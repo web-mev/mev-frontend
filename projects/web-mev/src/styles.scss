@@ -1,0 +1,53 @@
+@import 'styles-variables';
+
+@import '../../../node_modules/bootstrap/scss/bootstrap-reboot';
+@import '../../../node_modules/bootstrap/scss/bootstrap-grid';
+@import 'styles-reset';
+
+//@import '~@angular/material/theming';
+
+@include mat-core();
+
+@import './themes/default-theme';
+@import './themes/light-theme';
+@import './themes/black-theme';
+@import './themes/nature-theme';
+
+@import 'styles-reset.scss-theme';
+@import './app/app/app.component.scss-theme';
+@import './app/shared/big-input/big-input/big-input.component.scss-theme';
+@import './app/features/about/about/about.component.scss-theme';
+//@import './app/features/examples/notifications/components/notifications.component.scss-theme';
+
+@mixin custom-components-theme($theme) {
+  @include mev-styles-reset-theme($theme);
+  @include mev-app-component-theme($theme);
+  @include mev-about-component-theme($theme);
+  @include mev-big-input-component-theme($theme);
+  /*@include mev-notifications-component-theme($theme);
+  @include mev-todos-container-component-theme($theme);
+  @include mev-stock-market-container-component-theme($theme);
+  @include mev-parent-component-theme($theme);
+  @include mev-child-component-theme($theme);
+  @include mev-examples-component-theme($theme);*/
+}
+
+.default-theme {
+  @include angular-material-theme($mev-theme);
+  @include custom-components-theme($mev-theme);
+}
+
+.light-theme {
+  @include angular-material-theme($mev-light-theme);
+  @include custom-components-theme($mev-light-theme);
+}
+
+.black-theme {
+  @include angular-material-theme($mev-black-theme);
+  @include custom-components-theme($mev-black-theme);
+}
+
+.nature-theme {
+  @include angular-material-theme($mev-nature-theme);
+  @include custom-components-theme($mev-nature-theme);
+}

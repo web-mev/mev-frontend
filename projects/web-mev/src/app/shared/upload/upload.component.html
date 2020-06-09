@@ -1,0 +1,42 @@
+<div class="container" rtl>
+  <div class="row justify-content-center">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          Upload a dataset
+        </mat-card-title>
+        <mat-card-subtitle>
+          Use the Upload button to upload a tab-delimited (tsv) data file.
+          The first row is assumed to contain headers and the first column contains the feature names
+          (i.e. gene names).
+          Here is an example
+          <a href="/container/ui/data/raw_count_matrix.rand.primary.counts.tsv">RNASeq read count file</a>
+          and an example of
+          <a target="_blank" href="/container/ui/data/metadata.txt">metadata file</a>
+          (metadata.txt) that can loaded once entered into the platform.
+        </mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <ul>
+          <li *ngFor="let file of files">
+            <mat-progress-bar mode="determinate" [value]="file.progress" color="accent"></mat-progress-bar>
+            <span id="file-label"> {{ file.data.name }}
+            </span>
+          </li>
+        </ul>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="accent" (click)="onClick()">
+          <mat-icon>file_upload</mat-icon>
+          Upload
+        </button>
+      </mat-card-actions>
+    </mat-card>
+    <input type="file" #fileUpload id="fileUpload" name="fileUpload" multiple="multiple" accept="image/*"
+           style="display:none;"/>
+  </div>
+</div>
+
+
+

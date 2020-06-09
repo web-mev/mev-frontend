@@ -1,0 +1,155 @@
+/* Theme for the ripple elements.*/
+/* stylelint-disable material/no-prefixes */
+/* stylelint-enable */
+.theme-wrapper {
+  height: 100%;
+  width: 100%;
+}
+
+mat-sidenav-container {
+  height: 100%;
+  width: 100%;
+}
+mat-sidenav-container .toolbar {
+  position: fixed;
+  width: 100%;
+  display: flex;
+  z-index: 10;
+}
+mat-sidenav-container .toolbar .nav-button {
+  margin: 0 10px 0 0;
+}
+mat-sidenav-container .toolbar fa-icon {
+  font-size: 24px;
+}
+mat-sidenav-container .toolbar .branding {
+  cursor: pointer;
+  overflow: hidden;
+  padding-top: 4px;
+  text-overflow: ellipsis;
+}
+mat-sidenav-container .toolbar .branding.center {
+  text-align: center;
+}
+mat-sidenav-container .toolbar .branding img {
+  position: relative;
+  top: -2px;
+  width: 48px;
+  height: 48px;
+}
+mat-sidenav-container .toolbar .mat-stroked-button {
+  margin-right: 10px;
+}
+mat-sidenav-container .toolbar .spacer {
+  flex: 1 1 auto;
+}
+mat-sidenav-container .toolbar mat-select {
+  margin: 0 0 0 20px;
+  width: 40px;
+  font-size: 14px;
+}
+@media (max-width: 992px) {
+  mat-sidenav-container .toolbar .nav-button {
+    min-width: 0;
+    padding: 0 10px;
+  }
+}
+mat-sidenav-container .wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+}
+mat-sidenav-container .wrapper .content {
+  flex: 1 0 auto;
+  margin-top: 64px;
+  overflow: hidden;
+}
+mat-sidenav-container .wrapper .footer {
+  flex: 0 0 auto;
+  padding: 0 15px;
+  text-align: center;
+}
+mat-sidenav-container .wrapper .footer .row {
+  padding: 10px 0;
+}
+mat-sidenav-container .wrapper .footer .row .links a {
+  transition: padding 0.5s;
+  display: inline-block;
+  padding: 0 5px !important;
+}
+mat-sidenav-container .wrapper .footer .row .links a:hover {
+  text-decoration: none;
+}
+mat-sidenav-container .wrapper .footer .row .links a fa-icon {
+  font-size: 30px;
+  width: 35px;
+}
+mat-sidenav-container .wrapper .footer .row .links a span {
+  display: inline-block;
+  width: 75px;
+  padding: 0 0 0 3px;
+  overflow: hidden;
+  text-align: left;
+  white-space: nowrap;
+  transition: width 0.5s;
+}
+@media (min-width: 992px) {
+  mat-sidenav-container .wrapper .footer .row .links a {
+    padding: 20px 10px;
+  }
+}
+@media (max-width: 768px) {
+  mat-sidenav-container .wrapper .footer .row .links a {
+    padding: 20px;
+  }
+  mat-sidenav-container .wrapper .footer .row .links a span {
+    width: 0;
+    padding: 0;
+  }
+}
+@media (max-width: 576px) {
+  mat-sidenav-container .wrapper .footer .row .links a {
+    padding: 20px 5px;
+  }
+}
+@media (min-width: 576px) {
+  mat-sidenav-container .wrapper .footer .row .signature {
+    position: relative;
+  }
+  mat-sidenav-container .wrapper .footer .row .signature a {
+    position: absolute;
+    right: 15px;
+  }
+}
+@media (max-width: 600px) {
+  mat-sidenav-container .content {
+    margin-top: 56px !important;
+  }
+}
+
+mat-sidenav {
+  width: 250px;
+}
+mat-sidenav .branding {
+  height: 64px;
+  padding: 8px 10px;
+  font-size: 20px;
+  font-weight: 500;
+}
+mat-sidenav .branding img {
+  height: 48px;
+  margin: 2px 10px 0 0;
+}
+mat-sidenav .branding span {
+  position: relative;
+  top: 3px;
+}
+mat-sidenav .mat-nav-list {
+  padding-top: 0;
+}
+
+/*# sourceMappingURL=app.component.css.map */

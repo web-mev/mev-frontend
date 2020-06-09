@@ -1,0 +1,82 @@
+<div class="workspace-btn-group">
+  <button mat-raised-button color="accent" (click)="addItem()">
+    <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon> Create a workspace
+  </button>
+  <button mat-raised-button color="accent" (click)="refresh()">
+    <mat-icon>refresh</mat-icon> Refresh
+  </button>
+</div>
+
+
+<div class="workspace-list-container">
+
+  <div class="form">
+    <mat-form-field floatPlaceholder="never" color="accent">
+      <input matInput #filter placeholder="Filter workspaces">
+    </mat-form-field>
+  </div>
+
+  <mat-table #table [dataSource]="dataSource" matSort class="mat-cell">
+
+    <ng-container matColumnDef="id">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
+      <mat-cell *matCellDef="let row" >{{row.id}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="workspace_name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header class="workspace-table-header">Workspace name</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.workspace_name}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="created">
+      <mat-header-cell *matHeaderCellDef mat-sort-header class="workspace-table-header">Created date</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.created}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="accessed">
+      <mat-header-cell *matHeaderCellDef mat-sort-header class="workspace-table-header">Last accessed date</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.accessed}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="file_number">
+      <mat-header-cell *matHeaderCellDef mat-sort-header class="workspace-table-header">Number of files</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.file_number}}</mat-cell>
+    </ng-container>
+
+
+    <!-- actions -->
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef class="workspace-table-header">Actions</mat-header-cell>
+
+      <mat-cell *matCellDef="let row; let i=index;">
+        <button mat-icon-button color="accent" title="Edit workspace" (click)="editItem(i, row.id, row.workspace_name)">
+          <mat-icon aria-label="Edit">edit</mat-icon>
+        </button>
+
+        <button mat-icon-button color="accent" title="Delete workspace" (click)="deleteItem(i, row.id, row.workspace_name)">
+          <mat-icon aria-label="Delete">delete</mat-icon>
+        </button>
+
+        <button mat-icon-button color="accent" title="Go to workspace">
+          <mat-icon aria-label="Delete">launch</mat-icon>
+        </button>
+
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+
+
+  <div class="no-results" [style.display]="dataSource.renderedData.length == 0 ? '' : 'none'">
+    No results are available
+  </div>
+
+  <mat-paginator #paginator
+                 [length]="dataSource.filteredData.length"
+                 [pageIndex]="0"
+                 [pageSize]="10"
+                 [pageSizeOptions]="[10, 25, 100]">
+  </mat-paginator>
+</div>

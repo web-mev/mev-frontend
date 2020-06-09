@@ -1,0 +1,11 @@
+.mat-header-cell {
+  background: #eeeeee;
+}
+
+.workspace-btn-group {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 20px;
+}
+
+/*# sourceMappingURL=workspace-list.component.css.map */

@@ -1,0 +1,9 @@
+$mev-black-primary: mat-palette($mat-grey, 700, 300, 900);
+$mev-black-accent: mat-palette($mat-blue-grey, 400);
+$mev-black-warn: mat-palette($mat-red, 500);
+
+$mev-black-theme: mat-dark-theme(
+  $mev-black-primary,
+  $mev-black-accent,
+  $mev-black-warn
+);

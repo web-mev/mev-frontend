@@ -1,0 +1,158 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "web-mev": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "changeDetection": "OnPush",
+          "style": "scss"
+        }
+      },
+      "root": "projects/web-mev",
+      "sourceRoot": "projects/web-mev/src",
+      "prefix": "mev",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/web-mev",
+            "index": "projects/web-mev/src/index.html",
+            "main": "projects/web-mev/src/main.ts",
+            "polyfills": "projects/web-mev/src/polyfills.ts",
+            "tsConfig": "projects/web-mev/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "projects/web-mev/src/favicon.ico",
+              "projects/web-mev/src/assets"
+            ],
+            "styles": [
+              "projects/web-mev/src/styles-app-loading.scss",
+              "projects/web-mev/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/web-mev/src/environments/environment.ts",
+                  "with": "projects/web-mev/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "bundle",
+                  "name": "polyfills",
+                  "baseline": "150kb",
+                  "maximumWarning": "50kb",
+                  "maximumError": "100kb"
+                },
+                {
+                  "type": "bundle",
+                  "name": "styles",
+                  "baseline": "280kb",
+                  "maximumWarning": "50kb",
+                  "maximumError": "100kb"
+                },
+                {
+                  "type": "bundle",
+                  "name": "main",
+                  "baseline": "1024kb",
+                  "maximumWarning": "100kb",
+                  "maximumError": "200kb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "web-mev:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "web-mev:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "web-mev:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/web-mev/src/test.ts",
+            "polyfills": "projects/web-mev/src/polyfills.ts",
+            "tsConfig": "projects/web-mev/tsconfig.spec.json",
+            "karmaConfig": "projects/web-mev/karma.conf.js",
+            "assets": [
+              "projects/web-mev/src/favicon.ico",
+              "projects/web-mev/src/assets"
+            ],
+            "styles": [
+              "projects/web-mev/src/styles-app-loading.scss",
+              "projects/web-mev/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "test": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/web-mev/src/environments/environment.ts",
+                  "with": "projects/web-mev/src/environments/environment.test.ts"
+                }
+              ]
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/web-mev/tsconfig.app.json",
+              "projects/web-mev/tsconfig.spec.json",
+              "projects/web-mev/e2e/tsconfig.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/web-mev/e2e/protractor.conf.js",
+            "devServerTarget": "web-mev:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "web-mev:serve:production"
+            }
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "web-mev",
+  "cli": {
+    "analytics": false
+  }
+}

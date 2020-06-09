@@ -1,0 +1,6 @@
+Files
+<ul *ngIf="(files$ | async)">
+  <li *ngFor="let file of files$ | async">
+    <mev-file-item [file]="file"></mev-file-item>
+  </li>
+</ul>

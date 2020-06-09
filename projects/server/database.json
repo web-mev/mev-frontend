@@ -1,0 +1,185 @@
+{
+  "workspaces": [
+    {
+      "id": "1",
+      "workspace_name": "123"
+    },
+    {
+      "workspace_name": "asda",
+      "id": "1233"
+    },
+    {
+      "id": "868`",
+      "workspace_name": "frtrtr 2"
+    },
+    {
+      "id": "hYBm0YM",
+      "workspace_name": "My new WC "
+    },
+    {
+      "id": "zPJBdtH",
+      "workspace_name": "4445"
+    },
+    {
+      "workspace_name": "Zas",
+      "id": "IZw4Yui"
+    }
+  ],
+  "resources": [
+    {
+      "id": "1",
+      "url": "some/url",
+      "name": "File 1",
+      "resource_type": "FQ",
+      "owner_email": "user@example.com",
+      "is_active": true,
+      "is_public": true,
+      "status": "some_status",
+      "workspace": "My_Workspace1",
+      "created": "2020-06-06T15:57:24Z",
+      "size": 2046
+    },
+    {
+      "id": "2",
+      "url": "some/url/2",
+      "name": "My File 2",
+      "resource_type": "FQ",
+      "owner_email": "user@example.com",
+      "is_active": true,
+      "is_public": true,
+      "status": "some_status",
+      "workspace": "My_Workspace1",
+      "created": "2020-06-06T15:57:24Z",
+      "size": 2046
+    }
+  ],
+  "users": [
+    {
+      "email": "admin@mail",
+      "password": "123456",
+      "id": 1
+    },
+    {
+      "email": "stacey",
+      "password": "qwerty",
+      "id": 2
+    },
+    {
+      "email": "mmm",
+      "password": "123456",
+      "id": 3
+    },
+    {
+      "email": "test",
+      "password": "test56",
+      "id": 4
+    },
+    {
+      "email": "asd",
+      "password": "asd456",
+      "id": 5
+    },
+    {
+      "email": "qwe@jghh.ru",
+      "password": "555555",
+      "id": 6
+    }
+  ],
+  "authenticate": [
+    {
+      "username": "qqq",
+      "password": "123456",
+      "id": 1
+    },
+    {
+      "username": "qweqw",
+      "password": "4564565",
+      "id": 2
+    },
+    {
+      "username": "qweqw",
+      "password": "hh",
+      "id": 3
+    }
+  ],
+  "accounts": [
+    {
+      "id": 1,
+      "name": "",
+      "email": "",
+      "phone": "",
+      "industry": "",
+      "website": "",
+      "description": "",
+      "createdBy": 1,
+      "createdAt": "",
+      "isActive": true
+    }
+  ],
+  "contacts": [
+    {
+      "id": 1,
+      "first_name": "Aanbm",
+      "last_name": "Jsdfsdf",
+      "account": 1,
+      "status": 1,
+      "source": 1,
+      "email": "dskk@sdfdd",
+      "phone": "1231-1231-123",
+      "address": "sdfsdf sdfsdf sdf sdfsdfsdfs",
+      "description": "sfsdf124 sdkflkflllll llllllll",
+      "createdBy": 1,
+      "createdAt": "",
+      "isActive": true
+    },
+    {
+      "id": 2,
+      "first_name": "BBBBB",
+      "last_name": "fksdlkf;",
+      "account": 1,
+      "status": 1,
+      "source": 1,
+      "email": "erw@sfd",
+      "phone": "89802342342",
+      "address": "ddddddddddd dddddddddddsv",
+      "description": "sdfsdfsdfsdfsdf sdfsdfsdf sdf sdf s",
+      "createdBy": 1,
+      "createdAt": "",
+      "isActive": true
+    }
+  ],
+  "activities": [
+    {
+      "id": 1,
+      "description": "Activity 1",
+      "createdAt": "",
+      "contact": 1,
+      "status": 1
+    },
+    {
+      "id": 2,
+      "description": "Activity 2",
+      "createdAt": "",
+      "contact": 1,
+      "status": 1
+    }
+  ],
+  "contactsources": [
+    {
+      "id": 1,
+      "source": ""
+    }
+  ],
+  "contactstatuses": [
+    {
+      "id": 1,
+      "status": ""
+    }
+  ],
+  "activitystatuses": [
+    {
+      "id": 1,
+      "status": ""
+    }
+  ]
+}

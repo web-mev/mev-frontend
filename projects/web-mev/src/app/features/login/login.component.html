@@ -1,0 +1,43 @@
+<div class="container" rtl>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <div class="row justify-content-center">
+      <div class="col-md-8 form-group">
+        <mat-card>
+          <span class="d-flex justify-content-between align-items-baseline">
+            <h2>{{ 'mev.menu.login' | translate }}</h2>
+          </span>
+          <div class="row">
+            <mat-form-field class="col" [ngClass]="routeAnimationsElements">
+              <input matInput placeholder="E-mail"
+                     formControlName="email" type="email">
+              <mat-error *ngIf="submitted && f.email.errors">
+                E-mail is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <mat-form-field class="col" [ngClass]="routeAnimationsElements">
+              <input matInput type="password" placeholder="Password"
+                     formControlName="password">
+              <mat-error *ngIf="submitted && f.password.errors">
+                Password is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="row buttons d-flex justify-content-center pad">
+            <button type="submit" mat-raised-button color="accent" [disabled]="loading"
+                    [ngClass]="routeAnimationsElements">
+              <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+              Sign in
+            </button>
+            <button type="button" mat-raised-button color="primary" [ngClass]="routeAnimationsElements" routerLink="/register">
+              Register
+            </button>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+  </form>
+</div>

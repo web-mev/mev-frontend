@@ -1,0 +1,16 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  min-width: 450px;
+}
+
+.container > * {
+  width: 100%;
+}
+
+.mat-dialog-content {
+  max-height: none;
+  overflow: visible;
+}
+
+/*# sourceMappingURL=delete-dialog.component.css.map */

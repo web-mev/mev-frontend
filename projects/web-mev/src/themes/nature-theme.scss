@@ -1,0 +1,9 @@
+$mev-nature-primary: mat-palette($mat-brown, 700, 300, 900);
+$mev-nature-accent: mat-palette($mat-deep-purple, 300);
+$mev-nature-warn: mat-palette($mat-red, 600);
+
+$mev-nature-theme: mat-light-theme(
+  $mev-nature-primary,
+  $mev-nature-accent,
+  $mev-nature-warn
+);

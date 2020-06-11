@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { FileManagerService } from './file-manager.service';
+import { FileService} from "@file-manager/services/file-manager.service";
 
 describe('FileManagerService', () => {
-  let service: FileManagerService;
+  let service: FileService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(FileManagerService);
+    service = TestBed.inject(FileService);
   });
 
   it('should be created', () => {

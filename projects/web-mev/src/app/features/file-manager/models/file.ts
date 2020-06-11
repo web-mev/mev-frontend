@@ -1,6 +1,15 @@
 import { FileType } from '@app/features/file-manager/models/file-type';
 
-export interface File {
+/**
+ * File or Resource
+ *
+ * Resource instance is created when MEV users upload files.
+ * Resource instances are initially "unattached" meaning they are associated with their owner,
+ * but have not been associated with any user workspaces.
+ * Admins can, however, specify a Workspace in their request to create the Resource directly via the API.
+ */
+
+export class File {
   id: string;
   url: string;
   name: string;

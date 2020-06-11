@@ -16,15 +16,12 @@ export class ApiService {
   httpOptions: Object = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
-    }),
-    reportProgress: true,
-    observe: 'events'
+    })
   };
   constructor(private http: HttpClient) {}
 
   handleError(error: HttpErrorResponse) {
     let errorMessage = 'Unknown error';
-    console.log(error);
     if (error.error instanceof ErrorEvent) {
       // Client-side errors
       errorMessage = `Error: ${error.error.message}`;
@@ -38,13 +35,8 @@ export class ApiService {
 
   // POST
   post(url: string, data: Object): Observable<any> {
-    return this.http
-      .post<any>(
-        `${this.baseUrl}/${url}/`,
-        JSON.stringify(data),
-        this.httpOptions
-      )
-      .pipe(retry(1), catchError(this.handleError));
+    return this.http.post<any>(`${this.baseUrl}/${url}/`, data, this.httpOptions)
+      //.pipe(retry(1), catchError(this.handleError));
   }
 
   // GET

@@ -21,6 +21,7 @@ import { DeleteDialogComponent } from '@workspace-manager/components/dialogs/del
 })
 export class WorkspaceListComponent implements OnInit {
   displayedColumns = [
+    'id',
     'workspace_name',
     'created',
     'accessed',

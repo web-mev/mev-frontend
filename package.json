@@ -22,8 +22,9 @@
     "contributors:generate": "all-contributors generate && node .all-contributors-html.js",
     "contributors:check": "all-contributors check",
     "compodoc": "compodoc",
-    "generate-docs":"compodoc -p ./projects/web-mev/tsconfig.app.json",
-    "serve-docs":"compodoc -s ./projects/web-mev/tsconfig.app.json"
+    "generate-docs":"compodoc -p ./tsconfig.json",
+    "serve-docs":"compodoc -s ./tsconfig.json"
+
   },
   "husky": {
     "hooks": {

@@ -1,10 +1,10 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { AuthenticationService } from '@app/_services/authentication.service';
-import { NotificationService } from '@core/core.module';
-import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { first } from 'rxjs/operators';
-import { ROUTE_ANIMATIONS_ELEMENTS } from '@core/core.module';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {AuthenticationService} from '@app/_services/authentication.service';
+import {NotificationService} from '@core/core.module';
+import {Router, ActivatedRoute} from '@angular/router';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {first} from 'rxjs/operators';
+import {ROUTE_ANIMATIONS_ELEMENTS} from '@core/core.module';
 
 @Component({
   selector: 'mev-login-form',

@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FileManagerComponent } from './file-manager.component';
+import { DeleteDialogComponent } from './delete-dialog.component';
 
-describe('FileManagerComponent', () => {
-  let component: FileManagerComponent;
-  let fixture: ComponentFixture<FileManagerComponent>;
+describe('DeleteDialogComponent', () => {
+  let component: DeleteDialogComponent;
+  let fixture: ComponentFixture<DeleteDialogComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [FileManagerComponent]
+      declarations: [DeleteDialogComponent]
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FileManagerComponent);
+    fixture = TestBed.createComponent(DeleteDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

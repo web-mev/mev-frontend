@@ -14,10 +14,12 @@ import { environment } from '@environments/environment';
   providedIn: 'root'
 })
 export class WorkspaceService {
-  private readonly API_URL = environment.apiUrl + '/workspaces';
+  private readonly API_URL = environment.apiUrl + '/workspaces/';
+
   httpOptions: Object = {
     headers: new HttpHeaders({
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${JSON.parse(localStorage.getItem('currentUser'))}`
     })
   };
 
@@ -40,7 +42,7 @@ export class WorkspaceService {
       errorMessage = `Error: ${error.error.message}`;
     } else {
       // Server-side errors
-      errorMessage = `Server Side Error. Code: ${error.status}\nMessage: ${error.message}`;
+      errorMessage = `Server Side Error. Status: ${error.status} ${error.statusText}\nMessage: ${error.error.detail}`;
     }
     return throwError(errorMessage);
   }
@@ -55,7 +57,7 @@ export class WorkspaceService {
 
   getAllWorkspaces(): void {
     this.httpClient
-      .get<Workspace[]>(this.API_URL)
+      .get<Workspace[]>(this.API_URL, this.httpOptions)
       .pipe(retry(1), catchError(this.handleError))
       .subscribe(
         data => {
@@ -85,7 +87,7 @@ export class WorkspaceService {
   // UPDATE, PUT METHOD
   updateWorkspace(workspace: Workspace): void {
     this.httpClient
-      .put(`${this.API_URL}/${workspace.id}`, workspace, this.httpOptions)
+      .put(this.API_URL+workspace.id+'/', workspace, this.httpOptions)
       .pipe(retry(1), catchError(this.handleError))
       .subscribe(
         data => {
@@ -100,7 +102,7 @@ export class WorkspaceService {
   // DELETE METHOD
   deleteWorkspace(id: number): void {
     this.httpClient
-      .delete(`${this.API_URL}/${id}`, this.httpOptions)
+      .delete(this.API_URL+id+'/', this.httpOptions)
       .pipe(retry(1), catchError(this.handleError))
       .subscribe(
         data => {},

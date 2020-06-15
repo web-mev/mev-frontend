@@ -22,7 +22,8 @@ const routes: Routes = [
   },
   {
     path: 'workarea',
-    component: WorkareaComponent
+    component: WorkareaComponent,
+    canActivate: [AuthGuardService]
   },
   {
     path: 'upload',

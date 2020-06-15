@@ -14,12 +14,11 @@ import { environment } from '@environments/environment';
   providedIn: 'root'
 })
 export class WorkspaceService {
-  private readonly API_URL = environment.apiUrl + '/workspaces/';
+  private readonly API_URL = environment.apiUrl + '/workspaces';
 
   httpOptions: Object = {
     headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${JSON.parse(localStorage.getItem('currentUser'))}`
+      'Content-Type': 'application/json'
     })
   };
 
@@ -57,14 +56,14 @@ export class WorkspaceService {
 
   getAllWorkspaces(): void {
     this.httpClient
-      .get<Workspace[]>(this.API_URL, this.httpOptions)
+      .get<Workspace[]>(`${this.API_URL}/`, this.httpOptions)
       .pipe(retry(1), catchError(this.handleError))
       .subscribe(
         data => {
           this.dataChange.next(data);
         },
-        (err: HttpErrorResponse) => {
-          this.notificationService.error('Error occurred. Details: ' + err);
+        (err) => {
+            this.notificationService.error('Error occurred. Details: ' + err);
         }
       );
   }
@@ -72,13 +71,13 @@ export class WorkspaceService {
   // ADD, POST METHOD
   addWorkspace(workspace: Workspace): void {
     this.httpClient
-      .post(this.API_URL, workspace, this.httpOptions)
+      .post(`${this.API_URL}/`, workspace, this.httpOptions)
       .pipe(retry(1), catchError(this.handleError))
       .subscribe(
         data => {
           this.dialogData = workspace;
         },
-        (err: HttpErrorResponse) => {
+        (err) => {
           this.notificationService.error('Error occurred. Details: ' + err);
         }
       );
@@ -87,13 +86,13 @@ export class WorkspaceService {
   // UPDATE, PUT METHOD
   updateWorkspace(workspace: Workspace): void {
     this.httpClient
-      .put(this.API_URL+workspace.id+'/', workspace, this.httpOptions)
+      .put( `${this.API_URL}/${workspace.id}/`, workspace, this.httpOptions)
       .pipe(retry(1), catchError(this.handleError))
       .subscribe(
         data => {
           this.dialogData = workspace;
         },
-        (err: HttpErrorResponse) => {
+        (err) => {
           this.notificationService.error('Error occurred. Details: ' + err);
         }
       );
@@ -102,11 +101,11 @@ export class WorkspaceService {
   // DELETE METHOD
   deleteWorkspace(id: number): void {
     this.httpClient
-      .delete(this.API_URL+id+'/', this.httpOptions)
+      .delete(`${this.API_URL}/${id}/`, this.httpOptions)
       .pipe(retry(1), catchError(this.handleError))
       .subscribe(
         data => {},
-        (err: HttpErrorResponse) => {
+        (err) => {
           this.notificationService.error('Error occurred. Details: ' + err);
         }
       );

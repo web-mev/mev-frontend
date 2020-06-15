@@ -5,7 +5,6 @@ import { retry, catchError } from 'rxjs/operators';
 import { NotificationService } from '@core/core.module';
 import { File } from "@file-manager/models/file";
 import { environment } from '@environments/environment';
-import {consoleTestResultHandler} from "tslint/lib/test";
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +13,7 @@ export class FileService {
   private readonly API_URL = environment.apiUrl + '/resources';
   httpOptions: Object = {
     headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${JSON.parse(localStorage.getItem('currentUser'))}`
+      'Content-Type': 'application/json'
     })
   };
 
@@ -68,23 +66,12 @@ export class FileService {
 
   // ADD, POST METHOD
   addFile(file: any): void {
-    const httpFileOptions = {
-      headers: new HttpHeaders({
-        //"Content-Type": "multipart/form-data",
-        'Authorization': `Bearer ${JSON.parse(localStorage.getItem('currentUser'))}`
-      })
-    };
 
     this.httpClient
-      .post(`${this.API_URL}/upload/`, file, httpFileOptions)
+      .post(`${this.API_URL}/upload/`, file)
       .pipe(retry(1), catchError(this.handleError))
       .subscribe(
         data => {
-          console.log('File Service -> addFile INSIDE SUBSCRIBE');
-          console.log('data = ')
-          console.log(data)
-          console.log('file = ')
-          console.log(file)
           this.dialogData = file;
         },
         (err: HttpErrorResponse) => {

@@ -3,37 +3,37 @@
 
   <form class="mat-dialog-content" (ngSubmit)="submit" #formControl="ngForm">
 
-    <!--div class="form">
-      <mat-form-field color="accent">
-        <input matInput #input class="form-control" placeholder="Id" [(ngModel)]="data.id" name="id" required >
-        <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
-      </mat-form-field>
-    </div-->
-
-    <!--div class="form">
-      <mat-form-field color="accent">
-        <input matInput #input class="form-control" placeholder="File name" [(ngModel)]="data.name" name="name" required >
-        <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
-      </mat-form-field>
-    </div-->
-
-
-
-    <div class="form">
-        <input type="file" #fileUpload class="form-control" (change)="setFile($event)" id="fileUpload" name="upload_file" multiple="multiple" required />
-        <!--mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error-->
+     <div class="form">
+      <button mat-raised-button color="accent" (click)="onUploadBtnClick()">
+        <mat-icon>file_upload</mat-icon>
+        Upload
+      </button>
+      <span *ngIf="file_name" id="file-label"> {{ file_name }} </span>
+      <input type="file" #fileUpload (change)="setFile($event)" id="fileUpload" name="upload_file" multiple="multiple" required style="display:none;"/>
+      <mat-error *ngIf="!fileSelected">
+        <span class="help-block error" [hidden]="!fileSelected">
+          File is Required
+        </span>
+      </mat-error>
 
     </div>
 
     <div class="form">
+
       <mat-form-field color="accent">
-        <input matInput #input class="form-control" placeholder="Resource type" [(ngModel)]="data.resource_type" name="resource_type" required >
+        <mat-label>Select a resource type</mat-label>
+        <mat-select [(ngModel)]=data.resource_type name="resource_type" required>
+          <mat-option *ngFor="let type of resourceTypes" [value]="type">
+            {{ type }}
+          </mat-option>
+        </mat-select>
         <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
       </mat-form-field>
+
     </div>
 
     <div mat-dialog-actions>
-      <button mat-button [type]="submit" [disabled]="!formControl.valid" [mat-dialog-close]="1" (click)="confirmAdd()">Save</button>
+      <button mat-button [type]="submit" [disabled]="!(formControl.valid && fileSelected)" [mat-dialog-close]="1" (click)="confirmAdd()">Save</button>
       <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
     </div>
     <p></p>

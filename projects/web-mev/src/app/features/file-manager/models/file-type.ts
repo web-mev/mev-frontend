@@ -5,12 +5,12 @@
  */
 
 export enum FileType {
-  FQ,
-  FA,
-  ALN,
-  TBL,
-  MTX,
-  I_MTX,
-  ANN,
-  BED
+  FQ = 'FQ',
+  FA = 'FA',
+  ALN = 'ALN',
+  TBL = 'TBL',
+  MTX = 'MTX',
+  I_MTX = 'I_MTX',
+  ANN = 'ANN',
+  BED = 'BED'
 }

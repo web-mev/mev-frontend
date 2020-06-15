@@ -15,6 +15,12 @@ export class AppErrorHandler extends ErrorHandler {
   }
 
   handleError(error: Error | HttpErrorResponse) {
+
+    // If Unauthorized (401), we perform refresh process and don't show notification error for the user
+    if (error instanceof HttpErrorResponse && error.status === 401) {
+      return;
+    }
+
     let displayMessage = 'An error occurred.';
 
     if (!environment.production) {
@@ -24,5 +30,6 @@ export class AppErrorHandler extends ErrorHandler {
     this.notificationsService.error(displayMessage);
 
     super.handleError(error);
+
   }
 }

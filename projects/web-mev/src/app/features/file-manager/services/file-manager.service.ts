@@ -37,7 +37,7 @@ export class FileService {
       errorMessage = `Error: ${error.error.message}`;
     } else {
       // Server-side errors
-      errorMessage = `Server Side Error. Code: ${error.status}\nMessage: ${error.message}`;
+      errorMessage = `Server Side Error. Code: ${error.status} \n\nDetails: ${error.error.detail} \n\nMessage: ${error.message}`;
     }
     return throwError(errorMessage);
   }
@@ -80,6 +80,23 @@ export class FileService {
       );
   }
 
+  // ADD, POST METHOD for DROPBOX
+  addDropboxFile(file_source: string): void {
+
+    this.httpClient
+      .post(`${this.API_URL}/dropboxupload/`, file_source)
+      .pipe(retry(1), catchError(this.handleError))
+      .subscribe(
+        data => {
+           //this.dialogData = data;
+          this.notificationService.success('File has been successfully uploaded');
+        },
+        (err: HttpErrorResponse) => {
+          this.notificationService.error('Error occurred. Details: ' + err);
+        }
+      );
+  }
+
   // UPDATE, PUT METHOD
   updateFile(file: File): void {
     this.httpClient
@@ -89,7 +106,7 @@ export class FileService {
         data => {
           this.dialogData = file;
         },
-        (err: HttpErrorResponse) => {
+        (err) => {
           this.notificationService.error('Error occurred. Details: ' + err);
         }
       );

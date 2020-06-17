@@ -3,7 +3,7 @@
     Use the Files tab to upload files and the Workspace tab to organize them...
     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
   </h4>
-  <mat-tab-group animationDuration="0ms" color="accent">
+  <mat-tab-group animationDuration="0ms" color="accent" [(selectedIndex)]="selectedTabIndex">
     <mat-tab>
       <ng-template mat-tab-label>
         <mat-icon class="tab-icon">file_copy</mat-icon>
@@ -22,3 +22,10 @@
 
   </mat-tab-group>
 </section>
+
+<div class="workarea-footer" *ngIf="selectedTabIndex == 0">
+  <button mat-raised-button color="accent" (click)="goToNextTab()">
+    Next
+    <mat-icon aria-label="Next step">navigate_next</mat-icon>
+  </button>
+</div>

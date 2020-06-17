@@ -13,7 +13,9 @@ import { File } from '@file-manager/models/file';
 import { AddDialogComponent } from '@file-manager/components/dialogs/add-dialog/add-dialog.component';
 import { EditDialogComponent } from '@file-manager/components/dialogs/edit-dialog/edit-dialog.component';
 import { DeleteDialogComponent } from '@file-manager/components/dialogs/delete-dialog/delete-dialog.component';
+import { Dropbox, DropboxChooseOptions } from '@file-manager/models/dropbox';
 
+declare var Dropbox: Dropbox;
 
 @Component({
   selector: 'mev-file-list',
@@ -89,7 +91,7 @@ export class FileListComponent implements OnInit {
           foundIndex
           ] = this.fileService.getDialogData();
         // And lastly refresh table
-        this.refreshTable();
+        this.refresh();  //this.refreshTable();
       }
     });
   }
@@ -107,7 +109,7 @@ export class FileListComponent implements OnInit {
         );
         // for delete we use splice in order to remove single object from FileService
         this.exampleDatabase.dataChange.value.splice(foundIndex, 1);
-        this.refreshTable();
+        this.refresh();  //this.refreshTable();
       }
     });
   }
@@ -135,6 +137,31 @@ export class FileListComponent implements OnInit {
         }
         this.dataSource.filter = this.filter.nativeElement.value;
       });
+  }
+
+  addDropBoxItem() {
+
+    const options: DropboxChooseOptions = {
+      success: (files) => {
+        for (const file of files) {
+          const name = file.name;
+          const url = file.link;
+          this.fileService.addDropboxFile(url);
+          this.exampleDatabase.dataChange.value.push(
+            //this.fileService.getDialogData()
+          );
+          this.refresh();
+          console.log({name: name, url: url});
+        }
+      },
+      cancel: () => {
+      },
+      linkType: "direct",
+      multiselect: false,
+      folderselect: false
+    };
+
+    Dropbox.choose(options);
   }
 }
 
@@ -173,17 +200,17 @@ export class ExampleDataSource extends DataSource<File> {
     ];
 
     this._exampleDatabase.getAllFiles();
-
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
+
         this.filteredData = this._exampleDatabase.data
           .slice()
           .filter((file: File) => {
-            const searchStr = (
-              file.name + file.workspace
-            ).toLowerCase();
-            return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
+              const searchStr = (
+                file.name + file.workspace
+              ).toLowerCase();
+              return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
 
         // Sort filtered data
@@ -248,3 +275,6 @@ export class ExampleDataSource extends DataSource<File> {
     });
   }
 }
+
+
+

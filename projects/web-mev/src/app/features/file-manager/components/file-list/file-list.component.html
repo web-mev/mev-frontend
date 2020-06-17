@@ -1,16 +1,17 @@
 <div class="file-btn-group">
   <div>
     <button mat-raised-button color="accent" (click)="addItem()">
-      <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon>
+      <mat-icon aria-label="Upload a file from computer">add</mat-icon>
       Upload a file from computer
     </button>
-    <button mat-raised-button color="accent" disabled>
-      <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon>
+    <button mat-raised-button color="accent" (click)="addDropBoxItem()">
+      <mat-icon fontSet="material-icons-outlined" aria-label="Upload from Dropbox">backup</mat-icon>
       Upload from Dropbox
     </button>
   </div>
   <button mat-raised-button color="accent" (click)="refresh()">
-    <mat-icon>refresh</mat-icon> Refresh
+    <mat-icon aria-label="Refresh">refresh</mat-icon>
+    Refresh
   </button>
 </div>
 
@@ -27,7 +28,7 @@
 
     <ng-container matColumnDef="id">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
-      <mat-cell *matCellDef="let row" >{{row.id}}</mat-cell>
+      <mat-cell *matCellDef="let row">{{row.id}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="name">
@@ -57,12 +58,12 @@
 
     <ng-container matColumnDef="is_active">
       <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">Active</mat-header-cell>
-      <mat-cell *matCellDef="let row"> {{row.is_active}}</mat-cell>
+      <mat-cell *matCellDef="let row"> {{row.is_active ? 'Active' : 'Not active'}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="is_public">
       <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">Public</mat-header-cell>
-      <mat-cell *matCellDef="let row"> {{row.is_public}}</mat-cell>
+      <mat-cell *matCellDef="let row"> {{row.is_public ? 'Public' : 'Private'}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="workspace">
@@ -80,11 +81,16 @@
           <mat-icon aria-label="Edit">edit</mat-icon>
         </button>
 
-        <button mat-icon-button color="accent" title="Delete file" (click)="deleteItem(i, row.id, row.name, row.resource_type)">
+        <button mat-icon-button color="accent" title="Delete file"
+                (click)="deleteItem(i, row.id, row.name, row.resource_type)">
           <mat-icon aria-label="Delete">delete</mat-icon>
         </button>
 
         <button mat-icon-button color="accent" title="Download" disabled>
+          <mat-icon aria-label="Download">get_app</mat-icon>
+        </button>
+
+        <button mat-icon-button color="accent" title="Download to DropBox" disabled>
           <mat-icon aria-label="Download">cloud_download</mat-icon>
         </button>
 
@@ -107,3 +113,4 @@
                  [pageSizeOptions]="[10, 25, 100]">
   </mat-paginator>
 </div>
+

@@ -25,10 +25,28 @@
                   Password is required
                 </mat-error>
                 <mat-error *ngIf="f.password.errors.minlength">
-                  Password must be at least 6 characters
+                  Password must be at least 8 characters
                 </mat-error>
+                <mat-error *ngIf="f.password.errors.pattern">
+                  Password must have at least one uppercase letter, one lowercase letter, one number and one special character.
+                </mat-error>
+                
               </div>
+              </mat-form-field>
+          </div>
 
+          <div class="row">
+            <mat-form-field class="col" [ngClass]="routeAnimationsElements">
+              <input matInput type="password" placeholder="Confirm password"
+                     formControlName="confirm_password" [ngClass]="{ 'is-invalid': submitted && f.confirm_password.errors }" />
+              <div *ngIf="submitted && f.confirm_password.errors">
+                <mat-error *ngIf="f.confirm_password.errors.required">
+                  Please confirm your password
+                </mat-error>
+                <mat-error *ngIf="f.confirm_password.errors.notMatched">
+                  Confirm Password does not match with password.
+              </mat-error>
+              </div>
               </mat-form-field>
           </div>
 
@@ -38,7 +56,8 @@
               <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
               Register
             </button>
-            <button type="button" mat-raised-button color="primary" [ngClass]="routeAnimationsElements" routerLink="/about">
+            <button type="button" mat-raised-button color="primary" 
+              [ngClass]="routeAnimationsElements" routerLink="/about">
               Cancel
             </button>
           </div>

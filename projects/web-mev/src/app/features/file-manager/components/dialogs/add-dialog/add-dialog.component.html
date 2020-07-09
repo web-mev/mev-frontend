@@ -1,14 +1,29 @@
 <div class="container">
-  <h3 mat-dialog-title>Upload a new file</h3>
+  <h3 mat-dialog-title>Locate and select one or more files on your computer.
+    <br> Then click the Upload button.</h3>
 
   <form class="mat-dialog-content" (ngSubmit)="submit" #formControl="ngForm">
 
      <div class="form">
-      <button mat-raised-button color="accent" (click)="onUploadBtnClick()">
+      <button mat-raised-button color="accent" (click)="onUploadBtnClick()" class="upload-button">
         <mat-icon>file_upload</mat-icon>
-        Upload
+        Select files
       </button>
-      <span *ngIf="file_name" id="file-label"> {{ file_name }} </span>
+      <!--span *ngIf="file_name" id="file-label"> {{ file_name }} </span-->
+      <div *ngIf="fileNames" class="upload-info">
+        You selected the following file(s):
+        <ul>
+          <li *ngFor="let fileName of fileNames">
+            <span id="file-label"> {{ fileName }}
+            </span>
+          </li>
+        </ul>
+        <span *ngIf="isLargeFile" class="upload-warning"> 
+          The file specified is larger than what MeV is configured to support. 
+          Please use Dropbox to upload large files (>500Mb). 
+        </span> 
+      </div>
+      
       <input type="file" #fileUpload (change)="setFile($event)" id="fileUpload" name="upload_file" multiple="multiple" required style="display:none;"/>
       <mat-error *ngIf="!fileSelected">
         <span class="help-block error" [hidden]="!fileSelected">
@@ -33,7 +48,7 @@
     </div>
 
     <div mat-dialog-actions>
-      <button mat-button [type]="submit" [disabled]="!(formControl.valid && fileSelected)" [mat-dialog-close]="1" (click)="confirmAdd()">Save</button>
+      <button mat-button [type]="submit" [disabled]="!(formControl.valid && fileSelected)" [mat-dialog-close]="1" (click)="confirmAdd()">Upload</button>
       <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
     </div>
     <p></p>

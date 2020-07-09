@@ -66,8 +66,19 @@
                   [matMenuTriggerFor]="toolbarUserMenu">
             <fa-icon icon="user-circle"></fa-icon>
           </button>
+
           <mat-menu #toolbarUserMenu="matMenu">
+
             <button mat-menu-item (click)="onLogoutClick()">
+              <span *ngIf="socialUser" class="social-user-info">
+               <span class="social-user-info__name">
+                {{ socialUser.name }}
+              </span>
+              <span class="social-user-info__email">
+                {{ socialUser.email }}
+              </span>
+              </span>
+
               <mat-icon>
                 <fa-icon icon="power-off"></fa-icon>
               </mat-icon>
@@ -119,6 +130,7 @@
               <fa-icon [icon]="['fab','youtube']"></fa-icon>
               <span>Youtube</span>
             </a>
+
           </div>
         </div>
 

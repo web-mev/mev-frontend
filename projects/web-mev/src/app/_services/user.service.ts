@@ -1,32 +1,39 @@
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import { User } from '@app/_models/user';
-import { ApiService } from '@app/_services/api.service';
 import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  constructor(private api: ApiService) {}
+
+  private readonly API_URL = environment.apiUrl;
+
+  constructor(private http: HttpClient) {}
 
   get(id: number): Observable<User> {
-    return this.api.get('users', id);
+    return this.http.get<any>(`${this.API_URL}/users/${id}/`);
   }
 
   getAll(): Observable<User[]> {
-    return this.api.get_all('users');
+    return this.http.get<any[]>(`${this.API_URL}/users/`);
   }
 
-  register(user: User) {
-    return this.api.post('users', user);
+  register(body): Observable<any> {
+    return this.http.post<any>(`${this.API_URL}/users/register/`, body)
+  }
+
+  activate(body): Observable<any> {
+    return this.http.post<any>(`${this.API_URL}/users/activate/`, body)
   }
 
   update(user: User, id: number) {
-    return this.api.update('users', id, user);
+    return this.http.put<any>(`${this.API_URL}/users/${id}/`, JSON.stringify(user))
   }
 
   delete(id: number) {
-    return this.api.delete('users', id);
+    return this.http.delete<any>(`${this.API_URL}/users/${id}/`);
   }
 }

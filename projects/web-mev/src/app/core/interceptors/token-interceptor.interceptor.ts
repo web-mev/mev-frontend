@@ -1,14 +1,13 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
   HttpInterceptor, HttpErrorResponse
 } from '@angular/common/http';
-import {Observable, throwError, BehaviorSubject} from 'rxjs';
-import {catchError, filter, take, switchMap} from 'rxjs/operators';
-
-import {AuthenticationService} from "@app/_services/authentication.service";
+import { Observable, throwError, BehaviorSubject } from 'rxjs';
+import { catchError, filter, take, switchMap } from 'rxjs/operators';
+import { AuthenticationService } from '@app/_services/authentication.service';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
@@ -22,6 +21,7 @@ export class TokenInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<any> {
 
     return next.handle(request).pipe(catchError(error => {
+
       if (error instanceof HttpErrorResponse && error.status === 401) {
         return this.handle401Error(request, next);
       } else {
@@ -35,12 +35,11 @@ export class TokenInterceptor implements HttpInterceptor {
     if (!this.isRefreshing) {
       this.isRefreshing = true;
       this.refreshTokenSubject.next(null);
-
       return this.authService.refreshToken().pipe(
         switchMap((token: any) => {
           this.isRefreshing = false;
           this.refreshTokenSubject.next(token.access);
-          return next.handle(request);
+          return next.handle(this.addToken(request, token.access));
         }));
 
     } else {
@@ -48,8 +47,18 @@ export class TokenInterceptor implements HttpInterceptor {
         filter(token => token != null),
         take(1),
         switchMap(jwt => {
-          return next.handle(request);
+          return next.handle(this.addToken(request, jwt));
         }));
     }
   }
+
+
+  private addToken(request: HttpRequest<any>, token: string) {
+    return request.clone({
+      setHeaders: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+  }
+
 }

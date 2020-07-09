@@ -1,6 +1,9 @@
 .mat-header-cell {
   background: #eeeeee;
 }
+.mat-column-actions {
+  min-width: 250px;
+}
 
 .file-btn-group {
   display: flex;
@@ -10,4 +13,31 @@
 
 button {
   margin-right: 10px;
+}
+
+mat-cell {
+  word-wrap: break-word;
+  display: inline-block;
+  padding: 3px;
+  padding-right: 5px;
+}
+
+.warning-cell {
+  color: red;
+  font-weight: bold;
+}
+
+.warning-cell--asterisk {
+  &:after {
+    content:" *";
+  }
+}
+
+.warning-note {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  color: grey;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }

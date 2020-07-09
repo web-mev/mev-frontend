@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { FileService} from "@file-manager/services/file-manager.service";
+import { FileService} from '@file-manager/services/file-manager.service';
 
 describe('FileManagerService', () => {
   let service: FileService;

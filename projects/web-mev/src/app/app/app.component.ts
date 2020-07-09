@@ -30,6 +30,7 @@ import {
 })
 export class AppComponent implements OnInit {
   currentUser: User;
+  socialUser;
   isAuthenticated: boolean;
   isProd = env.production;
   envName = env.envName;
@@ -63,6 +64,9 @@ export class AppComponent implements OnInit {
       this.isAuthenticated = x !== null;
       this.currentUser = x;
     });
+
+    this.socialUser = JSON.parse(localStorage.getItem('socialUser'));
+
   }
 
   private static isIEorEdgeOrSafari() {

@@ -181,3 +181,30 @@ mat-sidenav {
     padding-top: 0;
   }
 }
+
+.mat-menu-item {
+  height: auto;
+}
+
+.social-user-info {
+  text-align: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  color: #202124;
+  display: block;
+}
+
+.social-user-info__name {
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 22px;
+  font-family: "Google Sans", Roboto, RobotoDraft, Helvetica, Arial, sans-serif;
+  display: block;
+}
+
+.social-user-info__email {
+  font-weight: 400;
+  font-size: 14px;
+  font-family: Roboto, RobotoDraft, Helvetica, Arial, sans-serif;
+  display: block;
+}

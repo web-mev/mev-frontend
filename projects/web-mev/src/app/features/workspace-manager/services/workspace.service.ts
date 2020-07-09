@@ -1,13 +1,9 @@
 import { Injectable, OnInit } from '@angular/core';
-import { BehaviorSubject, throwError } from 'rxjs';
-import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpHeaders
-} from '@angular/common/http';
-import { retry, catchError } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { NotificationService } from '@core/core.module';
-import { Workspace } from '../models/workspace';
+import { Workspace, WorkspaceAdapter } from '../models/workspace';
 import { environment } from '@environments/environment';
 
 @Injectable({
@@ -16,11 +12,6 @@ import { environment } from '@environments/environment';
 export class WorkspaceService {
   private readonly API_URL = environment.apiUrl + '/workspaces';
 
-  httpOptions: Object = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json'
-    })
-  };
 
   dataChange: BehaviorSubject<Workspace[]> = new BehaviorSubject<Workspace[]>(
     []
@@ -31,20 +22,10 @@ export class WorkspaceService {
 
   constructor(
     private httpClient: HttpClient,
-    private readonly notificationService: NotificationService
-  ) {}
+    private readonly notificationService: NotificationService,
+    private adapter: WorkspaceAdapter
+  ) { }
 
-  handleError(error: HttpErrorResponse) {
-    let errorMessage = 'Unknown error';
-    if (error.error instanceof ErrorEvent) {
-      // Client-side errors
-      errorMessage = `Error: ${error.error.message}`;
-    } else {
-      // Server-side errors
-      errorMessage = `Server Side Error. Status: ${error.status} ${error.statusText}\nMessage: ${error.error.detail}`;
-    }
-    return throwError(errorMessage);
-  }
 
   get data(): Workspace[] {
     return this.dataChange.value;
@@ -55,59 +36,42 @@ export class WorkspaceService {
   }
 
   getAllWorkspaces(): void {
-    this.httpClient
-      .get<Workspace[]>(`${this.API_URL}/`, this.httpOptions)
-      .pipe(retry(1), catchError(this.handleError))
+    this.httpClient.get<Workspace[]>(`${this.API_URL}/`)
+      .pipe(
+        map((data: any[]) => data.map((item) => this.adapter.adapt(item)))
+      )
       .subscribe(
         data => {
           this.dataChange.next(data);
-        },
-        (err) => {
-            this.notificationService.error('Error occurred. Details: ' + err);
         }
       );
   }
 
   // ADD, POST METHOD
   addWorkspace(workspace: Workspace): void {
-    this.httpClient
-      .post(`${this.API_URL}/`, workspace, this.httpOptions)
-      .pipe(retry(1), catchError(this.handleError))
+    this.httpClient.post(`${this.API_URL}/`, workspace)
       .subscribe(
         data => {
           this.dialogData = workspace;
-        },
-        (err) => {
-          this.notificationService.error('Error occurred. Details: ' + err);
         }
       );
   }
 
   // UPDATE, PUT METHOD
   updateWorkspace(workspace: Workspace): void {
-    this.httpClient
-      .put( `${this.API_URL}/${workspace.id}/`, workspace, this.httpOptions)
-      .pipe(retry(1), catchError(this.handleError))
+    this.httpClient.put(`${this.API_URL}/${workspace.id}/`, workspace)
       .subscribe(
         data => {
           this.dialogData = workspace;
-        },
-        (err) => {
-          this.notificationService.error('Error occurred. Details: ' + err);
         }
       );
   }
 
   // DELETE METHOD
   deleteWorkspace(id: number): void {
-    this.httpClient
-      .delete(`${this.API_URL}/${id}/`, this.httpOptions)
-      .pipe(retry(1), catchError(this.handleError))
+    this.httpClient.delete(`${this.API_URL}/${id}/`)
       .subscribe(
-        data => {},
-        (err) => {
-          this.notificationService.error('Error occurred. Details: ' + err);
-        }
+        data => { }
       );
   }
 }

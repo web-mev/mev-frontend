@@ -1,10 +1,9 @@
-import {Injectable} from '@angular/core';
-
-import {BehaviorSubject, Observable, throwError} from 'rxjs';
-import {catchError, map, retry, tap} from 'rxjs/operators';
-import {ApiService} from '@app/_services/api.service';
-import {User} from '@app/_models/user';
-import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
+import { Injectable } from '@angular/core';
+import { environment } from '@environments/environment';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+import { User } from '@app/_models/user';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -12,36 +11,36 @@ import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
 export class AuthenticationService {
   private currentUserSubject: BehaviorSubject<User>;
   public currentUser: Observable<User>;
-
+  private readonly API_URL = environment.apiUrl;
   private readonly JWT_TOKEN = 'JWT_TOKEN';
   private readonly REFRESH_TOKEN = 'REFRESH_TOKEN';
 
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json'
-    })
-  };
+  // httpOptions = {
+  //   headers: new HttpHeaders({
+  //     'Content-Type': 'application/json'
+  //   })
+  // };
 
-  constructor(private api: ApiService, private http: HttpClient) {
+  constructor(private http: HttpClient) {
     this.currentUserSubject = new BehaviorSubject<User>(
       JSON.parse(localStorage.getItem(this.JWT_TOKEN))
     );
     this.currentUser = this.currentUserSubject.asObservable();
   }
 
-  handleError(error: HttpErrorResponse) {
-    let errorMessage = 'Unknown error';
-
-    if (error.error instanceof ErrorEvent) {
-      // Client-side errors
-      errorMessage = `Error: ${error.error.message}`;
-    } else {
-      // Server-side errors
-      errorMessage = `Server Side Error! Code: ${error.status}\nMessage: ${error.message}`;
-    }
-    console.log(errorMessage);
-    return throwError(errorMessage);
-  }
+  // handleError(error: HttpErrorResponse) {
+  //   let errorMessage = 'Unknown error';
+  //
+  //   if (error.error instanceof ErrorEvent) {
+  //     // Client-side errors
+  //     errorMessage = `Error: ${error.error.message}`;
+  //   } else {
+  //     // Server-side errors
+  //     errorMessage = `Server Side Error! Code: ${error.status}\nMessage: ${error.message}`;
+  //   }
+  //   console.log(errorMessage);
+  //   return throwError(errorMessage);
+  // }
 
   public get currentUserValue(): User {
     return this.currentUserSubject.value;
@@ -50,7 +49,7 @@ export class AuthenticationService {
 
   login(username: string, password: string) {
 
-    return this.api.post('token', {email: username, password: password})
+    return this.http.post<any>(`${this.API_URL}/token/`, { email: username, password: password })
       .pipe(
         map(user => {
           // login successful if there's a token in the response: {'refresh': '<REFRESH TOKEN>', 'access': '<ACCESS_TOKEN>'}
@@ -79,7 +78,7 @@ export class AuthenticationService {
     this.currentUserSubject.next(null);
   }
 
-  getJwtToken():string {
+  getJwtToken(): string {
     return JSON.parse(localStorage.getItem(this.JWT_TOKEN));
   }
 
@@ -92,10 +91,63 @@ export class AuthenticationService {
   }
 
   refreshToken() {
-    return this.api.post('token/refresh', {
+    return this.http.post<any>(`${this.API_URL}/token/refresh/`, {
       'refresh': this.getRefreshToken()
     }).pipe(tap((tokens) => {
-       this.storeJwtToken(JSON.stringify(tokens.access));
+      this.storeJwtToken(JSON.stringify(tokens.access));
     }));
   }
+
+  googleSignInExternal(googleTokenId: string): Observable<any> {
+    return this.http
+      .post<any>('TO DO!!  url to google login in your rest api', { token: googleTokenId })
+      .pipe(
+        map(token => {
+          // login successful if there's a token in the response: {'refresh': '<REFRESH TOKEN>', 'access': '<ACCESS_TOKEN>'}
+          if (token && token.access) {
+            this.storeJwtToken(JSON.stringify(token.access));
+            this.storeRefreshToken(JSON.stringify(token.refresh));
+            this.currentUserSubject.next(token);
+          }
+          return token;
+        })
+      );
+  }
+
+  requestPasswordReset(body): Observable<any> {
+    return this.http.post<any>('users/reset-password', body);
+  }
+
+  confirmPasswordReset(body): Observable<any> {
+    // user has clicked on a reset link and is sending a UID (encoded), a token, a new password, and a re-typed confirmation of that password
+    return this.http.post<any>('users/reset-password/confirm', body);
+  }
+
+  newPassword(body): Observable<any> {
+    return this.http.post<any>('users/change-password', body);
+  }
+
+
+  ValidPasswordToken(body): Observable<any> {
+    return this.http.post<any>('users/activate', body);
+  }
+
+
+  // googleSignInExternal(googleTokenId: string): Observable<any> {
+  //
+  //   return this.http.get(APISecurityRoutes.authRoutes.googlesigninexternal(), {
+  //     params: new HttpParams().set('googleTokenId', googleTokenId)
+  //   })
+  //     .pipe(
+  //       map((result) => {
+  //         if (result) { //if (!(result instanceof SimpleError)) {
+  //           //this.credentialsService.setCredentials(result, true);
+  //         }
+  //         return result;
+  //
+  //       }),
+  //       catchError(() => of(new Error('error_signin')))
+  //     );
+  //
+  // }
 }

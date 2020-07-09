@@ -1,19 +1,21 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {Component, ElementRef, OnInit, Pipe, PipeTransform, ViewChild, ChangeDetectorRef} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DataSource } from '@angular/cdk/collections';
-import { BehaviorSubject, fromEvent, merge, Observable } from 'rxjs';
-import { map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { BehaviorSubject, fromEvent, merge, concat, Observable } from 'rxjs';
+import { map, debounceTime, distinctUntilChanged, timeout } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { NotificationService } from '@core/core.module';
-import { FileService} from "@file-manager/services/file-manager.service";
-import { File } from '@file-manager/models/file';
+import { FileService} from '@file-manager/services/file-manager.service';
+import { File, FileAdapter } from '@app/shared/models/file';
 import { AddDialogComponent } from '@file-manager/components/dialogs/add-dialog/add-dialog.component';
 import { EditDialogComponent } from '@file-manager/components/dialogs/edit-dialog/edit-dialog.component';
 import { DeleteDialogComponent } from '@file-manager/components/dialogs/delete-dialog/delete-dialog.component';
 import { Dropbox, DropboxChooseOptions } from '@file-manager/models/dropbox';
+import { ProgressSnackbarComponent } from '../progress-snackbar/progress-snackbar.component';
 
 declare var Dropbox: Dropbox;
 
@@ -37,12 +39,17 @@ export class FileListComponent implements OnInit {
   exampleDatabase: FileService | null;
   dataSource: ExampleDataSource | null;
   id: string;
+  uploadProgressData: Map<string, object>;
+  Object = Object;
 
   constructor(
     public httpClient: HttpClient,
     public dialog: MatDialog,
     public fileService: FileService,
-    private readonly notificationService: NotificationService
+    private adapter: FileAdapter,
+    private readonly notificationService: NotificationService,
+    public snackBar: MatSnackBar,
+    public cd: ChangeDetectorRef
   ) {}
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -51,6 +58,15 @@ export class FileListComponent implements OnInit {
 
   ngOnInit() {
     this.loadData();
+    this.fileService.fileUploadsProgress.subscribe((uploadProgressData) => {
+      this.uploadProgressData = uploadProgressData;
+
+      // refresh table if all files are uploaded
+      const allFilesUploaded = Object.keys(uploadProgressData).every(key => uploadProgressData[key].isUploaded);
+      if (allFilesUploaded) {
+        this.refresh();
+      }         
+    });
   }
 
   refresh() {
@@ -61,23 +77,35 @@ export class FileListComponent implements OnInit {
     const dialogRef = this.dialog.open(AddDialogComponent, {
       data: { file: File }
     });
-
+    
     dialogRef.afterClosed().subscribe(result => {
+      
       if (result === 1) {
         // After dialog is closed we're doing frontend updates
         // For add we're just pushing a new row inside FileService
+         
         this.exampleDatabase.dataChange.value.push(
           this.fileService.getDialogData()
         );
-        this.refresh();
+
+        // display file upload progress in snackbar
+        this.snackBar.openFromComponent(ProgressSnackbarComponent, {
+          duration: 0,
+          panelClass: 'upload-snackbar',
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+        });
+       
+        //this.refresh();  // issue with refresh when uploading large files
+
       }
     });
   }
 
-  editItem(i: number, id: string, file_name: string) {
+  editItem(i: number, id: string, file_name: string, resource_type: string) {
     this.id = id;
     const dialogRef = this.dialog.open(EditDialogComponent, {
-      data: { id: id, name: file_name }
+      data: { id: id, name: file_name, resource_type: resource_type }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -91,7 +119,7 @@ export class FileListComponent implements OnInit {
           foundIndex
           ] = this.fileService.getDialogData();
         // And lastly refresh table
-        this.refresh();  //this.refreshTable();
+        this.refresh();  // this.refreshTable();
       }
     });
   }
@@ -109,7 +137,7 @@ export class FileListComponent implements OnInit {
         );
         // for delete we use splice in order to remove single object from FileService
         this.exampleDatabase.dataChange.value.splice(foundIndex, 1);
-        this.refresh();  //this.refreshTable();
+        this.refresh();  // this.refreshTable();
       }
     });
   }
@@ -119,9 +147,11 @@ export class FileListComponent implements OnInit {
     this.paginator._changePageSize(this.paginator.pageSize);
   }
 
+
   public loadData() {
     this.exampleDatabase = new FileService(
       this.httpClient,
+      this.adapter,
       this.notificationService
     );
     this.dataSource = new ExampleDataSource(
@@ -146,17 +176,17 @@ export class FileListComponent implements OnInit {
         for (const file of files) {
           const name = file.name;
           const url = file.link;
+
           this.fileService.addDropboxFile(url);
           this.exampleDatabase.dataChange.value.push(
-            //this.fileService.getDialogData()
+            // this.fileService.getDialogData()
           );
           this.refresh();
-          console.log({name: name, url: url});
         }
       },
       cancel: () => {
       },
-      linkType: "direct",
+      linkType: 'direct',
       multiselect: false,
       folderselect: false
     };
@@ -198,33 +228,34 @@ export class ExampleDataSource extends DataSource<File> {
       this._filterChange,
       this._paginator.page
     ];
-
     this._exampleDatabase.getAllFiles();
-    return merge(...displayDataChanges).pipe(
-      map(() => {
-        // Filter data
+      return merge(...displayDataChanges).pipe(
+        map(() => {
+          // Filter data
 
-        this.filteredData = this._exampleDatabase.data
-          .slice()
-          .filter((file: File) => {
-              const searchStr = (
-                file.name + file.workspace
-              ).toLowerCase();
-              return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
-          });
-
-        // Sort filtered data
-        const sortedData = this.sortData(this.filteredData.slice());
-
-        // Grab the page's slice of the filtered sorted data.
-        const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
-        this.renderedData = sortedData.splice(
-          startIndex,
-          this._paginator.pageSize
-        );
-        return this.renderedData;
-      })
-    );
+          this.filteredData = this._exampleDatabase.data
+            .slice()
+            .filter((file: File) => {
+                const searchStr = (
+                  file.name + file.workspace
+                ).toLowerCase();
+                return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
+            });
+  
+          // Sort filtered data
+          const sortedData = this.sortData(this.filteredData.slice());
+  
+          // Grab the page's slice of the filtered sorted data.
+          const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
+            
+          this.renderedData = sortedData.splice(
+            startIndex,
+            this._paginator.pageSize
+          );
+  
+          return this.renderedData;
+        })
+      );
   }
 
   disconnect() {}
@@ -275,6 +306,3 @@ export class ExampleDataSource extends DataSource<File> {
     });
   }
 }
-
-
-

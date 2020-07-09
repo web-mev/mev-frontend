@@ -1,11 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
-import { LoginComponent } from '@app/features/login/login.component';
-import { RegisterComponent } from '@app/features/register/register.component';
-import { TutorialComponent } from '@app/features/tutorial/tutorial.component';
-import { UploadComponent } from '@app/shared/upload/upload.component';
+import { LoginComponent } from '@features/login/login.component';
+import { RegisterComponent } from '@features/register/register.component';
+import { RequestPasswordResetComponent } from '@features/request-password-reset/request-password-reset.component';
+import { TutorialComponent } from '@features/tutorial/tutorial.component';
 import { AuthGuardService } from '@core/auth/auth-guard.service';
-import { WorkareaComponent } from '@app/features/workarea/workarea.component';
+import { WorkareaComponent } from '@features/workarea/workarea.component';
+import { WorkspaceDetailComponent } from '@features/workspace-detail/components/workspace-detail/workspace-detail.component';
+import { ResponsePasswordResetComponent } from './features/response-password-reset/response-password-reset.component';
 
 const routes: Routes = [
   {
@@ -26,9 +28,8 @@ const routes: Routes = [
     canActivate: [AuthGuardService]
   },
   {
-    path: 'upload',
-    component: UploadComponent,
-    canActivate: [AuthGuardService]
+    path: 'workspace/:workspaceId',
+    component: WorkspaceDetailComponent
   },
   {
     path: 'settings',
@@ -42,6 +43,18 @@ const routes: Routes = [
   {
     path: 'register',
     component: RegisterComponent
+  },
+  {
+    path: 'activate/:uid/:token',
+    component: LoginComponent
+  },
+  {
+    path: 'reset',
+    component: RequestPasswordResetComponent
+  },
+  {
+    path: 'reset-password/:uid/:token',
+    component: ResponsePasswordResetComponent
   },
   {
     path: '',
@@ -66,4 +79,4 @@ const routes: Routes = [
   ],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

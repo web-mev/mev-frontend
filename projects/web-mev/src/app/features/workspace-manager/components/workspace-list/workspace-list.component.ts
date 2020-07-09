@@ -9,7 +9,7 @@ import { MatSort } from '@angular/material/sort';
 
 import { NotificationService } from '@core/core.module';
 import { WorkspaceService } from '@workspace-manager/services/workspace.service';
-import { Workspace } from '@workspace-manager/models/workspace';
+import { Workspace, WorkspaceAdapter } from '@workspace-manager/models/workspace';
 import { AddDialogComponent } from '@workspace-manager/components/dialogs/add-dialog/add-dialog.component';
 import { EditDialogComponent } from '@workspace-manager/components/dialogs/edit-dialog/edit-dialog.component';
 import { DeleteDialogComponent } from '@workspace-manager/components/dialogs/delete-dialog/delete-dialog.component';
@@ -21,7 +21,6 @@ import { DeleteDialogComponent } from '@workspace-manager/components/dialogs/del
 })
 export class WorkspaceListComponent implements OnInit {
   displayedColumns = [
-    'id',
     'workspace_name',
     'created',
     'accessed',
@@ -36,7 +35,8 @@ export class WorkspaceListComponent implements OnInit {
     public httpClient: HttpClient,
     public dialog: MatDialog,
     public workspaceService: WorkspaceService,
-    private readonly notificationService: NotificationService
+    private readonly notificationService: NotificationService,
+    private adapter: WorkspaceAdapter
   ) {}
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -76,6 +76,7 @@ export class WorkspaceListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === 1) {
+
         // When using an edit things are little different, firstly we find record inside WorkspaceService by id
         const foundIndex = this.exampleDatabase.dataChange.value.findIndex(
           x => x.id === this.id
@@ -85,7 +86,8 @@ export class WorkspaceListComponent implements OnInit {
           foundIndex
         ] = this.workspaceService.getDialogData();
         // And lastly refresh table
-        this.refreshTable();
+
+        this.refresh(); 
       }
     });
   }
@@ -103,7 +105,7 @@ export class WorkspaceListComponent implements OnInit {
         );
         // for delete we use splice in order to remove single object from WorkspaceService
         this.exampleDatabase.dataChange.value.splice(foundIndex, 1);
-        this.refreshTable();
+        this.refresh(); 
       }
     });
   }
@@ -116,7 +118,8 @@ export class WorkspaceListComponent implements OnInit {
   public loadData() {
     this.exampleDatabase = new WorkspaceService(
       this.httpClient,
-      this.notificationService
+      this.notificationService,
+      this.adapter
     );
     this.dataSource = new ExampleDataSource(
       this.exampleDatabase,

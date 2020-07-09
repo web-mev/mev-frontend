@@ -1,0 +1,83 @@
+.workspace-header {
+  display: flex;
+  justify-content: flex-start;
+  padding: 10px;
+}
+
+.workspace-header__title {
+  position: relative;
+  margin: auto;
+  left: -100px;
+}
+
+.search-field {
+  min-width: 250px;
+}
+
+
+.search-field .placeholder {
+  font-size: 12px;
+  color: #666666;
+}
+
+.file-btn-group {
+  display: flex;
+  justify-content: flex-start;
+  padding: 16px;
+}
+
+button {
+  margin-right: 10px;
+}
+
+.workspace-header__icon {
+  vertical-align: top;
+}
+
+::ng-deep .tooltip {
+  white-space: pre-line !important;
+}
+
+.cardList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.cardList > * {
+  box-sizing: border-box;
+}
+
+.cardList__item {
+  margin: 15px;
+  flex: 0 1 calc(33.3% - 32px);
+}
+
+@media screen and (max-width: 959px) {
+  .cardListItem {
+    flex: 0 1 calc(50% - 32px);
+  }
+}
+
+@media screen and (max-width: 599px) {
+  .cardList {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+}
+
+.mat-card-footer {
+  padding: 7px;
+  text-align: right;
+
+  .mat-icon {
+    margin-right: 10px;
+    cursor: pointer;
+
+    &:hover {
+      color: #666;
+    }
+  }
+}

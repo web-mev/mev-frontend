@@ -1,7 +1,8 @@
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Component, Inject } from '@angular/core';
-import { FileService} from "@file-manager/services/file-manager.service";
-import { File} from "@file-manager/models/file";
+import { FileService} from '@file-manager/services/file-manager.service';
+import { File } from '@app/shared/models/file';
+
 
 @Component({
   selector: 'mev-delete-dialog',

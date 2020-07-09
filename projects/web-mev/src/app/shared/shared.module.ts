@@ -24,7 +24,9 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatRippleModule } from '@angular/material/core';
 
 import {
   FontAwesomeModule,
@@ -53,10 +55,17 @@ import { faMediumM, faGithub } from '@fortawesome/free-brands-svg-icons';
 
 import { BigInputComponent } from './big-input/big-input/big-input.component';
 import { BigInputActionComponent } from './big-input/big-input-action/big-input-action.component';
-import { RtlSupportDirective } from './rtl-support/rtl-support.directive';
+import { RtlSupportDirective } from './directives/rtl-support/rtl-support.directive';
 import { AlertComponent } from './alert/alert.component';
-import { UploadComponent } from '@app/shared/upload/upload.component';
 import { MatSortModule } from '@angular/material/sort';
+import { ByteNamePipe } from '@app/shared/pipes/byte-name.pipe';
+
+const MatModules = [MatButtonModule, MatSelectModule, MatTabsModule, MatInputModule, MatProgressSpinnerModule,
+  MatChipsModule, MatCardModule, MatCheckboxModule, MatListModule, MatMenuModule, MatIconModule,
+  MatTooltipModule, MatSnackBarModule, MatSlideToggleModule, MatDividerModule, MatProgressBarModule,
+  MatDialogModule, MatTableModule, MatSortModule, MatPaginatorModule, MatSliderModule, MatDatepickerModule,
+  MatNativeDateModule, MatRippleModule, MatToolbarModule,
+];
 
 @NgModule({
   imports: [
@@ -64,36 +73,15 @@ import { MatSortModule } from '@angular/material/sort';
     FormsModule,
 
     TranslateModule,
-
-    MatButtonModule,
-    MatSelectModule,
-    MatTabsModule,
-    MatInputModule,
-    MatProgressSpinnerModule,
-    MatChipsModule,
-    MatCardModule,
-    MatCheckboxModule,
-    MatListModule,
-    MatMenuModule,
-    MatIconModule,
-    MatTooltipModule,
-    MatSnackBarModule,
-    MatSlideToggleModule,
-    MatDividerModule,
-    MatProgressBarModule,
-    MatDialogModule,
-    MatTableModule,
-    MatSortModule,
-    MatPaginatorModule,
-
-    FontAwesomeModule
+    ...MatModules,
+    FontAwesomeModule,
   ],
   declarations: [
     BigInputComponent,
     BigInputActionComponent,
     RtlSupportDirective,
     AlertComponent,
-    UploadComponent
+    ByteNamePipe
   ],
   exports: [
     CommonModule,
@@ -101,36 +89,13 @@ import { MatSortModule } from '@angular/material/sort';
     ReactiveFormsModule,
 
     TranslateModule,
-
-    MatButtonModule,
-    MatMenuModule,
-    MatTabsModule,
-    MatChipsModule,
-    MatInputModule,
-    MatProgressSpinnerModule,
-    MatCheckboxModule,
-    MatCardModule,
-    MatListModule,
-    MatSelectModule,
-    MatIconModule,
-    MatTooltipModule,
-    MatSnackBarModule,
-    MatSlideToggleModule,
-    MatDividerModule,
-    MatSliderModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatProgressBarModule,
-    MatDialogModule,
-    MatTableModule,
-    MatSortModule,
-    MatPaginatorModule,
+    ...MatModules,
     FontAwesomeModule,
 
     BigInputComponent,
     BigInputActionComponent,
     RtlSupportDirective,
-    UploadComponent
+    ByteNamePipe
   ]
 })
 export class SharedModule {
@@ -158,3 +123,7 @@ export class SharedModule {
     );
   }
 }
+
+
+
+

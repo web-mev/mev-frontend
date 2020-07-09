@@ -1,9 +1,9 @@
 import { Injectable, ErrorHandler } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 
-import { environment } from '../../../environments/environment';
+import { environment } from '@environments/environment';
 
-import { NotificationService } from '../notifications/notification.service';
+import { NotificationService } from '@core/notifications/notification.service';
 
 /** Application-wide error handler that adds a UI notification to the error handling
  * provided by the default Angular ErrorHandler.
@@ -14,12 +14,7 @@ export class AppErrorHandler extends ErrorHandler {
     super();
   }
 
-  handleError(error: Error | HttpErrorResponse) {
-
-    // If Unauthorized (401), we perform refresh process and don't show notification error for the user
-    if (error instanceof HttpErrorResponse && error.status === 401) {
-      return;
-    }
+  handleError(error) {
 
     let displayMessage = 'An error occurred.';
 
@@ -27,9 +22,6 @@ export class AppErrorHandler extends ErrorHandler {
       displayMessage += ' See console for details.';
     }
 
-    this.notificationsService.error(displayMessage);
-
     super.handleError(error);
-
   }
 }

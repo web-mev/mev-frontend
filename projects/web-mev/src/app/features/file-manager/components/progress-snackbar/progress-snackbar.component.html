@@ -1,0 +1,8 @@
+<div class='progress-snackbar-wrapper'>
+    <b> Upload status:</b>
+    <button mat-icon-button class="close-button"(click)="snackBarRef.dismiss()">
+        <mat-icon class="close-icon" color="accent">close</mat-icon>
+      </button>
+    <div [innerHTML]="uploadProgressStatus"></div>
+</div>
+

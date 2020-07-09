@@ -7,6 +7,7 @@ import { UserService } from '@app/_services/user.service';
 import { NotificationService } from '@core/core.module';
 import { AuthenticationService } from '@app/_services/authentication.service';
 import { ROUTE_ANIMATIONS_ELEMENTS } from '@core/core.module';
+import { RepeatPasswordValidator } from '@app/shared/validators/validators';
 
 @Component({
   selector: 'mev-register-form',
@@ -27,17 +28,19 @@ export class RegisterComponent implements OnInit {
     private userService: UserService,
     private readonly notificationService: NotificationService
   ) {
-    // redirect to home if already logged in
+    // redirect to workarea if already logged in
     if (this.authenticationService.currentUserValue) {
-      this.router.navigate(['/about']);
+      this.router.navigate(['/workarea']);
     }
   }
 
   ngOnInit(): void {
     this.registerForm = this.formBuilder.group({
       email: ['', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(6)]]
-    });
+      password: ['', [Validators.required, Validators.minLength(8), Validators.pattern('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$')]],
+      confirm_password: ['', [Validators.required]],
+    },
+    { validator: RepeatPasswordValidator });
   }
 
   // convenience getter for easy access to form fields
@@ -48,26 +51,24 @@ export class RegisterComponent implements OnInit {
   onSubmit() {
     this.submitted = true;
 
-    // stop here if form is invalid
-    if (this.registerForm.invalid) {
-      return;
+    if (this.registerForm.valid) {
+      this.loading = true;
+      this.userService
+        .register(this.registerForm.value)
+        .pipe(first())
+        .subscribe(
+          data => {
+            this.notificationService.success(
+              'Registration is successful. Please check your email to activate your account.'
+            );
+            this.router.navigate(['/login']);
+          },
+          error => {
+            this.notificationService.error(error);
+            this.loading = false;
+          }
+        );
     }
-
-    this.loading = true;
-    this.userService
-      .register(this.registerForm.value)
-      .pipe(first())
-      .subscribe(
-        data => {
-          this.notificationService.success(
-            'Registration successful. Please login'
-          );
-          this.router.navigate(['/login']);
-        },
-        error => {
-          this.notificationService.error(error);
-          this.loading = false;
-        }
-      );
+   
   }
 }

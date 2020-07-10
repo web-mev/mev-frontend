@@ -29,7 +29,7 @@ button {
   color: #737373;
   border-radius: 5px;
   white-space: nowrap;
-  box-shadow: 1px 1px 0px 1px rgba(0,0,0,0.05);
+  box-shadow: 1px 1px 0px 1px rgba(0, 0, 0, 0.05);
   transition-property: background-color, box-shadow;
   transition-duration: 150ms;
   transition-timing-function: ease-in-out;
@@ -37,7 +37,7 @@ button {
 
   &:focus,
   &:hover {
-    box-shadow: 1px 4px 5px 1px rgba(0,0,0,0.1);
+    box-shadow: 1px 4px 5px 1px rgba(0, 0, 0, 0.1);
   }
 
   &:active {
@@ -48,7 +48,6 @@ button {
 }
 
 .google-button__icon {
-  
   vertical-align: top;
   margin: 8px 0 8px 8px;
   width: 18px;
@@ -58,7 +57,6 @@ button {
 
   svg {
     vertical-align: top;
-
   }
 }
 
@@ -72,7 +70,7 @@ button {
   padding: 0 24px;
   font-size: 14px;
   font-weight: bold;
-  font-family: 'Roboto',arial,sans-serif;
+  font-family: 'Roboto', arial, sans-serif;
 }
 
 .msg {
@@ -83,7 +81,7 @@ button {
 }
 
 .msg--error {
-    color: red;
+  color: red;
 }
 
 .msg--success {

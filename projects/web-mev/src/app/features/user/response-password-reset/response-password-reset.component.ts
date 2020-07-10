@@ -10,7 +10,6 @@ import { RepeatPasswordValidator } from '@app/shared/validators/validators';
   templateUrl: './response-password-reset.component.html',
   styleUrls: ['./response-password-reset.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
-
 })
 export class ResponsePasswordResetComponent implements OnInit {
   routeAnimationsElements = ROUTE_ANIMATIONS_ELEMENTS;
@@ -29,7 +28,7 @@ export class ResponsePasswordResetComponent implements OnInit {
     private authService: AuthenticationService,
     private router: Router,
     private route: ActivatedRoute,
-    private fb: FormBuilder,
+    private fb: FormBuilder
   ) {
     this.CurrentState = 'Wait';
     this.route.params.subscribe(params => {
@@ -50,14 +49,16 @@ export class ResponsePasswordResetComponent implements OnInit {
 
   VerifyToken() {
     this.CurrentState = 'Verified';
-    this.authService.ValidPasswordToken({ token: this.resetToken, uid: this.uid }).subscribe(
-      data => {
-        this.CurrentState = 'Verified';
-      },
-      err => {
-        this.CurrentState = 'NotVerified';
-      }
-    );
+    this.authService
+      .ValidPasswordToken({ token: this.resetToken, uid: this.uid })
+      .subscribe(
+        data => {
+          this.CurrentState = 'Verified';
+        },
+        err => {
+          this.CurrentState = 'NotVerified';
+        }
+      );
   }
 
   Init() {
@@ -65,39 +66,49 @@ export class ResponsePasswordResetComponent implements OnInit {
       {
         token: [this.resetToken],
         uid: [this.uid],
-        password: ['', [Validators.required, Validators.minLength(8), Validators.pattern('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$')]],
+        password: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(8),
+            Validators.pattern(
+              '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$'
+            )
+          ]
+        ],
         confirm_password: ['', [Validators.required]]
       },
       { validator: RepeatPasswordValidator }
     );
-
-
   }
 
   ResetPassword() {
-
     this.submitted = true;
     if (this.responseResetForm.valid) {
       // this.IsResetFormValid = true;
       this.loading = true;
 
-      this.authService.confirmPasswordReset(this.responseResetForm.value).subscribe(
-        data => {
-          this.responseResetForm.reset();
-          this.IsResetFormValid = true;
-          this.successMessage = 'Your password has been successfully updated. Redirecting to Sign-in page...';
-          setTimeout(() => {
+      this.authService
+        .confirmPasswordReset(this.responseResetForm.value)
+        .subscribe(
+          data => {
+            this.responseResetForm.reset();
+            this.IsResetFormValid = true;
+            this.successMessage =
+              'Your password has been successfully updated. Redirecting to Sign-in page...';
+            setTimeout(() => {
+              this.successMessage = null;
+              this.router.navigate(['login']);
+            }, 5000);
+          },
+          err => {
             this.successMessage = null;
-            this.router.navigate(['login']);
-          }, 5000);
-        },
-        err => {
-          this.successMessage = null;
-          this.errorMessage = 'Server Side Error';
-          this.loading = false;
-        }
-      );
-    } else { this.IsResetFormValid = false; }
+            this.errorMessage = 'Server Side Error';
+            this.loading = false;
+          }
+        );
+    } else {
+      this.IsResetFormValid = false;
+    }
   }
-
 }

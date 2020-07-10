@@ -53,18 +53,36 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { faMediumM, faGithub } from '@fortawesome/free-brands-svg-icons';
 
-import { BigInputComponent } from './big-input/big-input/big-input.component';
-import { BigInputActionComponent } from './big-input/big-input-action/big-input-action.component';
 import { RtlSupportDirective } from './directives/rtl-support/rtl-support.directive';
-import { AlertComponent } from './alert/alert.component';
 import { MatSortModule } from '@angular/material/sort';
 import { ByteNamePipe } from '@app/shared/pipes/byte-name.pipe';
 
-const MatModules = [MatButtonModule, MatSelectModule, MatTabsModule, MatInputModule, MatProgressSpinnerModule,
-  MatChipsModule, MatCardModule, MatCheckboxModule, MatListModule, MatMenuModule, MatIconModule,
-  MatTooltipModule, MatSnackBarModule, MatSlideToggleModule, MatDividerModule, MatProgressBarModule,
-  MatDialogModule, MatTableModule, MatSortModule, MatPaginatorModule, MatSliderModule, MatDatepickerModule,
-  MatNativeDateModule, MatRippleModule, MatToolbarModule,
+const MatModules = [
+  MatButtonModule,
+  MatSelectModule,
+  MatTabsModule,
+  MatInputModule,
+  MatProgressSpinnerModule,
+  MatChipsModule,
+  MatCardModule,
+  MatCheckboxModule,
+  MatListModule,
+  MatMenuModule,
+  MatIconModule,
+  MatTooltipModule,
+  MatSnackBarModule,
+  MatSlideToggleModule,
+  MatDividerModule,
+  MatProgressBarModule,
+  MatDialogModule,
+  MatTableModule,
+  MatSortModule,
+  MatPaginatorModule,
+  MatSliderModule,
+  MatDatepickerModule,
+  MatNativeDateModule,
+  MatRippleModule,
+  MatToolbarModule
 ];
 
 @NgModule({
@@ -74,15 +92,9 @@ const MatModules = [MatButtonModule, MatSelectModule, MatTabsModule, MatInputMod
 
     TranslateModule,
     ...MatModules,
-    FontAwesomeModule,
+    FontAwesomeModule
   ],
-  declarations: [
-    BigInputComponent,
-    BigInputActionComponent,
-    RtlSupportDirective,
-    AlertComponent,
-    ByteNamePipe
-  ],
+  declarations: [RtlSupportDirective, ByteNamePipe],
   exports: [
     CommonModule,
     FormsModule,
@@ -92,8 +104,6 @@ const MatModules = [MatButtonModule, MatSelectModule, MatTabsModule, MatInputMod
     ...MatModules,
     FontAwesomeModule,
 
-    BigInputComponent,
-    BigInputActionComponent,
     RtlSupportDirective,
     ByteNamePipe
   ]
@@ -123,7 +133,3 @@ export class SharedModule {
     );
   }
 }
-
-
-
-

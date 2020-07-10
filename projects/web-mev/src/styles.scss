@@ -15,7 +15,6 @@
 
 @import 'styles-reset.scss-theme';
 @import './app/app/app.component.scss-theme';
-@import './app/shared/big-input/big-input/big-input.component.scss-theme';
 @import './app/features/about/about/about.component.scss-theme';
 //@import './app/features/examples/notifications/components/notifications.component.scss-theme';
 
@@ -23,7 +22,6 @@
   @include mev-styles-reset-theme($theme);
   @include mev-app-component-theme($theme);
   @include mev-about-component-theme($theme);
-  @include mev-big-input-component-theme($theme);
   /*@include mev-notifications-component-theme($theme);
   @include mev-todos-container-component-theme($theme);
   @include mev-stock-market-container-component-theme($theme);

@@ -46,10 +46,12 @@ export class AuthenticationService {
     return this.currentUserSubject.value;
   }
 
-
   login(username: string, password: string) {
-
-    return this.http.post<any>(`${this.API_URL}/token/`, { email: username, password: password })
+    return this.http
+      .post<any>(`${this.API_URL}/token/`, {
+        email: username,
+        password: password
+      })
       .pipe(
         map(user => {
           // login successful if there's a token in the response: {'refresh': '<REFRESH TOKEN>', 'access': '<ACCESS_TOKEN>'}
@@ -60,7 +62,7 @@ export class AuthenticationService {
           }
           return user;
         })
-      )
+      );
   }
 
   // store user details and token in local storage to keep user logged in between page refreshes
@@ -91,16 +93,22 @@ export class AuthenticationService {
   }
 
   refreshToken() {
-    return this.http.post<any>(`${this.API_URL}/token/refresh/`, {
-      'refresh': this.getRefreshToken()
-    }).pipe(tap((tokens) => {
-      this.storeJwtToken(JSON.stringify(tokens.access));
-    }));
+    return this.http
+      .post<any>(`${this.API_URL}/token/refresh/`, {
+        refresh: this.getRefreshToken()
+      })
+      .pipe(
+        tap(tokens => {
+          this.storeJwtToken(JSON.stringify(tokens.access));
+        })
+      );
   }
 
   googleSignInExternal(googleTokenId: string): Observable<any> {
     return this.http
-      .post<any>('TO DO!!  url to google login in your rest api', { token: googleTokenId })
+      .post<any>('TO DO!!  url to google login in your rest api', {
+        token: googleTokenId
+      })
       .pipe(
         map(token => {
           // login successful if there's a token in the response: {'refresh': '<REFRESH TOKEN>', 'access': '<ACCESS_TOKEN>'}
@@ -115,23 +123,24 @@ export class AuthenticationService {
   }
 
   requestPasswordReset(body): Observable<any> {
-    return this.http.post<any>('users/reset-password', body);
+    return this.http.post<any>(`${this.API_URL}/users/reset-password/`, body);
   }
 
   confirmPasswordReset(body): Observable<any> {
     // user has clicked on a reset link and is sending a UID (encoded), a token, a new password, and a re-typed confirmation of that password
-    return this.http.post<any>('users/reset-password/confirm', body);
+    return this.http.post<any>(
+      `${this.API_URL}/users/reset-password/confirm/`,
+      body
+    );
   }
 
   newPassword(body): Observable<any> {
-    return this.http.post<any>('users/change-password', body);
+    return this.http.post<any>(`${this.API_URL}/users/change-password/`, body);
   }
-
 
   ValidPasswordToken(body): Observable<any> {
-    return this.http.post<any>('users/activate', body);
+    return this.http.post<any>(`${this.API_URL}/users/activate/`, body);
   }
-
 
   // googleSignInExternal(googleTokenId: string): Observable<any> {
   //

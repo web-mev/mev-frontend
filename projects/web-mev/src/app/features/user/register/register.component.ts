@@ -35,12 +35,23 @@ export class RegisterComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.registerForm = this.formBuilder.group({
-      email: ['', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(8), Validators.pattern('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$')]],
-      confirm_password: ['', [Validators.required]],
-    },
-    { validator: RepeatPasswordValidator });
+    this.registerForm = this.formBuilder.group(
+      {
+        email: ['', Validators.required],
+        password: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(8),
+            Validators.pattern(
+              '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$'
+            )
+          ]
+        ],
+        confirm_password: ['', [Validators.required]]
+      },
+      { validator: RepeatPasswordValidator }
+    );
   }
 
   // convenience getter for easy access to form fields
@@ -69,6 +80,5 @@ export class RegisterComponent implements OnInit {
           }
         );
     }
-   
   }
 }

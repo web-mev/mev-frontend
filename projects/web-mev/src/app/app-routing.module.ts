@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
-import { LoginComponent } from '@features/login/login.component';
-import { RegisterComponent } from '@features/register/register.component';
-import { RequestPasswordResetComponent } from '@features/request-password-reset/request-password-reset.component';
+import { LoginComponent } from '@app/features/user/login/login.component';
+import { RegisterComponent } from '@app/features/user/register/register.component';
+import { RequestPasswordResetComponent } from '@app/features/user/request-password-reset/request-password-reset.component';
 import { TutorialComponent } from '@features/tutorial/tutorial.component';
 import { AuthGuardService } from '@core/auth/auth-guard.service';
 import { WorkareaComponent } from '@features/workarea/workarea.component';
 import { WorkspaceDetailComponent } from '@features/workspace-detail/components/workspace-detail/workspace-detail.component';
-import { ResponsePasswordResetComponent } from './features/response-password-reset/response-password-reset.component';
+import { ResponsePasswordResetComponent } from './features/user/response-password-reset/response-password-reset.component';
 
 const routes: Routes = [
   {
@@ -79,4 +79,4 @@ const routes: Routes = [
   ],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

@@ -9,11 +9,9 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app/app.component';
 import { JWT_OPTIONS, JwtModule } from '@auth0/angular-jwt';
-
-import { AuthService } from '@app/shared/auth/auth.service';
 import { AuthenticationService } from '@app/_services/authentication.service';
-import { LoginComponent } from './features/login/login.component';
-import { RegisterComponent } from './features/register/register.component';
+import { LoginComponent } from './features/user/login/login.component';
+import { RegisterComponent } from './features/user/register/register.component';
 import { TutorialComponent } from './features/tutorial/tutorial.component';
 import { YouTubePlayerModule } from '@angular/youtube-player';
 
@@ -24,7 +22,6 @@ import { TokenInterceptor } from '@core/interceptors/token-interceptor.intercept
 
 import { SharedModule } from '@app/shared/shared.module';
 
-
 import {
   SocialLoginModule,
   GoogleLoginProvider,
@@ -34,9 +31,8 @@ import {
 import { jwtOptionsFactory } from '@app/jwtConfig';
 import { WorkspaceDetailModule } from '@features/workspace-detail/workspace-detail.module';
 import { HttpErrorInterceptor } from '@core/interceptors/http-error.interceptor';
-import { RequestPasswordResetComponent } from './features/request-password-reset/request-password-reset.component';
-import { ResponsePasswordResetComponent } from './features/response-password-reset/response-password-reset.component';
-
+import { RequestPasswordResetComponent } from './features/user/request-password-reset/request-password-reset.component';
+import { ResponsePasswordResetComponent } from './features/user/response-password-reset/response-password-reset.component';
 
 // export function jwtOptionsFactory(authService: AuthenticationService) {
 //   return {
@@ -47,8 +43,6 @@ import { ResponsePasswordResetComponent } from './features/response-password-res
 //     blacklistedRoutes: ['http://localhost:8000/api/token/']
 //   };
 // }
-
-
 
 @NgModule({
   imports: [
@@ -91,12 +85,9 @@ import { ResponsePasswordResetComponent } from './features/response-password-res
     TutorialComponent,
     WorkareaComponent,
     RequestPasswordResetComponent,
-    ResponsePasswordResetComponent,
-    
+    ResponsePasswordResetComponent
   ],
   providers: [
-    AuthService,
-
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
@@ -121,15 +112,13 @@ import { ResponsePasswordResetComponent } from './features/response-password-res
             id: GoogleLoginProvider.PROVIDER_ID,
             provider: new GoogleLoginProvider(
               '624796833023-clhjgupm0pu6vgga7k5i5bsfp6qp6egh.apps.googleusercontent.com' // 'Google ClientId here!!'
-            ),
+            )
           }
-        ],
-      } as SocialAuthServiceConfig,
+        ]
+      } as SocialAuthServiceConfig
     }
-
   ],
   exports: [],
   bootstrap: [AppComponent]
 })
-export class AppModule {
-}
+export class AppModule {}

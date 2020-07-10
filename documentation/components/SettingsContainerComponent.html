@@ -1,0 +1,1136 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>web-mev documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	      <link rel="stylesheet" href="../styles/style.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">web-mev documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li>SettingsContainerComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>projects/web-mev/src/app/features/settings/settings/settings-container.component.ts</code>
+</p>
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover">
+        <tbody>
+
+            <tr>
+                <td class="col-md-3">changeDetection</td>
+                <td class="col-md-9"><code>ChangeDetectionStrategy.OnPush</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>mev-settings</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./settings-container.component.scss</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./settings-container.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#languages">languages</a>
+                            </li>
+                            <li>
+                                <a href="#routeAnimationsElements">routeAnimationsElements</a>
+                            </li>
+                            <li>
+                                <a href="#settings$">settings$</a>
+                            </li>
+                            <li>
+                                <a href="#themes">themes</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#ngOnInit">ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#onAutoNightModeToggle">onAutoNightModeToggle</a>
+                            </li>
+                            <li>
+                                <a href="#onElementsAnimationsToggle">onElementsAnimationsToggle</a>
+                            </li>
+                            <li>
+                                <a href="#onLanguageSelect">onLanguageSelect</a>
+                            </li>
+                            <li>
+                                <a href="#onPageAnimationsToggle">onPageAnimationsToggle</a>
+                            </li>
+                            <li>
+                                <a href="#onStickyHeaderToggle">onStickyHeaderToggle</a>
+                            </li>
+                            <li>
+                                <a href="#onThemeSelect">onThemeSelect</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(store: <a href="../interfaces/State.html">Store<State></a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">projects/web-mev/src/app/features/settings/settings/settings-container.component.ts:44</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>store</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../interfaces/State.html" target="_self" >Store&lt;State&gt;</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <b>
+                            ngOnInit
+                        </b>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="48"
+                            class="link-to-prism">projects/web-mev/src/app/features/settings/settings/settings-container.component.ts:48</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onAutoNightModeToggle"></a>
+                    <span class="name">
+                        <b>
+                            onAutoNightModeToggle
+                        </b>
+                        <a href="#onAutoNightModeToggle"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onAutoNightModeToggle(undefined)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="60"
+                            class="link-to-prism">projects/web-mev/src/app/features/settings/settings/settings-container.component.ts:60</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onElementsAnimationsToggle"></a>
+                    <span class="name">
+                        <b>
+                            onElementsAnimationsToggle
+                        </b>
+                        <a href="#onElementsAnimationsToggle"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onElementsAnimationsToggle(undefined)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="72"
+                            class="link-to-prism">projects/web-mev/src/app/features/settings/settings/settings-container.component.ts:72</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onLanguageSelect"></a>
+                    <span class="name">
+                        <b>
+                            onLanguageSelect
+                        </b>
+                        <a href="#onLanguageSelect"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onLanguageSelect(undefined)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="52"
+                            class="link-to-prism">projects/web-mev/src/app/features/settings/settings/settings-container.component.ts:52</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onPageAnimationsToggle"></a>
+                    <span class="name">
+                        <b>
+                            onPageAnimationsToggle
+                        </b>
+                        <a href="#onPageAnimationsToggle"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onPageAnimationsToggle(undefined)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="68"
+                            class="link-to-prism">projects/web-mev/src/app/features/settings/settings/settings-container.component.ts:68</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onStickyHeaderToggle"></a>
+                    <span class="name">
+                        <b>
+                            onStickyHeaderToggle
+                        </b>
+                        <a href="#onStickyHeaderToggle"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onStickyHeaderToggle(undefined)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="64"
+                            class="link-to-prism">projects/web-mev/src/app/features/settings/settings/settings-container.component.ts:64</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onThemeSelect"></a>
+                    <span class="name">
+                        <b>
+                            onThemeSelect
+                        </b>
+                        <a href="#onThemeSelect"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onThemeSelect(undefined)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="56"
+                            class="link-to-prism">projects/web-mev/src/app/features/settings/settings/settings-container.component.ts:56</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+        <h3 id="inputs">
+            Properties
+        </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="languages"></a>
+                        <span class="name">
+                            <b>
+                            languages</b>
+                            <a href="#languages"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>[]</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>[
+    { value: &#x27;en&#x27;, label: &#x27;en&#x27; },
+    { value: &#x27;de&#x27;, label: &#x27;de&#x27; },
+    { value: &#x27;sk&#x27;, label: &#x27;sk&#x27; },
+    { value: &#x27;fr&#x27;, label: &#x27;fr&#x27; },
+    { value: &#x27;es&#x27;, label: &#x27;es&#x27; },
+    { value: &#x27;pt-br&#x27;, label: &#x27;pt-br&#x27; },
+    { value: &#x27;zh-cn&#x27;, label: &#x27;zh-cn&#x27; },
+    { value: &#x27;he&#x27;, label: &#x27;he&#x27; }
+  ]</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">projects/web-mev/src/app/features/settings/settings/settings-container.component.ts:35</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="routeAnimationsElements"></a>
+                        <span class="name">
+                            <b>
+                            routeAnimationsElements</b>
+                            <a href="#routeAnimationsElements"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>ROUTE_ANIMATIONS_ELEMENTS</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">projects/web-mev/src/app/features/settings/settings/settings-container.component.ts:25</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="settings$"></a>
+                        <span class="name">
+                            <b>
+                            settings$</b>
+                            <a href="#settings$"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>Observable&lt;SettingsState&gt;</code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">projects/web-mev/src/app/features/settings/settings/settings-container.component.ts:26</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="themes"></a>
+                        <span class="name">
+                            <b>
+                            themes</b>
+                            <a href="#themes"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>[]</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>[
+    { value: &#x27;DEFAULT-THEME&#x27;, label: &#x27;blue&#x27; },
+    { value: &#x27;LIGHT-THEME&#x27;, label: &#x27;light&#x27; },
+    { value: &#x27;NATURE-THEME&#x27;, label: &#x27;nature&#x27; },
+    { value: &#x27;BLACK-THEME&#x27;, label: &#x27;dark&#x27; }
+  ]</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">projects/web-mev/src/app/features/settings/settings/settings-container.component.ts:28</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit, ChangeDetectionStrategy } from &#x27;@angular/core&#x27;;
+import { Store, select } from &#x27;@ngrx/store&#x27;;
+import { Observable } from &#x27;rxjs&#x27;;
+
+import { ROUTE_ANIMATIONS_ELEMENTS } from &#x27;../../../core/core.module&#x27;;
+
+import {
+  actionSettingsChangeAnimationsElements,
+  actionSettingsChangeAnimationsPage,
+  actionSettingsChangeAutoNightMode,
+  actionSettingsChangeLanguage,
+  actionSettingsChangeTheme,
+  actionSettingsChangeStickyHeader
+} from &#x27;../../../core/settings/settings.actions&#x27;;
+import { SettingsState, State } from &#x27;../../../core/settings/settings.model&#x27;;
+import { selectSettings } from &#x27;../../../core/settings/settings.selectors&#x27;;
+
+@Component({
+  selector: &#x27;mev-settings&#x27;,
+  templateUrl: &#x27;./settings-container.component.html&#x27;,
+  styleUrls: [&#x27;./settings-container.component.scss&#x27;],
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class SettingsContainerComponent implements OnInit {
+  routeAnimationsElements &#x3D; ROUTE_ANIMATIONS_ELEMENTS;
+  settings$: Observable&lt;SettingsState&gt;;
+
+  themes &#x3D; [
+    { value: &#x27;DEFAULT-THEME&#x27;, label: &#x27;blue&#x27; },
+    { value: &#x27;LIGHT-THEME&#x27;, label: &#x27;light&#x27; },
+    { value: &#x27;NATURE-THEME&#x27;, label: &#x27;nature&#x27; },
+    { value: &#x27;BLACK-THEME&#x27;, label: &#x27;dark&#x27; }
+  ];
+
+  languages &#x3D; [
+    { value: &#x27;en&#x27;, label: &#x27;en&#x27; },
+    { value: &#x27;de&#x27;, label: &#x27;de&#x27; },
+    { value: &#x27;sk&#x27;, label: &#x27;sk&#x27; },
+    { value: &#x27;fr&#x27;, label: &#x27;fr&#x27; },
+    { value: &#x27;es&#x27;, label: &#x27;es&#x27; },
+    { value: &#x27;pt-br&#x27;, label: &#x27;pt-br&#x27; },
+    { value: &#x27;zh-cn&#x27;, label: &#x27;zh-cn&#x27; },
+    { value: &#x27;he&#x27;, label: &#x27;he&#x27; }
+  ];
+
+  constructor(private store: Store&lt;State&gt;) {}
+
+  ngOnInit() {
+    this.settings$ &#x3D; this.store.pipe(select(selectSettings));
+  }
+
+  onLanguageSelect({ value: language }) {
+    this.store.dispatch(actionSettingsChangeLanguage({ language }));
+  }
+
+  onThemeSelect({ value: theme }) {
+    this.store.dispatch(actionSettingsChangeTheme({ theme }));
+  }
+
+  onAutoNightModeToggle({ checked: autoNightMode }) {
+    this.store.dispatch(actionSettingsChangeAutoNightMode({ autoNightMode }));
+  }
+
+  onStickyHeaderToggle({ checked: stickyHeader }) {
+    this.store.dispatch(actionSettingsChangeStickyHeader({ stickyHeader }));
+  }
+
+  onPageAnimationsToggle({ checked: pageAnimations }) {
+    this.store.dispatch(actionSettingsChangeAnimationsPage({ pageAnimations }));
+  }
+
+  onElementsAnimationsToggle({ checked: elementsAnimations }) {
+    this.store.dispatch(
+      actionSettingsChangeAnimationsElements({ elementsAnimations })
+    );
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;container&quot;&gt;
+  &lt;div class&#x3D;&quot;row&quot;&gt;
+    &lt;div class&#x3D;&quot;col-sm-12&quot;&gt;&lt;h1&gt;{{ &#x27;mev.settings.title&#x27; | translate }}&lt;/h1&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;br&gt;
+  &lt;ng-container *ngIf&#x3D;&quot;settings$ | async as settings&quot;&gt;
+    &lt;div class&#x3D;&quot;row&quot;&gt;
+      &lt;div class&#x3D;&quot;col-md-6 group&quot; [ngClass]&#x3D;&quot;routeAnimationsElements&quot;&gt;
+        &lt;h2&gt;{{ &#x27;mev.settings.general.title&#x27; | translate }}&lt;/h2&gt;
+        &lt;div class&#x3D;&quot;icon-form-field&quot;&gt;
+          &lt;mat-icon color&#x3D;&quot;accent&quot;&gt;&lt;fa-icon icon&#x3D;&quot;language&quot; color&#x3D;&quot;accent&quot;&gt;&lt;/fa-icon&gt;&lt;/mat-icon&gt;
+          &lt;mat-form-field&gt;
+            &lt;mat-select [placeholder]&#x3D;&quot;&#x27;mev.settings.general.placeholder&#x27; | translate&quot;
+                        [ngModel]&#x3D;&quot;settings.language&quot;
+                        (selectionChange)&#x3D;&quot;onLanguageSelect($event)&quot;
+                        name&#x3D;&quot;language&quot;&gt;
+              &lt;mat-option *ngFor&#x3D;&quot;let l of languages&quot; [value]&#x3D;&quot;l.value&quot;&gt;
+                {{ &#x27;mev.settings.general.language.&#x27; + l.label | translate }}
+              &lt;/mat-option&gt;
+            &lt;/mat-select&gt;
+          &lt;/mat-form-field&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;icon-form-field&quot;&gt;
+           &lt;mat-icon color&#x3D;&quot;accent&quot;&gt;&lt;fa-icon icon&#x3D;&quot;bars&quot; color&#x3D;&quot;accent&quot;&gt;&lt;/fa-icon&gt;&lt;/mat-icon&gt;
+           &lt;mat-placeholder&gt;{{ &#x27;mev.settings.themes.sticky-header&#x27; | translate }}
+           &lt;/mat-placeholder&gt;
+           &lt;mat-slide-toggle
+             [checked]&#x3D;&quot;settings.stickyHeader&quot;
+             (change)&#x3D;&quot;onStickyHeaderToggle($event)&quot;&gt;
+           &lt;/mat-slide-toggle&gt;
+         &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class&#x3D;&quot;row&quot;&gt;
+      &lt;div class&#x3D;&quot;col-md-6 group&quot; [ngClass]&#x3D;&quot;routeAnimationsElements&quot;&gt;
+        &lt;h2&gt;{{ &#x27;mev.settings.themes.title&#x27; | translate }}&lt;/h2&gt;
+        &lt;div class&#x3D;&quot;icon-form-field&quot;&gt;
+          &lt;mat-icon color&#x3D;&quot;accent&quot;&gt;&lt;fa-icon icon&#x3D;&quot;paint-brush&quot; color&#x3D;&quot;accent&quot;&gt;&lt;/fa-icon&gt;&lt;/mat-icon&gt;
+          &lt;mat-form-field&gt;
+            &lt;mat-select [placeholder]&#x3D;&quot;&#x27;mev.settings.themes.placeholder&#x27; | translate&quot;
+                        [ngModel]&#x3D;&quot;settings.theme&quot;
+                        (selectionChange)&#x3D;&quot;onThemeSelect($event)&quot;
+                        name&#x3D;&quot;themes&quot;&gt;
+              &lt;mat-option *ngFor&#x3D;&quot;let t of themes&quot; [value]&#x3D;&quot;t.value&quot;&gt;
+                {{ &#x27;mev.settings.themes.&#x27; + t.label | translate }}
+              &lt;/mat-option&gt;
+            &lt;/mat-select&gt;
+          &lt;/mat-form-field&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;icon-form-field&quot;&gt;
+          &lt;mat-icon color&#x3D;&quot;accent&quot;&gt;&lt;fa-icon icon&#x3D;&quot;lightbulb&quot; color&#x3D;&quot;accent&quot;&gt;&lt;/fa-icon&gt;&lt;/mat-icon&gt;
+          &lt;mat-placeholder&gt;{{ &#x27;mev.settings.themes.night-mode&#x27; | translate }}
+          &lt;/mat-placeholder&gt;
+          &lt;mat-slide-toggle
+            [checked]&#x3D;&quot;settings.autoNightMode&quot;
+            (change)&#x3D;&quot;onAutoNightModeToggle($event)&quot;&gt;
+          &lt;/mat-slide-toggle&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class&#x3D;&quot;col-md-6 group&quot; [ngClass]&#x3D;&quot;routeAnimationsElements&quot;&gt;
+        &lt;h2&gt;{{ &#x27;mev.settings.animations.title&#x27; | translate }}&lt;/h2&gt;
+        &lt;div class&#x3D;&quot;icon-form-field&quot;&gt;
+          &lt;mat-icon color&#x3D;&quot;accent&quot;&gt;&lt;mat-icon color&#x3D;&quot;accent&quot;&gt;&lt;fa-icon icon&#x3D;&quot;window-maximize&quot;&gt;&lt;/fa-icon&gt;&lt;/mat-icon&gt;&lt;/mat-icon&gt;
+          &lt;mat-placeholder&gt;{{ &#x27;mev.settings.animations.page&#x27; | translate }}
+          &lt;/mat-placeholder&gt;
+          &lt;mat-slide-toggle
+            matTooltip&#x3D;&quot;Sorry, this feature is disabled in IE, EDGE and Safari&quot;
+            matTooltipPosition&#x3D;&quot;before&quot;
+            *ngIf&#x3D;&quot;settings.pageAnimationsDisabled&quot;
+            disabled&gt;
+          &lt;/mat-slide-toggle&gt;
+          &lt;mat-slide-toggle
+            *ngIf&#x3D;&quot;!settings.pageAnimationsDisabled&quot;
+            [checked]&#x3D;&quot;settings.pageAnimations&quot;
+            (change)&#x3D;&quot;onPageAnimationsToggle($event)&quot;&gt;
+          &lt;/mat-slide-toggle&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;icon-form-field&quot;&gt;
+          &lt;mat-icon color&#x3D;&quot;accent&quot;&gt;&lt;fa-icon icon&#x3D;&quot;stream&quot; color&#x3D;&quot;accent&quot;&gt;&lt;/fa-icon&gt;&lt;/mat-icon&gt;
+          &lt;mat-placeholder&gt;{{ &#x27;mev.settings.animations.elements&#x27; | translate }}
+          &lt;/mat-placeholder&gt;
+          &lt;mat-slide-toggle
+            [checked]&#x3D;&quot;settings.elementsAnimations&quot;
+            (change)&#x3D;&quot;onElementsAnimationsToggle($event)&quot;&gt;
+          &lt;/mat-slide-toggle&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/ng-container&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./settings-container.component.scss</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">.container {
+  margin-top: 20px;
+}
+
+h1 {
+  margin: 0 0 20px 0;
+  text-transform: uppercase;
+}
+
+h2 {
+  margin: 0 0 10px 0;
+  text-transform: uppercase;
+}
+
+.group {
+  margin: 0 0 40px 0;
+}
+
+.icon-form-field {
+  position: relative;
+  display: flex;
+  height: 65.5px;
+  align-items: center;
+
+  mat-placeholder {
+    flex: 2 1 auto;
+  }
+}
+
+mat-icon {
+  margin: 0 6px 6px 0;
+  font-size: 20px;
+}
+
+mat-form-field {
+  flex: 1 0 auto;
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="container">  <div class="row">    <div class="col-sm-12"><h1>{{ \'mev.settings.title\' | translate }}</h1></div>  </div>  <br>  <ng-container *ngIf="settings$ | async as settings">    <div class="row">      <div class="col-md-6 group" [ngClass]="routeAnimationsElements">        <h2>{{ \'mev.settings.general.title\' | translate }}</h2>        <div class="icon-form-field">          <mat-icon color="accent"><fa-icon icon="language" color="accent"></fa-icon></mat-icon>          <mat-form-field>            <mat-select [placeholder]="\'mev.settings.general.placeholder\' | translate"                        [ngModel]="settings.language"                        (selectionChange)="onLanguageSelect($event)"                        name="language">              <mat-option *ngFor="let l of languages" [value]="l.value">                {{ \'mev.settings.general.language.\' + l.label | translate }}              </mat-option>            </mat-select>          </mat-form-field>        </div>        <div class="icon-form-field">           <mat-icon color="accent"><fa-icon icon="bars" color="accent"></fa-icon></mat-icon>           <mat-placeholder>{{ \'mev.settings.themes.sticky-header\' | translate }}           </mat-placeholder>           <mat-slide-toggle             [checked]="settings.stickyHeader"             (change)="onStickyHeaderToggle($event)">           </mat-slide-toggle>         </div>      </div>    </div>    <div class="row">      <div class="col-md-6 group" [ngClass]="routeAnimationsElements">        <h2>{{ \'mev.settings.themes.title\' | translate }}</h2>        <div class="icon-form-field">          <mat-icon color="accent"><fa-icon icon="paint-brush" color="accent"></fa-icon></mat-icon>          <mat-form-field>            <mat-select [placeholder]="\'mev.settings.themes.placeholder\' | translate"                        [ngModel]="settings.theme"                        (selectionChange)="onThemeSelect($event)"                        name="themes">              <mat-option *ngFor="let t of themes" [value]="t.value">                {{ \'mev.settings.themes.\' + t.label | translate }}              </mat-option>            </mat-select>          </mat-form-field>        </div>        <div class="icon-form-field">          <mat-icon color="accent"><fa-icon icon="lightbulb" color="accent"></fa-icon></mat-icon>          <mat-placeholder>{{ \'mev.settings.themes.night-mode\' | translate }}          </mat-placeholder>          <mat-slide-toggle            [checked]="settings.autoNightMode"            (change)="onAutoNightModeToggle($event)">          </mat-slide-toggle>        </div>      </div>      <div class="col-md-6 group" [ngClass]="routeAnimationsElements">        <h2>{{ \'mev.settings.animations.title\' | translate }}</h2>        <div class="icon-form-field">          <mat-icon color="accent"><mat-icon color="accent"><fa-icon icon="window-maximize"></fa-icon></mat-icon></mat-icon>          <mat-placeholder>{{ \'mev.settings.animations.page\' | translate }}          </mat-placeholder>          <mat-slide-toggle            matTooltip="Sorry, this feature is disabled in IE, EDGE and Safari"            matTooltipPosition="before"            *ngIf="settings.pageAnimationsDisabled"            disabled>          </mat-slide-toggle>          <mat-slide-toggle            *ngIf="!settings.pageAnimationsDisabled"            [checked]="settings.pageAnimations"            (change)="onPageAnimationsToggle($event)">          </mat-slide-toggle>        </div>        <div class="icon-form-field">          <mat-icon color="accent"><fa-icon icon="stream" color="accent"></fa-icon></mat-icon>          <mat-placeholder>{{ \'mev.settings.animations.elements\' | translate }}          </mat-placeholder>          <mat-slide-toggle            [checked]="settings.elementsAnimations"            (change)="onElementsAnimationsToggle($event)">          </mat-slide-toggle>        </div>      </div>    </div>  </ng-container></div></div>'
+    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'mev-about'},{'name': 'AddDialogComponent', 'selector': 'mev-add-dialog'},{'name': 'AddDialogComponent', 'selector': 'mev-add-dialog'},{'name': 'AddDialogComponent', 'selector': 'mev-add-dialog'},{'name': 'AlertComponent', 'selector': 'mev-alert'},{'name': 'AppComponent', 'selector': 'mev-root'},{'name': 'BigInputActionComponent', 'selector': 'mev-big-input-action'},{'name': 'BigInputComponent', 'selector': 'mev-big-input'},{'name': 'DeleteDialogComponent', 'selector': 'mev-delete-dialog'},{'name': 'DeleteDialogComponent', 'selector': 'mev-delete-dialog'},{'name': 'DeleteDialogComponent', 'selector': 'mev-delete-dialog'},{'name': 'EditDialogComponent', 'selector': 'mev-edit-dialog'},{'name': 'EditDialogComponent', 'selector': 'mev-edit-dialog'},{'name': 'FileListComponent', 'selector': 'mev-file-list'},{'name': 'LoginComponent', 'selector': 'mev-login-form'},{'name': 'ProgressSnackbarComponent', 'selector': 'mev-progress-snackbar'},{'name': 'RegisterComponent', 'selector': 'mev-register-form'},{'name': 'RequestPasswordResetComponent', 'selector': 'mev-request-password-reset'},{'name': 'ResponsePasswordResetComponent', 'selector': 'mev-response-password-reset'},{'name': 'SettingsContainerComponent', 'selector': 'mev-settings'},{'name': 'TutorialComponent', 'selector': 'mev-tutorial'},{'name': 'WorkareaComponent', 'selector': 'mev-workarea'},{'name': 'WorkspaceDetailComponent', 'selector': 'mev-workspace-detail'},{'name': 'WorkspaceListComponent', 'selector': 'mev-workspace-list'}];
+    var DIRECTIVES = [{'name': 'RtlSupportDirective', 'selector': '[rtl]'}];
+    var ACTUAL_COMPONENT = {'name': 'SettingsContainerComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+                   
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'SettingsContainerComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

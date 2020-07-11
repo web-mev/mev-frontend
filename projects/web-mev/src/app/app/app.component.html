@@ -10,7 +10,6 @@
            routerLinkActive="active">
           {{item.label | translate}}
         </a>
-        <a mat-list-item routerLink="/activity" routerLinkActive="active">Crisis Center</a>
         <a mat-list-item href="https://github.com/dfci-cccb/mev/issues" target="_blank" rel="noopener noreferrer">
           Github
         </a>
@@ -84,6 +83,14 @@
               </mat-icon>
               <span>{{ 'mev.menu.logout' | translate }}</span>
             </button>
+
+            <button mat-menu-item routerLink="/change-password">
+              <mat-icon>
+                <fa-icon icon="lock"></fa-icon>
+              </mat-icon>
+              <span>Account security</span>
+            </button>
+
           </mat-menu>
           <button mat-icon-button routerLink="settings" class="d-none d-sm-inline">
             <fa-icon icon="cog"></fa-icon>

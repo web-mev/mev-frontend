@@ -8,6 +8,7 @@ import { AuthGuardService } from '@core/auth/auth-guard.service';
 import { WorkareaComponent } from '@features/workarea/workarea.component';
 import { WorkspaceDetailComponent } from '@features/workspace-detail/components/workspace-detail/workspace-detail.component';
 import { ResponsePasswordResetComponent } from './features/user/response-password-reset/response-password-reset.component';
+import { PasswordChangeComponent } from './features/user/password-change/password-change.component';
 
 const routes: Routes = [
   {
@@ -55,6 +56,10 @@ const routes: Routes = [
   {
     path: 'reset-password/:uid/:token',
     component: ResponsePasswordResetComponent
+  },
+  {
+    path: 'change-password',
+    component: PasswordChangeComponent
   },
   {
     path: '',

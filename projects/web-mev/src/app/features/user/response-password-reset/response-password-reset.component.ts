@@ -94,6 +94,7 @@ export class ResponsePasswordResetComponent implements OnInit {
           data => {
             this.responseResetForm.reset();
             this.IsResetFormValid = true;
+            this.errorMessage = null;
             this.successMessage =
               'Your password has been successfully updated. Redirecting to Sign-in page...';
             setTimeout(() => {

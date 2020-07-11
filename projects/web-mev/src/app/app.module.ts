@@ -33,6 +33,7 @@ import { WorkspaceDetailModule } from '@features/workspace-detail/workspace-deta
 import { HttpErrorInterceptor } from '@core/interceptors/http-error.interceptor';
 import { RequestPasswordResetComponent } from './features/user/request-password-reset/request-password-reset.component';
 import { ResponsePasswordResetComponent } from './features/user/response-password-reset/response-password-reset.component';
+import { PasswordChangeComponent } from './features/user/password-change/password-change.component';
 
 // export function jwtOptionsFactory(authService: AuthenticationService) {
 //   return {
@@ -85,7 +86,8 @@ import { ResponsePasswordResetComponent } from './features/user/response-passwor
     TutorialComponent,
     WorkareaComponent,
     RequestPasswordResetComponent,
-    ResponsePasswordResetComponent
+    ResponsePasswordResetComponent,
+    PasswordChangeComponent
   ],
   providers: [
     {

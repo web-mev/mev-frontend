@@ -8,7 +8,6 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class UserService {
-
   private readonly API_URL = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
@@ -22,15 +21,22 @@ export class UserService {
   }
 
   register(body): Observable<any> {
-    return this.http.post<any>(`${this.API_URL}/users/register/`, body)
+    return this.http.post<any>(`${this.API_URL}/users/register/`, body);
   }
 
   activate(body): Observable<any> {
-    return this.http.post<any>(`${this.API_URL}/users/activate/`, body)
+    return this.http.post<any>(`${this.API_URL}/users/activate/`, body);
+  }
+
+  changePassword(body): Observable<any> {
+    return this.http.post<any>(`${this.API_URL}/users/change-password/`, body);
   }
 
   update(user: User, id: number) {
-    return this.http.put<any>(`${this.API_URL}/users/${id}/`, JSON.stringify(user))
+    return this.http.put<any>(
+      `${this.API_URL}/users/${id}/`,
+      JSON.stringify(user)
+    );
   }
 
   delete(id: number) {

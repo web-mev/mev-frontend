@@ -1,17 +1,15 @@
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import {Component, ElementRef, Inject, ViewChild} from '@angular/core';
+import { Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { FileService } from '@file-manager/services/file-manager.service';
 import { FormControl, Validators } from '@angular/forms';
 import { FileType } from '@app/shared/models/file-type';
 
-
 @Component({
-  selector: 'mev-add-dialog',
-  templateUrl: './add-dialog.component.html',
-  styleUrls: ['./add-dialog.component.scss']
+  selector: 'mev-add-file-dialog',
+  templateUrl: './add-file-dialog.component.html',
+  styleUrls: ['./add-file-dialog.component.scss']
 })
-export class AddDialogComponent {
-
+export class AddFileDialogComponent {
   private formData: FormData = new FormData();
   private filesToUpload: any[] = [];
   public resourceTypes = Object.keys(FileType);
@@ -21,22 +19,18 @@ export class AddDialogComponent {
   public fileSelected: boolean;
 
   constructor(
-    public dialogRef: MatDialogRef<AddDialogComponent>,
+    public dialogRef: MatDialogRef<AddFileDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public fileService: FileService
-  ) {     
-  }
+  ) {}
 
   formControl = new FormControl('', [
     Validators.required
     // Validators.email,
   ]);
 
-
   getErrorMessage() {
-    return this.formControl.hasError('required')
-      ? 'Required field'
-      : '';
+    return this.formControl.hasError('required') ? 'Required field' : '';
   }
 
   submit() {
@@ -53,7 +47,6 @@ export class AddDialogComponent {
   }
 
   setFile(event) {
-
     const fileSizeTreshold = 524288000;
 
     this.filesToUpload = event.target.files;
@@ -70,16 +63,12 @@ export class AddDialogComponent {
       if (this.filesToUpload[i].size >= fileSizeTreshold) {
         this.isLargeFile = true;
       }
-      this.fileNames.push(this.filesToUpload[i].name);      
+      this.fileNames.push(this.filesToUpload[i].name);
     }
-    
   }
 
   public confirmAdd(): void {
     this.formData.append('resource_type', this.data.resource_type);
     this.fileService.addFile(this.formData, this.filesToUpload);
   }
-
-
-
 }

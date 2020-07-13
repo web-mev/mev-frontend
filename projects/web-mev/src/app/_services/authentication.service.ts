@@ -15,32 +15,12 @@ export class AuthenticationService {
   private readonly JWT_TOKEN = 'JWT_TOKEN';
   private readonly REFRESH_TOKEN = 'REFRESH_TOKEN';
 
-  // httpOptions = {
-  //   headers: new HttpHeaders({
-  //     'Content-Type': 'application/json'
-  //   })
-  // };
-
   constructor(private http: HttpClient) {
     this.currentUserSubject = new BehaviorSubject<User>(
       JSON.parse(localStorage.getItem(this.JWT_TOKEN))
     );
     this.currentUser = this.currentUserSubject.asObservable();
   }
-
-  // handleError(error: HttpErrorResponse) {
-  //   let errorMessage = 'Unknown error';
-  //
-  //   if (error.error instanceof ErrorEvent) {
-  //     // Client-side errors
-  //     errorMessage = `Error: ${error.error.message}`;
-  //   } else {
-  //     // Server-side errors
-  //     errorMessage = `Server Side Error! Code: ${error.status}\nMessage: ${error.message}`;
-  //   }
-  //   console.log(errorMessage);
-  //   return throwError(errorMessage);
-  // }
 
   public get currentUserValue(): User {
     return this.currentUserSubject.value;
@@ -106,12 +86,13 @@ export class AuthenticationService {
 
   googleSignInExternal(googleTokenId: string): Observable<any> {
     return this.http
-      .post<any>('TO DO!!  url to google login in your rest api', {
-        token: googleTokenId
+      .post<any>(`${this.API_URL}/users/social/google/`, {
+        access_token: googleTokenId
       })
       .pipe(
         map(token => {
           // login successful if there's a token in the response: {'refresh': '<REFRESH TOKEN>', 'access': '<ACCESS_TOKEN>'}
+
           if (token && token.access) {
             this.storeJwtToken(JSON.stringify(token.access));
             this.storeRefreshToken(JSON.stringify(token.refresh));

@@ -1,17 +1,16 @@
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Component, Inject } from '@angular/core';
-import { FileService} from '@file-manager/services/file-manager.service';
+import { FileService } from '@file-manager/services/file-manager.service';
 import { File } from '@app/shared/models/file';
 
-
 @Component({
-  selector: 'mev-delete-dialog',
-  templateUrl: './delete-dialog.component.html',
-  styleUrls: ['./delete-dialog.component.scss']
+  selector: 'mev-delete-file-dialog',
+  templateUrl: './delete-file-dialog.component.html',
+  styleUrls: ['./delete-file-dialog.component.scss']
 })
-export class DeleteDialogComponent {
+export class DeleteFileDialogComponent {
   constructor(
-    public dialogRef: MatDialogRef<DeleteDialogComponent>,
+    public dialogRef: MatDialogRef<DeleteFileDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: File,
     public fileService: FileService
   ) {}

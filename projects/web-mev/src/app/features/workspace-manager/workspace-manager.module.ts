@@ -3,17 +3,17 @@ import { CommonModule } from '@angular/common';
 
 import { WorkspaceManagerRoutingModule } from './workspace-manager-routing.module';
 import { WorkspaceListComponent } from './components/workspace-list/workspace-list.component';
-import { AddDialogComponent } from './components/dialogs/add-dialog/add-dialog.component';
-import { DeleteDialogComponent } from './components/dialogs/delete-dialog/delete-dialog.component';
-import { EditDialogComponent } from './components/dialogs/edit-dialog/edit-dialog.component';
+import { AddWSDialogComponent } from './components/dialogs/add-ws-dialog/add-ws-dialog.component';
+import { DeleteWSDialogComponent } from './components/dialogs/delete-ws-dialog/delete-ws-dialog.component';
+import { EditWSDialogComponent } from './components/dialogs/edit-ws-dialog/edit-ws-dialog.component';
 import { SharedModule } from '@app/shared/shared.module';
 
 @NgModule({
   declarations: [
     WorkspaceListComponent,
-    AddDialogComponent,
-    DeleteDialogComponent,
-    EditDialogComponent
+    AddWSDialogComponent,
+    DeleteWSDialogComponent,
+    EditWSDialogComponent
   ],
   exports: [WorkspaceListComponent],
   imports: [CommonModule, WorkspaceManagerRoutingModule, SharedModule]

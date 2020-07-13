@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddDialogComponent } from './add-dialog.component';
+import { EditWSDialogComponent } from './edit-ws-dialog.component';
 
-describe('AddDialogComponent', () => {
-  let component: AddDialogComponent;
-  let fixture: ComponentFixture<AddDialogComponent>;
+describe('EditWSDialogComponent', () => {
+  let component: EditWSDialogComponent;
+  let fixture: ComponentFixture<EditWSDialogComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [AddDialogComponent]
+      declarations: [EditWSDialogComponent]
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AddDialogComponent);
+    fixture = TestBed.createComponent(EditWSDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

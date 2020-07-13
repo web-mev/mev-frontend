@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
 
 import { NgModule } from '@angular/core';
 
@@ -35,16 +36,6 @@ import { RequestPasswordResetComponent } from './features/user/request-password-
 import { ResponsePasswordResetComponent } from './features/user/response-password-reset/response-password-reset.component';
 import { PasswordChangeComponent } from './features/user/password-change/password-change.component';
 
-// export function jwtOptionsFactory(authService: AuthenticationService) {
-//   return {
-//     tokenGetter: () => {
-//       return authService.getJwtToken();
-//     },
-//     whitelistedDomains: ['localhost:8000'],
-//     blacklistedRoutes: ['http://localhost:8000/api/token/']
-//   };
-// }
-
 @NgModule({
   imports: [
     // angular
@@ -53,6 +44,7 @@ import { PasswordChangeComponent } from './features/user/password-change/passwor
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    AngularMultiSelectModule,
 
     // core
     CoreModule,
@@ -113,7 +105,7 @@ import { PasswordChangeComponent } from './features/user/password-change/passwor
           {
             id: GoogleLoginProvider.PROVIDER_ID,
             provider: new GoogleLoginProvider(
-              '624796833023-clhjgupm0pu6vgga7k5i5bsfp6qp6egh.apps.googleusercontent.com' // 'Google ClientId here!!'
+              '816319738910-5sap8t0kva0hi9agpcg24ab07g9l54dh.apps.googleusercontent.com' // 'Google ClientId here'
             )
           }
         ]

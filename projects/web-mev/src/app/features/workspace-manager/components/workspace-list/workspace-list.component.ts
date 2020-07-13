@@ -9,10 +9,13 @@ import { MatSort } from '@angular/material/sort';
 
 import { NotificationService } from '@core/core.module';
 import { WorkspaceService } from '@workspace-manager/services/workspace.service';
-import { Workspace, WorkspaceAdapter } from '@workspace-manager/models/workspace';
-import { AddDialogComponent } from '@workspace-manager/components/dialogs/add-dialog/add-dialog.component';
-import { EditDialogComponent } from '@workspace-manager/components/dialogs/edit-dialog/edit-dialog.component';
-import { DeleteDialogComponent } from '@workspace-manager/components/dialogs/delete-dialog/delete-dialog.component';
+import {
+  Workspace,
+  WorkspaceAdapter
+} from '@workspace-manager/models/workspace';
+import { AddWSDialogComponent } from '@app/features/workspace-manager/components/dialogs/add-ws-dialog/add-ws-dialog.component';
+import { EditWSDialogComponent } from '@app/features/workspace-manager/components/dialogs/edit-ws-dialog/edit-ws-dialog.component';
+import { DeleteWSDialogComponent } from '@app/features/workspace-manager/components/dialogs/delete-ws-dialog/delete-ws-dialog.component';
 
 @Component({
   selector: 'mev-workspace-list',
@@ -52,7 +55,7 @@ export class WorkspaceListComponent implements OnInit {
   }
 
   addItem() {
-    const dialogRef = this.dialog.open(AddDialogComponent, {
+    const dialogRef = this.dialog.open(AddWSDialogComponent, {
       data: { workspace: Workspace }
     });
 
@@ -70,13 +73,12 @@ export class WorkspaceListComponent implements OnInit {
 
   editItem(i: number, id: string, workspace_name: string) {
     this.id = id;
-    const dialogRef = this.dialog.open(EditDialogComponent, {
+    const dialogRef = this.dialog.open(EditWSDialogComponent, {
       data: { id: id, workspace_name: workspace_name }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === 1) {
-
         // When using an edit things are little different, firstly we find record inside WorkspaceService by id
         const foundIndex = this.exampleDatabase.dataChange.value.findIndex(
           x => x.id === this.id
@@ -87,14 +89,14 @@ export class WorkspaceListComponent implements OnInit {
         ] = this.workspaceService.getDialogData();
         // And lastly refresh table
 
-        this.refresh(); 
+        this.refresh();
       }
     });
   }
 
   deleteItem(i: number, id: string, workspace_name: string) {
     this.id = id;
-    const dialogRef = this.dialog.open(DeleteDialogComponent, {
+    const dialogRef = this.dialog.open(DeleteWSDialogComponent, {
       data: { id: id, workspace_name: workspace_name }
     });
 
@@ -105,7 +107,7 @@ export class WorkspaceListComponent implements OnInit {
         );
         // for delete we use splice in order to remove single object from WorkspaceService
         this.exampleDatabase.dataChange.value.splice(foundIndex, 1);
-        this.refresh(); 
+        this.refresh();
       }
     });
   }

@@ -30,7 +30,8 @@
             ],
             "styles": [
               "projects/web-mev/src/styles-app-loading.scss",
-              "projects/web-mev/src/styles.scss"
+              "projects/web-mev/src/styles.scss",
+              "projects/web-mev/src/angular2-multiselect-dropdow-default.theme.css"
             ],
             "scripts": []
           },

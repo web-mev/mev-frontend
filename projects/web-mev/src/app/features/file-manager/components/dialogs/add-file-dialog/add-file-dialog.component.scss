@@ -8,6 +8,10 @@
   width: 100%;
 }
 
+.mat-dialog-title {
+  font-size: 16px;
+}
+
 .mat-dialog-content {
   max-height: none;
   overflow: visible;
@@ -15,6 +19,7 @@
 
 .form {
   display: flex;
+  flex-direction: column;
   padding-top: 6px;
 }
 
@@ -23,4 +28,20 @@
   flex-grow: 1;
 }
 
-/*# sourceMappingURL=edit-dialog.component.css.map */
+.upload-button {
+  max-height: 36px;
+}
+
+.upload-button {
+  max-width: 200px;
+}
+
+.upload-info {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.upload-warning {
+  color: red;
+  font-weight: bold;
+}

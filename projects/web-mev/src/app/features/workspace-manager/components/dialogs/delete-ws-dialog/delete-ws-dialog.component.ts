@@ -3,13 +3,13 @@ import { Component, Inject } from '@angular/core';
 import { WorkspaceService } from '@workspace-manager/services/workspace.service';
 
 @Component({
-  selector: 'mev-delete-dialog',
-  templateUrl: './delete-dialog.component.html',
-  styleUrls: ['./delete-dialog.component.scss']
+  selector: 'mev-delete-ws-dialog',
+  templateUrl: './delete-ws-dialog.component.html',
+  styleUrls: ['./delete-ws-dialog.component.scss']
 })
-export class DeleteDialogComponent {
+export class DeleteWSDialogComponent {
   constructor(
-    public dialogRef: MatDialogRef<DeleteDialogComponent>,
+    public dialogRef: MatDialogRef<DeleteWSDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public workspaceService: WorkspaceService
   ) {}

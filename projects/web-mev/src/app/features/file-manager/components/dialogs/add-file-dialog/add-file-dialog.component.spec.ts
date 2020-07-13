@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddDialogComponent } from './add-dialog.component';
+import { AddFileDialogComponent } from './add-file-dialog.component';
 
-describe('AddDialogComponent', () => {
-  let component: AddDialogComponent;
-  let fixture: ComponentFixture<AddDialogComponent>;
+describe('AddFileDialogComponent', () => {
+  let component: AddFileDialogComponent;
+  let fixture: ComponentFixture<AddFileDialogComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [AddDialogComponent]
+      declarations: [AddFileDialogComponent]
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AddDialogComponent);
+    fixture = TestBed.createComponent(AddFileDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

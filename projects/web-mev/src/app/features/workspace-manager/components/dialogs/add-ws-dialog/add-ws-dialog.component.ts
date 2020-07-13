@@ -5,13 +5,13 @@ import { FormControl, Validators } from '@angular/forms';
 import { Workspace } from '@workspace-manager/models/workspace';
 
 @Component({
-  selector: 'mev-add-dialog',
-  templateUrl: './add-dialog.component.html',
-  styleUrls: ['./add-dialog.component.scss']
+  selector: 'mev-add-ws-dialog',
+  templateUrl: './add-ws-dialog.component.html',
+  styleUrls: ['./add-ws-dialog.component.scss']
 })
-export class AddDialogComponent {
+export class AddWSDialogComponent {
   constructor(
-    public dialogRef: MatDialogRef<AddDialogComponent>,
+    public dialogRef: MatDialogRef<AddWSDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Workspace,
     public workspaceService: WorkspaceService
   ) {}

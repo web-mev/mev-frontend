@@ -1,23 +1,18 @@
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Component, Inject } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { FileService } from '@file-manager/services/file-manager.service';
-import { FileType } from '@app/shared/models/file-type';
-
+import { WorkspaceService } from '@workspace-manager/services/workspace.service';
 @Component({
-  selector: 'mev-edit-dialog',
-  templateUrl: './edit-dialog.component.html',
-  styleUrls: ['./edit-dialog.component.scss']
+  selector: 'mev-edit-ws-dialog',
+  templateUrl: './edit-ws-dialog.component.html',
+  styleUrls: ['./edit-ws-dialog.component.scss']
 })
-export class EditDialogComponent {
-  public resourceTypes = FileType;
-  public resourceTypeKeys = Object.keys(FileType);
-
+export class EditWSDialogComponent {
   constructor(
-    public dialogRef: MatDialogRef<EditDialogComponent>,
+    public dialogRef: MatDialogRef<EditWSDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    public fileService: FileService
-  ) { }
+    public workspaceService: WorkspaceService
+  ) {}
 
   formControl = new FormControl('', [
     Validators.required
@@ -28,8 +23,8 @@ export class EditDialogComponent {
     return this.formControl.hasError('required')
       ? 'Required field'
       : this.formControl.hasError('email')
-        ? 'Not a valid email'
-        : '';
+      ? 'Not a valid email'
+      : '';
   }
 
   submit() {
@@ -41,6 +36,6 @@ export class EditDialogComponent {
   }
 
   stopEdit(): void {
-    this.fileService.updateFile(this.data);
+    this.workspaceService.updateWorkspace(this.data);
   }
 }

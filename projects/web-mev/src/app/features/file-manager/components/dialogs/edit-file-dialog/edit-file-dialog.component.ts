@@ -1,17 +1,22 @@
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Component, Inject } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { WorkspaceService } from '@workspace-manager/services/workspace.service';
+import { FileService } from '@file-manager/services/file-manager.service';
+import { FileType } from '@app/shared/models/file-type';
+
 @Component({
-  selector: 'mev-edit-dialog',
-  templateUrl: './edit-dialog.component.html',
-  styleUrls: ['./edit-dialog.component.scss']
+  selector: 'mev-edit-file-dialog',
+  templateUrl: './edit-file-dialog.component.html',
+  styleUrls: ['./edit-file-dialog.component.scss']
 })
-export class EditDialogComponent {
+export class EditFileDialogComponent {
+  public resourceTypes = FileType;
+  public resourceTypeKeys = Object.keys(FileType);
+
   constructor(
-    public dialogRef: MatDialogRef<EditDialogComponent>,
+    public dialogRef: MatDialogRef<EditFileDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    public workspaceService: WorkspaceService
+    public fileService: FileService
   ) {}
 
   formControl = new FormControl('', [
@@ -36,6 +41,6 @@ export class EditDialogComponent {
   }
 
   stopEdit(): void {
-    this.workspaceService.updateWorkspace(this.data);
+    this.fileService.updateFile(this.data);
   }
 }

@@ -190,10 +190,9 @@ import {
   routeAnimations
 } from &#x27;./animations/route.animations&#x27;;
 import { AnimationsService } from &#x27;./animations/animations.service&#x27;;
-import { AppErrorHandler } from &#x27;./error-handler/app-error-handler.service&#x27;;
 import { CustomSerializer } from &#x27;./router/custom-serializer&#x27;;
 import { LocalStorageService } from &#x27;./local-storage/local-storage.service&#x27;;
-import { HttpErrorInterceptor} from &quot;@core/interceptors/http-error.interceptor&quot;;
+import { HttpErrorInterceptor } from &#x27;@core/interceptors/http-error.interceptor&#x27;;
 import { GoogleAnalyticsEffects } from &#x27;./google-analytics/google-analytics.effects&#x27;;
 import { NotificationService } from &#x27;./notifications/notification.service&#x27;;
 import { SettingsEffects } from &#x27;./settings/settings.effects&#x27;;
@@ -210,6 +209,7 @@ import {
   faBars,
   faRocket,
   faPowerOff,
+  faLock,
   faUserCircle,
   faPlayCircle
 } from &#x27;@fortawesome/free-solid-svg-icons&#x27;;
@@ -294,7 +294,6 @@ export function HttpLoaderFactory(http: HttpClient) {
   declarations: [],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
-    { provide: ErrorHandler, useClass: AppErrorHandler },
     { provide: RouterStateSerializer, useClass: CustomSerializer }
   ],
   exports: [
@@ -334,6 +333,7 @@ export class CoreModule {
       faBars,
       faRocket,
       faPowerOff,
+      faLock,
       faUserCircle,
       faPlayCircle,
       faGithub,

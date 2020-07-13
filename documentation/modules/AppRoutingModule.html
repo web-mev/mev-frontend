@@ -72,14 +72,15 @@
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { NgModule } from &#x27;@angular/core&#x27;;
 import { Routes, RouterModule, PreloadAllModules } from &#x27;@angular/router&#x27;;
-import { LoginComponent } from &#x27;@features/login/login.component&#x27;;
-import { RegisterComponent } from &#x27;@features/register/register.component&#x27;;
-import { RequestPasswordResetComponent } from &#x27;@features/request-password-reset/request-password-reset.component&#x27;;
+import { LoginComponent } from &#x27;@app/features/user/login/login.component&#x27;;
+import { RegisterComponent } from &#x27;@app/features/user/register/register.component&#x27;;
+import { RequestPasswordResetComponent } from &#x27;@app/features/user/request-password-reset/request-password-reset.component&#x27;;
 import { TutorialComponent } from &#x27;@features/tutorial/tutorial.component&#x27;;
 import { AuthGuardService } from &#x27;@core/auth/auth-guard.service&#x27;;
 import { WorkareaComponent } from &#x27;@features/workarea/workarea.component&#x27;;
 import { WorkspaceDetailComponent } from &#x27;@features/workspace-detail/components/workspace-detail/workspace-detail.component&#x27;;
-import { ResponsePasswordResetComponent } from &#x27;./features/response-password-reset/response-password-reset.component&#x27;;
+import { ResponsePasswordResetComponent } from &#x27;./features/user/response-password-reset/response-password-reset.component&#x27;;
+import { PasswordChangeComponent } from &#x27;./features/user/password-change/password-change.component&#x27;;
 
 const routes: Routes &#x3D; [
   {
@@ -129,6 +130,10 @@ const routes: Routes &#x3D; [
     component: ResponsePasswordResetComponent
   },
   {
+    path: &#x27;change-password&#x27;,
+    component: PasswordChangeComponent
+  },
+  {
     path: &#x27;&#x27;,
     redirectTo: &#x27;about&#x27;,
     pathMatch: &#x27;full&#x27;
@@ -151,7 +156,7 @@ const routes: Routes &#x3D; [
   ],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
 </code></pre>
     </div>
 </div>

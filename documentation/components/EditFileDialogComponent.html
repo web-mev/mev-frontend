@@ -627,7 +627,7 @@ export class EditFileDialogComponent {
     public dialogRef: MatDialogRef&lt;EditFileDialogComponent&gt;,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public fileService: FileService
-  ) { }
+  ) {}
 
   formControl &#x3D; new FormControl(&#x27;&#x27;, [
     Validators.required
@@ -638,8 +638,8 @@ export class EditFileDialogComponent {
     return this.formControl.hasError(&#x27;required&#x27;)
       ? &#x27;Required field&#x27;
       : this.formControl.hasError(&#x27;email&#x27;)
-        ? &#x27;Not a valid email&#x27;
-        : &#x27;&#x27;;
+      ? &#x27;Not a valid email&#x27;
+      : &#x27;&#x27;;
   }
 
   submit() {

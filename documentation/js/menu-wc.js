@@ -86,13 +86,13 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="modules/AppModule.html" data-type="entity-link">AppModule</a>
                                     <li class="chapter inner">
                                         <div class="simple menu-toggler" data-toggle="collapse" ${ isNormalMode ?
-                                            'data-target="#components-links-module-AppModule-c84195466506933799b4716e326a0573"' : 'data-target="#xs-components-links-module-AppModule-c84195466506933799b4716e326a0573"' }>
+                                            'data-target="#components-links-module-AppModule-d5a9b267b478b34a7e219f5a65162984"' : 'data-target="#xs-components-links-module-AppModule-d5a9b267b478b34a7e219f5a65162984"' }>
                                             <span class="icon ion-md-cog"></span>
                                             <span>Components</span>
                                             <span class="icon ion-ios-arrow-down"></span>
                                         </div>
-                                        <ul class="links collapse" ${ isNormalMode ? 'id="components-links-module-AppModule-c84195466506933799b4716e326a0573"' :
-                                            'id="xs-components-links-module-AppModule-c84195466506933799b4716e326a0573"' }>
+                                        <ul class="links collapse" ${ isNormalMode ? 'id="components-links-module-AppModule-d5a9b267b478b34a7e219f5a65162984"' :
+                                            'id="xs-components-links-module-AppModule-d5a9b267b478b34a7e219f5a65162984"' }>
                                             <li class="link">
                                                 <a href="components/AppComponent.html"
                                                     data-type="entity-link" data-context="sub-entity" data-context-id="modules">AppComponent</a>
@@ -100,6 +100,10 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                             <li class="link">
                                                 <a href="components/LoginComponent.html"
                                                     data-type="entity-link" data-context="sub-entity" data-context-id="modules">LoginComponent</a>
+                                            </li>
+                                            <li class="link">
+                                                <a href="components/PasswordChangeComponent.html"
+                                                    data-type="entity-link" data-context="sub-entity" data-context-id="modules">PasswordChangeComponent</a>
                                             </li>
                                             <li class="link">
                                                 <a href="components/RegisterComponent.html"
@@ -123,21 +127,6 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                             </li>
                                         </ul>
                                     </li>
-                                <li class="chapter inner">
-                                    <div class="simple menu-toggler" data-toggle="collapse" ${ isNormalMode ?
-                                        'data-target="#injectables-links-module-AppModule-c84195466506933799b4716e326a0573"' : 'data-target="#xs-injectables-links-module-AppModule-c84195466506933799b4716e326a0573"' }>
-                                        <span class="icon ion-md-arrow-round-down"></span>
-                                        <span>Injectables</span>
-                                        <span class="icon ion-ios-arrow-down"></span>
-                                    </div>
-                                    <ul class="links collapse" ${ isNormalMode ? 'id="injectables-links-module-AppModule-c84195466506933799b4716e326a0573"' :
-                                        'id="xs-injectables-links-module-AppModule-c84195466506933799b4716e326a0573"' }>
-                                        <li class="link">
-                                            <a href="injectables/AuthService.html"
-                                                data-type="entity-link" data-context="sub-entity" data-context-id="modules" }>AuthService</a>
-                                        </li>
-                                    </ul>
-                                </li>
                             </li>
                             <li class="link">
                                 <a href="modules/AppRoutingModule.html" data-type="entity-link">AppRoutingModule</a>
@@ -149,24 +138,24 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="modules/FileManagerModule.html" data-type="entity-link">FileManagerModule</a>
                                     <li class="chapter inner">
                                         <div class="simple menu-toggler" data-toggle="collapse" ${ isNormalMode ?
-                                            'data-target="#components-links-module-FileManagerModule-90e14600236552caeada97eb6544be0a"' : 'data-target="#xs-components-links-module-FileManagerModule-90e14600236552caeada97eb6544be0a"' }>
+                                            'data-target="#components-links-module-FileManagerModule-3ec6ae986709c19403b5347333470b73"' : 'data-target="#xs-components-links-module-FileManagerModule-3ec6ae986709c19403b5347333470b73"' }>
                                             <span class="icon ion-md-cog"></span>
                                             <span>Components</span>
                                             <span class="icon ion-ios-arrow-down"></span>
                                         </div>
-                                        <ul class="links collapse" ${ isNormalMode ? 'id="components-links-module-FileManagerModule-90e14600236552caeada97eb6544be0a"' :
-                                            'id="xs-components-links-module-FileManagerModule-90e14600236552caeada97eb6544be0a"' }>
+                                        <ul class="links collapse" ${ isNormalMode ? 'id="components-links-module-FileManagerModule-3ec6ae986709c19403b5347333470b73"' :
+                                            'id="xs-components-links-module-FileManagerModule-3ec6ae986709c19403b5347333470b73"' }>
                                             <li class="link">
-                                                <a href="components/AddDialogComponent.html"
-                                                    data-type="entity-link" data-context="sub-entity" data-context-id="modules">AddDialogComponent</a>
+                                                <a href="components/AddFileDialogComponent.html"
+                                                    data-type="entity-link" data-context="sub-entity" data-context-id="modules">AddFileDialogComponent</a>
                                             </li>
                                             <li class="link">
-                                                <a href="components/DeleteDialogComponent.html"
-                                                    data-type="entity-link" data-context="sub-entity" data-context-id="modules">DeleteDialogComponent</a>
+                                                <a href="components/DeleteFileDialogComponent.html"
+                                                    data-type="entity-link" data-context="sub-entity" data-context-id="modules">DeleteFileDialogComponent</a>
                                             </li>
                                             <li class="link">
-                                                <a href="components/EditDialogComponent.html"
-                                                    data-type="entity-link" data-context="sub-entity" data-context-id="modules">EditDialogComponent</a>
+                                                <a href="components/EditFileDialogComponent.html"
+                                                    data-type="entity-link" data-context="sub-entity" data-context-id="modules">EditFileDialogComponent</a>
                                             </li>
                                             <li class="link">
                                                 <a href="components/FileListComponent.html"
@@ -180,13 +169,13 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                     </li>
                                     <li class="chapter inner">
                                         <div class="simple menu-toggler" data-toggle="collapse" ${ isNormalMode ?
-                                            'data-target="#pipes-links-module-FileManagerModule-90e14600236552caeada97eb6544be0a"' : 'data-target="#xs-pipes-links-module-FileManagerModule-90e14600236552caeada97eb6544be0a"' }>
+                                            'data-target="#pipes-links-module-FileManagerModule-3ec6ae986709c19403b5347333470b73"' : 'data-target="#xs-pipes-links-module-FileManagerModule-3ec6ae986709c19403b5347333470b73"' }>
                                             <span class="icon ion-md-add"></span>
                                             <span>Pipes</span>
                                             <span class="icon ion-ios-arrow-down"></span>
                                         </div>
-                                        <ul class="links collapse" ${ isNormalMode ? 'id="pipes-links-module-FileManagerModule-90e14600236552caeada97eb6544be0a"' :
-                                            'id="xs-pipes-links-module-FileManagerModule-90e14600236552caeada97eb6544be0a"' }>
+                                        <ul class="links collapse" ${ isNormalMode ? 'id="pipes-links-module-FileManagerModule-3ec6ae986709c19403b5347333470b73"' :
+                                            'id="xs-pipes-links-module-FileManagerModule-3ec6ae986709c19403b5347333470b73"' }>
                                             <li class="link">
                                                 <a href="pipes/ByteNamePipe.html"
                                                     data-type="entity-link" data-context="sub-entity" data-context-id="modules">ByteNamePipe</a>
@@ -220,38 +209,15 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="modules/SharedModule.html" data-type="entity-link">SharedModule</a>
-                                    <li class="chapter inner">
-                                        <div class="simple menu-toggler" data-toggle="collapse" ${ isNormalMode ?
-                                            'data-target="#components-links-module-SharedModule-fa0049eefcf278fe7ef0bc5601dfd2d8"' : 'data-target="#xs-components-links-module-SharedModule-fa0049eefcf278fe7ef0bc5601dfd2d8"' }>
-                                            <span class="icon ion-md-cog"></span>
-                                            <span>Components</span>
-                                            <span class="icon ion-ios-arrow-down"></span>
-                                        </div>
-                                        <ul class="links collapse" ${ isNormalMode ? 'id="components-links-module-SharedModule-fa0049eefcf278fe7ef0bc5601dfd2d8"' :
-                                            'id="xs-components-links-module-SharedModule-fa0049eefcf278fe7ef0bc5601dfd2d8"' }>
-                                            <li class="link">
-                                                <a href="components/AlertComponent.html"
-                                                    data-type="entity-link" data-context="sub-entity" data-context-id="modules">AlertComponent</a>
-                                            </li>
-                                            <li class="link">
-                                                <a href="components/BigInputActionComponent.html"
-                                                    data-type="entity-link" data-context="sub-entity" data-context-id="modules">BigInputActionComponent</a>
-                                            </li>
-                                            <li class="link">
-                                                <a href="components/BigInputComponent.html"
-                                                    data-type="entity-link" data-context="sub-entity" data-context-id="modules">BigInputComponent</a>
-                                            </li>
-                                        </ul>
-                                    </li>
                                 <li class="chapter inner">
                                     <div class="simple menu-toggler" data-toggle="collapse" ${ isNormalMode ?
-                                        'data-target="#directives-links-module-SharedModule-fa0049eefcf278fe7ef0bc5601dfd2d8"' : 'data-target="#xs-directives-links-module-SharedModule-fa0049eefcf278fe7ef0bc5601dfd2d8"' }>
+                                        'data-target="#directives-links-module-SharedModule-03c5d18cd7a805340c416d462fa0b318"' : 'data-target="#xs-directives-links-module-SharedModule-03c5d18cd7a805340c416d462fa0b318"' }>
                                         <span class="icon ion-md-code-working"></span>
                                         <span>Directives</span>
                                         <span class="icon ion-ios-arrow-down"></span>
                                     </div>
-                                    <ul class="links collapse" ${ isNormalMode ? 'id="directives-links-module-SharedModule-fa0049eefcf278fe7ef0bc5601dfd2d8"' :
-                                        'id="xs-directives-links-module-SharedModule-fa0049eefcf278fe7ef0bc5601dfd2d8"' }>
+                                    <ul class="links collapse" ${ isNormalMode ? 'id="directives-links-module-SharedModule-03c5d18cd7a805340c416d462fa0b318"' :
+                                        'id="xs-directives-links-module-SharedModule-03c5d18cd7a805340c416d462fa0b318"' }>
                                         <li class="link">
                                             <a href="directives/RtlSupportDirective.html"
                                                 data-type="entity-link" data-context="sub-entity" data-context-id="modules">RtlSupportDirective</a>
@@ -260,13 +226,13 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 </li>
                                     <li class="chapter inner">
                                         <div class="simple menu-toggler" data-toggle="collapse" ${ isNormalMode ?
-                                            'data-target="#pipes-links-module-SharedModule-fa0049eefcf278fe7ef0bc5601dfd2d8"' : 'data-target="#xs-pipes-links-module-SharedModule-fa0049eefcf278fe7ef0bc5601dfd2d8"' }>
+                                            'data-target="#pipes-links-module-SharedModule-03c5d18cd7a805340c416d462fa0b318"' : 'data-target="#xs-pipes-links-module-SharedModule-03c5d18cd7a805340c416d462fa0b318"' }>
                                             <span class="icon ion-md-add"></span>
                                             <span>Pipes</span>
                                             <span class="icon ion-ios-arrow-down"></span>
                                         </div>
-                                        <ul class="links collapse" ${ isNormalMode ? 'id="pipes-links-module-SharedModule-fa0049eefcf278fe7ef0bc5601dfd2d8"' :
-                                            'id="xs-pipes-links-module-SharedModule-fa0049eefcf278fe7ef0bc5601dfd2d8"' }>
+                                        <ul class="links collapse" ${ isNormalMode ? 'id="pipes-links-module-SharedModule-03c5d18cd7a805340c416d462fa0b318"' :
+                                            'id="xs-pipes-links-module-SharedModule-03c5d18cd7a805340c416d462fa0b318"' }>
                                             <li class="link">
                                                 <a href="pipes/ByteNamePipe.html"
                                                     data-type="entity-link" data-context="sub-entity" data-context-id="modules">ByteNamePipe</a>
@@ -278,13 +244,21 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="modules/WorkspaceDetailModule.html" data-type="entity-link">WorkspaceDetailModule</a>
                                     <li class="chapter inner">
                                         <div class="simple menu-toggler" data-toggle="collapse" ${ isNormalMode ?
-                                            'data-target="#components-links-module-WorkspaceDetailModule-40dd85fcee4e643d1e6a81be9b9cdcef"' : 'data-target="#xs-components-links-module-WorkspaceDetailModule-40dd85fcee4e643d1e6a81be9b9cdcef"' }>
+                                            'data-target="#components-links-module-WorkspaceDetailModule-8fcd1cd5816da7168321b7443f46406c"' : 'data-target="#xs-components-links-module-WorkspaceDetailModule-8fcd1cd5816da7168321b7443f46406c"' }>
                                             <span class="icon ion-md-cog"></span>
                                             <span>Components</span>
                                             <span class="icon ion-ios-arrow-down"></span>
                                         </div>
-                                        <ul class="links collapse" ${ isNormalMode ? 'id="components-links-module-WorkspaceDetailModule-40dd85fcee4e643d1e6a81be9b9cdcef"' :
-                                            'id="xs-components-links-module-WorkspaceDetailModule-40dd85fcee4e643d1e6a81be9b9cdcef"' }>
+                                        <ul class="links collapse" ${ isNormalMode ? 'id="components-links-module-WorkspaceDetailModule-8fcd1cd5816da7168321b7443f46406c"' :
+                                            'id="xs-components-links-module-WorkspaceDetailModule-8fcd1cd5816da7168321b7443f46406c"' }>
+                                            <li class="link">
+                                                <a href="components/AddDialogComponent.html"
+                                                    data-type="entity-link" data-context="sub-entity" data-context-id="modules">AddDialogComponent</a>
+                                            </li>
+                                            <li class="link">
+                                                <a href="components/DeleteDialogComponent.html"
+                                                    data-type="entity-link" data-context="sub-entity" data-context-id="modules">DeleteDialogComponent</a>
+                                            </li>
                                             <li class="link">
                                                 <a href="components/WorkspaceDetailComponent.html"
                                                     data-type="entity-link" data-context="sub-entity" data-context-id="modules">WorkspaceDetailComponent</a>
@@ -293,13 +267,13 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                     </li>
                                     <li class="chapter inner">
                                         <div class="simple menu-toggler" data-toggle="collapse" ${ isNormalMode ?
-                                            'data-target="#pipes-links-module-WorkspaceDetailModule-40dd85fcee4e643d1e6a81be9b9cdcef"' : 'data-target="#xs-pipes-links-module-WorkspaceDetailModule-40dd85fcee4e643d1e6a81be9b9cdcef"' }>
+                                            'data-target="#pipes-links-module-WorkspaceDetailModule-8fcd1cd5816da7168321b7443f46406c"' : 'data-target="#xs-pipes-links-module-WorkspaceDetailModule-8fcd1cd5816da7168321b7443f46406c"' }>
                                             <span class="icon ion-md-add"></span>
                                             <span>Pipes</span>
                                             <span class="icon ion-ios-arrow-down"></span>
                                         </div>
-                                        <ul class="links collapse" ${ isNormalMode ? 'id="pipes-links-module-WorkspaceDetailModule-40dd85fcee4e643d1e6a81be9b9cdcef"' :
-                                            'id="xs-pipes-links-module-WorkspaceDetailModule-40dd85fcee4e643d1e6a81be9b9cdcef"' }>
+                                        <ul class="links collapse" ${ isNormalMode ? 'id="pipes-links-module-WorkspaceDetailModule-8fcd1cd5816da7168321b7443f46406c"' :
+                                            'id="xs-pipes-links-module-WorkspaceDetailModule-8fcd1cd5816da7168321b7443f46406c"' }>
                                             <li class="link">
                                                 <a href="pipes/FilterPipe.html"
                                                     data-type="entity-link" data-context="sub-entity" data-context-id="modules">FilterPipe</a>
@@ -314,13 +288,25 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="modules/WorkspaceManagerModule.html" data-type="entity-link">WorkspaceManagerModule</a>
                                     <li class="chapter inner">
                                         <div class="simple menu-toggler" data-toggle="collapse" ${ isNormalMode ?
-                                            'data-target="#components-links-module-WorkspaceManagerModule-ae5f81ec87634a433375d505356257ec"' : 'data-target="#xs-components-links-module-WorkspaceManagerModule-ae5f81ec87634a433375d505356257ec"' }>
+                                            'data-target="#components-links-module-WorkspaceManagerModule-b5daf8b1390a3af34c061264aed556c9"' : 'data-target="#xs-components-links-module-WorkspaceManagerModule-b5daf8b1390a3af34c061264aed556c9"' }>
                                             <span class="icon ion-md-cog"></span>
                                             <span>Components</span>
                                             <span class="icon ion-ios-arrow-down"></span>
                                         </div>
-                                        <ul class="links collapse" ${ isNormalMode ? 'id="components-links-module-WorkspaceManagerModule-ae5f81ec87634a433375d505356257ec"' :
-                                            'id="xs-components-links-module-WorkspaceManagerModule-ae5f81ec87634a433375d505356257ec"' }>
+                                        <ul class="links collapse" ${ isNormalMode ? 'id="components-links-module-WorkspaceManagerModule-b5daf8b1390a3af34c061264aed556c9"' :
+                                            'id="xs-components-links-module-WorkspaceManagerModule-b5daf8b1390a3af34c061264aed556c9"' }>
+                                            <li class="link">
+                                                <a href="components/AddWSDialogComponent.html"
+                                                    data-type="entity-link" data-context="sub-entity" data-context-id="modules">AddWSDialogComponent</a>
+                                            </li>
+                                            <li class="link">
+                                                <a href="components/DeleteWSDialogComponent.html"
+                                                    data-type="entity-link" data-context="sub-entity" data-context-id="modules">DeleteWSDialogComponent</a>
+                                            </li>
+                                            <li class="link">
+                                                <a href="components/EditWSDialogComponent.html"
+                                                    data-type="entity-link" data-context="sub-entity" data-context-id="modules">EditWSDialogComponent</a>
+                                            </li>
                                             <li class="link">
                                                 <a href="components/WorkspaceListComponent.html"
                                                     data-type="entity-link" data-context="sub-entity" data-context-id="modules">WorkspaceListComponent</a>
@@ -342,28 +328,13 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                         </div>
                         <ul class="links collapse " ${ isNormalMode ? 'id="components-links"' : 'id="xs-components-links"' }>
                             <li class="link">
-                                <a href="components/AddDialogComponent.html" data-type="entity-link">AddDialogComponent</a>
+                                <a href="components/AddFileDialogComponent.html" data-type="entity-link">AddFileDialogComponent</a>
                             </li>
                             <li class="link">
-                                <a href="components/AddDialogComponent-1.html" data-type="entity-link">AddDialogComponent</a>
+                                <a href="components/DeleteFileDialogComponent.html" data-type="entity-link">DeleteFileDialogComponent</a>
                             </li>
                             <li class="link">
-                                <a href="components/AddDialogComponent-2.html" data-type="entity-link">AddDialogComponent</a>
-                            </li>
-                            <li class="link">
-                                <a href="components/DeleteDialogComponent.html" data-type="entity-link">DeleteDialogComponent</a>
-                            </li>
-                            <li class="link">
-                                <a href="components/DeleteDialogComponent-1.html" data-type="entity-link">DeleteDialogComponent</a>
-                            </li>
-                            <li class="link">
-                                <a href="components/DeleteDialogComponent-2.html" data-type="entity-link">DeleteDialogComponent</a>
-                            </li>
-                            <li class="link">
-                                <a href="components/EditDialogComponent.html" data-type="entity-link">EditDialogComponent</a>
-                            </li>
-                            <li class="link">
-                                <a href="components/EditDialogComponent-1.html" data-type="entity-link">EditDialogComponent</a>
+                                <a href="components/EditFileDialogComponent.html" data-type="entity-link">EditFileDialogComponent</a>
                             </li>
                             <li class="link">
                                 <a href="components/FileListComponent.html" data-type="entity-link">FileListComponent</a>
@@ -382,12 +353,6 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                         </div>
                         <ul class="links collapse " ${ isNormalMode ? 'id="classes-links"' : 'id="xs-classes-links"' }>
                             <li class="link">
-                                <a href="classes/AboutPage.html" data-type="entity-link">AboutPage</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/AppPage.html" data-type="entity-link">AppPage</a>
-                            </li>
-                            <li class="link">
                                 <a href="classes/ExampleDataSource.html" data-type="entity-link">ExampleDataSource</a>
                             </li>
                             <li class="link">
@@ -395,9 +360,6 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="classes/File.html" data-type="entity-link">File</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/TodosPage.html" data-type="entity-link">TodosPage</a>
                             </li>
                             <li class="link">
                                 <a href="classes/Workspace.html" data-type="entity-link">Workspace</a>
@@ -419,16 +381,10 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                     <a href="injectables/AnimationsService.html" data-type="entity-link">AnimationsService</a>
                                 </li>
                                 <li class="link">
-                                    <a href="injectables/AppErrorHandler.html" data-type="entity-link">AppErrorHandler</a>
-                                </li>
-                                <li class="link">
                                     <a href="injectables/AuthEffects.html" data-type="entity-link">AuthEffects</a>
                                 </li>
                                 <li class="link">
                                     <a href="injectables/AuthenticationService.html" data-type="entity-link">AuthenticationService</a>
-                                </li>
-                                <li class="link">
-                                    <a href="injectables/AuthService.html" data-type="entity-link">AuthService</a>
                                 </li>
                                 <li class="link">
                                     <a href="injectables/CustomSerializer.html" data-type="entity-link">CustomSerializer</a>

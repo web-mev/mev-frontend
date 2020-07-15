@@ -1,8 +1,8 @@
 {
   "/api/*": {
-    "target": "http://localhost:8000",
+    "target": "http://35.245.92.162",
     "secure": false,
     "logLevel": "debug",
-    "pathRewrite": { "^/api" : "" }
+    "pathRewrite": { "^/api": "" }
   }
 }

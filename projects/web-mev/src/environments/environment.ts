@@ -10,7 +10,7 @@ export const environment = {
   envName: 'DEV',
   production: false,
   test: false,
-  apiUrl: 'http://localhost:8000/api',
+  apiUrl: 'http://35.245.92.162/api',
   i18nPrefix: '',
   versions: {
     app: packageJson.version,

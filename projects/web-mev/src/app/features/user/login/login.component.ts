@@ -116,11 +116,10 @@ export class LoginComponent implements OnInit {
       // Google returns user data. Send user token to the server
       localStorage.setItem('socialUser', JSON.stringify(userData));
       this.authenticationService
-        .googleSignInExternal(userData.idToken)
+        .googleSignInExternal(userData.authToken)
         .pipe(finalize(() => (this.loading = false)))
         .subscribe(result => {
-          console.log('Success. External login: ' + JSON.stringify(result));
-          // this.router.navigate(['/workarea']);
+          this.router.navigate(['/workarea']);
         });
     });
   }

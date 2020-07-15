@@ -87,12 +87,11 @@ export class AuthenticationService {
   googleSignInExternal(googleTokenId: string): Observable<any> {
     return this.http
       .post<any>(`${this.API_URL}/users/social/google/`, {
-        access_token: googleTokenId
+        provider_token: googleTokenId
       })
       .pipe(
         map(token => {
           // login successful if there's a token in the response: {'refresh': '<REFRESH TOKEN>', 'access': '<ACCESS_TOKEN>'}
-
           if (token && token.access) {
             this.storeJwtToken(JSON.stringify(token.access));
             this.storeRefreshToken(JSON.stringify(token.refresh));

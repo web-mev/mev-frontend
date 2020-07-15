@@ -24,17 +24,14 @@ export class AddFileDialogComponent {
     public fileService: FileService
   ) {}
 
-  formControl = new FormControl('', [
-    Validators.required
-    // Validators.email,
-  ]);
+  formControl = new FormControl('', [Validators.required]);
 
   getErrorMessage() {
     return this.formControl.hasError('required') ? 'Required field' : '';
   }
 
   submit() {
-    // empty stuff
+    // empty
   }
 
   onNoClick(): void {
@@ -68,7 +65,6 @@ export class AddFileDialogComponent {
   }
 
   public confirmAdd(): void {
-    this.formData.append('resource_type', this.data.resource_type);
     this.fileService.addFile(this.formData, this.filesToUpload);
   }
 }

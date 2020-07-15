@@ -33,7 +33,7 @@
 
     </div>
 
-    <div class="form">
+    <!--div class="form">
 
       <mat-form-field color="accent">
         <mat-label>Select a resource type</mat-label>
@@ -45,7 +45,7 @@
         <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
       </mat-form-field>
 
-    </div>
+    </div-->
 
     <div mat-dialog-actions>
       <button mat-button [type]="submit" [disabled]="!(formControl.valid && fileSelected)" [mat-dialog-close]="1" (click)="confirmAdd()">Upload</button>

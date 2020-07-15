@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable} from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { NotificationService } from '@core/core.module';
@@ -14,7 +14,9 @@ export class FileService {
 
   dataChange: BehaviorSubject<File[]> = new BehaviorSubject<File[]>([]);
 
-  public fileUploadsProgress: BehaviorSubject<Map<string, object>> = new BehaviorSubject<Map<string, object>>(new Map<string, object>());
+  public fileUploadsProgress: BehaviorSubject<
+    Map<string, object>
+  > = new BehaviorSubject<Map<string, object>>(new Map<string, object>());
 
   // Temporarily stores data from dialogs
   dialogData: any;
@@ -23,8 +25,7 @@ export class FileService {
     private httpClient: HttpClient,
     private adapter: FileAdapter,
     private readonly notificationService: NotificationService
-  ) {
-  }
+  ) {}
 
   get data(): File[] {
     return this.dataChange.getValue();
@@ -34,29 +35,21 @@ export class FileService {
     return this.dialogData;
   }
 
-
-
   // GET FILE LIST
   getAllFiles(): void {
     this.httpClient
       .get<File[]>(`${this.API_URL}/`)
-      .pipe(
-        map((data: any[]) => data.map((item) => this.adapter.adapt(item))))
-      .subscribe(
-        data => {
-          this.dataChange.next(data);
-        }
-      );
+      .pipe(map((data: any[]) => data.map(item => this.adapter.adapt(item))))
+      .subscribe(data => {
+        this.dataChange.next(data);
+      });
   }
 
   getAllFilesTest(): Observable<any> {
     return this.httpClient
       .get<File[]>(`${this.API_URL}/`)
-      .pipe(
-        map((data: any[]) => data.map((item) => this.adapter.adapt(item))))
-    
+      .pipe(map((data: any[]) => data.map(item => this.adapter.adapt(item))));
   }
-
 
   // getAllFiles(): void {
   //   interval(5000)
@@ -70,76 +63,67 @@ export class FileService {
 
   // ADD, POST METHOD
   addFile(formData: FormData, files: any[]): void {
-
-    // execute the uploads sequentially, because uploading multiple files could potentially tie-up 
+    // execute the uploads sequentially, because uploading multiple files could potentially tie-up
     // the server since a bunch of threads would be busy ingesting the data for a long time
     this.getAllFiles();
-    let fileUploadsProgressMap = new Map<string, object>()
-  
+    let fileUploadsProgressMap = new Map<string, object>();
+
     for (let i = 0; i < files.length; i++) {
-      formData.set('upload_file', files[i], files[i].name);    
-      fileUploadsProgressMap[files[i].name] = {'percent': 0, 'isUploaded': false };
+      formData.set('upload_file', files[i], files[i].name);
+      fileUploadsProgressMap[files[i].name] = { percent: 0, isUploaded: false };
     }
     this.fileUploadsProgress.next(fileUploadsProgressMap);
     this.dialogData = formData; // to remove
 
-    
     for (let i = 0; i < files.length; i++) {
-       this.httpClient.post(`${this.API_URL}/upload/`, formData, {reportProgress: true, observe: 'events' })
-        .subscribe(
-          event => {            
-            switch (event.type) {
-              case HttpEventType.UploadProgress:
-                const percentDone = Math.round((event.loaded * 100) / event.total);
-                fileUploadsProgressMap[files[i].name] = {'percent': percentDone, 'isUploaded': false };
-                this.fileUploadsProgress.next(fileUploadsProgressMap);
-                break;
-              case HttpEventType.Response:
-                //this.notificationService.success(`File ${files[i].name} has been successfully uploaded`);
-                fileUploadsProgressMap[files[i].name] = {'percent': 100, 'isUploaded': true };
-                this.fileUploadsProgress.next(fileUploadsProgressMap);
-                this.dialogData = formData;
-            }
+      this.httpClient
+        .post(`${this.API_URL}/upload/`, formData, {
+          reportProgress: true,
+          observe: 'events'
+        })
+        .subscribe(event => {
+          switch (event.type) {
+            case HttpEventType.UploadProgress:
+              const percentDone = Math.round(
+                (event.loaded * 100) / event.total
+              );
+              fileUploadsProgressMap[files[i].name] = {
+                percent: percentDone,
+                isUploaded: false
+              };
+              this.fileUploadsProgress.next(fileUploadsProgressMap);
+              break;
+            case HttpEventType.Response:
+              fileUploadsProgressMap[files[i].name] = {
+                percent: 100,
+                isUploaded: true
+              };
+              this.fileUploadsProgress.next(fileUploadsProgressMap);
+              this.dialogData = formData;
           }
-       );
-    };
+        });
+    }
   }
-
-
-
 
   // ADD, POST METHOD for DROPBOX
   addDropboxFile(file_source: string): void {
-
     this.httpClient
       .post(`${this.API_URL}/dropboxupload/`, file_source)
-      .subscribe(
-        data => {
-          // this.dialogData = data;
-          this.notificationService.success('File has been successfully uploaded');
-        }
-      );
+      .subscribe(data => {
+        // this.dialogData = data;
+        this.notificationService.success('File has been successfully uploaded');
+      });
   }
 
   // UPDATE, PUT METHOD
   updateFile(file: File): void {
-    this.httpClient
-      .put(`${this.API_URL}/${file.id}/`, file)
-      .subscribe(
-        data => {
-          this.dialogData = file;
-        }
-      );
+    this.httpClient.put(`${this.API_URL}/${file.id}/`, file).subscribe(data => {
+      this.dialogData = file;
+    });
   }
-
 
   // DELETE METHOD
   deleteFile(id: number | string): void {
-    this.httpClient
-      .delete(`${this.API_URL}/${id}/`)
-      .subscribe(
-        data => {
-        }
-      );
+    this.httpClient.delete(`${this.API_URL}/${id}/`).subscribe(data => {});
   }
 }

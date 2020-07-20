@@ -1,47 +1,66 @@
 import { Injectable } from '@angular/core';
-import {environment} from '@environments/environment';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {NotificationService} from '@core/notifications/notification.service';
-import {Workspace} from '@workspace-manager/models/workspace';
-import {catchError, retry} from 'rxjs/operators';
-import {Observable, throwError} from 'rxjs';
+import { environment } from '@environments/environment';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { NotificationService } from '@core/notifications/notification.service';
+import { Workspace } from '@workspace-manager/models/workspace';
+import { catchError, retry, map } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import {
+  WorkspaceResource,
+  WorkspaceResourceAdapter
+} from '../models/workspace-resource';
+import { File, FileAdapter } from '@app/shared/models/file';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WorkspaceDetailService {
-  private readonly API_URL = environment.apiUrl + '/workspaces';
-
+  private readonly API_URL = environment.apiUrl;
   constructor(
     private httpClient: HttpClient,
-    private readonly notificationService: NotificationService
-  ) { }
+    private fileAdapter: FileAdapter,
+    private wsAdapter: WorkspaceResourceAdapter
+  ) {}
 
-  handleError(error: HttpErrorResponse) {
-    let errorMessage = 'Unknown error';
-    if (error.error instanceof ErrorEvent) {
-      // Client-side errors
-      errorMessage = `Error: ${error.error.message}`;
-    } else {
-      // Server-side errors
-      errorMessage = `Server Side Error. Status: ${error.status} ${error.statusText}\nMessage: ${error.error.detail}`;
-    }
-    return throwError(errorMessage);
+  getAvailableResources(): Observable<File[]> {
+    //return <Observable<File[]>>this.httpClient.get(`${this.API_URL}/resources/`)
+
+    return <Observable<File[]>>(
+      this.httpClient
+        .get(`${this.API_URL}/resources/`)
+        .pipe(
+          map((data: any[]) => data.map(item => this.fileAdapter.adapt(item)))
+        )
+    );
+  }
+
+  getConnectedResources(workspaceId: string): Observable<WorkspaceResource[]> {
+    // return <Observable<WorkspaceResource[]>>this.httpClient
+    //   .get(`${this.API_URL}/workspaces/${workspaceId}/resources/`)
+    return <Observable<WorkspaceResource[]>>(
+      this.httpClient
+        .get(`${this.API_URL}/workspaces/${workspaceId}/resources/`)
+        .pipe(
+          map((data: any[]) => data.map(item => this.wsAdapter.adapt(item)))
+        )
+    );
   }
 
   getWorkspaceDetail(id: number | string): Observable<Workspace> {
-    return <Observable<Workspace>> this.httpClient
-      .get( `${this.API_URL}/${id}/`)
-      .pipe(retry(1), catchError(this.handleError))
-      // .subscribe(
-      //   data => {
-      //     console.log(data);
-      //     //this.dialogData = workspace;
-      //   },
-      //   (err) => {
-      //     this.notificationService.error('Error occurred. Details: ' + err);
-      //   }
-      // );
+    return <Observable<Workspace>>(
+      this.httpClient.get(`${this.API_URL}/workspaces/${id}/`)
+    );
   }
 
+  addResourceToWorkspace(
+    resource_uuid: string,
+    workspaceId: string
+  ): Observable<any> {
+    return <Observable<any>>(
+      this.httpClient.post(
+        `${this.API_URL}/workspaces/${workspaceId}/resources/add/`,
+        { resource_uuid: resource_uuid }
+      )
+    );
+  }
 }

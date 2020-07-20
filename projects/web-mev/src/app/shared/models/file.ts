@@ -11,7 +11,6 @@ import { FileType } from '@app/shared/models/file-type';
  */
 
 export class File {
-
   constructor(
     public id: string,
     public url: string,
@@ -23,32 +22,34 @@ export class File {
     public is_public: boolean,
     public status: string,
     public workspace: string,
+    public workspace_name: string,
     public created: Date,
-    public size: number    
+    public size: number
   ) {}
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class FileAdapter {
   adapt(item: any): File {
-    
     const re = /[()]/g;
     const created_formatted = item.created.replace(re, '');
 
     return new File(
-      item.id, 
+      item.id,
       item.url,
-      item.name, 
-      item.resource_type, 
-      item.readable_resource_type, 
+      item.name,
+      item.resource_type,
+      item.readable_resource_type,
       item.owner_email,
       item.is_active,
       item.is_public,
       item.status,
       item.workspace,
+      item.workspace_name,
       new Date(created_formatted),
-      item.size)
+      item.size
+    );
   }
 }

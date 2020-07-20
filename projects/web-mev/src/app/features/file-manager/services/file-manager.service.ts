@@ -45,12 +45,6 @@ export class FileService {
       });
   }
 
-  getAllFilesTest(): Observable<any> {
-    return this.httpClient
-      .get<File[]>(`${this.API_URL}/`)
-      .pipe(map((data: any[]) => data.map(item => this.adapter.adapt(item))));
-  }
-
   // getAllFiles(): void {
   //   interval(5000)
   //     .pipe(

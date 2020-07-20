@@ -1,25 +1,21 @@
 <div class="workspace-header">
   <a routerLink='/workarea' class="workspace-header__nav">
     <mat-icon aria-label="Next step">navigate_back</mat-icon>
-    < Back to File & Workspace list
-  </a>
-  <span class="workspace-header__title" *ngIf="workspace$ | async as workspace">
-    Workspace
-    <b> {{ workspace.workspace_name }} </b>
-    <mat-icon class="workspace-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-              matTooltip="Workspace: {{ workspace.workspace_name }} &#13;
+    < Back to File & Workspace list </a>
+      <span class="workspace-header__title" *ngIf="workspace$ | async as workspace">
+        Workspace
+        <b> {{ workspace.workspace_name }} </b>
+        <mat-icon class="workspace-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined" matTooltip="Workspace: {{ workspace.workspace_name }} &#13;
                           Created: {{ workspace.created }} &#13;
-                          Owner: {{ workspace.owner_email }}"
-              aria-label="Info tooltip about the workspace">info</mat-icon>
-  </span>
+                          Owner: {{ workspace.owner_email }}" aria-label="Info tooltip about the workspace">info
+        </mat-icon>
+      </span>
 </div>
 
 <mat-toolbar>
   <mat-form-field floatLabel='never' class='search-field'>
-    <input matInput
-      [(ngModel)]="searchText"
-      autocomplete="off" >
-      <mat-placeholder class="placeholder">Search</mat-placeholder>
+    <input matInput [(ngModel)]="searchText" autocomplete="off">
+    <mat-placeholder class="placeholder">Search</mat-placeholder>
   </mat-form-field>
 </mat-toolbar>
 <div class="file-btn-group">
@@ -27,7 +23,7 @@
     <mat-icon aria-label="Add local data">add</mat-icon>
     Add local data
   </button>
-  
+
   <button mat-raised-button color="accent" (click)="addItem()">
     <mat-icon aria-label="Add external data">add</mat-icon>
     Add external data
@@ -36,11 +32,8 @@
 
 
 <div class="cardList">
-
-  <a *ngFor="let resource of workspaceResources | filter : searchText"
-     (click)="selectResource(resource);" class="cardList__item card"
-     matRipple
-     matRippleColor="rgba(158, 158, 158, 0.22)">
+  <a *ngFor="let resource of workspaceResources | filter : searchText" (click)="selectResource(resource);"
+    class="cardList__item card" matRipple matRippleColor="rgba(158, 158, 158, 0.22)">
     <mat-card>
       <mat-card-title>
         {{ resource.name }}

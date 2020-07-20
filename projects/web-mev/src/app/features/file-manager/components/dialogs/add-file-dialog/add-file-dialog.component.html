@@ -48,7 +48,7 @@
     </div-->
 
     <div mat-dialog-actions>
-      <button mat-button [type]="submit" [disabled]="!(formControl.valid && fileSelected)" [mat-dialog-close]="1" (click)="confirmAdd()">Upload</button>
+      <button mat-button mat-raised-button color="accent" [type]="submit" [disabled]="!(formControl.valid && fileSelected)" [mat-dialog-close]="1" (click)="confirmAdd()">Upload</button>
       <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
     </div>
     <p></p>

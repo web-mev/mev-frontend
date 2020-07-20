@@ -97,13 +97,11 @@ export class LoginComponent implements OnInit {
     this.loading = true;
     this.authenticationService
       .login(this.f.email.value, this.f.password.value)
-      .pipe(first())
       .subscribe(
         data => {
           this.router.navigate([this.returnUrl]);
         },
         error => {
-          this.notificationService.error(error);
           this.loading = false;
         }
       );

@@ -1,5 +1,14 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  Inject
+} from '@angular/core';
+import { Router, Params } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Validators, FormControl } from '@angular/forms';
+import { WorkspaceDetailService } from '@app/features/workspace-detail/services/workspace-detail.service';
 
 @Component({
   selector: 'mev-add-dialog',
@@ -8,29 +17,31 @@ import { Validators, FormControl } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddDialogComponent implements OnInit {
-  itemList = [];
-  selectedItems = [];
-  settings = {};
+  fileList = [];
+  selectedFiles = [];
+  dropdownSettings = {};
+  workspaceId: string;
 
-  constructor() {}
+  constructor(
+    public dialogRef: MatDialogRef<AddDialogComponent>,
+    private apiService: WorkspaceDetailService,
+    private router: Router,
+    private route: ActivatedRoute,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
 
   formControl = new FormControl('', [Validators.required]);
 
   ngOnInit(): void {
-    this.itemList = [
-      { id: 1, itemName: 'File 1' },
-      { id: 2, itemName: 'File 2' },
-      { id: 3, itemName: 'File 3' },
-      { id: 4, itemName: 'File 4' },
-      { id: 5, itemName: 'File 5' },
-      { id: 6, itemName: 'File 6' }
-    ];
+    this.route.params.subscribe(
+      (params: Params) => (this.workspaceId = params['workspaceId'])
+    );
 
-    this.selectedItems = [
-      { id: 1, itemName: 'File 1' },
-      { id: 2, itemName: 'File 3' }
-    ];
-    this.settings = {
+    this.apiService.getAvailableResources().subscribe(data => {
+      this.fileList = data;
+    });
+
+    this.dropdownSettings = {
       text: 'Select resources',
       selectAllText: 'Select All',
       unSelectAllText: 'UnSelect All',
@@ -38,8 +49,8 @@ export class AddDialogComponent implements OnInit {
     };
   }
 
-  onNoClick() {
-    alert('no');
+  onNoClick(): void {
+    this.dialogRef.close();
   }
 
   submit() {
@@ -47,7 +58,13 @@ export class AddDialogComponent implements OnInit {
   }
 
   confirmAdd() {
-    alert('confirm');
+    this.selectedFiles.forEach(file => {
+      this.apiService
+        .addResourceToWorkspace(file.id, this.data.workspaceId)
+        .subscribe(data => {
+          this.router.navigate(['workspace', this.workspaceId]);
+        });
+    });
   }
 
   getErrorMessage() {
@@ -60,11 +77,11 @@ export class AddDialogComponent implements OnInit {
 
   onItemSelect(item: any) {
     console.log(item);
-    console.log(this.selectedItems);
+    console.log(this.selectedFiles);
   }
   OnItemDeSelect(item: any) {
     console.log(item);
-    console.log(this.selectedItems);
+    console.log(this.selectedFiles);
   }
   onSelectAll(items: any) {
     console.log(items);

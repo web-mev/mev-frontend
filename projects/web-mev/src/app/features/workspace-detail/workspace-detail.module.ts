@@ -9,11 +9,13 @@ import { FilterPipe } from '@features/workspace-detail/pipes/search';
 import { AddDialogComponent } from './components/dialogs/add-dialog/add-dialog.component';
 import { DeleteDialogComponent } from './components/dialogs/delete-dialog/delete-dialog.component';
 import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
+import { AvailableresourcePipe } from './pipes/available-resource';
 
 @NgModule({
   declarations: [
     WorkspaceDetailComponent,
     FilterPipe,
+    AvailableresourcePipe,
     AddDialogComponent,
     DeleteDialogComponent
   ],

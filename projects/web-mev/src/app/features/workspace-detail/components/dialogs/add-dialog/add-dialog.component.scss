@@ -1,6 +1,37 @@
 .mat-dialog-content {
-  min-height: 400px;
+  min-height: 350px;
 }
 
-.resource-dropdown {
+.container {
+  display: flex;
+  flex-direction: column;
+  min-width: 450px;
+}
+
+.container > * {
+  width: 100%;
+}
+
+.mat-dialog-title {
+  font-size: 16px;
+}
+
+.mat-dialog-content {
+  max-height: none;
+  overflow: visible;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  padding-top: 6px;
+}
+
+.mat-dialog-content {
+  position: relative;
+}
+
+.mat-dialog-actions {
+  position: absolute;
+  bottom: 0;
 }

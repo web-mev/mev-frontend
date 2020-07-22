@@ -4,13 +4,20 @@
  * These types are restricted to a set of common file formats.
  */
 
-export enum FileType {
-  FQ = 'FastaQ file',
-  FA = 'Fasta file',
-  ALN = 'Alignment (SAM/BAM)',
-  TBL = 'General data table',
-  MTX = 'Numeric table',
-  I_MTX = 'Integer table',
-  ANN = 'Annotation table',
-  BED = 'BED-format file'
+export class FileType {
+  resource_type_key: string;
+  resource_type_title: string;
+  resource_type_description: string;
+
+  constructor(
+    options: {
+      resource_type_key?: string;
+      resource_type_title?: string;
+      resource_type_description?: string;
+    } = {}
+  ) {
+    this.resource_type_key = options.resource_type_key;
+    this.resource_type_title = options.resource_type_title;
+    this.resource_type_description = options.resource_type_description;
+  }
 }

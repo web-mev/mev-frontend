@@ -5,12 +5,13 @@ import { map } from 'rxjs/operators';
 import { NotificationService } from '@core/core.module';
 import { File, FileAdapter } from '@app/shared/models/file';
 import { environment } from '@environments/environment';
+import { FileType } from '@app/shared/models/file-type';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FileService {
-  private readonly API_URL = environment.apiUrl + '/resources';
+  private readonly API_URL = environment.apiUrl;
 
   dataChange: BehaviorSubject<File[]> = new BehaviorSubject<File[]>([]);
 
@@ -35,10 +36,15 @@ export class FileService {
     return this.dialogData;
   }
 
+  // GET FILE RESOURCE LIST
+  getFileTypes(): Observable<FileType[]> {
+    return this.httpClient.get<FileType[]>(`${this.API_URL}/resource-types/`);
+  }
+
   // GET FILE LIST
   getAllFiles(): void {
     this.httpClient
-      .get<File[]>(`${this.API_URL}/`)
+      .get<File[]>(`${this.API_URL}/resources/`)
       .pipe(map((data: any[]) => data.map(item => this.adapter.adapt(item))))
       .subscribe(data => {
         this.dataChange.next(data);
@@ -55,7 +61,7 @@ export class FileService {
   //     })
   // }
 
-  // ADD, POST METHOD
+  // ADD FILE, POST METHOD
   addFile(formData: FormData, files: any[]): void {
     // execute the uploads sequentially, because uploading multiple files could potentially tie-up
     // the server since a bunch of threads would be busy ingesting the data for a long time
@@ -71,7 +77,7 @@ export class FileService {
 
     for (let i = 0; i < files.length; i++) {
       this.httpClient
-        .post(`${this.API_URL}/upload/`, formData, {
+        .post(`${this.API_URL}/resources/upload/`, formData, {
           reportProgress: true,
           observe: 'events'
         })
@@ -102,22 +108,26 @@ export class FileService {
   // ADD, POST METHOD for DROPBOX
   addDropboxFile(file_source: string): void {
     this.httpClient
-      .post(`${this.API_URL}/dropboxupload/`, file_source)
+      .post(`${this.API_URL}/resources/dropboxupload/`, file_source)
       .subscribe(data => {
         // this.dialogData = data;
         this.notificationService.success('File has been successfully uploaded');
       });
   }
 
-  // UPDATE, PUT METHOD
+  // UPDATE FILE, PUT METHOD
   updateFile(file: File): void {
-    this.httpClient.put(`${this.API_URL}/${file.id}/`, file).subscribe(data => {
-      this.dialogData = file;
-    });
+    this.httpClient
+      .put(`${this.API_URL}/resources/${file.id}/`, file)
+      .subscribe(data => {
+        this.dialogData = file;
+      });
   }
 
-  // DELETE METHOD
+  // DELETE FILE
   deleteFile(id: number | string): void {
-    this.httpClient.delete(`${this.API_URL}/${id}/`).subscribe(data => {});
+    this.httpClient
+      .delete(`${this.API_URL}/resources/${id}/`)
+      .subscribe(data => {});
   }
 }

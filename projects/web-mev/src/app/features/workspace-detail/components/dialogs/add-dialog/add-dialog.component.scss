@@ -1,5 +1,6 @@
 .mat-dialog-content {
   min-height: 350px;
+  position: relative;
 }
 
 .container {
@@ -25,10 +26,6 @@
   display: flex;
   flex-direction: column;
   padding-top: 6px;
-}
-
-.mat-dialog-content {
-  position: relative;
 }
 
 .mat-dialog-actions {

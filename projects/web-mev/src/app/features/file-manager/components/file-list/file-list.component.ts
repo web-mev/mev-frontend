@@ -137,10 +137,19 @@ export class FileListComponent implements OnInit {
     });
   }
 
-  deleteItem(i: number, id: string, file_name: string, resource_type: string) {
+  deleteItem(
+    i: number,
+    id: string,
+    file_name: string,
+    readable_resource_type: string
+  ) {
     this.id = id;
     const dialogRef = this.dialog.open(DeleteFileDialogComponent, {
-      data: { id: id, name: file_name, resource_type: resource_type }
+      data: {
+        id: id,
+        name: file_name,
+        readable_resource_type: readable_resource_type
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {

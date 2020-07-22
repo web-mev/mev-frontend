@@ -1,3 +1,8 @@
+.mat-dialog-content {
+  min-height: 300px;
+  position: relative;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -21,4 +26,9 @@
 .mat-form-field {
   font-size: 16px;
   flex-grow: 1;
+}
+
+.mat-dialog-actions {
+  position: absolute;
+  bottom: 0;
 }

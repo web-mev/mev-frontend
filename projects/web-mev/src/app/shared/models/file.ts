@@ -15,7 +15,7 @@ export class File {
     public id: string,
     public url: string,
     public name: string,
-    public resource_type: FileType,
+    public resource_type: string, // FileType
     public readable_resource_type: string,
     public owner_email: string,
     public is_active: boolean,

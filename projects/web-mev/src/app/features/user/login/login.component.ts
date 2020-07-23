@@ -112,7 +112,7 @@ export class LoginComponent implements OnInit {
     this.loading = true;
     this.socialAuthService.signIn(socialPlatformProvider).then(userData => {
       // Google returns user data. Send user token to the server
-      localStorage.setItem('socialUser', JSON.stringify(userData));
+      sessionStorage.setItem('socialUser', JSON.stringify(userData));
       this.authenticationService
         .googleSignInExternal(userData.authToken)
         .pipe(finalize(() => (this.loading = false)))

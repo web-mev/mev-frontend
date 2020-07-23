@@ -66,6 +66,7 @@
     "@ngx-translate/http-loader": "^4.0.0",
     "angular2-multiselect-dropdown": "^4.6.3",
     "angularx-social-login": "^3.0.0",
+    "bn-ng-idle": "^1.0.1",
     "bootstrap": "^4.4.1",
     "browser-detect": "^0.2.28",
     "json-server": "^0.16.1",

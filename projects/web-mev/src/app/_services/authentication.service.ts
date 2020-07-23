@@ -17,7 +17,7 @@ export class AuthenticationService {
 
   constructor(private http: HttpClient) {
     this.currentUserSubject = new BehaviorSubject<User>(
-      JSON.parse(localStorage.getItem(this.JWT_TOKEN))
+      JSON.parse(sessionStorage.getItem(this.JWT_TOKEN))
     );
     this.currentUser = this.currentUserSubject.asObservable();
   }
@@ -47,25 +47,25 @@ export class AuthenticationService {
 
   // store user details and token in local storage to keep user logged in between page refreshes
   private storeJwtToken(jwt: string) {
-    localStorage.setItem(this.JWT_TOKEN, jwt);
+    sessionStorage.setItem(this.JWT_TOKEN, jwt);
   }
 
   private storeRefreshToken(token: string) {
-    localStorage.setItem(this.REFRESH_TOKEN, token);
+    sessionStorage.setItem(this.REFRESH_TOKEN, token);
   }
 
   logout() {
     // remove user from local storage to log user out
-    localStorage.removeItem(this.JWT_TOKEN);
+    sessionStorage.removeItem(this.JWT_TOKEN);
     this.currentUserSubject.next(null);
   }
 
   getJwtToken(): string {
-    return JSON.parse(localStorage.getItem(this.JWT_TOKEN));
+    return JSON.parse(sessionStorage.getItem(this.JWT_TOKEN));
   }
 
   private getRefreshToken() {
-    return JSON.parse(localStorage.getItem(this.REFRESH_TOKEN));
+    return JSON.parse(sessionStorage.getItem(this.REFRESH_TOKEN));
   }
 
   isLoggedIn() {

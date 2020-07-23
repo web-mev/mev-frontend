@@ -1,9 +1,9 @@
 import browser from 'browser-detect';
 import { Component, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
-
+import { BnNgIdleService } from 'bn-ng-idle';
 import { AuthenticationService } from '@app/_services/authentication.service';
 import { User } from '@app/_models/user';
 
@@ -38,10 +38,10 @@ export class AppComponent implements OnInit {
   year = new Date().getFullYear();
   logo = require('../../assets/logo.png').default;
   languages = ['en', 'es'];
+  sessionTimeout = 60 * 1; // 10 minutes
   navigation = [
     { link: 'about', label: 'mev.menu.about' },
     { link: 'tutorial', label: 'mev.menu.tutorial' },
-    //{ link: 'upload', label: 'mev.menu.start' },
     { link: 'workarea', label: 'Get Started' }
   ];
   navigationSideMenu = [
@@ -53,11 +53,13 @@ export class AppComponent implements OnInit {
   stickyHeader$: Observable<boolean>;
   language$: Observable<string>;
   theme$: Observable<string>;
+  private sessionSubscription$: Subscription;
 
   constructor(
     private store: Store,
     private storageService: LocalStorageService,
     private router: Router,
+    private bnIdle: BnNgIdleService,
     private authenticationService: AuthenticationService
   ) {
     this.authenticationService.currentUser.subscribe(x => {
@@ -65,8 +67,7 @@ export class AppComponent implements OnInit {
       this.currentUser = x;
     });
 
-    this.socialUser = JSON.parse(localStorage.getItem('socialUser'));
-
+    this.socialUser = JSON.parse(sessionStorage.getItem('socialUser'));
   }
 
   private static isIEorEdgeOrSafari() {
@@ -79,6 +80,15 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // listen for the user’s idleness
+    this.sessionSubscription$ = this.bnIdle
+      .startWatching(this.sessionTimeout)
+      .subscribe((isTimedOut: boolean) => {
+        if (isTimedOut) {
+          this.onLogoutClick();
+        }
+      });
+
     this.storageService.testLocalStorage();
     if (AppComponent.isIEorEdgeOrSafari()) {
       this.store.dispatch(
@@ -92,6 +102,12 @@ export class AppComponent implements OnInit {
     this.stickyHeader$ = this.store.pipe(select(selectSettingsStickyHeader));
     this.language$ = this.store.pipe(select(selectSettingsLanguage));
     this.theme$ = this.store.pipe(select(selectEffectiveTheme));
+  }
+
+  ngOnDestroy(): void {
+    if (this.sessionSubscription$) {
+      this.sessionSubscription$.unsubscribe();
+    }
   }
 
   onLanguageSelect({ value: language }) {

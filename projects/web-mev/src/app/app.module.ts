@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
-
+import { BnNgIdleService } from 'bn-ng-idle';
 import { NgModule } from '@angular/core';
 
 import { CoreModule } from './core/core.module';
@@ -82,6 +82,7 @@ import { PasswordChangeComponent } from './features/user/password-change/passwor
     PasswordChangeComponent
   ],
   providers: [
+    BnNgIdleService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,

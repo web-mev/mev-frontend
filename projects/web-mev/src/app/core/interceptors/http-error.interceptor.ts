@@ -49,7 +49,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
               detail += error.error[error_field] + ' \n';
             });
           }
-          errorMessage = `Server Side Error. Code: ${error.status}. Details: ${detail}
+          errorMessage = `Server Side Error. Details: ${detail}
                           Message: ${error.message}`;
         }
         this.notificationService.error(errorMessage);

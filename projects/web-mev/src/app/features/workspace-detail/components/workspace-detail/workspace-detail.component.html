@@ -35,22 +35,29 @@
   <a *ngFor="let resource of workspaceResources | filter : searchText" (click)="selectResource(resource);"
     class="cardList__item card" matRipple matRippleColor="rgba(158, 158, 158, 0.22)">
     <mat-card>
-      <mat-card-title>
+      <mat-card-title class="card-title">
         {{ resource.name }}
       </mat-card-title>
       <mat-card-content>
         <ul>
-          <li>Resource type: {{ resource.resource_type }}</li>
+          <li>Resource type: {{ resource.readable_resource_type }}</li>
           <li>Size: {{ resource.size | byteName}}</li>
           <li>Date added: {{ resource.created | date :'medium' }}</li>
         </ul>
 
       </mat-card-content>
       <mat-card-footer>
-        <mat-icon fontSet="material-icons-outlined" title="Preview resource">search</mat-icon>
+        <mat-icon fontSet="material-icons-outlined" title="Preview resource" (click)="previewItem(resource.id)">search</mat-icon>
         <mat-icon fontSet="material-icons-outlined" title="Delete resource">delete</mat-icon>
       </mat-card-footer>
     </mat-card>
 
   </a>
+</div>
+
+<div class="workspace-footer">
+  <button mat-raised-button color="accent" [routerLink]="['/analyses']">
+    Go to Analyses
+    <mat-icon aria-label="Next step">navigate_next</mat-icon>
+  </button>
 </div>

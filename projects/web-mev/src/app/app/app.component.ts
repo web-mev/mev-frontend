@@ -38,7 +38,7 @@ export class AppComponent implements OnInit {
   year = new Date().getFullYear();
   logo = require('../../assets/logo.png').default;
   languages = ['en', 'es'];
-  sessionTimeout = 60 * 1; // 10 minutes
+  sessionTimeout = 60 * 15; // 15 minutes
   navigation = [
     { link: 'about', label: 'mev.menu.about' },
     { link: 'tutorial', label: 'mev.menu.tutorial' },

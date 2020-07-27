@@ -9,6 +9,7 @@ import { WorkareaComponent } from '@features/workarea/workarea.component';
 import { WorkspaceDetailComponent } from '@features/workspace-detail/components/workspace-detail/workspace-detail.component';
 import { ResponsePasswordResetComponent } from './features/user/response-password-reset/response-password-reset.component';
 import { PasswordChangeComponent } from './features/user/password-change/password-change.component';
+import { AnalysesComponent } from './features/analyses/analyses.component';
 
 const routes: Routes = [
   {
@@ -26,6 +27,11 @@ const routes: Routes = [
   {
     path: 'workarea',
     component: WorkareaComponent,
+    canActivate: [AuthGuardService]
+  },
+  {
+    path: 'analyses',
+    component: AnalysesComponent,
     canActivate: [AuthGuardService]
   },
   {

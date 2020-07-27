@@ -23,8 +23,6 @@ export class WorkspaceDetailService {
   ) {}
 
   getAvailableResources(): Observable<File[]> {
-    //return <Observable<File[]>>this.httpClient.get(`${this.API_URL}/resources/`)
-
     return <Observable<File[]>>(
       this.httpClient
         .get(`${this.API_URL}/resources/`)
@@ -35,8 +33,6 @@ export class WorkspaceDetailService {
   }
 
   getConnectedResources(workspaceId: string): Observable<WorkspaceResource[]> {
-    // return <Observable<WorkspaceResource[]>>this.httpClient
-    //   .get(`${this.API_URL}/workspaces/${workspaceId}/resources/`)
     return <Observable<WorkspaceResource[]>>(
       this.httpClient
         .get(`${this.API_URL}/workspaces/${workspaceId}/resources/`)
@@ -49,6 +45,12 @@ export class WorkspaceDetailService {
   getWorkspaceDetail(id: number | string): Observable<Workspace> {
     return <Observable<Workspace>>(
       this.httpClient.get(`${this.API_URL}/workspaces/${id}/`)
+    );
+  }
+
+  getResourcePreview(id: number | string): Observable<any> {
+    return <Observable<Workspace>>(
+      this.httpClient.get(`${this.API_URL}/resources/${id}/preview/`)
     );
   }
 

@@ -69,7 +69,7 @@
                 {
                   "type": "bundle",
                   "name": "main",
-                  "baseline": "1024kb",
+                  "baseline": "2048kb",
                   "maximumWarning": "100kb",
                   "maximumError": "200kb"
                 },
@@ -148,6 +148,10 @@
               "devServerTarget": "web-mev:serve:production"
             }
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {}
         }
       }
     }

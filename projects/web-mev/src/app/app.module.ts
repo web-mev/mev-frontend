@@ -35,6 +35,7 @@ import { HttpErrorInterceptor } from '@core/interceptors/http-error.interceptor'
 import { RequestPasswordResetComponent } from './features/user/request-password-reset/request-password-reset.component';
 import { ResponsePasswordResetComponent } from './features/user/response-password-reset/response-password-reset.component';
 import { PasswordChangeComponent } from './features/user/password-change/password-change.component';
+import { AnalysesComponent } from './features/analyses/analyses.component';
 
 @NgModule({
   imports: [
@@ -79,7 +80,8 @@ import { PasswordChangeComponent } from './features/user/password-change/passwor
     WorkareaComponent,
     RequestPasswordResetComponent,
     ResponsePasswordResetComponent,
-    PasswordChangeComponent
+    PasswordChangeComponent,
+    AnalysesComponent
   ],
   providers: [
     BnNgIdleService,

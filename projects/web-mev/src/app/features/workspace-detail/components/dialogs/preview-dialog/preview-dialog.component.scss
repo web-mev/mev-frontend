@@ -1,0 +1,22 @@
+table,
+th,
+td {
+  border: 1px solid #333;
+  padding: 5px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.column-header,
+.row-header {
+  font-weight: bold;
+}
+
+.no-results {
+  color: red;
+  font-weight: bold;
+}
+
+.btn-group {
+  margin-top: 25px;
+}

@@ -1,0 +1,34 @@
+<h3>Preview of the data: </h3>
+<p>
+Please check that the parsing of the file worked correctly and is formatted properly. <br>
+Also, please note that some Resource types do not support a preview.
+</p>
+
+<table>
+    <thead>
+        <tr>
+            <th></th>
+            <th class="column-header" *ngFor="let column of previewData.columns">
+                {{column}}
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+        <tr *ngFor="let row of previewData.rows; index as i">
+            <td class="row-header"> {{ row }} </td>
+            <td *ngFor="let column of previewData.columns; index as j">
+                {{ previewData.values[i][j] }}
+            </td>
+        </tr>
+
+    </tbody>
+</table>
+
+<div *ngIf="!previewData" class="no-results">
+    No preview is available
+</div>
+
+<div mat-dialog-actions class="btn-group">
+    <button mat-button (click)="onNoClick()" mat-raised-button color="accent">Close</button>
+</div>

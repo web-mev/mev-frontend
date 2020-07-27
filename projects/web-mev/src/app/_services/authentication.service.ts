@@ -12,8 +12,10 @@ export class AuthenticationService {
   private currentUserSubject: BehaviorSubject<User>;
   public currentUser: Observable<User>;
   private readonly API_URL = environment.apiUrl;
-  private readonly JWT_TOKEN = 'JWT_TOKEN';
-  private readonly REFRESH_TOKEN = 'REFRESH_TOKEN';
+  private readonly API_NAME = environment.appName;
+
+  private readonly JWT_TOKEN = this.API_NAME + 'JWT_TOKEN';
+  private readonly REFRESH_TOKEN = this.API_NAME + 'REFRESH_TOKEN';
 
   constructor(private http: HttpClient) {
     this.currentUserSubject = new BehaviorSubject<User>(

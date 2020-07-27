@@ -7,6 +7,7 @@ import { switchMap, flatMap, tap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { WorkspaceDetailService } from '@features/workspace-detail/services/workspace-detail.service';
 import { AddDialogComponent } from '../dialogs/add-dialog/add-dialog.component';
+import { PreviewDialogComponent } from '../dialogs/preview-dialog/preview-dialog.component';
 @Component({
   selector: 'mev-workspace-detail',
   templateUrl: './workspace-detail.component.html',
@@ -65,6 +66,17 @@ export class WorkspaceDetailComponent implements OnInit {
       if (result === 1) {
         this.refresh();
       }
+    });
+  }
+
+  previewItem(resourceId) {
+    this.service.getResourcePreview(resourceId).subscribe(data => {
+      const previewData = JSON.parse(data);
+      const dialogRef = this.dialog.open(PreviewDialogComponent, {
+        data: {
+          previewData: previewData
+        }
+      });
     });
   }
 }

@@ -1,13 +1,14 @@
 <div class="container">
   <h3 mat-dialog-title>Select one or more resources from the list to add to the Workspace.
-  <br> Then click the Add button.</h3>
+    <br> Then click the Add button.</h3>
 
   <form class="mat-dialog-content" (ngSubmit)="submit" #formControl="ngForm">
 
     <div class="form">
 
-      <angular2-multiselect [data]="fileList | availableresource" [(ngModel)]="selectedFiles" [settings]="dropdownSettings" name="resource"
-        (onSelect)="onItemSelect($event)" (onDeSelect)="OnItemDeSelect($event)" (onSelectAll)="onSelectAll($event)"
+      <angular2-multiselect [data]="fileList | availableresource" [(ngModel)]="selectedFiles"
+        [settings]="dropdownSettings" name="resource" (onSelect)="onItemSelect($event)"
+        (onDeSelect)="OnItemDeSelect($event)" (onSelectAll)="onSelectAll($event)"
         (onDeSelectAll)="onDeSelectAll($event)">
         <c-item>
           <ng-template let-item="item">
@@ -15,11 +16,11 @@
             <label>Type: {{ item.readable_resource_type || 'N/A' }} </label>
           </ng-template>
         </c-item>
-        <c-badge class="badge-xxxx">
-          <ng-template class="yyyy" let-item="item">
-           <label class="xxxxxxxxxx">{{ item.name }}</label>
+        <c-badge>
+          <ng-template let-item="item">
+            <label>{{ item.name }}</label>
           </ng-template>
-        </c-badge> 
+        </c-badge>
       </angular2-multiselect>
 
     </div>

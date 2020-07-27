@@ -5,8 +5,7 @@ import {
   ChangeDetectionStrategy,
   Inject
 } from '@angular/core';
-import { Router, Params } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
+import { Router, Params, ActivatedRoute } from '@angular/router';
 import { Validators, FormControl } from '@angular/forms';
 import { WorkspaceDetailService } from '@app/features/workspace-detail/services/workspace-detail.service';
 
@@ -33,9 +32,7 @@ export class AddDialogComponent implements OnInit {
   formControl = new FormControl('', [Validators.required]);
 
   ngOnInit(): void {
-    this.route.params.subscribe(
-      (params: Params) => (this.workspaceId = params['workspaceId'])
-    );
+    this.workspaceId = this.data.workspaceId;
 
     this.apiService.getAvailableResources().subscribe(data => {
       this.fileList = data;

@@ -14,7 +14,6 @@
   min-width: 250px;
 }
 
-
 .search-field .placeholder {
   font-size: 12px;
   color: #666666;
@@ -68,6 +67,10 @@ button {
   }
 }
 
+.card-title {
+  word-wrap: break-word;
+}
+
 .mat-card-footer {
   padding: 7px;
   text-align: right;
@@ -80,4 +83,9 @@ button {
       color: #666;
     }
   }
+}
+
+.workspace-footer {
+  float: right;
+  padding: 20px;
 }

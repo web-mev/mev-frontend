@@ -9,7 +9,6 @@ import { DeleteFileDialogComponent } from '@app/features/file-manager/components
 import { ProgressSnackbarComponent } from '@file-manager/components/progress-snackbar/progress-snackbar.component';
 
 import { SharedModule } from '@app/shared/shared.module';
-import { ByteNamePipe } from './pipes/byte-name.pipe';
 
 @NgModule({
   declarations: [
@@ -17,7 +16,6 @@ import { ByteNamePipe } from './pipes/byte-name.pipe';
     AddFileDialogComponent,
     EditFileDialogComponent,
     DeleteFileDialogComponent,
-    ByteNamePipe,
     ProgressSnackbarComponent
   ],
   exports: [FileListComponent],

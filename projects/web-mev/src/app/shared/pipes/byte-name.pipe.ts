@@ -1,11 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import {DecimalPipe} from "@angular/common";
 
 @Pipe({
   name: 'byteName'
 })
 export class ByteNamePipe implements PipeTransform {
-
   transform(bytes: any): string {
     if (bytes === 0) return '0 Bytes';
 
@@ -18,6 +16,4 @@ export class ByteNamePipe implements PipeTransform {
 
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   }
-
 }
-

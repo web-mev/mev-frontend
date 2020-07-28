@@ -68,27 +68,27 @@
 
           <mat-menu #toolbarUserMenu="matMenu">
 
-            <button mat-menu-item (click)="onLogoutClick()">
-              <span *ngIf="socialUser" class="social-user-info">
-               <span class="social-user-info__name">
-                {{ socialUser.name }}
-              </span>
-              <span class="social-user-info__email">
-                {{ socialUser.email }}
-              </span>
-              </span>
-
-              <mat-icon>
-                <fa-icon icon="power-off"></fa-icon>
-              </mat-icon>
-              <span>{{ 'mev.menu.logout' | translate }}</span>
-            </button>
-
             <button mat-menu-item routerLink="/change-password">
+              <span *ngIf="socialUser" class="social-user-info">
+                <span class="social-user-info__name">
+                 {{ socialUser.name }}
+               </span>
+               <span class="social-user-info__email">
+                 {{ socialUser.email }}
+               </span>
+               </span>
+
               <mat-icon>
                 <fa-icon icon="lock"></fa-icon>
               </mat-icon>
               <span>Account security</span>
+            </button>
+
+            <button mat-menu-item (click)="onLogoutClick()">           
+              <mat-icon>
+                <fa-icon icon="power-off"></fa-icon>
+              </mat-icon>
+              <span>{{ 'mev.menu.logout' | translate }}</span>
             </button>
 
           </mat-menu>

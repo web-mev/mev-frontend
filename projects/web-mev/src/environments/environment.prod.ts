@@ -5,7 +5,7 @@ export const environment = {
   envName: 'PROD',
   production: true,
   test: false,
-  apiUrl: 'http://35.245.92.162/api',
+  apiUrl: 'http://35.194.76.64/api',
   i18nPrefix: '/mev',
   versions: {
     app: packageJson.version,

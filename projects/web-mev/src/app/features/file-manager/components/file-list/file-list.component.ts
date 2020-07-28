@@ -2,20 +2,13 @@ import {
   Component,
   ElementRef,
   OnInit,
-  Pipe,
-  PipeTransform,
   ViewChild,
   ChangeDetectorRef
 } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DataSource } from '@angular/cdk/collections';
-import { BehaviorSubject, fromEvent, merge, concat, Observable } from 'rxjs';
-import {
-  map,
-  debounceTime,
-  distinctUntilChanged,
-  timeout
-} from 'rxjs/operators';
+import { BehaviorSubject, fromEvent, merge, Observable } from 'rxjs';
+import { map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -80,6 +73,10 @@ export class FileListComponent implements OnInit {
       );
       if (allFilesUploaded) {
         this.refresh();
+        // setTimeout(() => {
+        //   console.log('~~~~~~~~ timeout');
+        //   this.refresh();
+        // }, 2000);
       }
     });
   }

@@ -5,7 +5,7 @@ export function jwtOptionsFactory(authService: AuthenticationService) {
     tokenGetter: () => {
       return authService.getJwtToken();
     },
-    whitelistedDomains: ['35.245.92.162'],
-    blacklistedRoutes: ['http://35.245.92.162/api/token/']
+    whitelistedDomains: ['35.194.76.64'],
+    blacklistedRoutes: ['http://35.194.76.64/api/token/']
   };
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, interval } from 'rxjs';
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { NotificationService } from '@core/core.module';
@@ -122,6 +122,8 @@ export class FileService {
       .subscribe(data => {
         this.dialogData = file;
       });
+
+    //this.getValidationProgress(file.id);
   }
 
   // DELETE FILE

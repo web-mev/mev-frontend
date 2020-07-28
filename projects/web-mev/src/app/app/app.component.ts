@@ -66,8 +66,6 @@ export class AppComponent implements OnInit {
       this.isAuthenticated = x !== null;
       this.currentUser = x;
     });
-
-    this.socialUser = JSON.parse(sessionStorage.getItem('socialUser'));
   }
 
   private static isIEorEdgeOrSafari() {
@@ -80,6 +78,8 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.socialUser = JSON.parse(localStorage.getItem('socialUser'));
+
     // listen for the user’s idleness
     this.sessionSubscription$ = this.bnIdle
       .startWatching(this.sessionTimeout)

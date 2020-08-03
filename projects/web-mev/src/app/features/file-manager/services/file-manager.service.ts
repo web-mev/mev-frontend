@@ -69,13 +69,13 @@ export class FileService {
     let fileUploadsProgressMap = new Map<string, object>();
 
     for (let i = 0; i < files.length; i++) {
-      formData.set('upload_file', files[i], files[i].name);
       fileUploadsProgressMap[files[i].name] = { percent: 0, isUploaded: false };
     }
     this.fileUploadsProgress.next(fileUploadsProgressMap);
-    this.dialogData = formData; // to remove
+    //this.dialogData = formData; // to remove
 
     for (let i = 0; i < files.length; i++) {
+      formData.set('upload_file', files[i], files[i].name);
       this.httpClient
         .post(`${this.API_URL}/resources/upload/`, formData, {
           reportProgress: true,

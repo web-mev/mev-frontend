@@ -9,13 +9,20 @@ mat-card {
 mat-checkbox {
   margin: 10px 0 20px 0;
 }
+
+.direction-col {
+  flex-direction: column;
+}
+
 .buttons {
   margin: 20px 0;
+  align-items: center;
 }
 
 button {
   margin-right: 5px;
   margin-left: 5px;
+  width: 250px;
 }
 
 // Google Identity and Google+ Sign in buttons
@@ -23,7 +30,7 @@ button {
 
 .google-button {
   height: 40px;
-  min-width: 250px;
+  width: 250px;
   border-width: 0;
   background: white;
   color: #737373;
@@ -95,6 +102,12 @@ button {
   text-align: center;
 }
 
-.footer-link {
+.forget-password-container {
+  padding-left: 15px;
+  margin-top: -5px;
+}
+
+.help-text {
   font-size: 14px;
+  padding-bottom: 5px;
 }

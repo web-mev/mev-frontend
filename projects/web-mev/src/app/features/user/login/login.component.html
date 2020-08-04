@@ -52,31 +52,40 @@
             </mat-form-field>
           </div>
 
-          <div class="row">
+          <div class="row direction-col">
             <mat-form-field class="col" [ngClass]="routeAnimationsElements">
               <input matInput type="password" placeholder="Password"
                      formControlName="password">
               <mat-error *ngIf="submitted && f.password.errors">
                 Password is required
               </mat-error>
-            </mat-form-field>
+            </mat-form-field>  
+            <div class="forget-password-container">
+              <a class="forget-password-link help-text" [routerLink]="['/reset']">Forgot password?</a>        
+            </div>                      
           </div>
+          
+        
 
           <div class="row buttons d-flex justify-content-center pad">
             <button type="submit" mat-raised-button color="accent" [disabled]="loading"
                     [ngClass]="routeAnimationsElements">
               <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
               Sign in
-            </button>
+            </button>          
+          </div>
+
+          <div class="row buttons d-flex justify-content-center pad direction-col">
+            <div class="help-text">Don't have a MeV account?</div>
             <button type="button" mat-raised-button color="primary" [ngClass]="routeAnimationsElements"
                     routerLink="/register">
               Register
-            </button>
-            
+            </button>            
           </div>
-          <div class="row justify-content-center">
+
+          <!-- <div class="row justify-content-center">
             <a class="footer-link" [routerLink]="['/reset']">Forgot password?</a>        
-          </div>
+          </div> -->
 
 
 

@@ -99,7 +99,6 @@ import { AnalysesComponent } from './features/analyses/analyses.component';
     // SocialLoginModule.initialize(getAuthServiceConfigs)
 
     // SocialAuthServiceConfig object to set up OAuth2
-    // TO DO: Update Client ID in the GoogleLoginProvider()
     {
       provide: 'SocialAuthServiceConfig',
       useValue: {
@@ -108,7 +107,7 @@ import { AnalysesComponent } from './features/analyses/analyses.component';
           {
             id: GoogleLoginProvider.PROVIDER_ID,
             provider: new GoogleLoginProvider(
-              '816319738910-5sap8t0kva0hi9agpcg24ab07g9l54dh.apps.googleusercontent.com' // 'Google ClientId here'
+              '963687796352-nrlmm9b4g5s5kcgv6fnlkhtutv5v34bh.apps.googleusercontent.com' // 'Google ClientId here'
             )
           }
         ]

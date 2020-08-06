@@ -72,7 +72,7 @@ export class ResponsePasswordResetComponent implements OnInit {
             Validators.required,
             Validators.minLength(8),
             Validators.pattern(
-              '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$'
+              '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-_]).{8,}$'
             )
           ]
         ],

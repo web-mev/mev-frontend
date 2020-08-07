@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { NotificationService } from '@core/notifications/notification.service';
+import { HttpClient } from '@angular/common/http';
 import { Workspace } from '@workspace-manager/models/workspace';
-import { catchError, retry, map } from 'rxjs/operators';
-import { Observable, throwError } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import {
   WorkspaceResource,
   WorkspaceResourceAdapter

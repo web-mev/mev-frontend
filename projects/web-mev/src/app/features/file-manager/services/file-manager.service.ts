@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, interval } from 'rxjs';
+import { BehaviorSubject, Observable, interval, timer } from 'rxjs';
 import { HttpClient, HttpEventType } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { map, switchMap, takeUntil } from 'rxjs/operators';
 import { NotificationService } from '@core/core.module';
 import { File, FileAdapter } from '@app/shared/models/file';
 import { environment } from '@environments/environment';
@@ -12,7 +12,10 @@ import { FileType } from '@app/shared/models/file-type';
 })
 export class FileService {
   private readonly API_URL = environment.apiUrl;
-
+  private readonly FILE_VALIDATION_PROGRESS_STATUSES = [
+    'Validating...',
+    'Processing...'
+  ];
   dataChange: BehaviorSubject<File[]> = new BehaviorSubject<File[]>([]);
 
   public fileUploadsProgress: BehaviorSubject<
@@ -42,40 +45,51 @@ export class FileService {
   }
 
   // GET FILE LIST
-  getAllFiles(): void {
+  public getAllFiles(): any {
     this.httpClient
       .get<File[]>(`${this.API_URL}/resources/`)
       .pipe(map((data: any[]) => data.map(item => this.adapter.adapt(item))))
       .subscribe(data => {
         this.dataChange.next(data);
       });
+
+    // refresh the status of the resource validation process
+    const progress = interval(2000)
+      .pipe(
+        switchMap(() =>
+          this.httpClient.get<File[]>(`${this.API_URL}/resources/`)
+        ), // mergeMap
+        takeUntil(timer(5000))
+      )
+      .subscribe(data => {
+        this.dataChange.next(data);
+        if (
+          data.every(
+            file =>
+              !this.FILE_VALIDATION_PROGRESS_STATUSES.includes(file.status)
+          )
+        ) {
+          progress.unsubscribe();
+        }
+      });
   }
 
-  // getAllFiles(): void {
-  //   interval(5000)
-  //     .pipe(
-  //       mergeMap(() => this.httpClient.get<File[]>(`${this.API_URL}/`)
-  //     ))
-  //     .subscribe(data => {
-  //       this.dataChange.next(data);
-  //     })
-  // }
-
   // ADD FILE, POST METHOD
-  addFile(formData: FormData, files: any[]): void {
+  addFile(files: any[]): void {
     // execute the uploads sequentially, because uploading multiple files could potentially tie-up
     // the server since a bunch of threads would be busy ingesting the data for a long time
-    this.getAllFiles();
+
     let fileUploadsProgressMap = new Map<string, object>();
 
     for (let i = 0; i < files.length; i++) {
       fileUploadsProgressMap[files[i].name] = { percent: 0, isUploaded: false };
     }
     this.fileUploadsProgress.next(fileUploadsProgressMap);
-    //this.dialogData = formData; // to remove
 
     for (let i = 0; i < files.length; i++) {
+      const formData = new FormData();
       formData.set('upload_file', files[i], files[i].name);
+
       this.httpClient
         .post(`${this.API_URL}/resources/upload/`, formData, {
           reportProgress: true,
@@ -122,8 +136,6 @@ export class FileService {
       .subscribe(data => {
         this.dialogData = file;
       });
-
-    //this.getValidationProgress(file.id);
   }
 
   // DELETE FILE

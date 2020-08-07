@@ -73,10 +73,6 @@ export class FileListComponent implements OnInit {
       );
       if (allFilesUploaded) {
         this.refresh();
-        // setTimeout(() => {
-        //   console.log('~~~~~~~~ timeout');
-        //   this.refresh();
-        // }, 2000);
       }
     });
   }
@@ -246,6 +242,7 @@ export class ExampleDataSource extends DataSource<File> {
       this._paginator.page
     ];
     this._exampleDatabase.getAllFiles();
+
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data

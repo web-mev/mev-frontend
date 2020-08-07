@@ -29,15 +29,20 @@ mat-cell {
 
 .warning-cell--asterisk {
   &:after {
-    content:" *";
+    content: ' *';
   }
 }
 
 .warning-note {
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
   font-size: 14px;
   font-weight: bold;
   color: grey;
   padding-top: 10px;
   padding-bottom: 10px;
+}
+
+.no-results {
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  font-size: 12px;
 }

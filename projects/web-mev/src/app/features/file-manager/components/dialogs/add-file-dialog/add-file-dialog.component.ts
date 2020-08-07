@@ -10,7 +10,6 @@ import { FileType } from '@app/shared/models/file-type';
   styleUrls: ['./add-file-dialog.component.scss']
 })
 export class AddFileDialogComponent {
-  private formData: FormData = new FormData();
   private filesToUpload: any[] = [];
   public resourceTypes = Object.keys(FileType);
   @ViewChild('fileUpload', { static: false }) fileUpload: ElementRef;
@@ -65,6 +64,6 @@ export class AddFileDialogComponent {
   }
 
   public confirmAdd(): void {
-    this.fileService.addFile(this.formData, this.filesToUpload);
+    this.fileService.addFile(this.filesToUpload);
   }
 }

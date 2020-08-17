@@ -16,8 +16,9 @@ import { WorkspaceDetailService } from '@app/features/workspace-detail/services/
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddDialogComponent implements OnInit {
-  fileList = [];
+  files = [];
   selectedFiles = [];
+
   dropdownSettings = {};
   workspaceId: string;
 
@@ -35,13 +36,13 @@ export class AddDialogComponent implements OnInit {
     this.workspaceId = this.data.workspaceId;
 
     this.apiService.getAvailableResources().subscribe(data => {
-      this.fileList = data;
+      this.files = data;
     });
 
     this.dropdownSettings = {
       text: 'Select resources',
       selectAllText: 'Select All',
-      unSelectAllText: 'UnSelect All',
+      unSelectAllText: 'Unselect All',
       classes: 'resource-dropdown'
     };
   }
@@ -72,18 +73,18 @@ export class AddDialogComponent implements OnInit {
       : '';
   }
 
-  onItemSelect(item: any) {
-    console.log(item);
-    console.log(this.selectedFiles);
-  }
-  OnItemDeSelect(item: any) {
-    console.log(item);
-    console.log(this.selectedFiles);
-  }
-  onSelectAll(items: any) {
-    console.log(items);
-  }
-  onDeSelectAll(items: any) {
-    console.log(items);
-  }
+  // onItemSelect(item: any) {
+  //   console.log(item);
+  //   console.log(this.selectedFiles);
+  // }
+  // OnItemDeSelect(item: any) {
+  //   console.log(item);
+  //   console.log(this.selectedFiles);
+  // }
+  // onSelectAll(items: any) {
+  //   console.log(items);
+  // }
+  // onDeSelectAll(items: any) {
+  //   console.log(items);
+  // }
 }

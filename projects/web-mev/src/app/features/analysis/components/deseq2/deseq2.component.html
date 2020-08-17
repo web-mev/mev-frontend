@@ -1,0 +1,101 @@
+<h3>DESeq</h3>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                In fringilla non eros vitae posuere. Pellentesque ac ante enim.
+                Nam luctus eleifend accumsan. Nullam sollicitudin malesuada
+                lacus vitae ultrices. Aenean malesuada commodo odio, id euismod
+                ante fringilla vitae. Duis luctus vel magna ut imperdiet. Nulla
+                sed leo nec est vestibulum varius.
+                Nunc a purus sed libero euismod fermentum in vel eros.
+              </p>
+
+              <form [formGroup]="analysesForm" (ngSubmit)="onSubmit()">
+
+                <!-- SINGLE SELECT LIST -->
+                <div *ngIf="resourceField1.visible">
+                  <div class="label"> {{ resourceField1.name }} </div>
+                  <mat-form-field class="form-control" color="accent">
+                    <mat-select [formControlName]="resourceField1.key" >
+                      <mat-option *ngFor="let file of this.resourceField1.files" [value]="file.id">
+                        {{ file.name }}
+                      </mat-option>
+                    </mat-select>
+                    <div *ngIf="submitted && f[resourceField1.key].errors">
+                      <mat-error *ngIf="f[resourceField1.key].errors.required">
+                        This field is required
+                      </mat-error>
+                    </div>
+                   </mat-form-field>
+                </div>
+
+                <!-- MULTIPLE SELECT LIST -->
+                <div class="form-control form-control--multiselect">
+                  <div class="label"> {{ multipleResourceField1.name }} </div>
+                  <angular2-multiselect [formControlName]="multipleResourceField1.key" [data]="multipleResourceField1.files" [(ngModel)]="multipleResourceField1.selectedFiles"
+                    [settings]="multipleResourcesDropdownSettings">
+                    <c-item>
+                      <ng-template let-item="item">
+                        <label>{{ item.name }} Type: {{ item.readable_resource_type || 'N/A' }}</label>
+                      </ng-template>
+                    </c-item>
+                    <c-badge>
+                      <ng-template let-item="item">
+                        <label>{{ item.name }}</label>
+                      </ng-template>
+                    </c-badge>
+                  </angular2-multiselect>            
+                </div>
+            
+
+                <!-- Numeric Field 1 -->
+               <div *ngIf="numField1.visible">
+                <div class="label"> {{ numField1.name }} </div>
+                  <mat-form-field class="form-control" color="accent">
+                    <input matInput [formControlName]="numField1.key" class="form-control" [name]="numField1.key">
+                    <div *ngIf="submitted && f[numField1.key].errors">
+                      <mat-error *ngIf="f[numField1.key].errors.required">
+                        This field is required
+                      </mat-error>
+                      <mat-error
+                        *ngIf="f[numField1.key].errors.min || f[numField1.key].errors.max || f[numField1.key].errors.pattern">
+                        The value should be a number between {{ numField1.min }} and {{ numField1.max }}.
+                      </mat-error>
+                    </div>
+                  </mat-form-field>
+                </div> 
+
+                <!-- Numeric Field 2 -->
+                <div *ngIf="numField2.visible">
+                  <div class="label"> {{ numField2.name }} </div>
+                  <mat-form-field class="form-control" color="accent">
+                    <input matInput [formControlName]="numField2.key" class="form-control" [name]="numField2.key">
+                    <div *ngIf="submitted && f[numField2.key].errors">
+                      <mat-error *ngIf="f[numField2.key].errors.required">
+                        This field is required
+                      </mat-error>
+                      <mat-error
+                        *ngIf="f[numField2.key].errors.min || f[numField2.key].errors.max || f[numField2.key].errors.pattern">
+                        The value should be a number between {{ numField2.min }} and {{ numField2.max }}.
+                      </mat-error>
+                    </div>
+                  </mat-form-field>
+                </div>
+
+                <!-- Text Field 1 -->
+                <div *ngIf="textField1.visible">
+                  <div class="label"> {{ textField1.name }} </div>
+                  <mat-form-field class="form-control" color="accent">
+                    <input matInput [formControlName]="textField1.key" class="form-control" [name]="textField1.key">
+                    <div *ngIf="submitted && f[textField1.key].errors">
+                      <mat-error *ngIf="f[textField1.key].errors.required">
+                        This field is required
+                      </mat-error>
+                    </div>
+                  </mat-form-field>
+                </div>
+
+                <div>
+                  <button mat-raised-button color="accent" type="submit" [disabled]="false"
+                    (click)="startAnalysis()">Go</button>
+                </div>
+              </form>

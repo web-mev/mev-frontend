@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
-import { UserService } from '@app/_services/user.service';
+import { UserService } from '@app/core/user/user.service';
 import { NotificationService } from '@core/core.module';
-import { AuthenticationService } from '@app/_services/authentication.service';
+import { AuthenticationService } from '@app/core/authentication/authentication.service';
 import { ROUTE_ANIMATIONS_ELEMENTS } from '@core/core.module';
 import { RepeatPasswordValidator } from '@app/shared/validators/validators';
 

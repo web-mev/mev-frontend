@@ -1,0 +1,63 @@
+.workspace-header {
+  display: flex;
+  justify-content: flex-start;
+  padding: 10px;
+}
+
+.workspace-header__title {
+  position: relative;
+  margin: auto;
+  left: -100px;
+}
+
+.workspace-header__icon {
+  vertical-align: top;
+}
+
+.analyses-section {
+  margin: 20px;
+}
+.mat-tab-group {
+  margin-bottom: 48px;
+}
+.tab-icon {
+  margin-right: 8px;
+}
+
+.tab-content {
+  padding: 15px 10px;
+}
+
+.vertical-tab-container {
+  margin: 30px 0;
+
+  ::ng-deep {
+    .mat-tab-group {
+      flex-direction: row;
+    }
+    .mat-tab-header {
+      border-bottom: none;
+    }
+    .mat-tab-header-pagination {
+      display: none !important;
+    }
+    .mat-tab-body-wrapper {
+      padding: 20px;
+    }
+    .mat-tab-labels {
+      flex-direction: column;
+    }
+    .mat-tab-label {
+      align-items: center;
+      justify-content: flex-start;
+      padding-left: 5px;
+    }
+    .mat-ink-bar {
+      height: 100%;
+      left: 99% !important;
+    }
+    .mat-tab-body-wrapper {
+      flex: 1 1 auto;
+    }
+  }
+}

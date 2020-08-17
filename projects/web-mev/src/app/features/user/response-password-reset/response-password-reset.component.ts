@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { AuthenticationService } from '@app/_services/authentication.service';
+import { AuthenticationService } from '@app/core/authentication/authentication.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ROUTE_ANIMATIONS_ELEMENTS } from '@app/core/core.module';

@@ -6,10 +6,8 @@
 
     <div class="form">
 
-      <angular2-multiselect [data]="fileList | availableresource" [(ngModel)]="selectedFiles"
-        [settings]="dropdownSettings" name="resource" (onSelect)="onItemSelect($event)"
-        (onDeSelect)="OnItemDeSelect($event)" (onSelectAll)="onSelectAll($event)"
-        (onDeSelectAll)="onDeSelectAll($event)">
+      <angular2-multiselect [data]="files | validFilesPipe" [(ngModel)]="selectedFiles"
+        [settings]="dropdownSettings" name="resource">
         <c-item>
           <ng-template let-item="item">
             <label>{{ item.name }}</label>

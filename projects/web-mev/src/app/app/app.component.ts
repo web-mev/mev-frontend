@@ -4,7 +4,7 @@ import { Store, select } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { BnNgIdleService } from 'bn-ng-idle';
-import { AuthenticationService } from '@app/_services/authentication.service';
+import { AuthenticationService } from '@app/core/authentication/authentication.service';
 import { User } from '@app/_models/user';
 
 import { environment as env } from '../../environments/environment';

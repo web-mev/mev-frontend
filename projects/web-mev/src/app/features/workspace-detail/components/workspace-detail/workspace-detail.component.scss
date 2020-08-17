@@ -10,6 +10,10 @@
   left: -100px;
 }
 
+.workspace-header__icon {
+  vertical-align: top;
+}
+
 .search-field {
   min-width: 250px;
 }
@@ -27,10 +31,6 @@
 
 button {
   margin-right: 10px;
-}
-
-.workspace-header__icon {
-  vertical-align: top;
 }
 
 ::ng-deep .tooltip {

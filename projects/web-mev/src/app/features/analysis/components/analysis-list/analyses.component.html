@@ -1,0 +1,66 @@
+<div class="workspace-header">
+  <a [routerLink]="['/workspace', workspaceId]" class="workspace-header__nav">
+    <mat-icon aria-label="Next step">navigate_back</mat-icon>
+    < Back to Workspace </a>
+      <span class="workspace-header__title" *ngIf="workspace$ | async as workspace">
+        Workspace
+        <b> {{ workspace.workspace_name }} </b>
+        <mat-icon class="workspace-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined" matTooltip="Workspace: {{ workspace.workspace_name }} &#13;
+                          Created: {{ workspace.created }} &#13;
+                          Owner: {{ workspace.owner_email }}" aria-label="Info tooltip about the workspace">info
+        </mat-icon>
+      </span>
+</div>
+
+<section class="analyses-section">
+
+  <mat-tab-group animationDuration="0ms" color="accent">
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">leaderboard</mat-icon>
+        Statistics
+      </ng-template>
+      <div class="tab-content">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+        dolore magna aliqua. 
+        <div class="vertical-tab-container">
+          <mat-tab-group>
+            <mat-tab label="DESeq">
+              <mev-deseq2></mev-deseq2>
+            </mat-tab>
+            <mat-tab label="LIMMA">
+              LIMMA
+            </mat-tab>
+            <mat-tab label="ANOVA">
+              ANOVA
+            </mat-tab>
+          </mat-tab-group>
+        </div>
+      </div>
+    </mat-tab>
+
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">bubble_chart</mat-icon>
+        Clustering
+      </ng-template>
+
+    </mat-tab>
+
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">assistant</mat-icon>
+        Meta-analyses
+      </ng-template>
+
+    </mat-tab>
+
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">filter_alt</mat-icon>
+        Normalization
+      </ng-template>
+
+    </mat-tab>
+  </mat-tab-group>
+</section>

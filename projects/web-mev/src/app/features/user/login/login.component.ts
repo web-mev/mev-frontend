@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { AuthenticationService } from '@app/_services/authentication.service';
-import { UserService } from '@app/_services/user.service';
+import { AuthenticationService } from '@app/core/authentication/authentication.service';
+import { UserService } from '@app/core/user/user.service';
 import { NotificationService } from '@core/core.module';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';

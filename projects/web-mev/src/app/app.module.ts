@@ -10,7 +10,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app/app.component';
 import { JWT_OPTIONS, JwtModule } from '@auth0/angular-jwt';
-import { AuthenticationService } from '@app/_services/authentication.service';
+import { AuthenticationService } from '@app/core/authentication/authentication.service';
 import { LoginComponent } from './features/user/login/login.component';
 import { RegisterComponent } from './features/user/register/register.component';
 import { TutorialComponent } from './features/tutorial/tutorial.component';
@@ -35,7 +35,9 @@ import { HttpErrorInterceptor } from '@core/interceptors/http-error.interceptor'
 import { RequestPasswordResetComponent } from './features/user/request-password-reset/request-password-reset.component';
 import { ResponsePasswordResetComponent } from './features/user/response-password-reset/response-password-reset.component';
 import { PasswordChangeComponent } from './features/user/password-change/password-change.component';
-import { AnalysesComponent } from './features/analyses/analyses.component';
+import { AnalysesComponent } from './features/analysis/components/analysis-list/analyses.component';
+import { AnalysisModule } from './features/analysis/analysis.module';
+//import { Deseq2Component } from './features/analysis/components/deseq2/deseq2.component';
 
 @NgModule({
   imports: [
@@ -70,7 +72,9 @@ import { AnalysesComponent } from './features/analyses/analyses.component';
     // Google authorization
     SocialLoginModule,
 
-    WorkspaceDetailModule
+    WorkspaceDetailModule,
+
+    AnalysisModule
   ],
   declarations: [
     AppComponent,
@@ -82,6 +86,7 @@ import { AnalysesComponent } from './features/analyses/analyses.component';
     ResponsePasswordResetComponent,
     PasswordChangeComponent,
     AnalysesComponent
+    //Deseq2Component
   ],
   providers: [
     BnNgIdleService,

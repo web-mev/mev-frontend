@@ -3,7 +3,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
 import { BnNgIdleService } from 'bn-ng-idle';
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 
 import { CoreModule } from './core/core.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -37,7 +37,7 @@ import { ResponsePasswordResetComponent } from './features/user/response-passwor
 import { PasswordChangeComponent } from './features/user/password-change/password-change.component';
 import { AnalysesComponent } from './features/analysis/components/analysis-list/analyses.component';
 import { AnalysisModule } from './features/analysis/analysis.module';
-//import { Deseq2Component } from './features/analysis/components/deseq2/deseq2.component';
+import { SentryErrorHandler } from './sentry-error-handler';
 
 @NgModule({
   imports: [
@@ -86,7 +86,6 @@ import { AnalysisModule } from './features/analysis/analysis.module';
     ResponsePasswordResetComponent,
     PasswordChangeComponent,
     AnalysesComponent
-    //Deseq2Component
   ],
   providers: [
     BnNgIdleService,
@@ -100,10 +99,10 @@ import { AnalysisModule } from './features/analysis/analysis.module';
       useClass: HttpErrorInterceptor,
       multi: true
     },
-
-    // SocialLoginModule.initialize(getAuthServiceConfigs)
-
-    // SocialAuthServiceConfig object to set up OAuth2
+    {
+      provide: ErrorHandler,
+      useClass: SentryErrorHandler
+    },
     {
       provide: 'SocialAuthServiceConfig',
       useValue: {

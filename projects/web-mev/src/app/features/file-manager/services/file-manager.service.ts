@@ -48,7 +48,7 @@ export class FileService {
   public getAllFiles(): any {
     this.httpClient
       .get<File[]>(`${this.API_URL}/resources/`)
-      .pipe(map((data: any[]) => data.map(item => this.adapter.adapt(item))))
+      .pipe(map((data: File[]) => data.map(item => this.adapter.adapt(item))))
       .subscribe(data => {
         this.dataChange.next(data);
       });
@@ -140,8 +140,6 @@ export class FileService {
 
   // DELETE FILE
   deleteFile(id: number | string): void {
-    this.httpClient
-      .delete(`${this.API_URL}/resources/${id}/`)
-      .subscribe(data => {});
+    this.httpClient.delete(`${this.API_URL}/resources/${id}/`).subscribe();
   }
 }

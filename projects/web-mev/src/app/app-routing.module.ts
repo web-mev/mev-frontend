@@ -6,19 +6,19 @@ import { RequestPasswordResetComponent } from '@app/features/user/request-passwo
 import { TutorialComponent } from '@features/tutorial/tutorial.component';
 import { AuthGuardService } from '@core/auth/auth-guard.service';
 import { WorkareaComponent } from '@features/workarea/workarea.component';
-import { WorkspaceDetailComponent } from '@features/workspace-detail/components/workspace-detail/workspace-detail.component';
 import { ResponsePasswordResetComponent } from './features/user/response-password-reset/response-password-reset.component';
 import { PasswordChangeComponent } from './features/user/password-change/password-change.component';
-import { AnalysesComponent } from './features/analysis/components/analysis-list/analyses.component';
 
 const routes: Routes = [
   {
+    path: '',
+    redirectTo: 'about',
+    pathMatch: 'full'
+  },
+  {
     path: 'about',
     loadChildren: () =>
-      import('./features/about/about.module').then(
-        m => m.AboutModule
-      ) /*,
-    canActivate: [AuthGuardService]*/
+      import('./features/about/about.module').then(m => m.AboutModule)
   },
   {
     path: 'tutorial',
@@ -30,18 +30,23 @@ const routes: Routes = [
     canActivate: [AuthGuardService]
   },
   {
+    path: 'settings',
+    loadChildren: () =>
+      import('./features/settings/settings.module').then(m => m.SettingsModule)
+  },
+  {
     path: 'analyses/:workspaceId',
-    component: AnalysesComponent,
+    loadChildren: () =>
+      import('./features/analysis/analysis.module').then(m => m.AnalysisModule),
     canActivate: [AuthGuardService]
   },
   {
     path: 'workspace/:workspaceId',
-    component: WorkspaceDetailComponent
-  },
-  {
-    path: 'settings',
     loadChildren: () =>
-      import('./features/settings/settings.module').then(m => m.SettingsModule)
+      import('./features/workspace-detail/workspace-detail.module').then(
+        m => m.WorkspaceDetailModule
+      ),
+    canActivate: [AuthGuardService]
   },
   {
     path: 'login',
@@ -67,11 +72,7 @@ const routes: Routes = [
     path: 'change-password',
     component: PasswordChangeComponent
   },
-  {
-    path: '',
-    redirectTo: 'about',
-    pathMatch: 'full'
-  },
+
   {
     path: '**',
     redirectTo: 'feature-list'

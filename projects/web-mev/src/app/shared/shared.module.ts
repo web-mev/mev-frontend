@@ -27,6 +27,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatRippleModule } from '@angular/material/core';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 import {
   FontAwesomeModule,
@@ -66,10 +68,12 @@ const MatModules = [
   MatChipsModule,
   MatCardModule,
   MatCheckboxModule,
+  MatGridListModule,
   MatListModule,
   MatMenuModule,
   MatIconModule,
   MatTooltipModule,
+  MatExpansionModule,
   MatSnackBarModule,
   MatSlideToggleModule,
   MatDividerModule,

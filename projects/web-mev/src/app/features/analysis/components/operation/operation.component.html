@@ -1,0 +1,129 @@
+<h3>{{ operation.name }}</h3>
+<p>{{ operation.description }} </p>
+
+<form *ngIf="analysesForm" [formGroup]="analysesForm" (ngSubmit)="onSubmit()">
+
+  <!-- SINGLE SELECT LISTS FOR RESOURCES -->
+  <div *ngFor="let resourceField of resourceFields">
+    <div class="label">
+      {{ resourceField.name }}
+      <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+        matTooltip="{{ resourceField.desc}}" aria-label="Info tooltip about the field">info
+      </mat-icon>
+    </div>
+    <mat-form-field class="form-control" color="accent">
+      <mat-select [formControlName]="resourceField.key">
+        <mat-option *ngFor="let file of this.resourceField.files" [value]="file.id">
+          {{ file.name }}
+        </mat-option>
+      </mat-select>
+      <div *ngIf="submitted && f[resourceField.key].errors">
+        <mat-error *ngIf="f[resourceField.key].errors.required">
+          This field is required
+        </mat-error>
+      </div>
+    </mat-form-field>
+  </div>
+
+
+
+  <!-- MULTIPLE SELECT LISTS FOR RESOURCES -->
+  <div *ngFor="let multipleResourceField of multipleResourceFields">
+    <div class="form-control form-control--multiselect">
+      <div class="label">
+        {{ multipleResourceField.name }}
+        <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+          matTooltip="{{ multipleResourceField.desc}}" aria-label="Info tooltip about the field">info
+        </mat-icon>
+      </div>
+      <angular2-multiselect [formControlName]="multipleResourceField.key" [data]="multipleResourceField.files"
+        [(ngModel)]="multipleResourceField.selectedFiles" [settings]="multipleResourcesDropdownSettings">
+        <c-item>
+          <ng-template let-item="item">
+            <label>{{ item.name }} Type: {{ item.readable_resource_type || 'N/A' }}</label>
+          </ng-template>
+        </c-item>
+        <c-badge>
+          <ng-template let-item="item">
+            <label>{{ item.name }}</label>
+          </ng-template>
+        </c-badge>
+      </angular2-multiselect>
+    </div>
+  </div>
+
+
+
+
+  <!-- NUMERIC FIELDS -->
+
+  <div *ngFor="let numField of numFields">
+    <div class="label">
+      {{ numField.name }}
+      <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+        matTooltip="{{ numField.desc}}" aria-label="Info tooltip about the field">info
+      </mat-icon>
+    </div>
+    <mat-form-field class="form-control" color="accent">
+      <input matInput [formControlName]="numField.key" [name]="numField.key">
+      <div *ngIf="submitted && f[numField.key].errors">
+        <mat-error *ngIf="f[numField.key].errors.required">
+          This field is required
+        </mat-error>
+        <mat-error *ngIf="f[numField.key].errors.min || f[numField.key].errors.max || f[numField.key].errors.pattern">
+          The value should be a number between {{ numField.min }} and {{ numField.max }}.
+        </mat-error>
+      </div>
+    </mat-form-field>
+  </div>
+
+
+  <!-- TEXT FIELDS -->
+
+  <div *ngFor="let textField of textFields">
+    <div class="label">
+      {{ textField.name }}
+      <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+        matTooltip="{{ textField.desc}}" aria-label="Info tooltip about the field">info
+      </mat-icon>
+    </div>
+
+    <mat-form-field class="form-control" color="accent">
+      <input matInput [formControlName]="textField.key" [name]="textField.key">
+      <div *ngIf="submitted && f[textField.key].errors">
+        <mat-error *ngIf="f[textField.key].errors.required">
+          This field is required
+        </mat-error>
+      </div>
+    </mat-form-field>
+  </div>
+
+
+  <!-- SINGLE SELECT LISTS FOR OBSERVATION SETS -->
+  <div *ngFor="let observationField of observationFields">
+    <div class="label">
+      {{ observationField.name }}
+      <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+        matTooltip="{{ observationField.desc}}" aria-label="Info tooltip about the field">info
+      </mat-icon>
+    </div>
+
+    <mat-form-field class="form-control" color="accent">
+      <mat-select [formControlName]="observationField.key">
+        <mat-option *ngFor="let set of this.observationField.sets" [value]="set">
+          {{ set.name }}
+        </mat-option>
+      </mat-select>
+      <div *ngIf="submitted && f[observationField.key].errors">
+        <mat-error *ngIf="f[observationField.key].errors.required">
+          This field is required
+        </mat-error>
+      </div>
+    </mat-form-field>
+  </div>
+
+  
+  <div>
+    <button mat-raised-button color="accent" type="submit" [disabled]="false" (click)="startAnalysis()">Go</button>
+  </div>
+</form>

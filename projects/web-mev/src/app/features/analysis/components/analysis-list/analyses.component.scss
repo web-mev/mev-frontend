@@ -1,25 +1,34 @@
-.workspace-header {
+.analyses-header {
   display: flex;
   justify-content: flex-start;
   padding: 10px;
 }
 
-.workspace-header__title {
+.analyses-header__title {
   position: relative;
   margin: auto;
-  left: -100px;
 }
 
-.workspace-header__icon {
+.analyses-header__icon {
   vertical-align: top;
+}
+
+::ng-deep .tooltip {
+  white-space: pre-line !important;
 }
 
 .analyses-section {
   margin: 20px;
+  font-size: 14px !important;
 }
 .mat-tab-group {
   margin-bottom: 48px;
 }
+
+::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {
+  opacity: 1;
+}
+
 .tab-icon {
   margin-right: 8px;
 }
@@ -42,7 +51,7 @@
       display: none !important;
     }
     .mat-tab-body-wrapper {
-      padding: 20px;
+      padding: 0 20px;
     }
     .mat-tab-labels {
       flex-direction: column;

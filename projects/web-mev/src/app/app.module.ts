@@ -30,13 +30,10 @@ import {
 } from 'angularx-social-login';
 
 import { jwtOptionsFactory } from '@app/jwtConfig';
-import { WorkspaceDetailModule } from '@features/workspace-detail/workspace-detail.module';
 import { HttpErrorInterceptor } from '@core/interceptors/http-error.interceptor';
 import { RequestPasswordResetComponent } from './features/user/request-password-reset/request-password-reset.component';
 import { ResponsePasswordResetComponent } from './features/user/response-password-reset/response-password-reset.component';
 import { PasswordChangeComponent } from './features/user/password-change/password-change.component';
-import { AnalysesComponent } from './features/analysis/components/analysis-list/analyses.component';
-import { AnalysisModule } from './features/analysis/analysis.module';
 import { SentryErrorHandler } from './sentry-error-handler';
 
 @NgModule({
@@ -51,11 +48,6 @@ import { SentryErrorHandler } from './sentry-error-handler';
 
     // core
     CoreModule,
-
-    // app
-    FileManagerModule,
-    WorkspaceManagerModule,
-    AppRoutingModule,
 
     YouTubePlayerModule,
 
@@ -72,9 +64,10 @@ import { SentryErrorHandler } from './sentry-error-handler';
     // Google authorization
     SocialLoginModule,
 
-    WorkspaceDetailModule,
-
-    AnalysisModule
+    // app
+    FileManagerModule,
+    WorkspaceManagerModule,
+    AppRoutingModule
   ],
   declarations: [
     AppComponent,
@@ -84,8 +77,8 @@ import { SentryErrorHandler } from './sentry-error-handler';
     WorkareaComponent,
     RequestPasswordResetComponent,
     ResponsePasswordResetComponent,
-    PasswordChangeComponent,
-    AnalysesComponent
+    PasswordChangeComponent
+    // AnalysesComponent
   ],
   providers: [
     BnNgIdleService,

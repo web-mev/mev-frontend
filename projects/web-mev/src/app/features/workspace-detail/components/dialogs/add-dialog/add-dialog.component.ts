@@ -5,7 +5,7 @@ import {
   ChangeDetectionStrategy,
   Inject
 } from '@angular/core';
-import { Router, Params, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Validators, FormControl } from '@angular/forms';
 import { WorkspaceDetailService } from '@app/features/workspace-detail/services/workspace-detail.service';
 
@@ -59,18 +59,8 @@ export class AddDialogComponent implements OnInit {
     this.selectedFiles.forEach(file => {
       this.apiService
         .addResourceToWorkspace(file.id, this.data.workspaceId)
-        .subscribe(data => {
-          this.router.navigate(['workspace', this.workspaceId]);
-        });
+        .subscribe();
     });
-  }
-
-  getErrorMessage() {
-    return this.formControl.hasError('required')
-      ? 'Required field'
-      : this.formControl.hasError('email')
-      ? 'Not a valid email'
-      : '';
   }
 
   // onItemSelect(item: any) {

@@ -1,0 +1,110 @@
+<mat-accordion class="example-headers-align" multi>
+  <mat-expansion-panel expanded=false [togglePosition]="'before'">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Annotations
+      </mat-panel-title>
+      <mat-panel-description>
+        Choose current annotation and blah-blah-blah
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <button mat-raised-button color="accent" (click)="onChooseAnnotation()">
+      <mat-icon aria-label="Choose current annotation">add</mat-icon>
+      Choose current annotation
+    </button>
+
+    <br>
+    <br>
+
+    <mat-grid-list cols="1" rowHeight="2:1">
+      <mat-grid-tile>
+        <div class="mat-table-container">
+          <h4>Current observation set</h4>
+          <div class="mat-elevation-z8">
+            <table mat-table [dataSource]="observationSetDS">
+              <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef> Name </th>
+                <td mat-cell *matCellDef="let element"> {{ element.id }} </td>
+              </ng-container>
+
+              <ng-container *ngFor="let attrCol of metadataObsDisplayedColumnsAttributesOnly; let colIndex = index"
+                matColumnDef="{{attrCol}}">
+                <th mat-header-cell *matHeaderCellDef>{{ attrCol }}</th>
+                <td mat-cell *matCellDef="let element"> {{ element.attributes[attrCol].value }}</td> 
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let element; let i=index;">
+                  <button mat-icon-button color="accent" title="Add">
+                    <mat-icon aria-label="Add">edit</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="metadataObsDisplayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: metadataObsDisplayedColumns;">
+              </tr>
+            </table>
+            <mat-paginator [pageSizeOptions]="[5, 10, 25]">
+            </mat-paginator>
+          </div>
+
+        </div>
+
+
+      </mat-grid-tile>
+    </mat-grid-list>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel [togglePosition]="'before'">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Set selections
+      </mat-panel-title>
+      <mat-panel-description>
+        Create sample (column) or feature (row) sets
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div class="file-btn-group">
+      <button mat-raised-button color="accent" (click)="onCreateObservationSet()">
+        <mat-icon aria-label="Create an observation set">add</mat-icon>
+        Create an observation set
+      </button>
+
+      <button mat-raised-button color="accent" (click)="onCreateFeatureSet()">
+        <mat-icon aria-label="Create a feature set">add</mat-icon>
+        Create a feature set
+      </button>
+    </div>
+
+    Saved set selections:
+    <table mat-table [dataSource]="customSetDS" class="mat-elevation-z8">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Name </th>
+        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef> Type (Observation/Feature set) </th>
+        <td mat-cell *matCellDef="let element"> {{element.type}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let element; let i=index;">
+          <button mat-icon-button color="accent" title="Add">
+            <mat-icon aria-label="Add">visibility</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="customSetsDisplayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: customSetsDisplayedColumns;">
+
+    </table>
+
+  </mat-expansion-panel>
+
+</mat-accordion>

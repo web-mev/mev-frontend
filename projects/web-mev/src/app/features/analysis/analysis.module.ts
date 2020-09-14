@@ -1,18 +1,24 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AnalysisRoutingModule } from './analysis-routing.module';
-import { Deseq2Component } from './components/deseq2/deseq2.component';
 import { SharedModule } from '@app/shared/shared.module';
 import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
+import { OperationComponent } from './components/operation/operation.component';
+import { ExecutedOperationComponent } from './components/executed-operation/executed-operation.component';
+import { AnalysesComponent } from './components/analysis-list/analyses.component';
 
 @NgModule({
-  declarations: [Deseq2Component],
-  exports: [Deseq2Component],
+  declarations: [
+    AnalysesComponent,
+    OperationComponent,
+    ExecutedOperationComponent
+  ],
+  exports: [OperationComponent],
   imports: [
     CommonModule,
-    AnalysisRoutingModule,
     SharedModule,
-    AngularMultiSelectModule
+    AngularMultiSelectModule,
+    AnalysisRoutingModule
   ]
 })
 export class AnalysisModule {}

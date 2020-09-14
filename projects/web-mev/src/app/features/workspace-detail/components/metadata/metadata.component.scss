@@ -1,0 +1,27 @@
+table {
+  width: 100%;
+}
+
+.mat-table-container {
+  width: 80%;
+  align-self: start;
+}
+
+.mat-expansion-panel-header-title {
+  font-weight: bold;
+  color: #a1887f;
+}
+
+.mat-header-cell {
+  text-transform: capitalize;
+}
+
+.file-btn-group {
+  display: flex;
+  justify-content: flex-start;
+  padding: 16px;
+}
+
+button {
+  margin-right: 10px;
+}

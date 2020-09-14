@@ -1,7 +1,7 @@
 <div class="workspace-header">
   <a routerLink='/workarea' class="workspace-header__nav">
-    <mat-icon aria-label="Next step">navigate_back</mat-icon>
-    < Back to File & Workspace list </a>
+    <mat-icon aria-label="Next step">reply</mat-icon>
+     Back to File & Workspace list </a>
       <span class="workspace-header__title" *ngIf="workspace$ | async as workspace">
         Workspace
         <b> {{ workspace.workspace_name }} </b>
@@ -12,48 +12,69 @@
       </span>
 </div>
 
-<mat-toolbar>
-  <mat-form-field floatLabel='never' class='search-field'>
-    <input matInput [(ngModel)]="searchText" autocomplete="off">
-    <mat-placeholder class="placeholder">Search</mat-placeholder>
-  </mat-form-field>
-</mat-toolbar>
-<div class="file-btn-group">
-  <button mat-raised-button color="accent" (click)="addItem()">
-    <mat-icon aria-label="Add local data">add</mat-icon>
-    Add local data
-  </button>
 
-  <button mat-raised-button color="accent" (click)="addItem()">
-    <mat-icon aria-label="Add external data">add</mat-icon>
-    Add external data
-  </button>
-</div>
+<mat-tab-group animationDuration="0ms" color="accent">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="tab-icon">bubble_chart</mat-icon>
+      Resources
+    </ng-template>
+
+    <mat-toolbar>
+      <mat-form-field floatLabel='never' class='search-field'>
+        <input matInput [(ngModel)]="searchText" autocomplete="off">
+        <mat-placeholder class="placeholder">Search</mat-placeholder>
+      </mat-form-field>
+    </mat-toolbar>
+    <div class="file-btn-group">
+      <button mat-raised-button color="accent" (click)="addItem()">
+        <mat-icon aria-label="Add local data">add</mat-icon>
+        Add local data
+      </button>
+
+      <button mat-raised-button color="accent" (click)="addItem()">
+        <mat-icon aria-label="Add external data">add</mat-icon>
+        Add external data
+      </button>
+    </div>
 
 
-<div class="cardList">
-  <a *ngFor="let resource of workspaceResources | filter : searchText" (click)="selectResource(resource);"
-    class="cardList__item card" matRipple matRippleColor="rgba(158, 158, 158, 0.22)">
-    <mat-card>
-      <mat-card-title class="card-title">
-        {{ resource.name }}
-      </mat-card-title>
-      <mat-card-content>
-        <ul>
-          <li>Resource type: {{ resource.readable_resource_type }}</li>
-          <li>Size: {{ resource.size | byteName}}</li>
-          <li>Date added: {{ resource.created | date :'medium' }}</li>
-        </ul>
+    <div class="cardList">
+      <a *ngFor="let resource of workspaceResources | filter : searchText" (click)="selectResource(resource);"
+        class="cardList__item card" matRipple matRippleColor="rgba(158, 158, 158, 0.22)">
+        <mat-card>
+          <mat-card-title class="card-title">
+            {{ resource.name }}
+          </mat-card-title>
+          <mat-card-content>
+            <ul>
+              <li>Resource type: {{ resource.readable_resource_type }}</li>
+              <li>Size: {{ resource.size | byteName}}</li>
+              <li>Date added: {{ resource.created | date :'medium' }}</li>
+            </ul>
 
-      </mat-card-content>
-      <mat-card-footer>
-        <mat-icon fontSet="material-icons-outlined" title="Preview resource" (click)="previewItem(resource.id)">search</mat-icon>
-        <mat-icon fontSet="material-icons-outlined" title="Delete resource">delete</mat-icon>
-      </mat-card-footer>
-    </mat-card>
+          </mat-card-content>
+          <mat-card-footer>
+            <mat-icon fontSet="material-icons-outlined" title="Preview resource" (click)="previewItem(resource.id)">
+              search</mat-icon>
+            <mat-icon fontSet="material-icons-outlined" title="Delete resource">delete</mat-icon>
+          </mat-card-footer>
+        </mat-card>
 
-  </a>
-</div>
+      </a>
+    </div>
+  </mat-tab>
+
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="tab-icon">bubble_chart</mat-icon>
+      Metadata
+    </ng-template>
+    <mev-metadata [workspaceResources]="workspaceResources"></mev-metadata>
+  </mat-tab>
+</mat-tab-group>
+
+
 
 <div class="workspace-footer">
   <button mat-raised-button color="accent" [routerLink]="['/analyses', workspaceId]">

@@ -1,8 +1,7 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { NotificationService } from '@core/core.module';
 import { Workspace, WorkspaceAdapter } from '../models/workspace';
 import { environment } from '@environments/environment';
 
@@ -11,7 +10,6 @@ import { environment } from '@environments/environment';
 })
 export class WorkspaceService {
   private readonly API_URL = environment.apiUrl + '/workspaces';
-
 
   dataChange: BehaviorSubject<Workspace[]> = new BehaviorSubject<Workspace[]>(
     []
@@ -22,10 +20,8 @@ export class WorkspaceService {
 
   constructor(
     private httpClient: HttpClient,
-    private readonly notificationService: NotificationService,
     private adapter: WorkspaceAdapter
-  ) { }
-
+  ) {}
 
   get data(): Workspace[] {
     return this.dataChange.value;
@@ -36,42 +32,32 @@ export class WorkspaceService {
   }
 
   getAllWorkspaces(): void {
-    this.httpClient.get<Workspace[]>(`${this.API_URL}/`)
-      .pipe(
-        map((data: any[]) => data.map((item) => this.adapter.adapt(item)))
-      )
-      .subscribe(
-        data => {
-          this.dataChange.next(data);
-        }
-      );
+    this.httpClient
+      .get<Workspace[]>(`${this.API_URL}/`)
+      .pipe(map((data: any[]) => data.map(item => this.adapter.adapt(item))))
+      .subscribe(data => {
+        this.dataChange.next(data);
+      });
   }
 
   // ADD, POST METHOD
   addWorkspace(workspace: Workspace): void {
-    this.httpClient.post(`${this.API_URL}/`, workspace)
-      .subscribe(
-        data => {
-          this.dialogData = workspace;
-        }
-      );
+    this.httpClient.post(`${this.API_URL}/`, workspace).subscribe(data => {
+      this.dialogData = workspace;
+    });
   }
 
   // UPDATE, PUT METHOD
   updateWorkspace(workspace: Workspace): void {
-    this.httpClient.put(`${this.API_URL}/${workspace.id}/`, workspace)
-      .subscribe(
-        data => {
-          this.dialogData = workspace;
-        }
-      );
+    this.httpClient
+      .put(`${this.API_URL}/${workspace.id}/`, workspace)
+      .subscribe(data => {
+        this.dialogData = workspace;
+      });
   }
 
   // DELETE METHOD
   deleteWorkspace(id: number): void {
-    this.httpClient.delete(`${this.API_URL}/${id}/`)
-      .subscribe(
-        data => { }
-      );
+    this.httpClient.delete(`${this.API_URL}/${id}/`).subscribe();
   }
 }

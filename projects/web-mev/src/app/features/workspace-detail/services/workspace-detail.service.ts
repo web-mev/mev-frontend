@@ -3,7 +3,7 @@ import { environment } from '@environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Workspace } from '@workspace-manager/models/workspace';
 import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import {
   WorkspaceResource,
   WorkspaceResourceAdapter
@@ -41,26 +41,43 @@ export class WorkspaceDetailService {
     );
   }
 
-  getWorkspaceDetail(id: number | string): Observable<Workspace> {
+  getWorkspaceDetail(workspaceId: number | string): Observable<Workspace> {
     return <Observable<Workspace>>(
-      this.httpClient.get(`${this.API_URL}/workspaces/${id}/`)
+      this.httpClient.get(`${this.API_URL}/workspaces/${workspaceId}/`)
     );
   }
 
-  getResourcePreview(id: number | string): Observable<any> {
-    return <Observable<Workspace>>(
-      this.httpClient.get(`${this.API_URL}/resources/${id}/preview/`)
+  getResourcePreview(resourceId: number | string): Observable<any> {
+    return <Observable<any>>(
+      this.httpClient.get(`${this.API_URL}/resources/${resourceId}/preview/`)
     );
+  }
+
+  getMetadata(resourceId: number | string): Observable<any> {
+    return <Observable<any>>(
+      this.httpClient.get(`${this.API_URL}/resources/${resourceId}/metadata/`)
+    );
+  }
+
+  getMetadataForResources(resources): Observable<any> {
+    const metadataObservables = resources.map(resource => {
+      return this.getMetadata(resource.id).pipe(
+        map(metadata => {
+          return metadata;
+        })
+      );
+    });
+    return forkJoin(metadataObservables);
   }
 
   addResourceToWorkspace(
-    resource_uuid: string,
+    resourceId: string,
     workspaceId: string
   ): Observable<any> {
     return <Observable<any>>(
       this.httpClient.post(
         `${this.API_URL}/workspaces/${workspaceId}/resources/add/`,
-        { resource_uuid: resource_uuid }
+        { resourceId: resourceId }
       )
     );
   }

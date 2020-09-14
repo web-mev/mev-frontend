@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { WorkspaceResource } from '@features/workspace-detail/models/workspace-resource';
 import { Workspace } from '@workspace-manager/models/workspace';
 import { Observable, of } from 'rxjs';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { switchMap, flatMap, tap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { WorkspaceDetailService } from '@features/workspace-detail/services/workspace-detail.service';
@@ -20,6 +20,7 @@ export class WorkspaceDetailComponent implements OnInit {
   workspace$: Observable<Workspace>;
   searchText;
   constructor(
+    private router: Router,
     private route: ActivatedRoute,
     private service: WorkspaceDetailService,
     public dialog: MatDialog
@@ -78,5 +79,9 @@ export class WorkspaceDetailComponent implements OnInit {
         }
       });
     });
+  }
+
+  metadata(resourceId) {
+    this.router.navigate([resourceId, 'metadata'], { relativeTo: this.route });
   }
 }

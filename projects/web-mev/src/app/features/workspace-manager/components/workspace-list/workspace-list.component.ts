@@ -118,11 +118,7 @@ export class WorkspaceListComponent implements OnInit {
   }
 
   public loadData() {
-    this.exampleDatabase = new WorkspaceService(
-      this.httpClient,
-      this.notificationService,
-      this.adapter
-    );
+    this.exampleDatabase = new WorkspaceService(this.httpClient, this.adapter);
     this.dataSource = new ExampleDataSource(
       this.exampleDatabase,
       this.paginator,

@@ -29,6 +29,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatRippleModule } from '@angular/material/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 import {
   FontAwesomeModule,
@@ -86,7 +87,8 @@ const MatModules = [
   MatDatepickerModule,
   MatNativeDateModule,
   MatRippleModule,
-  MatToolbarModule
+  MatToolbarModule,
+  MatButtonToggleModule
 ];
 
 @NgModule({
@@ -107,7 +109,6 @@ const MatModules = [
     TranslateModule,
     ...MatModules,
     FontAwesomeModule,
-
     RtlSupportDirective,
     ByteNamePipe
   ]

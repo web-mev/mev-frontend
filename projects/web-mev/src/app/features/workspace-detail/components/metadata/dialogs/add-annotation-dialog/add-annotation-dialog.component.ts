@@ -5,7 +5,6 @@ import {
   ChangeDetectionStrategy,
   Inject
 } from '@angular/core';
-import { WorkspaceDetailService } from '@app/features/workspace-detail/services/workspace-detail.service';
 
 @Component({
   selector: 'mev-add-annotation-dialog',
@@ -20,7 +19,6 @@ export class AddAnnotationDialogComponent implements OnInit {
   dropdownSettings = {};
   constructor(
     public dialogRef: MatDialogRef<AddAnnotationDialogComponent>,
-    private apiService: WorkspaceDetailService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
@@ -44,11 +42,9 @@ export class AddAnnotationDialogComponent implements OnInit {
   }
 
   confirmAdd() {
-    console.log('this.selectedFiles ', this.selectedFiles);
-    this.selectedFiles.forEach(file => {
-      this.apiService.getMetadata(file.id).subscribe(metadata => {
-        this.dialogRef.close(metadata);
-      });
-    });
+    // temporarily use only 1 file to get metadata
+    const selectedFile =
+      this.selectedFiles.length > 0 ? this.selectedFiles[0] : null;
+    this.dialogRef.close(selectedFile.id);
   }
 }

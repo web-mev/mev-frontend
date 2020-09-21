@@ -70,7 +70,7 @@
       <mat-icon class="tab-icon">bubble_chart</mat-icon>
       Metadata
     </ng-template>
-    <mev-metadata [workspaceResources]="workspaceResources"></mev-metadata>
+    <mev-metadata *ngIf='workspaceResources' [workspaceResources]="workspaceResources"></mev-metadata>
   </mat-tab>
 </mat-tab-group>
 

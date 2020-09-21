@@ -1,19 +1,19 @@
 <div class="container">
-    <h3 mat-dialog-title>Enter the name of a new observation set and select samples.
+    <h3 mat-dialog-title>Enter the name of a new feature set and select features.
         <br> Then click the Add button.</h3>
 
-    <form class="mat-dialog-content" (ngSubmit)="submit" [formGroup]="observationForm">
+    <form class="mat-dialog-content" (ngSubmit)="submit" [formGroup]="featureForm">
 
         <div class="form">
 
             <mat-form-field class="form-control" color="accent">
-                <mat-label>Enter observation set name</mat-label>
-                <input matInput formControlName=observationSetName name=observationSetName>
+                <mat-label>Enter feature set name</mat-label>
+                <input matInput formControlName=featureSetName name=featureSetName>
             </mat-form-field>
 
-            Select samples: 
+            Select features: 
             <div class="mat-elevation-z8">
-                <table mat-table [dataSource]="allObservationSetsDS">
+                <table mat-table [dataSource]="allFeatureSetsDS">
 
                     <ng-container matColumnDef="select">
                         <th mat-header-cell *matHeaderCellDef>
@@ -34,28 +34,28 @@
                         <td mat-cell *matCellDef="let element"> {{element.id}} </td>
                     </ng-container>
     
-                    <ng-container *ngFor="let attrCol of observationSetsDisplayedColumnsAttributesOnly; let colIndex = index"
+                    <ng-container *ngFor="let attrCol of featureSetsDisplayedColumnsAttributesOnly; let colIndex = index"
                     matColumnDef="{{attrCol}}">
                     <th mat-header-cell *matHeaderCellDef>{{ attrCol }}</th>
                     <td mat-cell *matCellDef="let element"> {{ element.attributes[attrCol] ? element.attributes[attrCol].value : '' }}</td> 
                     </ng-container>
     
-                    <tr mat-header-row *matHeaderRowDef="observationSetsDisplayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: observationSetsDisplayedColumns;"
+                    <tr mat-header-row *matHeaderRowDef="featureSetsDisplayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: featureSetsDisplayedColumns;"
                         (click)="selection.toggle(row)">
                     </tr>
                 </table>
                 <mat-paginator [pageSizeOptions]="[5, 10, 25]">
-                </mat-paginator>  
+                </mat-paginator> 
             </div>
-            
+             
 
 
         </div>
 
         <div mat-dialog-actions>
             <button mat-button [mat-dialog-close]="1" mat-raised-button color="accent"
-               [type]="submit" [disabled]="!observationForm.valid" (click)="confirmAdd()">Add</button>
+            [type]="submit" [disabled]="!featureForm.valid" (click)="confirmAdd()">Add</button>
             <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
         </div>
     </form>

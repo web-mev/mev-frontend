@@ -16,12 +16,79 @@ table {
   text-transform: capitalize;
 }
 
-.file-btn-group {
+::ng-deep .mat-figure {
+  overflow: scroll;
+}
+
+.control-group {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   padding: 16px;
+}
+
+::ng-deep .mat-button-toggle-label-content {
+  line-height: 36px !important;
 }
 
 button {
   margin-right: 10px;
+}
+
+.visualization-table {
+  width: auto;
+
+  .mat-cell {
+    width: 150px;
+  }
+
+  .mat-header-cell:nth-child(n + 2) {
+    text-align: center;
+  }
+
+  .highlighted-cell {
+    width: 20px;
+    height: 20px;
+    margin: auto;
+  }
+
+  td:nth-child(4n) .highlighted-cell {
+    background-color: #a1997f;
+  }
+  td:nth-child(4n + 1) .highlighted-cell {
+    background-color: #a1887f;
+  }
+  td:nth-child(4n + 2) .highlighted-cell {
+    background-color: #7f9fa1;
+  }
+  td:nth-child(4n + 3) .highlighted-cell {
+    background-color: #917fa1;
+  }
+}
+
+.mat-button-toggle-group {
+  float: right;
+}
+
+.mat-button-toggle-label-content,
+.mat-button-toggle-group button div {
+  line-height: 35px;
+}
+
+.mat-cell.mat-column-comment {
+  cursor: pointer;
+}
+
+.hint-text {
+  opacity: 0.4;
+}
+
+.annotation-table-wrapper {
+  display: flex;
+}
+
+.add-column-btn {
+  position: relative;
+  left: -50px;
+  top: 15px;
+  cursor: pointer;
 }

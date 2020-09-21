@@ -1,0 +1,16 @@
+<div class="container">
+    <h3 mat-dialog-title>{{ data.name }}</h3>
+    <div mat-dialog-content>
+      Type: {{ data.type }}
+      <p></p>
+      {{ data.type.toUpperCase().indexOf("OBSERVATION") >= 0 ? 'Samples' : 'Features' }}: 
+      <ul> 
+        <li *ngFor="let elem of data.samples">{{ elem.id }}</li>
+      </ul>
+    </div>
+  
+    <div mat-dialog-actions>
+      <button mat-button mat-raised-button (click)="onNoClick()" color="accent" tabindex="-1">Close</button>
+    </div>
+</div>
+  

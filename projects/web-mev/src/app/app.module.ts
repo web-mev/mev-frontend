@@ -78,7 +78,6 @@ import { SentryErrorHandler } from './sentry-error-handler';
     RequestPasswordResetComponent,
     ResponsePasswordResetComponent,
     PasswordChangeComponent
-    // AnalysesComponent
   ],
   providers: [
     BnNgIdleService,

@@ -3,8 +3,7 @@ import {
   OnInit,
   ChangeDetectionStrategy,
   Inject,
-  ViewChild,
-  ChangeDetectorRef
+  ViewChild
 } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -51,7 +50,7 @@ export class AddObservationSetDialogComponent implements OnInit {
   }
 
   submit() {
-    this.submitted = true;
+    //empty stuff
   }
 
   confirmAdd() {

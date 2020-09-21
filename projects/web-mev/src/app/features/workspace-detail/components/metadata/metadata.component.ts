@@ -159,9 +159,9 @@ export class MetadataComponent implements OnInit {
     this.observationSetDS = new MatTableDataSource(currentObsSet);
 
     // retrieve custom observation/feature sets
-    this.customSetDS = new MatTableDataSource(
-      JSON.parse(localStorage.getItem(this.workspaceId + '_custom_sets'))
-    );
+    const customSet =
+      JSON.parse(localStorage.getItem(this.workspaceId + '_custom_sets')) || [];
+    this.customSetDS = new MatTableDataSource(customSet);
 
     // generate custom observation visualization
     this.generateObservationSetsVisualization();
@@ -289,9 +289,8 @@ export class MetadataComponent implements OnInit {
 
   generateObservationSetsVisualization() {
     const visTable = [];
-    const customObservationSets = JSON.parse(
-      localStorage.getItem(this.workspaceId + '_custom_sets')
-    );
+    const customObservationSets =
+      JSON.parse(localStorage.getItem(this.workspaceId + '_custom_sets')) || [];
     this.visObsDisplayedColumns = ['id'];
     this.visObsDisplayedColumnsSetsOnly = [];
 
@@ -302,24 +301,28 @@ export class MetadataComponent implements OnInit {
       }
     });
 
-    this.getGlobalObservationSets().subscribe(data => {
-      this.globalObservationSets = data;
-      this.globalObservationSets.forEach(sample => {
-        const elem = { sampleName: sample.id };
-        customObservationSets.forEach(customSet => {
-          if (customSet.type.toUpperCase().indexOf('OBSERVATION') >= 0) {
-            if (customSet.samples.filter(e => e.id === sample.id).length > 0) {
-              elem[customSet.name] = true;
-            } else {
-              elem[customSet.name] = false;
+    if (this.visObsDisplayedColumnsSetsOnly.length > 0) {
+      this.getGlobalObservationSets().subscribe(data => {
+        this.globalObservationSets = data;
+        this.globalObservationSets.forEach(sample => {
+          const elem = { sampleName: sample.id };
+          customObservationSets.forEach(customSet => {
+            if (customSet.type.toUpperCase().indexOf('OBSERVATION') >= 0) {
+              if (
+                customSet.samples.filter(e => e.id === sample.id).length > 0
+              ) {
+                elem[customSet.name] = true;
+              } else {
+                elem[customSet.name] = false;
+              }
             }
-          }
+          });
+          visTable.push(elem);
         });
-        visTable.push(elem);
+        this.visObservationSetDS = new MatTableDataSource(visTable);
+        this.cd.markForCheck();
       });
-      this.visObservationSetDS = new MatTableDataSource(visTable);
-      this.cd.markForCheck();
-    });
+    }
   }
 
   /**

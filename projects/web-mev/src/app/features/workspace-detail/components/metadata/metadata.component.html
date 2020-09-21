@@ -21,8 +21,13 @@
       <mat-grid-tile>
         <div class="mat-table-container">
           <h4>Current observation set</h4>
-          Click the Plus sign to add a new attribute column. Click the column header to rename it, and click the table cell to add an attribute value.
-          <div class="mat-elevation-z8">
+          <div *ngIf="!observationSetDS.data.length">No data is available. Click the Choose current annotation button.
+          </div>
+          <div *ngIf="observationSetDS.data.length > 0" class="mat-elevation-z8">
+            <div class="annotation-text">
+              Click the Plus sign to add a new attribute column. Click the column header to rename it, and click the
+              table cell to add an attribute value.
+            </div>
             <div class="annotation-table-wrapper">
               <table mat-table [dataSource]="observationSetDS">
                 <ng-container matColumnDef="id">
@@ -30,37 +35,41 @@
                   </th>
                   <td mat-cell *matCellDef="let element"> {{ element.id }} </td>
                 </ng-container>
-  
+
                 <ng-container *ngFor="let attrCol of metadataObsDisplayedColumnsAttributesOnly; let colIndex = index"
                   matColumnDef="{{attrCol}}">
-                  <th mat-header-cell *matHeaderCellDef [satPopoverAnchor]="attrColHeader" (click)="attrColHeader.open()">{{ attrCol }}</th>
+                  <th mat-header-cell *matHeaderCellDef [satPopoverAnchor]="attrColHeader"
+                    (click)="attrColHeader.open()">{{ attrCol }}</th>
                   <sat-popover #attrColHeader hasBackdrop xAlign="start" yAlign="start"
                     (closed)="renameAttrColHeader($event, attrCol)">
                     <mev-inline-edit [value]="attrCol"></mev-inline-edit>
                   </sat-popover>
-                  <td mat-cell *matCellDef="let element; let i=index;" [satPopoverAnchor]="attrCell" (click)="attrCell.open()"> 
+                  <td mat-cell *matCellDef="let element; let i=index;" [satPopoverAnchor]="attrCell"
+                    (click)="attrCell.open()">
                     <ng-container *ngIf="element.attributes && element.attributes[attrCol]">
                       {{ element.attributes[attrCol].value }}
                     </ng-container>
                     <span class="hint-text" *ngIf="!element.attributes || !element.attributes[attrCol]">
                       Click to add a value
                     </span>
-            
-                    <sat-popover #attrCell hasBackdrop xAlign="start" yAlign="start" (closed)="updateAttrCellValue($event, attrCol, i)">
+
+                    <sat-popover #attrCell hasBackdrop xAlign="start" yAlign="start"
+                      (closed)="updateAttrCellValue($event, attrCol, i)">
                       <mev-inline-edit
                         [value]="(element.attributes && element.attributes[attrCol]) ? element.attributes[attrCol].value : ''">
                       </mev-inline-edit>
                     </sat-popover>
                   </td>
                 </ng-container>
-  
+
                 <tr mat-header-row *matHeaderRowDef="metadataObsDisplayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: metadataObsDisplayedColumns;">
                 </tr>
               </table>
-                <mat-icon title="Add a new attribute column" aria-label="Add a new attribute" class="add-column-btn" (click)="onAddAttribute()">add</mat-icon>                
+              <mat-icon title="Add a new attribute column" aria-label="Add a new attribute" class="add-column-btn"
+                (click)="onAddAttribute()">add</mat-icon>
             </div>
-            
+
             <mat-paginator [pageSizeOptions]="[5, 10, 25]">
             </mat-paginator>
           </div>
@@ -105,57 +114,60 @@
       </mat-button-toggle-group>
     </div>
 
+    <div *ngIf="!customSetDS.data.length">No data is available.</div>
+    <div *ngIf="customSetDS.data.length > 0">
+      <table *ngIf="customSetsViewMode.value === 'tableMode'" mat-table [dataSource]="customSetDS"
+        class="mat-elevation-z8">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Name </th>
+          <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef> Type (Observation/Feature set) </th>
+          <td mat-cell *matCellDef="let element"> {{element.type}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let element; let i=index;">
+            <button mat-icon-button color="accent" title="View" (click)="onViewCustomSet(element)">
+              <mat-icon aria-label="View">visibility</mat-icon>
+            </button>
+            <button mat-icon-button color="accent" title="Delete" (click)="onDeleteCustomSet(element.name)">
+              <mat-icon aria-label="Delete">delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="customSetsDisplayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: customSetsDisplayedColumns;">
+
+      </table>
 
 
-    <table *ngIf="customSetsViewMode.value === 'tableMode'" mat-table [dataSource]="customSetDS"
-      class="mat-elevation-z8">
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef> Name </th>
-        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-      </ng-container>
+      <table *ngIf="customSetsViewMode.value === 'visMode'" mat-table [dataSource]="visObservationSetDS"
+        class="visualization-table">
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef> Sample </th>
+          <td mat-cell *matCellDef="let element"> {{ element.sampleName }} </td>
+        </ng-container>
 
-      <ng-container matColumnDef="type">
-        <th mat-header-cell *matHeaderCellDef> Type (Observation/Feature set) </th>
-        <td mat-cell *matCellDef="let element"> {{element.type}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Actions</th>
-        <td mat-cell *matCellDef="let element; let i=index;">
-          <button mat-icon-button color="accent" title="View" (click)="onViewCustomSet(element)">
-            <mat-icon aria-label="View">visibility</mat-icon>
-          </button>
-          <button mat-icon-button color="accent" title="Delete" (click)="onDeleteCustomSet(element.name)">
-            <mat-icon aria-label="Delete">delete</mat-icon>
-          </button>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="customSetsDisplayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: customSetsDisplayedColumns;">
-
-    </table>
+        <ng-container *ngFor="let setCol of visObsDisplayedColumnsSetsOnly" matColumnDef="{{setCol}}">
+          <th mat-header-cell *matHeaderCellDef>{{ setCol }}</th>
+          <td mat-cell *matCellDef="let element">
+            <div [ngClass]="{'highlighted-cell': element[setCol] === true}"></div>
+          </td>
+        </ng-container>
 
 
-    <table *ngIf="customSetsViewMode.value === 'visMode'" mat-table [dataSource]="visObservationSetDS"
-      class="visualization-table">
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef> Sample </th>
-        <td mat-cell *matCellDef="let element"> {{ element.sampleName }} </td>
-      </ng-container>
-
-      <ng-container *ngFor="let setCol of visObsDisplayedColumnsSetsOnly" matColumnDef="{{setCol}}">
-        <th mat-header-cell *matHeaderCellDef>{{ setCol }}</th>
-        <td mat-cell *matCellDef="let element">
-          <div [ngClass]="{'highlighted-cell': element[setCol] === true}"></div>
-        </td>
-      </ng-container>
+        <tr mat-header-row *matHeaderRowDef="visObsDisplayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: visObsDisplayedColumns;">
+        </tr>
+      </table>
+    </div>
 
 
-      <tr mat-header-row *matHeaderRowDef="visObsDisplayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: visObsDisplayedColumns;">
-      </tr>
-    </table>
 
   </mat-expansion-panel>
 

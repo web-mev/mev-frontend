@@ -23,7 +23,7 @@
       </div>
   
       <div mat-dialog-actions>
-        <button mat-button [mat-dialog-close]="1" mat-raised-button color="accent" (click)="confirmAdd()">Add</button>
+        <button mat-button [mat-dialog-close]="1" mat-raised-button color="accent" [disabled]="selectedFiles.length === 0" (click)="confirmAdd()">Add</button>
         <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
       </div>
   

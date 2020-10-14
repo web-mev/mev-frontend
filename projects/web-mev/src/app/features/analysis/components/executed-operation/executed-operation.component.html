@@ -1,1 +1,4 @@
-<p>Executed operation: {{execOperationId}}</p>
+<section class="container">
+    <div *ngIf="!execOperationResult">Please wait...</div>
+    <mev-analysis-result *ngIf="execOperationResult" [data]="execOperationResult"></mev-analysis-result>    
+</section>

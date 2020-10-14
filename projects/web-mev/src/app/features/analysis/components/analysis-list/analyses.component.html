@@ -1,5 +1,5 @@
 <div class="analyses-container">
-  <div class="analyses-header">
+  <!-- <div class="analyses-header">
     <a [routerLink]="['/workspace', workspaceId]" class="analyses-header__title">
       
         <span  *ngIf="workspace$ | async as workspace">
@@ -11,27 +11,30 @@
           </mat-icon>
         </span>
     </a>
-  </div>
+  </div> -->
   
   <section class="analyses-section">
-  
-    <mat-tab-group animationDuration="0ms" color="accent">
+    <div class="tab-content">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+      dolore magna aliqua. 
+      <div class="vertical-tab-container">
+        <mat-tab-group>
+          <mat-tab *ngFor="let operation of operations" [label]="operation.name">
+            <mev-operation [operation]="operation" [workspaceId]="workspaceId" 
+            [workspace$]="workspace$" (executedOperationId)="showExecutedOperationResult($event)"></mev-operation>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    </div>
+    
+
+    <!-- <mat-tab-group animationDuration="0ms" color="accent">
       <mat-tab>
         <ng-template mat-tab-label>
           <mat-icon class="tab-icon">leaderboard</mat-icon>
           Statistics
         </ng-template>
-        <div class="tab-content">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-          dolore magna aliqua. 
-          <div class="vertical-tab-container">
-            <mat-tab-group>
-              <mat-tab *ngFor="let operation of operations" [label]="operation.name">
-                <mev-operation [operation]="operation" [workspaceId]="workspaceId" [workspace$]="workspace$"></mev-operation>
-              </mat-tab>
-            </mat-tab-group>
-          </div>
-        </div>
+       
       </mat-tab>
   
       <mat-tab>
@@ -57,6 +60,6 @@
         </ng-template>
   
       </mat-tab>
-    </mat-tab-group>
+    </mat-tab-group> -->
   </section>
 </div>

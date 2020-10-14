@@ -59,7 +59,7 @@ export class AddFeatureSetDialogComponent implements OnInit {
     const featureSet = {
       name: name,
       type: 'Feature set',
-      samples: samples
+      elements: samples
     };
     this.dialogRef.close(featureSet);
   }

@@ -1,9 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { WorkspaceResource } from '@features/workspace-detail/models/workspace-resource';
 import { Workspace } from '@workspace-manager/models/workspace';
-import { Observable, of } from 'rxjs';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { switchMap, flatMap, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { WorkspaceDetailService } from '@features/workspace-detail/services/workspace-detail.service';
 import { AddDialogComponent } from '../dialogs/add-dialog/add-dialog.component';
@@ -19,6 +18,8 @@ export class WorkspaceDetailComponent implements OnInit {
   workspaceId: string;
   workspace$: Observable<Workspace>;
   searchText;
+  selectedTabIndex;
+  execOperationId: string;
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -31,23 +32,11 @@ export class WorkspaceDetailComponent implements OnInit {
   }
 
   public loadData() {
-    this.route.paramMap
-      .pipe(
-        switchMap((params: ParamMap) => of(params.get('workspaceId'))),
-        tap(workspaceId => (this.workspaceId = workspaceId)),
-        flatMap(workspaceId =>
-          this.service.getConnectedResources(this.workspaceId)
-        )
-      )
-      .subscribe(data => {
-        this.workspaceResources = data;
-      });
-
-    this.workspace$ = this.route.paramMap.pipe(
-      switchMap((params: ParamMap) => {
-        return this.service.getWorkspaceDetail(params.get('workspaceId'));
-      })
-    );
+    this.workspaceId = this.route.snapshot.paramMap.get('workspaceId');
+    this.service.getConnectedResources(this.workspaceId).subscribe(data => {
+      this.workspaceResources = data;
+    });
+    this.workspace$ = this.service.getWorkspaceDetail(this.workspaceId);
   }
 
   refresh() {
@@ -72,7 +61,7 @@ export class WorkspaceDetailComponent implements OnInit {
 
   previewItem(resourceId) {
     this.service.getResourcePreview(resourceId).subscribe(data => {
-      const previewData = JSON.parse(data);
+      const previewData = data;
       const dialogRef = this.dialog.open(PreviewDialogComponent, {
         data: {
           previewData: previewData
@@ -83,5 +72,14 @@ export class WorkspaceDetailComponent implements OnInit {
 
   metadata(resourceId) {
     this.router.navigate([resourceId, 'metadata'], { relativeTo: this.route });
+  }
+
+  goToAnalysesTab() {
+    this.selectedTabIndex = 3;
+  }
+
+  public showExecutedOperationResult(executedOperationId: any) {
+    this.execOperationId = executedOperationId;
+    this.goToAnalysesTab();
   }
 }

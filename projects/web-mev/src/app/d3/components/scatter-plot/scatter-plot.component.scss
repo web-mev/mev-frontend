@@ -1,0 +1,108 @@
+rect {
+  fill: transparent;
+  shape-rendering: crispEdges;
+}
+
+::ng-deep .axis path,
+::ng-deep .axis line {
+  fill: none;
+  stroke: rgba(0, 0, 0, 0.1);
+  shape-rendering: crispEdges;
+}
+
+.axisLine {
+  fill: none;
+  shape-rendering: crispEdges;
+  stroke: rgba(0, 0, 0, 0.5);
+  stroke-width: 2px;
+}
+
+.axis-dropdown-container {
+  display: inline-block;
+  margin-left: 50px;
+}
+.axis-dropdown {
+  width: 100px;
+  padding: 0 5px;
+  margin: 0 30px 0 0;
+  border-bottom: 1px solid #ccc;
+}
+
+::ng-deep .dot {
+  opacity: 0.5;
+}
+
+::ng-deep .legend {
+  opacity: 0.5;
+}
+
+::ng-deep .label {
+  fill: initial;
+  font-size: 16px;
+}
+
+::ng-deep .d3-tip {
+  line-height: 1;
+  font-weight: bold;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+  z-index: 1;
+}
+
+/* Creates a small triangle extender for the tooltip */
+::ng-deep .d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  content: '\25BC';
+  position: absolute;
+  text-align: center;
+}
+
+/* Style northward tooltips differently */
+::ng-deep .d3-tip.n:after {
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+}
+
+::ng-deep .selected {
+  fill: red;
+  opacity: 1;
+  stroke: black;
+  stroke-width: 1px;
+}
+
+::ng-deep .mat-button-toggle-checked {
+  background-color: #e3f0e2 !important;
+}
+
+.sample-list-container {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: row;
+
+  button {
+    margin-left: 40px;
+    margin-top: 8px;
+  }
+}
+
+.sample-list {
+  font-weight: bold;
+  margin-bottom: 0;
+
+  li {
+    font-weight: normal;
+  }
+}
+
+.status-txt {
+  color: green;
+  font-weight: bold;
+}

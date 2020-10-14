@@ -7,7 +7,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 
-import { NotificationService } from '@core/core.module';
 import { WorkspaceService } from '@workspace-manager/services/workspace.service';
 import {
   Workspace,
@@ -38,7 +37,6 @@ export class WorkspaceListComponent implements OnInit {
     public httpClient: HttpClient,
     public dialog: MatDialog,
     public workspaceService: WorkspaceService,
-    private readonly notificationService: NotificationService,
     private adapter: WorkspaceAdapter
   ) {}
 

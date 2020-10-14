@@ -6,18 +6,24 @@ import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
 import { OperationComponent } from './components/operation/operation.component';
 import { ExecutedOperationComponent } from './components/executed-operation/executed-operation.component';
 import { AnalysesComponent } from './components/analysis-list/analyses.component';
+import { AnalysisResultComponent } from './components/analysis-result/analysis-result.component';
+import { D3Module } from '@app/d3/d3.module';
+import { NgxCsvParserModule } from 'ngx-csv-parser';
 
 @NgModule({
   declarations: [
     AnalysesComponent,
     OperationComponent,
-    ExecutedOperationComponent
+    ExecutedOperationComponent,
+    AnalysisResultComponent
   ],
-  exports: [OperationComponent],
+  exports: [OperationComponent, AnalysesComponent, ExecutedOperationComponent],
   imports: [
     CommonModule,
     SharedModule,
     AngularMultiSelectModule,
+    D3Module,
+    NgxCsvParserModule,
     AnalysisRoutingModule
   ]
 })

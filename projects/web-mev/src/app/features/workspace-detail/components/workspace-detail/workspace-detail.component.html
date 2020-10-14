@@ -13,10 +13,9 @@
 </div>
 
 
-<mat-tab-group animationDuration="0ms" color="accent">
-  <mat-tab>
+<mat-tab-group animationDuration="0ms" color="accent" [(selectedIndex)]="selectedTabIndex">
+  <mat-tab label="QQ">
     <ng-template mat-tab-label>
-      <mat-icon class="tab-icon">bubble_chart</mat-icon>
       Resources
     </ng-template>
 
@@ -65,20 +64,41 @@
     </div>
   </mat-tab>
 
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <mat-icon class="tab-icon">bubble_chart</mat-icon>
-      Metadata
-    </ng-template>
-    <mev-metadata *ngIf='workspaceResources' [workspaceResources]="workspaceResources"></mev-metadata>
+  <mat-tab label="Metadata">
+    <ng-template matTabContent>
+      <mev-metadata *ngIf='workspaceResources' [workspaceResources]="workspaceResources"></mev-metadata>      
+    </ng-template>  
   </mat-tab>
+
+  <mat-tab label="Tools">
+    <ng-template matTabContent>
+      <mev-analyses (executedOperationId)="showExecutedOperationResult($event)"></mev-analyses>
+    </ng-template>
+   
+  </mat-tab>
+
+
+ 
+
+  <mat-tab label="Analyses">
+    <ng-template matTabContent>
+      <mev-executed-operation *ngIf="execOperationId" [execOperationId]="execOperationId"></mev-executed-operation>
+    </ng-template>
+   
+  </mat-tab>
+
 </mat-tab-group>
 
+<!-- <nav mat-tab-nav-bar>
+  <a mat-tab-link routerLink="analyses" routerLinkActive #rla="routerLinkActive"> Tools</a>
+  <a mat-tab-link routerLink="analyses" routerLinkActive #rla="routerLinkActive"> Tools 2</a>
+</nav>
+<router-outlet></router-outlet> -->
 
 
-<div class="workspace-footer">
+<!-- <div class="workspace-footer">
   <button mat-raised-button color="accent" [routerLink]="['/analyses', workspaceId]">
     Go to Analyses
     <mat-icon aria-label="Next step">navigate_next</mat-icon>
   </button>
-</div>
+</div> -->

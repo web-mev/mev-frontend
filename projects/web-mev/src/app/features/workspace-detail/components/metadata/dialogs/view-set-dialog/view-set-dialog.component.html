@@ -5,7 +5,7 @@
       <p></p>
       {{ data.type.toUpperCase().indexOf("OBSERVATION") >= 0 ? 'Samples' : 'Features' }}: 
       <ul> 
-        <li *ngFor="let elem of data.samples">{{ elem.id }}</li>
+        <li *ngFor="let elem of data.elements">{{ elem.id }}</li>
       </ul>
     </div>
   

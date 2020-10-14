@@ -34,18 +34,25 @@ const routes: Routes = [
     loadChildren: () =>
       import('./features/settings/settings.module').then(m => m.SettingsModule)
   },
-  {
-    path: 'analyses/:workspaceId',
-    loadChildren: () =>
-      import('./features/analysis/analysis.module').then(m => m.AnalysisModule),
-    canActivate: [AuthGuardService]
-  },
+
   {
     path: 'workspace/:workspaceId',
     loadChildren: () =>
       import('./features/workspace-detail/workspace-detail.module').then(
         m => m.WorkspaceDetailModule
       ),
+    canActivate: [AuthGuardService]
+  },
+  {
+    path: 'analyses',
+    loadChildren: () =>
+      import('./features/analysis/analysis.module').then(m => m.AnalysisModule),
+    canActivate: [AuthGuardService]
+  },
+  {
+    path: 'analyses/:workspaceId',
+    loadChildren: () =>
+      import('./features/analysis/analysis.module').then(m => m.AnalysisModule),
     canActivate: [AuthGuardService]
   },
   {

@@ -19,6 +19,7 @@ import { DeleteSetDialogComponent } from './components/metadata/dialogs/delete-s
 import { ViewSetDialogComponent } from './components/metadata/dialogs/view-set-dialog/view-set-dialog.component';
 import { InlineEditComponent } from './components/metadata/inline-edit/inline-edit.component';
 import { SatPopoverModule } from '@ncstate/sat-popover';
+import { AnalysisModule } from '../analysis/analysis.module';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { SatPopoverModule } from '@ncstate/sat-popover';
     SatPopoverModule,
     RouterModule,
     AngularMultiSelectModule,
+    AnalysisModule,
     WorkspaceDetailRoutingModule
   ]
 })

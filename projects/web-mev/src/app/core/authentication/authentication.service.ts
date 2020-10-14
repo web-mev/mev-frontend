@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { map, tap, count, switchMap, catchError, retry } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { User } from '@app/_models/user';
 import { HttpClient } from '@angular/common/http';
 

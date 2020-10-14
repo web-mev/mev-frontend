@@ -2,7 +2,9 @@ import {
   Component,
   OnInit,
   ChangeDetectionStrategy,
-  Input
+  Input,
+  EventEmitter,
+  Output
 } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { AnalysesService } from '../../services/analysis.service';
@@ -25,6 +27,8 @@ export class OperationComponent implements OnInit {
   @Input() workspaceId: string;
   @Input() workspace$: Observable<Workspace>;
   @Input() operation: Operation;
+
+  @Output() executedOperationId: EventEmitter<any> = new EventEmitter<any>();
 
   // default settings for analyses fields
   numFields = [];
@@ -70,11 +74,17 @@ export class OperationComponent implements OnInit {
                 required: input.required,
                 sets: []
               };
-              observationField.sets = this.apiService.getAvailableObservationSetsByParam(
+              const availableObsSets = this.apiService.getAvailableObservationSetsByParam(
                 this.workspaceId
               );
+              observationField.sets = availableObsSets.map(set => {
+                const newSet = set.elements.map(elem => {
+                  const o = { id: elem.id };
+                  return o;
+                });
+                return { ...set, elements: newSet };
+              });
               this.observationFields.push(observationField);
-
               const configObservationSetsField = [
                 '',
                 [...(input.required ? [Validators.required] : [])]
@@ -182,10 +192,7 @@ export class OperationComponent implements OnInit {
     this.apiService
       .executeOperation(this.operation.id, this.workspaceId, inputs)
       .subscribe(data => {
-        this.router.navigate(
-          ['executedOperation', data.executed_operation_id],
-          { relativeTo: this.route }
-        );
+        this.executedOperationId.emit(data.executed_operation_id);
       });
   }
 

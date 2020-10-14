@@ -5,14 +5,14 @@
         Annotations
       </mat-panel-title>
       <mat-panel-description>
-        Choose current annotation and blah-blah-blah
+        The union of all the Resource metadata in the Workspace
       </mat-panel-description>
     </mat-expansion-panel-header>
 
-    <button mat-raised-button color="accent" (click)="onChooseAnnotation()">
+    <!--button mat-raised-button color="accent" (click)="onChooseAnnotation()">
       <mat-icon aria-label="Choose current annotation">add</mat-icon>
       Choose current annotation
-    </button>
+    </button-->
 
     <br>
     <br>
@@ -20,8 +20,8 @@
     <mat-grid-list cols="1" rowHeight="3:1">
       <mat-grid-tile>
         <div class="mat-table-container">
-          <h4>Current observation set</h4>
-          <div *ngIf="!observationSetDS.data.length">No data is available. Click the Choose current annotation button.
+          <h4>Annotation</h4>
+          <div *ngIf="!observationSetDS.data.length">No data is available.
           </div>
           <div *ngIf="observationSetDS.data.length > 0" class="mat-elevation-z8">
             <div class="annotation-text">
@@ -84,10 +84,10 @@
   <mat-expansion-panel [togglePosition]="'before'">
     <mat-expansion-panel-header>
       <mat-panel-title>
-        Set selections
+        User's sample/feature sets
       </mat-panel-title>
       <mat-panel-description>
-        Create sample (column) or feature (row) sets
+        Hear you can create and view user's sample (column) and feature(row) sets
       </mat-panel-description>
     </mat-expansion-panel-header>
     <div class="control-group">
@@ -114,8 +114,8 @@
       </mat-button-toggle-group>
     </div>
 
-    <div *ngIf="!customSetDS.data.length">No data is available.</div>
-    <div *ngIf="customSetDS.data.length > 0">
+    <div *ngIf="!customSetDS || !customSetDS.data || customSetDS.data.length === 0">No data is available.</div>
+    <div *ngIf="customSetDS && customSetDS.data && customSetDS.data.length > 0">
       <table *ngIf="customSetsViewMode.value === 'tableMode'" mat-table [dataSource]="customSetDS"
         class="mat-elevation-z8">
         <ng-container matColumnDef="name">

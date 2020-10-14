@@ -59,7 +59,8 @@ export class AddObservationSetDialogComponent implements OnInit {
     const observationSet = {
       name: name,
       type: 'Observation set',
-      samples: samples
+      elements: samples,
+      multiple: true
     };
     this.dialogRef.close(observationSet);
   }

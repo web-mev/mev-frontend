@@ -77,7 +77,7 @@ export class WorkspaceDetailService {
     return <Observable<any>>(
       this.httpClient.post(
         `${this.API_URL}/workspaces/${workspaceId}/resources/add/`,
-        { resourceId: resourceId }
+        { resource_uuid: resourceId }
       )
     );
   }

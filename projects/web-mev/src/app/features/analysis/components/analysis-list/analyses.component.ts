@@ -1,4 +1,10 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  Output,
+  EventEmitter
+} from '@angular/core';
 import { AnalysesService } from '../../services/analysis.service';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -16,6 +22,8 @@ export class AnalysesComponent implements OnInit {
   workspace$: Observable<Workspace>;
   operations: Operation[];
 
+  @Output() executedOperationId: EventEmitter<any> = new EventEmitter<any>();
+
   constructor(
     private route: ActivatedRoute,
     private apiService: AnalysesService
@@ -28,5 +36,9 @@ export class AnalysesComponent implements OnInit {
     this.apiService.getOperations().subscribe(operations => {
       this.operations = operations;
     });
+  }
+
+  public showExecutedOperationResult(data: any) {
+    this.executedOperationId.emit(data);
   }
 }

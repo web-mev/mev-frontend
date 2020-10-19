@@ -1,17 +1,13 @@
 import {
   Component,
   ChangeDetectionStrategy,
-  ViewChild,
-  ElementRef,
   Input,
-  OnChanges,
-  AfterViewInit
+  OnChanges
 } from '@angular/core';
 import * as d3 from 'd3';
 import d3Tip from 'd3-tip';
 import { LclStorageService } from '@app/core/local-storage/lcl-storage.service';
 import { ActivatedRoute } from '@angular/router';
-import { element } from 'protractor';
 import { MatDialog } from '@angular/material/dialog';
 import { AddSampleSetComponent } from '../dialogs/add-sample-set/add-sample-set.component';
 
@@ -82,6 +78,26 @@ export class ScatterPlotComponent implements OnChanges {
     if (!this.pcaData) {
       return;
     }
+
+    const headers = this.pcaData.columns;
+    const values = this.pcaData.values;
+    const samples = this.pcaData.rows;
+
+    const pcaPoints = values.map(point => {
+      const newPoint = {};
+      headers.forEach((header, idx) => (newPoint[header] = point[idx]));
+      return newPoint;
+    });
+
+    samples.forEach(
+      (sampleName, idx) => (pcaPoints[idx]['sample'] = sampleName)
+    );
+    const pcaDataFormatted = {
+      pcaPoints: pcaPoints,
+      axisInfo: this.pcaData.pca_explained_variances
+    };
+
+    this.pcaData = pcaDataFormatted;
 
     // initialise variables for X and Y axes if undefined
     // by default use the 1st principal component for X axis and the 2nd for Y axis

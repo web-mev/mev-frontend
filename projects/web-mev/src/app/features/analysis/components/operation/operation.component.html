@@ -13,7 +13,7 @@
     </div>
     <mat-form-field class="form-control" color="accent">
       <mat-select [formControlName]="resourceField.key">
-        <mat-option *ngFor="let file of this.resourceField.files" [value]="file.id">
+        <mat-option *ngFor="let file of resourceField.files" [value]="file.id">
           {{ file.name }}
         </mat-option>
       </mat-select>
@@ -110,7 +110,7 @@
 
     <mat-form-field class="form-control" color="accent">
       <mat-select [formControlName]="observationField.key">
-        <mat-option *ngFor="let set of this.observationField.sets" [value]="set">
+        <mat-option *ngFor="let set of observationField.sets" [value]="set">
           {{ set.name }}
         </mat-option>
       </mat-select>

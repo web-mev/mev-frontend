@@ -1,42 +1,45 @@
-<mat-button-toggle-group #chartMode="matButtonToggleGroup" [(ngModel)]="chartViewMode">
-    <mat-button-toggle value="selectionMode" (change)="onChartViewChange($event.value)" aria-label="Text align left">
-        <mat-icon aria-label="Select points">near_me</mat-icon> Select points
-    </mat-button-toggle>
-    <mat-button-toggle value="zoomMode" (change)="onChartViewChange($event.value)" aria-label="Text align center">
-        <mat-icon aria-label="Zooming/panning">zoom_in</mat-icon> Zooming/panning
-    </mat-button-toggle>
-</mat-button-toggle-group>
-
-<div class="axis-dropdown-container">
-    <span class="axis-dropdown-label">X axis: </span>
-    <mat-select class="axis-dropdown" (selectionChange)="onXAxisChange($event.value)" [(ngModel)]="xCatIndex">
-        <mat-option *ngFor="let item of pcaData.axisInfo; index as i; " [value]="i">
-            {{ item.name }}
-        </mat-option>
-    </mat-select>
+<div>
+    <mat-button-toggle-group #chartMode="matButtonToggleGroup" [(ngModel)]="chartViewMode">
+        <mat-button-toggle value="selectionMode" (change)="onChartViewChange($event.value)" aria-label="Text align left">
+            <mat-icon aria-label="Select points">near_me</mat-icon> Select points
+        </mat-button-toggle>
+        <mat-button-toggle value="zoomMode" (change)="onChartViewChange($event.value)" aria-label="Text align center">
+            <mat-icon aria-label="Zooming/panning">zoom_in</mat-icon> Zooming/panning
+        </mat-button-toggle>
+    </mat-button-toggle-group>
     
-    <span class="axis-dropdown-label">Y axis: </span>
-    <mat-select class="axis-dropdown" (selectionChange)="onYAxisChange($event.value)" [(ngModel)]="yCatIndex">
-        <mat-option *ngFor="let item of pcaData.axisInfo; index as i; " [value]="i">
-            {{ item.name }}
-        </mat-option>
-    </mat-select>
-</div>
-
-<div #scatterPlot id="scatterPlot" (window:resize)="onResize($event)"></div>
-
-<section *ngIf="selectedSamples.length">
-    <div *ngIf="selectedSamplesStatusTxt" class="status-txt"> {{selectedSamplesStatusTxt}}</div>
-    <div  class="sample-list-container">
-        <ul class="sample-list"> Selected samples:
-            <li *ngFor="let item of selectedSamples">
-                {{ item.sample }}: ({{ item.x_coord.toFixed(2) }}; {{ item.y_coord.toFixed(2) }})
-            </li>
-        </ul>
+    <div class="axis-dropdown-container">
+        <span class="axis-dropdown-label">X axis: </span>
+        <mat-select class="axis-dropdown" (selectionChange)="onXAxisChange($event.value)" [(ngModel)]="xCatIndex">
+            <mat-option *ngFor="let item of pcaData.axisInfo; index as i; " [value]="i">
+                {{ item.name }}
+            </mat-option>
+        </mat-select>
         
-        <button mat-raised-button color="accent" (click)="onCreateCustomSampleSet($event)" >
-            <mat-icon aria-label="Add local data">add</mat-icon>
-            Save as a sample set    
-        </button>        
-    </div>    
-</section>
+        <span class="axis-dropdown-label">Y axis: </span>
+        <mat-select class="axis-dropdown" (selectionChange)="onYAxisChange($event.value)" [(ngModel)]="yCatIndex">
+            <mat-option *ngFor="let item of pcaData.axisInfo; index as i; " [value]="i">
+                {{ item.name }}
+            </mat-option>
+        </mat-select>
+    </div>
+    
+    <div #scatterPlot id="scatterPlot" (window:resize)="onResize($event)"></div>
+    
+    <section *ngIf="selectedSamples.length">
+        <div *ngIf="selectedSamplesStatusTxt" class="status-txt"> {{selectedSamplesStatusTxt}}</div>
+        <div  class="sample-list-container">
+            <ul class="sample-list"> Selected samples:
+                <li *ngFor="let item of selectedSamples">
+                    {{ item.sample }}: ({{ item.x_coord.toFixed(2) }}; {{ item.y_coord.toFixed(2) }})
+                </li>
+            </ul>
+            
+            <button mat-raised-button color="accent" (click)="onCreateCustomSampleSet($event)" >
+                <mat-icon aria-label="Add local data">add</mat-icon>
+                Save as a sample set    
+            </button>        
+        </div>    
+    </section>
+    
+</div>

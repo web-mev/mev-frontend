@@ -1,2 +1,14 @@
-PCA<br>
-<mev-scatter-plot *ngIf="pcaData" [pcaData]="pcaData"></mev-scatter-plot>
+<ng-container *ngIf="pcaData">
+    <mev-scatter-plot *ngIf="pcaData" [pcaData]="pcaData"></mev-scatter-plot>
+</ng-container>
+
+<!-- <ng-container *ngIf="deseq2Data">
+    Deseq2<br>
+    <mev-deseq2 [deseq2Data]="deseq2Data"></mev-deseq2>
+</ng-container> -->
+
+
+<ng-container>
+    Deseq2<br>
+    <mev-deseq2></mev-deseq2>
+</ng-container>

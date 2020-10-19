@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
-import { HttpClient } from '@angular/common/http';
-import { map, switchMap, takeUntil, takeWhile } from 'rxjs/operators';
-import { Observable, interval, timer, pipe, of } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { map, switchMap, takeWhile } from 'rxjs/operators';
+import { Observable, interval, of } from 'rxjs';
 import { File, FileAdapter } from '@app/shared/models/file';
 import { Workspace } from '@app/features/workspace-manager/models/workspace';
 import { Operation, OperationAdapter } from '../models/operation';
 import { LclStorageService } from '@app/core/local-storage/lcl-storage.service';
+import { Feature } from '@app/d3/components/deseq2/deseq2.component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AnalysesService {
   private readonly API_URL = environment.apiUrl;
-  pca_explained_variances = [];
 
   constructor(
     private httpClient: HttpClient,
@@ -99,14 +99,17 @@ export class AnalysesService {
     );
   }
 
+  getExecOperations(workspaceId: string): Observable<any> {
+    return this.httpClient.get(
+      `${this.API_URL}/executed-operations/workspace/${workspaceId}/`
+    );
+  }
+
   getPCACoordinates(executedOperationId: string): Observable<any> {
+    const pca_explained_variances = [];
     return this.getExecutedOperationResult(executedOperationId).pipe(
       switchMap(response => {
-        if (
-          response.body &&
-          response.body.outputs &&
-          response.body.outputs.pca_coordinates
-        ) {
+        if (response.body?.outputs?.pca_coordinates) {
           const resourceId = response.body.outputs.pca_coordinates;
           let i = 1;
           while (
@@ -118,7 +121,7 @@ export class AnalysesService {
               name: 'pc' + i,
               var: response.body.outputs['pc' + i + '_explained_variance']
             };
-            this.pca_explained_variances.push(item);
+            pca_explained_variances.push(item);
             i++;
           }
 
@@ -128,8 +131,32 @@ export class AnalysesService {
       }),
       map(response => ({
         ...response,
-        pca_explained_variances: this.pca_explained_variances
+        pca_explained_variances: pca_explained_variances
       }))
     );
+  }
+
+  getDeseq2Features(
+    id: number,
+    filter = '',
+    sortOrder = 'asc',
+    pageNumber = 0,
+    pageSize = 3
+  ): Observable<Feature[]> {
+    //https://api.instantwebtools.net/v1/passenger?page=0&size=10
+    return this.httpClient
+      .get('https://api.instantwebtools.net/v1/passenger', {
+        params: new HttpParams().set('page', '0').set('size', '10')
+        // .set('id', id.toString())
+        // .set('filter', filter)
+        // .set('sortOrder', sortOrder)
+        // .set('pageNumber', pageNumber.toString())
+        // .set('pageSize', pageSize.toString())
+      })
+      .pipe(
+        map(res => {
+          return res['data'];
+        })
+      );
   }
 }

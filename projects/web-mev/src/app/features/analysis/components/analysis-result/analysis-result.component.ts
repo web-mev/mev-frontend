@@ -2,7 +2,8 @@ import {
   Component,
   OnInit,
   ChangeDetectionStrategy,
-  Input
+  Input,
+  OnChanges
 } from '@angular/core';
 
 @Component({
@@ -11,28 +12,16 @@ import {
   styleUrls: ['./analysis-result.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default
 })
-export class AnalysisResultComponent implements OnInit {
+export class AnalysisResultComponent implements OnInit, OnChanges {
   @Input() data;
   pcaData;
   constructor() {}
 
   ngOnInit(): void {
-    const headers = this.data.columns;
-    const values = this.data.values;
-    const samples = this.data.rows;
+    this.pcaData = { ...this.data };
+  }
 
-    const pcaPoints = values.map(point => {
-      const newPoint = {};
-      headers.forEach((header, idx) => (newPoint[header] = point[idx]));
-      return newPoint;
-    });
-
-    samples.forEach(
-      (sampleName, idx) => (pcaPoints[idx]['sample'] = sampleName)
-    );
-    this.pcaData = {
-      pcaPoints: pcaPoints,
-      axisInfo: this.data.pca_explained_variances
-    };
+  ngOnChanges(): void {
+    this.pcaData = { ...this.data };
   }
 }

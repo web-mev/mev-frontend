@@ -1,4 +1,18 @@
+
+
 <section class="container">
-    <div *ngIf="!execOperationResult">Please wait...</div>
+    <!--div *ngIf="!execOperationResult">Please wait...</div-->
+    <span class="label">
+        Select an executed operation:
+    </span>
+    <mat-form-field class="form-control" color="accent">
+        <mat-select name="execOperationId" [(value)]="selectedExecOperation"
+            (selectionChange)="onSelectExecOperation()">
+            <mat-option *ngFor="let operation of execOperations" [value]="operation.id">
+                {{ operation.id }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    
     <mev-analysis-result *ngIf="execOperationResult" [data]="execOperationResult"></mev-analysis-result>    
 </section>

@@ -61,7 +61,23 @@ export class WorkspaceDetailComponent implements OnInit {
 
   previewItem(resourceId) {
     this.service.getResourcePreview(resourceId).subscribe(data => {
-      const previewData = data;
+      const previewData = {};
+      if (data.results.length) {
+        const minN = Math.min(data.results.length, 10);
+        let slicedData = data.results.slice(0, minN);
+        const columns = Object.keys(slicedData[0].values);
+        const rows = slicedData.map(elem => elem.rowname);
+        const values = slicedData.map(elem => {
+          let rowValues = [];
+          const elemValues = elem.values;
+          columns.forEach(col => rowValues.push(elemValues[col]));
+          return rowValues;
+        });
+        previewData['columns'] = columns;
+        previewData['rows'] = rows;
+        previewData['values'] = values;
+      }
+
       const dialogRef = this.dialog.open(PreviewDialogComponent, {
         data: {
           previewData: previewData

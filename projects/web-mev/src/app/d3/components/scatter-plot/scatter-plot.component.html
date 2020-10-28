@@ -8,17 +8,17 @@
         </mat-button-toggle>
     </mat-button-toggle-group>
     
-    <div class="axis-dropdown-container">
+    <div *ngIf="pcaDataFormatted" class="axis-dropdown-container" >
         <span class="axis-dropdown-label">X axis: </span>
         <mat-select class="axis-dropdown" (selectionChange)="onXAxisChange($event.value)" [(ngModel)]="xCatIndex">
-            <mat-option *ngFor="let item of pcaData.axisInfo; index as i; " [value]="i">
+            <mat-option *ngFor="let item of pcaDataFormatted.axisInfo; index as i; " [value]="i">
                 {{ item.name }}
             </mat-option>
         </mat-select>
         
         <span class="axis-dropdown-label">Y axis: </span>
         <mat-select class="axis-dropdown" (selectionChange)="onYAxisChange($event.value)" [(ngModel)]="yCatIndex">
-            <mat-option *ngFor="let item of pcaData.axisInfo; index as i; " [value]="i">
+            <mat-option *ngFor="let item of pcaDataFormatted.axisInfo; index as i; " [value]="i">
                 {{ item.name }}
             </mat-option>
         </mat-select>
@@ -35,7 +35,7 @@
                 </li>
             </ul>
             
-            <button mat-raised-button color="accent" (click)="onCreateCustomSampleSet($event)" >
+            <button mat-raised-button color="accent" (click)="onCreateCustomSampleSet()" >
                 <mat-icon aria-label="Add local data">add</mat-icon>
                 Save as a sample set    
             </button>        

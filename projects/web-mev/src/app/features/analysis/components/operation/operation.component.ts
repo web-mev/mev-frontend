@@ -171,6 +171,7 @@ export class OperationComponent implements OnInit {
         }
       }
 
+      controlsConfig['job_name'] = ['', [Validators.required]];
       this.analysesForm = this.formBuilder.group(controlsConfig);
     });
   }

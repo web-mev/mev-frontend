@@ -7,7 +7,6 @@ import { File, FileAdapter } from '@app/shared/models/file';
 import { Workspace } from '@app/features/workspace-manager/models/workspace';
 import { Operation, OperationAdapter } from '../models/operation';
 import { LclStorageService } from '@app/core/local-storage/lcl-storage.service';
-import { Feature } from '@app/d3/components/deseq2/deseq2.component';
 
 @Injectable({
   providedIn: 'root'
@@ -73,6 +72,7 @@ export class AnalysesService {
     const body = {
       operation_id: operationId,
       workspace_id: workspaceId,
+      job_name: inputs.job_name,
       inputs: inputs
     };
 
@@ -93,9 +93,36 @@ export class AnalysesService {
     );
   }
 
-  getResourceContent(resourceId: string): Observable<any> {
+  getResourceContent(
+    resourceId: string,
+    pageIndex = 1,
+    pageSize = 50,
+    filters = {},
+    sorting = {}
+  ): Observable<any> {
+    let params = new HttpParams()
+      .set('page', pageIndex.toString())
+      .set('page_size', pageSize.toString());
+
+    for (const field in filters) {
+      if (filters.hasOwnProperty(field)) {
+        // TSLint rule
+        const expression = filters[field];
+        params = params.append(field, expression.toString());
+      }
+    }
+
+    if (sorting.hasOwnProperty('sortField')) {
+      const sortDirection = sorting['sortDirection'] || 'asc';
+      params = params.append(
+        'sort_vals',
+        '[' + sortDirection + ']:' + sorting['sortField']
+      ); // query param for sorting should have the format: ?sort_vals=[asc]:pvalue,[desc]:log2FoldChange
+    }
+
     return this.httpClient.get(
-      `${this.API_URL}/resources/${resourceId}/contents/`
+      `${this.API_URL}/resources/${resourceId}/contents/`,
+      { params: params }
     );
   }
 
@@ -103,60 +130,5 @@ export class AnalysesService {
     return this.httpClient.get(
       `${this.API_URL}/executed-operations/workspace/${workspaceId}/`
     );
-  }
-
-  getPCACoordinates(executedOperationId: string): Observable<any> {
-    const pca_explained_variances = [];
-    return this.getExecutedOperationResult(executedOperationId).pipe(
-      switchMap(response => {
-        if (response.body?.outputs?.pca_coordinates) {
-          const resourceId = response.body.outputs.pca_coordinates;
-          let i = 1;
-          while (
-            response.body.outputs.hasOwnProperty(
-              'pc' + i + '_explained_variance'
-            )
-          ) {
-            const item = {
-              name: 'pc' + i,
-              var: response.body.outputs['pc' + i + '_explained_variance']
-            };
-            pca_explained_variances.push(item);
-            i++;
-          }
-
-          return this.getResourceContent(resourceId);
-        }
-        return of();
-      }),
-      map(response => ({
-        ...response,
-        pca_explained_variances: pca_explained_variances
-      }))
-    );
-  }
-
-  getDeseq2Features(
-    id: number,
-    filter = '',
-    sortOrder = 'asc',
-    pageNumber = 0,
-    pageSize = 3
-  ): Observable<Feature[]> {
-    //https://api.instantwebtools.net/v1/passenger?page=0&size=10
-    return this.httpClient
-      .get('https://api.instantwebtools.net/v1/passenger', {
-        params: new HttpParams().set('page', '0').set('size', '10')
-        // .set('id', id.toString())
-        // .set('filter', filter)
-        // .set('sortOrder', sortOrder)
-        // .set('pageNumber', pageNumber.toString())
-        // .set('pageSize', pageSize.toString())
-      })
-      .pipe(
-        map(res => {
-          return res['data'];
-        })
-      );
   }
 }

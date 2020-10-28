@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Workspace } from '@workspace-manager/models/workspace';
 import { map } from 'rxjs/operators';
 import { Observable, forkJoin } from 'rxjs';
@@ -48,8 +48,14 @@ export class WorkspaceDetailService {
   }
 
   getResourcePreview(resourceId: number | string): Observable<any> {
+    const params = {
+      params: new HttpParams().set('page', '1').set('page_size', '10')
+    };
     return <Observable<any>>(
-      this.httpClient.get(`${this.API_URL}/resources/${resourceId}/preview/`)
+      this.httpClient.get(
+        `${this.API_URL}/resources/${resourceId}/contents/`,
+        params
+      )
     );
   }
 

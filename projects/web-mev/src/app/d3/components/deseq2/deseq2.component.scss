@@ -1,0 +1,26 @@
+.filter-section {
+  font-size: 14px;
+}
+
+.filter {
+  margin-right: 25px;
+  display: inline;
+}
+
+.form-control {
+  margin-right: 10px;
+}
+
+.form-control__small {
+  width: 80px;
+}
+
+::ng-deep {
+  .x-axis text {
+    font-size: 12px;
+  }
+
+  .legend-label {
+    font-size: 12px;
+  }
+}

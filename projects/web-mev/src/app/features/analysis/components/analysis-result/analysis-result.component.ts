@@ -13,15 +13,15 @@ import {
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class AnalysisResultComponent implements OnInit, OnChanges {
-  @Input() data;
-  pcaData;
+  @Input() outputs;
+  //pcaData;
   constructor() {}
 
   ngOnInit(): void {
-    this.pcaData = { ...this.data };
+    this.outputs = { ...this.outputs };
   }
 
   ngOnChanges(): void {
-    this.pcaData = { ...this.data };
+    this.outputs = { ...this.outputs };
   }
 }

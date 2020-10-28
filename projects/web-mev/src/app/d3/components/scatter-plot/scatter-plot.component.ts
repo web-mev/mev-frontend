@@ -10,6 +10,7 @@ import { LclStorageService } from '@app/core/local-storage/lcl-storage.service';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { AddSampleSetComponent } from '../dialogs/add-sample-set/add-sample-set.component';
+import { AnalysesService } from '@app/features/analysis/services/analysis.service';
 
 @Component({
   selector: 'mev-scatter-plot',
@@ -18,86 +19,95 @@ import { AddSampleSetComponent } from '../dialogs/add-sample-set/add-sample-set.
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class ScatterPlotComponent implements OnChanges {
-  @Input() pcaData;
-  chartViewMode = 'selectionMode';
-  precision = 2;
+  @Input() outputs;
+  pcaData;
+  pcaDataFormatted;
 
   selectedSamples = [];
   selectedSamplesStatusTxt: string;
-  pcaAxes = [];
 
-  margin = { top: 50, right: 300, bottom: 50, left: 50 };
+  /* Chart settings */
+  containerId = '#scatterPlot';
+  precision = 2;
+  chartViewMode = 'selectionMode'; // default chart view mode
+  margin = { top: 50, right: 300, bottom: 50, left: 50 }; // chart margins
   outerWidth = 1050;
   outerHeight = 500;
 
-  width;
-  height;
+  colorCat = 'sample'; // data field used for conditional color formatting
 
+  /* D3 chart variables */
+  xAxis; // axes
+  yAxis;
   xCat; // field name in data for X axis (it's 'pc1' for default view)
   yCat; // field name in data for Y axis (it's 'pc2' for default view)
-
   xCatIndex: number; // order of prinicipal component for X axis (0 for default view)
   yCatIndex: number; // order of prinicipal component for Y axis (1 for default view)
-
-  colorCat = 'sample';
-
-  xVariance; // explained variance for X axis PC
-  yVariance; // explained variance for Y axis PC
-
-  x;
-  y;
-
-  xAxis;
-  yAxis;
-
-  gX;
+  xVariance; // explained variance for X and Y axes
+  yVariance;
+  xScale; // scale functions to transform data values into the the range
+  yScale;
+  gX; // group elements for all the components of the X and Y-axis
   gY;
-  xMax;
-  xMin;
-  yMax;
-  yMin;
-
   zoomListener;
   brushListener;
-
   zoomTransform;
-  objects;
-
-  svg;
 
   constructor(
     private storage: LclStorageService,
     private route: ActivatedRoute,
-    public dialog: MatDialog
-  ) {
-    this.width = outerWidth - this.margin.left - this.margin.right;
-    this.height = outerHeight - this.margin.top - this.margin.bottom;
-  }
+    public dialog: MatDialog,
+    private apiService: AnalysesService
+  ) {}
 
   ngOnChanges(): void {
-    if (!this.pcaData) {
-      return;
+    this.generatePCAPlot();
+  }
+
+  onResize(event) {
+    this.createChart();
+  }
+
+  /**
+   * Function to retrieve data for PCA plot
+   */
+  generatePCAPlot() {
+    const resourceId = this.outputs.pca_coordinates;
+    const pca_explained_variances = [];
+    let i = 1;
+    while (this.outputs.hasOwnProperty('pc' + i + '_explained_variance')) {
+      const item = {
+        name: 'pc' + i,
+        var: this.outputs['pc' + i + '_explained_variance']
+      };
+      pca_explained_variances.push(item);
+      i++;
     }
 
-    const headers = this.pcaData.columns;
-    const values = this.pcaData.values;
-    const samples = this.pcaData.rows;
+    this.apiService.getResourceContent(resourceId).subscribe(response => {
+      this.pcaData = {
+        ...response,
+        pca_explained_variances: pca_explained_variances
+      };
+      this.reformatData();
+      this.createChart();
+    });
+  }
 
-    const pcaPoints = values.map(point => {
-      const newPoint = {};
-      headers.forEach((header, idx) => (newPoint[header] = point[idx]));
+  /**
+   * Function to prepare data for PCA plot
+   */
+  reformatData() {
+    const results = this.pcaData.results;
+    const pcaPoints = results.map(point => {
+      const newPoint = { sample: point.rowname, ...point.values };
       return newPoint;
     });
 
-    samples.forEach(
-      (sampleName, idx) => (pcaPoints[idx]['sample'] = sampleName)
-    );
-    const pcaDataFormatted = {
+    this.pcaDataFormatted = {
       pcaPoints: pcaPoints,
       axisInfo: this.pcaData.pca_explained_variances
     };
-
-    this.pcaData = pcaDataFormatted;
 
     // initialise variables for X and Y axes if undefined
     // by default use the 1st principal component for X axis and the 2nd for Y axis
@@ -105,8 +115,6 @@ export class ScatterPlotComponent implements OnChanges {
       this.updateXCatAndVarianceByIndex(0);
       this.updateYCatAndVarianceByIndex(1);
     }
-
-    this.createChart();
   }
 
   /**
@@ -114,30 +122,26 @@ export class ScatterPlotComponent implements OnChanges {
    */
   onChartViewChange(chartViewMode) {
     this.chartViewMode = chartViewMode;
-
+    const svg = d3.select(this.containerId).select('svg');
     if (chartViewMode === 'selectionMode') {
       // activate brushing
-      d3.select('svg').call(this.brushListener);
+      svg.call(this.brushListener);
 
       // deactivate zooming
-      d3.select('svg').call(
-        d3
-          .zoom()
-          .scaleExtent([0, 700])
-          .on('zoom', null)
-      );
+      svg.call(d3.zoom().on('zoom', null));
     }
     if (chartViewMode === 'zoomMode') {
-      d3.select('svg').call(this.zoomListener);
+      svg.call(this.zoomListener);
 
-      d3.select('svg').call(
+      // reset the brush area to an empty area and deactivate brushing feature
+      svg.call(
         d3
           .brush()
           .extent([
             [0, 0],
             [0, 0]
-          ]) // reset the brush area
-          .on('start', null) // deactivate brushing feature
+          ])
+          .on('start', null)
       );
     }
   }
@@ -146,47 +150,50 @@ export class ScatterPlotComponent implements OnChanges {
    * Function to create scatter plot
    */
   private createChart(): void {
-    d3.selectAll('svg').remove();
-    const data = this.pcaData.pcaPoints;
-
-    this.x = d3
-      .scaleLinear()
-      .rangeRound([0, this.width])
-      .nice();
-
-    this.y = d3
-      .scaleLinear()
-      .rangeRound([this.height, 0])
-      .nice();
-
-    const delta = 0.1;
-    this.xMax = d3.max(data, d => d[this.xCat]);
-    this.xMin = d3.min(data, d => d[this.xCat]);
-    this.yMax = d3.max(data, d => d[this.yCat]);
-    this.yMin = d3.min(data, d => d[this.yCat]);
-
-    const xRange = this.xMax - this.xMin + delta; // add delta to avoid bug when both max and min are zeros
-    const yRange = this.yMax - this.yMin + delta;
-
-    this.x.domain([this.xMin - xRange * delta, this.xMax + xRange * delta]);
-    this.y.domain([this.yMin - yRange * delta, this.yMax + yRange * delta]);
-
-    this.xAxis = d3.axisBottom(this.x).tickSize(-this.height);
-
-    this.yAxis = d3.axisLeft(this.y).tickSize(-this.width);
+    const delta = 0.1; // used for X and Y axis ranges (we add delta to avoid bug when both max and min are zeros)
+    const zoomFactor = 50;
+    const width = outerWidth - this.margin.left - this.margin.right;
+    const height = outerHeight - this.margin.top - this.margin.bottom;
 
     const color = d3.scaleOrdinal(d3.schemeCategory10);
+
+    const data = this.pcaDataFormatted.pcaPoints;
+
+    d3.select(this.containerId)
+      .selectAll('svg')
+      .remove();
+
+    /* Setting up X-axis and Y-axis*/
+    this.xScale = d3
+      .scaleLinear()
+      .rangeRound([0, width])
+      .nice();
+
+    this.yScale = d3
+      .scaleLinear()
+      .rangeRound([height, 0])
+      .nice();
+
+    const xMax = d3.max(data, d => <number>d[this.xCat]);
+    const xMin = d3.min(data, d => <number>d[this.xCat]);
+    const yMax = d3.max(data, d => <number>d[this.yCat]);
+    const yMin = d3.min(data, d => <number>d[this.yCat]);
+    const xRange = xMax - xMin + delta; // add delta to avoid bug when both max and min are zeros
+    const yRange = yMax - yMin + delta;
+    this.xScale.domain([xMin - xRange * delta, xMax + xRange * delta]);
+    this.yScale.domain([yMin - yRange * delta, yMax + yRange * delta]);
+
+    this.xAxis = d3.axisBottom(this.xScale).tickSize(-height);
+    this.yAxis = d3.axisLeft(this.yScale).tickSize(-width);
 
     // Add the Zoom and panning feature
     this.zoomListener = d3
       .zoom()
-      .scaleExtent([0, 700])
-      .on('zoom', event => {
-        this.zoomHandler(event);
-      });
+      .scaleExtent([0, zoomFactor])
+      .on('zoom', event => this.zoomHandler(event));
 
-    this.svg = d3
-      .select('#scatterPlot')
+    const svg = d3
+      .select(this.containerId)
       .append('svg')
       .attr('width', outerWidth)
       .attr('height', outerHeight)
@@ -203,7 +210,7 @@ export class ScatterPlotComponent implements OnChanges {
       .brush()
       .extent([
         [this.margin.left, this.margin.top],
-        [this.margin.left + this.width, this.margin.top + this.height]
+        [this.margin.left + width, this.margin.top + height]
       ])
       .on('start end', event => this.brushHandler(event));
 
@@ -224,24 +231,24 @@ export class ScatterPlotComponent implements OnChanges {
           d[this.yCat].toFixed(this.precision)
         );
       });
-    this.svg.call(tip);
+    svg.call(tip);
 
-    this.svg
+    svg
       .append('rect')
-      .attr('width', this.width)
-      .attr('height', this.height)
+      .attr('width', width)
+      .attr('height', height)
       .style('fill', 'transparent');
 
-    this.gX = this.svg
+    this.gX = svg
       .append('g')
       .classed('x axis', true)
-      .attr('transform', 'translate(0,' + this.height + ')')
+      .attr('transform', 'translate(0,' + height + ')')
       .call(this.xAxis);
 
     this.gX
       .append('text')
       .classed('label', true)
-      .attr('x', this.width)
+      .attr('x', width)
       .attr('y', this.margin.bottom - 10)
       .style('text-anchor', 'end')
       .text(
@@ -251,7 +258,7 @@ export class ScatterPlotComponent implements OnChanges {
           ')'
       );
 
-    this.gY = this.svg
+    this.gY = svg
       .append('g')
       .classed('y axis', true)
       .call(this.yAxis);
@@ -270,30 +277,13 @@ export class ScatterPlotComponent implements OnChanges {
           ')'
       );
 
-    this.objects = this.svg
+    const objects = svg
       .append('svg')
       .classed('objects', true)
-      .attr('width', this.width)
-      .attr('height', this.height);
+      .attr('width', width)
+      .attr('height', height);
 
-    this.objects
-      .append('svg:line')
-      .classed('axisLine hAxisLine', true)
-      .attr('x1', 0)
-      .attr('y1', 0)
-      .attr('x2', this.width)
-      .attr('y2', 0)
-      .attr('transform', 'translate(0,' + this.height + ')');
-
-    this.objects
-      .append('svg:line')
-      .classed('axisLine vAxisLine', true)
-      .attr('x1', 0)
-      .attr('y1', 0)
-      .attr('x2', 0)
-      .attr('y2', this.height);
-
-    this.objects
+    objects
       .selectAll('.dot')
       .data(data)
       .enter()
@@ -303,18 +293,26 @@ export class ScatterPlotComponent implements OnChanges {
       .attr(
         'transform',
         d =>
-          'translate(' + this.x(d[this.xCat]) + ',' + this.y(d[this.yCat]) + ')'
+          'translate(' +
+          this.xScale(d[this.xCat]) +
+          ',' +
+          this.yScale(d[this.yCat]) +
+          ')'
       )
       .style('fill', d => color(d[this.colorCat]))
       .attr('pointer-events', 'all')
       .on('mouseover', tip.show)
       .on('mouseout', tip.hide);
 
-    d3.select('svg').call(this.brushListener);
-    d3.select('rect.overlay').attr('pointer-events', null);
+    d3.select(this.containerId)
+      .select('svg')
+      .call(this.brushListener);
+    d3.select(this.containerId)
+      .select('rect.overlay')
+      .attr('pointer-events', null);
 
     // Legend
-    const legend = this.svg
+    const legend = svg
       .selectAll('.legend')
       .data(color.domain())
       .enter()
@@ -327,20 +325,16 @@ export class ScatterPlotComponent implements OnChanges {
     legend
       .append('circle')
       .attr('r', 5)
-      .attr('cx', this.width + 20)
+      .attr('cx', width + 20)
       .attr('fill', color);
 
     legend
       .append('text')
-      .attr('x', this.width + 26)
+      .attr('x', width + 26)
       .attr('dy', '.35em')
       .style('fill', '#000')
       .attr('class', 'legend-label')
       .text(d => d);
-  }
-
-  onResize(event) {
-    this.createChart();
   }
 
   /**
@@ -349,13 +343,15 @@ export class ScatterPlotComponent implements OnChanges {
   zoomHandler(event) {
     const { transform } = event;
     this.zoomTransform = transform;
-    this.svg.selectAll('.dot').attr('transform', t => {
-      const x_coord = transform.x + transform.k * this.x(t[this.xCat]);
-      const y_coord = transform.y + transform.k * this.y(t[this.yCat]);
-      return 'translate(' + x_coord + ',' + y_coord + ')';
-    });
-    this.gX.call(this.xAxis.scale(transform.rescaleX(this.x)));
-    this.gY.call(this.yAxis.scale(transform.rescaleY(this.y)));
+    d3.select(this.containerId)
+      .selectAll('.dot')
+      .attr('transform', t => {
+        const x_coord = transform.x + transform.k * this.xScale(t[this.xCat]);
+        const y_coord = transform.y + transform.k * this.yScale(t[this.yCat]);
+        return 'translate(' + x_coord + ',' + y_coord + ')';
+      });
+    this.gX.call(this.xAxis.scale(transform.rescaleX(this.xScale)));
+    this.gY.call(this.yAxis.scale(transform.rescaleY(this.yScale)));
   }
 
   /**
@@ -365,26 +361,28 @@ export class ScatterPlotComponent implements OnChanges {
     const extent = event.selection; // get the selection coordinate
     this.selectedSamples = [];
     this.selectedSamplesStatusTxt = '';
-    this.objects.selectAll('.dot').classed('selected', d => {
-      let x_coord = this.x(d[this.xCat]);
-      let y_coord = this.y(d[this.yCat]);
-      if (this.zoomTransform) {
-        // recalculate coordinates if zooming has been performed
-        x_coord = this.zoomTransform.x + this.zoomTransform.k * x_coord;
-        y_coord = this.zoomTransform.y + this.zoomTransform.k * y_coord;
-      }
+    d3.select(this.containerId)
+      .selectAll('.dot')
+      .classed('selected', d => {
+        let x_coord = this.xScale(d[this.xCat]);
+        let y_coord = this.yScale(d[this.yCat]);
+        if (this.zoomTransform) {
+          // recalculate coordinates if zooming has been performed
+          x_coord = this.zoomTransform.x + this.zoomTransform.k * x_coord;
+          y_coord = this.zoomTransform.y + this.zoomTransform.k * y_coord;
+        }
 
-      if (this.isBrushed(extent, x_coord, y_coord)) {
-        this.selectedSamples.push({
-          ...d,
-          x_coord: d[this.xCat],
-          y_coord: d[this.yCat]
-        });
-        return true;
-      }
+        if (this.isBrushed(extent, x_coord, y_coord)) {
+          this.selectedSamples.push({
+            ...(d as object),
+            x_coord: d[this.xCat],
+            y_coord: d[this.yCat]
+          });
+          return true;
+        }
 
-      return false;
-    });
+        return false;
+      });
   }
 
   /**
@@ -412,7 +410,6 @@ export class ScatterPlotComponent implements OnChanges {
   /**
    * Function that is triggered when principal component for Y axis is changed
    */
-
   onYAxisChange(index) {
     this.updateYCatAndVarianceByIndex(index);
     this.createChart();
@@ -423,8 +420,10 @@ export class ScatterPlotComponent implements OnChanges {
    */
   updateXCatAndVarianceByIndex(index) {
     this.xCatIndex = index;
-    this.xCat = this.pcaData.axisInfo[index].name;
-    this.xVariance = this.pcaData.axisInfo[index].var.toFixed(this.precision);
+    this.xCat = this.pcaDataFormatted.axisInfo[index].name;
+    this.xVariance = this.pcaDataFormatted.axisInfo[index].var.toFixed(
+      this.precision
+    );
   }
 
   /**
@@ -432,11 +431,16 @@ export class ScatterPlotComponent implements OnChanges {
    */
   updateYCatAndVarianceByIndex(index) {
     this.yCatIndex = index;
-    this.yCat = this.pcaData.axisInfo[index].name;
-    this.yVariance = this.pcaData.axisInfo[index].var.toFixed(this.precision);
+    this.yCat = this.pcaDataFormatted.axisInfo[index].name;
+    this.yVariance = this.pcaDataFormatted.axisInfo[index].var.toFixed(
+      this.precision
+    );
   }
 
-  onCreateCustomSampleSet(e) {
+  /**
+   * Function that is triggered when the user clicks the "Create a custom sample" button
+   */
+  onCreateCustomSampleSet() {
     const workspaceId = this.route.snapshot.paramMap.get('workspaceId');
 
     const samples = this.selectedSamples.map(elem => {

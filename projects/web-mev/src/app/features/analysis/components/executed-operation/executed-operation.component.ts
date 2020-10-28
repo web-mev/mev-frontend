@@ -21,6 +21,7 @@ export class ExecutedOperationComponent implements OnInit {
 
   @Input() execOperationId: string;
   execOperations;
+  outputs;
   selectedExecOperation: string;
 
   constructor(
@@ -39,41 +40,46 @@ export class ExecutedOperationComponent implements OnInit {
         switchMap(() => {
           if (this.execOperationId) {
             this.selectedExecOperation = this.execOperationId;
-            return this.showOperationResult(this.execOperationId);
+            return this.apiService.getExecutedOperationResult(
+              this.execOperationId
+            ); //this.getOutputs(this.execOperationId);
           }
           return of();
         })
       )
       .subscribe(response => {
-        this.execOperationResult = response;
+        this.outputs = {
+          ...response?.body?.outputs,
+          ...response?.body?.inputs
+        };
       });
   }
 
-  showOperationResult(operationId) {
+  getOutputs(operationId) {
     const idx = this.execOperations.findIndex(val => val.id === operationId);
-    const output = this.execOperations[idx].outputs;
-
-    if (true || output?.pca_coordinates) {
-      // TO UPDATE
-      return this.showPCAResult();
-    } else if (output?.dge_results) {
-      return this.showDeseq2Result();
-    }
-    return of();
-  }
-
-  showPCAResult() {
-    return this.apiService.getPCACoordinates(this.execOperationId);
-  }
-
-  showDeseq2Result() {
-    return this.apiService.getDeseq2Features(123);
+    return this.execOperations[idx].outputs;
   }
 
   onSelectExecOperation() {
     this.execOperationId = this.selectedExecOperation;
-    this.showOperationResult(this.selectedExecOperation).subscribe(response => {
-      this.execOperationResult = response;
-    });
+    const idx = this.execOperations.findIndex(
+      val => val.id === this.execOperationId
+    );
+    // if the opertion has been already completed, just extract its outputs from the operationa list
+    if (this.execOperations[idx].outputs) {
+      this.outputs = {
+        ...this.execOperations[idx].outputs,
+        ...this.execOperations[idx].inputs
+      };
+    } else {
+      this.apiService
+        .getExecutedOperationResult(this.execOperationId)
+        .subscribe(response => {
+          this.outputs = {
+            ...response?.body?.outputs,
+            ...response?.body?.inputs
+          };
+        });
+    }
   }
 }

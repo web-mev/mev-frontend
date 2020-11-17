@@ -1,45 +1,69 @@
-<div>
-    <mat-button-toggle-group #chartMode="matButtonToggleGroup" [(ngModel)]="chartViewMode">
-        <mat-button-toggle value="selectionMode" (change)="onChartViewChange($event.value)" aria-label="Text align left">
-            <mat-icon aria-label="Select points">near_me</mat-icon> Select points
-        </mat-button-toggle>
-        <mat-button-toggle value="zoomMode" (change)="onChartViewChange($event.value)" aria-label="Text align center">
-            <mat-icon aria-label="Zooming/panning">zoom_in</mat-icon> Zooming/panning
-        </mat-button-toggle>
-    </mat-button-toggle-group>
-    
-    <div *ngIf="pcaDataFormatted" class="axis-dropdown-container" >
-        <span class="axis-dropdown-label">X axis: </span>
-        <mat-select class="axis-dropdown" (selectionChange)="onXAxisChange($event.value)" [(ngModel)]="xCatIndex">
-            <mat-option *ngFor="let item of pcaDataFormatted.axisInfo; index as i; " [value]="i">
-                {{ item.name }}
-            </mat-option>
-        </mat-select>
-        
-        <span class="axis-dropdown-label">Y axis: </span>
-        <mat-select class="axis-dropdown" (selectionChange)="onYAxisChange($event.value)" [(ngModel)]="yCatIndex">
-            <mat-option *ngFor="let item of pcaDataFormatted.axisInfo; index as i; " [value]="i">
-                {{ item.name }}
-            </mat-option>
-        </mat-select>
-    </div>
-    
-    <div #scatterPlot id="scatterPlot" (window:resize)="onResize($event)"></div>
-    
-    <section *ngIf="selectedSamples.length">
-        <div *ngIf="selectedSamplesStatusTxt" class="status-txt"> {{selectedSamplesStatusTxt}}</div>
-        <div  class="sample-list-container">
-            <ul class="sample-list"> Selected samples:
-                <li *ngFor="let item of selectedSamples">
-                    {{ item.sample }}: ({{ item.x_coord.toFixed(2) }}; {{ item.y_coord.toFixed(2) }})
-                </li>
-            </ul>
+<mat-card class="analysis-card">
+    <mat-card-header>
+        <div mat-card-avatar class="analysis-card__img"></div>
+        <mat-card-title>Principal component analysis</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="analysis-card__main">
+        <p class="analysis-card__instruction">
+            To select points click the toggle button to enable the Selection mode. Then click the Add button to save a custom sample set.
+        </p>
+        <mat-divider [inset]="true"></mat-divider>
+        <div class="analysis-card__content">
+            <mat-button-toggle-group #chartMode="matButtonToggleGroup" [(ngModel)]="chartViewMode">
+                <mat-button-toggle value="zoomMode" (change)="onChartViewChange($event.value)"
+                    aria-label="Text align center">
+                    <mat-icon aria-label="Zooming/panning">zoom_in</mat-icon> Zooming/panning
+                </mat-button-toggle>
+                <mat-button-toggle value="selectionMode" (change)="onChartViewChange($event.value)"
+                    aria-label="Text align left">
+                    <mat-icon aria-label="Select points">near_me</mat-icon> Select points
+                </mat-button-toggle>
+            </mat-button-toggle-group>
+
+            <div *ngIf="pcaDataFormatted" class="axis-dropdown-container">
+                <span class="axis-dropdown-label">X axis: </span>
+                <mat-select class="axis-dropdown" (selectionChange)="onXAxisChange($event.value)"
+                    [(ngModel)]="xCatIndex">
+                    <mat-option *ngFor="let item of pcaDataFormatted.axisInfo; index as i; " [value]="i">
+                        {{ item.name }}
+                    </mat-option>
+                </mat-select>
+
+                <span class="axis-dropdown-label">Y axis: </span>
+                <mat-select class="axis-dropdown" (selectionChange)="onYAxisChange($event.value)"
+                    [(ngModel)]="yCatIndex">
+                    <mat-option *ngFor="let item of pcaDataFormatted.axisInfo; index as i; " [value]="i">
+                        {{ item.name }}
+                    </mat-option>
+                </mat-select>
+            </div>
             
-            <button mat-raised-button color="accent" (click)="onCreateCustomSampleSet()" >
-                <mat-icon aria-label="Add local data">add</mat-icon>
-                Save as a sample set    
-            </button>        
-        </div>    
-    </section>
-    
-</div>
+            <section class="observation-list-section">
+                
+                <ul *ngIf="customObservationSets.length"> Conditional formatting: 
+                    <li *ngFor="let set of customObservationSets">
+                        <mat-checkbox (change)="onObservationCheck($event)" [checked]="isCustomObservationSetChecked(set.name)" [id]="set.name">{{set.name}}</mat-checkbox>
+                    </li>
+                </ul>
+            </section>          
+                
+                <div class="sample-list-container">
+                    <button mat-raised-button color="accent" (click)="onCreateCustomSampleSet()" 
+                    [disabled]="!selectedSamples.length">
+                        <mat-icon>add</mat-icon>
+                        Save as a sample set
+                    </button>
+                    <div class="sample-list" *ngIf="selectedSamples.length"> Selected samples:
+                        <span class="sample-list__item" *ngFor="let item of selectedSamples">
+                            {{ item.sample }} ({{ item.x_coord.toFixed(2) }}; {{ item.y_coord.toFixed(2) }})
+                        </span>
+                    </div>
+                    <div *ngIf="selectedSamplesStatusTxt" class="status-txt"> {{selectedSamplesStatusTxt}}</div> 
+                </div>          
+
+            <mev-download-button [containerId]="containerId" [imageName]="imageName"></mev-download-button>
+            <div #scatterPlot id="scatterPlot" class="chart" (window:resize)="onResize($event)"></div>
+            
+        </div>
+    </mat-card-content>
+</mat-card>

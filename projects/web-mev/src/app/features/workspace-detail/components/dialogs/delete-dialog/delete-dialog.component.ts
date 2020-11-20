@@ -1,4 +1,7 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { WorkspaceDetailService } from '@app/features/workspace-detail/services/workspace-detail.service';
+import { WorkspaceResource } from '@app/features/workspace-detail/models/workspace-resource';
 
 @Component({
   selector: 'mev-delete-dialog',
@@ -6,11 +9,31 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
   styleUrls: ['./delete-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeleteDialogComponent implements OnInit {
+export class DeleteDialogComponent {
+  resource: WorkspaceResource;
 
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor(
+    public dialogRef: MatDialogRef<DeleteDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    public service: WorkspaceDetailService
+  ) {
+    this.resource = this.data.resource;
   }
 
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  confirmDelete(): void {
+    this.service
+      .deleteResourceFromWorkspace(this.data.resource.id, this.data.workspaceId)
+      .subscribe(
+        () => {
+          this.dialogRef.close();
+        },
+        error => {
+          console.error(error);
+        }
+      );
+  }
 }

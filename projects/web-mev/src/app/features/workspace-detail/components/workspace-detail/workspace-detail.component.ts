@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { WorkspaceDetailService } from '@features/workspace-detail/services/workspace-detail.service';
 import { AddDialogComponent } from '../dialogs/add-dialog/add-dialog.component';
 import { PreviewDialogComponent } from '../dialogs/preview-dialog/preview-dialog.component';
+import { DeleteDialogComponent } from '../dialogs/delete-dialog/delete-dialog.component';
 @Component({
   selector: 'mev-workspace-detail',
   templateUrl: './workspace-detail.component.html',
@@ -86,12 +87,22 @@ export class WorkspaceDetailComponent implements OnInit {
     });
   }
 
+  deleteItem(resource) {
+    const dialogRef = this.dialog.open(DeleteDialogComponent, {
+      data: { workspaceId: this.workspaceId, resource: resource }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.refresh();
+    });
+  }
+
   metadata(resourceId) {
     this.router.navigate([resourceId, 'metadata'], { relativeTo: this.route });
   }
 
   goToAnalysesTab() {
-    this.selectedTabIndex = 3;
+    this.selectedTabIndex = 4;
   }
 
   public showExecutedOperationResult(executedOperationId: any) {

@@ -1,1 +1,17 @@
-<p>delete-dialog works!</p>
+<div class="container">
+    <h3 mat-dialog-title>This resource will be deleted from your workspace. Are you sure?</h3>
+    <div mat-dialog-content>
+      <b>File: {{ resource.name }}</b>
+      <p>
+      Resource type: {{ resource.readable_resource_type }}<br>
+      Size: {{ resource.size | byteName}}<br>
+      Created: {{ resource.created | date :'medium' }}<br>
+      </p>
+    </div>
+  
+    <div mat-dialog-actions>
+      <button mat-button [mat-dialog-close]="1" (click)="confirmDelete()">Delete</button>
+      <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
+    </div>
+  </div>
+  

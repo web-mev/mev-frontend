@@ -11,7 +11,6 @@ import { AnalysesService } from '../../services/analysis.service';
 import { Workspace } from '@app/features/workspace-manager/models/workspace';
 import { Observable } from 'rxjs';
 import { Operation } from '../../models/operation';
-import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'mev-operation',
@@ -39,9 +38,7 @@ export class OperationComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private apiService: AnalysesService,
-    private router: Router,
-    private route: ActivatedRoute
+    private apiService: AnalysesService
   ) {}
 
   ngOnInit(): void {

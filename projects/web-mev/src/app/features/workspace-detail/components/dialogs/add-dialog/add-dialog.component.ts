@@ -34,7 +34,6 @@ export class AddDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.workspaceId = this.data.workspaceId;
-
     this.apiService.getAvailableResources().subscribe(data => {
       this.files = data;
     });

@@ -1,5 +1,5 @@
 .mat-dialog-content {
-  min-height: 550px;
+  min-height: 650px;
   max-height: none;
   overflow: visible;
   position: relative;
@@ -16,4 +16,11 @@ table {
 .mat-dialog-actions {
   position: absolute;
   bottom: 0;
+}
+
+.color-picker-input {
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  padding: 0;
 }

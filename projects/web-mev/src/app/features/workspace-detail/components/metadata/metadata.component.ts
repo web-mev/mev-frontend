@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, Subscription } from 'rxjs';
-import { takeUntil, switchMap, filter } from 'rxjs/operators';
+import { takeUntil, switchMap, filter, tap } from 'rxjs/operators';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatAccordion } from '@angular/material/expansion';
 import { MatDialog } from '@angular/material/dialog';
@@ -23,6 +23,7 @@ import { AddFeatureSetDialogComponent } from './dialogs/add-feature-set-dialog/a
 import { DeleteSetDialogComponent } from './dialogs/delete-set-dialog/delete-set-dialog.component';
 import { ViewSetDialogComponent } from './dialogs/view-set-dialog/view-set-dialog.component';
 import { LclStorageService } from '@app/core/local-storage/lcl-storage.service';
+import { MetadataService } from '@app/core/metadata/metadata.service';
 
 @Component({
   selector: 'mev-metadata',
@@ -60,6 +61,7 @@ export class MetadataComponent implements OnInit {
 
   constructor(
     private service: WorkspaceDetailService,
+    private metadataService: MetadataService,
     private storage: LclStorageService,
     private route: ActivatedRoute,
     private cd: ChangeDetectorRef,
@@ -163,7 +165,7 @@ export class MetadataComponent implements OnInit {
     this.observationSetDS = new MatTableDataSource(currentObsSet);
 
     // retrieve custom observation/feature sets
-    const customSet = this.storage.get(this.workspaceId + '_custom_sets') || [];
+    const customSet = this.metadataService.getCustomSets();
     this.customSetDS = new MatTableDataSource(customSet);
 
     // watch value changes
@@ -171,7 +173,7 @@ export class MetadataComponent implements OnInit {
       .watch(this.workspaceId + '_custom_sets')
       .subscribe(response => {
         this.customSetDS = new MatTableDataSource(
-          this.storage.get(this.workspaceId + '_custom_sets')
+          this.metadataService.getCustomSets()
         );
         this.generateObservationSetsVisualization(); // generate custom observation visualization
         this.cd.markForCheck();
@@ -201,21 +203,21 @@ export class MetadataComponent implements OnInit {
       .afterClosed()
       .pipe(
         filter(selectedFileId => selectedFileId !== undefined),
-        switchMap(selectedFileId => this.service.getMetadata(selectedFileId)),
+        switchMap(selectedFileId =>
+          this.service.getResourceMetadataObservations(selectedFileId)
+        ),
         takeUntil(this.onDestroy)
       )
       .subscribe(metadata => {
-        if (metadata) {
-          if (metadata.observation_set && metadata.observation_set.elements) {
-            const currentObsSet = metadata.observation_set.elements;
+        if (metadata?.observation_set?.elements) {
+          const currentObsSet = metadata.observation_set.elements;
 
-            this.generateMetadataColumns(currentObsSet);
-            this.observationSetDS = new MatTableDataSource(currentObsSet);
-            this.storage.set(
-              this.workspaceId + '_current_observation_set',
-              currentObsSet
-            );
-          }
+          this.generateMetadataColumns(currentObsSet);
+          this.observationSetDS = new MatTableDataSource(currentObsSet);
+          this.storage.set(
+            this.workspaceId + '_current_observation_set',
+            currentObsSet
+          );
 
           this.observationSetDS.paginator = this.paginator;
           this.cd.markForCheck();
@@ -230,24 +232,12 @@ export class MetadataComponent implements OnInit {
   onCreateObservationSet() {
     this.globalObservationSets = [];
     this.service
-      .getMetadataForResources(this.workspaceResources)
+      .getWorkspaceMetadataObservations(this.workspaceId)
       .pipe(
-        switchMap(metadataArr => {
-          metadataArr.forEach(metadata => {
-            if (metadata.observation_set && metadata.observation_set.elements) {
-              const elements = metadata.observation_set.elements;
-              // add only samples that don't exist
-              elements.forEach(element => {
-                const index = this.globalObservationSets.findIndex(
-                  el => el.id === element.id
-                );
-                if (index === -1) {
-                  this.globalObservationSets.push(element);
-                }
-              });
-            }
-          });
-
+        switchMap(metadata => {
+          if (metadata?.observation_set?.elements) {
+            this.globalObservationSets = metadata.observation_set.elements;
+          }
           const globalObservationSetsDS = new MatTableDataSource(
             this.globalObservationSets
           );
@@ -283,40 +273,22 @@ export class MetadataComponent implements OnInit {
       )
       .subscribe(newObservationSet => {
         if (newObservationSet) {
-          const customObservationSets =
-            this.storage.get(this.workspaceId + '_custom_sets') || [];
-          customObservationSets.push(newObservationSet);
-          // localStorage.setItem(
-          //   this.workspaceId + '_custom_sets',
-          //   JSON.stringify(customObservationSets)
-          // );
-
-          this.storage.set(
-            this.workspaceId + '_custom_sets',
-            customObservationSets
-          );
-          // this.customSetDS = new MatTableDataSource(
-          //   JSON.parse(this.storage.get(this.workspaceId + '_custom_sets'))
-          // );
-          // this.generateObservationSetsVisualization();
-          // this.cd.markForCheck();
+          this.metadataService.addCustomSet(newObservationSet);
         }
       });
   }
 
   generateObservationSetsVisualization() {
     const visTable = [];
-    const customObservationSets =
-      this.storage.get(this.workspaceId + '_custom_sets') || [];
-    this.visObsDisplayedColumns = ['id'];
-    this.visObsDisplayedColumnsSetsOnly = [];
+    const customObservationSets = this.metadataService.getCustomObservationSets();
 
-    customObservationSets.forEach(customSet => {
-      if (customSet.type.toUpperCase().indexOf('OBSERVATION') >= 0) {
-        this.visObsDisplayedColumns.push(customSet.name);
-        this.visObsDisplayedColumnsSetsOnly.push(customSet.name);
-      }
-    });
+    this.visObsDisplayedColumns = [
+      'id',
+      ...customObservationSets.map(customSet => customSet.name)
+    ];
+    this.visObsDisplayedColumnsSetsOnly = customObservationSets.map(
+      customSet => customSet.name
+    );
 
     if (this.visObsDisplayedColumnsSetsOnly.length > 0) {
       this.getGlobalObservationSets().subscribe(data => {
@@ -324,16 +296,13 @@ export class MetadataComponent implements OnInit {
         this.globalObservationSets.forEach(sample => {
           const elem = { sampleName: sample.id };
           customObservationSets.forEach(customSet => {
-            if (customSet.type.toUpperCase().indexOf('OBSERVATION') >= 0) {
-              if (
-                customSet.elements.filter(e => e.id === sample.id).length > 0
-              ) {
-                elem[customSet.name] = true;
-              } else {
-                elem[customSet.name] = false;
-              }
+            if (customSet.elements.filter(e => e.id === sample.id).length > 0) {
+              elem[customSet.name] = customSet.color;
+            } else {
+              elem[customSet.name] = 'transparent';
             }
           });
+
           visTable.push(elem);
         });
         this.visObservationSetDS = new MatTableDataSource(visTable);
@@ -347,26 +316,14 @@ export class MetadataComponent implements OnInit {
    * when user clicks button 'Create a custom feature set'
    */
   onCreateFeatureSet() {
-    const globalFeatureSets = [];
+    let globalFeatureSets = [];
     this.service
-      .getMetadataForResources(this.workspaceResources)
+      .getWorkspaceMetadataFeatures(this.workspaceId)
       .pipe(
-        switchMap(metadataArr => {
-          metadataArr.forEach(metadata => {
-            const elements = metadata.feature_set
-              ? metadata.feature_set.elements
-              : [];
-            // add only samples that don't exist
-            elements.forEach(element => {
-              const index = globalFeatureSets.findIndex(
-                el => el.id === element.id
-              );
-              if (index === -1) {
-                globalFeatureSets.push(element);
-              }
-            });
-          });
-
+        switchMap(metadata => {
+          if (metadata?.feature_set?.elements) {
+            globalFeatureSets = metadata.feature_set.elements;
+          }
           const globalFeatureSetsDS = new MatTableDataSource(globalFeatureSets);
 
           // the list of columns for pop-up table to select samples for custom feature sets
@@ -400,17 +357,7 @@ export class MetadataComponent implements OnInit {
       )
       .subscribe(newFeatureSet => {
         if (newFeatureSet) {
-          const customFeatureSets =
-            this.storage.get(this.workspaceId + '_custom_sets') || [];
-          customFeatureSets.push(newFeatureSet);
-          this.storage.set(
-            this.workspaceId + '_custom_sets',
-            customFeatureSets
-          );
-          // this.customSetDS = new MatTableDataSource(
-          //   JSON.parse(this.storage.get(this.workspaceId + '_custom_sets'))
-          // );
-          // this.cd.markForCheck();
+          this.metadataService.addCustomSet(newFeatureSet);
         }
       });
   }
@@ -422,21 +369,7 @@ export class MetadataComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === 1) {
-        const customObservationSets =
-          this.storage.get(this.workspaceId + '_custom_sets') || [];
-        const foundIndex = customObservationSets.findIndex(
-          set => set.name === setId
-        );
-
-        customObservationSets.splice(foundIndex, 1);
-        this.storage.set(
-          this.workspaceId + '_custom_sets',
-          customObservationSets
-        );
-        // this.customSetDS = new MatTableDataSource(
-        //   JSON.parse(this.storage.get(this.workspaceId + '_custom_sets'))
-        // );
-        // this.cd.markForCheck();
+        this.metadataService.deleteCustomSet(setId);
       }
     });
   }
@@ -467,26 +400,14 @@ export class MetadataComponent implements OnInit {
   }
 
   getGlobalObservationSets() {
-    const globalObservationSets = [];
+    let globalObservationSets = [];
     const subject = new Subject<any>();
-
     this.service
-      .getMetadataForResources(this.workspaceResources)
-      .subscribe(metadataArr => {
-        metadataArr.forEach(metadata => {
-          if (metadata.observation_set && metadata.observation_set.elements) {
-            const elements = metadata.observation_set.elements;
-            // add only samples that don't exist
-            elements.forEach(element => {
-              const index = globalObservationSets.findIndex(
-                el => el.id === element.id
-              );
-              if (index === -1) {
-                globalObservationSets.push(element);
-              }
-            });
-          }
-        });
+      .getWorkspaceMetadataObservations(this.workspaceId)
+      .subscribe(metadata => {
+        if (metadata?.observation_set?.elements) {
+          globalObservationSets = metadata.observation_set.elements;
+        }
         subject.next(globalObservationSets);
       });
     return subject.asObservable();

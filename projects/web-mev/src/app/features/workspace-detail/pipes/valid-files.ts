@@ -9,8 +9,6 @@ export class ValidFilesPipe implements PipeTransform {
    * To exclude duplicate rows, we filter out the files that already have a workspace linked.
    */
   transform(value: any): any {
-    return value.filter(
-      item => item.workspace === null && item.resource_type !== null
-    );
+    return value.filter(item => item.resource_type && !item.workspace);
   }
 }

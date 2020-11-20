@@ -7,7 +7,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { AnalysesService } from '../../services/analysis.service';
 import { switchMap, tap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 
 @Component({
   selector: 'mev-executed-operation',
@@ -16,13 +16,15 @@ import { of } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class ExecutedOperationComponent implements OnInit {
+  private executedOperationResultSubscription: Subscription = new Subscription();
+  execOperations;
   execOperationResult;
+  selectedExecOperation: string;
   data;
 
   @Input() execOperationId: string;
-  execOperations;
   outputs;
-  selectedExecOperation: string;
+  isInProgress: boolean;
 
   constructor(
     private route: ActivatedRoute,
@@ -31,6 +33,7 @@ export class ExecutedOperationComponent implements OnInit {
 
   ngOnInit(): void {
     const workspaceId = this.route.snapshot.paramMap.get('workspaceId');
+    this.isInProgress = true;
     this.apiService
       .getExecOperations(workspaceId)
       .pipe(
@@ -40,18 +43,38 @@ export class ExecutedOperationComponent implements OnInit {
         switchMap(() => {
           if (this.execOperationId) {
             this.selectedExecOperation = this.execOperationId;
+            const idx = this.execOperations.findIndex(
+              val => val.id === this.execOperationId
+            );
+            // if the opertion has been already completed, just extract its outputs from the operationa list
+            if (
+              this.execOperations[idx].outputs ||
+              this.execOperations[idx].error_message
+            ) {
+              this.outputs = {
+                ...this.execOperations[idx].outputs,
+                ...this.execOperations[idx].inputs,
+                error_message: this.execOperations[idx].error_message
+              };
+              return of({ body: this.execOperations[idx] });
+            }
+
             return this.apiService.getExecutedOperationResult(
               this.execOperationId
-            ); //this.getOutputs(this.execOperationId);
+            );
           }
           return of();
         })
       )
-      .subscribe(response => {
+      .subscribe((response: any) => {
         this.outputs = {
           ...response?.body?.outputs,
-          ...response?.body?.inputs
+          ...response?.body?.inputs,
+          error_message: response?.body?.error_message
         };
+        if (response?.body?.error_message || response?.body?.outputs) {
+          this.isInProgress = false;
+        }
       });
   }
 
@@ -61,25 +84,41 @@ export class ExecutedOperationComponent implements OnInit {
   }
 
   onSelectExecOperation() {
+    this.isInProgress = true;
+    this.executedOperationResultSubscription.unsubscribe();
+
     this.execOperationId = this.selectedExecOperation;
     const idx = this.execOperations.findIndex(
       val => val.id === this.execOperationId
     );
     // if the opertion has been already completed, just extract its outputs from the operationa list
-    if (this.execOperations[idx].outputs) {
+    if (
+      this.execOperations[idx].outputs ||
+      this.execOperations[idx].error_message
+    ) {
       this.outputs = {
         ...this.execOperations[idx].outputs,
-        ...this.execOperations[idx].inputs
+        ...this.execOperations[idx].inputs,
+        error_message: this.execOperations[idx].error_message
       };
+      this.isInProgress = false;
     } else {
-      this.apiService
+      this.executedOperationResultSubscription = this.apiService
         .getExecutedOperationResult(this.execOperationId)
         .subscribe(response => {
           this.outputs = {
             ...response?.body?.outputs,
-            ...response?.body?.inputs
+            ...response?.body?.inputs,
+            error_message: response?.body?.error_message
           };
+          if (response?.body?.error_message || response?.body?.outputs) {
+            this.isInProgress = false;
+          }
         });
     }
+  }
+
+  public ngOnDestroy(): void {
+    this.executedOperationResultSubscription.unsubscribe();
   }
 }

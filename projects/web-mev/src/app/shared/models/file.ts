@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FileType } from '@app/shared/models/file-type';
+import { Workspace } from '@app/features/workspace-manager/models/workspace';
 
 /**
  * File or Resource
@@ -21,8 +22,8 @@ export class File {
     public is_active: boolean,
     public is_public: boolean,
     public status: string,
-    public workspace: string,
-    public workspace_name: string,
+    public workspaces: Workspace[],
+    //public workspace_name: string,
     public created: Date,
     public size: number
   ) {}
@@ -46,8 +47,8 @@ export class FileAdapter {
       item.is_active,
       item.is_public,
       item.status,
-      item.workspace,
-      item.workspace_name,
+      item.workspaces,
+      //item.workspace_name,
       new Date(created_formatted),
       item.size
     );

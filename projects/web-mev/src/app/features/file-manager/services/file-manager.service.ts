@@ -59,6 +59,7 @@ export class FileService {
         switchMap(() =>
           this.httpClient.get<File[]>(`${this.API_URL}/resources/`)
         ), // mergeMap
+        map((data: File[]) => data.map(item => this.adapter.adapt(item))),
         takeUntil(timer(5000))
       )
       .subscribe(data => {

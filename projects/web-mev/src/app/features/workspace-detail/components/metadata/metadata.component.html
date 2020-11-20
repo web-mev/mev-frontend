@@ -115,7 +115,7 @@
     </div>
 
     <div *ngIf="!customSetDS || !customSetDS.data || customSetDS.data.length === 0">No data is available.</div>
-    <div *ngIf="customSetDS && customSetDS.data && customSetDS.data.length > 0">
+    <div *ngIf="customSetDS?.data?.length > 0">
       <table *ngIf="customSetsViewMode.value === 'tableMode'" mat-table [dataSource]="customSetDS"
         class="mat-elevation-z8">
         <ng-container matColumnDef="name">
@@ -156,7 +156,7 @@
         <ng-container *ngFor="let setCol of visObsDisplayedColumnsSetsOnly" matColumnDef="{{setCol}}">
           <th mat-header-cell *matHeaderCellDef>{{ setCol }}</th>
           <td mat-cell *matCellDef="let element">
-            <div [ngClass]="{'highlighted-cell': element[setCol] === true}"></div>
+            <div class="highlighted-cell" [style.background-color]="element[setCol]" [ngClass]="{'highlighted-cell2': element[setCol] === true}"></div>
           </td>
         </ng-container>
 

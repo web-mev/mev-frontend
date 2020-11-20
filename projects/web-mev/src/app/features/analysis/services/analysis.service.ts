@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { map, switchMap, takeWhile } from 'rxjs/operators';
-import { Observable, interval, of } from 'rxjs';
+import { map, switchMap, takeWhile, timeout } from 'rxjs/operators';
+import { Observable, interval } from 'rxjs';
 import { File, FileAdapter } from '@app/shared/models/file';
 import { Workspace } from '@app/features/workspace-manager/models/workspace';
 import { Operation, OperationAdapter } from '../models/operation';
@@ -37,7 +37,7 @@ export class AnalysesService {
           data.filter(
             item =>
               types.includes(item.resource_type) &&
-              item.workspace === workspaceId
+              item.workspaces.some(workspace => workspace.id === workspaceId)
           )
         ),
         map((data: any[]) => data.map(item => this.fileAdapter.adapt(item)))
@@ -95,14 +95,22 @@ export class AnalysesService {
 
   getResourceContent(
     resourceId: string,
-    pageIndex = 1,
-    pageSize = 50,
+    pageIndex = 0,
+    pageSize = 0,
     filters = {},
     sorting = {}
   ): Observable<any> {
-    let params = new HttpParams()
-      .set('page', pageIndex.toString())
-      .set('page_size', pageSize.toString());
+    let params = new HttpParams();
+
+    if (pageIndex) {
+      params = params.append('page', pageIndex.toString());
+    }
+
+    if (pageSize) {
+      params = params.append('page_size', pageSize.toString());
+    }
+    // .set('page', pageIndex.toString())
+    // .set('page_size', pageSize.toString());
 
     for (const field in filters) {
       if (filters.hasOwnProperty(field)) {
@@ -129,6 +137,12 @@ export class AnalysesService {
   getExecOperations(workspaceId: string): Observable<any> {
     return this.httpClient.get(
       `${this.API_URL}/executed-operations/workspace/${workspaceId}/`
+    );
+  }
+
+  getExecOperationDAG(workspaceId: string): Observable<any> {
+    return this.httpClient.get(
+      `${this.API_URL}/executed-operations/workspace/${workspaceId}/tree/`
     );
   }
 }

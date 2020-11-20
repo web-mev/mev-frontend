@@ -10,6 +10,7 @@ table {
 .mat-expansion-panel-header-title {
   font-weight: bold;
   color: #a1887f;
+  flex-grow: unset;
 }
 
 .mat-header-cell {
@@ -49,19 +50,6 @@ button {
     width: 20px;
     height: 20px;
     margin: auto;
-  }
-
-  td:nth-child(4n) .highlighted-cell {
-    background-color: #a1997f;
-  }
-  td:nth-child(4n + 1) .highlighted-cell {
-    background-color: #a1887f;
-  }
-  td:nth-child(4n + 2) .highlighted-cell {
-    background-color: #7f9fa1;
-  }
-  td:nth-child(4n + 3) .highlighted-cell {
-    background-color: #917fa1;
   }
 }
 

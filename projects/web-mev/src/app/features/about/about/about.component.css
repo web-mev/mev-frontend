@@ -111,11 +111,6 @@ mat-card {
   justify-content: space-between;
 }
 
-.github-header-image {
-  background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
-  background-size: cover;
-}
-
 .contributors {
   max-width: 700px;
   margin: 0 auto 60px auto;

@@ -1,18 +1,19 @@
 
 
 <section class="operation-container">
-    <!--div *ngIf="!execOperationResult">Please wait...</div-->
-    <span class="label">
-        Select an executed operation:
-    </span>
-    <mat-form-field class="form-control" color="accent">
-        <mat-select name="execOperationId" [(value)]="selectedExecOperation"
-            (selectionChange)="onSelectExecOperation()">
-            <mat-option *ngFor="let operation of execOperations" [value]="operation.id">
-                {{ operation.job_name }}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
-    
-    <mev-analysis-result *ngIf="outputs" [outputs]="outputs"></mev-analysis-result>    
+    <div class="operation-selector">
+        <span>
+            Select an executed operation to view results:
+        </span>
+        <mat-form-field class="form-control" color="accent">
+            <mat-select name="execOperationId" [(value)]="selectedExecOperation"
+                (selectionChange)="onSelectExecOperation()">
+                <mat-option *ngFor="let operation of execOperations" [value]="operation.id">
+                    {{ operation.job_name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div *ngIf="selectedExecOperation && isInProgress" class="operation-status">Building chart, please wait...</div>
+    <mev-analysis-result *ngIf="!isInProgress" [outputs]="outputs"></mev-analysis-result>    
 </section>

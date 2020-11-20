@@ -14,7 +14,6 @@ import {
 })
 export class AnalysisResultComponent implements OnInit, OnChanges {
   @Input() outputs;
-  //pcaData;
   constructor() {}
 
   ngOnInit(): void {

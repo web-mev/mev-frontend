@@ -1,7 +1,17 @@
+<ng-container *ngIf="outputs.error_message">
+    <p class="error">The analysis result cannot be displayed. The error description: 
+        <span class="error__description">{{ outputs.error_message }}</span>
+    </p>
+</ng-container>
+
 <ng-container *ngIf="outputs.pca_coordinates">
     <mev-scatter-plot *ngIf="outputs" [outputs]="outputs"></mev-scatter-plot>
 </ng-container>
 
 <ng-container *ngIf="outputs.dge_results">
     <mev-deseq2 [outputs]="outputs"></mev-deseq2>
+</ng-container>
+
+<ng-container *ngIf="outputs.features_hcl">
+    <mev-hcl [outputs]="outputs"></mev-hcl>
 </ng-container>

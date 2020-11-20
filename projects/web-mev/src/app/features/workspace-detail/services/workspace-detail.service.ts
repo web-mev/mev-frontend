@@ -59,21 +59,52 @@ export class WorkspaceDetailService {
     );
   }
 
-  getMetadata(resourceId: number | string): Observable<any> {
+  getResourceMetadata(resourceId: number | string): Observable<any> {
     return <Observable<any>>(
       this.httpClient.get(`${this.API_URL}/resources/${resourceId}/metadata/`)
     );
   }
 
-  getMetadataForResources(resources): Observable<any> {
-    const metadataObservables = resources.map(resource => {
-      return this.getMetadata(resource.id).pipe(
-        map(metadata => {
-          return metadata;
-        })
-      );
-    });
-    return forkJoin(metadataObservables);
+  getWorkspaceMetadata(workspaceId: number | string): Observable<any> {
+    return <Observable<any>>(
+      this.httpClient.get(`${this.API_URL}/workspaces/${workspaceId}/metadata/`)
+    );
+  }
+
+  getResourceMetadataObservations(
+    resourceId: number | string
+  ): Observable<any> {
+    return <Observable<any>>(
+      this.httpClient.get(
+        `${this.API_URL}/resources/${resourceId}/metadata/observations/`
+      )
+    );
+  }
+
+  getWorkspaceMetadataObservations(
+    workspaceId: number | string
+  ): Observable<any> {
+    return <Observable<any>>(
+      this.httpClient.get(
+        `${this.API_URL}/workspaces/${workspaceId}/metadata/observations/`
+      )
+    );
+  }
+
+  getResourceMetadataFeatures(resourceId: number | string): Observable<any> {
+    return <Observable<any>>(
+      this.httpClient.get(
+        `${this.API_URL}/resources/${resourceId}/metadata/features/`
+      )
+    );
+  }
+
+  getWorkspaceMetadataFeatures(workspaceId: number | string): Observable<any> {
+    return <Observable<any>>(
+      this.httpClient.get(
+        `${this.API_URL}/workspaces/${workspaceId}/metadata/features/`
+      )
+    );
   }
 
   addResourceToWorkspace(
@@ -84,6 +115,17 @@ export class WorkspaceDetailService {
       this.httpClient.post(
         `${this.API_URL}/workspaces/${workspaceId}/resources/add/`,
         { resource_uuid: resourceId }
+      )
+    );
+  }
+
+  deleteResourceFromWorkspace(
+    resourceId: string,
+    workspaceId: string
+  ): Observable<any> {
+    return <Observable<any>>(
+      this.httpClient.get(
+        `${this.API_URL}/workspaces/${workspaceId}/resources/${resourceId}/remove/`
       )
     );
   }

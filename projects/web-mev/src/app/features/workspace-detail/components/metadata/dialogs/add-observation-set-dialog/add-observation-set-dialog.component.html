@@ -11,6 +11,11 @@
                 <input matInput formControlName=observationSetName name=observationSetName>
             </mat-form-field>
 
+            <mat-form-field class="form-control" color="accent">
+                <mat-label>Select your color for the observation set:</mat-label>
+                <input type="color" class="color-picker-input" matInput formControlName=observationSetColor name=observationSetColor>
+            </mat-form-field>
+            
             Select samples: 
             <div class="mat-elevation-z8">
                 <table mat-table [dataSource]="allObservationSetsDS">
@@ -50,6 +55,9 @@
             </div>
             
 
+            
+
+          
 
         </div>
 

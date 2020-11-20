@@ -200,7 +200,7 @@ export class FileListComponent implements OnInit {
       },
       cancel: () => {},
       linkType: 'direct',
-      multiselect: false,
+      multiselect: true,
       folderselect: false
     };
 
@@ -250,7 +250,7 @@ export class ExampleDataSource extends DataSource<File> {
         this.filteredData = this._exampleDatabase.data
           .slice()
           .filter((file: File) => {
-            const searchStr = (file.name + file.workspace).toLowerCase();
+            const searchStr = (file.name + file.workspaces).toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
 
@@ -279,8 +279,8 @@ export class ExampleDataSource extends DataSource<File> {
     }
 
     return data.sort((a, b) => {
-      let propertyA: number | string | Date = '';
-      let propertyB: number | string | Date = '';
+      let propertyA: any = ''; //number | string | Date = '';
+      let propertyB: any = ''; //number | string | Date = '';
 
       switch (this._sort.active) {
         case 'id':
@@ -296,13 +296,13 @@ export class ExampleDataSource extends DataSource<File> {
           [propertyA, propertyB] = [a.status, b.status];
           break;
         case 'workspace':
-          [propertyA, propertyB] = [a.workspace, b.workspace];
+          [propertyA, propertyB] = [a.workspaces, b.workspaces];
           break;
         case 'url':
           [propertyA, propertyB] = [a.url, b.url];
           break;
         case 'created':
-          [propertyA, propertyB] = [a.created, b.created];
+          [propertyA, propertyB] = [new Date(a.created), new Date(b.created)];
           break;
         case 'size':
           [propertyA, propertyB] = [a.size, b.size];

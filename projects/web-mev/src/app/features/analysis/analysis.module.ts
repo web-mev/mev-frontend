@@ -9,15 +9,22 @@ import { AnalysesComponent } from './components/analysis-list/analyses.component
 import { AnalysisResultComponent } from './components/analysis-result/analysis-result.component';
 import { D3Module } from '@app/d3/d3.module';
 import { NgxCsvParserModule } from 'ngx-csv-parser';
+import { AnalysisFlowComponent } from './components/analysis-flow/analysis-flow.component';
 
 @NgModule({
   declarations: [
     AnalysesComponent,
     OperationComponent,
     ExecutedOperationComponent,
-    AnalysisResultComponent
+    AnalysisResultComponent,
+    AnalysisFlowComponent
   ],
-  exports: [OperationComponent, AnalysesComponent, ExecutedOperationComponent],
+  exports: [
+    OperationComponent,
+    AnalysesComponent,
+    ExecutedOperationComponent,
+    AnalysisFlowComponent
+  ],
   imports: [
     CommonModule,
     SharedModule,

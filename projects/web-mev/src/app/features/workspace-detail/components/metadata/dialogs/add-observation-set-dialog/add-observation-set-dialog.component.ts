@@ -33,7 +33,8 @@ export class AddObservationSetDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.observationForm = this.formBuilder.group({
-      observationSetName: ['', Validators.required]
+      observationSetName: ['', Validators.required],
+      observationSetColor: ['', Validators.required]
     });
     this.allObservationSetsDS = this.data.observationSetDS;
 
@@ -55,9 +56,11 @@ export class AddObservationSetDialogComponent implements OnInit {
 
   confirmAdd() {
     const name = this.observationForm.value.observationSetName;
+    const color = this.observationForm.value.observationSetColor;
     const samples = this.selection.selected;
     const observationSet = {
       name: name,
+      color: color,
       type: 'Observation set',
       elements: samples,
       multiple: true

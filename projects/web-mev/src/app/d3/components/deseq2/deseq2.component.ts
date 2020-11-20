@@ -3,62 +3,35 @@ import {
   OnInit,
   ChangeDetectionStrategy,
   ViewChild,
-  ElementRef,
   AfterViewInit,
-  Input
+  Input,
+  ElementRef
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { ActivatedRoute } from '@angular/router';
 import { AnalysesService } from '@app/features/analysis/services/analysis.service';
 import { merge, BehaviorSubject, Observable } from 'rxjs';
 import { tap, finalize } from 'rxjs/operators';
 import { DataSource } from '@angular/cdk/table';
 import * as d3 from 'd3';
+import d3Tip from 'd3-tip';
 import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'mev-deseq2',
   templateUrl: './deseq2.component.html',
   styleUrls: ['./deseq2.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class Deseq2Component implements OnInit, AfterViewInit {
-  constructor(
-    private route: ActivatedRoute,
-    private analysesService: AnalysesService
-  ) {
-    this.dataSource = new FeaturesDataSource(this.analysesService);
-
-    for (const key in this.allowedFilters) {
-      if (this.allowedFilters.hasOwnProperty(key)) {
-        // TSLint rule
-        const defaultValue = this.allowedFilters[key].defaultValue;
-        this.filterForm.addControl(key, new FormControl(defaultValue));
-        if (this.allowedFilters[key].hasOperator) {
-          const operatorDefaultValue = this.allowedFilters[key]
-            .operatorDefaultValue;
-          this.filterForm.addControl(
-            key + '_operator',
-            new FormControl(operatorDefaultValue)
-          );
-        }
-      }
-    }
-  }
-
   @Input() outputs;
-  dataSource: FeaturesDataSource;
+  dataSource: FeaturesDataSource; // datsource for MatTable
+  boxPlotData; // data retrieved from the dgeResourceId resource, pre-processed for D3 box plot visualization
   dgeResourceId;
-  countsResourceId;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
-
   @ViewChild(MatSort) sort: MatSort;
-
-  // @ViewChild('input') input: ElementRef;
-
-  boxPlotData;
+  @ViewChild('boxPlot') svgElement: ElementRef;
 
   /* Table settings */
   displayedColumns = [
@@ -83,8 +56,8 @@ export class Deseq2Component implements OnInit, AfterViewInit {
   defaultPageIndex = 0;
   defaultPageSize = 10;
   defaultSorting = { field: 'log2FoldChange', direction: 'asc' };
-  /* Table filters */
 
+  /* Table filters */
   allowedFilters = {
     /*name: { defaultValue: '', hasOperator: false },*/
     pvalue: {
@@ -101,20 +74,89 @@ export class Deseq2Component implements OnInit, AfterViewInit {
 
   filterForm = new FormGroup({});
 
-  /* Chart settings */
+  /* D3 Chart settings */
   containerId = '#boxPlot';
-  margin = { top: 50, right: 300, bottom: 50, left: 50 };
-  outerWidth = 1050;
-  outerHeight = 500;
+  imageName = 'DESeq2'; // file name for downloaded SVG image
+  margin = { top: 50, right: 300, bottom: 100, left: 50 };
+  outerHeight = 700;
+  precision = 2;
+  delta = 0.1; // used for X and Y axis ranges (we add delta to avoid bug when both max and min are zeros)
+  boxWidth = 20; // the width of rectangular box
+  jitterWidth = 10;
+  tooltipOffsetX = 10; // to position the tooltip on the right side of the triggering element
 
-  /* D3 chart variables */
-  xCat; // field name in data for X axis
-  yCat; // field name in data for Y axis (used to build box plots)
-  yPoints; // field name in data for Y axis (used to draw individual points)
+  boxPlotTypes = {
+    Experimental: {
+      label: 'Treated/Experimental',
+      yCat: 'experValues',
+      yPoints: 'experPoints',
+      color: '#69b3a2'
+    },
+    Base: {
+      label: 'Baseline/Control',
+      yCat: 'baseValues',
+      yPoints: 'basePoints',
+      color: '#a1887f'
+    }
+  };
+  xCat = 'key'; // field name in data for X axis
+  yExperCat = this.boxPlotTypes.Experimental.yCat; // field name in data for Y axis (used to build experimental box plots)
+  yBaseCat = this.boxPlotTypes.Base.yCat; // field name in data for Y axis (used to build baseline box plots)
+  yExperPoints = this.boxPlotTypes.Experimental.yPoints; // field name in data for Y axis (used to draw individual points for experimental samples)
+  yBasePoints = this.boxPlotTypes.Base.yPoints; // field name in data for Y axis (used to draw individual points for baseline samples)
   xScale; // scale functions to transform data values into the the range
   yScale;
 
+  constructor(private analysesService: AnalysesService) {
+    this.dataSource = new FeaturesDataSource(this.analysesService);
+
+    // adding form controls depending on the tables settings (the allowedFilters property)
+    for (const key in this.allowedFilters) {
+      if (this.allowedFilters.hasOwnProperty(key)) {
+        // TSLint rule
+        const defaultValue = this.allowedFilters[key].defaultValue;
+        this.filterForm.addControl(key, new FormControl(defaultValue));
+        if (this.allowedFilters[key].hasOperator) {
+          const operatorDefaultValue = this.allowedFilters[key]
+            .operatorDefaultValue;
+          this.filterForm.addControl(
+            key + '_operator',
+            new FormControl(operatorDefaultValue)
+          );
+        }
+      }
+    }
+  }
+
   ngOnInit() {
+    this.initializeFeatureResource();
+  }
+
+  ngAfterViewInit() {
+    this.sort.sortChange.subscribe(
+      () => (this.paginator.pageIndex = this.defaultPageIndex)
+    );
+    this.dataSource.connect().subscribe(featureData => {
+      this.boxPlotData = featureData;
+      this.preprocessBoxPlotData();
+      this.createChart();
+    });
+    merge(this.sort.sortChange, this.paginator.page)
+      .pipe(
+        tap(() => {
+          this.loadFeaturesPage();
+          this.preprocessBoxPlotData();
+          this.createChart();
+        })
+      )
+      .subscribe();
+  }
+
+  ngOnChanges(): void {
+    this.initializeFeatureResource();
+  }
+
+  initializeFeatureResource(): void {
     this.dgeResourceId = this.outputs.dge_results;
     const sorting = {
       sortField: this.defaultSorting.field,
@@ -129,42 +171,17 @@ export class Deseq2Component implements OnInit, AfterViewInit {
     );
   }
 
-  ngOnChanges(): void {
-    this.generateBoxPlot();
-  }
-
-  ngAfterViewInit() {
-    this.sort.sortChange.subscribe(
-      () => (this.paginator.pageIndex = this.defaultPageIndex)
-    );
-
-    // TO DO: add filtering
-    // fromEvent(this.input.nativeElement, 'keyup')
-    //     .pipe(
-    //         debounceTime(150),
-    //         distinctUntilChanged(),
-    //         tap(() => {
-    //             this.paginator.pageIndex = 0;
-
-    //             this.loadFeaturesPage();
-    //         })
-    //     )
-    //     .subscribe();
-
-    merge(this.sort.sortChange, this.paginator.page)
-      .pipe(
-        tap(() => {
-          this.loadFeaturesPage();
-          this.generateBoxPlot();
-        })
-      )
-      .subscribe();
-  }
-
+  /**
+   * Function is triggered when submitting the form with table filters
+   */
   onSubmit() {
+    this.paginator.pageIndex = this.defaultPageIndex;
     this.loadFeaturesPage();
   }
 
+  /**
+   * Function is triggered when resizing the chart
+   */
   onResize(event) {
     this.createChart();
   }
@@ -179,17 +196,16 @@ export class Deseq2Component implements OnInit, AfterViewInit {
       q1: q1,
       median: d3.quantile(numbers, 0.5),
       q3: q3,
-      interQuantileRange: q3 - q1,
-      min: d3.min(numbers), //q1 - 1.5 * interQuantileRange
-      max: d3.max(numbers) //q3 + 1.5 * interQuantileRange
+      iqr: q3 - q1,
+      min: d3.min(numbers), // q1 - 1.5 * interQuantileRange
+      max: d3.max(numbers) // q3 + 1.5 * interQuantileRange
     };
   }
 
-  generateBoxPlot() {
-    const pageIndex = this.paginator?.pageIndex || this.defaultPageIndex;
-    const pageSize = this.paginator?.pageSize || this.defaultPageSize;
-    this.countsResourceId = this.outputs.normalized_counts;
-
+  /**
+   * Function to prepape the outputs data for D3 box plot visualization
+   */
+  preprocessBoxPlotData() {
     const baseSamples = this.outputs.base_condition_samples.elements.map(
       elem => elem.id
     );
@@ -197,82 +213,35 @@ export class Deseq2Component implements OnInit, AfterViewInit {
       elem => elem.id
     );
 
-    this.dataSource
-      .loadCounts(this.countsResourceId, 'asc', pageIndex, pageSize)
-      .subscribe(counts => {
-        const countsFormatted = counts.results.map(elem => {
-          const baseNumbers = baseSamples.reduce(
-            (acc, cur) => [...acc, elem.values[cur]],
-            []
-          );
-          const experNumbers = experSamples.reduce(
-            (acc, cur) => [...acc, elem.values[cur]],
-            []
-          );
-          return {
-            key: elem.rowname,
-            experValues: this.getBoxPlotStatistics(baseNumbers),
-            baseValues: this.getBoxPlotStatistics(experNumbers),
-            experPoints: experNumbers,
-            basePoints: baseNumbers
-          };
-        });
-        this.boxPlotData = countsFormatted;
-        this.createChart();
-      });
+    const countsFormatted = this.boxPlotData.map(elem => {
+      const baseNumbers = baseSamples.reduce(
+        (acc, cur) => [...acc, elem[cur]],
+        []
+      );
+      const experNumbers = experSamples.reduce(
+        (acc, cur) => [...acc, elem[cur]],
+        []
+      );
+      const newElem = { key: elem.name };
+      newElem[this.yExperCat] = this.getBoxPlotStatistics(experNumbers);
+      newElem[this.yBaseCat] = this.getBoxPlotStatistics(baseNumbers);
+      newElem[this.yExperPoints] = experNumbers;
+      newElem[this.yBasePoints] = baseNumbers;
+      return newElem;
+    });
+    this.boxPlotData = countsFormatted;
   }
 
-  loadFeaturesPage() {
-    const formValues = this.filterForm.value; // Example: {name: "asdfgh", pvalue: 3, pvalue_operator: "lte", log2FoldChange: 2, log2FoldChange_operator: "lte"}
-    const paramFilter = {}; // Example: {'log2FoldChange': '[absgt]:2'};
-    for (const key in this.allowedFilters) {
-      if (
-        formValues.hasOwnProperty(key) &&
-        formValues[key] !== '' &&
-        formValues[key] !== null
-      ) {
-        if (formValues.hasOwnProperty(key + '_operator')) {
-          paramFilter[key] =
-            '[' + formValues[key + '_operator'] + ']:' + formValues[key];
-        } else {
-          paramFilter[key] = '[eq]:' + formValues[key];
-        }
-      }
-    }
-    console.log('this.sort', this.sort);
-
-    const sorting = {
-      sortField: this.sort.active,
-      sortDirection: this.sort.direction
-    };
-
-    this.dataSource.loadFeatures(
-      this.dgeResourceId,
-      paramFilter,
-      sorting,
-      this.paginator.pageIndex,
-      this.paginator.pageSize
-    );
-  }
-
+  /**
+   * Function to generate D3 box plot
+   */
   createChart(): void {
-    const delta = 0.1; // used for X and Y axis ranges (we add delta to avoid bug when both max and min are zeros)
-    const boxWidth = 20; // the width of rectangular box
-    const jitterWidth = 0;
-
-    this.xCat = 'key';
-    this.yCat = 'Values';
-    this.yPoints = 'Points';
-    const boxPlotColors = [
-      { group: 'Treated', color: '#69b3a2' },
-      { group: 'Control', color: '#a1887f' }
-    ];
-
+    const outerWidth = this.svgElement.nativeElement.offsetWidth;
+    const outerHeight = this.outerHeight;
     const width = outerWidth - this.margin.left - this.margin.right;
     const height = outerHeight - this.margin.top - this.margin.bottom;
 
     const data = this.boxPlotData;
-    const sumstat = this.boxPlotData;
 
     d3.select(this.containerId)
       .selectAll('svg')
@@ -290,150 +259,282 @@ export class Deseq2Component implements OnInit, AfterViewInit {
       )
       .style('fill', 'none');
 
+    // Tooltip
+    const tooltipOffsetX = this.tooltipOffsetX;
+    const tip = d3Tip()
+      .attr('class', 'd3-tip')
+      .offset([-10, 0])
+      .html((event, d) => {
+        // if it is a hover over an individual point, show the value
+        if (d !== Object(d)) return 'Value: ' + d.toFixed(this.precision);
+
+        // if it is a hover over a box plot, show table with basic statistic values
+        const htmlTable =
+          '<table><thead><th></th><th>' +
+          this.boxPlotTypes.Experimental.label +
+          '</th><th>' +
+          this.boxPlotTypes.Base.label +
+          '</th><thead>' +
+          '<tr><td>Q1</td><td>' +
+          d[this.yExperCat].q1.toFixed(this.precision) +
+          '</td><td>' +
+          d[this.yBaseCat].q1.toFixed(this.precision) +
+          '</td></tr>' +
+          '<tr><td>Q2</td><td>' +
+          d[this.yExperCat].median.toFixed(this.precision) +
+          '</td><td>' +
+          d[this.yBaseCat].median.toFixed(this.precision) +
+          '</td></tr>' +
+          '<tr><td>Q3</td><td>' +
+          d[this.yExperCat].q3.toFixed(this.precision) +
+          '</td><td>' +
+          d[this.yBaseCat].q3.toFixed(this.precision) +
+          '</td></tr>' +
+          '<tr><td>IQR</td><td>' +
+          d[this.yExperCat].iqr.toFixed(this.precision) +
+          '</td><td>' +
+          d[this.yBaseCat].iqr.toFixed(this.precision) +
+          '</td></tr>' +
+          '<tr><td>MIN</td><td>' +
+          d[this.yExperCat].min.toFixed(this.precision) +
+          '</td><td>' +
+          d[this.yBaseCat].min.toFixed(this.precision) +
+          '</td></tr>' +
+          '<tr><td>MAX</td><td>' +
+          d[this.yExperCat].max.toFixed(this.precision) +
+          '</td><td>' +
+          d[this.yBaseCat].max.toFixed(this.precision) +
+          '</td></tr>' +
+          '</table>';
+        return '<b>' + d[this.xCat] + '</b><br>' + htmlTable;
+      });
+    svg.call(tip);
+
+    svg
+      .append('rect')
+      .attr('width', width)
+      .attr('height', height)
+      .style('fill', 'transparent');
+
     /* Setting up X-axis and Y-axis*/
     this.xScale = d3
       .scaleBand()
       .rangeRound([0, width])
-      .domain(sumstat.map(d => d.key))
+      .domain(data.map(d => d.key))
       .paddingInner(1)
       .paddingOuter(0.5);
 
     this.yScale = d3.scaleLinear().rangeRound([height, 0]);
 
-    const experMaxVal = d3.max(data, d => <number>d['exper' + this.yCat].max);
-    const experMinVal = d3.min(data, d => <number>d['exper' + this.yCat].min);
-    const baseMaxVal = d3.max(data, d => <number>d['base' + this.yCat].max);
-    const baseMinVal = d3.min(data, d => <number>d['base' + this.yCat].min);
+    const experMaxVal = d3.max(data, d => <number>d[this.yExperCat].max);
+    const experMinVal = d3.min(data, d => <number>d[this.yExperCat].min);
+    const baseMaxVal = d3.max(data, d => <number>d[this.yBaseCat].max);
+    const baseMinVal = d3.min(data, d => <number>d[this.yBaseCat].min);
     const yMax = Math.max(baseMaxVal, experMaxVal);
     const yMin = Math.min(baseMinVal, experMinVal);
-    const yRange = yMax - yMin + delta; // add delta to avoid bug when both max and min are zeros
+    const yRange = yMax - yMin + this.delta; // add delta to avoid bug when both max and min are zeros
 
-    this.yScale.domain([yMin - yRange * delta, yMax + yRange * delta]);
+    this.yScale.domain([
+      yMin - yRange * this.delta,
+      yMax + yRange * this.delta
+    ]);
 
     svg
       .append('g')
       .attr('transform', 'translate(0,' + height + ')')
       .attr('class', 'x-axis')
-      .call(d3.axisBottom(this.xScale));
+      .call(d3.axisBottom(this.xScale))
+      .selectAll('text')
+      .style('text-anchor', 'end')
+      .attr('dx', '-.8em')
+      .attr('dy', '.15em')
+      .attr('transform', 'rotate(-45)');
 
     svg.append('g').call(d3.axisLeft(this.yScale));
 
-    const boxPlotTypes = ['exper', 'base'];
-    boxPlotTypes.forEach((boxPlotType, i) => {
+    // Box plots
+    Object.keys(this.boxPlotTypes).forEach((key, i) => {
+      const yCatProp = this.boxPlotTypes[key].yCat;
+      const yPointsProp = this.boxPlotTypes[key].yPoints;
+      const color = this.boxPlotTypes[key].color;
+
       // Main vertical line
       svg
-        .selectAll('vertLines' + i)
-        .data(sumstat)
+        .selectAll('.vertLines')
+        .data(data)
         .enter()
         .append('line')
         .attr(
           'x1',
-          (d: any) => this.xScale(d[this.xCat]) + (1.2 * i - 0.6) * boxWidth
+          (d: any) =>
+            this.xScale(d[this.xCat]) + (1.2 * i - 0.6) * this.boxWidth
         )
         .attr(
           'x2',
-          (d: any) => this.xScale(d[this.xCat]) + (1.2 * i - 0.6) * boxWidth
+          (d: any) =>
+            this.xScale(d[this.xCat]) + (1.2 * i - 0.6) * this.boxWidth
         )
-        .attr('y1', (d: any) => this.yScale(d[boxPlotType + this.yCat].min))
-        .attr('y2', (d: any) => this.yScale(d[boxPlotType + this.yCat].max))
+        .attr('y1', (d: any) => this.yScale(d[yCatProp].min))
+        .attr('y2', (d: any) => this.yScale(d[yCatProp].max))
         .attr('stroke', 'black')
         .style('width', 10);
 
       svg
-        .selectAll('boxes' + i)
-        .data(sumstat)
+        .selectAll('.boxes')
+        .data(data)
         .enter()
         .append('rect')
-        .attr('x', d => this.xScale(d[this.xCat]) + (1.2 * i - 1.1) * boxWidth)
-        .attr('y', d => this.yScale(d[boxPlotType + this.yCat].q3))
+        .attr(
+          'x',
+          d => this.xScale(d[this.xCat]) + (1.2 * i - 1.1) * this.boxWidth
+        )
+        .attr('y', d => this.yScale(d[yCatProp].q3))
         .attr(
           'height',
-          d =>
-            this.yScale(d[boxPlotType + this.yCat].q1) -
-            this.yScale(d[boxPlotType + this.yCat].q3)
+          d => this.yScale(d[yCatProp].q1) - this.yScale(d[yCatProp].q3)
         )
-        .attr('width', boxWidth)
+        .attr('width', this.boxWidth)
         .attr('stroke', 'black')
-        .style('fill', boxPlotColors[i].color);
+        .style('fill', color)
+        .attr('pointer-events', 'all')
+        .on('mouseover', function(mouseEvent: any, d) {
+          tip.show(mouseEvent, d, this);
+          tip.style('left', mouseEvent.x + tooltipOffsetX + 'px');
+        })
+        .on('mouseout', tip.hide);
 
       // Medians
       svg
-        .selectAll('medianLines' + i)
-        .data(sumstat)
+        .selectAll('.medianLines')
+        .data(data)
         .enter()
         .append('line')
-        .attr('x1', d => this.xScale(d[this.xCat]) + (1.2 * i - 1.1) * boxWidth)
-        .attr('x2', d => this.xScale(d[this.xCat]) + (1.2 * i - 0.1) * boxWidth)
-        .attr('y1', d => this.yScale(d[boxPlotType + this.yCat].median))
-        .attr('y2', d => this.yScale(d[boxPlotType + this.yCat].median))
+        .attr(
+          'x1',
+          d => this.xScale(d[this.xCat]) + (1.2 * i - 1.1) * this.boxWidth
+        )
+        .attr(
+          'x2',
+          d => this.xScale(d[this.xCat]) + (1.2 * i - 0.1) * this.boxWidth
+        )
+        .attr('y1', d => this.yScale(d[yCatProp].median))
+        .attr('y2', d => this.yScale(d[yCatProp].median))
         .attr('stroke', 'black')
         .style('width', 80);
 
       // Add individual points with jitter
       svg
-        .selectAll('genePoints' + i)
+        .selectAll('genePoints')
         .data(data)
         .enter()
         .each((d, ix, nodes) => {
           d3.select(nodes[ix])
-            .selectAll('individualPoints')
-            .data(d[boxPlotType + this.yPoints])
+            .selectAll('.individualPoints')
+            .data(d[yPointsProp])
             .enter()
             .append('circle')
             .attr(
               'cx',
               this.xScale(data[ix][this.xCat]) +
-                (1.2 * i - 0.6) * boxWidth -
-                jitterWidth / 2 +
-                Math.random() * jitterWidth
+                (1.2 * i - 0.6) * this.boxWidth -
+                this.jitterWidth / 2 +
+                Math.random() * this.jitterWidth
             )
             .attr('cy', d => this.yScale(d))
             .attr('r', 3)
-            .style('fill', boxPlotColors[i].color)
-            .attr('stroke', '#000000');
+            .style('fill', color)
+            .attr('stroke', '#000000')
+            .attr('pointer-events', 'all')
+            .on('mouseover', function(mouseEvent: any, d) {
+              tip.show(mouseEvent, d, this);
+              tip.style('left', mouseEvent.x + tooltipOffsetX + 'px');
+            })
+            .on('mouseout', tip.hide);
         });
+
+      // Legend
+      const boxPlotColors = Object.keys(this.boxPlotTypes).map(key => ({
+        label: this.boxPlotTypes[key].label,
+        color: this.boxPlotTypes[key].color
+      }));
+      const legend = svg
+        .selectAll('.legend')
+        .data(boxPlotColors)
+        .enter()
+        .append('g')
+        .classed('legend', true)
+        .attr('transform', function(d, i) {
+          return 'translate(0,' + i * 20 + ')';
+        });
+
+      legend
+        .append('circle')
+        .attr('r', 5)
+        .attr('cx', width + 20)
+        .attr('fill', d => d.color);
+
+      legend
+        .append('text')
+        .attr('x', width + 30)
+        .attr('dy', '.35em')
+        .style('fill', '#000')
+        .attr('class', 'legend-label')
+        .text(d => d.label);
     });
+  }
 
-    // Legend
-    const legend = svg
-      .selectAll('.legend')
-      .data(boxPlotColors)
-      .enter()
-      .append('g')
-      .classed('legend', true)
-      .attr('transform', function(d, i) {
-        return 'translate(0,' + i * 20 + ')';
-      });
+  /**
+   * Function to load features by filters, pages and sorting settings specified by a user
+   */
+  loadFeaturesPage() {
+    const formValues = this.filterForm.value; // i.e. {name: "asdfgh", pvalue: 3, pvalue_operator: "lte", log2FoldChange: 2, log2FoldChange_operator: "lte"}
+    const paramFilter = {}; // has values {'log2FoldChange': '[absgt]:2'};
+    for (const key in this.allowedFilters) {
+      if (
+        formValues.hasOwnProperty(key) &&
+        formValues[key] !== '' &&
+        formValues[key] !== null
+      ) {
+        if (formValues.hasOwnProperty(key + '_operator')) {
+          paramFilter[key] =
+            '[' + formValues[key + '_operator'] + ']:' + formValues[key];
+        } else {
+          paramFilter[key] = '[eq]:' + formValues[key];
+        }
+      }
+    }
 
-    legend
-      .append('circle')
-      .attr('r', 5)
-      .attr('cx', width + 20)
-      .attr('fill', d => d.color);
+    const sorting = {
+      sortField: this.sort.active,
+      sortDirection: this.sort.direction
+    };
 
-    legend
-      .append('text')
-      .attr('x', width + 30)
-      .attr('dy', '.35em')
-      .style('fill', '#000')
-      .attr('class', 'legend-label')
-      .text(d => d.group);
+    this.dataSource.loadFeatures(
+      this.dgeResourceId,
+      paramFilter,
+      sorting,
+      this.paginator.pageIndex,
+      this.paginator.pageSize
+    );
   }
 }
 
-export interface Feature {
-  id: number;
-  description: string;
-  duration: string;
-  seqNo: number;
+export interface DESeqFeature {
+  name: string;
+  overall_mean: number;
+  Control: number;
+  Experimental: number;
+  log2FoldChange: number;
+  lfcSE: number;
+  stat: number;
+  pvalue: number;
+  padj: number;
 }
 
-export class FeaturesDataSource implements DataSource<Feature> {
-  private featuresSubject = new BehaviorSubject<Feature[]>([]);
-  private countsSubject = new BehaviorSubject<any[]>([]);
+export class FeaturesDataSource implements DataSource<DESeqFeature> {
+  private featuresSubject = new BehaviorSubject<DESeqFeature[]>([]);
   public featuresCount = 0;
   private loadingSubject = new BehaviorSubject<boolean>(false);
-  private countLoadingSubject = new BehaviorSubject<boolean>(false);
   public loading$ = this.loadingSubject.asObservable();
 
   constructor(private analysesService: AnalysesService) {}
@@ -446,8 +547,6 @@ export class FeaturesDataSource implements DataSource<Feature> {
     pageSize: number
   ) {
     this.loadingSubject.next(true);
-
-    //const filter = { 'log2FoldChange': '[absgt]:2' };
 
     this.analysesService
       .getResourceContent(
@@ -464,29 +563,11 @@ export class FeaturesDataSource implements DataSource<Feature> {
           const newFeature = { name: feature.rowname, ...feature.values };
           return newFeature;
         });
-
         return this.featuresSubject.next(featuresFormatted);
       });
   }
 
-  /**
-   * Function to get the normalized counts for the Box Plot
-   */
-  loadCounts(
-    resourceId: string,
-    // filter: string,
-    sortDirection: string,
-    pageIndex: number,
-    pageSize: number
-  ) {
-    this.countLoadingSubject.next(true);
-
-    return this.analysesService
-      .getResourceContent(resourceId, pageIndex + 1, pageSize)
-      .pipe(finalize(() => this.countLoadingSubject.next(false)));
-  }
-
-  connect(): Observable<Feature[]> {
+  connect(): Observable<DESeqFeature[]> {
     return this.featuresSubject.asObservable();
   }
 

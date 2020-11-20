@@ -1,20 +1,28 @@
 <div class="container">
-    <h3 mat-dialog-title>Add a new custom sample set</h3>
-  
-    <form class="mat-dialog-content" (ngSubmit)="submit" #formControl="ngForm">
- 
-      <div class="form">
-        <mat-form-field color="accent">
-          <input matInput #input class="form-control" placeholder="Sample set name" [(ngModel)]="sapleSetName" name="name" required >
-          <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
-        </mat-form-field>
-      </div>
-  
-      <div mat-dialog-actions>
-        <button mat-button mat-raised-button color="accent" [type]="submit" [disabled]="!formControl.valid" [(mat-dialog-close)]="sapleSetName">Save</button>
-        <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
-      </div>
-      <p></p>
-    </form>
-  </div>
-  
+  <h3 mat-dialog-title>Add a new custom {{ customSetType | lowercase}}</h3>
+
+  <form class="mat-dialog-content" [formGroup]="setForm" (ngSubmit)="submit">
+
+    <div class="form">
+
+      <mat-form-field class="form-control" color="accent">
+        <mat-label>{{ customSetType }} name:</mat-label>
+        <input matInput formControlName=customSetName>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="isObservationSet" class="form-control" color="accent">
+        <mat-label>Select your color for the observation set:</mat-label>
+        <input type="color" class="color-picker-input" matInput formControlName=customSetColor>
+      </mat-form-field>
+
+    </div>
+
+
+    <div mat-dialog-actions>
+      <button mat-button mat-raised-button color="accent" (click)="confirmAdd()" 
+        [type]="submit" [disabled]="!setForm.valid" [mat-dialog-close]="1">Save</button>
+      <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
+    </div>
+    <p></p>
+  </form>
+</div>

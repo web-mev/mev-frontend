@@ -8,17 +8,35 @@
   width: 100%;
 }
 
-.mat-dialog-content {
-  max-height: none;
-  overflow: visible;
-}
-
 .form {
   display: flex;
+  flex-direction: column;
   padding-top: 6px;
 }
 
 .mat-form-field {
   font-size: 16px;
   flex-grow: 1;
+}
+
+.mat-dialog-content {
+  max-height: none;
+  overflow: visible;
+  position: relative;
+}
+
+.form-control {
+  width: 100%;
+}
+
+.mat-dialog-actions {
+  position: absolute;
+  bottom: 0;
+}
+
+.color-picker-input {
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  padding: 0;
 }

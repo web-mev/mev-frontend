@@ -5,7 +5,7 @@ import {
   Inject
 } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormControl, Validators } from '@angular/forms';
+import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'mev-add-sample-set',
@@ -14,16 +14,30 @@ import { FormControl, Validators } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddSampleSetComponent {
-  sapleSetName: string;
+  setForm: FormGroup;
+  isObservationSet = true;
+  customSetType: string;
   constructor(
+    private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<AddSampleSetComponent>,
     @Inject(MAT_DIALOG_DATA) public data
   ) {}
 
-  formControl = new FormControl('', [Validators.required]);
+  ngOnInit(): void {
+    // if no custom set type is passed, assume Observation set by default
+    this.customSetType = this.data?.type || 'Observation set';
 
-  getErrorMessage() {
-    return this.formControl.hasError('required') ? 'Required field' : '';
+    if (this.customSetType.toUpperCase().indexOf('FEATURE') >= 0) {
+      this.isObservationSet = false;
+    }
+
+    this.setForm = this.formBuilder.group({
+      customSetName: ['', [Validators.required]],
+      customSetColor: [
+        '',
+        [...(this.isObservationSet ? [Validators.required] : [])]
+      ]
+    });
   }
 
   submit() {
@@ -32,5 +46,16 @@ export class AddSampleSetComponent {
 
   onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  confirmAdd() {
+    const name = this.setForm.value.customSetName;
+    const color = this.setForm.value.customSetColor;
+
+    const customSet = {
+      name: name,
+      color: color
+    };
+    this.dialogRef.close(customSet);
   }
 }

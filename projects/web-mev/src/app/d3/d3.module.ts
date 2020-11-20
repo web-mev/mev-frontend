@@ -5,15 +5,19 @@ import { ScatterPlotComponent } from './components/scatter-plot/scatter-plot.com
 import { SharedModule } from '@app/shared/shared.module';
 import { AddSampleSetComponent } from './components/dialogs/add-sample-set/add-sample-set.component';
 import { Deseq2Component } from './components/deseq2/deseq2.component';
+import { HclComponent } from './components/hcl/hcl.component';
+import { DownloadButtonComponent } from './components/download-button/download-button.component';
 
 @NgModule({
   declarations: [
     BarChartComponent,
     ScatterPlotComponent,
     AddSampleSetComponent,
-    Deseq2Component
+    Deseq2Component,
+    HclComponent,
+    DownloadButtonComponent
   ],
   imports: [CommonModule, SharedModule],
-  exports: [ScatterPlotComponent, Deseq2Component]
+  exports: [ScatterPlotComponent, Deseq2Component, HclComponent]
 })
 export class D3Module {}

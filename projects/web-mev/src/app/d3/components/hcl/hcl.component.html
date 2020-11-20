@@ -1,0 +1,59 @@
+<mat-card class="analysis-card">
+    <mat-card-header>
+        <div mat-card-avatar class="analysis-card__img"></div>
+        <mat-card-title>Hierarchical clustering</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="analysis-card__main">
+        <p class="analysis-card__instruction">
+            Click on a node in the dendrogram graph to select multiple samples/features. Then click the Add button to
+            save it as a new custom set.
+        </p>
+        <mat-divider [inset]="true"></mat-divider>
+        <div class="analysis-card__content">
+
+            <div class="hcl-container">
+
+                <div class="chart-section">
+                    <div class="chart-title">Sample clustering</div>                    
+                    <div class="sample-list-container">
+                        <button mat-raised-button color="accent" (click)="onCreateCustomSampleSet('Observation set')"
+                            [disabled]="!selectedSamples.length">
+                            <mat-icon>add</mat-icon>
+                            Save as a sample set
+                        </button>
+                        <div class="sample-list" *ngIf="selectedSamples.length"> Selected samples:
+                            <span class="sample-list__item" *ngFor="let item of selectedSamples">
+                                {{ item }}
+                            </span>
+                        </div>
+                        <div *ngIf="selectedSamplesStatusTxt" class="status-txt"> {{ selectedSamplesStatusTxt }}</div>
+                    </div>
+                    <mev-download-button [containerId]="obsTreeContainerId" [imageName]="obsImageName"></mev-download-button>
+                    <div class="chart" #treePlot id="observationPlot" (window:resize)="onResize($event)"></div>
+
+                </div>
+                <mat-divider [inset]="true"></mat-divider>
+
+                <div class="chart-section">
+                    <div class="chart-title">Gene clustering</div>
+                    <div class="sample-list-container">
+                        <button mat-raised-button color="accent" (click)="onCreateCustomSampleSet('Feature set')"
+                            [disabled]="!selectedFeatures.length">
+                            <mat-icon aria-label="Add local data">add</mat-icon>
+                            Save as a feature set
+                        </button>
+                        <div class="sample-list" *ngIf="selectedFeatures.length"> Selected features:
+                            <span class="sample-list__item" *ngFor="let item of selectedFeatures">
+                                {{ item }}
+                            </span>
+                        </div>
+                        <div *ngIf="selectedFeaturesStatusTxt" class="status-txt"> {{ selectedFeaturesStatusTxt }}</div>
+                    </div>
+                    <mev-download-button [containerId]="featTreeContainerId" [imageName]="featImageName"></mev-download-button>
+                    <div class="chart" id="featurePlot" (window:resize)="onResize($event)"></div>
+
+                </div>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>

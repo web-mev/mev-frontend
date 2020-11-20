@@ -23,7 +23,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
-      retry(1),
+      //retry(1),
       catchError((error: HttpErrorResponse) => {
         let errorMessage = '';
 
@@ -49,8 +49,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
               detail += error.error[error_field] + ' \n';
             });
           }
-          errorMessage = `Server Side Error. Details: ${detail}
-                          Message: ${error.message}`;
+          errorMessage = `Error: ${detail}`; // Message: ${error.message}
         }
         this.notificationService.error(errorMessage);
         return throwError(errorMessage);

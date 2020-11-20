@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BarChartComponent } from './components/bar-chart/bar-chart.component';
 import { ScatterPlotComponent } from './components/scatter-plot/scatter-plot.component';
 import { SharedModule } from '@app/shared/shared.module';
 import { AddSampleSetComponent } from './components/dialogs/add-sample-set/add-sample-set.component';
@@ -10,7 +9,6 @@ import { DownloadButtonComponent } from './components/download-button/download-b
 
 @NgModule({
   declarations: [
-    BarChartComponent,
     ScatterPlotComponent,
     AddSampleSetComponent,
     Deseq2Component,

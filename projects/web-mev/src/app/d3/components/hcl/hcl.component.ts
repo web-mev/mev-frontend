@@ -104,10 +104,11 @@ export class HclComponent implements OnChanges {
       .remove();
 
     const root = d3.hierarchy(hierData);
-
+    console.log('root: ', root);
     let ifCustomObservationSetExists = false;
     root.leaves().map(leaf => {
       const sample = leaf.data.name;
+      leaf.data.isLeaf = true;
       leaf.data.colors = [];
       this.customObservationSets.forEach(set => {
         if (set.elements.some(e => e.id === sample)) {
@@ -118,8 +119,8 @@ export class HclComponent implements OnChanges {
     });
 
     const leafNodeNumber = root.leaves().length; // calculate the number of nodes
-    //add extra 50px for every node above 20 to the set height
-    const addHeight = leafNodeNumber > 20 ? (leafNodeNumber - 20) * 50 : 0;
+    // add extra 50px for every node above 20 to the set height
+    const addHeight = leafNodeNumber > 20 ? (leafNodeNumber - 20) * 30 : 0;
     const canvasHeight = height + addHeight;
 
     const tree = d3.cluster().size([canvasHeight, width - 200]);
@@ -186,7 +187,7 @@ export class HclComponent implements OnChanges {
     node
       .append('rect')
       .filter(function(d) {
-        return d.data.name.length > 2;
+        return d.data.isLeaf === true;
       })
       // .attr('x', function (d, i) { return d.children ? (-1 * 1) - 12 : 900; })
       .attr('class', 'rectLabel')
@@ -200,7 +201,7 @@ export class HclComponent implements OnChanges {
     node
       .append('text')
       .filter(function(d) {
-        return d.data.name.length > 2;
+        return d.data.isLeaf === true;
       })
       .attr('dx', function(d) {
         return d.children ? -8 : 8;
@@ -221,7 +222,7 @@ export class HclComponent implements OnChanges {
     node
       .append('g')
       .filter(function(d) {
-        return d.data.name.length > 2;
+        return d.data.isLeaf === true;
       })
       .attr('width', 200)
       .each((d, ix, nodes) => {
@@ -288,7 +289,7 @@ export class HclComponent implements OnChanges {
 
     dialogRef.afterClosed().subscribe(customSetData => {
       if (customSetData) {
-        let customSet = {
+        const customSet = {
           name: customSetData.name,
           type: type,
           color: customSetData.color,

@@ -23,6 +23,10 @@
 }
 
 ::ng-deep {
+  .mat-content {
+    display: inline !important;
+    text-align: center;
+  }
   .node circle {
     fill: #fff;
     stroke: #a1887f;

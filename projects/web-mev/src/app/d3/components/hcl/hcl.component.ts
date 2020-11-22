@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   Input,
   OnChanges,
-  OnInit,
   ElementRef,
   ViewChild
 } from '@angular/core';
@@ -33,8 +32,10 @@ export class HclComponent implements OnChanges {
   selectedFeaturesStatusTxt: string;
 
   /* Chart settings */
+
   featTreeContainerId = '#featurePlot';
   obsTreeContainerId = '#observationPlot';
+  isFeatTreePanelExpanded = false;
   featImageName = 'Hierarchical clustering - Features'; // file name for downloaded SVG image
   obsImageName = 'Hierarchical clustering - Observations';
   margin = { top: 50, right: 300, bottom: 50, left: 50 }; // chart margins
@@ -47,7 +48,7 @@ export class HclComponent implements OnChanges {
   ) {}
 
   ngOnChanges(): void {
-    this.generateHCLPlot();
+    this.generateHCL();
   }
 
   onResize(event) {
@@ -64,22 +65,19 @@ export class HclComponent implements OnChanges {
   }
 
   /**
-   * Function to retrieve data for PCA plot
+   * Function to retrieve data for HCL plots
    */
-  generateHCLPlot() {
-    const featResourceId = this.outputs.features_hcl;
+  generateHCL() {
+    this.generateObsHCL();
+    this.generateFeatHCL();
+  }
+
+  /**
+   * Function to retrieve data for Observation HCL plot
+   */
+  generateObsHCL() {
     const obsResourceId = this.outputs.observations_hcl;
-
     this.customObservationSets = this.metadataService.getCustomObservationSets();
-    this.apiService.getResourceContent(featResourceId).subscribe(response => {
-      this.hierFeatData = response;
-      this.createChart(
-        this.hierFeatData,
-        this.featTreeContainerId,
-        CustomSetType.FeatureSet
-      );
-    });
-
     this.apiService.getResourceContent(obsResourceId).subscribe(response => {
       this.hierObsData = response;
       this.createChart(
@@ -91,9 +89,32 @@ export class HclComponent implements OnChanges {
   }
 
   /**
-   * Function to create scatter plot
+   * Function to retrieve data for Feature HCL plot
    */
-  private createChart(hierData, containerId, type): void {
+  generateFeatHCL() {
+    if (this.isFeatTreePanelExpanded && !this.hierFeatData) {
+      const featResourceId = this.outputs.features_hcl;
+      this.apiService.getResourceContent(featResourceId).subscribe(response => {
+        this.hierFeatData = response;
+        this.createChart(
+          this.hierFeatData,
+          this.featTreeContainerId,
+          CustomSetType.FeatureSet
+        );
+      });
+    }
+  }
+
+  /**
+   * Function to create dendrogram
+   */
+  private createChart(
+    hierData: any,
+    containerId: string,
+    type: CustomSetType
+  ): void {
+    if (!hierData) return;
+
     const outerWidth = this.svgElement.nativeElement.offsetWidth;
     const outerHeight = this.outerHeight;
     const width = outerWidth - this.margin.left - this.margin.right;
@@ -104,7 +125,6 @@ export class HclComponent implements OnChanges {
       .remove();
 
     const root = d3.hierarchy(hierData);
-    console.log('root: ', root);
     let ifCustomObservationSetExists = false;
     root.leaves().map(leaf => {
       const sample = leaf.data.name;
@@ -139,7 +159,7 @@ export class HclComponent implements OnChanges {
       )
       .style('fill', 'none');
 
-    const link = svg
+    svg
       .selectAll('path.link')
       .data(root.descendants().slice(1))
       .enter()
@@ -166,16 +186,24 @@ export class HclComponent implements OnChanges {
       .attr('stroke', '#a1887f');
 
     function highlightNodes(event, d: any) {
+      d.descendants().forEach(
+        node =>
+          (node.data.isHighlighted = node.data.isHighlighted ? false : true)
+      );
+
       if (type === CustomSetType.ObservationSet) {
-        that.selectedSamples = d.leaves().map(leaf => leaf.data.name);
+        that.selectedSamples = root
+          .leaves()
+          .filter(leaf => leaf.data.isHighlighted)
+          .map(leaf => leaf.data.name);
         that.selectedSamplesStatusTxt = '';
       } else {
-        that.selectedFeatures = d.leaves().map(leaf => leaf.data.name);
+        that.selectedFeatures = root
+          .leaves()
+          .filter(leaf => leaf.data.isHighlighted)
+          .map(leaf => leaf.data.name);
         that.selectedFeaturesStatusTxt = '';
       }
-
-      root.descendants().forEach(node => (node.data.isHighlighted = false));
-      d.descendants().forEach(node => (node.data.isHighlighted = true));
 
       d3.select(containerId)
         .selectAll('circle')
@@ -200,23 +228,14 @@ export class HclComponent implements OnChanges {
 
     node
       .append('text')
-      .filter(function(d) {
-        return d.data.isLeaf === true;
-      })
-      .attr('dx', function(d) {
-        return d.children ? -8 : 8;
-      })
-      .attr('class', 'textLabel')
-      .attr('id', function(d, i) {
-        return 'txt' + i;
-      })
+      .filter(d => d.data.isLeaf === true)
+      .attr('dx', 10)
       .attr('dy', 3)
-      .attr('text-anchor', function(d) {
-        return d.children ? 'end' : 'start';
-      })
-      .text(function(d) {
-        return d.data.name;
-      });
+      .attr('class', 'textLabel')
+      // .attr('text-anchor', function (d) {
+      //   return d.children ? 'end' : 'start';
+      // })
+      .text(d => d.data.name);
 
     // Color squares for leaf nodes to indicate custom sample sets
     node
@@ -273,6 +292,14 @@ export class HclComponent implements OnChanges {
   }
 
   /**
+   * Function that is triggered when the Feature Tree Panel is expanded
+   */
+  onOpenGeneHCLPanel() {
+    this.isFeatTreePanelExpanded = true;
+    this.generateFeatHCL();
+  }
+
+  /**
    * Function that is triggered when the user clicks the "Create a custom sample" button
    */
   onCreateCustomSampleSet(type) {
@@ -299,7 +326,7 @@ export class HclComponent implements OnChanges {
 
         this.metadataService.addCustomSet(customSet);
 
-        this.generateHCLPlot();
+        this.generateHCL();
         if (type === CustomSetType.ObservationSet) {
           this.selectedSamples = [];
           this.selectedSamplesStatusTxt =

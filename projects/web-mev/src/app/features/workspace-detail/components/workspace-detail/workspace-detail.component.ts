@@ -63,7 +63,7 @@ export class WorkspaceDetailComponent implements OnInit {
   previewItem(resourceId) {
     this.service.getResourcePreview(resourceId).subscribe(data => {
       const previewData = {};
-      if (data.results.length) {
+      if (data?.results?.length) {
         const minN = Math.min(data.results.length, 10);
         let slicedData = data.results.slice(0, minN);
         const columns = Object.keys(slicedData[0].values);

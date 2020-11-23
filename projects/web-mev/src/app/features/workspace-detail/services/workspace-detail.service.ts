@@ -49,7 +49,7 @@ export class WorkspaceDetailService {
 
   getResourcePreview(resourceId: number | string): Observable<any> {
     const params = {
-      params: new HttpParams().set('page', '1').set('page_size', '10')
+      params: new HttpParams().set('page', '1').set('page_size', '5')
     };
     return <Observable<any>>(
       this.httpClient.get(

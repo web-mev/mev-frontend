@@ -4,7 +4,7 @@ Please check that the parsing of the file worked correctly and is formatted prop
 Also, please note that some Resource types do not support a preview.
 </p>
 
-<table>
+<table *ngIf="(previewData | json) != '{}'">
     <thead>
         <tr>
             <th></th>
@@ -25,7 +25,7 @@ Also, please note that some Resource types do not support a preview.
     </tbody>
 </table>
 
-<div *ngIf="!previewData" class="no-results">
+<div *ngIf="(previewData | json) == '{}'" class="no-results">
     No preview is available
 </div>
 

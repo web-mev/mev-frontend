@@ -1,10 +1,10 @@
 .analysis-container {
   margin: 20px;
-  width: 100%;
+  width: 98%;
 }
 
 .mat-card {
-  width: 100%;
+  overflow-x: scroll;
 }
 
 ::ng-deep {
@@ -20,5 +20,9 @@
 
   .circle {
     cursor: pointer;
+  }
+
+  .text-label {
+    font-weight: bold;
   }
 }

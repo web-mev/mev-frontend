@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { CustomSet, CustomSetType } from '@app/_models/metadata';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LclStorageService } from '../local-storage/lcl-storage.service';
+import { NotificationService } from '../core.module';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,11 @@ import { LclStorageService } from '../local-storage/lcl-storage.service';
 export class MetadataService {
   result: string;
 
-  constructor(private router: Router, private storage: LclStorageService) {}
+  constructor(
+    private router: Router,
+    private storage: LclStorageService,
+    private readonly notificationService: NotificationService
+  ) {}
 
   /**
    * Traverses a router tree from root to a leaf looking for {@param}.
@@ -65,11 +70,22 @@ export class MetadataService {
   /**
    * Add a new custom observation/feature set to user's storage
    */
-  addCustomSet(customSet: CustomSet): void {
+  addCustomSet(customSet: CustomSet): boolean {
     const customSets = this.getCustomSets();
-    customSets.push(customSet);
-    const workspaceId = this.getParam('workspaceId');
-    this.storage.set(workspaceId + '_custom_sets', customSets);
+    if (customSets.some(set => set.name === customSet.name)) {
+      const errorMessage =
+        'The observation/feature set with this name already exists.';
+      this.notificationService.error(errorMessage);
+      return false;
+    } else {
+      customSets.push(customSet);
+      const workspaceId = this.getParam('workspaceId');
+      this.storage.set(workspaceId + '_custom_sets', customSets);
+      this.notificationService.success(
+        'The new custom set has been successfully created.'
+      );
+      return true;
+    }
   }
 
   /**

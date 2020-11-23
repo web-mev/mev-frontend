@@ -28,8 +28,6 @@ export class HclComponent implements OnChanges {
   customObservationSets = [];
   selectedSamples = [];
   selectedFeatures = [];
-  selectedSamplesStatusTxt: string;
-  selectedFeaturesStatusTxt: string;
 
   /* Chart settings */
 
@@ -196,13 +194,11 @@ export class HclComponent implements OnChanges {
           .leaves()
           .filter(leaf => leaf.data.isHighlighted)
           .map(leaf => leaf.data.name);
-        that.selectedSamplesStatusTxt = '';
       } else {
         that.selectedFeatures = root
           .leaves()
           .filter(leaf => leaf.data.isHighlighted)
           .map(leaf => leaf.data.name);
-        that.selectedFeaturesStatusTxt = '';
       }
 
       d3.select(containerId)
@@ -324,17 +320,14 @@ export class HclComponent implements OnChanges {
           multiple: true
         };
 
-        this.metadataService.addCustomSet(customSet);
-
-        this.generateHCL();
-        if (type === CustomSetType.ObservationSet) {
-          this.selectedSamples = [];
-          this.selectedSamplesStatusTxt =
-            'The new custom set has been successfully created.';
-        } else {
-          this.selectedFeatures = [];
-          this.selectedFeaturesStatusTxt =
-            'The new custom set has been successfully created.';
+        // if the custom set has been successfully added, update the plot
+        if (this.metadataService.addCustomSet(customSet)) {
+          this.generateHCL();
+          if (type === CustomSetType.ObservationSet) {
+            this.selectedSamples = [];
+          } else {
+            this.selectedFeatures = [];
+          }
         }
       }
     });

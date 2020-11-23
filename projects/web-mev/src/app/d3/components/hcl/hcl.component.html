@@ -26,7 +26,6 @@
                                 {{ item }}
                             </span>
                         </div>
-                        <div *ngIf="selectedSamplesStatusTxt" class="status-txt"> {{ selectedSamplesStatusTxt }}</div>
                     </div>
                     <mev-download-button [containerId]="obsTreeContainerId" [imageName]="obsImageName"></mev-download-button>
                     <div class="chart" #treePlot id="observationPlot" (window:resize)="onResize($event)"></div>
@@ -55,7 +54,6 @@
                     {{ item }}
                 </span>
             </div>
-            <div *ngIf="selectedFeaturesStatusTxt" class="status-txt"> {{ selectedFeaturesStatusTxt }}</div>
         </div>
         <mev-download-button [containerId]="featTreeContainerId" [imageName]="featImageName"></mev-download-button>
         <div class="chart" id="featurePlot" (window:resize)="onResize($event)"></div>

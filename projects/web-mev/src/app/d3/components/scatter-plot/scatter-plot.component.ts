@@ -27,7 +27,6 @@ export class ScatterPlotComponent implements OnChanges {
   pcaDataFormatted;
 
   selectedSamples = [];
-  selectedSamplesStatusTxt: string;
   customObservationSets = [];
   sampleColorMap = {}; // mapping individual samples and colors (used for points in scatter plot)
   sampleSetColors = []; // the list of sample sets and their colors (used for legend in scatter plot)
@@ -399,7 +398,6 @@ export class ScatterPlotComponent implements OnChanges {
   brushHandler(event) {
     const extent = event.selection; // get the selection coordinate
     this.selectedSamples = [];
-    this.selectedSamplesStatusTxt = '';
     d3.select(this.containerId)
       .selectAll('.dot')
       .classed('selected', d => {
@@ -496,11 +494,9 @@ export class ScatterPlotComponent implements OnChanges {
           multiple: true
         };
 
-        this.metadataService.addCustomSet(observationSet);
-        this.selectedSamplesStatusTxt =
-          'The new sample set has been successfully created.';
-
-        this.customObservationSets = this.metadataService.getCustomObservationSets();
+        if (this.metadataService.addCustomSet(observationSet)) {
+          this.customObservationSets = this.metadataService.getCustomObservationSets();
+        }
       }
     });
   }

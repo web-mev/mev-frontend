@@ -58,7 +58,6 @@
                             {{ item.sample }} ({{ item.x_coord.toFixed(2) }}; {{ item.y_coord.toFixed(2) }})
                         </span>
                     </div>
-                    <div *ngIf="selectedSamplesStatusTxt" class="status-txt"> {{selectedSamplesStatusTxt}}</div> 
                 </div>          
 
             <mev-download-button [containerId]="containerId" [imageName]="imageName"></mev-download-button>

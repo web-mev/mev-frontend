@@ -5,7 +5,6 @@ import {
   ChangeDetectionStrategy,
   Inject
 } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
 import { Validators, FormControl } from '@angular/forms';
 import { WorkspaceDetailService } from '@app/features/workspace-detail/services/workspace-detail.service';
 
@@ -25,8 +24,6 @@ export class AddDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<AddDialogComponent>,
     private apiService: WorkspaceDetailService,
-    private router: Router,
-    private route: ActivatedRoute,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
@@ -42,6 +39,7 @@ export class AddDialogComponent implements OnInit {
       text: 'Select resources',
       selectAllText: 'Select All',
       unSelectAllText: 'Unselect All',
+      enableSearchFilter: true,
       classes: 'resource-dropdown'
     };
   }

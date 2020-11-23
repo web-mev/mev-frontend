@@ -158,6 +158,15 @@ export class AnalysisFlowComponent implements OnInit {
       })
       .on('mouseout', tip.hide)
       .on('click', (event, d) => this.onNodeClick(d));
+
+    // Add text to root nodes
+    nodes
+      .append('text')
+      .filter(d => d.data['parentIds'].length === 0)
+      .text(d => d.data['node_name'])
+      .attr('dx', '-3em')
+      .attr('dy', '-2em')
+      .attr('class', 'text-label');
   }
 
   /**

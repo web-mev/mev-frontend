@@ -91,6 +91,34 @@ export class MetadataService {
   /**
    * Add a new custom observation/feature set to user's storage
    */
+  updateCustomSet(customSet: CustomSet, oldCustomSetId: string): boolean {
+    const customSets = this.getCustomSets();
+
+    if (
+      customSet.name !== oldCustomSetId &&
+      customSets.some(set => set.name === customSet.name)
+    ) {
+      const errorMessage =
+        'The observation/feature set with this name already exists.';
+      this.notificationService.error(errorMessage);
+      return false;
+    } else {
+      const foundIndex = customSets.findIndex(
+        set => set.name === oldCustomSetId
+      );
+      customSets[foundIndex] = customSet;
+      const workspaceId = this.getParam('workspaceId');
+      this.storage.set(workspaceId + '_custom_sets', customSets);
+      this.notificationService.success(
+        'The custom set has been successfully updated.'
+      );
+      return true;
+    }
+  }
+
+  /**
+   * Add a new custom observation/feature set to user's storage
+   */
   deleteCustomSet(customSetId: string): void {
     const customSets = this.getCustomSets();
     const foundIndex = customSets.findIndex(set => set.name === customSetId);

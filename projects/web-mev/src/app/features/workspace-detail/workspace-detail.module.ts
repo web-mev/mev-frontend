@@ -20,6 +20,7 @@ import { ViewSetDialogComponent } from './components/metadata/dialogs/view-set-d
 import { InlineEditComponent } from './components/metadata/inline-edit/inline-edit.component';
 import { SatPopoverModule } from '@ncstate/sat-popover';
 import { AnalysisModule } from '../analysis/analysis.module';
+import { EditFeatureSetDialogComponent } from './components/metadata/dialogs/edit-feature-set-dialog/edit-feature-set-dialog.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { AnalysisModule } from '../analysis/analysis.module';
     AddFeatureSetDialogComponent,
     DeleteSetDialogComponent,
     ViewSetDialogComponent,
-    InlineEditComponent
+    InlineEditComponent,
+    EditFeatureSetDialogComponent
   ],
   exports: [],
   imports: [

@@ -24,6 +24,8 @@ import { DeleteSetDialogComponent } from './dialogs/delete-set-dialog/delete-set
 import { ViewSetDialogComponent } from './dialogs/view-set-dialog/view-set-dialog.component';
 import { LclStorageService } from '@app/core/local-storage/lcl-storage.service';
 import { MetadataService } from '@app/core/metadata/metadata.service';
+import { EditFeatureSetDialogComponent } from './dialogs/edit-feature-set-dialog/edit-feature-set-dialog.component';
+import { element } from 'protractor';
 
 @Component({
   selector: 'mev-metadata',
@@ -372,6 +374,58 @@ export class MetadataComponent implements OnInit {
         this.metadataService.deleteCustomSet(setId);
       }
     });
+  }
+
+  onEditCustomSet(set) {
+    this.globalObservationSets = [];
+    this.service
+      .getWorkspaceMetadataObservations(this.workspaceId)
+      .pipe(
+        switchMap(metadata => {
+          if (metadata?.observation_set?.elements) {
+            this.globalObservationSets = metadata.observation_set.elements;
+          }
+          const globalObservationSetsDS = new MatTableDataSource(
+            this.globalObservationSets
+          );
+
+          // the list of columns for pop-up table to select samples for custom observation sets
+          const observationSetsDisplayedColumns = ['select', 'id'];
+          const observationSetsDisplayedColumnsAttributesOnly = [];
+
+          const obsSetsWithAttr = this.globalObservationSets.filter(
+            set => 'attributes' in set
+          );
+          const attributes = obsSetsWithAttr.length
+            ? obsSetsWithAttr[0].attributes
+            : {};
+
+          for (const attribute in attributes) {
+            if (attributes.hasOwnProperty(attribute)) {
+              observationSetsDisplayedColumns.push(attribute);
+              observationSetsDisplayedColumnsAttributesOnly.push(attribute);
+            }
+          }
+
+          const dialogRef = this.dialog.open(EditFeatureSetDialogComponent, {
+            data: {
+              name: set.name,
+              color: set.color,
+              selectedElements: set.elements,
+              observationSetDS: globalObservationSetsDS,
+              observationSetsDisplayedColumns: observationSetsDisplayedColumns,
+              observationSetsDisplayedColumnsAttributesOnly: observationSetsDisplayedColumnsAttributesOnly
+            }
+          });
+          return dialogRef.afterClosed();
+        }),
+        takeUntil(this.onDestroy)
+      )
+      .subscribe(updatedObservationSet => {
+        if (updatedObservationSet) {
+          this.metadataService.updateCustomSet(updatedObservationSet, set.name);
+        }
+      });
   }
 
   onViewCustomSet(set) {

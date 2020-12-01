@@ -44,13 +44,14 @@ export class AnalysesService {
   }
 
   getOperations(): Observable<Operation[]> {
-    return this.httpClient
-      .get(`${this.API_URL}/operations/`)
-      .pipe(
-        map((operations: Operation[]) =>
-          operations.map(operation => this.opAdapter.adapt(operation))
-        )
-      );
+    return this.httpClient.get(`${this.API_URL}/operations/`).pipe(
+      map((operations: Operation[]) => {
+        operations = operations.filter(
+          operation => operation['workspace_operation'] === true
+        );
+        return operations.map(operation => this.opAdapter.adapt(operation));
+      })
+    );
   }
 
   getOperation(id: string): Observable<Operation> {
@@ -102,8 +103,6 @@ export class AnalysesService {
     if (pageSize) {
       params = params.append('page_size', pageSize.toString());
     }
-    // .set('page', pageIndex.toString())
-    // .set('page_size', pageSize.toString());
 
     for (const field in filters) {
       if (filters.hasOwnProperty(field)) {

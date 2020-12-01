@@ -24,6 +24,8 @@ export class HclComponent implements OnChanges {
   @ViewChild('treePlot') svgElement: ElementRef;
   hierFeatData;
   hierObsData;
+  obSetType = CustomSetType.ObservationSet;
+  featSetType = CustomSetType.FeatureSet;
 
   customObservationSets = [];
   selectedSamples = [];

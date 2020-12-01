@@ -1,11 +1,7 @@
-import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  Inject
-} from '@angular/core';
+import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { CustomSetType } from '@app/_models/metadata';
 
 @Component({
   selector: 'mev-add-sample-set',
@@ -25,9 +21,9 @@ export class AddSampleSetComponent {
 
   ngOnInit(): void {
     // if no custom set type is passed, assume Observation set by default
-    this.customSetType = this.data?.type || 'Observation set';
+    this.customSetType = this.data?.type || CustomSetType.ObservationSet;
 
-    if (this.customSetType.toUpperCase().indexOf('FEATURE') >= 0) {
+    if (this.customSetType === CustomSetType.FeatureSet) {
       this.isObservationSet = false;
     }
 

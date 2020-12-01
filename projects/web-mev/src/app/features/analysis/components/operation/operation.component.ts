@@ -11,6 +11,7 @@ import { AnalysesService } from '../../services/analysis.service';
 import { Workspace } from '@app/features/workspace-manager/models/workspace';
 import { Observable } from 'rxjs';
 import { Operation } from '../../models/operation';
+import { MetadataService } from '@app/core/metadata/metadata.service';
 
 @Component({
   selector: 'mev-operation',
@@ -38,7 +39,8 @@ export class OperationComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private apiService: AnalysesService
+    private apiService: AnalysesService,
+    private metadataService: MetadataService
   ) {}
 
   ngOnInit(): void {
@@ -71,9 +73,7 @@ export class OperationComponent implements OnInit {
                 required: input.required,
                 sets: []
               };
-              const availableObsSets = this.apiService.getAvailableObservationSetsByParam(
-                this.workspaceId
-              );
+              const availableObsSets = this.metadataService.getCustomObservationSets();
               observationField.sets = availableObsSets.map(set => {
                 const newSet = set.elements.map(elem => {
                   const o = { id: elem.id };

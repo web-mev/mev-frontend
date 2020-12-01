@@ -21,7 +21,6 @@ export class PreviewDialogComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log(this.data.previewData);
     this.previewData = this.data.previewData;
   }
 

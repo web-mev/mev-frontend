@@ -9,6 +9,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
+import { CustomSetType } from '@app/_models/metadata';
 
 @Component({
   selector: 'mev-add-observation-set-dialog',
@@ -61,7 +62,7 @@ export class AddObservationSetDialogComponent implements OnInit {
     const observationSet = {
       name: name,
       color: color,
-      type: 'Observation set',
+      type: CustomSetType.ObservationSet,
       elements: samples,
       multiple: true
     };

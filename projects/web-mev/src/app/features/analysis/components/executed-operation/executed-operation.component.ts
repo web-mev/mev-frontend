@@ -48,13 +48,13 @@ export class ExecutedOperationComponent implements OnInit {
             );
             // if the opertion has been already completed, just extract its outputs from the operationa list
             if (
-              this.execOperations[idx].outputs ||
-              this.execOperations[idx].error_message
+              this.execOperations[idx]?.outputs ||
+              this.execOperations[idx]?.error_messages
             ) {
               this.outputs = {
                 ...this.execOperations[idx].outputs,
                 ...this.execOperations[idx].inputs,
-                error_message: this.execOperations[idx].error_message
+                error_messages: this.execOperations[idx].error_messages
               };
               return of({ body: this.execOperations[idx] });
             }
@@ -70,9 +70,9 @@ export class ExecutedOperationComponent implements OnInit {
         this.outputs = {
           ...response?.body?.outputs,
           ...response?.body?.inputs,
-          error_message: response?.body?.error_message
+          error_messages: response?.body?.error_messages
         };
-        if (response?.body?.error_message || response?.body?.outputs) {
+        if (response?.body?.error_messages || response?.body?.outputs) {
           this.isInProgress = false;
         }
       });
@@ -91,15 +91,15 @@ export class ExecutedOperationComponent implements OnInit {
     const idx = this.execOperations.findIndex(
       val => val.id === this.execOperationId
     );
-    // if the opertion has been already completed, just extract its outputs from the operationa list
+    // if the operation has been already completed, just extract its outputs from the operationa list
     if (
       this.execOperations[idx].outputs ||
-      this.execOperations[idx].error_message
+      this.execOperations[idx].error_messages
     ) {
       this.outputs = {
         ...this.execOperations[idx].outputs,
         ...this.execOperations[idx].inputs,
-        error_message: this.execOperations[idx].error_message
+        error_messages: this.execOperations[idx].error_messages
       };
       this.isInProgress = false;
     } else {
@@ -109,9 +109,9 @@ export class ExecutedOperationComponent implements OnInit {
           this.outputs = {
             ...response?.body?.outputs,
             ...response?.body?.inputs,
-            error_message: response?.body?.error_message
+            error_messages: response?.body?.error_messages
           };
-          if (response?.body?.error_message || response?.body?.outputs) {
+          if (response?.body?.error_messages || response?.body?.outputs) {
             this.isInProgress = false;
           }
         });

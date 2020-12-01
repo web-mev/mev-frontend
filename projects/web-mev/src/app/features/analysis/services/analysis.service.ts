@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { map, switchMap, takeWhile, timeout } from 'rxjs/operators';
+import { map, switchMap, takeWhile } from 'rxjs/operators';
 import { Observable, interval } from 'rxjs';
 import { File, FileAdapter } from '@app/shared/models/file';
 import { Workspace } from '@app/features/workspace-manager/models/workspace';
 import { Operation, OperationAdapter } from '../models/operation';
-import { LclStorageService } from '@app/core/local-storage/lcl-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +16,7 @@ export class AnalysesService {
   constructor(
     private httpClient: HttpClient,
     private opAdapter: OperationAdapter,
-    private fileAdapter: FileAdapter,
-    private storage: LclStorageService
+    private fileAdapter: FileAdapter
   ) {}
 
   getWorkspaceDetail(id: number | string): Observable<Workspace> {
@@ -43,11 +41,6 @@ export class AnalysesService {
         map((data: any[]) => data.map(item => this.fileAdapter.adapt(item)))
       )
     );
-  }
-
-  getAvailableObservationSetsByParam(workspaceId: string): any[] {
-    const custom_sets = this.storage.get(workspaceId + '_custom_sets') || [];
-    return custom_sets.filter(set => set.type === 'Observation set');
   }
 
   getOperations(): Observable<Operation[]> {

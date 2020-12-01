@@ -16,7 +16,7 @@
                 <div class="chart-section">
                     <div class="chart-title">Sample clustering</div>                    
                     <div class="sample-list-container">
-                        <button mat-raised-button color="accent" (click)="onCreateCustomSampleSet('Observation set')"
+                        <button mat-raised-button color="accent" (click)="onCreateCustomSampleSet(obSetType)"
                             [disabled]="!selectedSamples.length">
                             <mat-icon>add</mat-icon>
                             Save as a sample set
@@ -44,7 +44,7 @@
   
     <ng-template matExpansionPanelContent>
         <div class="sample-list-container">
-            <button mat-raised-button color="accent" (click)="onCreateCustomSampleSet('Feature set')"
+            <button mat-raised-button color="accent" (click)="onCreateCustomSampleSet(featSetType)"
                 [disabled]="!selectedFeatures.length">
                 <mat-icon aria-label="Add local data">add</mat-icon>
                 Save as a feature set

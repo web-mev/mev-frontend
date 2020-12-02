@@ -34,7 +34,7 @@ export class ExecutedOperationComponent implements OnInit {
   ngOnInit(): void {
     const workspaceId = this.route.snapshot.paramMap.get('workspaceId');
     this.isInProgress = true;
-    this.apiService
+    this.executedOperationResultSubscription = this.apiService
       .getExecOperations(workspaceId)
       .pipe(
         tap(operations => {
@@ -86,7 +86,6 @@ export class ExecutedOperationComponent implements OnInit {
   onSelectExecOperation() {
     this.isInProgress = true;
     this.executedOperationResultSubscription.unsubscribe();
-
     this.execOperationId = this.selectedExecOperation;
     const idx = this.execOperations.findIndex(
       val => val.id === this.execOperationId

@@ -1,6 +1,5 @@
 <div class="container">
-    <h3 mat-dialog-title>Enter the name of a new observation set and select samples.
-        <br> Then click the Add button.</h3>
+    <p>Update the name of the observation set, its color and sample list. Then click the Save button.</p>
 
     <form class="mat-dialog-content" (ngSubmit)="submit" [formGroup]="observationForm">
 
@@ -18,6 +17,12 @@
             
             Select samples: 
             <div class="mat-elevation-z8">
+                <div class="filter-panel">
+                    <mat-form-field class="form-control">
+                      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                    </mat-form-field>
+                </div>
+
                 <table mat-table [dataSource]="allObservationSetsDS">
 
                     <ng-container matColumnDef="select">

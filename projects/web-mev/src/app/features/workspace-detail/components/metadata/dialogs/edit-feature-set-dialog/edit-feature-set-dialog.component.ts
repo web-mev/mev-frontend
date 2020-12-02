@@ -66,7 +66,7 @@ export class EditFeatureSetDialogComponent implements OnInit {
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.allObservationSetsDS.data.length;
+    const numRows = this.allObservationSetsDS.filteredData.length;
     return numSelected === numRows;
   }
 
@@ -74,7 +74,7 @@ export class EditFeatureSetDialogComponent implements OnInit {
   masterToggle() {
     this.isAllSelected()
       ? this.selection.clear()
-      : this.allObservationSetsDS.data.forEach(row =>
+      : this.allObservationSetsDS.filteredData.forEach(row =>
           this.selection.select(row)
         );
   }
@@ -96,5 +96,11 @@ export class EditFeatureSetDialogComponent implements OnInit {
       multiple: true
     };
     this.dialogRef.close(observationSet);
+  }
+
+  applyFilter(filterValue: string) {
+    filterValue = filterValue.trim();
+    filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+    this.allObservationSetsDS.filter = filterValue;
   }
 }

@@ -12,21 +12,21 @@
         </span>
     </a>
   </div> -->
-  
+
   <section class="analyses-section">
     <div class="tab-content">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-      dolore magna aliqua. 
+      The analysis pane on the left side displays the list of available
+       data analysis tools. Click on a item to set input parameters and run an analysis.
       <div class="vertical-tab-container">
         <mat-tab-group>
           <mat-tab *ngFor="let operation of operations" [label]="operation.name">
-            <mev-operation [operation]="operation" [workspaceId]="workspaceId" 
-            [workspace$]="workspace$" (executedOperationId)="showExecutedOperationResult($event)"></mev-operation>
+            <mev-operation [operation]="operation" [workspaceId]="workspaceId" [workspace$]="workspace$"
+              (executedOperationId)="showExecutedOperationResult($event)"></mev-operation>
           </mat-tab>
         </mat-tab-group>
       </div>
     </div>
-    
+
 
     <!-- <mat-tab-group animationDuration="0ms" color="accent">
       <mat-tab>

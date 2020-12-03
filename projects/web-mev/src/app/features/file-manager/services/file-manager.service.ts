@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, interval, timer } from 'rxjs';
+import { BehaviorSubject, Observable, interval, timer, forkJoin } from 'rxjs';
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import { map, switchMap, takeUntil } from 'rxjs/operators';
-import { NotificationService } from '@core/core.module';
 import { File, FileAdapter } from '@app/shared/models/file';
 import { environment } from '@environments/environment';
 import { FileType } from '@app/shared/models/file-type';
+import { AnalysesService } from '@app/features/analysis/services/analysis.service';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +28,7 @@ export class FileService {
   constructor(
     private httpClient: HttpClient,
     private adapter: FileAdapter,
-    private readonly notificationService: NotificationService
+    private analysesService: AnalysesService
   ) {}
 
   get data(): File[] {
@@ -80,7 +80,7 @@ export class FileService {
     // execute the uploads sequentially, because uploading multiple files could potentially tie-up
     // the server since a bunch of threads would be busy ingesting the data for a long time
 
-    let fileUploadsProgressMap = new Map<string, object>();
+    const fileUploadsProgressMap = new Map<string, object>();
 
     for (let i = 0; i < files.length; i++) {
       fileUploadsProgressMap[files[i].name] = { percent: 0, isUploaded: false };
@@ -121,13 +121,18 @@ export class FileService {
   }
 
   // ADD, POST METHOD for DROPBOX
-  addDropboxFile(file_source: string): void {
-    this.httpClient
-      .post(`${this.API_URL}/resources/dropboxupload/`, file_source)
-      .subscribe(data => {
-        // this.dialogData = data;
-        this.notificationService.success('File has been successfully uploaded');
-      });
+  addDropboxFile(files): Observable<any> {
+    return this.httpClient
+      .post(`${this.API_URL}/resources/dropbox-upload/`, files)
+      .pipe(
+        switchMap(response => {
+          return forkJoin(
+            response['upload_ids'].map(execOperationId =>
+              this.analysesService.getExecutedOperationResult(execOperationId)
+            )
+          );
+        })
+      );
   }
 
   // UPDATE FILE, PUT METHOD

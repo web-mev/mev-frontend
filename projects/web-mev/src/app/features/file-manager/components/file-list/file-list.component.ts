@@ -22,6 +22,7 @@ import { EditFileDialogComponent } from '@app/features/file-manager/components/d
 import { DeleteFileDialogComponent } from '@app/features/file-manager/components/dialogs/delete-file-dialog/delete-file-dialog.component';
 import { Dropbox, DropboxChooseOptions } from '@file-manager/models/dropbox';
 import { ProgressSnackbarComponent } from '../progress-snackbar/progress-snackbar.component';
+import { AnalysesService } from '@app/features/analysis/services/analysis.service';
 
 declare var Dropbox: Dropbox;
 
@@ -31,6 +32,9 @@ declare var Dropbox: Dropbox;
   styleUrls: ['./file-list.component.scss']
 })
 export class FileListComponent implements OnInit {
+  uploadInProgressMsg = 'Please wait. Uploading...';
+  uploadCompleteMsg = 'File(s) uploaded successfully';
+
   displayedColumns = [
     'name',
     'resource_type',
@@ -54,6 +58,7 @@ export class FileListComponent implements OnInit {
     public fileService: FileService,
     private adapter: FileAdapter,
     private readonly notificationService: NotificationService,
+    private readonly analysesService: AnalysesService,
     public snackBar: MatSnackBar,
     public cd: ChangeDetectorRef
   ) {}
@@ -102,10 +107,29 @@ export class FileListComponent implements OnInit {
           horizontalPosition: 'center',
           verticalPosition: 'bottom'
         });
-
-        // this.refresh();  // issue with refresh when uploading large files
       }
     });
+  }
+
+  addDropBoxItem() {
+    const options: DropboxChooseOptions = {
+      success: files => {
+        this.notificationService.info(this.uploadInProgressMsg);
+        const filesToUpload = files.map(file => ({
+          download_link: file.link,
+          filename: file.name
+        }));
+        this.fileService.addDropboxFile(filesToUpload).subscribe(data => {
+          this.notificationService.success(this.uploadCompleteMsg);
+          this.refresh();
+        });
+      },
+      cancel: () => {},
+      linkType: 'direct',
+      multiselect: true,
+      folderselect: false
+    };
+    Dropbox.choose(options);
   }
 
   editItem(i: number, id: string, file_name: string, resource_type: string) {
@@ -166,7 +190,7 @@ export class FileListComponent implements OnInit {
     this.exampleDatabase = new FileService(
       this.httpClient,
       this.adapter,
-      this.notificationService
+      this.analysesService
     );
     this.dataSource = new ExampleDataSource(
       this.exampleDatabase,
@@ -181,30 +205,6 @@ export class FileListComponent implements OnInit {
         }
         this.dataSource.filter = this.filter.nativeElement.value;
       });
-  }
-
-  addDropBoxItem() {
-    const options: DropboxChooseOptions = {
-      success: files => {
-        for (const file of files) {
-          const name = file.name;
-          const url = file.link;
-
-          this.fileService.addDropboxFile(url);
-          this.exampleDatabase.dataChange.value
-            .push
-            // this.fileService.getDialogData()
-            ();
-          this.refresh();
-        }
-      },
-      cancel: () => {},
-      linkType: 'direct',
-      multiselect: true,
-      folderselect: false
-    };
-
-    Dropbox.choose(options);
   }
 }
 

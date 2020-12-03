@@ -110,11 +110,6 @@ export class WorkspaceListComponent implements OnInit {
     });
   }
 
-  private refreshTable() {
-    // Material Table updates if you do a pagination or filter update
-    this.paginator._changePageSize(this.paginator.pageSize);
-  }
-
   public loadData() {
     this.exampleDatabase = new WorkspaceService(this.httpClient, this.adapter);
     this.dataSource = new ExampleDataSource(

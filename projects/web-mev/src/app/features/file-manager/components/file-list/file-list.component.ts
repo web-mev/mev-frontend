@@ -149,7 +149,7 @@ export class FileListComponent implements OnInit {
           foundIndex
         ] = this.fileService.getDialogData();
         // And lastly refresh table
-        this.refresh(); // this.refreshTable();
+        this.refresh();
       }
     });
   }
@@ -176,14 +176,9 @@ export class FileListComponent implements OnInit {
         );
         // for delete we use splice in order to remove single object from FileService
         this.exampleDatabase.dataChange.value.splice(foundIndex, 1);
-        this.refresh(); // this.refreshTable();
+        this.refresh();
       }
     });
-  }
-
-  private refreshTable() {
-    // Material Table updates if you do a pagination or filter update
-    this.paginator._changePageSize(this.paginator.pageSize);
   }
 
   public loadData() {

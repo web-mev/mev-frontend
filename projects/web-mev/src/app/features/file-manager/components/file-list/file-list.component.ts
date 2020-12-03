@@ -7,7 +7,13 @@ import {
 } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DataSource } from '@angular/cdk/collections';
-import { BehaviorSubject, fromEvent, merge, Observable } from 'rxjs';
+import {
+  BehaviorSubject,
+  fromEvent,
+  merge,
+  Observable,
+  Subscription
+} from 'rxjs';
 import { map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -51,6 +57,7 @@ export class FileListComponent implements OnInit {
   id: string;
   uploadProgressData: Map<string, object>;
   Object = Object;
+  private fileUploadProgressSubscription: Subscription = new Subscription();
 
   constructor(
     public httpClient: HttpClient,
@@ -69,17 +76,23 @@ export class FileListComponent implements OnInit {
 
   ngOnInit() {
     this.loadData();
-    this.fileService.fileUploadsProgress.subscribe(uploadProgressData => {
-      this.uploadProgressData = uploadProgressData;
+    this.fileUploadProgressSubscription = this.fileService.fileUploadsProgress.subscribe(
+      uploadProgressData => {
+        this.uploadProgressData = uploadProgressData;
 
-      // refresh table if all files are uploaded
-      const allFilesUploaded = Object.keys(uploadProgressData).every(
-        key => uploadProgressData[key].isUploaded
-      );
-      if (allFilesUploaded) {
-        this.refresh();
+        // refresh table if all files are uploaded
+        const allFilesUploaded = Object.keys(uploadProgressData).every(
+          key => uploadProgressData[key].isUploaded
+        );
+        if (allFilesUploaded) {
+          this.refresh();
+        }
       }
-    });
+    );
+  }
+
+  public ngOnDestroy(): void {
+    this.fileUploadProgressSubscription.unsubscribe();
   }
 
   refresh() {
@@ -274,8 +287,8 @@ export class ExampleDataSource extends DataSource<File> {
     }
 
     return data.sort((a, b) => {
-      let propertyA: any = ''; //number | string | Date = '';
-      let propertyB: any = ''; //number | string | Date = '';
+      let propertyA: any = '';
+      let propertyB: any = '';
 
       switch (this._sort.active) {
         case 'id':

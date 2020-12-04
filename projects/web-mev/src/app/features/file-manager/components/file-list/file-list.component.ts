@@ -3,6 +3,7 @@ import {
   ElementRef,
   OnInit,
   ViewChild,
+  ChangeDetectionStrategy,
   ChangeDetectorRef
 } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -18,7 +19,6 @@ import { map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { NotificationService } from '@core/core.module';
 import { FileService } from '@file-manager/services/file-manager.service';
@@ -27,7 +27,6 @@ import { AddFileDialogComponent } from '@app/features/file-manager/components/di
 import { EditFileDialogComponent } from '@app/features/file-manager/components/dialogs/edit-file-dialog/edit-file-dialog.component';
 import { DeleteFileDialogComponent } from '@app/features/file-manager/components/dialogs/delete-file-dialog/delete-file-dialog.component';
 import { Dropbox, DropboxChooseOptions } from '@file-manager/models/dropbox';
-import { ProgressSnackbarComponent } from '../progress-snackbar/progress-snackbar.component';
 import { AnalysesService } from '@app/features/analysis/services/analysis.service';
 
 declare var Dropbox: Dropbox;
@@ -35,11 +34,14 @@ declare var Dropbox: Dropbox;
 @Component({
   selector: 'mev-file-list',
   templateUrl: './file-list.component.html',
-  styleUrls: ['./file-list.component.scss']
+  styleUrls: ['./file-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileListComponent implements OnInit {
-  uploadInProgressMsg = 'Please wait. Uploading...';
-  uploadCompleteMsg = 'File(s) uploaded successfully';
+  dropboxUploadInProgressMsg = '';
+  dropboxUploadCompleteMsg =
+    'File(s) uploaded successfully. Please assign the specific type for the file(s) uploaded.';
+  uploadInProgressMsg = '';
 
   displayedColumns = [
     'name',
@@ -66,8 +68,7 @@ export class FileListComponent implements OnInit {
     private adapter: FileAdapter,
     private readonly notificationService: NotificationService,
     private readonly analysesService: AnalysesService,
-    public snackBar: MatSnackBar,
-    public cd: ChangeDetectorRef
+    private ref: ChangeDetectorRef
   ) {}
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -76,9 +77,18 @@ export class FileListComponent implements OnInit {
 
   ngOnInit() {
     this.loadData();
+
     this.fileUploadProgressSubscription = this.fileService.fileUploadsProgress.subscribe(
       uploadProgressData => {
         this.uploadProgressData = uploadProgressData;
+
+        // show % of upload
+        let txt = '';
+        for (const key of Object.keys(uploadProgressData)) {
+          txt += `File ${key} is ${uploadProgressData[key].percent}% uploaded. \n`;
+        }
+        this.uploadInProgressMsg = txt;
+        this.ref.markForCheck();
 
         // refresh table if all files are uploaded
         const allFilesUploaded = Object.keys(uploadProgressData).every(
@@ -86,6 +96,8 @@ export class FileListComponent implements OnInit {
         );
         if (allFilesUploaded) {
           this.refresh();
+          this.uploadInProgressMsg = '';
+          this.ref.markForCheck();
         }
       }
     );
@@ -112,14 +124,6 @@ export class FileListComponent implements OnInit {
         this.exampleDatabase.dataChange.value.push(
           this.fileService.getDialogData()
         );
-
-        // display file upload progress in snackbar
-        this.snackBar.openFromComponent(ProgressSnackbarComponent, {
-          duration: 0,
-          panelClass: 'upload-snackbar',
-          horizontalPosition: 'center',
-          verticalPosition: 'bottom'
-        });
       }
     });
   }
@@ -127,13 +131,17 @@ export class FileListComponent implements OnInit {
   addDropBoxItem() {
     const options: DropboxChooseOptions = {
       success: files => {
-        this.notificationService.info(this.uploadInProgressMsg);
+        const fileNames = files.map(file => file.name).join("' ,'");
+        this.dropboxUploadInProgressMsg = `Uploading file(s) '${fileNames}' from Dropbox...`;
+        this.ref.markForCheck();
         const filesToUpload = files.map(file => ({
           download_link: file.link,
           filename: file.name
         }));
         this.fileService.addDropboxFile(filesToUpload).subscribe(data => {
-          this.notificationService.success(this.uploadCompleteMsg);
+          this.notificationService.success(this.dropboxUploadCompleteMsg);
+          this.dropboxUploadInProgressMsg = '';
+          this.ref.markForCheck();
           this.refresh();
         });
       },

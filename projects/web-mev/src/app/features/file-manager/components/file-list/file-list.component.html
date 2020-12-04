@@ -23,6 +23,8 @@
       <input matInput #filter placeholder="Filter files">
     </mat-form-field>
   </div>
+  <div *ngIf="uploadInProgressMsg" class="process-status">{{ uploadInProgressMsg }}</div>
+  <div *ngIf="dropboxUploadInProgressMsg" class="process-status">{{ dropboxUploadInProgressMsg }}</div>
 
   <mat-table #table [dataSource]="dataSource" matSort matSortActive="created" matSortDirection="desc" class="mat-cell">
 
@@ -113,8 +115,7 @@
   </mat-paginator>
 
   <div class="warning-note" [style.display]="dataSource.renderedData.length >= 0 ? '' : 'none'">
-    * Lorem ipsum dolor sit amet, consectetur adipiscing elit.. < some warning message for users to review file types
-      and specify if blank>
+    * Please assign file types by clicking the Edit button in the table row
   </div>
 
 </div>

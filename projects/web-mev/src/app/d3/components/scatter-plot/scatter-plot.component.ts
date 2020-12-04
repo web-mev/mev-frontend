@@ -78,6 +78,7 @@ export class ScatterPlotComponent implements OnChanges {
    * Function to retrieve data for PCA plot
    */
   generatePCAPlot() {
+    this.chartViewMode = 'zoomMode'; // default mode
     const resourceId = this.outputs.pca_coordinates;
     const pca_explained_variances = [];
     let i = 1;
@@ -159,13 +160,14 @@ export class ScatterPlotComponent implements OnChanges {
             !event['ctrlKey'] && !event['button'] && event['target'].__data__
         )
         .on('start', null);
-      svg.call(brush.move, null);
+
       svg.call(
         brush.extent([
           [0, 0],
           [0, 0]
         ])
       );
+      svg.call(brush.move, null);
     }
   }
 

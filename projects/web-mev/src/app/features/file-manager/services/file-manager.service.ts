@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, interval, timer, forkJoin } from 'rxjs';
 import { HttpClient, HttpEventType } from '@angular/common/http';
-import { map, switchMap, takeUntil } from 'rxjs/operators';
+import { map, switchMap, takeWhile, concatMap } from 'rxjs/operators';
 import { File, FileAdapter } from '@app/shared/models/file';
 import { environment } from '@environments/environment';
 import { FileType } from '@app/shared/models/file-type';
@@ -45,33 +45,22 @@ export class FileService {
   }
 
   // GET FILE LIST
-  public getAllFiles(): any {
-    this.httpClient
-      .get<File[]>(`${this.API_URL}/resources/`)
-      .pipe(map((data: File[]) => data.map(item => this.adapter.adapt(item))))
-      .subscribe(data => {
-        this.dataChange.next(data);
-      });
-
-    // refresh the status of the resource validation process
-    const progress = interval(2000)
+  public getAllFiles(): void {
+    // refresh the status of the resource validation process every 2 seconds
+    interval(2000)
       .pipe(
-        switchMap(() =>
-          this.httpClient.get<File[]>(`${this.API_URL}/resources/`)
-        ), // mergeMap
-        map((data: File[]) => data.map(item => this.adapter.adapt(item))),
-        takeUntil(timer(5000))
+        concatMap(() => this.httpClient.get(`${this.API_URL}/resources/`)),
+        map((files: File[]) => files.map(file => this.adapter.adapt(file))),
+        takeWhile(
+          files =>
+            files.some(file =>
+              this.FILE_VALIDATION_PROGRESS_STATUSES.includes(file.status)
+            ),
+          true
+        )
       )
       .subscribe(data => {
         this.dataChange.next(data);
-        if (
-          data.every(
-            file =>
-              !this.FILE_VALIDATION_PROGRESS_STATUSES.includes(file.status)
-          )
-        ) {
-          progress.unsubscribe();
-        }
       });
   }
 

@@ -137,16 +137,12 @@ export class HclComponent implements OnChanges {
         }
       });
     });
-
     const leafNodeNumber = root.leaves().length; // calculate the number of nodes
     // add extra 50px for every node above 20 to the set height
     const addHeight = leafNodeNumber > 20 ? (leafNodeNumber - 20) * 30 : 0;
     const canvasHeight = height + addHeight;
-
     const tree = d3.cluster().size([canvasHeight, width - 200]);
-
     tree(root);
-
     const svg = d3
       .select(containerId)
       .append('svg')
@@ -165,11 +161,9 @@ export class HclComponent implements OnChanges {
       .enter()
       .append('path')
       .attr('class', 'link')
-      .attr('stroke', '#ccc')
       .attr('d', elbow);
 
     const that = this;
-
     const node = svg
       .selectAll('g.node')
       .data(root.descendants())
@@ -182,8 +176,9 @@ export class HclComponent implements OnChanges {
     node
       .append('circle')
       .filter(d => d.data.name.length > 0)
-      .attr('r', 4)
-      .attr('stroke', '#a1887f');
+      .attr('r', 4);
+
+    const leafNode = node.filter(d => d.data.isLeaf === true);
 
     function highlightNodes(event, d: any) {
       d.descendants().forEach(
@@ -191,18 +186,16 @@ export class HclComponent implements OnChanges {
           (node.data.isHighlighted = node.data.isHighlighted ? false : true)
       );
 
-      if (type === CustomSetType.ObservationSet) {
-        that.selectedSamples = root
-          .leaves()
-          .filter(leaf => leaf.data.isHighlighted)
-          .map(leaf => leaf.data.name);
-      } else {
-        that.selectedFeatures = root
-          .leaves()
-          .filter(leaf => leaf.data.isHighlighted)
-          .map(leaf => leaf.data.name);
-      }
+      const selectedItems = root
+        .leaves()
+        .filter(leaf => leaf.data.isHighlighted)
+        .map(leaf => leaf.data.name);
 
+      if (type === CustomSetType.ObservationSet) {
+        that.selectedSamples = selectedItems;
+      } else {
+        that.selectedFeatures = selectedItems;
+      }
       d3.select(containerId)
         .selectAll('circle')
         .attr('class', (d: any) => {
@@ -210,37 +203,16 @@ export class HclComponent implements OnChanges {
         });
     }
 
-    node
-      .append('rect')
-      .filter(function(d) {
-        return d.data.isLeaf === true;
-      })
-      // .attr('x', function (d, i) { return d.children ? (-1 * 1) - 12 : 900; })
-      .attr('class', 'rectLabel')
-      .attr('id', function(d, i) {
-        return 'rect' + i;
-      })
-      .attr('y', -4)
-      .attr('height', '10')
-      .attr('width', '50');
-
-    node
+    leafNode
       .append('text')
-      .filter(d => d.data.isLeaf === true)
       .attr('dx', 10)
       .attr('dy', 3)
       .attr('class', 'textLabel')
-      // .attr('text-anchor', function (d) {
-      //   return d.children ? 'end' : 'start';
-      // })
       .text(d => d.data.name);
 
     // Color squares for leaf nodes to indicate custom sample sets
-    node
+    leafNode
       .append('g')
-      .filter(function(d) {
-        return d.data.isLeaf === true;
-      })
       .attr('width', 200)
       .each((d, ix, nodes) => {
         d3.select(nodes[ix])
@@ -284,8 +256,8 @@ export class HclComponent implements OnChanges {
         .text(d => d.name);
     }
 
-    function elbow(d, i) {
-      return 'M' + d.parent.y + ',' + d.parent.x + 'V' + d.x + 'H' + (d.y - 0);
+    function elbow(d) {
+      return 'M' + d.parent.y + ',' + d.parent.x + 'V' + d.x + 'H' + d.y;
     }
   }
 

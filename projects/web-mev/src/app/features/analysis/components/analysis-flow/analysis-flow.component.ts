@@ -157,7 +157,10 @@ export class AnalysisFlowComponent implements OnInit {
         tip.style('left', mouseEvent.x + tooltipOffsetX + 'px');
       })
       .on('mouseout', tip.hide)
-      .on('click', (event, d) => this.onNodeClick(d));
+      .on('click', (event, d) => {
+        tip.hide();
+        this.onNodeClick(d);
+      });
 
     // Add text to root nodes
     nodes

@@ -47,7 +47,7 @@ export class FileService {
   // GET FILE LIST
   public getAllFiles(): void {
     // refresh the status of the resource validation process every 2 seconds
-    interval(2000)
+    timer(0, 2000)
       .pipe(
         concatMap(() => this.httpClient.get(`${this.API_URL}/resources/`)),
         map((files: File[]) => files.map(file => this.adapter.adapt(file))),

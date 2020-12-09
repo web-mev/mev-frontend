@@ -22,22 +22,15 @@ import { CustomSetType } from '@app/_models/metadata';
 export class HclComponent implements OnChanges {
   @Input() outputs;
   @ViewChild('treePlot') svgElement: ElementRef;
-  hierFeatData;
   hierObsData;
   obSetType = CustomSetType.ObservationSet;
-  featSetType = CustomSetType.FeatureSet;
 
   customObservationSets = [];
   selectedSamples = [];
-  selectedFeatures = [];
 
   /* Chart settings */
-
-  featTreeContainerId = '#featurePlot';
-  obsTreeContainerId = '#observationPlot';
-  isFeatTreePanelExpanded = false;
-  featImageName = 'Hierarchical clustering - Features'; // file name for downloaded SVG image
-  obsImageName = 'Hierarchical clustering - Observations';
+  obsTreeContainerId = '#observationPlot'; // chart container id
+  obsImageName = 'Hierarchical clustering - Observations'; // file name for downloaded SVG image
   margin = { top: 50, right: 300, bottom: 50, left: 50 }; // chart margins
   outerHeight = 500;
 
@@ -53,11 +46,6 @@ export class HclComponent implements OnChanges {
 
   onResize(event) {
     this.createChart(
-      this.hierFeatData,
-      this.featTreeContainerId,
-      CustomSetType.FeatureSet
-    );
-    this.createChart(
       this.hierObsData,
       this.obsTreeContainerId,
       CustomSetType.ObservationSet
@@ -65,17 +53,9 @@ export class HclComponent implements OnChanges {
   }
 
   /**
-   * Function to retrieve data for HCL plots
-   */
-  generateHCL() {
-    this.generateObsHCL();
-    this.generateFeatHCL();
-  }
-
-  /**
    * Function to retrieve data for Observation HCL plot
    */
-  generateObsHCL() {
+  generateHCL() {
     const obsResourceId = this.outputs.observations_hcl;
     this.customObservationSets = this.metadataService.getCustomObservationSets();
     this.apiService.getResourceContent(obsResourceId).subscribe(response => {
@@ -86,23 +66,6 @@ export class HclComponent implements OnChanges {
         CustomSetType.ObservationSet
       );
     });
-  }
-
-  /**
-   * Function to retrieve data for Feature HCL plot
-   */
-  generateFeatHCL() {
-    if (this.isFeatTreePanelExpanded && !this.hierFeatData) {
-      const featResourceId = this.outputs.features_hcl;
-      this.apiService.getResourceContent(featResourceId).subscribe(response => {
-        this.hierFeatData = response;
-        this.createChart(
-          this.hierFeatData,
-          this.featTreeContainerId,
-          CustomSetType.FeatureSet
-        );
-      });
-    }
   }
 
   /**
@@ -186,16 +149,11 @@ export class HclComponent implements OnChanges {
           (node.data.isHighlighted = node.data.isHighlighted ? false : true)
       );
 
-      const selectedItems = root
+      that.selectedSamples = root
         .leaves()
         .filter(leaf => leaf.data.isHighlighted)
         .map(leaf => leaf.data.name);
 
-      if (type === CustomSetType.ObservationSet) {
-        that.selectedSamples = selectedItems;
-      } else {
-        that.selectedFeatures = selectedItems;
-      }
       d3.select(containerId)
         .selectAll('circle')
         .attr('class', (d: any) => {
@@ -262,24 +220,10 @@ export class HclComponent implements OnChanges {
   }
 
   /**
-   * Function that is triggered when the Feature Tree Panel is expanded
-   */
-  onOpenGeneHCLPanel() {
-    this.isFeatTreePanelExpanded = true;
-    this.generateFeatHCL();
-  }
-
-  /**
    * Function that is triggered when the user clicks the "Create a custom sample" button
    */
   onCreateCustomSampleSet(type) {
-    let samples;
-    if (type === CustomSetType.ObservationSet) {
-      samples = this.selectedSamples.map(elem => ({ id: elem }));
-    } else {
-      samples = this.selectedFeatures.map(elem => ({ id: elem }));
-    }
-
+    let samples = this.selectedSamples.map(elem => ({ id: elem }));
     const dialogRef = this.dialog.open(AddSampleSetComponent, {
       data: { type: type }
     });
@@ -297,11 +241,7 @@ export class HclComponent implements OnChanges {
         // if the custom set has been successfully added, update the plot
         if (this.metadataService.addCustomSet(customSet)) {
           this.generateHCL();
-          if (type === CustomSetType.ObservationSet) {
-            this.selectedSamples = [];
-          } else {
-            this.selectedFeatures = [];
-          }
+          this.selectedSamples = [];
         }
       }
     });

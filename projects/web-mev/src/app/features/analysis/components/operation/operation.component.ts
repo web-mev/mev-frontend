@@ -35,6 +35,7 @@ export class OperationComponent implements OnInit {
   resourceFields = [];
   multipleResourceFields = [];
   textFields = [];
+  optionFields = [];
   observationFields = [];
 
   constructor(
@@ -158,6 +159,24 @@ export class OperationComponent implements OnInit {
                 [...(input.required ? [Validators.required] : [])]
               ];
               controlsConfig[key] = configTextField;
+              break;
+            }
+
+            case 'OptionString': {
+              const optionField = {
+                key: key,
+                name: input.name,
+                desc: input.description,
+                required: input.required,
+                options: input.spec.options,
+                selectedOptions: []
+              };
+              this.optionFields.push(optionField);
+              const configOptionField = [
+                input.spec.default_value,
+                [...(input.required ? [Validators.required] : [])]
+              ];
+              controlsConfig[key] = configOptionField;
               break;
             }
 

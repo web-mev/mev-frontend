@@ -24,7 +24,8 @@ export class InputSpec {
     public many?: boolean,
     public min?: number,
     public max?: number,
-    public default_value?: number | string
+    public default_value?: number | string,
+    public options?: string[]
   ) {}
 }
 export class OperationInput {
@@ -47,7 +48,8 @@ export class OperationInputAdapter {
       item.spec.many,
       item.spec.min,
       item.spec.max,
-      item.spec.default
+      item.spec.default,
+      item.spec.options
     );
 
     return new OperationInput(item.description, item.name, item.required, spec);

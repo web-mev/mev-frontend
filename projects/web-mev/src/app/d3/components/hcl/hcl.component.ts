@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { AnalysesService } from '@app/features/analysis/services/analysis.service';
 import * as d3 from 'd3';
+import d3Tip from 'd3-tip';
 import { AddSampleSetComponent } from '../dialogs/add-sample-set/add-sample-set.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MetadataService } from '@app/core/metadata/metadata.service';
@@ -33,6 +34,8 @@ export class HclComponent implements OnChanges {
   obsImageName = 'Hierarchical clustering - Observations'; // file name for downloaded SVG image
   margin = { top: 50, right: 300, bottom: 50, left: 50 }; // chart margins
   outerHeight = 500;
+  maxTextLabelLength = 10;
+  tooltipOffsetX = 10; // position the tooltip on the right side of the triggering element
 
   constructor(
     private apiService: AnalysesService,
@@ -45,11 +48,7 @@ export class HclComponent implements OnChanges {
   }
 
   onResize(event) {
-    this.createChart(
-      this.hierObsData,
-      this.obsTreeContainerId,
-      CustomSetType.ObservationSet
-    );
+    this.createChart(this.hierObsData, this.obsTreeContainerId);
   }
 
   /**
@@ -60,22 +59,14 @@ export class HclComponent implements OnChanges {
     this.customObservationSets = this.metadataService.getCustomObservationSets();
     this.apiService.getResourceContent(obsResourceId).subscribe(response => {
       this.hierObsData = response;
-      this.createChart(
-        this.hierObsData,
-        this.obsTreeContainerId,
-        CustomSetType.ObservationSet
-      );
+      this.createChart(this.hierObsData, this.obsTreeContainerId);
     });
   }
 
   /**
    * Function to create dendrogram
    */
-  private createChart(
-    hierData: any,
-    containerId: string,
-    type: CustomSetType
-  ): void {
+  private createChart(hierData: any, containerId: string): void {
     if (!hierData) return;
 
     const outerWidth = this.svgElement.nativeElement.offsetWidth;
@@ -161,12 +152,29 @@ export class HclComponent implements OnChanges {
         });
     }
 
+    // Tooltip
+    const tooltipOffsetX = this.tooltipOffsetX;
+    const tip = d3Tip()
+      .attr('class', 'd3-tip')
+      .offset([-10, 0])
+      .html((event, d) => d.data.name);
+    svg.call(tip);
+
+    const truncate = input =>
+      input.length > this.maxTextLabelLength
+        ? `${input.substring(0, this.maxTextLabelLength)}...`
+        : input;
     leafNode
       .append('text')
       .attr('dx', 10)
       .attr('dy', 3)
       .attr('class', 'textLabel')
-      .text(d => d.data.name);
+      .text(d => truncate(d.data.name))
+      .on('mouseover', function(mouseEvent: any, d) {
+        tip.show(mouseEvent, d, this);
+        tip.style('left', mouseEvent.x + tooltipOffsetX + 'px');
+      })
+      .on('mouseout', tip.hide);
 
     // Color squares for leaf nodes to indicate custom sample sets
     leafNode

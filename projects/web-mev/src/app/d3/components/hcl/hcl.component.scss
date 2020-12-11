@@ -71,6 +71,16 @@ mat-expansion-panel {
   .legend-label {
     font-size: 12px;
   }
+
+  .d3-tip {
+    line-height: 1;
+    font-weight: bold;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 2px;
+    z-index: 1;
+  }
 }
 
 mat-card {

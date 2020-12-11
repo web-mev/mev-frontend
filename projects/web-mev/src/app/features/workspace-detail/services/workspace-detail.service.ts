@@ -3,7 +3,7 @@ import { environment } from '@environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Workspace } from '@workspace-manager/models/workspace';
 import { map } from 'rxjs/operators';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable } from 'rxjs';
 import {
   WorkspaceResource,
   WorkspaceResourceAdapter

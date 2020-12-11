@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { FileType } from '@app/shared/models/file-type';
 import { Workspace } from '@app/features/workspace-manager/models/workspace';
 
 /**

@@ -30,17 +30,17 @@
       
           <div class="filter">
               <span class="label">
-                  P-value: 
+                  P-value adjusted: 
               </span>
                 <mat-form-field class="form-control form-control__small" color="accent">
-                  <mat-select formControlName="pvalue_operator">
+                  <mat-select formControlName="padj_operator">
                     <mat-option *ngFor="let operator of operators" [value]="operator.id">
                       {{ operator.name }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
                 <mat-form-field class="form-control">
-                  <input matInput formControlName="pvalue" type=number step=any min=0>
+                  <input matInput formControlName="padj" type=number step=any min=0>
               </mat-form-field>
           </div>
          

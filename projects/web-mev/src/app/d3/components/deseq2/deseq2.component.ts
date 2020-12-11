@@ -60,7 +60,7 @@ export class Deseq2Component implements OnInit, AfterViewInit {
   /* Table filters */
   allowedFilters = {
     /*name: { defaultValue: '', hasOperator: false },*/
-    pvalue: {
+    padj: {
       defaultValue: '',
       hasOperator: true,
       operatorDefaultValue: 'lte'

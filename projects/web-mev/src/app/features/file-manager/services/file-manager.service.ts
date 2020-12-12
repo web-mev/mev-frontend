@@ -1,7 +1,13 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, interval, timer, forkJoin } from 'rxjs';
+import { BehaviorSubject, Observable, timer, forkJoin } from 'rxjs';
 import { HttpClient, HttpEventType } from '@angular/common/http';
-import { map, switchMap, takeWhile, concatMap } from 'rxjs/operators';
+import {
+  map,
+  switchMap,
+  takeWhile,
+  concatMap,
+  takeUntil
+} from 'rxjs/operators';
 import { File, FileAdapter } from '@app/shared/models/file';
 import { environment } from '@environments/environment';
 import { FileType } from '@app/shared/models/file-type';
@@ -16,6 +22,8 @@ export class FileService {
     'Validating...',
     'Processing...'
   ];
+  private maxTime = 20000; //  check the file validation status only for the first 20 secs
+
   dataChange: BehaviorSubject<File[]> = new BehaviorSubject<File[]>([]);
 
   public fileUploadsProgress: BehaviorSubject<
@@ -47,6 +55,7 @@ export class FileService {
   // GET FILE LIST
   public getAllFiles(): void {
     // refresh the status of the resource validation process every 2 seconds
+    const maxTimer$ = timer(this.maxTime);
     timer(0, 2000)
       .pipe(
         concatMap(() => this.httpClient.get(`${this.API_URL}/resources/`)),
@@ -57,7 +66,8 @@ export class FileService {
               this.FILE_VALIDATION_PROGRESS_STATUSES.includes(file.status)
             ),
           true
-        )
+        ),
+        takeUntil(maxTimer$)
       )
       .subscribe(data => {
         this.dataChange.next(data);

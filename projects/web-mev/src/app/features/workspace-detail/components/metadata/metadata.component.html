@@ -3,13 +3,16 @@
       <mat-card-content class="metadata-card__main">
           <div class="metadata-card__instruction">
             Here you can create custom observation and feature sets to filter your data during
-            the analysis.
+            the analysis. You also can incorporate an annotation file as attributes to your custom observation set.
             <p *ngIf="(workspaceResources| annotationFilesPipe)?.length > 0; else noAnnotationFiles">
-              Click the button to use annotation file.
+              Click the Choose current annotation button to use your annotation file.
             </p>
            
            <ng-template #noAnnotationFiles>
-             <p>No annotation files available.</p>
+             <p>No annotation files available. Please upload an annotation file 
+               <mat-icon class="icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+              matTooltip=" An Annotation Table is a special type of table that is be responsible for annotating observations/samples (e.g. adding sample names and associated attributes like experimental group or other covariates). The first column gives the sample names and the remaining columns  each individually represent different covariates associated with that sample." aria-label="Info tooltip about the field">info
+            </mat-icon>and add it to your workspace to. </p>
            </ng-template>
           </div>
           <mat-divider [inset]="true"></mat-divider>

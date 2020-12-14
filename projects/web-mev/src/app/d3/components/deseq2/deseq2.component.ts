@@ -16,6 +16,10 @@ import { DataSource } from '@angular/cdk/table';
 import * as d3 from 'd3';
 import d3Tip from 'd3-tip';
 import { FormGroup, FormControl } from '@angular/forms';
+import { CustomSetType } from '@app/_models/metadata';
+import { MatDialog } from '@angular/material/dialog';
+import { AddSampleSetComponent } from '../dialogs/add-sample-set/add-sample-set.component';
+import { MetadataService } from '@app/core/metadata/metadata.service';
 
 @Component({
   selector: 'mev-deseq2',
@@ -25,7 +29,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 })
 export class Deseq2Component implements OnInit, AfterViewInit {
   @Input() outputs;
-  dataSource: FeaturesDataSource; // datsource for MatTable
+  dataSource: FeaturesDataSource; // datasource for MatTable
   boxPlotData; // data retrieved from the dgeResourceId resource, pre-processed for D3 box plot visualization
   dgeResourceId;
 
@@ -107,7 +111,11 @@ export class Deseq2Component implements OnInit, AfterViewInit {
   xScale; // scale functions to transform data values into the the range
   yScale;
 
-  constructor(private analysesService: AnalysesService) {
+  constructor(
+    private analysesService: AnalysesService,
+    public dialog: MatDialog,
+    private metadataService: MetadataService
+  ) {
     this.dataSource = new FeaturesDataSource(this.analysesService);
 
     // adding form controls depending on the tables settings (the allowedFilters property)
@@ -230,6 +238,31 @@ export class Deseq2Component implements OnInit, AfterViewInit {
       return newElem;
     });
     this.boxPlotData = countsFormatted;
+  }
+
+  /**
+   * Function that is triggered when the user clicks the "Create a custom sample" button
+   */
+  onCreateCustomFeatureSet() {
+    const features = this.dataSource.featuresSubject.value.map(elem => ({
+      id: elem.name
+    }));
+    const dialogRef = this.dialog.open(AddSampleSetComponent, {
+      data: { type: CustomSetType.FeatureSet }
+    });
+
+    dialogRef.afterClosed().subscribe(customSetData => {
+      if (customSetData) {
+        const customSet = {
+          name: customSetData.name,
+          type: CustomSetType.FeatureSet,
+          elements: features,
+          multiple: true
+        };
+
+        this.metadataService.addCustomSet(customSet);
+      }
+    });
   }
 
   /**
@@ -532,7 +565,7 @@ export interface DESeqFeature {
 }
 
 export class FeaturesDataSource implements DataSource<DESeqFeature> {
-  private featuresSubject = new BehaviorSubject<DESeqFeature[]>([]);
+  public featuresSubject = new BehaviorSubject<DESeqFeature[]>([]);
   public featuresCount = 0;
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public loading$ = this.loadingSubject.asObservable();

@@ -19,6 +19,8 @@ import { CustomSetType } from '@app/_models/metadata';
 })
 export class EditFeatureSetDialogComponent implements OnInit {
   selection = new SelectionModel(true, []);
+  customSetType: string;
+  isObservationSet = true;
   allObservationSetsDS;
   observationForm: FormGroup;
   submitted = false;
@@ -33,26 +35,37 @@ export class EditFeatureSetDialogComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // if no custom set type is passed, assume Observation set by default
+    this.customSetType = this.data?.type || CustomSetType.ObservationSet;
+    if (this.customSetType === CustomSetType.FeatureSet) {
+      this.isObservationSet = false;
+    }
     this.observationForm = this.formBuilder.group({
       observationSetName: [this.data.name, Validators.required],
-      observationSetColor: [this.data.color, Validators.required]
+      observationSetColor: [
+        this.data.color,
+        [...(this.isObservationSet ? [Validators.required] : [])]
+      ]
     });
-    this.allObservationSetsDS = this.data.observationSetDS;
 
-    this.observationSetsDisplayedColumns = this.data.observationSetsDisplayedColumns;
-    this.observationSetsDisplayedColumnsAttributesOnly = this.data.observationSetsDisplayedColumnsAttributesOnly;
-
-    this.allObservationSetsDS.data
-      .filter(el =>
-        this.data.selectedElements.some(selEl => selEl.id === el.id)
-      )
-      .forEach(row => {
-        this.selection.select(row);
-      });
+    if (this.isObservationSet) {
+      this.allObservationSetsDS = this.data.observationSetDS;
+      this.observationSetsDisplayedColumns = this.data.observationSetsDisplayedColumns;
+      this.observationSetsDisplayedColumnsAttributesOnly = this.data.observationSetsDisplayedColumnsAttributesOnly;
+      this.allObservationSetsDS.data
+        .filter(el =>
+          this.data.selectedElements.some(selEl => selEl.id === el.id)
+        )
+        .forEach(row => {
+          this.selection.select(row);
+        });
+    }
   }
 
   ngAfterViewInit() {
-    this.allObservationSetsDS.paginator = this.paginator;
+    if (this.isObservationSet) {
+      this.allObservationSetsDS.paginator = this.paginator;
+    }
   }
 
   onNoClick(): void {
@@ -91,7 +104,7 @@ export class EditFeatureSetDialogComponent implements OnInit {
     const observationSet = {
       name: name,
       color: color,
-      type: CustomSetType.ObservationSet,
+      type: this.customSetType,
       elements: samples,
       multiple: true
     };

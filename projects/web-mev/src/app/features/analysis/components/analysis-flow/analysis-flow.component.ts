@@ -30,6 +30,7 @@ export class AnalysisFlowComponent implements OnInit {
   tooltipOffsetX = 10; // position the tooltip on the right side of the triggering element
   margin = { top: 50, right: 50, bottom: 50, left: 50 }; // chart margins
   nodeSize = 30; // tree node size
+  maxTextLabelLength = 13;
   nodeTypes = [
     {
       id: 'data_resource_node',
@@ -163,10 +164,16 @@ export class AnalysisFlowComponent implements OnInit {
       });
 
     // Add text to root nodes
+    const truncate = input =>
+      input.length > this.maxTextLabelLength
+        ? `${input.substring(0, this.maxTextLabelLength)}...`
+        : input;
+
     nodes
       .append('text')
       .filter(d => d.data['parentIds'].length === 0)
-      .text(d => d.data['node_name'])
+      .text(d => truncate(d.data['node_name']))
+
       .attr('dx', '-3em')
       .attr('dy', '-2em')
       .attr('class', 'text-label');

@@ -126,4 +126,13 @@ export class MetadataService {
     const workspaceId = this.getParam('workspaceId');
     this.storage.set(workspaceId + '_custom_sets', customSets);
   }
+
+  getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
 }

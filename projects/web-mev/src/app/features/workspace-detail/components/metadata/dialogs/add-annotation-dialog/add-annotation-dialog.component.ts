@@ -5,6 +5,10 @@ import {
   ChangeDetectionStrategy,
   Inject
 } from '@angular/core';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { AnalysesService } from '@app/features/analysis/services/analysis.service';
+import { CustomSetType } from '@app/_models/metadata';
+import { MetadataService } from '@app/core/metadata/metadata.service';
 
 @Component({
   selector: 'mev-add-annotation-dialog',
@@ -14,23 +18,61 @@ import {
 })
 export class AddAnnotationDialogComponent implements OnInit {
   files = [];
-  selectedFiles = [];
+  attributes = [];
+  selectedAnnotationFileId: string;
+  annotationFileContent = [];
+  selectedAttribute: string;
+  attributeValues = [];
+  selectedAttributeValues = [];
+  form: FormGroup;
 
   dropdownSettings = {};
   constructor(
+    private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<AddAnnotationDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private apiService: AnalysesService,
+    private metadataService: MetadataService
   ) {}
 
   ngOnInit(): void {
+    this.form = this.formBuilder.group({
+      annotation: ['', Validators.required],
+      attribute: ['', Validators.required],
+      attributeValue: ['', Validators.required]
+    });
+
     this.dropdownSettings = {
-      text: 'Select resources',
+      primaryKey: 'name',
+      text: 'Select custom observation sets to create',
       selectAllText: 'Select All',
       unSelectAllText: 'Unselect All',
       classes: 'resource-dropdown'
     };
 
     this.files = this.data.workspaceResources;
+  }
+
+  onSelectAnnonation() {
+    this.apiService
+      .getResourceContent(this.selectedAnnotationFileId)
+      .subscribe(response => {
+        if (response.length) {
+          this.annotationFileContent = response;
+          this.attributes = Object.keys(response[0].values);
+          this.selectedAttributeValues = []; // reset selected attributes in multi-select dropdown
+        }
+      });
+  }
+
+  onSelectAttribute() {
+    this.attributeValues = [
+      ...new Set(
+        this.annotationFileContent.map(
+          item => item.values[this.selectedAttribute]
+        )
+      )
+    ].map(el => ({ name: el }));
   }
 
   onNoClick(): void {
@@ -42,9 +84,22 @@ export class AddAnnotationDialogComponent implements OnInit {
   }
 
   confirmAdd() {
-    // temporarily use only 1 file to get metadata
-    const selectedFile =
-      this.selectedFiles.length > 0 ? this.selectedFiles[0] : null;
-    this.dialogRef.close(selectedFile.id);
+    const customSets = [];
+    this.form.value.attributeValue.forEach(attrValue => {
+      const attrSamples = this.annotationFileContent
+        .filter(
+          sample => sample.values[this.selectedAttribute] === attrValue.name
+        )
+        .map(sample => ({ id: sample.rowname, attributes: sample.values }));
+
+      const customSet = {
+        name: attrValue.name,
+        type: CustomSetType.ObservationSet,
+        elements: attrSamples,
+        color: this.metadataService.getRandomColor()
+      };
+      customSets.push(customSet);
+    });
+    this.dialogRef.close(customSets);
   }
 }

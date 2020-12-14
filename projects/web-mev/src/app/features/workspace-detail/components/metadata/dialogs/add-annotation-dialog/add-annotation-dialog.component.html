@@ -1,31 +1,51 @@
 <div class="container">
-    <h3 mat-dialog-title>Select one or more annotations
-      <br> Then click the Add button.</h3>
-  
-    <form class="mat-dialog-content" (ngSubmit)="submit" #formControl="ngForm">
-  
-      <div class="form">
-  
-        <angular2-multiselect [data]="files" [(ngModel)]="selectedFiles"
-          [settings]="dropdownSettings" name="resource">
-          <c-item>
-            <ng-template let-item="item">
-              <label>{{ item.name }}</label>
-            </ng-template>
-          </c-item>
-          <c-badge>
-            <ng-template let-item="item">
-              <label>{{ item.name }}</label>
-            </ng-template>
-          </c-badge>
-        </angular2-multiselect>
-  
-      </div>
-  
-      <div mat-dialog-actions>
-        <button mat-button [mat-dialog-close]="1" mat-raised-button color="accent" [disabled]="selectedFiles.length === 0" (click)="confirmAdd()">Add</button>
-        <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
-      </div>
-  
-    </form>
-  </div>
+  <p> Fill in the parameters and click the Add button. <br> 
+    After you have created custom observations sets from your annotation file,
+     you can rename them and assign new colors instead default ones.</p>
+  <form class="mat-dialog-content" (ngSubmit)="submit" [formGroup]="form">
+
+    <div class="form">
+      <mat-form-field class="form-control" color="accent">
+        <mat-label>Annotation file</mat-label>
+        <mat-select formControlName=annotation [(value)]="selectedAnnotationFileId"
+          (selectionChange)="onSelectAnnonation()">
+          <mat-option *ngFor="let file of files | annotationFilesPipe" [value]="file.id">
+            {{ file.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+    
+      <mat-form-field *ngIf="attributes.length" class="form-control" color="accent">
+        <mat-label>Annotation attribute</mat-label>
+        <mat-select formControlName=attribute [(value)]="selectedAttribute" (selectionChange)="onSelectAttribute()">
+          <mat-option *ngFor="let attribute of attributes" [value]="attribute">
+            {{ attribute }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+     
+      <angular2-multiselect *ngIf="attributeValues.length" formControlName=attributeValue [data]="attributeValues"
+        class="form-control" [settings]="dropdownSettings" [(ngModel)]="selectedAttributeValues" >
+        <c-item>
+          <ng-template let-item="item">
+            <label>{{ item.name }}</label>
+          </ng-template>
+        </c-item>
+        <c-badge>
+          <ng-template let-item="item">
+            <label>{{ item.name }}</label>
+          </ng-template>
+        </c-badge>
+      </angular2-multiselect>
+
+    </div>
+
+    <div mat-dialog-actions>
+      <button mat-button [mat-dialog-close]="1" mat-raised-button color="accent" [type]="submit" (click)="confirmAdd()" [disabled]="!form.valid">Add</button>
+      <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
+    </div>
+
+  </form>
+</div>

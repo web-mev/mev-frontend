@@ -25,7 +25,7 @@ export interface CustomSetElement {
 
 export interface CustomSet {
   name: string;
-  color: string;
+  color?: string;
   type: CustomSetType;
   elements: CustomSetElement[];
   multiple: boolean;

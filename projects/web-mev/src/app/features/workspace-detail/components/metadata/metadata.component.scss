@@ -1,22 +1,31 @@
+.metadata-container {
+  margin: 20px;
+  width: 98%;
+}
+
+.mat-card {
+  overflow-x: scroll;
+}
+
 table {
   width: 100%;
 }
 
-.metadata-section {
-  font-size: 14px !important;
-  margin: 20px;
-}
+// .metadata-section {
+//   font-size: 14px !important;
+//   margin: 20px;
+// }
 
 .mat-table-container {
   width: 80%;
   align-self: start;
 }
 
-.mat-expansion-panel-header-title {
-  font-weight: bold;
-  color: #a1887f;
-  flex-grow: unset;
-}
+// .mat-expansion-panel-header-title {
+//   font-weight: bold;
+//   color: #a1887f;
+//   flex-grow: unset;
+// }
 
 .mat-header-cell {
   text-transform: capitalize;

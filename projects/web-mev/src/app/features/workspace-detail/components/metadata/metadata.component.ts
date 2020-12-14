@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, Subscription } from 'rxjs';
-import { takeUntil, switchMap, filter, tap } from 'rxjs/operators';
+import { takeUntil, switchMap } from 'rxjs/operators';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatAccordion } from '@angular/material/expansion';
 import { MatDialog } from '@angular/material/dialog';
@@ -25,7 +25,6 @@ import { ViewSetDialogComponent } from './dialogs/view-set-dialog/view-set-dialo
 import { LclStorageService } from '@app/core/local-storage/lcl-storage.service';
 import { MetadataService } from '@app/core/metadata/metadata.service';
 import { EditFeatureSetDialogComponent } from './dialogs/edit-feature-set-dialog/edit-feature-set-dialog.component';
-import { element } from 'protractor';
 
 @Component({
   selector: 'mev-metadata',
@@ -200,31 +199,13 @@ export class MetadataComponent implements OnInit {
     const dialogRef = this.dialog.open(AddAnnotationDialogComponent, {
       data: { workspaceResources: this.workspaceResources }
     });
-
-    dialogRef
-      .afterClosed()
-      .pipe(
-        filter(selectedFileId => selectedFileId !== undefined),
-        switchMap(selectedFileId =>
-          this.service.getResourceMetadataObservations(selectedFileId)
-        ),
-        takeUntil(this.onDestroy)
-      )
-      .subscribe(metadata => {
-        if (metadata?.observation_set?.elements) {
-          const currentObsSet = metadata.observation_set.elements;
-
-          this.generateMetadataColumns(currentObsSet);
-          this.observationSetDS = new MatTableDataSource(currentObsSet);
-          this.storage.set(
-            this.workspaceId + '_current_observation_set',
-            currentObsSet
-          );
-
-          this.observationSetDS.paginator = this.paginator;
-          this.cd.markForCheck();
-        }
-      });
+    dialogRef.afterClosed().subscribe(newCustomSets => {
+      if (newCustomSets) {
+        newCustomSets.forEach(newCustomSet =>
+          this.metadataService.addCustomSet(newCustomSet)
+        );
+      }
+    });
   }
 
   /**
@@ -411,6 +392,7 @@ export class MetadataComponent implements OnInit {
             data: {
               name: set.name,
               color: set.color,
+              type: set.type,
               selectedElements: set.elements,
               observationSetDS: globalObservationSetsDS,
               observationSetsDisplayedColumns: observationSetsDisplayedColumns,

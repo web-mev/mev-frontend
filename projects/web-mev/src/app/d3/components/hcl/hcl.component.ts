@@ -24,7 +24,6 @@ export class HclComponent implements OnChanges {
   @Input() outputs;
   @ViewChild('treePlot') svgElement: ElementRef;
   hierObsData;
-  obSetType = CustomSetType.ObservationSet;
 
   customObservationSets = [];
   selectedSamples = [];
@@ -230,17 +229,17 @@ export class HclComponent implements OnChanges {
   /**
    * Function that is triggered when the user clicks the "Create a custom sample" button
    */
-  onCreateCustomSampleSet(type) {
+  onCreateCustomSampleSet() {
     let samples = this.selectedSamples.map(elem => ({ id: elem }));
     const dialogRef = this.dialog.open(AddSampleSetComponent, {
-      data: { type: type }
+      data: { type: CustomSetType.ObservationSet }
     });
 
     dialogRef.afterClosed().subscribe(customSetData => {
       if (customSetData) {
         const customSet = {
           name: customSetData.name,
-          type: type,
+          type: CustomSetType.ObservationSet,
           color: customSetData.color,
           elements: samples,
           multiple: true

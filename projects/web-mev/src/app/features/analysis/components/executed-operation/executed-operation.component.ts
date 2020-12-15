@@ -52,6 +52,7 @@ export class ExecutedOperationComponent implements OnInit {
               this.execOperations[idx]?.error_messages
             ) {
               this.outputs = {
+                operation: this.execOperations[idx].operation,
                 ...this.execOperations[idx].outputs,
                 ...this.execOperations[idx].inputs,
                 error_messages: this.execOperations[idx].error_messages
@@ -68,6 +69,7 @@ export class ExecutedOperationComponent implements OnInit {
       )
       .subscribe((response: any) => {
         this.outputs = {
+          operation: response?.body?.operation,
           ...response?.body?.outputs,
           ...response?.body?.inputs,
           error_messages: response?.body?.error_messages
@@ -96,6 +98,7 @@ export class ExecutedOperationComponent implements OnInit {
       this.execOperations[idx].error_messages
     ) {
       this.outputs = {
+        operation: this.execOperations[idx].operation,
         ...this.execOperations[idx].outputs,
         ...this.execOperations[idx].inputs,
         error_messages: this.execOperations[idx].error_messages
@@ -106,6 +109,7 @@ export class ExecutedOperationComponent implements OnInit {
         .getExecutedOperationResult(this.execOperationId)
         .subscribe(response => {
           this.outputs = {
+            operation: response?.body?.operation,
             ...response?.body?.outputs,
             ...response?.body?.inputs,
             error_messages: response?.body?.error_messages

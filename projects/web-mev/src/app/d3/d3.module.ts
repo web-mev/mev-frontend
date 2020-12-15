@@ -4,6 +4,7 @@ import { ScatterPlotComponent } from './components/scatter-plot/scatter-plot.com
 import { SharedModule } from '@app/shared/shared.module';
 import { AddSampleSetComponent } from './components/dialogs/add-sample-set/add-sample-set.component';
 import { Deseq2Component } from './components/deseq2/deseq2.component';
+import { LimmaComponent } from './components/limma/limma.component';
 import { HclComponent } from './components/hcl/hcl.component';
 import { DownloadButtonComponent } from './components/download-button/download-button.component';
 
@@ -12,10 +13,11 @@ import { DownloadButtonComponent } from './components/download-button/download-b
     ScatterPlotComponent,
     AddSampleSetComponent,
     Deseq2Component,
+    LimmaComponent,
     HclComponent,
     DownloadButtonComponent
   ],
   imports: [CommonModule, SharedModule],
-  exports: [ScatterPlotComponent, Deseq2Component, HclComponent]
+  exports: [ScatterPlotComponent, Deseq2Component, LimmaComponent, HclComponent]
 })
 export class D3Module {}

@@ -1,9 +1,8 @@
 <div class="container">
-    <h3 mat-dialog-title>{{ data.name }}</h3>
+    <p mat-dialog-title>{{ data.name }}</p>
     <div mat-dialog-content>
-      Type: {{ data.type }}
-      <p></p>
-      {{ data.type.toUpperCase().indexOf("OBSERVATION") >= 0 ? 'Samples' : 'Features' }}: 
+      <p>Type: {{ data.type }}</p>
+      {{ isObservationSet ? 'Observations' : 'Features' }}: 
       <ul> 
         <li *ngFor="let elem of data.elements">{{ elem.id }}</li>
       </ul>

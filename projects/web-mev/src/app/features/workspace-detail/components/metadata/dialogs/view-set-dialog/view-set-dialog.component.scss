@@ -1,4 +1,5 @@
 .container {
+  font-size: 14px;
   display: flex;
   flex-direction: column;
   min-width: 450px;
@@ -10,8 +11,10 @@
 
 .mat-dialog-title {
   font-weight: bold;
+  font-size: 15px;
 }
+
 .mat-dialog-content {
-  max-height: none;
-  overflow: visible;
+  overflow-y: auto;
+  max-height: 400px;
 }

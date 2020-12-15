@@ -22,7 +22,6 @@
                     name=observationSetColor>
             </mat-form-field>
 
-
             <div *ngIf="isObservationSet">
                 Select samples:
                 <div class="mat-elevation-z8">
@@ -71,8 +70,16 @@
                     </mat-paginator>
                 </div>
             </div>
+
+            <div *ngIf="!isObservationSet">
+                Selected features:
+                <ul> 
+                    <li *ngFor="let elem of data.selectedElements">{{ elem.id }}</li>
+                </ul>
+            </div>            
+
         </div>
-        <div mat-dialog-actions>
+        <div class="button-panel">
             <button mat-button [mat-dialog-close]="1" mat-raised-button color="accent" [type]="submit"
                 [disabled]="!observationForm.valid" (click)="confirmEdit()">Save</button>
             <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>

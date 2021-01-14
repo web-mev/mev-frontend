@@ -1,5 +1,5 @@
-$mev-primary: mat-palette($mat-grey, 200, 500, 300);
-$mev-accent: mat-palette($mat-brown, 300);
+$mev-primary: mat-palette($mat-blue-grey, 800, 900, 100);
+$mev-accent: mat-palette($mat-light-blue, 500);
 $mev-warn: mat-palette($mat-deep-orange, 200);
 
 $mev-theme: mat-light-theme($mev-primary, $mev-accent, $mev-warn);

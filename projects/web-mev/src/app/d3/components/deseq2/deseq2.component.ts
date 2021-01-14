@@ -94,13 +94,13 @@ export class Deseq2Component implements OnInit, AfterViewInit {
       label: 'Treated/Experimental',
       yCat: 'experValues',
       yPoints: 'experPoints',
-      color: '#69b3a2'
+      color: '#f40357'
     },
     Base: {
       label: 'Baseline/Control',
       yCat: 'baseValues',
       yPoints: 'basePoints',
-      color: '#a1887f'
+      color: '#f4cc03'
     }
   };
   xCat = 'key'; // field name in data for X axis

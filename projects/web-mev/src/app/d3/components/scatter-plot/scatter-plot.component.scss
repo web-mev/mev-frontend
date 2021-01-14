@@ -1,5 +1,5 @@
 .analysis-card__img {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' aria-hidden='true' focusable='false' width='1em' height='1em' style='-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);' preserveAspectRatio='xMidYMid meet' viewBox='0 0 48 48'%3E%3Cpath fill='%23a1887f' d='M9 39V6H7v35h35v-2z'/%3E%3Cg fill='%23a1887f'%3E%3Ccircle cx='39' cy='11' r='3'/%3E%3Ccircle cx='31' cy='13' r='3'/%3E%3Ccircle cx='37' cy='19' r='3'/%3E%3Ccircle cx='34' cy='26' r='3'/%3E%3Ccircle cx='28' cy='20' r='3'/%3E%3Ccircle cx='26' cy='28' r='3'/%3E%3Ccircle cx='20' cy='23' r='3'/%3E%3Ccircle cx='21' cy='33' r='3'/%3E%3Ccircle cx='14' cy='30' r='3'/%3E%3C/g%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' aria-hidden='true' focusable='false' width='1em' height='1em' style='-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);' preserveAspectRatio='xMidYMid meet' viewBox='0 0 48 48'%3E%3Cpath fill='%2337474f' d='M9 39V6H7v35h35v-2z'/%3E%3Cg fill='%2337474f'%3E%3Ccircle cx='39' cy='11' r='3'/%3E%3Ccircle cx='31' cy='13' r='3'/%3E%3Ccircle cx='37' cy='19' r='3'/%3E%3Ccircle cx='34' cy='26' r='3'/%3E%3Ccircle cx='28' cy='20' r='3'/%3E%3Ccircle cx='26' cy='28' r='3'/%3E%3Ccircle cx='20' cy='23' r='3'/%3E%3Ccircle cx='21' cy='33' r='3'/%3E%3Ccircle cx='14' cy='30' r='3'/%3E%3C/g%3E%3C/svg%3E");
   background-size: 30px;
   background-position: top center;
   background-repeat: no-repeat;
@@ -7,15 +7,6 @@
 
 .analysis-card__content {
   padding-top: 1rem;
-}
-
-.chart-title {
-  color: #a1887f;
-  text-transform: uppercase;
-  text-align: center;
-  font-size: 14px;
-  font-weight: bold;
-  padding: 20px;
 }
 
 .chart {
@@ -62,7 +53,7 @@ rect {
 }
 
 .mat-button-toggle-checked {
-  background-color: #e3f0e2 !important;
+  background-color: #c8ebfa !important;
 }
 
 .axis-dropdown-container {

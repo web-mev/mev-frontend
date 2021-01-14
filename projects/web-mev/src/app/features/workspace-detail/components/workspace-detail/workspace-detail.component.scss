@@ -3,7 +3,14 @@
   justify-content: flex-start;
   padding: 10px;
 }
+.workspace-header__nav {
+  color: #03a9f4;
+  font-size: 14px;
 
+  .nav__icon {
+    vertical-align: bottom;
+  }
+}
 .workspace-header__title {
   position: relative;
   margin: auto;

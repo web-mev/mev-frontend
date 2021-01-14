@@ -91,14 +91,15 @@ mat-sidenav-container {
             transition: padding 0.5s;
             display: inline-block;
             padding: 0 5px !important;
+            line-height: 35px;
 
             &:hover {
               text-decoration: none;
             }
 
             fa-icon {
-              font-size: 30px;
-              width: 35px;
+              font-size: 35px;
+              vertical-align: top;
             }
 
             span {
@@ -198,7 +199,7 @@ mat-sidenav {
   font-weight: bold;
   font-size: 16px;
   line-height: 22px;
-  font-family: "Google Sans", Roboto, RobotoDraft, Helvetica, Arial, sans-serif;
+  font-family: 'Google Sans', Roboto, RobotoDraft, Helvetica, Arial, sans-serif;
   display: block;
 }
 

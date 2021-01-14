@@ -1,15 +1,16 @@
 <div class="workspace-header">
-  <a routerLink='/workarea' class="workspace-header__nav">
-    <mat-icon aria-label="Next step">reply</mat-icon>
-     Back to File & Workspace list </a>
-      <span class="workspace-header__title" *ngIf="workspace$ | async as workspace">
-        Workspace
-        <b> {{ workspace.workspace_name }} </b>
-        <mat-icon class="workspace-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined" matTooltip="Workspace: {{ workspace.workspace_name }} &#13;
+  <a routerLink='/workarea' class="workspace-header__nav nav">
+    <mat-icon class="nav__icon" aria-label="Next step">reply</mat-icon>
+    <span class="nav__text">Back to File & Workspace list</span>
+  </a>
+  <span class="workspace-header__title" *ngIf="workspace$ | async as workspace">
+    Workspace
+    <b> {{ workspace.workspace_name }} </b>
+    <mat-icon class="workspace-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined" matTooltip="Workspace: {{ workspace.workspace_name }} &#13;
                           Created: {{ workspace.created }} &#13;
                           Owner: {{ workspace.owner_email }}" aria-label="Info tooltip about the workspace">info
-        </mat-icon>
-      </span>
+    </mat-icon>
+  </span>
 </div>
 
 
@@ -56,7 +57,8 @@
           <mat-card-footer>
             <mat-icon fontSet="material-icons-outlined" title="Preview resource" (click)="previewItem(resource.id)">
               search</mat-icon>
-            <mat-icon fontSet="material-icons-outlined" title="Delete resource" (click)="deleteItem(resource)">delete</mat-icon>
+            <mat-icon fontSet="material-icons-outlined" title="Delete resource" (click)="deleteItem(resource)">delete
+            </mat-icon>
           </mat-card-footer>
         </mat-card>
 
@@ -66,29 +68,29 @@
 
   <mat-tab label="Metadata">
     <ng-template matTabContent>
-      <mev-metadata *ngIf='workspaceResources' [workspaceResources]="workspaceResources"></mev-metadata>      
-    </ng-template>  
+      <mev-metadata *ngIf='workspaceResources' [workspaceResources]="workspaceResources"></mev-metadata>
+    </ng-template>
   </mat-tab>
 
   <mat-tab label="Analysis Flow">
     <ng-template matTabContent>
       <mev-analysis-flow (executedOperationId)="showExecutedOperationResult($event)"></mev-analysis-flow>
-    </ng-template>   
+    </ng-template>
   </mat-tab>
 
   <mat-tab label="Tools">
     <ng-template matTabContent>
       <mev-analyses (executedOperationId)="showExecutedOperationResult($event)"></mev-analyses>
-    </ng-template>   
+    </ng-template>
   </mat-tab>
 
 
- 
+
 
   <mat-tab label="Analyses Result">
     <ng-template matTabContent>
       <mev-executed-operation [execOperationId]="execOperationId"></mev-executed-operation>
-    </ng-template>   
+    </ng-template>
   </mat-tab>
 
 </mat-tab-group>

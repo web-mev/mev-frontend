@@ -1,14 +1,10 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, ErrorHandler, Injectable } from '@angular/core';
+import { ErrorHandler, Injectable } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-
 import { environment } from '../environments/environment';
-
 import * as Sentry from '@sentry/browser';
-import { AppComponent } from './app/app.component';
 
 Sentry.init({
-  dsn: 'http://84829d1d88d1401daa1d19eda968f330@35.194.76.64:9001/2',
+  dsn: 'http://073dd22ef4a5468b8d9b532111756e08@35.199.2.238:9000/2',
   // TryCatch has to be configured to disable XMLHttpRequest wrapping, as we are going to handle
   // http module exceptions manually in Angular's ErrorHandler and we don't want it to capture the same error twice.
   // Please note that TryCatch configuration requires at least @sentry/browser v5.16.0.

@@ -28,6 +28,7 @@ import { EditFileDialogComponent } from '@app/features/file-manager/components/d
 import { DeleteFileDialogComponent } from '@app/features/file-manager/components/dialogs/delete-file-dialog/delete-file-dialog.component';
 import { Dropbox, DropboxChooseOptions } from '@file-manager/models/dropbox';
 import { AnalysesService } from '@app/features/analysis/services/analysis.service';
+import { PreviewDialogComponent } from '@app/features/workspace-detail/components/dialogs/preview-dialog/preview-dialog.component';
 
 declare var Dropbox: Dropbox;
 
@@ -172,6 +173,33 @@ export class FileListComponent implements OnInit {
         // And lastly refresh table
         this.refresh();
       }
+    });
+  }
+
+  previewItem(fileId: string) {
+    this.fileService.getFilePreview(fileId).subscribe(data => {
+      const previewData = {};
+      if (data?.results?.length) {
+        const minN = Math.min(data.results.length, 10);
+        let slicedData = data.results.slice(0, minN);
+        const columns = Object.keys(slicedData[0].values);
+        const rows = slicedData.map(elem => elem.rowname);
+        const values = slicedData.map(elem => {
+          let rowValues = [];
+          const elemValues = elem.values;
+          columns.forEach(col => rowValues.push(elemValues[col]));
+          return rowValues;
+        });
+        previewData['columns'] = columns;
+        previewData['rows'] = rows;
+        previewData['values'] = values;
+      }
+
+      const dialogRef = this.dialog.open(PreviewDialogComponent, {
+        data: {
+          previewData: previewData
+        }
+      });
     });
   }
 

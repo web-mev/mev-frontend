@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, timer, forkJoin } from 'rxjs';
-import { HttpClient, HttpEventType } from '@angular/common/http';
+import { HttpClient, HttpEventType, HttpParams } from '@angular/common/http';
 import {
   map,
   switchMap,
@@ -146,5 +146,17 @@ export class FileService {
   // DELETE FILE
   deleteFile(id: number | string): void {
     this.httpClient.delete(`${this.API_URL}/resources/${id}/`).subscribe();
+  }
+
+  getFilePreview(fileId: number | string): Observable<any> {
+    const params = {
+      params: new HttpParams().set('page', '1').set('page_size', '5')
+    };
+    return <Observable<any>>(
+      this.httpClient.get(
+        `${this.API_URL}/resources/${fileId}/contents/`,
+        params
+      )
+    );
   }
 }

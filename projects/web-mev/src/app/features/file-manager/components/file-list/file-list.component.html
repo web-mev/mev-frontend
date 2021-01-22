@@ -1,3 +1,13 @@
+<div class="instruction">
+  Upload and manage your files here. The table below shows all files associated with your
+  account. After your files have been uploaded and validated, you can add them to
+  workspaces to conduct your analysis.
+  Note that we need to know what type of file we are working with. Hence, after upload, we
+  ask that you specify a file type. To learn more about the available file types and their
+  formats, go here. If applicable, you can preview the file to check that we have parsed it correctly. If
+  something does not appear to be correct, you may have to edit your file offline and
+  upload again.
+</div>
 <div class="file-btn-group">
   <div>
     <button mat-raised-button color="accent" (click)="addItem()">
@@ -72,7 +82,7 @@
 
     <ng-container matColumnDef="workspace">
       <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">Workspace</mat-header-cell>
-      <mat-cell *matCellDef="let row"> {{row.workspace_name}}</mat-cell>
+      <mat-cell *matCellDef="let row"> {{row.workspaces}}</mat-cell>
     </ng-container>
 
 
@@ -81,6 +91,11 @@
       <mat-header-cell *matHeaderCellDef class="file-table-header">Actions</mat-header-cell>
 
       <mat-cell *matCellDef="let row; let i=index;">
+        <button mat-icon-button color="accent" title="Preview"
+          (click)="previewItem(row.id)">
+          <mat-icon aria-label="Preview">visibility</mat-icon>
+        </button>
+
         <button mat-icon-button color="accent" title="Edit" [disabled]="!row.is_active"
           (click)="editItem(i, row.id, row.name, row.resource_type)">
           <mat-icon aria-label="Edit">edit</mat-icon>

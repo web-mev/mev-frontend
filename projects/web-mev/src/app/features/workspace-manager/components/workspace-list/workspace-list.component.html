@@ -1,3 +1,9 @@
+<div class="instruction">
+  To keep your different projects separate, we require that all your analyses are run in the
+  context of a ‘workspace.’ Navigate to your workspaces below, or create a new one to get
+  started.
+</div>
+
 <div class="workspace-btn-group">
   <button mat-raised-button color="accent" (click)="addItem()">
     <mat-icon aria-label="Create a workspace">add</mat-icon> Create a workspace
@@ -20,7 +26,7 @@
 
     <ng-container matColumnDef="id">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
-      <mat-cell *matCellDef="let row" >{{ row.id }}</mat-cell>
+      <mat-cell *matCellDef="let row">{{ row.id }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="workspace_name">
@@ -39,12 +45,14 @@
     </ng-container>
 
     <ng-container matColumnDef="accessed">
-      <mat-header-cell *matHeaderCellDef mat-sort-header class="workspace-table-header">Last accessed date</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header class="workspace-table-header">Last accessed date
+      </mat-header-cell>
       <mat-cell *matCellDef="let row"> {{ row.accessed | date :'medium' }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="file_number">
-      <mat-header-cell *matHeaderCellDef mat-sort-header class="workspace-table-header">Number of files</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header class="workspace-table-header">Number of files
+      </mat-header-cell>
       <mat-cell *matCellDef="let row"> {{ row.file_number }}</mat-cell>
     </ng-container>
 
@@ -58,7 +66,8 @@
           <mat-icon aria-label="Edit">edit</mat-icon>
         </button>
 
-        <button mat-icon-button color="accent" title="Delete workspace" (click)="deleteItem(i, row.id, row.workspace_name)">
+        <button mat-icon-button color="accent" title="Delete workspace"
+          (click)="deleteItem(i, row.id, row.workspace_name)">
           <mat-icon aria-label="Delete">delete</mat-icon>
         </button>
 
@@ -78,10 +87,7 @@
     No results are available
   </div>
 
-  <mat-paginator #paginator
-                 [length]="dataSource.filteredData.length"
-                 [pageIndex]="0"
-                 [pageSize]="10"
-                 [pageSizeOptions]="[10, 25, 100]">
+  <mat-paginator #paginator [length]="dataSource.filteredData.length" [pageIndex]="0" [pageSize]="10"
+    [pageSizeOptions]="[10, 25, 100]">
   </mat-paginator>
 </div>

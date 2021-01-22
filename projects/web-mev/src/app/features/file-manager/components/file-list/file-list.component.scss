@@ -1,3 +1,8 @@
+.instruction {
+  font-size: 14px;
+  padding-top: 10px;
+}
+
 .mat-header-cell {
   background: #eeeeee;
 }
@@ -51,4 +56,11 @@ mat-cell {
   font-size: 14px;
   color: #666;
   white-space: pre;
+}
+
+.mat-column-actions {
+  word-wrap: break-word !important;
+  white-space: unset !important;
+  flex: 0 0 20% !important;
+  width: 20% !important;
 }

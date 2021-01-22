@@ -35,7 +35,7 @@ export class AddObservationSetDialogComponent implements OnInit {
   ngOnInit(): void {
     this.observationForm = this.formBuilder.group({
       observationSetName: ['', Validators.required],
-      observationSetColor: ['', Validators.required]
+      observationSetColor: ['#000000', Validators.required]
     });
     this.allObservationSetsDS = this.data.observationSetDS;
 

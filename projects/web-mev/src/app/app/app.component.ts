@@ -40,7 +40,7 @@ export class AppComponent implements OnInit {
   languages = ['en'];
   sessionTimeout = 60 * 15; // 15 minutes
   navigation = [
-    { link: 'about', label: 'mev.menu.about' },
+    { link: 'about', label: 'mev.menu.main' },
     { link: 'tutorial', label: 'mev.menu.tutorial' },
     { link: 'workarea', label: 'Get Started' }
   ];

@@ -7,7 +7,7 @@ const routes: Routes = [
   {
     path: '',
     component: AboutComponent,
-    data: { title: 'mev.menu.about' }
+    data: { title: 'mev.menu.main' }
   }
 ];
 

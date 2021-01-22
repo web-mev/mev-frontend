@@ -31,7 +31,7 @@
   "mev.features.typescript": "Experiencia superior de desarrollador, completado de código, refactorización y menos errores",
   "mev.footer.changelog": "Mostrar historial de cambios",
   "mev.header.github": "Repositorio del Proyecto en Github",
-  "mev.menu.about": "Acerca",
+  "mev.menu.main": "WebMEV",
   "mev.menu.tutorial": "Tutorial",
   "mev.menu.start": "Get started",
   "mev.menu.examples": "Ejemplos",

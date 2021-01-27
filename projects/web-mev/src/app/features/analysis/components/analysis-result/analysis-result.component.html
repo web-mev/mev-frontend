@@ -8,14 +8,18 @@
     <mev-scatter-plot *ngIf="outputs" [outputs]="outputs"></mev-scatter-plot>
 </ng-container>
 
-<ng-container *ngIf="outputs.dge_results && outputs.operation === 'DESeq2'">
+<ng-container *ngIf="outputs.dge_results && outputs.operation.operation_name === 'DESeq2'">
     <mev-deseq2 [outputs]="outputs"></mev-deseq2>
 </ng-container>
 
-<ng-container *ngIf="outputs.dge_results && outputs.operation === 'Limma/voom'">
+<ng-container *ngIf="outputs.dge_results && outputs.operation.operation_name === 'Limma/voom'">
     <mev-limma [outputs]="outputs"></mev-limma>
 </ng-container>
 
 <ng-container *ngIf="outputs.observations_hcl">
     <mev-hcl [outputs]="outputs"></mev-hcl>
+</ng-container>
+
+<ng-container *ngIf="outputs.pathway_results">
+    <mev-gsea [outputs]="outputs"></mev-gsea>
 </ng-container>

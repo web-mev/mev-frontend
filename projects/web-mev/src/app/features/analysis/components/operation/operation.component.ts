@@ -299,9 +299,7 @@ export class OperationComponent implements OnChanges {
   }
 
   startAnalysis() {
-    console.log('this.analysesForm.value', this.analysesForm.value);
     const inputs = this.convertToFloatObj(this.analysesForm.value);
-    console.log('inputs', inputs);
     this.apiService
       .executeOperation(this.operation.id, this.workspaceId, inputs)
       .subscribe(data => {

@@ -19,13 +19,16 @@ export class ExecutedOperationComponent implements OnInit {
   private executedOperationResultSubscription: Subscription = new Subscription();
   execOperations;
   execOperationResult;
-  selectedExecOperation: string;
+  selectedExecOperationId: string;
+  selectedExecOperationName: string;
   data;
 
   @Input() execOperationId: string;
   outputs;
   isInProgress: boolean;
 
+  categories = new Set();
+  subcategories = [];
   constructor(
     private route: ActivatedRoute,
     private apiService: AnalysesService
@@ -39,25 +42,45 @@ export class ExecutedOperationComponent implements OnInit {
       .pipe(
         tap(operations => {
           this.execOperations = operations;
+          const operationsWithCategories = [];
+          operations.forEach(execOperation => {
+            const categories = execOperation.operation.categories;
+            const operation = execOperation.operation.operation_name;
+            categories.forEach(category => {
+              this.categories.add(category);
+              operationsWithCategories.push({
+                operation_name: operation,
+                category: category
+              });
+            });
+            operationsWithCategories.map(x =>
+              this.subcategories.filter(
+                a =>
+                  a.operation_name == x.operation_name &&
+                  a.category == x.category
+              ).length > 0
+                ? null
+                : this.subcategories.push(x)
+            );
+          });
         }),
         switchMap(() => {
           if (this.execOperationId) {
-            this.selectedExecOperation = this.execOperationId;
-            const idx = this.execOperations.findIndex(
-              val => val.id === this.execOperationId
+            this.selectedExecOperationId = this.execOperationId;
+            const execOperation = this.getExecOperationByOperationId(
+              this.execOperationId
             );
-            // if the opertion has been already completed, just extract its outputs from the operationa list
-            if (
-              this.execOperations[idx]?.outputs ||
-              this.execOperations[idx]?.error_messages
-            ) {
+            this.selectedExecOperationName = execOperation.job_name;
+
+            // if the opertion has been already completed, just extract its data from the list
+            if (execOperation?.outputs || execOperation?.error_messages) {
               this.outputs = {
-                operation: this.execOperations[idx].operation,
-                ...this.execOperations[idx].outputs,
-                ...this.execOperations[idx].inputs,
-                error_messages: this.execOperations[idx].error_messages
+                operation: execOperation.operation,
+                ...execOperation.outputs,
+                ...execOperation.inputs,
+                error_messages: execOperation.error_messages
               };
-              return of({ body: this.execOperations[idx] });
+              return of({ body: execOperation });
             }
 
             return this.apiService.getExecutedOperationResult(
@@ -88,20 +111,20 @@ export class ExecutedOperationComponent implements OnInit {
   onSelectExecOperation() {
     this.isInProgress = true;
     this.executedOperationResultSubscription.unsubscribe();
-    this.execOperationId = this.selectedExecOperation;
-    const idx = this.execOperations.findIndex(
-      val => val.id === this.execOperationId
+    this.execOperationId = this.selectedExecOperationId;
+
+    const execOperation = this.getExecOperationByOperationId(
+      this.execOperationId
     );
-    // if the operation has been already completed, just extract its outputs from the operationa list
-    if (
-      this.execOperations[idx].outputs ||
-      this.execOperations[idx].error_messages
-    ) {
+    this.selectedExecOperationName = execOperation.job_name;
+
+    // if the operation has been already completed, just extract its data from the list
+    if (execOperation.outputs || execOperation.error_messages) {
       this.outputs = {
-        operation: this.execOperations[idx].operation,
-        ...this.execOperations[idx].outputs,
-        ...this.execOperations[idx].inputs,
-        error_messages: this.execOperations[idx].error_messages
+        operation: execOperation.operation,
+        ...execOperation.outputs,
+        ...execOperation.inputs,
+        error_messages: execOperation.error_messages
       };
       this.isInProgress = false;
     } else {
@@ -119,6 +142,11 @@ export class ExecutedOperationComponent implements OnInit {
           }
         });
     }
+  }
+
+  getExecOperationByOperationId(operationId: string) {
+    const idx = this.execOperations.findIndex(val => val.id === operationId);
+    return this.execOperations[idx];
   }
 
   public ngOnDestroy(): void {

@@ -1,19 +1,39 @@
-
-
 <section class="operation-container">
     <div class="operation-selector">
         <span>
             Select an executed operation to view results:
         </span>
         <mat-form-field class="form-control" color="accent">
-            <mat-select name="execOperationId" [(value)]="selectedExecOperation"
+            <mat-select name="execOperationId" [(value)]="selectedExecOperationId"
                 (selectionChange)="onSelectExecOperation()">
-                <mat-option *ngFor="let operation of execOperations" [value]="operation.id">
-                    {{ operation.job_name }}
-                </mat-option>
+
+                <mat-select-trigger *ngIf="selectedExecOperationId" class="mark">
+                    <span>{{selectedExecOperationName}}</span>
+                </mat-select-trigger>
+
+                <mat-option>-- None --</mat-option>
+                <ng-container *ngFor="let category of categories">
+                    <mat-optgroup class="category" [label]="category">
+                        <ng-container *ngFor="let subcategory of subcategories">
+                            <mat-optgroup class="subcategory" *ngIf="category===subcategory.category"
+                                [label]="subcategory.operation_name">
+                                <ng-container *ngFor="let execOperation of execOperations">
+                                    <mat-option class="operation"
+                                        *ngIf="subcategory.operation_name===execOperation.operation.operation_name"
+                                        [value]="execOperation.id">
+                                        {{ execOperation.job_name }}
+                                        <mat-icon *ngIf="!execOperation.execution_stop_datetime" class="mat-icon--timer">timer</mat-icon>
+                                        <mat-icon *ngIf="execOperation.job_failed" class="mat-icon--error">error_outline</mat-icon>
+                                    </mat-option>
+                                </ng-container>
+                            </mat-optgroup>
+                        </ng-container>
+                    </mat-optgroup>
+                </ng-container>
             </mat-select>
         </mat-form-field>
+
     </div>
-    <div *ngIf="selectedExecOperation && isInProgress" class="operation-status">Building chart, please wait...</div>
-    <mev-analysis-result *ngIf="!isInProgress" [outputs]="outputs"></mev-analysis-result>    
+    <div *ngIf="selectedExecOperationId && isInProgress" class="operation-status">Building chart, please wait...</div>
+    <mev-analysis-result *ngIf="!isInProgress" [outputs]="outputs"></mev-analysis-result>
 </section>

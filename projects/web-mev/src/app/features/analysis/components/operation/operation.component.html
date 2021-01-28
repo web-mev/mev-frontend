@@ -89,6 +89,29 @@
     </mat-form-field>
   </div>
 
+  <!-- INTEGER FIELDS -->
+
+  <div *ngFor="let intField of intFields">
+    <div class="label">
+      {{ intField.name }}
+      <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+        matTooltip="{{ intField.desc}}" aria-label="Info tooltip about the field">info
+      </mat-icon>
+    </div>
+    <mat-form-field class="form-control" color="accent">
+      <input matInput [formControlName]="intField.key" [name]="intField.key">
+      <div *ngIf="f[intField.key].value && f[intField.key].errors">
+        <mat-error *ngIf="f[intField.key].errors.required">
+          This field is required
+        </mat-error>
+        <mat-error
+          *ngIf="f[intField.key].errors.min || f[intField.key].errors.max || f[intField.key].errors.pattern">
+          The value should be an integer greater than or equal to {{ intField.min }}
+        </mat-error>
+      </div>
+    </mat-form-field>
+  </div>
+
 
   <!-- TEXT FIELDS -->
 
@@ -134,6 +157,30 @@
     </mat-form-field>
   </div>
 
+  <!-- SINGLE SELECT LISTS FOR FEATURE SETS -->
+  <div *ngFor="let featureField of featureFields">
+    <div class="label">
+      {{ featureField.name }}
+      <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+        matTooltip="{{ featureField.desc}}" aria-label="Info tooltip about the field">info
+      </mat-icon>
+    </div>
+
+    <mat-form-field class="form-control" color="accent">
+      <mat-select [formControlName]="featureField.key">
+        <mat-option *ngFor="let set of featureField.sets" [value]="set">
+          {{ set.name }}
+        </mat-option>
+      </mat-select>
+      <div *ngIf="submitted && f[featureField.key].errors">
+        <mat-error *ngIf="f[featureField.key].errors.required">
+          This field is required
+        </mat-error>
+      </div>
+    </mat-form-field>
+  </div>
+
+
   <!-- SINGLE SELECT LISTS FOR OPERATION OPTIONS -->
   <div *ngFor="let optionField of optionFields">
     <div class="label">
@@ -156,9 +203,26 @@
     </mat-form-field>
   </div>
 
-  
+
+  <!-- CHECKBOXES FOR BOOLEAN FIELDS -->
+  <ng-container *ngFor="let booleanField of booleanFields">
+    <div class="form-control" color="accent">
+      <mat-checkbox [formControlName]="booleanField.key" [checked]="booleanField.checked">
+      </mat-checkbox>
+      <span class="label">
+        {{ booleanField.name }}
+        <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+          matTooltip="{{ booleanField.desc}}" aria-label="Info tooltip about the field">info
+        </mat-icon>
+      </span>
+    </div>
+  </ng-container>
+
+
+
 
   <div>
-    <button mat-raised-button color="accent" type="submit" [disabled]="!analysesForm.valid" (click)="startAnalysis()">Start</button>
+    <button mat-raised-button color="accent" type="submit" [disabled]="!analysesForm.valid"
+      (click)="startAnalysis()">Start</button>
   </div>
 </form>

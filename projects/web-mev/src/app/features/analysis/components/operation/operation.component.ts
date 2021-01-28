@@ -1,10 +1,10 @@
 import {
   Component,
-  OnInit,
   ChangeDetectionStrategy,
   Input,
   EventEmitter,
-  Output
+  Output,
+  OnChanges
 } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { AnalysesService } from '../../services/analysis.service';
@@ -19,7 +19,7 @@ import { MetadataService } from '@app/core/metadata/metadata.service';
   styleUrls: ['./operation.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default
 })
-export class OperationComponent implements OnInit {
+export class OperationComponent implements OnChanges {
   analysesForm: FormGroup;
   submitted = false;
   multipleResourcesDropdownSettings = {};
@@ -32,26 +32,29 @@ export class OperationComponent implements OnInit {
 
   // default settings for analyses fields
   numFields = [];
+  intFields = [];
   resourceFields = [];
   multipleResourceFields = [];
   textFields = [];
   optionFields = [];
+  booleanFields = [];
   observationFields = [];
+  featureFields = [];
 
   constructor(
     private formBuilder: FormBuilder,
     private apiService: AnalysesService,
     private metadataService: MetadataService
-  ) {}
-
-  ngOnInit(): void {
+  ) {
     this.multipleResourcesDropdownSettings = {
       text: '',
       selectAllText: 'Select All',
       unSelectAllText: 'Unselect All',
       classes: 'resource-dropdown'
     };
+  }
 
+  ngOnChanges(): void {
     this.loadData();
   }
 
@@ -59,6 +62,15 @@ export class OperationComponent implements OnInit {
     this.apiService.getOperation(this.operation.id).subscribe(data => {
       const inputs = data.inputs;
       const controlsConfig = {};
+      this.numFields = [];
+      this.intFields = [];
+      this.resourceFields = [];
+      this.multipleResourceFields = [];
+      this.textFields = [];
+      this.booleanFields = [];
+      this.optionFields = [];
+      this.observationFields = [];
+      this.featureFields = [];
 
       for (const key in inputs) {
         if (inputs.hasOwnProperty(key)) {
@@ -90,7 +102,30 @@ export class OperationComponent implements OnInit {
               controlsConfig[key] = configObservationSetsField;
               break;
             }
-
+            case 'FeatureSet': {
+              const featureField = {
+                key: key,
+                name: input.name,
+                desc: input.description,
+                required: input.required,
+                sets: []
+              };
+              const availableFeatSets = this.metadataService.getCustomFeatureSets();
+              featureField.sets = availableFeatSets.map(set => {
+                const newSet = set.elements.map(elem => {
+                  const o = { id: elem.id };
+                  return o;
+                });
+                return { ...set, elements: newSet };
+              });
+              this.featureFields.push(featureField);
+              const configFeatureSetsField = [
+                '',
+                [...(input.required ? [Validators.required] : [])]
+              ];
+              controlsConfig[key] = configFeatureSetsField;
+              break;
+            }
             case 'DataResource': {
               const resourceField = {
                 key: key,
@@ -145,6 +180,48 @@ export class OperationComponent implements OnInit {
               controlsConfig[key] = configNumField;
               break;
             }
+            case 'Integer': {
+              const intField = {
+                key: key,
+                name: input.name,
+                min: 0,
+                desc: input.description,
+                required: input.required
+              };
+              this.intFields.push(intField);
+
+              const configIntField = [
+                input.spec.default_value,
+                [
+                  ...(input.required ? [Validators.required] : []),
+                  Validators.min(input.spec.min),
+                  Validators.pattern(/^[0-9]\d*$/)
+                ]
+              ];
+              controlsConfig[key] = configIntField;
+              break;
+            }
+            case 'PositiveInteger': {
+              const posIntField = {
+                key: key,
+                name: input.name,
+                min: 1,
+                desc: input.description,
+                required: input.required
+              };
+              this.intFields.push(posIntField);
+
+              const configPosIntField = [
+                input.spec.default_value,
+                [
+                  ...(input.required ? [Validators.required] : []),
+                  Validators.min(input.spec.min),
+                  Validators.pattern(/^[1-9]\d*$/)
+                ]
+              ];
+              controlsConfig[key] = configPosIntField;
+              break;
+            }
             case 'String': {
               const textField = {
                 key: key,
@@ -161,7 +238,6 @@ export class OperationComponent implements OnInit {
               controlsConfig[key] = configTextField;
               break;
             }
-
             case 'OptionString': {
               const optionField = {
                 key: key,
@@ -179,7 +255,22 @@ export class OperationComponent implements OnInit {
               controlsConfig[key] = configOptionField;
               break;
             }
+            case 'Boolean': {
+              const booleanField = {
+                key: key,
+                name: input.name,
+                desc: input.description,
+                required: input.required
+              };
+              this.booleanFields.push(booleanField);
 
+              const configBooleanField = [
+                input.spec.default_value,
+                [...(input.required ? [Validators.required] : [])]
+              ];
+              controlsConfig[key] = configBooleanField;
+              break;
+            }
             default: {
               break;
             }
@@ -199,13 +290,18 @@ export class OperationComponent implements OnInit {
   convertToFloatObj(obj) {
     const res = {};
     for (const key in obj) {
-      res[key] = isNaN(obj[key]) ? obj[key] : parseFloat(obj[key]);
+      res[key] =
+        isNaN(obj[key]) || typeof obj[key] === 'boolean'
+          ? obj[key]
+          : parseFloat(obj[key]);
     }
     return res;
   }
 
   startAnalysis() {
+    console.log('this.analysesForm.value', this.analysesForm.value);
     const inputs = this.convertToFloatObj(this.analysesForm.value);
+    console.log('inputs', inputs);
     this.apiService
       .executeOperation(this.operation.id, this.workspaceId, inputs)
       .subscribe(data => {

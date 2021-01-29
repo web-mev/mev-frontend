@@ -105,9 +105,13 @@ export class EditFeatureSetDialogComponent implements OnInit {
       name: name,
       color: color,
       type: this.customSetType,
-      elements: samples,
       multiple: true
     };
+
+    // for Feature sets users can't update sample list
+    if (this.customSetType === CustomSetType.ObservationSet) {
+      observationSet['elements'] = samples;
+    }
     this.dialogRef.close(observationSet);
   }
 

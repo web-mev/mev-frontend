@@ -106,7 +106,7 @@ export class MetadataService {
       const foundIndex = customSets.findIndex(
         set => set.name === oldCustomSetId
       );
-      customSets[foundIndex] = customSet;
+      customSets[foundIndex] = { ...customSets[foundIndex], ...customSet }; //customSet;
       const workspaceId = this.getParam('workspaceId');
       this.storage.set(workspaceId + '_custom_sets', customSets);
       this.notificationService.success(

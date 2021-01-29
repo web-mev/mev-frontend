@@ -199,7 +199,7 @@ export class AnalysisFlowComponent implements OnInit {
       .getResourcePreview(resourceId)
       .subscribe(data => {
         const previewData = {};
-        if (data?.results?.length) {
+        if (data?.results?.length && 'rowname' in data.results[0]) {
           const minN = Math.min(data.results.length, 10);
           const slicedData = data.results.slice(0, minN);
           const columns = Object.keys(slicedData[0].values);
@@ -222,4 +222,10 @@ export class AnalysisFlowComponent implements OnInit {
         });
       });
   }
+
+  /**
+   * Function performs a ‘workspace export’ which takes the graph
+   * and make some ‘full record’ including the operation versions, etc.
+   */
+  saveAnalysisHistory() {}
 }

@@ -10,8 +10,9 @@
         [settings]="dropdownSettings" name="resource">
         <c-item>
           <ng-template let-item="item">
-            <label>{{ item.name }}</label>
-            <label>Type: {{ item.readable_resource_type || 'N/A' }} </label>
+            <span class="resource-label">{{ item.name }} </span>
+            <br>
+            <span class="resource-type-label">Type: {{ item.readable_resource_type || 'N/A' }}</span>
           </ng-template>
         </c-item>
         <c-badge>

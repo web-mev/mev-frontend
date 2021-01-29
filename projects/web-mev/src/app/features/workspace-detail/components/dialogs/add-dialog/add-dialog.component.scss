@@ -1,12 +1,14 @@
 .mat-dialog-content {
   min-height: 350px;
+  max-height: 600px;
   position: relative;
+  overflow: scroll;
 }
 
 .container {
   display: flex;
   flex-direction: column;
-  min-width: 450px;
+  width: 500px;
 }
 
 .container > * {
@@ -31,4 +33,20 @@
 .mat-dialog-actions {
   position: absolute;
   bottom: 0;
+}
+
+.resource-label {
+  font-size: 16px;
+  word-break: break-all;
+}
+
+.resource-type-label {
+  color: #666;
+  font-size: 12px;
+}
+
+::ng-deep {
+  .selected-list .c-list .c-token {
+    word-break: break-all;
+  }
 }

@@ -14,56 +14,58 @@
 </div>
 
 
-<mat-tab-group animationDuration="0ms" color="accent" [(selectedIndex)]="selectedTabIndex">
-  <mat-tab label="QQ">
-    <ng-template mat-tab-label>
-      Resources
-    </ng-template>
-
-    <mat-toolbar>
-      <mat-form-field floatLabel='never' class='search-field'>
-        <input matInput [(ngModel)]="searchText" autocomplete="off">
-        <mat-placeholder class="placeholder">Search</mat-placeholder>
-      </mat-form-field>
-    </mat-toolbar>
-    <div class="file-btn-group">
-      <button mat-raised-button color="accent" (click)="addItem()">
-        <mat-icon aria-label="Add local data">add</mat-icon>
-        Add local data
-      </button>
-
-      <button mat-raised-button color="accent" (click)="addItem()">
-        <mat-icon aria-label="Add external data">add</mat-icon>
-        Add external data
-      </button>
-    </div>
-
-
-    <div class="cardList">
-      <a *ngFor="let resource of workspaceResources | filter : searchText" (click)="selectResource(resource);"
-        class="cardList__item card" matRipple matRippleColor="rgba(158, 158, 158, 0.22)">
-        <mat-card>
-          <mat-card-title class="card-title">
-            {{ resource.name }}
-          </mat-card-title>
-          <mat-card-content>
-            <ul>
-              <li>Resource type: {{ resource.readable_resource_type }}</li>
-              <li>Size: {{ resource.size | byteName}}</li>
-              <li>Date added: {{ resource.created | date :'medium' }}</li>
-            </ul>
-
-          </mat-card-content>
-          <mat-card-footer>
-            <mat-icon fontSet="material-icons-outlined" title="Preview resource" (click)="previewItem(resource.id)">
-              search</mat-icon>
-            <mat-icon fontSet="material-icons-outlined" title="Delete resource" (click)="deleteItem(resource)">delete
-            </mat-icon>
-          </mat-card-footer>
-        </mat-card>
-
-      </a>
-    </div>
+<mat-tab-group animationDuration="0ms" color="accent" [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="onTabChanged($event);">
+  <mat-tab label="Resources">
+    <ng-template matTabContent>
+      <div *ngIf="!workspaceResources?.length" class="instruction">
+        To perform analyses, you need to add or import data into the workspace. Select
+        from among the files you uploaded or import public data (if available)
+      </div>
+      <mat-toolbar>
+        <mat-form-field floatLabel='never' class='search-field'>
+          <input matInput [(ngModel)]="searchText" autocomplete="off">
+          <mat-placeholder class="placeholder">Search</mat-placeholder>
+        </mat-form-field>
+      </mat-toolbar>
+  
+      <div class="file-btn-group">
+        <button mat-raised-button color="accent" (click)="addItem()">
+          <mat-icon aria-label="Add local data">add</mat-icon>
+          Add local data
+        </button>
+  
+        <button mat-raised-button color="accent" (click)="addItem()">
+          <mat-icon aria-label="Add external data">add</mat-icon>
+          Add external data
+        </button>
+      </div>
+      <div class="cardList">
+        <a *ngFor="let resource of workspaceResources | filter : searchText" (click)="selectResource(resource);"
+          class="cardList__item card" matRipple matRippleColor="rgba(158, 158, 158, 0.22)">
+          <mat-card>
+            <mat-card-title class="card-title">
+              {{ resource.name }}
+            </mat-card-title>
+            <mat-card-content>
+              <ul>
+                <li>Resource type: {{ resource.readable_resource_type }}</li>
+                <li>Size: {{ resource.size | byteName}}</li>
+                <li>Date added: {{ resource.created | date :'medium' }}</li>
+              </ul>
+  
+            </mat-card-content>
+            <mat-card-footer>
+              <mat-icon fontSet="material-icons-outlined" title="Edit resource" (click)="editItem(resource)">
+                edit</mat-icon>
+              <mat-icon fontSet="material-icons-outlined" title="Preview resource" (click)="previewItem(resource.id)">
+                search</mat-icon>
+              <mat-icon fontSet="material-icons-outlined" title="Delete resource" (click)="deleteItem(resource)">delete
+              </mat-icon>
+            </mat-card-footer>
+          </mat-card>  
+        </a>
+      </div>
+    </ng-template>    
   </mat-tab>
 
   <mat-tab label="Metadata">

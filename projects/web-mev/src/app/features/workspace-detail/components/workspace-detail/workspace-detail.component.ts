@@ -8,6 +8,7 @@ import { WorkspaceDetailService } from '@features/workspace-detail/services/work
 import { AddDialogComponent } from '../dialogs/add-dialog/add-dialog.component';
 import { PreviewDialogComponent } from '../dialogs/preview-dialog/preview-dialog.component';
 import { DeleteDialogComponent } from '../dialogs/delete-dialog/delete-dialog.component';
+import { EditDialogComponent } from '../dialogs/edit-dialog/edit-dialog/edit-dialog.component';
 @Component({
   selector: 'mev-workspace-detail',
   templateUrl: './workspace-detail.component.html',
@@ -63,7 +64,7 @@ export class WorkspaceDetailComponent implements OnInit {
   previewItem(resourceId) {
     this.service.getResourcePreview(resourceId).subscribe(data => {
       const previewData = {};
-      if (data?.results?.length) {
+      if (data?.results?.length && 'rowname' in data.results[0]) {
         const minN = Math.min(data.results.length, 10);
         let slicedData = data.results.slice(0, minN);
         const columns = Object.keys(slicedData[0].values);
@@ -87,6 +88,20 @@ export class WorkspaceDetailComponent implements OnInit {
     });
   }
 
+  editItem(resource) {
+    const dialogRef = this.dialog.open(EditDialogComponent, {
+      data: {
+        id: resource.id,
+        name: resource.name,
+        resource_type: resource.resource_type
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.refresh();
+    });
+  }
+
   deleteItem(resource) {
     const dialogRef = this.dialog.open(DeleteDialogComponent, {
       data: { workspaceId: this.workspaceId, resource: resource }
@@ -105,7 +120,14 @@ export class WorkspaceDetailComponent implements OnInit {
     this.selectedTabIndex = 4;
   }
 
-  public showExecutedOperationResult(executedOperationId: any) {
+  onTabChanged($event) {
+    let clickedIndex = $event.index;
+    if (clickedIndex === 0) {
+      this.refresh();
+    }
+  }
+
+  public showExecutedOperationResult(executedOperationId: string) {
     this.execOperationId = executedOperationId;
     this.goToAnalysesTab();
   }

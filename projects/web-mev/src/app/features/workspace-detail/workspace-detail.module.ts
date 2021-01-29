@@ -9,6 +9,8 @@ import { AddDialogComponent } from './components/dialogs/add-dialog/add-dialog.c
 import { DeleteDialogComponent } from './components/dialogs/delete-dialog/delete-dialog.component';
 import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
 import { ValidFilesPipe } from './pipes/valid-files';
+import { AnnotationFilesPipe } from './pipes/annotation-files';
+
 import { PreviewDialogComponent } from './components/dialogs/preview-dialog/preview-dialog.component';
 import { MetadataComponent } from './components/metadata/metadata.component';
 import { RouterModule } from '@angular/router';
@@ -21,12 +23,14 @@ import { InlineEditComponent } from './components/metadata/inline-edit/inline-ed
 import { SatPopoverModule } from '@ncstate/sat-popover';
 import { AnalysisModule } from '../analysis/analysis.module';
 import { EditFeatureSetDialogComponent } from './components/metadata/dialogs/edit-feature-set-dialog/edit-feature-set-dialog.component';
+import { EditDialogComponent } from './components/dialogs/edit-dialog/edit-dialog/edit-dialog.component';
 
 @NgModule({
   declarations: [
     WorkspaceDetailComponent,
     FilterPipe,
     ValidFilesPipe,
+    AnnotationFilesPipe,
     AddDialogComponent,
     DeleteDialogComponent,
     PreviewDialogComponent,
@@ -37,7 +41,8 @@ import { EditFeatureSetDialogComponent } from './components/metadata/dialogs/edi
     DeleteSetDialogComponent,
     ViewSetDialogComponent,
     InlineEditComponent,
-    EditFeatureSetDialogComponent
+    EditFeatureSetDialogComponent,
+    EditDialogComponent
   ],
   exports: [],
   imports: [

@@ -54,6 +54,10 @@ export class AnalysesService {
     );
   }
 
+  getOperationCategories(): Observable<any> {
+    return this.httpClient.get(`${this.API_URL}/operation-categories/`);
+  }
+
   getOperation(id: string): Observable<Operation> {
     return this.httpClient
       .get(`${this.API_URL}/operations/${id}/`)

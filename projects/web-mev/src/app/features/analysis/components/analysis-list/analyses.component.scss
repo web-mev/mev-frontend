@@ -1,72 +1,17 @@
-.analyses-header {
-  display: flex;
-  justify-content: flex-start;
-  padding: 10px;
-}
-
-.analyses-header__title {
-  position: relative;
-  margin: auto;
-}
-
-.analyses-header__icon {
-  vertical-align: top;
-}
-
-::ng-deep .tooltip {
-  white-space: pre-line !important;
-}
-
 .analyses-section {
   margin: 20px;
   font-size: 14px !important;
 }
-.mat-tab-group {
-  margin-bottom: 48px;
-}
-
-::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {
-  opacity: 1;
-}
-
-.tab-icon {
-  margin-right: 8px;
-}
-
-.tab-content {
-  padding: 15px 10px;
-}
 
 .vertical-tab-container {
   margin: 30px 0;
+  display: flex;
+}
 
-  ::ng-deep {
-    .mat-tab-group {
-      flex-direction: row;
-    }
-    .mat-tab-header {
-      border-bottom: none;
-    }
-    .mat-tab-header-pagination {
-      display: none !important;
-    }
-    .mat-tab-body-wrapper {
-      padding: 0 20px;
-    }
-    .mat-tab-labels {
-      flex-direction: column;
-    }
-    .mat-tab-label {
-      align-items: center;
-      justify-content: flex-start;
-      padding-left: 5px;
-    }
-    .mat-ink-bar {
-      height: 100%;
-      left: 99% !important;
-    }
-    .mat-tab-body-wrapper {
-      flex: 1 1 auto;
-    }
-  }
+mat-tree {
+  background-color: transparent !important;
+}
+
+.operation-container {
+  padding: 10px 20px;
 }

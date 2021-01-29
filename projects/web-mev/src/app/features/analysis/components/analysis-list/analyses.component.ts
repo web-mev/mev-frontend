@@ -10,6 +10,27 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Workspace } from '@app/features/workspace-manager/models/workspace';
 import { Operation } from '../../models/operation';
+import {
+  MatTreeFlatDataSource,
+  MatTreeFlattener
+} from '@angular/material/tree';
+import { FlatTreeControl } from '@angular/cdk/tree';
+
+/**
+ * Operation category with nested structure.
+ * Each node has a name and an optional list of children.
+ */
+interface OperationCategoryNode {
+  name: string;
+  children?: Operation[];
+}
+
+/** Flat node with expandable and level information */
+interface ExampleFlatNode {
+  expandable: boolean;
+  name: string;
+  level: number;
+}
 
 @Component({
   selector: 'mev-analyses',
@@ -21,8 +42,34 @@ export class AnalysesComponent implements OnInit {
   workspaceId: string;
   workspace$: Observable<Workspace>;
   operations: Operation[];
+  operationCategories: any[];
+  selectedOperation: Operation;
 
   @Output() executedOperationId: EventEmitter<any> = new EventEmitter<any>();
+
+  private _transformer = (node: OperationCategoryNode, level: number) => {
+    return {
+      expandable: !!node.children && node.children.length > 0,
+      level: level,
+      ...node
+    };
+  };
+
+  treeControl = new FlatTreeControl<ExampleFlatNode>(
+    node => node.level,
+    node => node.expandable
+  );
+
+  treeFlattener = new MatTreeFlattener(
+    this._transformer,
+    node => node.level,
+    node => node.expandable,
+    node => node.children
+  );
+
+  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+
+  hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
   constructor(
     private route: ActivatedRoute,
@@ -36,6 +83,18 @@ export class AnalysesComponent implements OnInit {
     this.apiService.getOperations().subscribe(operations => {
       this.operations = operations;
     });
+
+    this.apiService.getOperationCategories().subscribe(operationCategories => {
+      this.dataSource.data = operationCategories;
+
+      // expand the 1st operation category and show the parameters of the 1st operation by default
+      this.treeControl.expand(this.treeControl.dataNodes[0]);
+      this.selectedOperation = operationCategories[0].children[0];
+    });
+  }
+
+  public showOperationDetails(operation) {
+    this.selectedOperation = operation;
   }
 
   public showExecutedOperationResult(data: any) {

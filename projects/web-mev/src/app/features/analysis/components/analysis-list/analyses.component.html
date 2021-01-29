@@ -1,65 +1,37 @@
 <div class="analyses-container">
-  <!-- <div class="analyses-header">
-    <a [routerLink]="['/workspace', workspaceId]" class="analyses-header__title">
-      
-        <span  *ngIf="workspace$ | async as workspace">
-          Workspace
-          <b> {{ workspace.workspace_name }} </b>
-          <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined" matTooltip="Workspace: {{ workspace.workspace_name }} &#13;
-                            Created: {{ workspace.created }} &#13;
-                            Owner: {{ workspace.owner_email }}" aria-label="Info tooltip about the workspace">info
-          </mat-icon>
-        </span>
-    </a>
-  </div> -->
-
   <section class="analyses-section">
     <div class="tab-content">
       The analysis pane on the left side displays the list of available
-       data analysis tools. Click on a item to set input parameters and run an analysis.
+      data analysis tools. Expand & collapse the list of tools clicking on a category.
+      Click on a item to set input parameters and run an analysis.
       <div class="vertical-tab-container">
-        <mat-tab-group>
-          <mat-tab *ngFor="let operation of operations" [label]="operation.name">
-            <mev-operation [operation]="operation" [workspaceId]="workspaceId" [workspace$]="workspace$"
-              (executedOperationId)="showExecutedOperationResult($event)"></mev-operation>
-          </mat-tab>
-        </mat-tab-group>
+        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+          <!-- tree node template for leaf nodes -->
+          <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+            <!-- use a disabled button to provide padding for tree leaf -->
+            <button mat-icon-button disabled></button>
+            <button mat-button (click)="showOperationDetails(node)">
+              {{node.name}}
+            </button>
+          </mat-tree-node>
+          <!-- tree node template for expandable nodes -->
+          <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+            <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
+              <mat-icon class="mat-icon-rtl-mirror">
+                {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+              </mat-icon>
+            </button>
+            {{node.name}}
+          </mat-tree-node>
+        </mat-tree>
+
+        <mat-divider [vertical]="true"></mat-divider>
+
+        <div class="operation-container">
+          <mev-operation *ngIf="selectedOperation" [operation]="selectedOperation" [workspaceId]="workspaceId"
+            [workspace$]="workspace$" (executedOperationId)="showExecutedOperationResult($event)"></mev-operation>
+        </div>
       </div>
     </div>
-
-
-    <!-- <mat-tab-group animationDuration="0ms" color="accent">
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon class="tab-icon">leaderboard</mat-icon>
-          Statistics
-        </ng-template>
-       
-      </mat-tab>
-  
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon class="tab-icon">bubble_chart</mat-icon>
-          Clustering
-        </ng-template>
-  
-      </mat-tab>
-  
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon class="tab-icon">assistant</mat-icon>
-          Meta-analyses
-        </ng-template>
-  
-      </mat-tab>
-  
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon class="tab-icon">filter_alt</mat-icon>
-          Normalization
-        </ng-template>
-  
-      </mat-tab>
-    </mat-tab-group> -->
   </section>
 </div>

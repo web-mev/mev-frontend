@@ -1,0 +1,57 @@
+<header>File types</header>
+<main class="container">
+    <h3>Table-based formats</h3>
+    <p>
+        <mat-icon>check</mat-icon>Numeric Table is a table of where all the entries are numbers except the first column
+        (which names the rows) and the
+        first line (which gives the column names). The cell at the first row and column may be left blank.
+        <br>
+        <mat-icon>check</mat-icon>An Integer Table is a table of where all the entries are integers except the first
+        column (which names the rows) and
+        the first line (which gives the column names). The cell at the first row and column may be left blank.
+        <br>
+        <mat-icon>check</mat-icon>RNA-seq count matrix is a table of where all the entries are integers except the first
+        column (which names the rows)
+        and the first line (which gives the column names). The cell at the first row and column may be left blank.
+        <br>
+        <mat-icon>check</mat-icon>Expression matrix is a table of where all the entries are numbers except the first
+        column (which names the rows) and
+        the first line (which gives the column names). The cell at the first row and column may be left blank.
+        <br>
+        <mat-icon>check</mat-icon>Feature table. This type of file describes the "features" of your data. In the
+        genomics context, one example of a
+        feature is a gene. Therefore, you could use this table to give additional information about each gene, such as
+        alternative symbols, oncogene status, or similar. Each row contains information about a single gene. Note,
+        however,
+        that this concept is completely general and not restricted to information about genes or transcripts.
+        <br>
+        <mat-icon>check</mat-icon>Annotation table. This type of file is used to add metadata to your samples. The first
+        column has the sample name
+        and the remaining columns contain metadata about each sample (for instance, experimental group, treatment, or
+        similar.
+        <br>
+        <mat-icon>check</mat-icon>BED-format file is a three-column BED-format file
+    </p>
+
+    <h3>Sequence-based formats:</h3>
+    <p>
+        <mat-icon>check</mat-icon>Fasta is FASTA-format sequence files.
+        <br>
+        <mat-icon>check</mat-icon>Fastq is FASTQ-format sequence files. The most common format used for sequencing experiments.
+        <br>
+        <mat-icon>check</mat-icon>Alignment (SAM/BAM) is BAM or SAM-format aligned sequence files. Typically the output of an alignment process.
+    </p>
+    <h3>JSON format:</h3>
+    <p>
+        <mat-icon>check</mat-icon>JSON-format file is used for data that is not easily represented in a table-based format
+    </p>
+    <h3>General Format:</h3>
+    <p>
+        <mat-icon>check</mat-icon>A general file is typically used to denote an unspecified type.
+    </p>
+</main>
+
+
+<footer mat-dialog-actions class="btn-group">
+    <button mat-button (click)="onNoClick()" mat-raised-button color="accent">Close</button>
+</footer>

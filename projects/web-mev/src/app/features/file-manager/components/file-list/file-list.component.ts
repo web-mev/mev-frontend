@@ -29,6 +29,7 @@ import { DeleteFileDialogComponent } from '@app/features/file-manager/components
 import { Dropbox, DropboxChooseOptions } from '@file-manager/models/dropbox';
 import { AnalysesService } from '@app/features/analysis/services/analysis.service';
 import { PreviewDialogComponent } from '@app/features/workspace-detail/components/dialogs/preview-dialog/preview-dialog.component';
+import { ViewFileTypesDialogComponent } from '../dialogs/view-file-types-dialog/view-file-types-dialog.component';
 
 declare var Dropbox: Dropbox;
 
@@ -176,10 +177,14 @@ export class FileListComponent implements OnInit {
     });
   }
 
+  viewFileTypes() {
+    const dialogRef = this.dialog.open(ViewFileTypesDialogComponent);
+  }
+
   previewItem(fileId: string) {
     this.fileService.getFilePreview(fileId).subscribe(data => {
       const previewData = {};
-      if (data?.results?.length) {
+      if (data?.results?.length && 'rowname' in data.results[0]) {
         const minN = Math.min(data.results.length, 10);
         let slicedData = data.results.slice(0, minN);
         const columns = Object.keys(slicedData[0].values);

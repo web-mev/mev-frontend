@@ -11,7 +11,6 @@
                     <span>{{selectedExecOperationName}}</span>
                 </mat-select-trigger>
 
-                <mat-option>-- None --</mat-option>
                 <ng-container *ngFor="let category of categories">
                     <mat-optgroup class="category" [label]="category">
                         <ng-container *ngFor="let subcategory of subcategories">

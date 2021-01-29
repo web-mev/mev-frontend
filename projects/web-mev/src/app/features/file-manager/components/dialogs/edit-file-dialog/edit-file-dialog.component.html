@@ -36,7 +36,7 @@
 
     <div mat-dialog-actions>
       <button mat-button [type]="submit" [disabled]="!formControl.valid" [mat-dialog-close]="1"
-        (click)="stopEdit()">Save</button>
+        (click)="stopEdit()" mat-raised-button color="accent">Save</button>
       <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
     </div>
   </form>

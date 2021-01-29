@@ -11,21 +11,10 @@ table {
   width: 100%;
 }
 
-// .metadata-section {
-//   font-size: 14px !important;
-//   margin: 20px;
-// }
-
 .mat-table-container {
   width: 80%;
   align-self: start;
 }
-
-// .mat-expansion-panel-header-title {
-//   font-weight: bold;
-//   color: #a1887f;
-//   flex-grow: unset;
-// }
 
 .mat-header-cell {
   text-transform: capitalize;
@@ -109,4 +98,8 @@ button {
   display: inline-block;
   vertical-align: middle;
   margin-right: 5px;
+}
+
+::ng-deep .mat-tooltip {
+  font-size: 12px;
 }

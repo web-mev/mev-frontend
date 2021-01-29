@@ -2,14 +2,15 @@
   <mat-card class="metadata-card">
       <mat-card-content class="metadata-card__main">
           <div class="metadata-card__instruction">
-            Here you can create custom observation and feature sets to filter your data during
-            the analysis. You also can incorporate an annotation file as attributes to your custom observation set.
+            <p>
+              Here you can create custom observation and feature sets to filter your data during
+              the analysis. You also can incorporate an annotation file as attributes to your custom observation set. 
+            </p>
             <p *ngIf="(workspaceResources| annotationFilesPipe)?.length > 0; else noAnnotationFiles">
               Click the Incorporate annotations button to use your annotation file.
             </p>
-           
            <ng-template #noAnnotationFiles>
-             <p>No annotation files available. Please upload an annotation file 
+             <p>Please upload an annotation file 
                <mat-icon class="icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
               matTooltip=" An Annotation Table is a special type of table that is be responsible for annotating observations/samples (e.g. adding sample names and associated attributes like experimental group or other covariates). The first column gives the sample names and the remaining columns  each individually represent different covariates associated with that sample." aria-label="Info tooltip about the field">info
             </mat-icon>and add it to your workspace to. </p>
@@ -17,8 +18,6 @@
           </div>
           <mat-divider [inset]="true"></mat-divider>
           <div class="metadata-card__content">
-           
-      
             <div class="control-group">
               <div class="btn-group">
                 <button mat-raised-button color="accent" (click)="onCreateObservationSet()">
@@ -47,7 +46,9 @@
                 </mat-button-toggle>
               </mat-button-toggle-group>
             </div>
-            <div *ngIf="!customSetDS || !customSetDS.data || customSetDS.data.length === 0">No data is available.</div>
+            <div *ngIf="!customSetDS || !customSetDS.data || customSetDS.data.length === 0">
+              No custom observation and feature sets available.
+            </div>
             <div *ngIf="customSetDS?.data?.length > 0">
               <table *ngIf="customSetsViewMode.value === 'tableMode'" mat-table [dataSource]="customSetDS"
                 class="mat-elevation-z8">
@@ -106,41 +107,7 @@
                 </tr>
               </table>
             </div>
-
-      
           </div>
       </mat-card-content>
   </mat-card>
 </section>
-
-
-
-<!-- <section class="metadata-section">
-  <p>
-    Here you can create custom observation and feature sets to filter your data during
-    the analysis.
-  </p>
-
-  <mat-accordion class="example-headers-align" multi>
-    <mat-expansion-panel expanded=true [togglePosition]="'before'">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          User's sample/feature sets
-        </mat-panel-title>
-        <mat-panel-description>
-          Hear you can create and view user's sample (column) and feature(row) sets
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-
-     
-      
-
-      
-
-
-
-    </mat-expansion-panel>
-
-  </mat-accordion>
-
-</section> -->

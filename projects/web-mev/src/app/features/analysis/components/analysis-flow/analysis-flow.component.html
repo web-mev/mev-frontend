@@ -2,12 +2,17 @@
     <mat-card class="analysis-card">
         <mat-card-content class="analysis-card__main">
             <p class="analysis-card__instruction">
-                Here is the overview of the analysis as a complete DAG of the steps performed.
-                Hover the tree nodes to see more detailed info about files and operations.
-                Click on a "gear" node to view the operation results.
+                Below is a visual representation of your analysis. 
+                You can view which analyses were run and with which files so that analyses can be fully reproduced.
             </p>
             <mat-divider [inset]="true"></mat-divider>
             <div class="analysis-card__content">
+                <div class="btn-group">
+                    <button mat-raised-button color="accent" (click)="saveAnalysisHistory()" disabled=true>
+                      <mat-icon aria-label="Export analysis history">save_alt</mat-icon>
+                      Export analysis history
+                    </button>
+                </div>    
                 <div *ngIf="noDataIsAvailable">No data is available</div>
                 <div class="chart" #dagPlot id="dagPlot"></div>
             </div>

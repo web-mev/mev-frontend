@@ -6,11 +6,11 @@ const { isArray } = Array;
   name: 'filter'
 })
 export class FilterPipe implements PipeTransform {
-  transform(posts: WorkspaceResource[], find: string): WorkspaceResource[] {
-    if (!posts) return [];
-    if (!find) return posts;
+  transform(resources: WorkspaceResource[], find: string): WorkspaceResource[] {
+    if (!resources) return [];
+    if (!find) return resources;
     find = find.toLowerCase();
-    return search(posts, find);
+    return search(resources, find);
   }
 }
 
@@ -26,7 +26,9 @@ function search(entries: any[], search: string) {
           return v.toLowerCase().includes(search);
         });
       } else if (!isArray(value)) {
-        return value.toLowerCase().includes(search);
+        return String(value)
+          .toLowerCase()
+          .includes(search);
       }
     });
   });

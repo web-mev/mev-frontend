@@ -7,6 +7,8 @@ import { Deseq2Component } from './components/deseq2/deseq2.component';
 import { LimmaComponent } from './components/limma/limma.component';
 import { HclComponent } from './components/hcl/hcl.component';
 import { DownloadButtonComponent } from './components/download-button/download-button.component';
+import { GseaComponent } from './components/gsea/gsea/gsea.component';
+import { RugPlotComponent } from './components/rug-plot/rug-plot/rug-plot.component';
 
 @NgModule({
   declarations: [
@@ -15,9 +17,18 @@ import { DownloadButtonComponent } from './components/download-button/download-b
     Deseq2Component,
     LimmaComponent,
     HclComponent,
-    DownloadButtonComponent
+    DownloadButtonComponent,
+    GseaComponent,
+    RugPlotComponent
   ],
   imports: [CommonModule, SharedModule],
-  exports: [ScatterPlotComponent, Deseq2Component, LimmaComponent, HclComponent]
+  exports: [
+    ScatterPlotComponent,
+    Deseq2Component,
+    LimmaComponent,
+    HclComponent,
+    GseaComponent,
+    RugPlotComponent
+  ]
 })
 export class D3Module {}

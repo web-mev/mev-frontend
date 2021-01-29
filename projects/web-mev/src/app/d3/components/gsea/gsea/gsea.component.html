@@ -1,0 +1,115 @@
+<mat-card class="analysis-card">
+  <mat-card-header>
+    <div mat-card-avatar class="analysis-card__img"></div>
+    <mat-card-title>FGSEA</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="analysis-card__main">
+    <p class="analysis-card__instruction">
+      Use the table pagination component at the bottom of the table to navigate
+      between a set of table and chart results. <br>
+      You can sort data in alphabetical and numerical order,
+      or use filters to hide data you don't want to see.
+    </p>
+    <mat-divider [inset]="true"></mat-divider>
+    <div class="analysis-card__content">
+      <section class="filter-section">
+        <form [formGroup]="filterForm" (ngSubmit)="onSubmit()">
+          <div class="filter">
+            <span class="label">
+              P-value adjusted:
+            </span>
+            <mat-form-field class="form-control form-control__small" color="accent">
+              <mat-select formControlName="padj_operator">
+                <mat-option *ngFor="let operator of operators" [value]="operator.id">
+                  {{ operator.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field class="form-control">
+              <input matInput formControlName="padj" type=number step=any min=0>
+            </mat-form-field>
+          </div>
+
+          <button type="submit" [disabled]="!filterForm.valid" mat-raised-button color="accent">Apply filters</button>
+        </form>
+
+      </section>
+
+      <div class="mat-elevation-z8">
+        <mat-table class="deseq-table" [dataSource]="dataSource" matSort [matSortActive]="defaultSorting.field"
+          [matSortDirection]="defaultSorting.direction" matSortDisableClear>
+
+          <ng-container matColumnDef="pathway">
+            <mat-header-cell *matHeaderCellDef>Pathway</mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.pathway}}</mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="NES">
+            <mat-header-cell *matHeaderCellDef>NES</mat-header-cell>
+            <mat-cell class="description-cell" *matCellDef="let row">{{row.NES}}</mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="padj">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>P-value adjusted</mat-header-cell>
+            <mat-cell class="description-cell" *matCellDef="let row">{{row.padj}}</mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="pval">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>P-value</mat-header-cell>
+            <mat-cell class="description-cell" *matCellDef="let row">{{row.pval}}</mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="ranks">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Gene ranks</mat-header-cell>
+            <mat-cell class="description-cell" *matCellDef="let row">
+              <mev-rug-plot [plotData]="row.ranks"></mev-rug-plot>
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="featureSetCreation">
+            <mat-header-cell *matHeaderCellDef class="file-table-header"></mat-header-cell>
+
+            <mat-cell *matCellDef="let row; let i=index;">
+              <button mat-raised-button color="accent" title="Create feature set" 
+                (click)="onCreateFeatureSet(row)">
+                Create feature set
+              </button>
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="topGeneView">
+            <mat-header-cell *matHeaderCellDef class="file-table-header"></mat-header-cell>
+            <mat-cell *matCellDef="let row; let i=index;">
+              <button mat-raised-button color="accent" title="Show top genes" 
+                (click)="onShowTopGenes(row)">
+                Show top genes
+              </button>
+            </mat-cell>
+          </ng-container>
+
+
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+
+        </mat-table>
+
+
+        <mat-paginator [length]="dataSource.pathwaysCount" [pageSize]="10" [pageSizeOptions]="[10, 25, 50]">
+        </mat-paginator>
+      </div>
+
+      <!-- <div class="button-panel">
+          <button mat-raised-button color="accent" (click)="onCreateCustomFeatureSet()">
+            <mat-icon>add</mat-icon>
+            Save as a feature set
+          </button>
+          <mev-download-button [containerId]="containerId" [imageName]="imageName"></mev-download-button>  
+        </div>       -->
+
+
+    </div>
+
+  </mat-card-content>
+
+</mat-card>

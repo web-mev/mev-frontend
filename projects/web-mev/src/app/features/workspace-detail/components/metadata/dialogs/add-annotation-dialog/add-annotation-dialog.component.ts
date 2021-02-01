@@ -8,7 +8,7 @@ import {
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { AnalysesService } from '@app/features/analysis/services/analysis.service';
 import { CustomSetType } from '@app/_models/metadata';
-import { MetadataService } from '@app/core/metadata/metadata.service';
+import { Utils } from '@app/shared/utils/utils';
 
 @Component({
   selector: 'mev-add-annotation-dialog',
@@ -31,8 +31,7 @@ export class AddAnnotationDialogComponent implements OnInit {
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<AddAnnotationDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private apiService: AnalysesService,
-    private metadataService: MetadataService
+    private apiService: AnalysesService
   ) {}
 
   ngOnInit(): void {
@@ -96,7 +95,7 @@ export class AddAnnotationDialogComponent implements OnInit {
         name: attrValue.name,
         type: CustomSetType.ObservationSet,
         elements: attrSamples,
-        color: this.metadataService.getRandomColor()
+        color: Utils.getRandomColor()
       };
       customSets.push(customSet);
     });

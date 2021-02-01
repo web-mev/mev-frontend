@@ -30,6 +30,7 @@ import { MatRippleModule } from '@angular/material/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatTreeModule } from '@angular/material/tree';
 
 import {
   FontAwesomeModule,
@@ -88,7 +89,8 @@ const MatModules = [
   MatNativeDateModule,
   MatRippleModule,
   MatToolbarModule,
-  MatButtonToggleModule
+  MatButtonToggleModule,
+  MatTreeModule
 ];
 
 @NgModule({

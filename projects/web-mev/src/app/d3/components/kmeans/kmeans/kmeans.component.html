@@ -1,0 +1,46 @@
+<mat-card class="analysis-card">
+    <mat-card-header>
+        <div mat-card-avatar class="analysis-card__img"></div>
+        <mat-card-title>K-means analysis</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="analysis-card__main">
+        <p class="analysis-card__instruction">
+            Please note PCA is used for K-means visualization.
+        </p>
+        <mat-divider [inset]="true"></mat-divider>
+        <div class="analysis-card__content">
+            <div *ngIf="scatterDataFormatted" class="axis-dropdown-container">
+                <span class="axis-dropdown-label">Select a cluster and click the Save button: </span>
+                <mat-select class="axis-dropdown" [(ngModel)]="clusterSelected">
+                    <mat-option *ngFor="let centroid of centroids; index as i; " [value]="centroid.cluster_id">
+                        {{ centroid.id }}
+                    </mat-option>
+                </mat-select>
+
+                    <button mat-raised-button color="accent" (click)="onCreateCustomSampleSet()" 
+                    [disabled]="clusterSelected === undefined || isDimensionByFeatures()">
+                        <mat-icon>add</mat-icon>
+                        Save as a sample set
+                    </button>
+                    <div class="sample-list" *ngIf="selectedSamples.length"> Selected samples:
+                        <span class="sample-list__item" *ngFor="let item of selectedSamples">
+                            {{ item.sample }}
+                        </span>
+                    </div>
+            </div>
+            
+            <section class="observation-list-section">
+                
+                <ul *ngIf="customObservationSets.length"> Conditional formatting: 
+                    <li *ngFor="let set of customObservationSets">
+                        <mat-checkbox (change)="onObservationCheck($event)" [checked]="isCustomObservationSetChecked(set.name)" [id]="set.name">{{set.name}}</mat-checkbox>
+                    </li>
+                </ul>
+            </section>
+
+            <mev-download-button [containerId]="containerId" [imageName]="imageName"></mev-download-button>
+            <div #scatterPlot id="scatterPlot" class="chart" (window:resize)="onResize($event)"></div>
+            
+        </div>
+    </mat-card-content>
+</mat-card>

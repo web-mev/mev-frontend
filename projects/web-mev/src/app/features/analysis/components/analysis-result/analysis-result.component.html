@@ -23,3 +23,7 @@
 <ng-container *ngIf="outputs.pathway_results">
     <mev-gsea [outputs]="outputs"></mev-gsea>
 </ng-container>
+
+<ng-container *ngIf="outputs.kmeans_results">
+    <mev-kmeans [outputs]="outputs"></mev-kmeans>
+</ng-container>

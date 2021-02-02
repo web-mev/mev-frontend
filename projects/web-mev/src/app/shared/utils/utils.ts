@@ -7,4 +7,20 @@ export class Utils {
     }
     return color;
   }
+
+  public static getColorScheme() {
+    const colors = [
+      '#332288',
+      '#88CCEE',
+      '#44AA99',
+      '#117733',
+      '#999933',
+      '#DDCC77',
+      '#CC6677',
+      '#882255',
+      '#AA4499',
+      '#DDDDDD'
+    ];
+    return colors;
+  }
 }

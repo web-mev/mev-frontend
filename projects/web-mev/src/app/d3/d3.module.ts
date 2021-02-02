@@ -9,6 +9,7 @@ import { HclComponent } from './components/hcl/hcl.component';
 import { DownloadButtonComponent } from './components/download-button/download-button.component';
 import { GseaComponent } from './components/gsea/gsea/gsea.component';
 import { RugPlotComponent } from './components/rug-plot/rug-plot/rug-plot.component';
+import { KmeansComponent } from './components/kmeans/kmeans/kmeans.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { RugPlotComponent } from './components/rug-plot/rug-plot/rug-plot.compon
     HclComponent,
     DownloadButtonComponent,
     GseaComponent,
-    RugPlotComponent
+    RugPlotComponent,
+    KmeansComponent
   ],
   imports: [CommonModule, SharedModule],
   exports: [
@@ -28,7 +30,8 @@ import { RugPlotComponent } from './components/rug-plot/rug-plot/rug-plot.compon
     LimmaComponent,
     HclComponent,
     GseaComponent,
-    RugPlotComponent
+    RugPlotComponent,
+    KmeansComponent
   ]
 })
 export class D3Module {}

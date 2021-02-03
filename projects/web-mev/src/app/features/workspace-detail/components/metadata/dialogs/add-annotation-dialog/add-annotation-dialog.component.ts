@@ -95,7 +95,8 @@ export class AddAnnotationDialogComponent implements OnInit {
         name: attrValue.name,
         type: CustomSetType.ObservationSet,
         elements: attrSamples,
-        color: Utils.getRandomColor()
+        color: Utils.getRandomColor(),
+        multiple: true
       };
       customSets.push(customSet);
     });

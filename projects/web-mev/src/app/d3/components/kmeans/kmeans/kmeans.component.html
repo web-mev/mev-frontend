@@ -1,7 +1,7 @@
 <mat-card class="analysis-card">
     <mat-card-header>
         <div mat-card-avatar class="analysis-card__img"></div>
-        <mat-card-title>K-means analysis</mat-card-title>
+        <mat-card-title>K-means analysis: {{ outputs?.job_name }}</mat-card-title>
     </mat-card-header>
     <mat-card-content class="analysis-card__main">
         <p class="analysis-card__instruction">
@@ -9,9 +9,9 @@
         </p>
         <mat-divider [inset]="true"></mat-divider>
         <div class="analysis-card__content">
-            <div *ngIf="scatterDataFormatted" class="axis-dropdown-container">
-                <span class="axis-dropdown-label">Select a cluster and click the Save button: </span>
-                <mat-select class="axis-dropdown" [(ngModel)]="clusterSelected">
+            <div *ngIf="scatterDataFormatted" class="dropdown-container">
+                <span class="dropdown-label">Select a cluster and click the Save button: </span>
+                <mat-select class="dropdown" [(ngModel)]="clusterSelected">
                     <mat-option *ngFor="let centroid of centroids; index as i; " [value]="centroid.cluster_id">
                         {{ centroid.id }}
                     </mat-option>

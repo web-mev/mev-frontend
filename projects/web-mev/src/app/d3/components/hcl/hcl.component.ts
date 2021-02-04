@@ -91,7 +91,7 @@ export class HclComponent implements OnChanges {
       });
     });
     const leafNodeNumber = root.leaves().length; // calculate the number of nodes
-    // add extra 50px for every node above 20 to the set height
+    // add extra px for every node above 20 to the set height
     const addHeight = leafNodeNumber > 20 ? (leafNodeNumber - 20) * 30 : 0;
     const canvasHeight = height + addHeight;
     const tree = d3.cluster().size([canvasHeight, width - 200]);

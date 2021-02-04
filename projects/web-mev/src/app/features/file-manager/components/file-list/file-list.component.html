@@ -4,7 +4,7 @@
   workspaces to conduct your analysis.
   Note that we need to know what type of file we are working with. Hence, after upload, we
   ask that you specify a file type. To learn more about the available file types and their
-  formats,<a (click)="viewFileTypes()"> click here</a>. If applicable, you can preview the file to check that we have parsed it correctly. If
+  formats, <a (click)="viewFileTypes()">click here</a>. If applicable, you can preview the file to check that we have parsed it correctly. If
   something does not appear to be correct, you may have to edit your file offline and
   upload again.
 </div>
@@ -66,7 +66,7 @@
     </ng-container>
 
     <ng-container matColumnDef="created">
-      <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">Created date</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">Creation date</mat-header-cell>
       <mat-cell *matCellDef="let row"> {{ row.created | date :'medium' }}</mat-cell>
     </ng-container>
 
@@ -81,7 +81,7 @@
     </ng-container>
 
     <ng-container matColumnDef="workspace">
-      <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">Workspace</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">Workspace(s)</mat-header-cell>
       <mat-cell *matCellDef="let row"> {{row.workspaces}}</mat-cell>
     </ng-container>
 

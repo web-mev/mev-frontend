@@ -2,6 +2,10 @@
   font-size: 14px;
 }
 
+.dialog {
+  max-height: 670px;
+}
+
 header {
   font-weight: bold;
   text-transform: uppercase;
@@ -15,4 +19,22 @@ mat-icon {
 
 .container {
   text-align: justify;
+}
+
+h3 {
+  margin-top: 15px;
+}
+.show-more-link {
+  cursor: pointer;
+}
+
+.example-table {
+  margin: 10px auto;
+  border: 1px solid black;
+
+  th,
+  td {
+    padding: 5px 15px;
+    border: 1px solid black;
+  }
 }

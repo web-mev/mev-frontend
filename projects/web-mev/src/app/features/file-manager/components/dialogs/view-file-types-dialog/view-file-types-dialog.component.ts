@@ -8,11 +8,23 @@ import { MatDialogRef } from '@angular/material/dialog';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewFileTypesDialogComponent implements OnInit {
+  isTableShown = {
+    numeric: false,
+    integer: false,
+    feature: false,
+    expression: false,
+    count: false,
+    annotation: false
+  };
   constructor(public dialogRef: MatDialogRef<ViewFileTypesDialogComponent>) {}
 
   ngOnInit(): void {}
 
   onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  toggleShow(type) {
+    this.isTableShown[type] = !this.isTableShown[type];
   }
 }

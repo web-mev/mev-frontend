@@ -1,6 +1,5 @@
 import {
   Component,
-  OnInit,
   ChangeDetectionStrategy,
   Input,
   OnChanges
@@ -12,15 +11,20 @@ import {
   styleUrls: ['./analysis-result.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default
 })
-export class AnalysisResultComponent implements OnInit, OnChanges {
+export class AnalysisResultComponent implements OnChanges {
   @Input() outputs;
+  operationName: string;
   constructor() {}
-
-  ngOnInit(): void {
-    this.outputs = { ...this.outputs };
-  }
 
   ngOnChanges(): void {
     this.outputs = { ...this.outputs };
+    this.operationName = this.getOperationName();
+  }
+
+  getOperationName() {
+    if (typeof this.outputs.operation === 'string') {
+      return this.outputs.operation;
+    }
+    return this.outputs.operation?.operation_name;
   }
 }

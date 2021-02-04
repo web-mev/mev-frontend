@@ -2,15 +2,15 @@
   <section class="analyses-section">
     <div class="tab-content">
       The analysis pane on the left side displays the list of available
-      data analysis tools. Expand & collapse the list of tools clicking on a category.
+      data analysis tools. Expand and collapse the list of tools clicking on a category.
       Click on a item to set input parameters and run an analysis.
       <div class="vertical-tab-container">
         <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
           <!-- tree node template for leaf nodes -->
-          <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+          <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding [ngClass]="{ 'active-node': node.id === selectedOperation.id }">
             <!-- use a disabled button to provide padding for tree leaf -->
             <button mat-icon-button disabled></button>
-            <button mat-button (click)="showOperationDetails(node)">
+            <button (click)="showOperationDetails(node)">
               {{node.name}}
             </button>
           </mat-tree-node>

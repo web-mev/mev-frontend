@@ -85,11 +85,9 @@ export class AnalysesComponent implements OnInit {
     });
 
     this.apiService.getOperationCategories().subscribe(operationCategories => {
+      this.selectedOperation = operationCategories[0].children[0]; // show the parameters for the 1st operation by default
       this.dataSource.data = operationCategories;
-
-      // expand the 1st operation category and show the parameters of the 1st operation by default
-      this.treeControl.expand(this.treeControl.dataNodes[0]);
-      this.selectedOperation = operationCategories[0].children[0];
+      this.treeControl.expand(this.treeControl.dataNodes[0]); // expand the 1st operation category by default
     });
   }
 

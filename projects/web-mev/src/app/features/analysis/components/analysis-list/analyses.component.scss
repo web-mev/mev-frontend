@@ -9,7 +9,26 @@
 }
 
 mat-tree {
-  background-color: transparent !important;
+  background-color: #ddebf2 !important;
+  width: 300px;
+
+  button {
+    border: 0;
+    background: none;
+    white-space: normal;
+    padding-right: 15px;
+    padding-left: 15px;
+    text-align: left;
+
+    &:hover {
+      color: grey;
+    }
+  }
+
+  .active-node {
+    font-weight: bold;
+    background-color: #eee !important;
+  }
 }
 
 .operation-container {

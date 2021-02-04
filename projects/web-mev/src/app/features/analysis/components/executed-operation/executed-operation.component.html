@@ -1,38 +1,42 @@
-<section class="operation-container">
-    <div class="operation-selector">
-        <span>
-            Select an executed operation to view results:
-        </span>
-        <mat-form-field class="form-control" color="accent">
-            <mat-select name="execOperationId" [(value)]="selectedExecOperationId"
-                (selectionChange)="onSelectExecOperation()">
+<section class="container">
 
-                <mat-select-trigger *ngIf="selectedExecOperationId" class="mark">
-                    <span>{{selectedExecOperationName}}</span>
-                </mat-select-trigger>
+  <p>
+    The analysis pane on the left side displays the list of executed opertations.
+    Expand and collapse the list of operations clicking on an operation category.
+    Click on an operation to view results.
+  </p>
+  <p *ngIf="dataSource.data.length === 0">
+    No executed operations available
+  </p>
+  <div *ngIf="dataSource.data.length !== 0" class="vertical-tab-container">
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+      <!-- tree node template for leaf nodes -->
+      <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding [ngClass]="{ 'active-node': activeNode?.id === node.id }">
+        <!-- use a disabled button to provide padding for tree leaf -->
+        <!-- <button mat-icon-button disabled></button> -->
+        <button (click)="onSelectExecOperation(node)">
+          {{node.name}}
+          <mat-icon *ngIf="!node.execution_stop_datetime" class="mat-icon--timer">timer</mat-icon>
+          <mat-icon *ngIf="node.job_failed" class="mat-icon--error">error_outline</mat-icon>                          
+        </button>
+      </mat-tree-node>
+      <!-- tree node template for expandable nodes -->
+      <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+        <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
+          <mat-icon class="mat-icon-rtl-mirror">
+            {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+          </mat-icon>
+        </button>
+        {{node.name}}
+      </mat-tree-node>
+    </mat-tree>
 
-                <ng-container *ngFor="let category of categories">
-                    <mat-optgroup class="category" [label]="category">
-                        <ng-container *ngFor="let subcategory of subcategories">
-                            <mat-optgroup class="subcategory" *ngIf="category===subcategory.category"
-                                [label]="subcategory.operation_name">
-                                <ng-container *ngFor="let execOperation of execOperations">
-                                    <mat-option class="operation"
-                                        *ngIf="subcategory.operation_name===execOperation.operation.operation_name"
-                                        [value]="execOperation.id">
-                                        {{ execOperation.job_name }}
-                                        <mat-icon *ngIf="!execOperation.execution_stop_datetime" class="mat-icon--timer">timer</mat-icon>
-                                        <mat-icon *ngIf="execOperation.job_failed" class="mat-icon--error">error_outline</mat-icon>
-                                    </mat-option>
-                                </ng-container>
-                            </mat-optgroup>
-                        </ng-container>
-                    </mat-optgroup>
-                </ng-container>
-            </mat-select>
-        </mat-form-field>
+    <mat-divider [vertical]="true"></mat-divider>
 
+    <div class="operation-container">
+      <div *ngIf="selectedExecOperationId && isInProgress" class="operation-status">Building chart, please wait...</div>
+      <mev-analysis-result *ngIf="!isInProgress" [outputs]="outputs"></mev-analysis-result>
     </div>
-    <div *ngIf="selectedExecOperationId && isInProgress" class="operation-status">Building chart, please wait...</div>
-    <mev-analysis-result *ngIf="!isInProgress" [outputs]="outputs"></mev-analysis-result>
+  </div>
+
 </section>

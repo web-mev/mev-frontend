@@ -1,4 +1,6 @@
-.operation-container {
+.container {
+  font-size: 14px !important;
+  max-width: 98%;
   margin: 20px;
 }
 
@@ -7,9 +9,9 @@
   color: #666;
 }
 
-.operation-selector {
-  font-size: 15px;
-  font-weight: bold;
+.operation-container {
+  margin: 0 20px;
+  width: 98%;
 }
 
 .mat-form-field {
@@ -30,10 +32,43 @@
   }
 }
 
-.operation .mat-icon {
-  font-size: 16px;
+.vertical-tab-container {
+  margin: 20px 0;
+  display: flex;
 }
 
-.operation .mat-icon--error {
-  color: #b94e4e;
+mat-tree {
+  background-color: #ddebf2 !important;
+  width: 300px;
+  min-height: 500px;
+
+  mat-tree-node {
+    padding-right: 15px;
+  }
+
+  button {
+    border: 0;
+    background: none;
+    white-space: normal;
+    padding-right: 15px;
+    padding-left: 15px;
+    text-align: left;
+
+    &:hover {
+      color: grey;
+    }
+
+    mat-icon {
+      font-size: 16px;
+    }
+
+    .mat-icon--error {
+      color: #b94e4e;
+    }
+  }
+
+  .active-node {
+    font-weight: bold;
+    background-color: #eee !important;
+  }
 }

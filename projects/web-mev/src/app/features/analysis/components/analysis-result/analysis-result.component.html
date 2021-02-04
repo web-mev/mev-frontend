@@ -1,29 +1,31 @@
-<ng-container *ngIf="outputs.error_messages">
-    <p class="error">The analysis result cannot be displayed. The error description: 
+<div *ngIf="!outputs.error_messages?.length; else error">
+    <ng-container *ngIf="operationName === 'Principal component analysis (PCA)'">
+        <mev-scatter-plot *ngIf="outputs" [outputs]="outputs"></mev-scatter-plot>
+    </ng-container>
+
+    <ng-container *ngIf="operationName === 'DESeq2'">
+        <mev-deseq2 [outputs]="outputs"></mev-deseq2>
+    </ng-container>
+
+    <ng-container *ngIf="operationName === 'Limma/voom'">
+        <mev-limma [outputs]="outputs"></mev-limma>
+    </ng-container>
+
+    <ng-container *ngIf="operationName === 'Hierarchical clustering (HCL)'">
+        <mev-hcl [outputs]="outputs"></mev-hcl>
+    </ng-container>
+
+    <ng-container *ngIf="operationName === 'Fast Gene Set Enrichment Analysis (fgsea)'">
+        <mev-gsea [outputs]="outputs"></mev-gsea>
+    </ng-container>
+
+    <ng-container *ngIf="operationName === 'K-means'">
+        <mev-kmeans [outputs]="outputs"></mev-kmeans>
+    </ng-container>
+</div>
+
+<ng-template #error>
+    <p class="error">The analysis result cannot be displayed. The error description:
         <span class="error__description">{{ outputs.error_messages }}</span>
     </p>
-</ng-container>
-
-<ng-container *ngIf="outputs.pca_coordinates">
-    <mev-scatter-plot *ngIf="outputs" [outputs]="outputs"></mev-scatter-plot>
-</ng-container>
-
-<ng-container *ngIf="outputs.dge_results && outputs.operation.operation_name === 'DESeq2'">
-    <mev-deseq2 [outputs]="outputs"></mev-deseq2>
-</ng-container>
-
-<ng-container *ngIf="outputs.dge_results && outputs.operation.operation_name === 'Limma/voom'">
-    <mev-limma [outputs]="outputs"></mev-limma>
-</ng-container>
-
-<ng-container *ngIf="outputs.observations_hcl">
-    <mev-hcl [outputs]="outputs"></mev-hcl>
-</ng-container>
-
-<ng-container *ngIf="outputs.pathway_results">
-    <mev-gsea [outputs]="outputs"></mev-gsea>
-</ng-container>
-
-<ng-container *ngIf="outputs.kmeans_results">
-    <mev-kmeans [outputs]="outputs"></mev-kmeans>
-</ng-container>
+</ng-template>

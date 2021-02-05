@@ -142,9 +142,12 @@ export class GseaComponent implements OnInit {
    * Function that is triggered when the user clicks the "Create a custom sample" button
    */
   onCreateFeatureSet(row) {
-    const features = row.leadingEdge;
+    const features = row.leadingEdge.map(elem => ({
+      id: elem
+    }));
+
     const dialogRef = this.dialog.open(AddSampleSetComponent, {
-      data: { type: CustomSetType.FeatureSet }
+      data: { type: CustomSetType.FeatureSet, name: row.pathway }
     });
 
     dialogRef.afterClosed().subscribe(customSetData => {

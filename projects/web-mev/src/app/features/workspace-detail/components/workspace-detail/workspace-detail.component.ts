@@ -1,4 +1,10 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  ViewChild,
+  ChangeDetectorRef
+} from '@angular/core';
 import { WorkspaceResource } from '@features/workspace-detail/models/workspace-resource';
 import { Workspace } from '@workspace-manager/models/workspace';
 import { Observable } from 'rxjs';
@@ -9,6 +15,9 @@ import { AddDialogComponent } from '../dialogs/add-dialog/add-dialog.component';
 import { PreviewDialogComponent } from '../dialogs/preview-dialog/preview-dialog.component';
 import { DeleteDialogComponent } from '../dialogs/delete-dialog/delete-dialog.component';
 import { EditDialogComponent } from '../dialogs/edit-dialog/edit-dialog/edit-dialog.component';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 @Component({
   selector: 'mev-workspace-detail',
   templateUrl: './workspace-detail.component.html',
@@ -22,6 +31,18 @@ export class WorkspaceDetailComponent implements OnInit {
   searchText;
   selectedTabIndex;
   execOperationId: string;
+
+  workspaceResourcesDS;
+  displayedColumns: string[] = [
+    'name',
+    'readable_resource_type',
+    'size',
+    'created',
+    'actions'
+  ];
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -37,6 +58,10 @@ export class WorkspaceDetailComponent implements OnInit {
     this.workspaceId = this.route.snapshot.paramMap.get('workspaceId');
     this.service.getConnectedResources(this.workspaceId).subscribe(data => {
       this.workspaceResources = data;
+
+      this.workspaceResourcesDS = new MatTableDataSource(data);
+      this.workspaceResourcesDS.paginator = this.paginator;
+      this.workspaceResourcesDS.sort = this.sort;
     });
     this.workspace$ = this.service.getWorkspaceDetail(this.workspaceId);
   }
@@ -80,7 +105,7 @@ export class WorkspaceDetailComponent implements OnInit {
         previewData['values'] = values;
       }
 
-      const dialogRef = this.dialog.open(PreviewDialogComponent, {
+      this.dialog.open(PreviewDialogComponent, {
         data: {
           previewData: previewData
         }

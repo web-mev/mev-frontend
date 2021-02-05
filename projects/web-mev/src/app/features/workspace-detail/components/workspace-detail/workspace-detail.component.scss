@@ -39,9 +39,9 @@
   color: #666666;
 }
 
-.file-btn-group {
+.btn-panel {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   padding: 16px;
 }
 
@@ -49,8 +49,49 @@ button {
   margin-right: 10px;
 }
 
-::ng-deep .tooltip {
-  white-space: pre-line !important;
+::ng-deep {
+  .tooltip {
+    white-space: pre-line !important;
+  }
+
+  .mat-button-toggle-group {
+    font-size: 14px;
+  }
+
+  .mat-button-toggle-label-content {
+    line-height: 36px !important;
+  }
+
+  .mat-button-toggle-checked {
+    background-color: #c8ebfa !important;
+  }
+}
+
+.resource-table-container {
+  margin: 15px;
+
+  table {
+    width: 100%;
+  }
+
+  .mat-header-cell {
+    background: #eeeeee;
+  }
+
+  .mat-column-name {
+    padding-right: 5px;
+    word-wrap: break-word !important;
+    white-space: unset !important;
+    flex: 0 0 40% !important;
+    width: 40% !important;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
 }
 
 .cardList {

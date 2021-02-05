@@ -238,6 +238,15 @@ export class LimmaComponent implements OnInit, AfterViewInit {
       return newElem;
     });
     this.boxPlotData = countsFormatted;
+
+    // overwrite labels if there are custom names efimed by the user
+    if (this.outputs.base_condition_name) {
+      this.boxPlotTypes.Base.label = this.outputs.base_condition_name;
+    }
+
+    if (this.outputs.experimental_condition_name) {
+      this.boxPlotTypes.Experimental.label = this.outputs.experimental_condition_name;
+    }
   }
 
   /**

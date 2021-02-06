@@ -31,6 +31,13 @@ interface ExampleFlatNode {
   level: number;
 }
 
+enum operationExecution {
+  InProcess,
+  RunningAnalysis,
+  PreparingData,
+  Finished
+}
+
 @Component({
   selector: 'mev-executed-operation',
   templateUrl: './executed-operation.component.html',
@@ -47,8 +54,8 @@ export class ExecutedOperationComponent implements OnInit {
 
   @Input() execOperationId: string;
   outputs;
-  isInProgress: boolean;
-
+  operationExecutionStateType = operationExecution;
+  operationExecutionState: operationExecution;
   categories = new Set();
   subcategories = [];
 
@@ -85,7 +92,6 @@ export class ExecutedOperationComponent implements OnInit {
   ngOnInit(): void {
     const operationTree = {};
     const workspaceId = this.route.snapshot.paramMap.get('workspaceId');
-    this.isInProgress = true;
     this.executedOperationResultSubscription = this.apiService
       .getExecOperations(workspaceId)
       .pipe(
@@ -120,17 +126,39 @@ export class ExecutedOperationComponent implements OnInit {
               }
               operationTreeArr.push(categoryLevel);
             }
+            operationTreeArr.sort(function(a, b) {
+              var nameA = a.name.toUpperCase();
+              var nameB = b.name.toUpperCase();
+              if (nameA < nameB) {
+                return -1;
+              }
+              if (nameA > nameB) {
+                return 1;
+              }
+              return 0;
+            });
             this.dataSource.data = operationTreeArr.sort();
-            this.treeControl.expand(this.treeControl.dataNodes[0]);
           });
         }),
         switchMap(() => {
           if (this.execOperationId) {
+            this.operationExecutionState = operationExecution.InProcess;
+
             this.selectedExecOperationId = this.execOperationId;
             const execOperation = this.getExecOperationByOperationId(
               this.execOperationId
             );
 
+            // expand the parent nodes if there is an operation selected
+            const nodesToExpand = [
+              execOperation.operation.operation_name,
+              ...execOperation.operation.categories
+            ];
+            this.treeControl.dataNodes.forEach((node, i) => {
+              if (nodesToExpand.includes(node.name)) {
+                this.treeControl.expand(this.treeControl.dataNodes[i]);
+              }
+            });
             this.activeNode = execOperation;
             this.selectedExecOperationName = execOperation.job_name;
 
@@ -154,6 +182,9 @@ export class ExecutedOperationComponent implements OnInit {
         })
       )
       .subscribe((response: any) => {
+        this.operationExecutionState = this.getOperationExecutionState(
+          response.status
+        );
         this.outputs = {
           operation: response?.body?.operation,
           job_name: response?.body?.job_name,
@@ -161,9 +192,6 @@ export class ExecutedOperationComponent implements OnInit {
           ...response?.body?.inputs,
           error_messages: response?.body?.error_messages
         };
-        if (response?.body?.error_messages || response?.body?.outputs) {
-          this.isInProgress = false;
-        }
       });
   }
 
@@ -174,7 +202,8 @@ export class ExecutedOperationComponent implements OnInit {
 
   onSelectExecOperation(execOperation) {
     this.activeNode = execOperation;
-    this.isInProgress = true;
+    this.operationExecutionState = operationExecution.InProcess;
+
     this.executedOperationResultSubscription.unsubscribe();
     this.execOperationId = execOperation.id;
     this.selectedExecOperationName = execOperation.job_name;
@@ -188,7 +217,7 @@ export class ExecutedOperationComponent implements OnInit {
         ...execOperation.inputs,
         error_messages: execOperation.error_messages
       };
-      this.isInProgress = false;
+      this.operationExecutionState = operationExecution.Finished;
     } else {
       this.executedOperationResultSubscription = this.apiService
         .getExecutedOperationResult(this.execOperationId)
@@ -200,11 +229,22 @@ export class ExecutedOperationComponent implements OnInit {
             ...response?.body?.inputs,
             error_messages: response?.body?.error_messages
           };
-          if (response?.body?.error_messages || response?.body?.outputs) {
-            this.isInProgress = false;
-          }
+
+          this.operationExecutionState = this.getOperationExecutionState(
+            response.status
+          );
         });
     }
+  }
+
+  getOperationExecutionState(status) {
+    if (status === 204) {
+      return operationExecution.RunningAnalysis;
+    }
+    if (status === 202 || status === 208) {
+      return operationExecution.PreparingData;
+    }
+    return operationExecution.Finished;
   }
 
   getExecOperationByOperationId(operationId: string) {

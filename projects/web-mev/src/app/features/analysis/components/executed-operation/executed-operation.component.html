@@ -15,27 +15,37 @@
         <!-- use a disabled button to provide padding for tree leaf -->
         <!-- <button mat-icon-button disabled></button> -->
         <button (click)="onSelectExecOperation(node)">
-          {{node.name}}
+          {{ node.name }} 
           <mat-icon *ngIf="!node.execution_stop_datetime" class="mat-icon--timer">timer</mat-icon>
           <mat-icon *ngIf="node.job_failed" class="mat-icon--error">error_outline</mat-icon>                          
         </button>
       </mat-tree-node>
       <!-- tree node template for expandable nodes -->
       <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
-        <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
+        <button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
           <mat-icon class="mat-icon-rtl-mirror">
             {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
           </mat-icon>
+          {{node.name}}
         </button>
-        {{node.name}}
+        
       </mat-tree-node>
     </mat-tree>
 
     <mat-divider [vertical]="true"></mat-divider>
 
     <div class="operation-container">
-      <div *ngIf="selectedExecOperationId && isInProgress" class="operation-status">Building chart, please wait...</div>
-      <mev-analysis-result *ngIf="!isInProgress" [outputs]="outputs"></mev-analysis-result>
+      <!-- <div *ngIf="selectedExecOperationId && isInProgress" class="operation-status">Building chart, please wait...</div> -->
+      <div *ngIf="operationExecutionState === operationExecutionStateType.RunningAnalysis" class="operation-status">
+        Running analysis, please wait...
+      </div>
+      <div *ngIf="operationExecutionState === operationExecutionStateType.PreparingData" class="operation-status">
+        Preparing data and visualization...
+      </div>
+      <div *ngIf="operationExecutionState === operationExecutionStateType.InProcess" class="operation-status">
+        Please wait...
+      </div>
+      <mev-analysis-result *ngIf="operationExecutionState === operationExecutionStateType.Finished" [outputs]="outputs"></mev-analysis-result>
     </div>
   </div>
 

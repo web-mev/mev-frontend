@@ -47,23 +47,27 @@ mat-tree {
   }
 
   button {
+    display: flex;
+    align-items: center;
     border: 0;
     background: none;
     white-space: normal;
     padding-right: 15px;
     padding-left: 15px;
     text-align: left;
+    overflow: hidden;
 
     &:hover {
       color: grey;
     }
 
-    mat-icon {
+    .mat-icon--error {
       font-size: 16px;
+      color: #b94e4e;
     }
 
-    .mat-icon--error {
-      color: #b94e4e;
+    .mat-icon--timer {
+      font-size: 16px;
     }
   }
 

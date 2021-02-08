@@ -45,6 +45,15 @@
   hyphens: auto;
 }
 
+.mat-column-actions {
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  button {
+    margin: 5px;
+  }
+}
+
 mev-rug-plot {
   width: 100% !important;
 }

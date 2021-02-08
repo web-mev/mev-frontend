@@ -32,15 +32,7 @@ export class GseaComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   /* Table settings */
-  displayedColumns = [
-    'pathway',
-    'ranks',
-    'pval',
-    'padj',
-    'NES',
-    'featureSetCreation',
-    'topGeneView'
-  ];
+  displayedColumns = ['pathway', 'ranks', 'pval', 'padj', 'NES', 'actions'];
 
   operators = [
     { id: 'eq', name: ' = ' },

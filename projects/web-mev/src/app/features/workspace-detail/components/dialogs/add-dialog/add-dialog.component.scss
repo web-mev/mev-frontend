@@ -1,10 +1,3 @@
-.mat-dialog-content {
-  min-height: 350px;
-  max-height: 600px;
-  position: relative;
-  overflow: scroll;
-}
-
 .container {
   display: flex;
   flex-direction: column;
@@ -15,13 +8,15 @@
   width: 100%;
 }
 
-.mat-dialog-title {
-  font-size: 16px;
+.mat-dialog-content {
+  min-height: 350px;
+  max-height: none;
+  position: relative;
+  overflow: visible;
 }
 
-.mat-dialog-content {
-  max-height: none;
-  overflow: visible;
+.mat-dialog-title {
+  font-size: 16px;
 }
 
 .form {

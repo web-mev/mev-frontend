@@ -40,6 +40,8 @@ export class AddDialogComponent implements OnInit {
       selectAllText: 'Select All',
       unSelectAllText: 'Unselect All',
       enableSearchFilter: true,
+      searchBy: ['name', 'readable_resource_type'],
+      lazyLoading: true,
       classes: 'resource-dropdown'
     };
   }
@@ -59,19 +61,4 @@ export class AddDialogComponent implements OnInit {
         .subscribe();
     });
   }
-
-  // onItemSelect(item: any) {
-  //   console.log(item);
-  //   console.log(this.selectedFiles);
-  // }
-  // OnItemDeSelect(item: any) {
-  //   console.log(item);
-  //   console.log(this.selectedFiles);
-  // }
-  // onSelectAll(items: any) {
-  //   console.log(items);
-  // }
-  // onDeSelectAll(items: any) {
-  //   console.log(items);
-  // }
 }

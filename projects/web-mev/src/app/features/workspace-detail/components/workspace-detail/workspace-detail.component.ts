@@ -70,6 +70,11 @@ export class WorkspaceDetailComponent implements OnInit {
     this.loadData();
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.workspaceResourcesDS.filter = filterValue.trim().toLowerCase();
+  }
+
   selectResource(resource) {
     console.log(`The selected resource is::  ${resource.name}`);
   }

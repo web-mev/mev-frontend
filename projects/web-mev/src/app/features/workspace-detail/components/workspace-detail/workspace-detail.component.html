@@ -24,7 +24,7 @@
       </div>
       <mat-toolbar>
         <mat-form-field floatLabel='never' class='search-field'>
-          <input matInput [(ngModel)]="searchText" autocomplete="off">
+          <input matInput [(ngModel)]="searchText" (keyup)="applyFilter($event)"  autocomplete="off">
           <mat-placeholder class="placeholder">Search</mat-placeholder>
         </mat-form-field>
       </mat-toolbar>

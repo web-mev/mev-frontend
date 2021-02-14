@@ -16,7 +16,7 @@
         <!-- <button mat-icon-button disabled></button> -->
         <button (click)="onSelectExecOperation(node)">
           {{ node.name }} 
-          <mat-icon *ngIf="!node.execution_stop_datetime" class="mat-icon--timer">timer</mat-icon>
+          <mat-icon *ngIf="isOperationExecuting(node)" class="mat-icon--timer">timer</mat-icon>
           <mat-icon *ngIf="node.job_failed" class="mat-icon--error">error_outline</mat-icon>                          
         </button>
       </mat-tree-node>

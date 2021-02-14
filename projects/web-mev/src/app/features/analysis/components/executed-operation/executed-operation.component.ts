@@ -24,19 +24,29 @@ interface OperationCategoryNode {
   children?: Operation[];
 }
 
-/** Flat node with expandable and level information */
+/**
+ * Flat node with expandable and level information
+ */
 interface ExampleFlatNode {
   expandable: boolean;
   name: string;
   level: number;
 }
 
+/**
+ * Presentational states of operation execution process
+ */
 enum operationExecution {
   InProcess,
   RunningAnalysis,
   PreparingData,
   Finished
 }
+
+/**
+ * Executed Operation Component
+ * used for displaying the list of executed operations (tree) and their results
+ */
 
 @Component({
   selector: 'mev-executed-operation',
@@ -89,6 +99,9 @@ export class ExecutedOperationComponent implements OnInit {
     private apiService: AnalysesService
   ) {}
 
+  /**
+   * Initialize the datasource for the Operation Tree
+   */
   ngOnInit(): void {
     const operationTree = {};
     const workspaceId = this.route.snapshot.paramMap.get('workspaceId');
@@ -182,9 +195,7 @@ export class ExecutedOperationComponent implements OnInit {
         })
       )
       .subscribe((response: any) => {
-        this.operationExecutionState = this.getOperationExecutionState(
-          response.status
-        );
+        this.updateOperationExecutionState(response.status);
         this.outputs = {
           operation: response?.body?.operation,
           job_name: response?.body?.job_name,
@@ -195,11 +206,17 @@ export class ExecutedOperationComponent implements OnInit {
       });
   }
 
+  /**
+   * Find the operation data by OperationID
+   */
   getOutputs(operationId) {
     const idx = this.execOperations.findIndex(val => val.id === operationId);
     return this.execOperations[idx].outputs;
   }
 
+  /**
+   * Function is triggered when the user selects an operation in the tree
+   */
   onSelectExecOperation(execOperation) {
     this.activeNode = execOperation;
     this.operationExecutionState = operationExecution.InProcess;
@@ -230,21 +247,46 @@ export class ExecutedOperationComponent implements OnInit {
             error_messages: response?.body?.error_messages
           };
 
-          this.operationExecutionState = this.getOperationExecutionState(
-            response.status
-          );
+          this.updateOperationExecutionState(response.status);
         });
     }
   }
 
-  getOperationExecutionState(status) {
+  /**
+   * Update the operation execution state depending on the server response
+   */
+  updateOperationExecutionState(status) {
     if (status === 204) {
-      return operationExecution.RunningAnalysis;
+      this.operationExecutionState = operationExecution.RunningAnalysis;
+    } else if (status === 202 || status === 208) {
+      this.operationExecutionState = operationExecution.PreparingData;
+    } else {
+      this.operationExecutionState = operationExecution.Finished;
+      this.execOperations.filter(
+        op => op.id === this.execOperationId
+      )[0].execution_stop_datetime = new Date();
     }
-    if (status === 202 || status === 208) {
-      return operationExecution.PreparingData;
+  }
+
+  /**
+   * Function to check if an operation failed
+   */
+  isOperationFailed(operation): boolean {
+    return operation.job_failed;
+  }
+
+  /**
+   * Function to check if an operation is still executing
+   */
+  isOperationExecuting(operation): boolean {
+    if (operation.execution_stop_datetime) return false;
+
+    // if execution_stop_datetime is null, check if the list of operations has an updated value
+    const arr = this.execOperations.filter(op => op.id === operation.id);
+    if (arr.length) {
+      return !arr[0].execution_stop_datetime;
     }
-    return operationExecution.Finished;
+    return true;
   }
 
   getExecOperationByOperationId(operationId: string) {

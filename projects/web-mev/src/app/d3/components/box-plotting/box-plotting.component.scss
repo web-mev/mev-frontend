@@ -1,0 +1,29 @@
+.observation-list-section {
+  margin: 20px 5px;
+
+  ul {
+    padding-left: 0;
+  }
+
+  li {
+    display: inline;
+    padding: 15px;
+  }
+}
+
+::ng-deep {
+  .d3-tip {
+    line-height: 1;
+    font-weight: normal;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 2px;
+    z-index: 9999;
+  }
+
+  .d3-tip table th,
+  td {
+    padding: 5px 10px;
+  }
+}

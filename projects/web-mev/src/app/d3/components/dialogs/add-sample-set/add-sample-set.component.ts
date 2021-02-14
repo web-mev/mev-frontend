@@ -28,7 +28,7 @@ export class AddSampleSetComponent {
     }
 
     this.setForm = this.formBuilder.group({
-      customSetName: ['', [Validators.required]],
+      customSetName: [this.data.name, [Validators.required]],
       customSetColor: [
         '#000000',
         [...(this.isObservationSet ? [Validators.required] : [])]

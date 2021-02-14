@@ -1,0 +1,18 @@
+* {
+  font-size: 14px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 90vw;
+  min-height: 500px;
+  max-height: 600px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.mat-dialog-content {
+  max-height: none;
+  overflow: visible;
+}

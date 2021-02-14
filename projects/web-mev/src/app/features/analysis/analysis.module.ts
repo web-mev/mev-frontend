@@ -10,6 +10,7 @@ import { AnalysisResultComponent } from './components/analysis-result/analysis-r
 import { D3Module } from '@app/d3/d3.module';
 import { NgxCsvParserModule } from 'ngx-csv-parser';
 import { AnalysisFlowComponent } from './components/analysis-flow/analysis-flow.component';
+import { AnalysisPlottingResultComponent } from './components/analysis-plotting-result/analysis-plotting-result.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { AnalysisFlowComponent } from './components/analysis-flow/analysis-flow.
     OperationComponent,
     ExecutedOperationComponent,
     AnalysisResultComponent,
-    AnalysisFlowComponent
+    AnalysisFlowComponent,
+    AnalysisPlottingResultComponent
   ],
   exports: [
     OperationComponent,

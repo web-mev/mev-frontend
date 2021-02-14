@@ -3,17 +3,19 @@
 
 <form *ngIf="analysesForm" [formGroup]="analysesForm" (ngSubmit)="onSubmit()">
 
-  <div class="label">
-    Operation name:
-    <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-      matTooltip="Type operation name" aria-label="Info tooltip about the field">info
-    </mat-icon>
-  </div>
+  <!-- OPERATION NAME -->
+  <ng-container *ngIf="operation.mode !== 'client'">
+    <div class="label">
+      Operation name:
+      <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+        matTooltip="Type operation name" aria-label="Info tooltip about the field">info
+      </mat-icon>
+    </div>
 
-  <mat-form-field class="form-control" color="accent">
-    <input matInput formControlName="job_name" name="job_name">
-  </mat-form-field>
-
+    <mat-form-field class="form-control" color="accent">
+      <input matInput formControlName="job_name" name="job_name">
+    </mat-form-field>
+  </ng-container>
 
   <!-- SINGLE SELECT LISTS FOR RESOURCES -->
   <div *ngFor="let resourceField of resourceFields">
@@ -104,8 +106,7 @@
         <mat-error *ngIf="f[intField.key].errors.required">
           This field is required
         </mat-error>
-        <mat-error
-          *ngIf="f[intField.key].errors.min || f[intField.key].errors.max || f[intField.key].errors.pattern">
+        <mat-error *ngIf="f[intField.key].errors.min || f[intField.key].errors.max || f[intField.key].errors.pattern">
           The value should be an integer greater than or equal to {{ intField.min }}
         </mat-error>
       </div>
@@ -218,11 +219,16 @@
     </div>
   </ng-container>
 
-
-
-
-  <div>
+  <div *ngIf="operation.mode !== 'client'; else plotContainer">
     <button mat-raised-button color="accent" type="submit" [disabled]="!analysesForm.valid"
-      (click)="startAnalysis()">Start</button>
+      (click)="startAnalysis()">Run
+    </button>
   </div>
+
+  <ng-template #plotContainer>
+    <button mat-raised-button color="accent" [disabled]="!analysesForm.valid" (click)="showPlots()">Show plots
+    </button>
+
+  </ng-template>
+
 </form>

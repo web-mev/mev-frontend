@@ -11,21 +11,6 @@
         </mat-form-field>
       </div>
   
-      <!-- <div class="form">  
-        <mat-form-field color="accent">
-          <mat-label>Select a resource type</mat-label>
-          <mat-select [(ngModel)]=data.resource_type name="resource_type" required>
-            <mat-option *ngFor="let type of resourceTypes | keyvalue" [value]="type.key">
-              {{ type.value.title }}
-            </mat-option>
-          </mat-select>
-          <mat-hint *ngIf=resourceTypes[data.resource_type] align="start">
-            {{ resourceTypes[data.resource_type].description }}</mat-hint>
-          <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
-        </mat-form-field>
-  
-      </div> -->
-  
       <div mat-dialog-actions>
         <button mat-button [type]="submit" [disabled]="!formControl.valid" [mat-dialog-close]="1"
           (click)="stopEdit()" mat-raised-button color="accent">Save</button>

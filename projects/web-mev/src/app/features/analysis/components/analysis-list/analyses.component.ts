@@ -32,6 +32,10 @@ interface ExampleFlatNode {
   level: number;
 }
 
+/**
+ * Analyses Component
+ * Used to display the list of available operations as a tree structure (the Tools tab)
+ */
 @Component({
   selector: 'mev-analyses',
   templateUrl: './analyses.component.html',
@@ -47,6 +51,11 @@ export class AnalysesComponent implements OnInit {
 
   @Output() executedOperationId: EventEmitter<any> = new EventEmitter<any>();
 
+  treeControl = new FlatTreeControl<ExampleFlatNode>(
+    node => node.level,
+    node => node.expandable
+  );
+
   private _transformer = (node: OperationCategoryNode, level: number) => {
     return {
       expandable: !!node.children && node.children.length > 0,
@@ -54,11 +63,6 @@ export class AnalysesComponent implements OnInit {
       ...node
     };
   };
-
-  treeControl = new FlatTreeControl<ExampleFlatNode>(
-    node => node.level,
-    node => node.expandable
-  );
 
   treeFlattener = new MatTreeFlattener(
     this._transformer,
@@ -76,6 +80,9 @@ export class AnalysesComponent implements OnInit {
     private apiService: AnalysesService
   ) {}
 
+  /**
+   * Initialize the datasource for the Operation Tree
+   */
   ngOnInit(): void {
     this.workspaceId = this.route.snapshot.paramMap.get('workspaceId');
     this.workspace$ = this.apiService.getWorkspaceDetail(this.workspaceId);
@@ -86,15 +93,64 @@ export class AnalysesComponent implements OnInit {
 
     this.apiService.getOperationCategories().subscribe(operationCategories => {
       this.selectedOperation = operationCategories[0].children[0]; // show the parameters for the 1st operation by default
+      operationCategories.push(this.getPlottingOperationCategory());
       this.dataSource.data = operationCategories;
       this.treeControl.expand(this.treeControl.dataNodes[0]); // expand the 1st operation category by default
     });
   }
 
+  /**
+   * Add a 'fake' operation for plotting. It is a frontend-only operation to provide
+   * view for the normalization methods
+   * The user can select a numerical matrix and custom feature set to view a boxplot showing the
+   * distribution of expressions
+   */
+  getPlottingOperationCategory() {
+    const op = {
+      name: 'Plotting',
+      children: [
+        {
+          id: 'Plotting',
+          name: 'Plot expressions',
+          description: 'Output view for the normalization methods',
+          mode: 'client',
+          inputs: {
+            input_matrix: {
+              description:
+                'The input matrix. For example, a gene expression matrix for a cohort of samples.',
+              name: 'Input matrix:',
+              required: true,
+              spec: {
+                attribute_type: 'DataResource',
+                many: false,
+                resource_types: ['MTX', 'I_MTX', 'EXP_MTX', 'RNASEQ_COUNT_MTX']
+              }
+            },
+            features: {
+              description: 'The genes/features to use in plotting',
+              name: 'Plot genes/features by:',
+              required: false,
+              spec: {
+                attribute_type: 'FeatureSet'
+              }
+            }
+          }
+        }
+      ]
+    };
+    return op;
+  }
+
+  /**
+   * Function is triggered when the user clicks on a specific operation in the Operation Tree
+   */
   public showOperationDetails(operation) {
     this.selectedOperation = operation;
   }
 
+  /**
+   * Function is triggered when the user starts an analysis and emits a newly created executed operation id
+   */
   public showExecutedOperationResult(data: any) {
     this.executedOperationId.emit(data);
   }

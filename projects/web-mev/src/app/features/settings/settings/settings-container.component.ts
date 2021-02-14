@@ -15,6 +15,12 @@ import {
 import { SettingsState, State } from '../../../core/settings/settings.model';
 import { selectSettings } from '../../../core/settings/settings.selectors';
 
+/**
+ * Settings Component
+ *
+ * Display user's settings (theme, language, night-mode, animations)
+ * Currently it is hidden and unavailable for users
+ */
 @Component({
   selector: 'mev-settings',
   templateUrl: './settings-container.component.html',

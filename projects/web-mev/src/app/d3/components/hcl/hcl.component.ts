@@ -14,6 +14,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { MetadataService } from '@app/core/metadata/metadata.service';
 import { CustomSetType } from '@app/_models/metadata';
 
+/**
+ * HCL Component
+ *
+ * Used for Hierarchical Clustering (HCL) analysis
+ */
 @Component({
   selector: 'mev-hcl',
   templateUrl: './hcl.component.html',

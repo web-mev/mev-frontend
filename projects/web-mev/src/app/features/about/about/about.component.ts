@@ -3,6 +3,10 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ROUTE_ANIMATIONS_ELEMENTS } from '../../../core/core.module';
 import { Router, NavigationEnd } from '@angular/router';
 
+/**
+ * About component
+ * Used for the start WebMEV page
+ */
 @Component({
   selector: 'mev-about',
   templateUrl: './about.component.html',
@@ -11,15 +15,20 @@ import { Router, NavigationEnd } from '@angular/router';
 })
 export class AboutComponent implements OnInit {
   routeAnimationsElements = ROUTE_ANIMATIONS_ELEMENTS;
-  releaseButler = require('../../../../assets/release-butler.png');
   private twitter: any;
 
   constructor(private _router: Router) {}
 
+  /**
+   * Initialize twitter widget
+   */
   ngOnInit() {
     this.initTwitterWidget();
   }
 
+  /**
+   * Initialize twitter widget
+   */
   initTwitterWidget() {
     this.twitter = this._router.events.subscribe(val => {
       if (val instanceof NavigationEnd) {

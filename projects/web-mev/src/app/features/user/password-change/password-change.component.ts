@@ -1,10 +1,14 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { AuthenticationService } from '@app/core/authentication/authentication.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
 import { ROUTE_ANIMATIONS_ELEMENTS } from '@app/core/core.module';
 import { RepeatPasswordValidator } from '@app/shared/validators/validators';
 import { UserService } from '@app/core/user/user.service';
+
+/**
+ * Password Change Component
+ *
+ * Display form to update user password
+ */
 
 @Component({
   selector: 'mev-password-change',
@@ -21,12 +25,7 @@ export class PasswordChangeComponent implements OnInit {
   submitted = false;
   isFormValid = true;
 
-  constructor(
-    private userService: UserService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private fb: FormBuilder
-  ) {}
+  constructor(private userService: UserService, private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.changePasswordForm = this.fb.group(
@@ -48,10 +47,17 @@ export class PasswordChangeComponent implements OnInit {
     );
   }
 
-  // convenience getter for easy access to form fields
+  /**
+   * Convenience getter for easy access to form fields
+   */
+
   get f() {
     return this.changePasswordForm.controls;
   }
+
+  /**
+   * Method for the form submission
+   */
 
   changePassword() {
     this.submitted = true;

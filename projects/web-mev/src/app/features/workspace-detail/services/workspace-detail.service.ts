@@ -10,6 +10,11 @@ import {
 } from '../models/workspace-resource';
 import { File, FileAdapter } from '@app/shared/models/file';
 
+/**
+ * Workspace Detail service
+ *
+ * Used for operations within a current workspace
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -21,6 +26,10 @@ export class WorkspaceDetailService {
     private wsAdapter: WorkspaceResourceAdapter
   ) {}
 
+  /**
+   * Get the list of resources that can be potentially added to a workspace
+   *
+   */
   getAvailableResources(): Observable<File[]> {
     return <Observable<File[]>>(
       this.httpClient
@@ -31,6 +40,10 @@ export class WorkspaceDetailService {
     );
   }
 
+  /**
+   * Get the list of connected resources that has been already added to a workspace
+   *
+   */
   getConnectedResources(workspaceId: string): Observable<WorkspaceResource[]> {
     return <Observable<WorkspaceResource[]>>(
       this.httpClient
@@ -41,12 +54,20 @@ export class WorkspaceDetailService {
     );
   }
 
+  /**
+   * Get workspace properties
+   *
+   */
   getWorkspaceDetail(workspaceId: number | string): Observable<Workspace> {
     return <Observable<Workspace>>(
       this.httpClient.get(`${this.API_URL}/workspaces/${workspaceId}/`)
     );
   }
 
+  /**
+   * Preview workspace resource content. Display only the first 5 rows
+   *
+   */
   getResourcePreview(resourceId: number | string): Observable<any> {
     const params = {
       params: new HttpParams().set('page', '1').set('page_size', '5')
@@ -59,18 +80,30 @@ export class WorkspaceDetailService {
     );
   }
 
+  /**
+   * Get workspace resource metadata
+   *
+   */
   getResourceMetadata(resourceId: number | string): Observable<any> {
     return <Observable<any>>(
       this.httpClient.get(`${this.API_URL}/resources/${resourceId}/metadata/`)
     );
   }
 
+  /**
+   * Get workspace metadata
+   *
+   */
   getWorkspaceMetadata(workspaceId: number | string): Observable<any> {
     return <Observable<any>>(
       this.httpClient.get(`${this.API_URL}/workspaces/${workspaceId}/metadata/`)
     );
   }
 
+  /**
+   * Get workspace resource observations
+   *
+   */
   getResourceMetadataObservations(
     resourceId: number | string
   ): Observable<any> {
@@ -81,6 +114,10 @@ export class WorkspaceDetailService {
     );
   }
 
+  /**
+   * Get all workspace observations
+   *
+   */
   getWorkspaceMetadataObservations(
     workspaceId: number | string
   ): Observable<any> {
@@ -91,6 +128,10 @@ export class WorkspaceDetailService {
     );
   }
 
+  /**
+   * Get workspace resource features
+   *
+   */
   getResourceMetadataFeatures(resourceId: number | string): Observable<any> {
     return <Observable<any>>(
       this.httpClient.get(
@@ -99,6 +140,10 @@ export class WorkspaceDetailService {
     );
   }
 
+  /**
+   * Get all workspace features
+   *
+   */
   getWorkspaceMetadataFeatures(workspaceId: number | string): Observable<any> {
     return <Observable<any>>(
       this.httpClient.get(
@@ -107,6 +152,10 @@ export class WorkspaceDetailService {
     );
   }
 
+  /**
+   * Connect a file to the current workspace
+   *
+   */
   addResourceToWorkspace(
     resourceId: string,
     workspaceId: string
@@ -119,6 +168,10 @@ export class WorkspaceDetailService {
     );
   }
 
+  /**
+   * Delete a file from the current workspace
+   *
+   */
   deleteResourceFromWorkspace(
     resourceId: string,
     workspaceId: string

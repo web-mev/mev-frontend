@@ -8,6 +8,11 @@ import {
 } from '@angular/core';
 import * as d3 from 'd3';
 
+/**
+ * Rug Plot Component
+ *
+ * Used in the GSEA table
+ */
 @Component({
   selector: 'mev-rug-plot',
   templateUrl: './rug-plot.component.html',

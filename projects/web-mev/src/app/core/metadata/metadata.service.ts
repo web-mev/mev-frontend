@@ -4,6 +4,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LclStorageService } from '../local-storage/lcl-storage.service';
 import { NotificationService } from '../core.module';
 
+/**
+ * Metadata service
+ *
+ * Used for operations with workspace metadata (observation and feature sets defined in workspace)
+ * Uses local storage to save custom observation and feature sets
+ */
 @Injectable({
   providedIn: 'root'
 })

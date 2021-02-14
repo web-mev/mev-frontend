@@ -9,7 +9,8 @@ import { OperationOutput } from './operation-output';
  * it defines the type of analysis that is run, its inputs and outputs,
  * and other relevant information. An Operation can be as simple as selecting a subset
  * of the columns/rows of a matrix or running a large-scale processing job
- * that spans many machines and significant time. */
+ * that spans many machines and significant time.
+ */
 
 export class Operation {
   constructor(
@@ -24,6 +25,9 @@ export class Operation {
   ) {}
 }
 
+/**
+ * Operation Adapter
+ */
 @Injectable({
   providedIn: 'root'
 })

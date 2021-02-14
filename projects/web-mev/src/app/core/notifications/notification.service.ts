@@ -1,6 +1,10 @@
 import { Injectable, NgZone } from '@angular/core';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 
+/**
+ * Notification service
+ *
+ */
 @Injectable({
   providedIn: 'root'
 })

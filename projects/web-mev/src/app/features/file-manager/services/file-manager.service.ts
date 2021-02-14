@@ -13,6 +13,11 @@ import { environment } from '@environments/environment';
 import { FileType } from '@app/shared/models/file-type';
 import { AnalysesService } from '@app/features/analysis/services/analysis.service';
 
+/**
+ * File service
+ *
+ * Used for operations with file in the File Manager
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -47,12 +52,18 @@ export class FileService {
     return this.dialogData;
   }
 
-  // GET FILE RESOURCE LIST
+  /**
+   * Get file resource list
+   *
+   */
   getFileTypes(): Observable<FileType[]> {
     return this.httpClient.get<FileType[]>(`${this.API_URL}/resource-types/`);
   }
 
-  // GET FILE LIST
+  /**
+   * Get file list
+   *
+   */
   public getAllFiles(): void {
     // refresh the status of the resource validation process every 2 seconds
     const maxTimer$ = timer(this.maxTime);
@@ -74,11 +85,13 @@ export class FileService {
       });
   }
 
-  // ADD FILE, POST METHOD
+  /**
+   * Add file, post method
+   *
+   * Execute the uploads sequentially, because uploading multiple files could potentially tie-up
+   * the server since a bunch of threads would be busy ingesting the data for a long time
+   */
   addFile(files: any[]): void {
-    // execute the uploads sequentially, because uploading multiple files could potentially tie-up
-    // the server since a bunch of threads would be busy ingesting the data for a long time
-
     const fileUploadsProgressMap = new Map<string, object>();
 
     for (let i = 0; i < files.length; i++) {
@@ -119,7 +132,10 @@ export class FileService {
     }
   }
 
-  // ADD, POST METHOD for DROPBOX
+  /**
+   * Add file, post method for Dropbox upload
+   *
+   */
   addDropboxFile(files): Observable<any> {
     return this.httpClient
       .post(`${this.API_URL}/resources/dropbox-upload/`, files)
@@ -134,7 +150,10 @@ export class FileService {
       );
   }
 
-  // UPDATE FILE, PUT METHOD
+  /**
+   * Update file properties, put method
+   *
+   */
   updateFile(file: File): void {
     this.httpClient
       .put(`${this.API_URL}/resources/${file.id}/`, file)
@@ -143,11 +162,19 @@ export class FileService {
       });
   }
 
-  // DELETE FILE
+  /**
+   * Delete file
+   *
+   */
   deleteFile(id: number | string): void {
     this.httpClient.delete(`${this.API_URL}/resources/${id}/`).subscribe();
   }
 
+  /**
+   * Preview file content
+   *
+   * Display only the first 5 rows of file
+   */
   getFilePreview(fileId: number | string): Observable<any> {
     const params = {
       params: new HttpParams().set('page', '1').set('page_size', '5')

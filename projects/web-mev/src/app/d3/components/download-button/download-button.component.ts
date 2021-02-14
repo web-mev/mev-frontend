@@ -1,11 +1,11 @@
-import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  Input
-} from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import * as svgAsPng from 'save-svg-as-png';
 
+/**
+ * Download Button Component
+ *
+ * Used in D3 charts for downloading svg image
+ */
 @Component({
   selector: 'mev-download-button',
   templateUrl: './download-button.component.html',

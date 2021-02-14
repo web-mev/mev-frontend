@@ -2,13 +2,12 @@ import {
   Component,
   OnInit,
   ChangeDetectionStrategy,
-  ViewChild,
-  ChangeDetectorRef
+  ViewChild
 } from '@angular/core';
 import { WorkspaceResource } from '@features/workspace-detail/models/workspace-resource';
 import { Workspace } from '@workspace-manager/models/workspace';
 import { Observable } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { WorkspaceDetailService } from '@features/workspace-detail/services/workspace-detail.service';
 import { AddDialogComponent } from '../dialogs/add-dialog/add-dialog.component';
@@ -18,6 +17,13 @@ import { EditDialogComponent } from '../dialogs/edit-dialog/edit-dialog/edit-dia
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+
+/**
+ * Workspace Detail Component
+ *
+ * Used to display the list of files/resources included in the current workspace
+ * Also contains child components for Metadata, Analyses Flow, Tools and Analyses Result
+ */
 @Component({
   selector: 'mev-workspace-detail',
   templateUrl: './workspace-detail.component.html',
@@ -31,6 +37,7 @@ export class WorkspaceDetailComponent implements OnInit {
   searchText;
   selectedTabIndex;
   execOperationId: string;
+  isWait = false;
 
   workspaceResourcesDS;
   displayedColumns: string[] = [
@@ -44,7 +51,6 @@ export class WorkspaceDetailComponent implements OnInit {
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   constructor(
-    private router: Router,
     private route: ActivatedRoute,
     private service: WorkspaceDetailService,
     public dialog: MatDialog
@@ -79,6 +85,10 @@ export class WorkspaceDetailComponent implements OnInit {
     console.log(`The selected resource is::  ${resource.name}`);
   }
 
+  /**
+   * Open a modal dialog to add files to a specific workspace
+   *
+   */
   addItem() {
     const dialogRef = this.dialog.open(AddDialogComponent, {
       data: { workspaceId: this.workspaceId }
@@ -91,7 +101,12 @@ export class WorkspaceDetailComponent implements OnInit {
     });
   }
 
+  /**
+   * Open a modal dialog to preview workspace resource content
+   *
+   */
   previewItem(resourceId) {
+    this.isWait = true;
     this.service.getResourcePreview(resourceId).subscribe(data => {
       const previewData = {};
       if (data?.results?.length && 'rowname' in data.results[0]) {
@@ -109,15 +124,21 @@ export class WorkspaceDetailComponent implements OnInit {
         previewData['rows'] = rows;
         previewData['values'] = values;
       }
-
-      this.dialog.open(PreviewDialogComponent, {
-        data: {
-          previewData: previewData
-        }
-      });
+      setTimeout(() => {
+        this.isWait = false;
+        this.dialog.open(PreviewDialogComponent, {
+          data: {
+            previewData: previewData
+          }
+        });
+      }, 1000); // time-out for spinner
     });
   }
 
+  /**
+   * Open a modal dialog to edit workspace resource
+   * Users can re-name resources
+   */
   editItem(resource) {
     const dialogRef = this.dialog.open(EditDialogComponent, {
       data: {
@@ -132,6 +153,10 @@ export class WorkspaceDetailComponent implements OnInit {
     });
   }
 
+  /**
+   * Open a modal dialog to delete a workspace resource from the current workspace
+   *
+   */
   deleteItem(resource) {
     const dialogRef = this.dialog.open(DeleteDialogComponent, {
       data: { workspaceId: this.workspaceId, resource: resource }
@@ -142,21 +167,29 @@ export class WorkspaceDetailComponent implements OnInit {
     });
   }
 
-  metadata(resourceId) {
-    this.router.navigate([resourceId, 'metadata'], { relativeTo: this.route });
-  }
-
+  /**
+   * Switch to Analyses tab when the user clicks the Run button  on the Tools tab
+   *
+   */
   goToAnalysesTab() {
     this.selectedTabIndex = 4;
   }
 
+  /**
+   * Refresh data when user switching between tabs
+   *
+   */
   onTabChanged($event) {
-    let clickedIndex = $event.index;
+    const clickedIndex = $event.index;
     if (clickedIndex === 0) {
       this.refresh();
     }
   }
 
+  /**
+   * Method is triggered when the user clicks on a executed operation on the Analyses Flow Tab
+   *
+   */
   public showExecutedOperationResult(executedOperationId: string) {
     this.execOperationId = executedOperationId;
     this.goToAnalysesTab();

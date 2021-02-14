@@ -1,19 +1,17 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from '@app/core/authentication/authentication.service';
 import { UserService } from '@app/core/user/user.service';
-import { NotificationService } from '@core/core.module';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { finalize, first } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 import { ROUTE_ANIMATIONS_ELEMENTS } from '@core/core.module';
-import {
-  GoogleLoginProvider,
-  SocialAuthService,
-  SocialUser
-} from 'angularx-social-login';
-import { from } from 'rxjs';
+import { GoogleLoginProvider, SocialAuthService } from 'angularx-social-login';
 
-const googleLogoURL = '@ass';
+/**
+ * Login Component
+ *
+ * Support sign-in with email/password and Google sign-in
+ */
 
 @Component({
   selector: 'mev-login-form',
@@ -32,17 +30,13 @@ export class LoginComponent implements OnInit {
   token: string;
   uid: string;
 
-  // public socialUser: SocialUser;
-  private loggedIn: boolean;
-
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private authenticationService: AuthenticationService,
     private userService: UserService,
-    private socialAuthService: SocialAuthService,
-    private readonly notificationService: NotificationService
+    private socialAuthService: SocialAuthService
   ) {
     // redirect to home if already logged in
     if (this.authenticationService.currentUserValue) {
@@ -71,6 +65,10 @@ export class LoginComponent implements OnInit {
     );
   }
 
+  /**
+   * Initialize login form
+   */
+
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
       email: ['', Validators.required],
@@ -81,7 +79,10 @@ export class LoginComponent implements OnInit {
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
-  // convenience getter for easy access to form fields
+  /**
+   * Convenience getter for easy access to form fields
+   */
+
   get f() {
     return this.loginForm.controls;
   }
@@ -107,6 +108,9 @@ export class LoginComponent implements OnInit {
       );
   }
 
+  /**
+   * Method to sign out with Google
+   */
   signInWithGoogle(): void {
     const socialPlatformProvider = GoogleLoginProvider.PROVIDER_ID;
     this.loading = true;
@@ -121,7 +125,10 @@ export class LoginComponent implements OnInit {
         });
     });
   }
-  // Generic method to sign out, regardless of Auth provider
+
+  /**
+   * Generic method to sign out, regardless of Auth provider
+   */
   signOut(): void {
     this.socialAuthService.signOut().then(data => {
       // debugger;

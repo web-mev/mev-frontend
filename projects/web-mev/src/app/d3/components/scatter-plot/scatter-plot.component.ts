@@ -14,6 +14,11 @@ import { AnalysesService } from '@app/features/analysis/services/analysis.servic
 import { MetadataService } from '@app/core/metadata/metadata.service';
 import { CustomSetType, CustomSet } from '@app/_models/metadata';
 
+/**
+ * Scatter Plot Component
+ *
+ * Used for Principal Component Analyses (PCA)
+ */
 @Component({
   selector: 'mev-scatter-plot',
   templateUrl: './scatter-plot.component.html',
@@ -34,7 +39,7 @@ export class ScatterPlotComponent implements OnChanges {
   /* Chart settings */
   containerId = '#scatterPlot';
   imageName = 'PCA'; // file name for downloaded SVG image
-  maxPointNumber = 100;
+  maxPointNumber = 10 ** 4;
   precision = 2;
   chartViewMode = 'zoomMode'; // default chart view mode
   margin = { top: 50, right: 300, bottom: 50, left: 70 }; // chart margins

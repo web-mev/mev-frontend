@@ -11,6 +11,11 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { CustomSetType } from '@app/_models/metadata';
 
+/**
+ * Add Observation Dialog Component
+ *
+ * Modal dialog component which is used to add a custom observation set
+ */
 @Component({
   selector: 'mev-add-observation-set-dialog',
   templateUrl: './add-observation-set-dialog.component.html',
@@ -47,6 +52,10 @@ export class AddObservationSetDialogComponent implements OnInit {
     this.allObservationSetsDS.paginator = this.paginator;
   }
 
+  /**
+   * Function is triggered when user clicks the Cancel button
+   *
+   */
   onNoClick(): void {
     this.dialogRef.close();
   }
@@ -55,6 +64,10 @@ export class AddObservationSetDialogComponent implements OnInit {
     //empty stuff
   }
 
+  /**
+   * Function is triggered when user clicks the Add button
+   *
+   */
   confirmAdd() {
     const name = this.observationForm.value.observationSetName;
     const color = this.observationForm.value.observationSetColor;
@@ -69,14 +82,18 @@ export class AddObservationSetDialogComponent implements OnInit {
     this.dialogRef.close(observationSet);
   }
 
-  /** Whether the number of selected elements matches the total number of rows. */
+  /**
+   * Whether the number of selected elements matches the total number of rows.
+   */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.allObservationSetsDS.filteredData.length;
     return numSelected === numRows;
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  /**
+   * Selects all rows if they are not all selected; otherwise clear selection.
+   */
   masterToggle() {
     this.isAllSelected()
       ? this.selection.clear()
@@ -85,13 +102,18 @@ export class AddObservationSetDialogComponent implements OnInit {
         );
   }
 
+  /**
+   * Filtering observations by name
+   */
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim();
     filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
     this.allObservationSetsDS.filter = filterValue;
   }
 
-  /** convenience getter for easy access to form fields */
+  /**
+   * Convenience getter for easy access to form fields
+   */
   get f() {
     return this.observationForm.controls;
   }

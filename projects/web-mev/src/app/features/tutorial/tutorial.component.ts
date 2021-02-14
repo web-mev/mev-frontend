@@ -1,4 +1,10 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+
+/**
+ * Tutorial Component
+ *
+ * Display youtube player with tutorials (the Tutorial page)
+ */
 @Component({
   selector: 'mev-tutorial',
   templateUrl: './tutorial.component.html',

@@ -10,6 +10,11 @@ import { AnalysesService } from '@app/features/analysis/services/analysis.servic
 import { CustomSetType } from '@app/_models/metadata';
 import { Utils } from '@app/shared/utils/utils';
 
+/**
+ * Add Annotation Dialog Component
+ *
+ * Modal dialog component which is used to incorporate an annotation file as custom observation set.
+ */
 @Component({
   selector: 'mev-add-annotation-dialog',
   templateUrl: './add-annotation-dialog.component.html',
@@ -52,6 +57,11 @@ export class AddAnnotationDialogComponent implements OnInit {
     this.files = this.data.workspaceResources;
   }
 
+  /**
+   * Method is triggered when the user selects an annotation file from the dropdown list
+   *
+   * Get the annotation file content to get the list of attributes
+   */
   onSelectAnnonation() {
     this.apiService
       .getResourceContent(this.selectedAnnotationFileId)
@@ -64,6 +74,11 @@ export class AddAnnotationDialogComponent implements OnInit {
       });
   }
 
+  /**
+   * Method is triggered when the user select an attribure from the annotation file
+   *
+   * Get the list of unique attribute values
+   */
   onSelectAttribute() {
     this.attributeValues = [
       ...new Set(
@@ -74,6 +89,10 @@ export class AddAnnotationDialogComponent implements OnInit {
     ].map(el => ({ name: el }));
   }
 
+  /**
+   * Function is triggered when user clicks the Cancel button
+   *
+   */
   onNoClick(): void {
     this.dialogRef.close();
   }
@@ -82,6 +101,10 @@ export class AddAnnotationDialogComponent implements OnInit {
     // empty stuff
   }
 
+  /**
+   * Function is triggered when user clicks the Add button
+   *
+   */
   confirmAdd() {
     const customSets = [];
     this.form.value.attributeValue.forEach(attrValue => {

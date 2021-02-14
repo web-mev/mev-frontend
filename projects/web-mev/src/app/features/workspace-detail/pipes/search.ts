@@ -2,6 +2,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { WorkspaceResource } from '@features/workspace-detail/models/workspace-resource';
 const { isArray } = Array;
 
+/**
+ * Pipe for text searching
+ */
 @Pipe({
   name: 'filter'
 })

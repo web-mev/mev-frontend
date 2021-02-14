@@ -1,3 +1,13 @@
+import { FileType } from '@app/shared/models/file-type';
+import { Injectable } from '@angular/core';
+
+/**
+ * Operation Output Specification
+ */
+export class OutputSpec {
+  constructor(public attribute_type: string, public resource_types: FileType) {}
+}
+
 /**
  * Operation Output
  *
@@ -7,17 +17,14 @@
  *      "resource_type": "FT"
  *  }
  */
-
-import { FileType } from '@app/shared/models/file-type';
-import { Injectable } from '@angular/core';
-
-export class OutputSpec {
-  constructor(public attribute_type: string, public resource_types: FileType) {}
-}
 export class OperationOutput {
   constructor(public spec: OutputSpec) {}
 }
 
+/**
+ * Operation Output Adapter
+ *
+ */
 @Injectable({
   providedIn: 'root'
 })

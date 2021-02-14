@@ -21,6 +21,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddSampleSetComponent } from '../dialogs/add-sample-set/add-sample-set.component';
 import { MetadataService } from '@app/core/metadata/metadata.service';
 
+/**
+ * Limma Component
+ *
+ * Used for Limma analysis
+ */
 @Component({
   selector: 'mev-limma',
   templateUrl: './limma.component.html',

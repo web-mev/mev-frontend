@@ -3,12 +3,12 @@ export interface Dropbox {
 }
 
 export interface DropboxChooseOptions {
-  success(files: DropboxFile[]); // Required. Called when a user selects an item in the Chooser.
-  cancel?(): void; // Optional. Called when the user closes the dialog without selecting a file and does not include any parameters.
-  linkType: "direct" | "preview";  // "direct" is an expiring link to download the contents of the file
+  linkType: 'direct' | 'preview'; // "direct" is an expiring link to download the contents of the file
   multiselect: boolean;
   extensions?: string[];
   folderselect: boolean;
+  success(files: DropboxFile[]); // Required. Called when a user selects an item in the Chooser.
+  cancel?(): void; // Optional. Called when the user closes the dialog without selecting a file and does not include any parameters.
 }
 
 interface DropboxFile {

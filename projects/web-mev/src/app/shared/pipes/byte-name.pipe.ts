@@ -1,5 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
+/**
+ * Pipe for converting file size from Bytes to KB, MB, GB, etc
+ */
 @Pipe({
   name: 'byteName'
 })

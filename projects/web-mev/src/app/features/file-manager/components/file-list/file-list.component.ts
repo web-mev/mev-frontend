@@ -33,6 +33,11 @@ import { ViewFileTypesDialogComponent } from '../dialogs/view-file-types-dialog/
 
 declare var Dropbox: Dropbox;
 
+/**
+ * View File List Component
+ *
+ * Used to display the list of uploaded files
+ */
 @Component({
   selector: 'mev-file-list',
   templateUrl: './file-list.component.html',
@@ -60,6 +65,7 @@ export class FileListComponent implements OnInit {
   dataSource: ExampleDataSource | null;
   id: string;
   uploadProgressData: Map<string, object>;
+  isWait = false;
   Object = Object;
   private fileUploadProgressSubscription: Subscription = new Subscription();
 
@@ -113,6 +119,10 @@ export class FileListComponent implements OnInit {
     this.loadData();
   }
 
+  /**
+   * Open a modal dialog to upload files
+   *
+   */
   addItem() {
     const dialogRef = this.dialog.open(AddFileDialogComponent, {
       data: { file: File }
@@ -130,6 +140,10 @@ export class FileListComponent implements OnInit {
     });
   }
 
+  /**
+   * Open Dropbox pop-up window to add files from Dropbox
+   *
+   */
   addDropBoxItem() {
     const options: DropboxChooseOptions = {
       success: files => {
@@ -155,6 +169,10 @@ export class FileListComponent implements OnInit {
     Dropbox.choose(options);
   }
 
+  /**
+   * Open a modal dialog to edit file properties
+   *
+   */
   editItem(i: number, id: string, file_name: string, resource_type: string) {
     this.id = id;
     const dialogRef = this.dialog.open(EditFileDialogComponent, {
@@ -177,11 +195,20 @@ export class FileListComponent implements OnInit {
     });
   }
 
+  /**
+   * Open a modal dialog to view detailed information about the available file types and their formats
+   *
+   */
   viewFileTypes() {
-    const dialogRef = this.dialog.open(ViewFileTypesDialogComponent);
+    this.dialog.open(ViewFileTypesDialogComponent);
   }
 
+  /**
+   * Open a modal dialog to preview file
+   *
+   */
   previewItem(fileId: string) {
+    this.isWait = true;
     this.fileService.getFilePreview(fileId).subscribe(data => {
       const previewData = {};
       if (data?.results?.length && 'rowname' in data.results[0]) {
@@ -199,8 +226,9 @@ export class FileListComponent implements OnInit {
         previewData['rows'] = rows;
         previewData['values'] = values;
       }
-
-      const dialogRef = this.dialog.open(PreviewDialogComponent, {
+      this.isWait = false;
+      this.ref.markForCheck();
+      this.dialog.open(PreviewDialogComponent, {
         data: {
           previewData: previewData
         }
@@ -208,6 +236,10 @@ export class FileListComponent implements OnInit {
     });
   }
 
+  /**
+   * Open a modal dialog to delete a file
+   *
+   */
   deleteItem(
     i: number,
     id: string,
@@ -281,7 +313,9 @@ export class ExampleDataSource extends DataSource<File> {
     this._filterChange.subscribe(() => (this._paginator.pageIndex = 0));
   }
 
-  /** Connect function called by the table to retrieve one stream containing the data to render. */
+  /**
+   * Connect function called by the table to retrieve one stream containing the data to render.
+   */
   connect(): Observable<File[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
@@ -321,7 +355,10 @@ export class ExampleDataSource extends DataSource<File> {
 
   disconnect() {}
 
-  /** Returns a sorted copy of the database data. */
+  /**
+   * Returns a sorted copy of the database data.
+   *
+   */
   sortData(data: File[]): File[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;

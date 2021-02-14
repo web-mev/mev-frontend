@@ -1,4 +1,4 @@
-import { Injectable, Injector, ErrorHandler } from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
   HttpEvent,
   HttpInterceptor,
@@ -7,23 +7,21 @@ import {
   HttpErrorResponse
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { retry, catchError, tap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { NotificationService } from '@core/notifications/notification.service';
 
-/** Passes HttpErrorResponse to application-wide error handler */
+/**
+ * Passes HttpErrorResponse to application-wide error handler
+ * */
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
-  constructor(
-    private injector: Injector,
-    private readonly notificationService: NotificationService
-  ) {}
+  constructor(private readonly notificationService: NotificationService) {}
 
   intercept(
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
-      //retry(1),
       catchError((error: HttpErrorResponse) => {
         let errorMessage = '';
 

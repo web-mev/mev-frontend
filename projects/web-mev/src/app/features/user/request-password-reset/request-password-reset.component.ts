@@ -1,11 +1,13 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
 import { AuthenticationService } from '@app/core/authentication/authentication.service';
-import {
-  NotificationService,
-  ROUTE_ANIMATIONS_ELEMENTS
-} from '@core/core.module';
+import { ROUTE_ANIMATIONS_ELEMENTS } from '@core/core.module';
+
+/**
+ * Request Password Reset Component
+ *
+ * Display form with email to allow user to reset password
+ */
 
 @Component({
   selector: 'mev-request-password-reset',
@@ -22,11 +24,7 @@ export class RequestPasswordResetComponent implements OnInit {
   IsValidForm = true;
   loading = false;
 
-  constructor(
-    private authService: AuthenticationService,
-    private readonly notificationService: NotificationService,
-    private router: Router
-  ) {}
+  constructor(private authService: AuthenticationService) {}
 
   ngOnInit(): void {
     this.RequestResetForm = new FormGroup({

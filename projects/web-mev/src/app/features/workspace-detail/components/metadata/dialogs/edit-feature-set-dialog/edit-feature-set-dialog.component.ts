@@ -11,6 +11,13 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { MatPaginator } from '@angular/material/paginator';
 import { CustomSetType } from '@app/_models/metadata';
 
+/**
+ * Edit Feature/Observation Dialog Component
+ *
+ * Modal dialog component which is used to edit a custom feature or observation set
+ * For Observation sets the user  can update name and the list of samples included
+ * For Feature sets the user can update name
+ */
 @Component({
   selector: 'mev-edit-feature-set-dialog',
   templateUrl: './edit-feature-set-dialog.component.html',
@@ -68,6 +75,10 @@ export class EditFeatureSetDialogComponent implements OnInit {
     }
   }
 
+  /**
+   * Function is triggered when user clicks the Cancel button
+   *
+   */
   onNoClick(): void {
     this.dialogRef.close();
   }
@@ -76,14 +87,18 @@ export class EditFeatureSetDialogComponent implements OnInit {
     //empty stuff
   }
 
-  /** Whether the number of selected elements matches the total number of rows. */
+  /**
+   * Whether the number of selected elements matches the total number of rows.
+   */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.allObservationSetsDS.filteredData.length;
     return numSelected === numRows;
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  /**
+   * Selects all rows if they are not all selected; otherwise clear selection.
+   */
   masterToggle() {
     this.isAllSelected()
       ? this.selection.clear()
@@ -92,11 +107,17 @@ export class EditFeatureSetDialogComponent implements OnInit {
         );
   }
 
-  /** convenience getter for easy access to form fields */
+  /**
+   * Convenience getter for easy access to form fields
+   */
   get f() {
     return this.observationForm.controls;
   }
 
+  /**
+   * Method is triggered when user clicks the Save button
+   *
+   */
   confirmEdit() {
     const name = this.observationForm.value.observationSetName;
     const color = this.observationForm.value.observationSetColor;
@@ -115,6 +136,9 @@ export class EditFeatureSetDialogComponent implements OnInit {
     this.dialogRef.close(observationSet);
   }
 
+  /**
+   * Filtering observations by name
+   */
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim();
     filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches

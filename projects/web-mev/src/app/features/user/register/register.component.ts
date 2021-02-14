@@ -9,6 +9,12 @@ import { AuthenticationService } from '@app/core/authentication/authentication.s
 import { ROUTE_ANIMATIONS_ELEMENTS } from '@core/core.module';
 import { RepeatPasswordValidator } from '@app/shared/validators/validators';
 
+/**
+ * User Register Component
+ *
+ * Display user registration form
+ */
+
 @Component({
   selector: 'mev-register-form',
   templateUrl: './register.component.html',
@@ -54,7 +60,9 @@ export class RegisterComponent implements OnInit {
     );
   }
 
-  // convenience getter for easy access to form fields
+  /**
+   * Convenience getter for easy access to form fields
+   */
   get f() {
     return this.registerForm.controls;
   }

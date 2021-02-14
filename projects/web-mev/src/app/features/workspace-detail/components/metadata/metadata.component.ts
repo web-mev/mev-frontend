@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, Subscription } from 'rxjs';
-import { takeUntil, switchMap } from 'rxjs/operators';
+import { takeUntil, switchMap, delay } from 'rxjs/operators';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatAccordion } from '@angular/material/expansion';
 import { MatDialog } from '@angular/material/dialog';
@@ -19,18 +19,24 @@ import { AddAnnotationDialogComponent } from './dialogs/add-annotation-dialog/ad
 import { WorkspaceResource } from '../../models/workspace-resource';
 import { WorkspaceDetailService } from '../../services/workspace-detail.service';
 import { AddObservationSetDialogComponent } from './dialogs/add-observation-set-dialog/add-observation-set-dialog.component';
-import { AddFeatureSetDialogComponent } from './dialogs/add-feature-set-dialog/add-feature-set-dialog.component';
 import { DeleteSetDialogComponent } from './dialogs/delete-set-dialog/delete-set-dialog.component';
 import { ViewSetDialogComponent } from './dialogs/view-set-dialog/view-set-dialog.component';
 import { LclStorageService } from '@app/core/local-storage/lcl-storage.service';
 import { MetadataService } from '@app/core/metadata/metadata.service';
 import { EditFeatureSetDialogComponent } from './dialogs/edit-feature-set-dialog/edit-feature-set-dialog.component';
+import { ViewInfoDialogComponent } from './dialogs/view-info-dialog/view-info-dialog.component';
 
+/**
+ * Metadata Component
+ *
+ * Used to add, edit, remove custom observations sets and edit, remove custom feature sets.
+ * User's custom sets are stored in local storage only
+ */
 @Component({
   selector: 'mev-metadata',
   templateUrl: './metadata.component.html',
   styleUrls: ['./metadata.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class MetadataComponent implements OnInit {
   displayedColumns = ['name', 'symbol'];
@@ -55,6 +61,7 @@ export class MetadataComponent implements OnInit {
 
   datasource;
   selection = new SelectionModel(true, []);
+  isWait = false;
   private readonly onDestroy = new Subject<void>();
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -68,91 +75,6 @@ export class MetadataComponent implements OnInit {
     private cd: ChangeDetectorRef,
     public dialog: MatDialog
   ) {}
-
-  /**
-   * Rename column headers in the Annotation table
-   */
-  renameAttrColHeader(newHeaderName: string, prevHeaderName: string) {
-    if (newHeaderName && newHeaderName !== prevHeaderName) {
-      const currentObsSet =
-        JSON.parse(
-          localStorage.getItem(this.workspaceId + '_current_observation_set')
-        ) || [];
-      currentObsSet.forEach(sample => {
-        if (sample.attributes === undefined) {
-          sample.attributes = {};
-        }
-        // attributes without any values are not stored,
-        // so to keep the attribute column header renamed by the user
-        // dummy values are added
-        if (!sample.attributes.hasOwnProperty(prevHeaderName)) {
-          sample.attributes[newHeaderName] = null;
-        }
-        if (
-          sample.attributes &&
-          sample.attributes.hasOwnProperty(prevHeaderName)
-        ) {
-          sample.attributes[newHeaderName] = sample.attributes[prevHeaderName];
-          delete sample.attributes[prevHeaderName];
-        }
-      });
-
-      this.generateMetadataColumns(currentObsSet);
-      this.observationSetDS = new MatTableDataSource(currentObsSet);
-      this.observationSetDS.paginator = this.paginator;
-      localStorage.setItem(
-        this.workspaceId + '_current_observation_set',
-        JSON.stringify(currentObsSet)
-      );
-    }
-  }
-
-  /**
-   * Add/update attribute value for a specific sample
-   */
-  updateAttrCellValue(
-    newCellValue: string,
-    columnName: string,
-    rowIndex: number
-  ) {
-    if (newCellValue == null) {
-      return;
-    }
-
-    const currentObsSet =
-      JSON.parse(
-        localStorage.getItem(this.workspaceId + '_current_observation_set')
-      ) || [];
-
-    if (!currentObsSet[rowIndex].attributes) {
-      currentObsSet[rowIndex].attributes = {};
-    }
-
-    if (!currentObsSet[rowIndex].attributes[columnName]) {
-      currentObsSet[rowIndex].attributes[columnName] = {};
-    }
-    currentObsSet[rowIndex].attributes[columnName].value = newCellValue;
-    this.observationSetDS = new MatTableDataSource(currentObsSet);
-    localStorage.setItem(
-      this.workspaceId + '_current_observation_set',
-      JSON.stringify(currentObsSet)
-    );
-    this.observationSetDS.paginator = this.paginator;
-    this.cd.markForCheck();
-  }
-
-  /**
-   * Add a new column to the Annotation table when user clicks the Plus sign
-   */
-  onAddAttribute() {
-    const ix = this.metadataObsDisplayedColumnsAttributesOnly.length + 1;
-    this.metadataObsDisplayedColumnsAttributesOnly.push(
-      'New Column ' + ix + ' (click to rename)'
-    );
-    this.metadataObsDisplayedColumns.push(
-      'New Column ' + ix + ' (click to rename)'
-    );
-  }
 
   ngOnInit(): void {
     this.workspaceId = this.route.snapshot.paramMap.get('workspaceId');
@@ -192,8 +114,8 @@ export class MetadataComponent implements OnInit {
   }
 
   /**
-   * Display the list of all files in the workspace
-   * when user clicks button 'Create a current annotation'
+   * Method is triggered when the user clicks button 'Incorporate annotation'
+   *
    */
   onChooseAnnotation() {
     const dialogRef = this.dialog.open(AddAnnotationDialogComponent, {
@@ -209,14 +131,16 @@ export class MetadataComponent implements OnInit {
   }
 
   /**
+   * Method is triggered when the user clicks button 'Create a custom observation set'
    * Display the list of all available samples from all files in the workspace
-   * when user clicks button 'Create a custom observation set'
    */
   onCreateObservationSet() {
+    this.isWait = true;
     this.globalObservationSets = [];
     this.service
       .getWorkspaceMetadataObservations(this.workspaceId)
       .pipe(
+        delay(500), // delay for spinner
         switchMap(metadata => {
           if (metadata?.observation_set?.elements) {
             this.globalObservationSets = metadata.observation_set.elements;
@@ -243,6 +167,7 @@ export class MetadataComponent implements OnInit {
             }
           }
 
+          this.isWait = false;
           const dialogRef = this.dialog.open(AddObservationSetDialogComponent, {
             data: {
               observationSetDS: globalObservationSetsDS,
@@ -252,6 +177,7 @@ export class MetadataComponent implements OnInit {
           });
           return dialogRef.afterClosed();
         }),
+
         takeUntil(this.onDestroy)
       )
       .subscribe(newObservationSet => {
@@ -261,6 +187,9 @@ export class MetadataComponent implements OnInit {
       });
   }
 
+  /**
+   * Method to display the list of custom observation sets in the Visualization mode
+   */
   generateObservationSetsVisualization() {
     const visTable = [];
     const customObservationSets = this.metadataService.getCustomObservationSets();
@@ -295,56 +224,9 @@ export class MetadataComponent implements OnInit {
   }
 
   /**
-   * Display the list of all available features from all files in the workspace
-   * when user clicks button 'Create a custom feature set'
+   * Method is triggered when the user clicks icon 'Delete'
+   * Delete a custom observation or feature set from the list
    */
-  onCreateFeatureSet() {
-    let globalFeatureSets = [];
-    this.service
-      .getWorkspaceMetadataFeatures(this.workspaceId)
-      .pipe(
-        switchMap(metadata => {
-          if (metadata?.feature_set?.elements) {
-            globalFeatureSets = metadata.feature_set.elements;
-          }
-          const globalFeatureSetsDS = new MatTableDataSource(globalFeatureSets);
-
-          // the list of columns for pop-up table to select samples for custom feature sets
-          const featureSetsDisplayedColumns = ['select', 'id'];
-          const featureSetsDisplayedColumnsAttributesOnly = [];
-
-          const featSetsWithAttr = globalFeatureSets.filter(
-            set => 'attributes' in set
-          );
-          const attributes = featSetsWithAttr.length
-            ? featSetsWithAttr[0].attributes
-            : {};
-
-          for (const attribute in attributes) {
-            if (attributes.hasOwnProperty(attribute)) {
-              featureSetsDisplayedColumns.push(attribute);
-              featureSetsDisplayedColumnsAttributesOnly.push(attribute);
-            }
-          }
-
-          const dialogRef = this.dialog.open(AddFeatureSetDialogComponent, {
-            data: {
-              featureSetDS: globalFeatureSetsDS,
-              featureSetsDisplayedColumns: featureSetsDisplayedColumns,
-              featureSetsDisplayedColumnsAttributesOnly: featureSetsDisplayedColumnsAttributesOnly
-            }
-          });
-          return dialogRef.afterClosed();
-        }),
-        takeUntil(this.onDestroy)
-      )
-      .subscribe(newFeatureSet => {
-        if (newFeatureSet) {
-          this.metadataService.addCustomSet(newFeatureSet);
-        }
-      });
-  }
-
   onDeleteCustomSet(setId: string) {
     const dialogRef = this.dialog.open(DeleteSetDialogComponent, {
       data: { setId: setId }
@@ -357,11 +239,20 @@ export class MetadataComponent implements OnInit {
     });
   }
 
+  /**
+   * Method is triggered when the user clicks icon 'Edit'
+   *
+   * Edit a custom observation or feature set.
+   * For custom observation sets the user can update name, color, list of samples.
+   * For feature sets only names can be updated
+   */
   onEditCustomSet(set) {
+    this.isWait = true;
     this.globalObservationSets = [];
     this.service
       .getWorkspaceMetadataObservations(this.workspaceId)
       .pipe(
+        delay(500), // delay for spinner
         switchMap(metadata => {
           if (metadata?.observation_set?.elements) {
             this.globalObservationSets = metadata.observation_set.elements;
@@ -388,6 +279,7 @@ export class MetadataComponent implements OnInit {
             }
           }
 
+          this.isWait = false;
           const dialogRef = this.dialog.open(EditFeatureSetDialogComponent, {
             data: {
               name: set.name,
@@ -409,6 +301,11 @@ export class MetadataComponent implements OnInit {
         }
       });
   }
+
+  /**
+   * Method is triggered when the user clicks icon 'View'
+   * View a custom observation or feature set.
+   */
 
   onViewCustomSet(set) {
     const dialogRef = this.dialog.open(ViewSetDialogComponent, { data: set });
@@ -435,6 +332,9 @@ export class MetadataComponent implements OnInit {
     }
   }
 
+  /**
+   * Get the list of observations used in all files/resources included in the current workspace
+   */
   getGlobalObservationSets() {
     let globalObservationSets = [];
     const subject = new Subject<any>();
@@ -447,5 +347,12 @@ export class MetadataComponent implements OnInit {
         subject.next(globalObservationSets);
       });
     return subject.asObservable();
+  }
+
+  /**
+   * Method is triggered when the user clicks a link in the Metadata tab description
+   */
+  viewCustomSetInfo() {
+    this.dialog.open(ViewInfoDialogComponent);
   }
 }

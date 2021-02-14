@@ -6,6 +6,11 @@ import {
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
+/**
+ * Preview Workspace Resource Dialog Component
+ *
+ * Modal dialog component which is used to preview resource content
+ */
 @Component({
   selector: 'mev-preview-dialog',
   templateUrl: './preview-dialog.component.html',
@@ -24,6 +29,10 @@ export class PreviewDialogComponent implements OnInit {
     this.previewData = this.data.previewData;
   }
 
+  /**
+   * Function is triggered when user clicks the Cancel button
+   *
+   */
   onNoClick(): void {
     this.dialogRef.close();
   }

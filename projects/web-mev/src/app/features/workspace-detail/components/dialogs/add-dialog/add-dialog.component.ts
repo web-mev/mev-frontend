@@ -8,6 +8,11 @@ import {
 import { Validators, FormControl } from '@angular/forms';
 import { WorkspaceDetailService } from '@app/features/workspace-detail/services/workspace-detail.service';
 
+/**
+ * Add Workspace Resource Dialog Component
+ *
+ * Modal dialog component which is used to add new resources to the current workspace
+ */
 @Component({
   selector: 'mev-add-dialog',
   templateUrl: './add-dialog.component.html',
@@ -46,6 +51,10 @@ export class AddDialogComponent implements OnInit {
     };
   }
 
+  /**
+   * Function is triggered when user clicks the Cancel button
+   *
+   */
   onNoClick(): void {
     this.dialogRef.close();
   }
@@ -54,6 +63,10 @@ export class AddDialogComponent implements OnInit {
     // empty stuff
   }
 
+  /**
+   * Function is triggered when user clicks the Add button
+   *
+   */
   confirmAdd() {
     this.selectedFiles.forEach(file => {
       this.apiService

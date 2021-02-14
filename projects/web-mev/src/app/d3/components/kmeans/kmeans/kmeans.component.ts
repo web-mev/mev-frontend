@@ -1,10 +1,10 @@
 import {
   Component,
-  OnInit,
   ChangeDetectionStrategy,
   Input,
   ViewChild,
-  ElementRef
+  ElementRef,
+  OnChanges
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AnalysesService } from '@app/features/analysis/services/analysis.service';
@@ -15,13 +15,18 @@ import { AddSampleSetComponent } from '../../dialogs/add-sample-set/add-sample-s
 import { CustomSet, CustomSetType } from '@app/_models/metadata';
 import { Utils } from '@app/shared/utils/utils';
 
+/**
+ * K-Means Component
+ *
+ * Used for K-Means analysis
+ */
 @Component({
   selector: 'mev-kmeans',
   templateUrl: './kmeans.component.html',
   styleUrls: ['./kmeans.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default
 })
-export class KmeansComponent implements OnInit {
+export class KmeansComponent implements OnChanges {
   @Input() outputs;
   @ViewChild('scatterPlot') svgElement: ElementRef;
   scatterData;
@@ -36,7 +41,7 @@ export class KmeansComponent implements OnInit {
   /* Chart settings */
   containerId = '#scatterPlot';
   imageName = 'K-means'; // file name for downloaded SVG image
-  maxPointNumber = 10 ^ 5;
+  maxPointNumber = 10 ** 4;
   precision = 2;
   margin = { top: 50, right: 300, bottom: 50, left: 70 }; // chart margins
   outerHeight = 500;
@@ -62,8 +67,6 @@ export class KmeansComponent implements OnInit {
     private apiService: AnalysesService,
     private metadataService: MetadataService
   ) {}
-
-  ngOnInit(): void {}
 
   ngOnChanges(): void {
     this.customObservationSets = this.metadataService.getCustomObservationSets();

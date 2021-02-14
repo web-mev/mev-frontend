@@ -5,6 +5,12 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ROUTE_ANIMATIONS_ELEMENTS } from '@app/core/core.module';
 import { RepeatPasswordValidator } from '@app/shared/validators/validators';
 
+/**
+ * Response Password Reset Component
+ *
+ * Display the result of password reset operation. It is shown after the user clicks email link for reset password
+ */
+
 @Component({
   selector: 'mev-response-password-reset',
   templateUrl: './response-password-reset.component.html',
@@ -40,11 +46,6 @@ export class ResponsePasswordResetComponent implements OnInit {
 
   ngOnInit(): void {
     this.Init();
-  }
-
-  // convenience getter for easy access to form fields
-  get f() {
-    return this.responseResetForm.controls;
   }
 
   VerifyToken() {
@@ -111,5 +112,12 @@ export class ResponsePasswordResetComponent implements OnInit {
     } else {
       this.IsResetFormValid = false;
     }
+  }
+
+  /**
+   * Convenience getter for easy access to form fields
+   */
+  get f() {
+    return this.responseResetForm.controls;
   }
 }

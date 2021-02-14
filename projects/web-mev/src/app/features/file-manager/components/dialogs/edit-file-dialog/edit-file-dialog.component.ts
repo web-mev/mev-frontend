@@ -4,6 +4,11 @@ import { FormControl, Validators } from '@angular/forms';
 import { FileService } from '@file-manager/services/file-manager.service';
 import { FileType } from '@app/shared/models/file-type';
 
+/**
+ * Edit File Dialog Component
+ *
+ * Modal dialog component which is used to edit a file name or file(resource) type
+ */
 @Component({
   selector: 'mev-edit-file-dialog',
   templateUrl: './edit-file-dialog.component.html',
@@ -12,10 +17,7 @@ import { FileType } from '@app/shared/models/file-type';
 export class EditFileDialogComponent implements OnInit {
   public resourceTypes = {};
 
-  formControl = new FormControl('', [
-    Validators.required
-    // Validators.email,
-  ]);
+  formControl = new FormControl('', [Validators.required]);
 
   constructor(
     public dialogRef: MatDialogRef<EditFileDialogComponent>,
@@ -35,14 +37,18 @@ export class EditFileDialogComponent implements OnInit {
       : '';
   }
 
-  submit() {
-    // empty stuff
-  }
-
+  /**
+   * Function is triggered when user clicks the Cancel button
+   *
+   */
   onNoClick(): void {
     this.dialogRef.close();
   }
 
+  /**
+   * Function is triggered when user clicks the Save button
+   *
+   */
   stopEdit(): void {
     this.fileService.updateFile(this.data);
   }
@@ -57,5 +63,9 @@ export class EditFileDialogComponent implements OnInit {
           })
       );
     });
+  }
+
+  submit() {
+    // empty stuff
   }
 }

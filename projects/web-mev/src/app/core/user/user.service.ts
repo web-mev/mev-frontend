@@ -4,6 +4,10 @@ import { User } from '@app/_models/user';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
+/**
+ * User service
+ *
+ */
 @Injectable({
   providedIn: 'root'
 })

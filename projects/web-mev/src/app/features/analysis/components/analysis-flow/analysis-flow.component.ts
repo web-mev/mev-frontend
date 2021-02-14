@@ -14,6 +14,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { PreviewDialogComponent } from '@app/features/workspace-detail/components/dialogs/preview-dialog/preview-dialog.component';
 import { WorkspaceDetailService } from '@app/features/workspace-detail/services/workspace-detail.service';
 
+/**
+ * Analysis Flow Component.
+ * Used to display the visual representation of all performed analyses as DAG graph
+ */
 @Component({
   selector: 'mev-analysis-flow',
   templateUrl: './analysis-flow.component.html',
@@ -24,6 +28,7 @@ export class AnalysisFlowComponent implements OnInit {
   @Output() executedOperationId: EventEmitter<any> = new EventEmitter<any>();
 
   noDataIsAvailable = false;
+  isWait = false; // to control spinner
 
   /* DAG Chart settings */
   containerId = '#dagPlot';
@@ -32,6 +37,7 @@ export class AnalysisFlowComponent implements OnInit {
   nodeSize = 30; // tree node size
   maxTextLabelLength = 13;
   nodeTypes = [
+    // settings for DAG nodes
     {
       id: 'data_resource_node',
       label: 'File',
@@ -195,6 +201,7 @@ export class AnalysisFlowComponent implements OnInit {
    * Function is used to preview the content of the workspace resource (file)
    */
   previewItem(resourceId) {
+    this.isWait = true;
     this.workspaceDetailService
       .getResourcePreview(resourceId)
       .subscribe(data => {
@@ -215,11 +222,14 @@ export class AnalysisFlowComponent implements OnInit {
           previewData['values'] = values;
         }
 
-        const dialogRef = this.dialog.open(PreviewDialogComponent, {
-          data: {
-            previewData: previewData
-          }
-        });
+        setTimeout(() => {
+          this.isWait = false;
+          this.dialog.open(PreviewDialogComponent, {
+            data: {
+              previewData: previewData
+            }
+          });
+        }, 1000);
       });
   }
 

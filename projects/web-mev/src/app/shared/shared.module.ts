@@ -60,6 +60,7 @@ import { faMediumM, faGithub } from '@fortawesome/free-brands-svg-icons';
 import { RtlSupportDirective } from './directives/rtl-support/rtl-support.directive';
 import { MatSortModule } from '@angular/material/sort';
 import { ByteNamePipe } from '@app/shared/pipes/byte-name.pipe';
+import { SpinnerOverlayComponent } from './components/spinner-overlay/spinner-overlay.component';
 
 const MatModules = [
   MatButtonModule,
@@ -102,7 +103,7 @@ const MatModules = [
     ...MatModules,
     FontAwesomeModule
   ],
-  declarations: [RtlSupportDirective, ByteNamePipe],
+  declarations: [RtlSupportDirective, ByteNamePipe, SpinnerOverlayComponent],
   exports: [
     CommonModule,
     FormsModule,
@@ -112,7 +113,8 @@ const MatModules = [
     ...MatModules,
     FontAwesomeModule,
     RtlSupportDirective,
-    ByteNamePipe
+    ByteNamePipe,
+    SpinnerOverlayComponent
   ]
 })
 export class SharedModule {

@@ -20,7 +20,13 @@ import { CustomSetType } from '@app/_models/metadata';
 import { MatDialog } from '@angular/material/dialog';
 import { AddSampleSetComponent } from '../dialogs/add-sample-set/add-sample-set.component';
 import { MetadataService } from '@app/core/metadata/metadata.service';
+import { Utils } from '@app/shared/utils/utils';
 
+/**
+ * Deseq2 Component
+ *
+ * Used for Deseq2 analysis
+ */
 @Component({
   selector: 'mev-deseq2',
   templateUrl: './deseq2.component.html',
@@ -195,22 +201,6 @@ export class Deseq2Component implements OnInit, AfterViewInit {
   }
 
   /**
-   * Help function to calculate basic statistics for Box Plot
-   */
-  getBoxPlotStatistics(numbers: number[]) {
-    const q1 = d3.quantile(numbers, 0.25);
-    const q3 = d3.quantile(numbers, 0.75);
-    return {
-      q1: q1,
-      median: d3.quantile(numbers, 0.5),
-      q3: q3,
-      iqr: q3 - q1,
-      min: d3.min(numbers), // q1 - 1.5 * interQuantileRange
-      max: d3.max(numbers) // q3 + 1.5 * interQuantileRange
-    };
-  }
-
-  /**
    * Function to prepape the outputs data for D3 box plot visualization
    */
   preprocessBoxPlotData() {
@@ -231,15 +221,15 @@ export class Deseq2Component implements OnInit, AfterViewInit {
         []
       );
       const newElem = { key: elem.name };
-      newElem[this.yExperCat] = this.getBoxPlotStatistics(experNumbers);
-      newElem[this.yBaseCat] = this.getBoxPlotStatistics(baseNumbers);
+      newElem[this.yExperCat] = Utils.getBoxPlotStatistics(experNumbers);
+      newElem[this.yBaseCat] = Utils.getBoxPlotStatistics(baseNumbers);
       newElem[this.yExperPoints] = experNumbers;
       newElem[this.yBasePoints] = baseNumbers;
       return newElem;
     });
     this.boxPlotData = countsFormatted;
 
-    // overwrite labels if there are custom names efimed by the user
+    // overwrite labels if there are custom names defined by the user
     if (this.outputs.base_condition_name) {
       this.boxPlotTypes.Base.label = this.outputs.base_condition_name;
     }
@@ -284,7 +274,6 @@ export class Deseq2Component implements OnInit, AfterViewInit {
     const height = outerHeight - this.margin.top - this.margin.bottom;
 
     const data = this.boxPlotData;
-
     d3.select(this.containerId)
       .selectAll('svg')
       .remove();

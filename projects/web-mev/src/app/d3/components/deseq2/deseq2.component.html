@@ -65,9 +65,7 @@
 
       </section>
 
-      <!-- <div class="spinner-container" *ngIf="dataSource.loading$ | async">
-          <mat-spinner></mat-spinner>
-      </div> -->
+      <mev-spinner-overlay *ngIf="dataSource.loading$ | async"></mev-spinner-overlay>
 
       <div class="mat-elevation-z8">
         <mat-table class="deseq-table" [dataSource]="dataSource" matSort [matSortActive]="defaultSorting.field"

@@ -1,3 +1,5 @@
+<mev-spinner-overlay *ngIf="isWait"></mev-spinner-overlay>
+
 <div class="workspace-header">
   <a routerLink='/workarea' class="workspace-header__nav nav">
     <mat-icon class="nav__icon" aria-label="Next step">reply</mat-icon>
@@ -132,9 +134,6 @@
       <mat-paginator #paginator [pageSizeOptions]="[5, 10, 25]" [pageIndex]="0" [pageSize]="10">
       </mat-paginator>
     </div>
-    
-    
-
     </ng-template>
   </mat-tab>
 
@@ -163,17 +162,3 @@
   </mat-tab>
 
 </mat-tab-group>
-
-<!-- <nav mat-tab-nav-bar>
-  <a mat-tab-link routerLink="analyses" routerLinkActive #rla="routerLinkActive"> Tools</a>
-  <a mat-tab-link routerLink="analyses" routerLinkActive #rla="routerLinkActive"> Tools 2</a>
-</nav>
-<router-outlet></router-outlet> -->
-
-
-<!-- <div class="workspace-footer">
-  <button mat-raised-button color="accent" [routerLink]="['/analyses', workspaceId]">
-    Go to Analyses
-    <mat-icon aria-label="Next step">navigate_next</mat-icon>
-  </button>
-</div> -->

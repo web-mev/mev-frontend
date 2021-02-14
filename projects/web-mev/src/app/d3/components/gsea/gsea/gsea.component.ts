@@ -17,6 +17,11 @@ import { MetadataService } from '@app/core/metadata/metadata.service';
 import { AddSampleSetComponent } from '../../dialogs/add-sample-set/add-sample-set.component';
 import { CustomSetType } from '@app/_models/metadata';
 
+/**
+ * FGSEA Component
+ *
+ * Used for GSEA analysis
+ */
 @Component({
   selector: 'mev-gsea',
   templateUrl: './gsea.component.html',
@@ -154,13 +159,6 @@ export class GseaComponent implements OnInit {
         this.metadataService.addCustomSet(customSet);
       }
     });
-  }
-
-  /**
-   * Function that is triggered when the user clicks the "Show top genes" button to view box plots
-   */
-  onShowTopGenes(row) {
-    // const features = ["ECHS1", "ADH5P2", "LAPTM4B", "MMGT1"]; // row.leadingEdge
   }
 
   /**

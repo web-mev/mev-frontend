@@ -64,7 +64,7 @@
                 <h3>Description</h3>
             </p>
             <p class="comment">
-                <p>Passes HttpErrorResponse to application-wide error handler </p>
+                <p>Passes HttpErrorResponse to application-wide error handler</p>
 
             </p>
 
@@ -103,12 +103,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(injector: <a href="https://angular.io/api/core/Injector" target="_blank">Injector</a>, notificationService: <a href="../injectables/NotificationService.html">NotificationService</a>)</code>
+<code>constructor(notificationService: <a href="../injectables/NotificationService.html">NotificationService</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">projects/web-mev/src/app/core/interceptors/http-error.interceptor.ts:15</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">projects/web-mev/src/app/core/interceptors/http-error.interceptor.ts:17</a></div>
                             </td>
                         </tr>
 
@@ -125,18 +125,6 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                                <tr>
-                                                        <td>injector</td>
-                                                  
-                                                        <td>
-                                                                        <code><a href="https://angular.io/api/core/Injector" target="_blank" >Injector</a></code>
-                                                        </td>
-                                                  
-                                                    <td>
-                                                            No
-                                                    </td>
-                                                    
-                                                </tr>
                                                 <tr>
                                                         <td>notificationService</td>
                                                   
@@ -185,8 +173,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="21"
-                            class="link-to-prism">projects/web-mev/src/app/core/interceptors/http-error.interceptor.ts:21</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="20"
+                            class="link-to-prism">projects/web-mev/src/app/core/interceptors/http-error.interceptor.ts:20</a></div>
                 </td>
             </tr>
 
@@ -251,7 +239,7 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, Injector, ErrorHandler } from &#x27;@angular/core&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &#x27;@angular/core&#x27;;
 import {
   HttpEvent,
   HttpInterceptor,
@@ -260,43 +248,47 @@ import {
   HttpErrorResponse
 } from &#x27;@angular/common/http&#x27;;
 import { Observable, throwError } from &#x27;rxjs&#x27;;
-import { retry, catchError, tap } from &#x27;rxjs/operators&#x27;;
+import { catchError } from &#x27;rxjs/operators&#x27;;
 import { NotificationService } from &#x27;@core/notifications/notification.service&#x27;;
 
-/** Passes HttpErrorResponse to application-wide error handler */
+/**
+ * Passes HttpErrorResponse to application-wide error handler
+ * */
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
-  constructor(
-    private injector: Injector,
-    private readonly notificationService: NotificationService
-  ) { }
+  constructor(private readonly notificationService: NotificationService) {}
 
   intercept(
     request: HttpRequest&lt;any&gt;,
     next: HttpHandler
   ): Observable&lt;HttpEvent&lt;any&gt;&gt; {
     return next.handle(request).pipe(
-      retry(1),
       catchError((error: HttpErrorResponse) &#x3D;&gt; {
         let errorMessage &#x3D; &#x27;&#x27;;
 
-        // If Unauthorized (401), we perform refresh process and don&#x27;t show notification error for the user
-        if (error instanceof HttpErrorResponse &amp;&amp; error.status &#x3D;&#x3D;&#x3D; 401) {
+        if (typeof error &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {
+          return throwError(error);
+        }
+
+        // If Unauthorized (401) and it is not user sign-in, we perform refresh process to get refresh token and don&#x27;t show notification error for the user
+        if (
+          error instanceof HttpErrorResponse &amp;&amp;
+          error.status &#x3D;&#x3D;&#x3D; 401 &amp;&amp;
+          request.url.indexOf(&#x27;api/token&#x27;) &#x3D;&#x3D;&#x3D; -1
+        ) {
           return next.handle(request);
         }
         if (error.error instanceof ErrorEvent) {
-          // client-side error
           errorMessage &#x3D; &#x60;Error: ${error.error.message}&#x60;;
         } else {
-          // server-side error
           let detail &#x3D; &#x27;See console for detail&#x27;;
-          if (error.error &amp;&amp; error.error.detail) {
-            detail &#x3D; error.error.detail;
-          } else if (&#x27;detail&#x27; in error) {
-            detail &#x3D; error[&#x27;detail&#x27;];
+          if (error.error) {
+            detail &#x3D; &#x27;&#x27;;
+            Object.keys(error.error).forEach(error_field &#x3D;&gt; {
+              detail +&#x3D; error.error[error_field] + &#x27; \n&#x27;;
+            });
           }
-          errorMessage &#x3D; &#x60;Server Side Error. Code: ${error.status}. Details: ${detail}
-                          Message: ${error.message}&#x60;;
+          errorMessage &#x3D; &#x60;Error: ${detail}&#x60;; // Message: ${error.message}
         }
         this.notificationService.error(errorMessage);
         return throwError(errorMessage);

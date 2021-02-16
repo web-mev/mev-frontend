@@ -132,7 +132,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">projects/web-mev/src/app/core/interceptors/token-interceptor.interceptor.ts:16</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">projects/web-mev/src/app/core/interceptors/token-interceptor.interceptor.ts:17</a></div>
                             </td>
                         </tr>
 
@@ -199,8 +199,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="56"
-                            class="link-to-prism">projects/web-mev/src/app/core/interceptors/token-interceptor.interceptor.ts:56</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="55"
+                            class="link-to-prism">projects/web-mev/src/app/core/interceptors/token-interceptor.interceptor.ts:55</a></div>
                 </td>
             </tr>
 
@@ -283,8 +283,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="34"
-                            class="link-to-prism">projects/web-mev/src/app/core/interceptors/token-interceptor.interceptor.ts:34</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="33"
+                            class="link-to-prism">projects/web-mev/src/app/core/interceptors/token-interceptor.interceptor.ts:33</a></div>
                 </td>
             </tr>
 
@@ -452,7 +452,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">projects/web-mev/src/app/core/interceptors/token-interceptor.interceptor.ts:18</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">projects/web-mev/src/app/core/interceptors/token-interceptor.interceptor.ts:19</a></div>
                             </td>
                         </tr>
 
@@ -479,7 +479,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">projects/web-mev/src/app/core/interceptors/token-interceptor.interceptor.ts:15</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">projects/web-mev/src/app/core/interceptors/token-interceptor.interceptor.ts:14</a></div>
                             </td>
                         </tr>
 
@@ -507,12 +507,14 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                            <i>Default value : </i><code>new BehaviorSubject&lt;any&gt;(null)</code>
+                            <i>Default value : </i><code>new BehaviorSubject&lt;any&gt;(
+    null
+  )</code>
                         </td>
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">projects/web-mev/src/app/core/interceptors/token-interceptor.interceptor.ts:16</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">projects/web-mev/src/app/core/interceptors/token-interceptor.interceptor.ts:15</a></div>
                             </td>
                         </tr>
 
@@ -529,34 +531,33 @@
 import {
   HttpRequest,
   HttpHandler,
-  HttpEvent,
-  HttpInterceptor, HttpErrorResponse
+  HttpInterceptor,
+  HttpErrorResponse
 } from &#x27;@angular/common/http&#x27;;
 import { Observable, throwError, BehaviorSubject } from &#x27;rxjs&#x27;;
 import { catchError, filter, take, switchMap } from &#x27;rxjs/operators&#x27;;
-import { AuthenticationService } from &#x27;@app/_services/authentication.service&#x27;;
+import { AuthenticationService } from &#x27;@app/core/authentication/authentication.service&#x27;;
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
-
   private isRefreshing &#x3D; false;
-  private refreshTokenSubject: BehaviorSubject&lt;any&gt; &#x3D; new BehaviorSubject&lt;any&gt;(null);
+  private refreshTokenSubject: BehaviorSubject&lt;any&gt; &#x3D; new BehaviorSubject&lt;any&gt;(
+    null
+  );
 
-  constructor(public authService: AuthenticationService) {
-  }
+  constructor(public authService: AuthenticationService) {}
 
   intercept(request: HttpRequest&lt;any&gt;, next: HttpHandler): Observable&lt;any&gt; {
-
-    return next.handle(request).pipe(catchError(error &#x3D;&gt; {
-
-      if (error instanceof HttpErrorResponse &amp;&amp; error.status &#x3D;&#x3D;&#x3D; 401) {
-        return this.handle401Error(request, next);
-      } else {
-        return throwError(error);
-      }
-    }));
+    return next.handle(request).pipe(
+      catchError(error &#x3D;&gt; {
+        if (error instanceof HttpErrorResponse &amp;&amp; error.status &#x3D;&#x3D;&#x3D; 401) {
+          return this.handle401Error(request, next);
+        } else {
+          return throwError(error);
+        }
+      })
+    );
   }
-
 
   private handle401Error(request: HttpRequest&lt;any&gt;, next: HttpHandler) {
     if (!this.isRefreshing) {
@@ -567,27 +568,26 @@ export class TokenInterceptor implements HttpInterceptor {
           this.isRefreshing &#x3D; false;
           this.refreshTokenSubject.next(token.access);
           return next.handle(this.addToken(request, token.access));
-        }));
-
+        })
+      );
     } else {
       return this.refreshTokenSubject.pipe(
         filter(token &#x3D;&gt; token !&#x3D; null),
         take(1),
         switchMap(jwt &#x3D;&gt; {
           return next.handle(this.addToken(request, jwt));
-        }));
+        })
+      );
     }
   }
-
 
   private addToken(request: HttpRequest&lt;any&gt;, token: string) {
     return request.clone({
       setHeaders: {
-        &#x27;Authorization&#x27;: &#x60;Bearer ${token}&#x60;
+        Authorization: &#x60;Bearer ${token}&#x60;
       }
     });
   }
-
 }
 </code></pre>
     </div>

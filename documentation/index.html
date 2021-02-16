@@ -31,8 +31,77 @@
                    <div class="content-data">
 
 <h1 id="webmev">WebMEV</h1>
-<p>The front end Angular 9 application for the MEV web application.
-Documentation: <a href="https://web-mev.github.io/mev-frontend/documentation/overview.html">click here</a></p>
+<ul>
+<li><a href="#GeneralInformation">General information</a></li>
+<li><a href="#Installation">Installation</a></li>
+<li><a href="#Settings">Settings</a></li>
+<li><a href="#Modules">Modules and components info</a></li>
+<li><a href="#Features">Features and bugs </a></li>
+</ul>
+<h2 id="a-namegeneralinformationgeneral-informationa"><a name="GeneralInformation"><strong>General information</strong></a></h2>
+<p>The front end Angular 9 application for the MEV web application.</p>
+<p>Compodoc documentation: <a href="https://web-mev.github.io/mev-frontend/documentation/overview.html">click here</a></p>
+<p>Respository: <a href="https://github.com/web-mev/mev-frontend">https://github.com/web-mev/mev-frontend</a></p>
+<p>Sentry error tracking and monitoring: <a href="http://35.199.2.238:9000/organizations/sentry/issues/">http://35.199.2.238:9000/organizations/sentry/issues/</a></p>
+<p>The application is based on a Angular Material Starter project:
+<a href="https://github.com/tomastrajan/angular-ngrx-material-starter">https://github.com/tomastrajan/angular-ngrx-material-starter</a></p>
+<h2 id="a-nameinstallationinstallationa"><a name="Installation"><strong>Installation</strong></a></h2>
+<p>Install the dependencies:</p>
+<div><pre class="line-numbers"><code class="language-sh">
+npm install
+</code></pre></div><ul>
+<li>Run the local development server:</li>
+</ul>
+<div><pre class="line-numbers"><code class="language-sh">
+ng serve
+</code></pre></div><p>(you can access the app at <a href="http://localhost:4200">http://localhost:4200</a>)</p>
+<p>or</p>
+<div><pre class="line-numbers"><code class="language-sh">
+ng serve --port 8080 --host mydomain.com
+</code></pre></div><p>(for development purposes we need a proper host pointing to localhost, because Google’s OAuth requires redirect URLs that can’t be localhost. So you can add an entry in the hosts file of your machine to associate mydomain.com to 127.0.0.1. The app will be run at <a href="http://mydomain.com:8080">http://mydomain.com:8080</a>)</p>
+<ul>
+<li>Generate project documentation:</li>
+</ul>
+<div><pre class="line-numbers"><code class="language-sh">
+npm run generate-docs
+</code></pre></div><h2 id="a-namesettingssettingsa"><a name="Settings"><strong>Settings</strong></a></h2>
+<ul>
+<li><p>File <em>app.component.ts</em>
+Use the following properties to update the application settings:
+-- <em>logo</em>: to update the application logo image
+-- <em>languages</em>: to set the list of available languages
+-- <em>sessionTimeout</em>: to set user idle / session timeout
+-- <em>navigation</em>: to set top navigation bar</p>
+</li>
+<li><p>File <em>themes/default-theme.scss</em>
+Here you can change the color theme, specifying primary, accent and warning colors that will be used on components</p>
+</li>
+<li><p>File <em>sentry-error-handler.ts</em>
+Use this file to set a configuration to handle error tracking</p>
+</li>
+<li><p>File <em>jwtConfig.ts</em>
+Use this file to update settings for JWT authentication: <code>whiteListedDomains</code>(domains that are allowed to receive the JWT) and <code>blackListedRoutes</code>(routes that are not allowed to receive the JWT token)</p>
+</li>
+</ul>
+<h2 id="a-namemodulesmodules-and-components-infoa"><a name="Modules"><strong>Modules and components info</strong></a></h2>
+<p>The structure of the application includes a few main modules:</p>
+<ol>
+<li>File Manager Module
+Includes components for uploading and managing user files. Users can upload files from local computer, Dropbox, rename files, edit file types, delete files.
+To add: download files to local computer, download to Dropbox</li>
+<li>Workspace Manager Module
+Contains the WorkspaceList component for managing user&#39;s workspace and a set of modal dialogs to add/edit/delete a workspace</li>
+<li>Workspace Details Module
+It is used to display the content of a workspace. It contains the WorkspaceDetails component which is used to display list of files (resources) included in the selected workspace. Also contains components for managing workspace metadata (user&#39;s custom observation and feature sets saved in the local storage) and modal dialogs for create/edit/delete actions.</li>
+<li>Analysis Module
+It contains components used on the Analysis Flow, Tools, Analyses Result.</li>
+<li>D3 Module
+It contains components (D3-charts and tables) used for different types of analyses (HCL, PCA, DESeq2, etc)</li>
+<li>Shared Module
+Contains commonly used directives, pipes, validators, help functions, shared components</li>
+</ol>
+<h2 id="a-namefeaturesfeatures-and-bugsa"><a name="Features"><strong>Features and bugs</strong></a></h2>
+<p><a href="https://docs.google.com/spreadsheets/d/1hyKzuzDYb5nYS1AKZByssyCLNSQS-FxEqEdQ82IakQ8/edit#gid=0">https://docs.google.com/spreadsheets/d/1hyKzuzDYb5nYS1AKZByssyCLNSQS-FxEqEdQ82IakQ8/edit#gid=0</a></p>
 
 
 

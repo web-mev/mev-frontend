@@ -1,0 +1,1177 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>web-mev documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	      <link rel="stylesheet" href="../styles/style.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">web-mev documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li>AnalysesComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>projects/web-mev/src/app/features/analysis/components/analysis-list/analyses.component.ts</code>
+</p>
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Analyses Component
+Used to display the list of available operations as a tree structure (the Tools tab)</p>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover">
+        <tbody>
+
+            <tr>
+                <td class="col-md-3">changeDetection</td>
+                <td class="col-md-9"><code>ChangeDetectionStrategy.Default</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>mev-analyses</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./analyses.component.scss</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./analyses.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#_transformer">_transformer</a>
+                            </li>
+                            <li>
+                                <a href="#dataSource">dataSource</a>
+                            </li>
+                            <li>
+                                <a href="#hasChild">hasChild</a>
+                            </li>
+                            <li>
+                                <a href="#operationCategories">operationCategories</a>
+                            </li>
+                            <li>
+                                <a href="#operations">operations</a>
+                            </li>
+                            <li>
+                                <a href="#selectedOperation">selectedOperation</a>
+                            </li>
+                            <li>
+                                <a href="#treeControl">treeControl</a>
+                            </li>
+                            <li>
+                                <a href="#treeFlattener">treeFlattener</a>
+                            </li>
+                            <li>
+                                <a href="#workspace$">workspace$</a>
+                            </li>
+                            <li>
+                                <a href="#workspaceId">workspaceId</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#getPlottingOperationCategory">getPlottingOperationCategory</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit">ngOnInit</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#showExecutedOperationResult">showExecutedOperationResult</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#showOperationDetails">showOperationDetails</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Outputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#executedOperationId">executedOperationId</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(route: <a href="https://angular.io/api/router/ActivatedRoute" target="_blank">ActivatedRoute</a>, apiService: <a href="../injectables/AnalysesService.html">AnalysesService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="76" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/analysis-list/analyses.component.ts:76</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>route</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://angular.io/api/router/ActivatedRoute" target="_blank" >ActivatedRoute</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>apiService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/AnalysesService.html" target="_self" >AnalysesService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+    <section>
+    <h3 id="outputs">Outputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="executedOperationId"></a>
+                        <b>executedOperationId</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/analysis-list/analyses.component.ts:52</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getPlottingOperationCategory"></a>
+                    <span class="name">
+                        <b>
+                            getPlottingOperationCategory
+                        </b>
+                        <a href="#getPlottingOperationCategory"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getPlottingOperationCategory()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="108"
+                            class="link-to-prism">projects/web-mev/src/app/features/analysis/components/analysis-list/analyses.component.ts:108</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Add a &#39;fake&#39; operation for plotting. It is a frontend-only operation to provide
+view for the normalization methods
+The user can select a numerical matrix and custom feature set to view a boxplot showing the
+distribution of expressions</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>{ name: string; children: {}; }</code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <b>
+                            ngOnInit
+                        </b>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="86"
+                            class="link-to-prism">projects/web-mev/src/app/features/analysis/components/analysis-list/analyses.component.ts:86</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Initialize the datasource for the Operation Tree</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="showExecutedOperationResult"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Public</span>
+                            showExecutedOperationResult
+                        </b>
+                        <a href="#showExecutedOperationResult"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>showExecutedOperationResult(data: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="154"
+                            class="link-to-prism">projects/web-mev/src/app/features/analysis/components/analysis-list/analyses.component.ts:154</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Function is triggered when the user starts an analysis and emits a newly created executed operation id</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>data</td>
+                                    <td>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="showOperationDetails"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Public</span>
+                            showOperationDetails
+                        </b>
+                        <a href="#showOperationDetails"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>showOperationDetails(operation)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="147"
+                            class="link-to-prism">projects/web-mev/src/app/features/analysis/components/analysis-list/analyses.component.ts:147</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Function is triggered when the user clicks on a specific operation in the Operation Tree</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>operation</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+        <h3 id="inputs">
+            Properties
+        </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="_transformer"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                            _transformer</b>
+                            <a href="#_transformer"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="59" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/analysis-list/analyses.component.ts:59</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="dataSource"></a>
+                        <span class="name">
+                            <b>
+                            dataSource</b>
+                            <a href="#dataSource"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>new MatTreeFlatDataSource(this.treeControl, this.treeFlattener)</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="74" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/analysis-list/analyses.component.ts:74</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="hasChild"></a>
+                        <span class="name">
+                            <b>
+                            hasChild</b>
+                            <a href="#hasChild"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="76" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/analysis-list/analyses.component.ts:76</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="operationCategories"></a>
+                        <span class="name">
+                            <b>
+                            operationCategories</b>
+                            <a href="#operationCategories"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>any[]</code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/analysis-list/analyses.component.ts:49</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="operations"></a>
+                        <span class="name">
+                            <b>
+                            operations</b>
+                            <a href="#operations"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="../classes/Operation.html" target="_self" >Operation[]</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/analysis-list/analyses.component.ts:48</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="selectedOperation"></a>
+                        <span class="name">
+                            <b>
+                            selectedOperation</b>
+                            <a href="#selectedOperation"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="../classes/Operation.html" target="_self" >Operation</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/analysis-list/analyses.component.ts:50</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="treeControl"></a>
+                        <span class="name">
+                            <b>
+                            treeControl</b>
+                            <a href="#treeControl"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>new FlatTreeControl&lt;ExampleFlatNode&gt;(
+    node &#x3D;&gt; node.level,
+    node &#x3D;&gt; node.expandable
+  )</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/analysis-list/analyses.component.ts:54</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="treeFlattener"></a>
+                        <span class="name">
+                            <b>
+                            treeFlattener</b>
+                            <a href="#treeFlattener"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>new MatTreeFlattener(
+    this._transformer,
+    node &#x3D;&gt; node.level,
+    node &#x3D;&gt; node.expandable,
+    node &#x3D;&gt; node.children
+  )</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="67" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/analysis-list/analyses.component.ts:67</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="workspace$"></a>
+                        <span class="name">
+                            <b>
+                            workspace$</b>
+                            <a href="#workspace$"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="../classes/Workspace.html" target="_self" >Observable&lt;Workspace&gt;</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/analysis-list/analyses.component.ts:47</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="workspaceId"></a>
+                        <span class="name">
+                            <b>
+                            workspaceId</b>
+                            <a href="#workspaceId"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/analysis-list/analyses.component.ts:46</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  Output,
+  EventEmitter
+} from &#x27;@angular/core&#x27;;
+import { AnalysesService } from &#x27;../../services/analysis.service&#x27;;
+import { ActivatedRoute } from &#x27;@angular/router&#x27;;
+import { Observable } from &#x27;rxjs&#x27;;
+import { Workspace } from &#x27;@app/features/workspace-manager/models/workspace&#x27;;
+import { Operation } from &#x27;../../models/operation&#x27;;
+import {
+  MatTreeFlatDataSource,
+  MatTreeFlattener
+} from &#x27;@angular/material/tree&#x27;;
+import { FlatTreeControl } from &#x27;@angular/cdk/tree&#x27;;
+
+/**
+ * Operation category with nested structure.
+ * Each node has a name and an optional list of children.
+ */
+interface OperationCategoryNode {
+  name: string;
+  children?: Operation[];
+}
+
+/** Flat node with expandable and level information */
+interface ExampleFlatNode {
+  expandable: boolean;
+  name: string;
+  level: number;
+}
+
+/**
+ * Analyses Component
+ * Used to display the list of available operations as a tree structure (the Tools tab)
+ */
+@Component({
+  selector: &#x27;mev-analyses&#x27;,
+  templateUrl: &#x27;./analyses.component.html&#x27;,
+  styleUrls: [&#x27;./analyses.component.scss&#x27;],
+  changeDetection: ChangeDetectionStrategy.Default
+})
+export class AnalysesComponent implements OnInit {
+  workspaceId: string;
+  workspace$: Observable&lt;Workspace&gt;;
+  operations: Operation[];
+  operationCategories: any[];
+  selectedOperation: Operation;
+
+  @Output() executedOperationId: EventEmitter&lt;any&gt; &#x3D; new EventEmitter&lt;any&gt;();
+
+  treeControl &#x3D; new FlatTreeControl&lt;ExampleFlatNode&gt;(
+    node &#x3D;&gt; node.level,
+    node &#x3D;&gt; node.expandable
+  );
+
+  private _transformer &#x3D; (node: OperationCategoryNode, level: number) &#x3D;&gt; {
+    return {
+      expandable: !!node.children &amp;&amp; node.children.length &gt; 0,
+      level: level,
+      ...node
+    };
+  };
+
+  treeFlattener &#x3D; new MatTreeFlattener(
+    this._transformer,
+    node &#x3D;&gt; node.level,
+    node &#x3D;&gt; node.expandable,
+    node &#x3D;&gt; node.children
+  );
+
+  dataSource &#x3D; new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+
+  hasChild &#x3D; (_: number, node: ExampleFlatNode) &#x3D;&gt; node.expandable;
+
+  constructor(
+    private route: ActivatedRoute,
+    private apiService: AnalysesService
+  ) {}
+
+  /**
+   * Initialize the datasource for the Operation Tree
+   */
+  ngOnInit(): void {
+    this.workspaceId &#x3D; this.route.snapshot.paramMap.get(&#x27;workspaceId&#x27;);
+    this.workspace$ &#x3D; this.apiService.getWorkspaceDetail(this.workspaceId);
+
+    this.apiService.getOperations().subscribe(operations &#x3D;&gt; {
+      this.operations &#x3D; operations;
+    });
+
+    this.apiService.getOperationCategories().subscribe(operationCategories &#x3D;&gt; {
+      this.selectedOperation &#x3D; operationCategories[0].children[0]; // show the parameters for the 1st operation by default
+      operationCategories.push(this.getPlottingOperationCategory());
+      this.dataSource.data &#x3D; operationCategories;
+      this.treeControl.expand(this.treeControl.dataNodes[0]); // expand the 1st operation category by default
+    });
+  }
+
+  /**
+   * Add a &#x27;fake&#x27; operation for plotting. It is a frontend-only operation to provide
+   * view for the normalization methods
+   * The user can select a numerical matrix and custom feature set to view a boxplot showing the
+   * distribution of expressions
+   */
+  getPlottingOperationCategory() {
+    const op &#x3D; {
+      name: &#x27;Plotting&#x27;,
+      children: [
+        {
+          id: &#x27;Plotting&#x27;,
+          name: &#x27;Plot expressions&#x27;,
+          description: &#x27;Output view for the normalization methods&#x27;,
+          mode: &#x27;client&#x27;,
+          inputs: {
+            input_matrix: {
+              description:
+                &#x27;The input matrix. For example, a gene expression matrix for a cohort of samples.&#x27;,
+              name: &#x27;Input matrix:&#x27;,
+              required: true,
+              spec: {
+                attribute_type: &#x27;DataResource&#x27;,
+                many: false,
+                resource_types: [&#x27;MTX&#x27;, &#x27;I_MTX&#x27;, &#x27;EXP_MTX&#x27;, &#x27;RNASEQ_COUNT_MTX&#x27;]
+              }
+            },
+            features: {
+              description: &#x27;The genes/features to use in plotting&#x27;,
+              name: &#x27;Plot genes/features by:&#x27;,
+              required: false,
+              spec: {
+                attribute_type: &#x27;FeatureSet&#x27;
+              }
+            }
+          }
+        }
+      ]
+    };
+    return op;
+  }
+
+  /**
+   * Function is triggered when the user clicks on a specific operation in the Operation Tree
+   */
+  public showOperationDetails(operation) {
+    this.selectedOperation &#x3D; operation;
+  }
+
+  /**
+   * Function is triggered when the user starts an analysis and emits a newly created executed operation id
+   */
+  public showExecutedOperationResult(data: any) {
+    this.executedOperationId.emit(data);
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;analyses-container&quot;&gt;
+  &lt;section class&#x3D;&quot;analyses-section&quot;&gt;
+    &lt;div class&#x3D;&quot;tab-content&quot;&gt;
+      The analysis pane on the left side displays the list of available
+      data analysis tools. Expand and collapse the list of tools clicking on a category.
+      Click on a item to set input parameters and run an analysis.
+      &lt;div class&#x3D;&quot;vertical-tab-container&quot;&gt;
+        &lt;mat-tree [dataSource]&#x3D;&quot;dataSource&quot; [treeControl]&#x3D;&quot;treeControl&quot;&gt;
+          &lt;!-- tree node template for leaf nodes --&gt;
+          &lt;mat-tree-node *matTreeNodeDef&#x3D;&quot;let node&quot; matTreeNodePadding [ngClass]&#x3D;&quot;{ &#x27;active-node&#x27;: node.id &#x3D;&#x3D;&#x3D; selectedOperation.id }&quot;&gt;
+            &lt;!-- use a disabled button to provide padding for tree leaf --&gt;
+            &lt;button mat-icon-button disabled&gt;&lt;/button&gt;
+            &lt;button (click)&#x3D;&quot;showOperationDetails(node)&quot;&gt;
+              {{node.name}}
+            &lt;/button&gt;
+          &lt;/mat-tree-node&gt;
+          &lt;!-- tree node template for expandable nodes --&gt;
+          &lt;mat-tree-node *matTreeNodeDef&#x3D;&quot;let node;when: hasChild&quot; matTreeNodePadding&gt;
+            &lt;button matTreeNodeToggle [attr.aria-label]&#x3D;&quot;&#x27;Toggle &#x27; + node.name&quot;&gt;
+              &lt;mat-icon class&#x3D;&quot;mat-icon-rtl-mirror&quot;&gt;
+                {{treeControl.isExpanded(node) ? &#x27;expand_more&#x27; : &#x27;chevron_right&#x27;}}
+              &lt;/mat-icon&gt;
+              {{node.name}}
+            &lt;/button&gt;
+            
+          &lt;/mat-tree-node&gt;
+        &lt;/mat-tree&gt;
+
+        &lt;mat-divider [vertical]&#x3D;&quot;true&quot;&gt;&lt;/mat-divider&gt;
+
+        &lt;div class&#x3D;&quot;operation-container&quot;&gt;
+          &lt;mev-operation *ngIf&#x3D;&quot;selectedOperation&quot; [operation]&#x3D;&quot;selectedOperation&quot; [workspaceId]&#x3D;&quot;workspaceId&quot;
+            [workspace$]&#x3D;&quot;workspace$&quot; (executedOperationId)&#x3D;&quot;showExecutedOperationResult($event)&quot;&gt;&lt;/mev-operation&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./analyses.component.scss</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">.analyses-section {
+  margin: 20px;
+  font-size: 14px !important;
+}
+
+.vertical-tab-container {
+  margin: 30px 0;
+  display: flex;
+}
+
+mat-tree {
+  background-color: #ddebf2 !important;
+  width: 300px;
+
+  button {
+    display: flex;
+    align-items: center;
+    border: 0;
+    background: none;
+    white-space: normal;
+    padding-right: 15px;
+    padding-left: 15px;
+    text-align: left;
+
+    &amp;:hover {
+      color: grey;
+    }
+  }
+
+  .active-node {
+    font-weight: bold;
+    background-color: #eee !important;
+  }
+}
+
+.operation-container {
+  padding: 10px 20px;
+  width: 100%;
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="analyses-container">  <section class="analyses-section">    <div class="tab-content">      The analysis pane on the left side displays the list of available      data analysis tools. Expand and collapse the list of tools clicking on a category.      Click on a item to set input parameters and run an analysis.      <div class="vertical-tab-container">        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">          <!-- tree node template for leaf nodes -->          <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding [ngClass]="{ \'active-node\': node.id === selectedOperation.id }">            <!-- use a disabled button to provide padding for tree leaf -->            <button mat-icon-button disabled></button>            <button (click)="showOperationDetails(node)">              {{node.name}}            </button>          </mat-tree-node>          <!-- tree node template for expandable nodes -->          <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>            <button matTreeNodeToggle [attr.aria-label]="\'Toggle \' + node.name">              <mat-icon class="mat-icon-rtl-mirror">                {{treeControl.isExpanded(node) ? \'expand_more\' : \'chevron_right\'}}              </mat-icon>              {{node.name}}            </button>                      </mat-tree-node>        </mat-tree>        <mat-divider [vertical]="true"></mat-divider>        <div class="operation-container">          <mev-operation *ngIf="selectedOperation" [operation]="selectedOperation" [workspaceId]="workspaceId"            [workspace$]="workspace$" (executedOperationId)="showExecutedOperationResult($event)"></mev-operation>        </div>      </div>    </div>  </section></div></div>'
+    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'mev-about'},{'name': 'AddAnnotationDialogComponent', 'selector': 'mev-add-annotation-dialog'},{'name': 'AddDialogComponent', 'selector': 'mev-add-dialog'},{'name': 'AddFileDialogComponent', 'selector': 'mev-add-file-dialog'},{'name': 'AddObservationSetDialogComponent', 'selector': 'mev-add-observation-set-dialog'},{'name': 'AddSampleSetComponent', 'selector': 'mev-add-sample-set'},{'name': 'AddWSDialogComponent', 'selector': 'mev-add-ws-dialog'},{'name': 'AnalysesComponent', 'selector': 'mev-analyses'},{'name': 'AnalysisFlowComponent', 'selector': 'mev-analysis-flow'},{'name': 'AnalysisPlottingResultComponent', 'selector': 'mev-analysis-plotting-result'},{'name': 'AnalysisResultComponent', 'selector': 'mev-analysis-result'},{'name': 'AppComponent', 'selector': 'mev-root'},{'name': 'BoxPlottingComponent', 'selector': 'mev-box-plotting'},{'name': 'DeleteDialogComponent', 'selector': 'mev-delete-dialog'},{'name': 'DeleteFileDialogComponent', 'selector': 'mev-delete-file-dialog'},{'name': 'DeleteSetDialogComponent', 'selector': 'mev-delete-set-dialog'},{'name': 'DeleteWSDialogComponent', 'selector': 'mev-delete-ws-dialog'},{'name': 'Deseq2Component', 'selector': 'mev-deseq2'},{'name': 'DownloadButtonComponent', 'selector': 'mev-download-button'},{'name': 'EditDialogComponent', 'selector': 'mev-edit-dialog'},{'name': 'EditFeatureSetDialogComponent', 'selector': 'mev-edit-feature-set-dialog'},{'name': 'EditFileDialogComponent', 'selector': 'mev-edit-file-dialog'},{'name': 'EditWSDialogComponent', 'selector': 'mev-edit-ws-dialog'},{'name': 'ExecutedOperationComponent', 'selector': 'mev-executed-operation'},{'name': 'FileListComponent', 'selector': 'mev-file-list'},{'name': 'GseaComponent', 'selector': 'mev-gsea'},{'name': 'HclComponent', 'selector': 'mev-hcl'},{'name': 'KmeansComponent', 'selector': 'mev-kmeans'},{'name': 'LimmaComponent', 'selector': 'mev-limma'},{'name': 'LoginComponent', 'selector': 'mev-login-form'},{'name': 'MetadataComponent', 'selector': 'mev-metadata'},{'name': 'OperationComponent', 'selector': 'mev-operation'},{'name': 'PasswordChangeComponent', 'selector': 'mev-password-change'},{'name': 'PreviewDialogComponent', 'selector': 'mev-preview-dialog'},{'name': 'ProgressSnackbarComponent', 'selector': 'mev-progress-snackbar'},{'name': 'RegisterComponent', 'selector': 'mev-register-form'},{'name': 'RequestPasswordResetComponent', 'selector': 'mev-request-password-reset'},{'name': 'ResponsePasswordResetComponent', 'selector': 'mev-response-password-reset'},{'name': 'RugPlotComponent', 'selector': 'mev-rug-plot'},{'name': 'ScatterPlotComponent', 'selector': 'mev-scatter-plot'},{'name': 'SettingsContainerComponent', 'selector': 'mev-settings'},{'name': 'SpinnerOverlayComponent', 'selector': 'mev-spinner-overlay'},{'name': 'TutorialComponent', 'selector': 'mev-tutorial'},{'name': 'ViewFileTypesDialogComponent', 'selector': 'mev-view-file-types-dialog'},{'name': 'ViewInfoDialogComponent', 'selector': 'mev-view-info-dialog'},{'name': 'ViewSetDialogComponent', 'selector': 'mev-view-set-dialog'},{'name': 'WorkareaComponent', 'selector': 'mev-workarea'},{'name': 'WorkspaceDetailComponent', 'selector': 'mev-workspace-detail'},{'name': 'WorkspaceListComponent', 'selector': 'mev-workspace-list'}];
+    var DIRECTIVES = [{'name': 'RtlSupportDirective', 'selector': '[rtl]'}];
+    var ACTUAL_COMPONENT = {'name': 'AnalysesComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+                   
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'AnalysesComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

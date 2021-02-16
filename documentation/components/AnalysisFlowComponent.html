@@ -1,0 +1,1325 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>web-mev documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	      <link rel="stylesheet" href="../styles/style.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">web-mev documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li>AnalysisFlowComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>projects/web-mev/src/app/features/analysis/components/analysis-flow/analysis-flow.component.ts</code>
+</p>
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Analysis Flow Component.
+Used to display the visual representation of all performed analyses as DAG graph</p>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover">
+        <tbody>
+
+            <tr>
+                <td class="col-md-3">changeDetection</td>
+                <td class="col-md-9"><code>ChangeDetectionStrategy.Default</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>mev-analysis-flow</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./analysis-flow.component.scss</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./analysis-flow.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#containerId">containerId</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#dialog">dialog</a>
+                            </li>
+                            <li>
+                                <a href="#isWait">isWait</a>
+                            </li>
+                            <li>
+                                <a href="#margin">margin</a>
+                            </li>
+                            <li>
+                                <a href="#maxTextLabelLength">maxTextLabelLength</a>
+                            </li>
+                            <li>
+                                <a href="#noDataIsAvailable">noDataIsAvailable</a>
+                            </li>
+                            <li>
+                                <a href="#nodeSize">nodeSize</a>
+                            </li>
+                            <li>
+                                <a href="#nodeTypes">nodeTypes</a>
+                            </li>
+                            <li>
+                                <a href="#tooltipOffsetX">tooltipOffsetX</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#buildDAG">buildDAG</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit">ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#onNodeClick">onNodeClick</a>
+                            </li>
+                            <li>
+                                <a href="#previewItem">previewItem</a>
+                            </li>
+                            <li>
+                                <a href="#saveAnalysisHistory">saveAnalysisHistory</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Outputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#executedOperationId">executedOperationId</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(route: <a href="https://angular.io/api/router/ActivatedRoute" target="_blank">ActivatedRoute</a>, analysesService: <a href="../injectables/AnalysesService.html">AnalysesService</a>, workspaceDetailService: <a href="../injectables/WorkspaceDetailService.html">WorkspaceDetailService</a>, dialog: MatDialog)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/analysis-flow/analysis-flow.component.ts:47</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>route</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://angular.io/api/router/ActivatedRoute" target="_blank" >ActivatedRoute</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>analysesService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/AnalysesService.html" target="_self" >AnalysesService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>workspaceDetailService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/WorkspaceDetailService.html" target="_self" >WorkspaceDetailService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>dialog</td>
+                                                  
+                                                        <td>
+                                                                    <code>MatDialog</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+    <section>
+    <h3 id="outputs">Outputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="executedOperationId"></a>
+                        <b>executedOperationId</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/analysis-flow/analysis-flow.component.ts:28</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildDAG"></a>
+                    <span class="name">
+                        <b>
+                            buildDAG
+                        </b>
+                        <a href="#buildDAG"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>buildDAG(data)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="66"
+                            class="link-to-prism">projects/web-mev/src/app/features/analysis/components/analysis-flow/analysis-flow.component.ts:66</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Function to render DAG (Directed Acyclic Graph)</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>data</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <b>
+                            ngOnInit
+                        </b>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="56"
+                            class="link-to-prism">projects/web-mev/src/app/features/analysis/components/analysis-flow/analysis-flow.component.ts:56</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onNodeClick"></a>
+                    <span class="name">
+                        <b>
+                            onNodeClick
+                        </b>
+                        <a href="#onNodeClick"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onNodeClick(d)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="192"
+                            class="link-to-prism">projects/web-mev/src/app/features/analysis/components/analysis-flow/analysis-flow.component.ts:192</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Function is triggered when a tree node is clicked. Clicking on operation nodes
+redirects to the Analysis Result. Clicking on Resource nodes opens the Preview file pop-up.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>d</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="previewItem"></a>
+                    <span class="name">
+                        <b>
+                            previewItem
+                        </b>
+                        <a href="#previewItem"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>previewItem(resourceId)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="203"
+                            class="link-to-prism">projects/web-mev/src/app/features/analysis/components/analysis-flow/analysis-flow.component.ts:203</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Function is used to preview the content of the workspace resource (file)</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>resourceId</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="saveAnalysisHistory"></a>
+                    <span class="name">
+                        <b>
+                            saveAnalysisHistory
+                        </b>
+                        <a href="#saveAnalysisHistory"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>saveAnalysisHistory()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="240"
+                            class="link-to-prism">projects/web-mev/src/app/features/analysis/components/analysis-flow/analysis-flow.component.ts:240</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Function performs a ‘workspace export’ which takes the graph
+and make some ‘full record’ including the operation versions, etc.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+        <h3 id="inputs">
+            Properties
+        </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="containerId"></a>
+                        <span class="name">
+                            <b>
+                            containerId</b>
+                            <a href="#containerId"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>&#x27;#dagPlot&#x27;</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/analysis-flow/analysis-flow.component.ts:34</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="dialog"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Public</span>
+                            dialog</b>
+                            <a href="#dialog"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>MatDialog</code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="53" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/analysis-flow/analysis-flow.component.ts:53</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="isWait"></a>
+                        <span class="name">
+                            <b>
+                            isWait</b>
+                            <a href="#isWait"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>false</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/analysis-flow/analysis-flow.component.ts:31</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="margin"></a>
+                        <span class="name">
+                            <b>
+                            margin</b>
+                            <a href="#margin"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>{ top: 50, right: 50, bottom: 50, left: 50 }</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/analysis-flow/analysis-flow.component.ts:36</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="maxTextLabelLength"></a>
+                        <span class="name">
+                            <b>
+                            maxTextLabelLength</b>
+                            <a href="#maxTextLabelLength"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>13</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/analysis-flow/analysis-flow.component.ts:38</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="noDataIsAvailable"></a>
+                        <span class="name">
+                            <b>
+                            noDataIsAvailable</b>
+                            <a href="#noDataIsAvailable"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>false</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/analysis-flow/analysis-flow.component.ts:30</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="nodeSize"></a>
+                        <span class="name">
+                            <b>
+                            nodeSize</b>
+                            <a href="#nodeSize"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>30</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/analysis-flow/analysis-flow.component.ts:37</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="nodeTypes"></a>
+                        <span class="name">
+                            <b>
+                            nodeTypes</b>
+                            <a href="#nodeTypes"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>[]</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>[
+    // settings for DAG nodes
+    {
+      id: &#x27;data_resource_node&#x27;,
+      label: &#x27;File&#x27;,
+      img: &#x27;../../../../assets/file.png&#x27;
+    },
+    { id: &#x27;op_node&#x27;, label: &#x27;Operation&#x27;, img: &#x27;../../../../assets/gear.png&#x27; }
+  ]</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/analysis-flow/analysis-flow.component.ts:39</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="tooltipOffsetX"></a>
+                        <span class="name">
+                            <b>
+                            tooltipOffsetX</b>
+                            <a href="#tooltipOffsetX"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>10</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/analysis-flow/analysis-flow.component.ts:35</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+  Component,
+  ChangeDetectionStrategy,
+  OnInit,
+  EventEmitter,
+  Output
+} from &#x27;@angular/core&#x27;;
+import * as d3 from &#x27;d3&#x27;;
+import * as d3dag from &#x27;d3-dag&#x27;;
+import d3Tip from &#x27;d3-tip&#x27;;
+import { AnalysesService } from &#x27;../../services/analysis.service&#x27;;
+import { ActivatedRoute } from &#x27;@angular/router&#x27;;
+import { MatDialog } from &#x27;@angular/material/dialog&#x27;;
+import { PreviewDialogComponent } from &#x27;@app/features/workspace-detail/components/dialogs/preview-dialog/preview-dialog.component&#x27;;
+import { WorkspaceDetailService } from &#x27;@app/features/workspace-detail/services/workspace-detail.service&#x27;;
+
+/**
+ * Analysis Flow Component.
+ * Used to display the visual representation of all performed analyses as DAG graph
+ */
+@Component({
+  selector: &#x27;mev-analysis-flow&#x27;,
+  templateUrl: &#x27;./analysis-flow.component.html&#x27;,
+  styleUrls: [&#x27;./analysis-flow.component.scss&#x27;],
+  changeDetection: ChangeDetectionStrategy.Default
+})
+export class AnalysisFlowComponent implements OnInit {
+  @Output() executedOperationId: EventEmitter&lt;any&gt; &#x3D; new EventEmitter&lt;any&gt;();
+
+  noDataIsAvailable &#x3D; false;
+  isWait &#x3D; false; // to control spinner
+
+  /* DAG Chart settings */
+  containerId &#x3D; &#x27;#dagPlot&#x27;;
+  tooltipOffsetX &#x3D; 10; // position the tooltip on the right side of the triggering element
+  margin &#x3D; { top: 50, right: 50, bottom: 50, left: 50 }; // chart margins
+  nodeSize &#x3D; 30; // tree node size
+  maxTextLabelLength &#x3D; 13;
+  nodeTypes &#x3D; [
+    // settings for DAG nodes
+    {
+      id: &#x27;data_resource_node&#x27;,
+      label: &#x27;File&#x27;,
+      img: &#x27;../../../../assets/file.png&#x27;
+    },
+    { id: &#x27;op_node&#x27;, label: &#x27;Operation&#x27;, img: &#x27;../../../../assets/gear.png&#x27; }
+  ];
+
+  constructor(
+    private route: ActivatedRoute,
+    private analysesService: AnalysesService,
+    private workspaceDetailService: WorkspaceDetailService,
+    public dialog: MatDialog
+  ) {}
+
+  ngOnInit(): void {
+    const workspaceId &#x3D; this.route.snapshot.paramMap.get(&#x27;workspaceId&#x27;);
+    this.analysesService.getExecOperationDAG(workspaceId).subscribe(data &#x3D;&gt; {
+      this.buildDAG(data);
+    });
+  }
+
+  /**
+   * Function to render DAG (Directed Acyclic Graph)
+   */
+  buildDAG(data): void {
+    if (!data || data.length &#x3D;&#x3D;&#x3D; 0) {
+      this.noDataIsAvailable &#x3D; true;
+      return;
+    }
+
+    const dag &#x3D; d3dag.dagStratify()(data);
+    const layout &#x3D; d3dag.sugiyama()(dag);
+    const scale &#x3D; x &#x3D;&gt; 100 * x;
+
+    // use computed layout and get size
+    const width &#x3D; scale(layout.width);
+    const height &#x3D; scale(layout.height);
+
+    d3.select(this.containerId)
+      .selectAll(&#x27;svg&#x27;)
+      .remove();
+
+    const svgSelection &#x3D; d3
+      .select(this.containerId)
+      .append(&#x27;svg&#x27;)
+      .attr(&#x27;width&#x27;, width + this.margin.right + this.margin.left)
+      .attr(&#x27;height&#x27;, height + this.margin.top + this.margin.bottom);
+
+    const defs &#x3D; svgSelection.append(&#x27;defs&#x27;);
+
+    this.nodeTypes.forEach(d &#x3D;&gt; {
+      defs
+        .append(&#x27;svg:pattern&#x27;)
+        .attr(&#x27;id&#x27;, d.id)
+        .attr(&#x27;width&#x27;, this.nodeSize)
+        .attr(&#x27;height&#x27;, this.nodeSize)
+        .append(&#x27;svg:image&#x27;)
+        .attr(&#x27;href&#x27;, d.img)
+        .attr(&#x27;width&#x27;, this.nodeSize)
+        .attr(&#x27;height&#x27;, this.nodeSize)
+        .attr(&#x27;x&#x27;, this.nodeSize / 2)
+        .attr(&#x27;y&#x27;, this.nodeSize / 2);
+    });
+
+    // Draw edges
+    const line &#x3D; d3
+      .line()
+      .curve(d3.curveCatmullRom)
+      .x(d &#x3D;&gt; d[&#x27;x&#x27;])
+      .y(d &#x3D;&gt; d[&#x27;y&#x27;]);
+
+    // Plot edges
+    svgSelection
+      .append(&#x27;g&#x27;)
+      .selectAll(&#x27;path&#x27;)
+      .data(dag.links())
+      .enter()
+      .append(&#x27;path&#x27;)
+      .attr(&#x27;d&#x27;, ({ points }: any) &#x3D;&gt; {
+        points &#x3D; points.map(el &#x3D;&gt; ({ x: scale(el.x), y: scale(el.y) }));
+        return line(points);
+      })
+      .attr(&#x27;fill&#x27;, &#x27;none&#x27;)
+      .attr(&#x27;stroke-width&#x27;, 2)
+      .attr(&#x27;stroke&#x27;, &#x27;#ccc&#x27;);
+
+    // Select nodes
+    const nodes &#x3D; svgSelection
+      .append(&#x27;g&#x27;)
+      .selectAll(&#x27;g&#x27;)
+      .data(dag.descendants())
+      .enter()
+      .append(&#x27;g&#x27;)
+      .attr(
+        &#x27;transform&#x27;,
+        ({ x, y }: any) &#x3D;&gt; &#x60;translate(${scale(x)}, ${scale(y)})&#x60;
+      );
+
+    // Tooltip
+    const tooltipOffsetX &#x3D; this.tooltipOffsetX;
+    const tip &#x3D; d3Tip()
+      .attr(&#x27;class&#x27;, &#x27;d3-tip&#x27;)
+      .offset([-10, 0])
+      .html((event, d) &#x3D;&gt; {
+        const name &#x3D; d.data.node_name;
+        const typeLabel &#x3D; this.nodeTypes.find(
+          type &#x3D;&gt; type.id &#x3D;&#x3D;&#x3D; d.data.node_type
+        ).label;
+        return typeLabel + &#x27;: &#x27; + name;
+      });
+    svgSelection.call(tip);
+
+    // Plot node circles
+    nodes
+      .append(&#x27;circle&#x27;)
+      .attr(&#x27;r&#x27;, this.nodeSize)
+      .attr(&#x27;fill&#x27;, d &#x3D;&gt; {
+        return &#x27;url(#&#x27; + d.data[&#x27;node_type&#x27;] + &#x27;)&#x27;;
+      })
+      .attr(&#x27;class&#x27;, &#x27;circle&#x27;)
+      .on(&#x27;mouseover&#x27;, function(mouseEvent: any, d) {
+        tip.show(mouseEvent, d, this);
+        tip.style(&#x27;left&#x27;, mouseEvent.x + tooltipOffsetX + &#x27;px&#x27;);
+      })
+      .on(&#x27;mouseout&#x27;, tip.hide)
+      .on(&#x27;click&#x27;, (event, d) &#x3D;&gt; {
+        tip.hide();
+        this.onNodeClick(d);
+      });
+
+    // Add text to root nodes
+    const truncate &#x3D; input &#x3D;&gt;
+      input.length &gt; this.maxTextLabelLength
+        ? &#x60;${input.substring(0, this.maxTextLabelLength)}...&#x60;
+        : input;
+
+    nodes
+      .append(&#x27;text&#x27;)
+      .filter(d &#x3D;&gt; d.data[&#x27;parentIds&#x27;].length &#x3D;&#x3D;&#x3D; 0)
+      .text(d &#x3D;&gt; truncate(d.data[&#x27;node_name&#x27;]))
+
+      .attr(&#x27;dx&#x27;, &#x27;-3em&#x27;)
+      .attr(&#x27;dy&#x27;, &#x27;-2em&#x27;)
+      .attr(&#x27;class&#x27;, &#x27;text-label&#x27;);
+  }
+
+  /**
+   * Function is triggered when a tree node is clicked. Clicking on operation nodes
+   * redirects to the Analysis Result. Clicking on Resource nodes opens the Preview file pop-up.
+   */
+  onNodeClick(d) {
+    if (d.data.node_type &#x3D;&#x3D;&#x3D; &#x27;op_node&#x27;) {
+      this.executedOperationId.emit(d.data.id);
+    } else {
+      this.previewItem(d.data.id);
+    }
+  }
+
+  /**
+   * Function is used to preview the content of the workspace resource (file)
+   */
+  previewItem(resourceId) {
+    this.isWait &#x3D; true;
+    this.workspaceDetailService
+      .getResourcePreview(resourceId)
+      .subscribe(data &#x3D;&gt; {
+        const previewData &#x3D; {};
+        if (data?.results?.length &amp;&amp; &#x27;rowname&#x27; in data.results[0]) {
+          const minN &#x3D; Math.min(data.results.length, 10);
+          const slicedData &#x3D; data.results.slice(0, minN);
+          const columns &#x3D; Object.keys(slicedData[0].values);
+          const rows &#x3D; slicedData.map(elem &#x3D;&gt; elem.rowname);
+          const values &#x3D; slicedData.map(elem &#x3D;&gt; {
+            const rowValues &#x3D; [];
+            const elemValues &#x3D; elem.values;
+            columns.forEach(col &#x3D;&gt; rowValues.push(elemValues[col]));
+            return rowValues;
+          });
+          previewData[&#x27;columns&#x27;] &#x3D; columns;
+          previewData[&#x27;rows&#x27;] &#x3D; rows;
+          previewData[&#x27;values&#x27;] &#x3D; values;
+        }
+
+        setTimeout(() &#x3D;&gt; {
+          this.isWait &#x3D; false;
+          this.dialog.open(PreviewDialogComponent, {
+            data: {
+              previewData: previewData
+            }
+          });
+        }, 1000);
+      });
+  }
+
+  /**
+   * Function performs a ‘workspace export’ which takes the graph
+   * and make some ‘full record’ including the operation versions, etc.
+   */
+  saveAnalysisHistory() {}
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;mev-spinner-overlay *ngIf&#x3D;&quot;isWait&quot;&gt;&lt;/mev-spinner-overlay&gt;
+
+&lt;section class&#x3D;&quot;analysis-container&quot;&gt;
+    &lt;mat-card class&#x3D;&quot;analysis-card&quot;&gt;
+        &lt;mat-card-content class&#x3D;&quot;analysis-card__main&quot;&gt;
+            &lt;p class&#x3D;&quot;analysis-card__instruction&quot;&gt;
+                Below is a visual representation of your analysis. 
+                You can view which analyses were run and with which files so that analyses can be fully reproduced.
+            &lt;/p&gt;
+            &lt;mat-divider [inset]&#x3D;&quot;true&quot;&gt;&lt;/mat-divider&gt;
+            &lt;div class&#x3D;&quot;analysis-card__content&quot;&gt;
+                &lt;div class&#x3D;&quot;btn-group&quot;&gt;
+                    &lt;button mat-raised-button color&#x3D;&quot;accent&quot; (click)&#x3D;&quot;saveAnalysisHistory()&quot; disabled&#x3D;true&gt;
+                      &lt;mat-icon aria-label&#x3D;&quot;Export analysis history&quot;&gt;save_alt&lt;/mat-icon&gt;
+                      Export analysis history
+                    &lt;/button&gt;
+                &lt;/div&gt;    
+                &lt;div *ngIf&#x3D;&quot;noDataIsAvailable&quot;&gt;No data is available&lt;/div&gt;
+                &lt;div class&#x3D;&quot;chart&quot; #dagPlot id&#x3D;&quot;dagPlot&quot;&gt;&lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/mat-card-content&gt;
+    &lt;/mat-card&gt;
+&lt;/section&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./analysis-flow.component.scss</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">.analysis-container {
+  margin: 20px;
+  width: 98%;
+}
+
+.btn-group {
+  padding: 15px 0;
+}
+
+.mat-card {
+  overflow-x: scroll;
+}
+
+::ng-deep {
+  .d3-tip {
+    line-height: 1;
+    font-weight: bold;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 2px;
+    z-index: 1;
+  }
+
+  .circle {
+    cursor: pointer;
+  }
+
+  .text-label {
+    font-weight: bold;
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><mev-spinner-overlay *ngIf="isWait"></mev-spinner-overlay><section class="analysis-container">    <mat-card class="analysis-card">        <mat-card-content class="analysis-card__main">            <p class="analysis-card__instruction">                Below is a visual representation of your analysis.                 You can view which analyses were run and with which files so that analyses can be fully reproduced.            </p>            <mat-divider [inset]="true"></mat-divider>            <div class="analysis-card__content">                <div class="btn-group">                    <button mat-raised-button color="accent" (click)="saveAnalysisHistory()" disabled=true>                      <mat-icon aria-label="Export analysis history">save_alt</mat-icon>                      Export analysis history                    </button>                </div>                    <div *ngIf="noDataIsAvailable">No data is available</div>                <div class="chart" #dagPlot id="dagPlot"></div>            </div>        </mat-card-content>    </mat-card></section></div>'
+    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'mev-about'},{'name': 'AddAnnotationDialogComponent', 'selector': 'mev-add-annotation-dialog'},{'name': 'AddDialogComponent', 'selector': 'mev-add-dialog'},{'name': 'AddFileDialogComponent', 'selector': 'mev-add-file-dialog'},{'name': 'AddObservationSetDialogComponent', 'selector': 'mev-add-observation-set-dialog'},{'name': 'AddSampleSetComponent', 'selector': 'mev-add-sample-set'},{'name': 'AddWSDialogComponent', 'selector': 'mev-add-ws-dialog'},{'name': 'AnalysesComponent', 'selector': 'mev-analyses'},{'name': 'AnalysisFlowComponent', 'selector': 'mev-analysis-flow'},{'name': 'AnalysisPlottingResultComponent', 'selector': 'mev-analysis-plotting-result'},{'name': 'AnalysisResultComponent', 'selector': 'mev-analysis-result'},{'name': 'AppComponent', 'selector': 'mev-root'},{'name': 'BoxPlottingComponent', 'selector': 'mev-box-plotting'},{'name': 'DeleteDialogComponent', 'selector': 'mev-delete-dialog'},{'name': 'DeleteFileDialogComponent', 'selector': 'mev-delete-file-dialog'},{'name': 'DeleteSetDialogComponent', 'selector': 'mev-delete-set-dialog'},{'name': 'DeleteWSDialogComponent', 'selector': 'mev-delete-ws-dialog'},{'name': 'Deseq2Component', 'selector': 'mev-deseq2'},{'name': 'DownloadButtonComponent', 'selector': 'mev-download-button'},{'name': 'EditDialogComponent', 'selector': 'mev-edit-dialog'},{'name': 'EditFeatureSetDialogComponent', 'selector': 'mev-edit-feature-set-dialog'},{'name': 'EditFileDialogComponent', 'selector': 'mev-edit-file-dialog'},{'name': 'EditWSDialogComponent', 'selector': 'mev-edit-ws-dialog'},{'name': 'ExecutedOperationComponent', 'selector': 'mev-executed-operation'},{'name': 'FileListComponent', 'selector': 'mev-file-list'},{'name': 'GseaComponent', 'selector': 'mev-gsea'},{'name': 'HclComponent', 'selector': 'mev-hcl'},{'name': 'KmeansComponent', 'selector': 'mev-kmeans'},{'name': 'LimmaComponent', 'selector': 'mev-limma'},{'name': 'LoginComponent', 'selector': 'mev-login-form'},{'name': 'MetadataComponent', 'selector': 'mev-metadata'},{'name': 'OperationComponent', 'selector': 'mev-operation'},{'name': 'PasswordChangeComponent', 'selector': 'mev-password-change'},{'name': 'PreviewDialogComponent', 'selector': 'mev-preview-dialog'},{'name': 'ProgressSnackbarComponent', 'selector': 'mev-progress-snackbar'},{'name': 'RegisterComponent', 'selector': 'mev-register-form'},{'name': 'RequestPasswordResetComponent', 'selector': 'mev-request-password-reset'},{'name': 'ResponsePasswordResetComponent', 'selector': 'mev-response-password-reset'},{'name': 'RugPlotComponent', 'selector': 'mev-rug-plot'},{'name': 'ScatterPlotComponent', 'selector': 'mev-scatter-plot'},{'name': 'SettingsContainerComponent', 'selector': 'mev-settings'},{'name': 'SpinnerOverlayComponent', 'selector': 'mev-spinner-overlay'},{'name': 'TutorialComponent', 'selector': 'mev-tutorial'},{'name': 'ViewFileTypesDialogComponent', 'selector': 'mev-view-file-types-dialog'},{'name': 'ViewInfoDialogComponent', 'selector': 'mev-view-info-dialog'},{'name': 'ViewSetDialogComponent', 'selector': 'mev-view-set-dialog'},{'name': 'WorkareaComponent', 'selector': 'mev-workarea'},{'name': 'WorkspaceDetailComponent', 'selector': 'mev-workspace-detail'},{'name': 'WorkspaceListComponent', 'selector': 'mev-workspace-list'}];
+    var DIRECTIVES = [{'name': 'RtlSupportDirective', 'selector': '[rtl]'}];
+    var ACTUAL_COMPONENT = {'name': 'AnalysisFlowComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+                   
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'AnalysisFlowComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

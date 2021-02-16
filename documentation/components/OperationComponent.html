@@ -1,0 +1,1998 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>web-mev documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	      <link rel="stylesheet" href="../styles/style.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">web-mev documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li>OperationComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>projects/web-mev/src/app/features/analysis/components/operation/operation.component.ts</code>
+</p>
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Operation Component
+used for displaying the input parameters of an operation</p>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnChanges" target="_blank" >OnChanges</a></code>
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover">
+        <tbody>
+
+            <tr>
+                <td class="col-md-3">changeDetection</td>
+                <td class="col-md-9"><code>ChangeDetectionStrategy.Default</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>mev-operation</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./operation.component.scss</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./operation.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#analysesForm">analysesForm</a>
+                            </li>
+                            <li>
+                                <a href="#booleanFields">booleanFields</a>
+                            </li>
+                            <li>
+                                <a href="#boxPlotData">boxPlotData</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#dialog">dialog</a>
+                            </li>
+                            <li>
+                                <a href="#featureFields">featureFields</a>
+                            </li>
+                            <li>
+                                <a href="#intFields">intFields</a>
+                            </li>
+                            <li>
+                                <a href="#multipleResourceFields">multipleResourceFields</a>
+                            </li>
+                            <li>
+                                <a href="#multipleResourcesDropdownSettings">multipleResourcesDropdownSettings</a>
+                            </li>
+                            <li>
+                                <a href="#numFields">numFields</a>
+                            </li>
+                            <li>
+                                <a href="#observationFields">observationFields</a>
+                            </li>
+                            <li>
+                                <a href="#optionFields">optionFields</a>
+                            </li>
+                            <li>
+                                <a href="#resourceFields">resourceFields</a>
+                            </li>
+                            <li>
+                                <a href="#submitted">submitted</a>
+                            </li>
+                            <li>
+                                <a href="#textFields">textFields</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#convertToFloatObj">convertToFloatObj</a>
+                            </li>
+                            <li>
+                                <a href="#createForm">createForm</a>
+                            </li>
+                            <li>
+                                <a href="#loadData">loadData</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnChanges">ngOnChanges</a>
+                            </li>
+                            <li>
+                                <a href="#onSubmit">onSubmit</a>
+                            </li>
+                            <li>
+                                <a href="#showPlots">showPlots</a>
+                            </li>
+                            <li>
+                                <a href="#startAnalysis">startAnalysis</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#operation">operation</a>
+                            </li>
+                            <li>
+                                <a href="#workspace$">workspace$</a>
+                            </li>
+                            <li>
+                                <a href="#workspaceId">workspaceId</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Outputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#executedOperationId">executedOperationId</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#f">f</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(formBuilder: <a href="https://angular.io/api/forms/FormBuilder" target="_blank">FormBuilder</a>, apiService: <a href="../injectables/AnalysesService.html">AnalysesService</a>, metadataService: <a href="../injectables/MetadataService.html">MetadataService</a>, dialog: MatDialog)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/operation/operation.component.ts:50</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>formBuilder</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://angular.io/api/forms/FormBuilder" target="_blank" >FormBuilder</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>apiService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/AnalysesService.html" target="_self" >AnalysesService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>metadataService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/MetadataService.html" target="_self" >MetadataService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>dialog</td>
+                                                  
+                                                        <td>
+                                                                    <code>MatDialog</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+    <section>
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="operation"></a>
+                        <b>operation</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/Operation.html" target="_self" >Operation</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/operation/operation.component.ts:35</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="workspace$"></a>
+                        <b>workspace$</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/Workspace.html" target="_self" >Observable&lt;Workspace&gt;</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/operation/operation.component.ts:34</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="workspaceId"></a>
+                        <b>workspaceId</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/operation/operation.component.ts:33</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+    <section>
+    <h3 id="outputs">Outputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="executedOperationId"></a>
+                        <b>executedOperationId</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/operation/operation.component.ts:37</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="convertToFloatObj"></a>
+                    <span class="name">
+                        <b>
+                            convertToFloatObj
+                        </b>
+                        <a href="#convertToFloatObj"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>convertToFloatObj(obj)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="322"
+                            class="link-to-prism">projects/web-mev/src/app/features/analysis/components/operation/operation.component.ts:322</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Function is used to convert strings to floats for numeric values
+before sending the data to execute the operation</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>obj</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>{}</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createForm"></a>
+                    <span class="name">
+                        <b>
+                            createForm
+                        </b>
+                        <a href="#createForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>createForm(data)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="75"
+                            class="link-to-prism">projects/web-mev/src/app/features/analysis/components/operation/operation.component.ts:75</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Configure the control setting for different types of input operation parameters
+The supported types are ObservationSet, FeatureSet, DataResource, BoundedFloat, Integer,
+Positive Integer, String, OptionString</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>data</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadData"></a>
+                    <span class="name">
+                        <b>
+                            loadData
+                        </b>
+                        <a href="#loadData"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>loadData()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="304"
+                            class="link-to-prism">projects/web-mev/src/app/features/analysis/components/operation/operation.component.ts:304</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Load operation data before creating form controls</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnChanges"></a>
+                    <span class="name">
+                        <b>
+                            ngOnChanges
+                        </b>
+                        <a href="#ngOnChanges"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnChanges()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="66"
+                            class="link-to-prism">projects/web-mev/src/app/features/analysis/components/operation/operation.component.ts:66</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onSubmit"></a>
+                    <span class="name">
+                        <b>
+                            onSubmit
+                        </b>
+                        <a href="#onSubmit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onSubmit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="314"
+                            class="link-to-prism">projects/web-mev/src/app/features/analysis/components/operation/operation.component.ts:314</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="showPlots"></a>
+                    <span class="name">
+                        <b>
+                            showPlots
+                        </b>
+                        <a href="#showPlots"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>showPlots()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="350"
+                            class="link-to-prism">projects/web-mev/src/app/features/analysis/components/operation/operation.component.ts:350</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Function is triggered when the user clicks the Show button
+to visualize normalization results</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="startAnalysis"></a>
+                    <span class="name">
+                        <b>
+                            startAnalysis
+                        </b>
+                        <a href="#startAnalysis"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>startAnalysis()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="337"
+                            class="link-to-prism">projects/web-mev/src/app/features/analysis/components/operation/operation.component.ts:337</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Function is triggered when the user clicks the Run button
+to start analysis</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+        <h3 id="inputs">
+            Properties
+        </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="analysesForm"></a>
+                        <span class="name">
+                            <b>
+                            analysesForm</b>
+                            <a href="#analysesForm"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://angular.io/api/forms/FormGroup" target="_blank" >FormGroup</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/operation/operation.component.ts:29</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="booleanFields"></a>
+                        <span class="name">
+                            <b>
+                            booleanFields</b>
+                            <a href="#booleanFields"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>[]</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>[]</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/operation/operation.component.ts:46</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="boxPlotData"></a>
+                        <span class="name">
+                            <b>
+                            boxPlotData</b>
+                            <a href="#boxPlotData"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/operation/operation.component.ts:50</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="dialog"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Public</span>
+                            dialog</b>
+                            <a href="#dialog"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>MatDialog</code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/operation/operation.component.ts:56</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="featureFields"></a>
+                        <span class="name">
+                            <b>
+                            featureFields</b>
+                            <a href="#featureFields"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>[]</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>[]</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/operation/operation.component.ts:48</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="intFields"></a>
+                        <span class="name">
+                            <b>
+                            intFields</b>
+                            <a href="#intFields"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>[]</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>[]</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/operation/operation.component.ts:41</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="multipleResourceFields"></a>
+                        <span class="name">
+                            <b>
+                            multipleResourceFields</b>
+                            <a href="#multipleResourceFields"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>[]</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>[]</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/operation/operation.component.ts:43</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="multipleResourcesDropdownSettings"></a>
+                        <span class="name">
+                            <b>
+                            multipleResourcesDropdownSettings</b>
+                            <a href="#multipleResourcesDropdownSettings"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>{}</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/operation/operation.component.ts:31</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="numFields"></a>
+                        <span class="name">
+                            <b>
+                            numFields</b>
+                            <a href="#numFields"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>[]</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>[]</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/operation/operation.component.ts:40</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="observationFields"></a>
+                        <span class="name">
+                            <b>
+                            observationFields</b>
+                            <a href="#observationFields"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>[]</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>[]</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/operation/operation.component.ts:47</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="optionFields"></a>
+                        <span class="name">
+                            <b>
+                            optionFields</b>
+                            <a href="#optionFields"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>[]</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>[]</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/operation/operation.component.ts:45</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="resourceFields"></a>
+                        <span class="name">
+                            <b>
+                            resourceFields</b>
+                            <a href="#resourceFields"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>[]</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>[]</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/operation/operation.component.ts:42</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="submitted"></a>
+                        <span class="name">
+                            <b>
+                            submitted</b>
+                            <a href="#submitted"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>false</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/operation/operation.component.ts:30</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="textFields"></a>
+                        <span class="name">
+                            <b>
+                            textFields</b>
+                            <a href="#textFields"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>[]</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>[]</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/operation/operation.component.ts:44</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+</section>
+
+    <section>
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="f"></a>
+                        <span class="name"><b>f</b><a href="#f"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>f()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="364" class="link-to-prism">projects/web-mev/src/app/features/analysis/components/operation/operation.component.ts:364</a></div>
+                                </td>
+                            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description"><p>Convenience getter for easy access to form fields</p>
+</div>
+
+                        </td>
+                    </tr>
+
+            </tbody>
+        </table>
+</section>
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  EventEmitter,
+  Output,
+  OnChanges
+} from &#x27;@angular/core&#x27;;
+import { FormGroup, Validators, FormBuilder } from &#x27;@angular/forms&#x27;;
+import { AnalysesService } from &#x27;../../services/analysis.service&#x27;;
+import { Workspace } from &#x27;@app/features/workspace-manager/models/workspace&#x27;;
+import { Observable } from &#x27;rxjs&#x27;;
+import { Operation } from &#x27;../../models/operation&#x27;;
+import { MetadataService } from &#x27;@app/core/metadata/metadata.service&#x27;;
+import { AnalysisPlottingResultComponent } from &#x27;../analysis-plotting-result/analysis-plotting-result.component&#x27;;
+import { MatDialog } from &#x27;@angular/material/dialog&#x27;;
+
+/**
+ * Operation Component
+ * used for displaying the input parameters of an operation
+ */
+@Component({
+  selector: &#x27;mev-operation&#x27;,
+  templateUrl: &#x27;./operation.component.html&#x27;,
+  styleUrls: [&#x27;./operation.component.scss&#x27;],
+  changeDetection: ChangeDetectionStrategy.Default
+})
+export class OperationComponent implements OnChanges {
+  analysesForm: FormGroup;
+  submitted &#x3D; false;
+  multipleResourcesDropdownSettings &#x3D; {};
+
+  @Input() workspaceId: string;
+  @Input() workspace$: Observable&lt;Workspace&gt;;
+  @Input() operation: Operation;
+
+  @Output() executedOperationId: EventEmitter&lt;any&gt; &#x3D; new EventEmitter&lt;any&gt;();
+
+  // default settings for analyses fields
+  numFields &#x3D; [];
+  intFields &#x3D; [];
+  resourceFields &#x3D; [];
+  multipleResourceFields &#x3D; [];
+  textFields &#x3D; [];
+  optionFields &#x3D; [];
+  booleanFields &#x3D; [];
+  observationFields &#x3D; [];
+  featureFields &#x3D; [];
+
+  boxPlotData;
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private apiService: AnalysesService,
+    private metadataService: MetadataService,
+    public dialog: MatDialog
+  ) {
+    this.multipleResourcesDropdownSettings &#x3D; {
+      text: &#x27;&#x27;,
+      selectAllText: &#x27;Select All&#x27;,
+      unSelectAllText: &#x27;Unselect All&#x27;,
+      classes: &#x27;resource-dropdown&#x27;
+    };
+  }
+
+  ngOnChanges(): void {
+    this.loadData();
+  }
+
+  /**
+   * Configure the control setting for different types of input operation parameters
+   * The supported types are ObservationSet, FeatureSet, DataResource, BoundedFloat, Integer,
+   * Positive Integer, String, OptionString
+   */
+  createForm(data) {
+    const inputs &#x3D; data.inputs;
+    const controlsConfig &#x3D; {};
+    this.numFields &#x3D; [];
+    this.intFields &#x3D; [];
+    this.resourceFields &#x3D; [];
+    this.multipleResourceFields &#x3D; [];
+    this.textFields &#x3D; [];
+    this.booleanFields &#x3D; [];
+    this.optionFields &#x3D; [];
+    this.observationFields &#x3D; [];
+    this.featureFields &#x3D; [];
+
+    for (const key in inputs) {
+      if (inputs.hasOwnProperty(key)) {
+        const input &#x3D; inputs[key];
+        const field_type &#x3D; input.spec.attribute_type;
+
+        switch (field_type) {
+          case &#x27;ObservationSet&#x27;: {
+            const observationField &#x3D; {
+              key: key,
+              name: input.name,
+              desc: input.description,
+              required: input.required,
+              sets: []
+            };
+            const availableObsSets &#x3D; this.metadataService.getCustomObservationSets();
+            observationField.sets &#x3D; availableObsSets.map(set &#x3D;&gt; {
+              const newSet &#x3D; set.elements.map(elem &#x3D;&gt; {
+                const o &#x3D; { id: elem.id };
+                return o;
+              });
+              return { ...set, elements: newSet };
+            });
+            this.observationFields.push(observationField);
+            const configObservationSetsField &#x3D; [
+              &#x27;&#x27;,
+              [...(input.required ? [Validators.required] : [])]
+            ];
+            controlsConfig[key] &#x3D; configObservationSetsField;
+            break;
+          }
+          case &#x27;FeatureSet&#x27;: {
+            const featureField &#x3D; {
+              key: key,
+              name: input.name,
+              desc: input.description,
+              required: input.required,
+              sets: []
+            };
+            const availableFeatSets &#x3D; this.metadataService.getCustomFeatureSets();
+            featureField.sets &#x3D; availableFeatSets.map(set &#x3D;&gt; {
+              const newSet &#x3D; set.elements.map(elem &#x3D;&gt; {
+                const o &#x3D; { id: elem.id };
+                return o;
+              });
+              return { ...set, elements: newSet };
+            });
+            this.featureFields.push(featureField);
+            const configFeatureSetsField &#x3D; [
+              &#x27;&#x27;,
+              [...(input.required ? [Validators.required] : [])]
+            ];
+            controlsConfig[key] &#x3D; configFeatureSetsField;
+            break;
+          }
+          case &#x27;DataResource&#x27;: {
+            const resourceField &#x3D; {
+              key: key,
+              name: input.name,
+              resource_types: input.spec.resource_types,
+              desc: input.description,
+              required: input.required,
+              files: [],
+              selectedFiles: []
+            };
+            this.apiService
+              .getAvailableResourcesByParam(
+                input.spec.resource_types,
+                this.workspaceId
+              )
+              .subscribe(data &#x3D;&gt; {
+                resourceField.files &#x3D; data;
+                if (input.spec.many &#x3D;&#x3D;&#x3D; false) {
+                  this.resourceFields.push(resourceField);
+                } else {
+                  this.multipleResourceFields.push(resourceField);
+                }
+              });
+
+            const configResourceField &#x3D; [
+              &#x27;&#x27;,
+              [...(input.required ? [Validators.required] : [])]
+            ];
+            controlsConfig[key] &#x3D; configResourceField;
+            break;
+          }
+          case &#x27;BoundedFloat&#x27;: {
+            const numField &#x3D; {
+              key: key,
+              name: input.name,
+              min: input.spec.min,
+              max: input.spec.max,
+              desc: input.description,
+              required: input.required
+            };
+            this.numFields.push(numField);
+
+            const configNumField &#x3D; [
+              input.spec.default_value,
+              [
+                ...(input.required ? [Validators.required] : []),
+                Validators.min(input.spec.min),
+                Validators.max(input.spec.max),
+                Validators.pattern(/^-?\d*(\.\d+)?$/)
+              ]
+            ];
+            controlsConfig[key] &#x3D; configNumField;
+            break;
+          }
+          case &#x27;Integer&#x27;: {
+            const intField &#x3D; {
+              key: key,
+              name: input.name,
+              min: 0,
+              desc: input.description,
+              required: input.required
+            };
+            this.intFields.push(intField);
+
+            const configIntField &#x3D; [
+              input.spec.default_value,
+              [
+                ...(input.required ? [Validators.required] : []),
+                Validators.min(input.spec.min),
+                Validators.pattern(/^[0-9]\d*$/)
+              ]
+            ];
+            controlsConfig[key] &#x3D; configIntField;
+            break;
+          }
+          case &#x27;PositiveInteger&#x27;: {
+            const posIntField &#x3D; {
+              key: key,
+              name: input.name,
+              min: 1,
+              desc: input.description,
+              required: input.required
+            };
+            this.intFields.push(posIntField);
+
+            const configPosIntField &#x3D; [
+              input.spec.default_value,
+              [
+                ...(input.required ? [Validators.required] : []),
+                Validators.min(input.spec.min),
+                Validators.pattern(/^[1-9]\d*$/)
+              ]
+            ];
+            controlsConfig[key] &#x3D; configPosIntField;
+            break;
+          }
+          case &#x27;String&#x27;: {
+            const textField &#x3D; {
+              key: key,
+              name: input.name,
+              desc: input.description,
+              required: input.required
+            };
+            this.textFields.push(textField);
+
+            const configTextField &#x3D; [
+              input.spec.default_value,
+              [...(input.required ? [Validators.required] : [])]
+            ];
+            controlsConfig[key] &#x3D; configTextField;
+            break;
+          }
+          case &#x27;OptionString&#x27;: {
+            const optionField &#x3D; {
+              key: key,
+              name: input.name,
+              desc: input.description,
+              required: input.required,
+              options: input.spec.options,
+              selectedOptions: []
+            };
+            this.optionFields.push(optionField);
+            const configOptionField &#x3D; [
+              input.spec.default_value,
+              [...(input.required ? [Validators.required] : [])]
+            ];
+            controlsConfig[key] &#x3D; configOptionField;
+            break;
+          }
+          case &#x27;Boolean&#x27;: {
+            const booleanField &#x3D; {
+              key: key,
+              name: input.name,
+              desc: input.description,
+              required: input.required
+            };
+            this.booleanFields.push(booleanField);
+
+            const configBooleanField &#x3D; [
+              input.spec.default_value,
+              [...(input.required ? [Validators.required] : [])]
+            ];
+            controlsConfig[key] &#x3D; configBooleanField;
+            break;
+          }
+          default: {
+            break;
+          }
+        }
+      }
+    }
+
+    controlsConfig[&#x27;job_name&#x27;] &#x3D; [
+      &#x27;&#x27;,
+      [...(this.operation.mode !&#x3D;&#x3D; &#x27;client&#x27; ? [Validators.required] : [])]
+    ];
+    this.analysesForm &#x3D; this.formBuilder.group(controlsConfig);
+  }
+
+  /**
+   * Load operation data before creating form controls
+   */
+  loadData() {
+    if (this.operation.mode &#x3D;&#x3D;&#x3D; &#x27;client&#x27;) {
+      this.createForm(this.operation);
+    } else {
+      this.apiService.getOperation(this.operation.id).subscribe(data &#x3D;&gt; {
+        this.createForm(data);
+      });
+    }
+  }
+
+  onSubmit() {
+    this.submitted &#x3D; true;
+  }
+
+  /**
+   * Function is used to convert strings to floats for numeric values
+   * before sending the data to execute the operation
+   */
+  convertToFloatObj(obj) {
+    const res &#x3D; {};
+    for (const key in obj) {
+      res[key] &#x3D;
+        isNaN(obj[key]) || typeof obj[key] &#x3D;&#x3D;&#x3D; &#x27;boolean&#x27;
+          ? obj[key]
+          : parseFloat(obj[key]);
+    }
+    return res;
+  }
+
+  /**
+   * Function is triggered when the user clicks the Run button
+   * to start analysis
+   */
+  startAnalysis() {
+    const inputs &#x3D; this.convertToFloatObj(this.analysesForm.value);
+    this.apiService
+      .executeOperation(this.operation.id, this.workspaceId, inputs)
+      .subscribe(data &#x3D;&gt; {
+        this.executedOperationId.emit(data.executed_operation_id);
+      });
+  }
+
+  /**
+   * Function is triggered when the user clicks the Show button
+   * to visualize normalization results
+   */
+  showPlots() {
+    const inputs &#x3D; this.convertToFloatObj(this.analysesForm.value);
+    this.boxPlotData &#x3D; { ...inputs };
+
+    this.dialog.open(AnalysisPlottingResultComponent, {
+      data: {
+        boxPlotData: { ...inputs }
+      }
+    });
+  }
+
+  /**
+   * Convenience getter for easy access to form fields
+   */
+  get f() {
+    return this.analysesForm.controls;
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;h3&gt;{{ operation.name }}&lt;/h3&gt;
+&lt;p&gt;{{ operation.description }} &lt;/p&gt;
+
+&lt;form *ngIf&#x3D;&quot;analysesForm&quot; [formGroup]&#x3D;&quot;analysesForm&quot; (ngSubmit)&#x3D;&quot;onSubmit()&quot;&gt;
+
+  &lt;!-- OPERATION NAME --&gt;
+  &lt;ng-container *ngIf&#x3D;&quot;operation.mode !&#x3D;&#x3D; &#x27;client&#x27;&quot;&gt;
+    &lt;div class&#x3D;&quot;label&quot;&gt;
+      Operation name:
+      &lt;mat-icon class&#x3D;&quot;analyses-header__icon&quot; matTooltipClass&#x3D;&quot;tooltip&quot; fontSet&#x3D;&quot;material-icons-outlined&quot;
+        matTooltip&#x3D;&quot;Type operation name&quot; aria-label&#x3D;&quot;Info tooltip about the field&quot;&gt;info
+      &lt;/mat-icon&gt;
+    &lt;/div&gt;
+
+    &lt;mat-form-field class&#x3D;&quot;form-control&quot; color&#x3D;&quot;accent&quot;&gt;
+      &lt;input matInput formControlName&#x3D;&quot;job_name&quot; name&#x3D;&quot;job_name&quot;&gt;
+    &lt;/mat-form-field&gt;
+  &lt;/ng-container&gt;
+
+  &lt;!-- SINGLE SELECT LISTS FOR RESOURCES --&gt;
+  &lt;div *ngFor&#x3D;&quot;let resourceField of resourceFields&quot;&gt;
+    &lt;div class&#x3D;&quot;label&quot;&gt;
+      {{ resourceField.name }}
+      &lt;mat-icon class&#x3D;&quot;analyses-header__icon&quot; matTooltipClass&#x3D;&quot;tooltip&quot; fontSet&#x3D;&quot;material-icons-outlined&quot;
+        matTooltip&#x3D;&quot;{{ resourceField.desc}}&quot; aria-label&#x3D;&quot;Info tooltip about the field&quot;&gt;info
+      &lt;/mat-icon&gt;
+    &lt;/div&gt;
+    &lt;mat-form-field class&#x3D;&quot;form-control&quot; color&#x3D;&quot;accent&quot;&gt;
+      &lt;mat-select [formControlName]&#x3D;&quot;resourceField.key&quot;&gt;
+        &lt;mat-option *ngFor&#x3D;&quot;let file of resourceField.files&quot; [value]&#x3D;&quot;file.id&quot;&gt;
+          {{ file.name }}
+        &lt;/mat-option&gt;
+      &lt;/mat-select&gt;
+      &lt;div *ngIf&#x3D;&quot;submitted &amp;&amp; f[resourceField.key].errors&quot;&gt;
+        &lt;mat-error *ngIf&#x3D;&quot;f[resourceField.key].errors.required&quot;&gt;
+          This field is required
+        &lt;/mat-error&gt;
+      &lt;/div&gt;
+    &lt;/mat-form-field&gt;
+  &lt;/div&gt;
+
+
+
+  &lt;!-- MULTIPLE SELECT LISTS FOR RESOURCES --&gt;
+  &lt;div *ngFor&#x3D;&quot;let multipleResourceField of multipleResourceFields&quot;&gt;
+    &lt;div class&#x3D;&quot;form-control form-control--multiselect&quot;&gt;
+      &lt;div class&#x3D;&quot;label&quot;&gt;
+        {{ multipleResourceField.name }}
+        &lt;mat-icon class&#x3D;&quot;analyses-header__icon&quot; matTooltipClass&#x3D;&quot;tooltip&quot; fontSet&#x3D;&quot;material-icons-outlined&quot;
+          matTooltip&#x3D;&quot;{{ multipleResourceField.desc}}&quot; aria-label&#x3D;&quot;Info tooltip about the field&quot;&gt;info
+        &lt;/mat-icon&gt;
+      &lt;/div&gt;
+      &lt;angular2-multiselect [formControlName]&#x3D;&quot;multipleResourceField.key&quot; [data]&#x3D;&quot;multipleResourceField.files&quot;
+        [(ngModel)]&#x3D;&quot;multipleResourceField.selectedFiles&quot; [settings]&#x3D;&quot;multipleResourcesDropdownSettings&quot;&gt;
+        &lt;c-item&gt;
+          &lt;ng-template let-item&#x3D;&quot;item&quot;&gt;
+            &lt;label&gt;{{ item.name }} Type: {{ item.readable_resource_type || &#x27;N/A&#x27; }}&lt;/label&gt;
+          &lt;/ng-template&gt;
+        &lt;/c-item&gt;
+        &lt;c-badge&gt;
+          &lt;ng-template let-item&#x3D;&quot;item&quot;&gt;
+            &lt;label&gt;{{ item.name }}&lt;/label&gt;
+          &lt;/ng-template&gt;
+        &lt;/c-badge&gt;
+      &lt;/angular2-multiselect&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+
+
+
+  &lt;!-- NUMERIC FIELDS --&gt;
+
+  &lt;div *ngFor&#x3D;&quot;let numField of numFields&quot;&gt;
+    &lt;div class&#x3D;&quot;label&quot;&gt;
+      {{ numField.name }}
+      &lt;mat-icon class&#x3D;&quot;analyses-header__icon&quot; matTooltipClass&#x3D;&quot;tooltip&quot; fontSet&#x3D;&quot;material-icons-outlined&quot;
+        matTooltip&#x3D;&quot;{{ numField.desc}}&quot; aria-label&#x3D;&quot;Info tooltip about the field&quot;&gt;info
+      &lt;/mat-icon&gt;
+    &lt;/div&gt;
+    &lt;mat-form-field class&#x3D;&quot;form-control&quot; color&#x3D;&quot;accent&quot;&gt;
+      &lt;input matInput [formControlName]&#x3D;&quot;numField.key&quot; [name]&#x3D;&quot;numField.key&quot;&gt;
+      &lt;div *ngIf&#x3D;&quot;submitted &amp;&amp; f[numField.key].errors&quot;&gt;
+        &lt;mat-error *ngIf&#x3D;&quot;f[numField.key].errors.required&quot;&gt;
+          This field is required
+        &lt;/mat-error&gt;
+        &lt;mat-error *ngIf&#x3D;&quot;f[numField.key].errors.min || f[numField.key].errors.max || f[numField.key].errors.pattern&quot;&gt;
+          The value should be a number between {{ numField.min }} and {{ numField.max }}.
+        &lt;/mat-error&gt;
+      &lt;/div&gt;
+    &lt;/mat-form-field&gt;
+  &lt;/div&gt;
+
+  &lt;!-- INTEGER FIELDS --&gt;
+
+  &lt;div *ngFor&#x3D;&quot;let intField of intFields&quot;&gt;
+    &lt;div class&#x3D;&quot;label&quot;&gt;
+      {{ intField.name }}
+      &lt;mat-icon class&#x3D;&quot;analyses-header__icon&quot; matTooltipClass&#x3D;&quot;tooltip&quot; fontSet&#x3D;&quot;material-icons-outlined&quot;
+        matTooltip&#x3D;&quot;{{ intField.desc}}&quot; aria-label&#x3D;&quot;Info tooltip about the field&quot;&gt;info
+      &lt;/mat-icon&gt;
+    &lt;/div&gt;
+    &lt;mat-form-field class&#x3D;&quot;form-control&quot; color&#x3D;&quot;accent&quot;&gt;
+      &lt;input matInput [formControlName]&#x3D;&quot;intField.key&quot; [name]&#x3D;&quot;intField.key&quot;&gt;
+      &lt;div *ngIf&#x3D;&quot;f[intField.key].value &amp;&amp; f[intField.key].errors&quot;&gt;
+        &lt;mat-error *ngIf&#x3D;&quot;f[intField.key].errors.required&quot;&gt;
+          This field is required
+        &lt;/mat-error&gt;
+        &lt;mat-error *ngIf&#x3D;&quot;f[intField.key].errors.min || f[intField.key].errors.max || f[intField.key].errors.pattern&quot;&gt;
+          The value should be an integer greater than or equal to {{ intField.min }}
+        &lt;/mat-error&gt;
+      &lt;/div&gt;
+    &lt;/mat-form-field&gt;
+  &lt;/div&gt;
+
+
+  &lt;!-- TEXT FIELDS --&gt;
+
+  &lt;div *ngFor&#x3D;&quot;let textField of textFields&quot;&gt;
+    &lt;div class&#x3D;&quot;label&quot;&gt;
+      {{ textField.name }}
+      &lt;mat-icon class&#x3D;&quot;analyses-header__icon&quot; matTooltipClass&#x3D;&quot;tooltip&quot; fontSet&#x3D;&quot;material-icons-outlined&quot;
+        matTooltip&#x3D;&quot;{{ textField.desc}}&quot; aria-label&#x3D;&quot;Info tooltip about the field&quot;&gt;info
+      &lt;/mat-icon&gt;
+    &lt;/div&gt;
+
+    &lt;mat-form-field class&#x3D;&quot;form-control&quot; color&#x3D;&quot;accent&quot;&gt;
+      &lt;input matInput [formControlName]&#x3D;&quot;textField.key&quot; [name]&#x3D;&quot;textField.key&quot;&gt;
+      &lt;div *ngIf&#x3D;&quot;submitted &amp;&amp; f[textField.key].errors&quot;&gt;
+        &lt;mat-error *ngIf&#x3D;&quot;f[textField.key].errors.required&quot;&gt;
+          This field is required
+        &lt;/mat-error&gt;
+      &lt;/div&gt;
+    &lt;/mat-form-field&gt;
+  &lt;/div&gt;
+
+
+  &lt;!-- SINGLE SELECT LISTS FOR OBSERVATION SETS --&gt;
+  &lt;div *ngFor&#x3D;&quot;let observationField of observationFields&quot;&gt;
+    &lt;div class&#x3D;&quot;label&quot;&gt;
+      {{ observationField.name }}
+      &lt;mat-icon class&#x3D;&quot;analyses-header__icon&quot; matTooltipClass&#x3D;&quot;tooltip&quot; fontSet&#x3D;&quot;material-icons-outlined&quot;
+        matTooltip&#x3D;&quot;{{ observationField.desc}}&quot; aria-label&#x3D;&quot;Info tooltip about the field&quot;&gt;info
+      &lt;/mat-icon&gt;
+    &lt;/div&gt;
+
+    &lt;mat-form-field class&#x3D;&quot;form-control&quot; color&#x3D;&quot;accent&quot;&gt;
+      &lt;mat-select [formControlName]&#x3D;&quot;observationField.key&quot;&gt;
+        &lt;mat-option *ngFor&#x3D;&quot;let set of observationField.sets&quot; [value]&#x3D;&quot;set&quot;&gt;
+          {{ set.name }}
+        &lt;/mat-option&gt;
+      &lt;/mat-select&gt;
+      &lt;div *ngIf&#x3D;&quot;submitted &amp;&amp; f[observationField.key].errors&quot;&gt;
+        &lt;mat-error *ngIf&#x3D;&quot;f[observationField.key].errors.required&quot;&gt;
+          This field is required
+        &lt;/mat-error&gt;
+      &lt;/div&gt;
+    &lt;/mat-form-field&gt;
+  &lt;/div&gt;
+
+  &lt;!-- SINGLE SELECT LISTS FOR FEATURE SETS --&gt;
+  &lt;div *ngFor&#x3D;&quot;let featureField of featureFields&quot;&gt;
+    &lt;div class&#x3D;&quot;label&quot;&gt;
+      {{ featureField.name }}
+      &lt;mat-icon class&#x3D;&quot;analyses-header__icon&quot; matTooltipClass&#x3D;&quot;tooltip&quot; fontSet&#x3D;&quot;material-icons-outlined&quot;
+        matTooltip&#x3D;&quot;{{ featureField.desc}}&quot; aria-label&#x3D;&quot;Info tooltip about the field&quot;&gt;info
+      &lt;/mat-icon&gt;
+    &lt;/div&gt;
+
+    &lt;mat-form-field class&#x3D;&quot;form-control&quot; color&#x3D;&quot;accent&quot;&gt;
+      &lt;mat-select [formControlName]&#x3D;&quot;featureField.key&quot;&gt;
+        &lt;mat-option *ngFor&#x3D;&quot;let set of featureField.sets&quot; [value]&#x3D;&quot;set&quot;&gt;
+          {{ set.name }}
+        &lt;/mat-option&gt;
+      &lt;/mat-select&gt;
+      &lt;div *ngIf&#x3D;&quot;submitted &amp;&amp; f[featureField.key].errors&quot;&gt;
+        &lt;mat-error *ngIf&#x3D;&quot;f[featureField.key].errors.required&quot;&gt;
+          This field is required
+        &lt;/mat-error&gt;
+      &lt;/div&gt;
+    &lt;/mat-form-field&gt;
+  &lt;/div&gt;
+
+
+  &lt;!-- SINGLE SELECT LISTS FOR OPERATION OPTIONS --&gt;
+  &lt;div *ngFor&#x3D;&quot;let optionField of optionFields&quot;&gt;
+    &lt;div class&#x3D;&quot;label&quot;&gt;
+      {{ optionField.name }}
+      &lt;mat-icon class&#x3D;&quot;analyses-header__icon&quot; matTooltipClass&#x3D;&quot;tooltip&quot; fontSet&#x3D;&quot;material-icons-outlined&quot;
+        matTooltip&#x3D;&quot;{{ optionField.desc}}&quot; aria-label&#x3D;&quot;Info tooltip about the field&quot;&gt;info
+      &lt;/mat-icon&gt;
+    &lt;/div&gt;
+    &lt;mat-form-field class&#x3D;&quot;form-control&quot; color&#x3D;&quot;accent&quot;&gt;
+      &lt;mat-select [formControlName]&#x3D;&quot;optionField.key&quot;&gt;
+        &lt;mat-option *ngFor&#x3D;&quot;let option of optionField.options&quot; [value]&#x3D;&quot;option&quot;&gt;
+          {{ option }}
+        &lt;/mat-option&gt;
+      &lt;/mat-select&gt;
+      &lt;div *ngIf&#x3D;&quot;submitted &amp;&amp; f[optionField.key].errors&quot;&gt;
+        &lt;mat-error *ngIf&#x3D;&quot;f[optionField.key].errors.required&quot;&gt;
+          This field is required
+        &lt;/mat-error&gt;
+      &lt;/div&gt;
+    &lt;/mat-form-field&gt;
+  &lt;/div&gt;
+
+
+  &lt;!-- CHECKBOXES FOR BOOLEAN FIELDS --&gt;
+  &lt;ng-container *ngFor&#x3D;&quot;let booleanField of booleanFields&quot;&gt;
+    &lt;div class&#x3D;&quot;form-control&quot; color&#x3D;&quot;accent&quot;&gt;
+      &lt;mat-checkbox [formControlName]&#x3D;&quot;booleanField.key&quot; [checked]&#x3D;&quot;booleanField.checked&quot;&gt;
+      &lt;/mat-checkbox&gt;
+      &lt;span class&#x3D;&quot;label&quot;&gt;
+        {{ booleanField.name }}
+        &lt;mat-icon class&#x3D;&quot;analyses-header__icon&quot; matTooltipClass&#x3D;&quot;tooltip&quot; fontSet&#x3D;&quot;material-icons-outlined&quot;
+          matTooltip&#x3D;&quot;{{ booleanField.desc}}&quot; aria-label&#x3D;&quot;Info tooltip about the field&quot;&gt;info
+        &lt;/mat-icon&gt;
+      &lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/ng-container&gt;
+
+  &lt;div *ngIf&#x3D;&quot;operation.mode !&#x3D;&#x3D; &#x27;client&#x27;; else plotContainer&quot;&gt;
+    &lt;button mat-raised-button color&#x3D;&quot;accent&quot; type&#x3D;&quot;submit&quot; [disabled]&#x3D;&quot;!analysesForm.valid&quot;
+      (click)&#x3D;&quot;startAnalysis()&quot;&gt;Run
+    &lt;/button&gt;
+  &lt;/div&gt;
+
+  &lt;ng-template #plotContainer&gt;
+    &lt;button mat-raised-button color&#x3D;&quot;accent&quot; [disabled]&#x3D;&quot;!analysesForm.valid&quot; (click)&#x3D;&quot;showPlots()&quot;&gt;Show plots
+    &lt;/button&gt;
+
+  &lt;/ng-template&gt;
+
+&lt;/form&gt;</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./operation.component.scss</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">.label {
+  padding-right: 10px;
+  font-weight: bolder;
+}
+
+.analyses-header__icon {
+  font-size: 14px;
+}
+
+.form-control {
+  width: 500px;
+  padding-bottom: 50px;
+}
+
+mat-checkbox {
+  padding-right: 10px;
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><h3>{{ operation.name }}</h3><p>{{ operation.description }} </p><form *ngIf="analysesForm" [formGroup]="analysesForm" (ngSubmit)="onSubmit()">  <!-- OPERATION NAME -->  <ng-container *ngIf="operation.mode !== \'client\'">    <div class="label">      Operation name:      <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"        matTooltip="Type operation name" aria-label="Info tooltip about the field">info      </mat-icon>    </div>    <mat-form-field class="form-control" color="accent">      <input matInput formControlName="job_name" name="job_name">    </mat-form-field>  </ng-container>  <!-- SINGLE SELECT LISTS FOR RESOURCES -->  <div *ngFor="let resourceField of resourceFields">    <div class="label">      {{ resourceField.name }}      <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"        matTooltip="{{ resourceField.desc}}" aria-label="Info tooltip about the field">info      </mat-icon>    </div>    <mat-form-field class="form-control" color="accent">      <mat-select [formControlName]="resourceField.key">        <mat-option *ngFor="let file of resourceField.files" [value]="file.id">          {{ file.name }}        </mat-option>      </mat-select>      <div *ngIf="submitted && f[resourceField.key].errors">        <mat-error *ngIf="f[resourceField.key].errors.required">          This field is required        </mat-error>      </div>    </mat-form-field>  </div>  <!-- MULTIPLE SELECT LISTS FOR RESOURCES -->  <div *ngFor="let multipleResourceField of multipleResourceFields">    <div class="form-control form-control--multiselect">      <div class="label">        {{ multipleResourceField.name }}        <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"          matTooltip="{{ multipleResourceField.desc}}" aria-label="Info tooltip about the field">info        </mat-icon>      </div>      <angular2-multiselect [formControlName]="multipleResourceField.key" [data]="multipleResourceField.files"        [(ngModel)]="multipleResourceField.selectedFiles" [settings]="multipleResourcesDropdownSettings">        <c-item>          <ng-template let-item="item">            <label>{{ item.name }} Type: {{ item.readable_resource_type || \'N/A\' }}</label>          </ng-template>        </c-item>        <c-badge>          <ng-template let-item="item">            <label>{{ item.name }}</label>          </ng-template>        </c-badge>      </angular2-multiselect>    </div>  </div>  <!-- NUMERIC FIELDS -->  <div *ngFor="let numField of numFields">    <div class="label">      {{ numField.name }}      <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"        matTooltip="{{ numField.desc}}" aria-label="Info tooltip about the field">info      </mat-icon>    </div>    <mat-form-field class="form-control" color="accent">      <input matInput [formControlName]="numField.key" [name]="numField.key">      <div *ngIf="submitted && f[numField.key].errors">        <mat-error *ngIf="f[numField.key].errors.required">          This field is required        </mat-error>        <mat-error *ngIf="f[numField.key].errors.min || f[numField.key].errors.max || f[numField.key].errors.pattern">          The value should be a number between {{ numField.min }} and {{ numField.max }}.        </mat-error>      </div>    </mat-form-field>  </div>  <!-- INTEGER FIELDS -->  <div *ngFor="let intField of intFields">    <div class="label">      {{ intField.name }}      <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"        matTooltip="{{ intField.desc}}" aria-label="Info tooltip about the field">info      </mat-icon>    </div>    <mat-form-field class="form-control" color="accent">      <input matInput [formControlName]="intField.key" [name]="intField.key">      <div *ngIf="f[intField.key].value && f[intField.key].errors">        <mat-error *ngIf="f[intField.key].errors.required">          This field is required        </mat-error>        <mat-error *ngIf="f[intField.key].errors.min || f[intField.key].errors.max || f[intField.key].errors.pattern">          The value should be an integer greater than or equal to {{ intField.min }}        </mat-error>      </div>    </mat-form-field>  </div>  <!-- TEXT FIELDS -->  <div *ngFor="let textField of textFields">    <div class="label">      {{ textField.name }}      <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"        matTooltip="{{ textField.desc}}" aria-label="Info tooltip about the field">info      </mat-icon>    </div>    <mat-form-field class="form-control" color="accent">      <input matInput [formControlName]="textField.key" [name]="textField.key">      <div *ngIf="submitted && f[textField.key].errors">        <mat-error *ngIf="f[textField.key].errors.required">          This field is required        </mat-error>      </div>    </mat-form-field>  </div>  <!-- SINGLE SELECT LISTS FOR OBSERVATION SETS -->  <div *ngFor="let observationField of observationFields">    <div class="label">      {{ observationField.name }}      <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"        matTooltip="{{ observationField.desc}}" aria-label="Info tooltip about the field">info      </mat-icon>    </div>    <mat-form-field class="form-control" color="accent">      <mat-select [formControlName]="observationField.key">        <mat-option *ngFor="let set of observationField.sets" [value]="set">          {{ set.name }}        </mat-option>      </mat-select>      <div *ngIf="submitted && f[observationField.key].errors">        <mat-error *ngIf="f[observationField.key].errors.required">          This field is required        </mat-error>      </div>    </mat-form-field>  </div>  <!-- SINGLE SELECT LISTS FOR FEATURE SETS -->  <div *ngFor="let featureField of featureFields">    <div class="label">      {{ featureField.name }}      <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"        matTooltip="{{ featureField.desc}}" aria-label="Info tooltip about the field">info      </mat-icon>    </div>    <mat-form-field class="form-control" color="accent">      <mat-select [formControlName]="featureField.key">        <mat-option *ngFor="let set of featureField.sets" [value]="set">          {{ set.name }}        </mat-option>      </mat-select>      <div *ngIf="submitted && f[featureField.key].errors">        <mat-error *ngIf="f[featureField.key].errors.required">          This field is required        </mat-error>      </div>    </mat-form-field>  </div>  <!-- SINGLE SELECT LISTS FOR OPERATION OPTIONS -->  <div *ngFor="let optionField of optionFields">    <div class="label">      {{ optionField.name }}      <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"        matTooltip="{{ optionField.desc}}" aria-label="Info tooltip about the field">info      </mat-icon>    </div>    <mat-form-field class="form-control" color="accent">      <mat-select [formControlName]="optionField.key">        <mat-option *ngFor="let option of optionField.options" [value]="option">          {{ option }}        </mat-option>      </mat-select>      <div *ngIf="submitted && f[optionField.key].errors">        <mat-error *ngIf="f[optionField.key].errors.required">          This field is required        </mat-error>      </div>    </mat-form-field>  </div>  <!-- CHECKBOXES FOR BOOLEAN FIELDS -->  <ng-container *ngFor="let booleanField of booleanFields">    <div class="form-control" color="accent">      <mat-checkbox [formControlName]="booleanField.key" [checked]="booleanField.checked">      </mat-checkbox>      <span class="label">        {{ booleanField.name }}        <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"          matTooltip="{{ booleanField.desc}}" aria-label="Info tooltip about the field">info        </mat-icon>      </span>    </div>  </ng-container>  <div *ngIf="operation.mode !== \'client\'; else plotContainer">    <button mat-raised-button color="accent" type="submit" [disabled]="!analysesForm.valid"      (click)="startAnalysis()">Run    </button>  </div>  <ng-template #plotContainer>    <button mat-raised-button color="accent" [disabled]="!analysesForm.valid" (click)="showPlots()">Show plots    </button>  </ng-template></form></div>'
+    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'mev-about'},{'name': 'AddAnnotationDialogComponent', 'selector': 'mev-add-annotation-dialog'},{'name': 'AddDialogComponent', 'selector': 'mev-add-dialog'},{'name': 'AddFileDialogComponent', 'selector': 'mev-add-file-dialog'},{'name': 'AddObservationSetDialogComponent', 'selector': 'mev-add-observation-set-dialog'},{'name': 'AddSampleSetComponent', 'selector': 'mev-add-sample-set'},{'name': 'AddWSDialogComponent', 'selector': 'mev-add-ws-dialog'},{'name': 'AnalysesComponent', 'selector': 'mev-analyses'},{'name': 'AnalysisFlowComponent', 'selector': 'mev-analysis-flow'},{'name': 'AnalysisPlottingResultComponent', 'selector': 'mev-analysis-plotting-result'},{'name': 'AnalysisResultComponent', 'selector': 'mev-analysis-result'},{'name': 'AppComponent', 'selector': 'mev-root'},{'name': 'BoxPlottingComponent', 'selector': 'mev-box-plotting'},{'name': 'DeleteDialogComponent', 'selector': 'mev-delete-dialog'},{'name': 'DeleteFileDialogComponent', 'selector': 'mev-delete-file-dialog'},{'name': 'DeleteSetDialogComponent', 'selector': 'mev-delete-set-dialog'},{'name': 'DeleteWSDialogComponent', 'selector': 'mev-delete-ws-dialog'},{'name': 'Deseq2Component', 'selector': 'mev-deseq2'},{'name': 'DownloadButtonComponent', 'selector': 'mev-download-button'},{'name': 'EditDialogComponent', 'selector': 'mev-edit-dialog'},{'name': 'EditFeatureSetDialogComponent', 'selector': 'mev-edit-feature-set-dialog'},{'name': 'EditFileDialogComponent', 'selector': 'mev-edit-file-dialog'},{'name': 'EditWSDialogComponent', 'selector': 'mev-edit-ws-dialog'},{'name': 'ExecutedOperationComponent', 'selector': 'mev-executed-operation'},{'name': 'FileListComponent', 'selector': 'mev-file-list'},{'name': 'GseaComponent', 'selector': 'mev-gsea'},{'name': 'HclComponent', 'selector': 'mev-hcl'},{'name': 'KmeansComponent', 'selector': 'mev-kmeans'},{'name': 'LimmaComponent', 'selector': 'mev-limma'},{'name': 'LoginComponent', 'selector': 'mev-login-form'},{'name': 'MetadataComponent', 'selector': 'mev-metadata'},{'name': 'OperationComponent', 'selector': 'mev-operation'},{'name': 'PasswordChangeComponent', 'selector': 'mev-password-change'},{'name': 'PreviewDialogComponent', 'selector': 'mev-preview-dialog'},{'name': 'ProgressSnackbarComponent', 'selector': 'mev-progress-snackbar'},{'name': 'RegisterComponent', 'selector': 'mev-register-form'},{'name': 'RequestPasswordResetComponent', 'selector': 'mev-request-password-reset'},{'name': 'ResponsePasswordResetComponent', 'selector': 'mev-response-password-reset'},{'name': 'RugPlotComponent', 'selector': 'mev-rug-plot'},{'name': 'ScatterPlotComponent', 'selector': 'mev-scatter-plot'},{'name': 'SettingsContainerComponent', 'selector': 'mev-settings'},{'name': 'SpinnerOverlayComponent', 'selector': 'mev-spinner-overlay'},{'name': 'TutorialComponent', 'selector': 'mev-tutorial'},{'name': 'ViewFileTypesDialogComponent', 'selector': 'mev-view-file-types-dialog'},{'name': 'ViewInfoDialogComponent', 'selector': 'mev-view-info-dialog'},{'name': 'ViewSetDialogComponent', 'selector': 'mev-view-set-dialog'},{'name': 'WorkareaComponent', 'selector': 'mev-workarea'},{'name': 'WorkspaceDetailComponent', 'selector': 'mev-workspace-detail'},{'name': 'WorkspaceListComponent', 'selector': 'mev-workspace-list'}];
+    var DIRECTIVES = [{'name': 'RtlSupportDirective', 'selector': '[rtl]'}];
+    var ACTUAL_COMPONENT = {'name': 'OperationComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+                   
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'OperationComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

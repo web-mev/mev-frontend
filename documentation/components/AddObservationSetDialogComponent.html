@@ -1,0 +1,1294 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>web-mev documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	      <link rel="stylesheet" href="../styles/style.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">web-mev documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li>AddObservationSetDialogComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>projects/web-mev/src/app/features/workspace-detail/components/metadata/dialogs/add-observation-set-dialog/add-observation-set-dialog.component.ts</code>
+</p>
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Add Observation Dialog Component</p>
+<p>Modal dialog component which is used to add a custom observation set</p>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover">
+        <tbody>
+
+            <tr>
+                <td class="col-md-3">changeDetection</td>
+                <td class="col-md-9"><code>ChangeDetectionStrategy.OnPush</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>mev-add-observation-set-dialog</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./add-observation-set-dialog.component.scss</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./add-observation-set-dialog.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#allObservationSetsDS">allObservationSetsDS</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#data">data</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#dialogRef">dialogRef</a>
+                            </li>
+                            <li>
+                                <a href="#observationForm">observationForm</a>
+                            </li>
+                            <li>
+                                <a href="#observationSetsDisplayedColumns">observationSetsDisplayedColumns</a>
+                            </li>
+                            <li>
+                                <a href="#observationSetsDisplayedColumnsAttributesOnly">observationSetsDisplayedColumnsAttributesOnly</a>
+                            </li>
+                            <li>
+                                <a href="#paginator">paginator</a>
+                            </li>
+                            <li>
+                                <a href="#selection">selection</a>
+                            </li>
+                            <li>
+                                <a href="#submitted">submitted</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#applyFilter">applyFilter</a>
+                            </li>
+                            <li>
+                                <a href="#confirmAdd">confirmAdd</a>
+                            </li>
+                            <li>
+                                <a href="#isAllSelected">isAllSelected</a>
+                            </li>
+                            <li>
+                                <a href="#masterToggle">masterToggle</a>
+                            </li>
+                            <li>
+                                <a href="#ngAfterViewInit">ngAfterViewInit</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit">ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#onNoClick">onNoClick</a>
+                            </li>
+                            <li>
+                                <a href="#submit">submit</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#f">f</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(formBuilder: <a href="https://angular.io/api/forms/FormBuilder" target="_blank">FormBuilder</a>, dialogRef: <a href="../components/AddObservationSetDialogComponent.html">MatDialogRef<AddObservationSetDialogComponent></a>, data: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/dialogs/add-observation-set-dialog/add-observation-set-dialog.component.ts:32</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>formBuilder</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://angular.io/api/forms/FormBuilder" target="_blank" >FormBuilder</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>dialogRef</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../components/AddObservationSetDialogComponent.html" target="_self" >MatDialogRef&lt;AddObservationSetDialogComponent&gt;</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>data</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="applyFilter"></a>
+                    <span class="name">
+                        <b>
+                            applyFilter
+                        </b>
+                        <a href="#applyFilter"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>applyFilter(filterValue: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="108"
+                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/dialogs/add-observation-set-dialog/add-observation-set-dialog.component.ts:108</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Filtering observations by name</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>filterValue</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="confirmAdd"></a>
+                    <span class="name">
+                        <b>
+                            confirmAdd
+                        </b>
+                        <a href="#confirmAdd"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>confirmAdd()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="71"
+                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/dialogs/add-observation-set-dialog/add-observation-set-dialog.component.ts:71</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Function is triggered when user clicks the Add button</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isAllSelected"></a>
+                    <span class="name">
+                        <b>
+                            isAllSelected
+                        </b>
+                        <a href="#isAllSelected"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>isAllSelected()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="88"
+                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/dialogs/add-observation-set-dialog/add-observation-set-dialog.component.ts:88</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Whether the number of selected elements matches the total number of rows.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="masterToggle"></a>
+                    <span class="name">
+                        <b>
+                            masterToggle
+                        </b>
+                        <a href="#masterToggle"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>masterToggle()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="97"
+                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/dialogs/add-observation-set-dialog/add-observation-set-dialog.component.ts:97</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Selects all rows if they are not all selected; otherwise clear selection.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngAfterViewInit"></a>
+                    <span class="name">
+                        <b>
+                            ngAfterViewInit
+                        </b>
+                        <a href="#ngAfterViewInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngAfterViewInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="51"
+                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/dialogs/add-observation-set-dialog/add-observation-set-dialog.component.ts:51</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <b>
+                            ngOnInit
+                        </b>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="40"
+                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/dialogs/add-observation-set-dialog/add-observation-set-dialog.component.ts:40</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onNoClick"></a>
+                    <span class="name">
+                        <b>
+                            onNoClick
+                        </b>
+                        <a href="#onNoClick"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onNoClick()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="59"
+                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/dialogs/add-observation-set-dialog/add-observation-set-dialog.component.ts:59</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Function is triggered when user clicks the Cancel button</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="submit"></a>
+                    <span class="name">
+                        <b>
+                            submit
+                        </b>
+                        <a href="#submit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>submit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="63"
+                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/dialogs/add-observation-set-dialog/add-observation-set-dialog.component.ts:63</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+        <h3 id="inputs">
+            Properties
+        </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="allObservationSetsDS"></a>
+                        <span class="name">
+                            <b>
+                            allObservationSetsDS</b>
+                            <a href="#allObservationSetsDS"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/dialogs/add-observation-set-dialog/add-observation-set-dialog.component.ts:27</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="data"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Public</span>
+                            data</b>
+                            <a href="#data"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Decorators : </b>
+                            <br />
+                            <code>
+                                @Inject(MAT_DIALOG_DATA)<br />
+                            </code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/dialogs/add-observation-set-dialog/add-observation-set-dialog.component.ts:37</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="dialogRef"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Public</span>
+                            dialogRef</b>
+                            <a href="#dialogRef"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="../components/AddObservationSetDialogComponent.html" target="_self" >MatDialogRef&lt;AddObservationSetDialogComponent&gt;</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/dialogs/add-observation-set-dialog/add-observation-set-dialog.component.ts:36</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="observationForm"></a>
+                        <span class="name">
+                            <b>
+                            observationForm</b>
+                            <a href="#observationForm"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://angular.io/api/forms/FormGroup" target="_blank" >FormGroup</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/dialogs/add-observation-set-dialog/add-observation-set-dialog.component.ts:28</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="observationSetsDisplayedColumns"></a>
+                        <span class="name">
+                            <b>
+                            observationSetsDisplayedColumns</b>
+                            <a href="#observationSetsDisplayedColumns"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/dialogs/add-observation-set-dialog/add-observation-set-dialog.component.ts:30</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="observationSetsDisplayedColumnsAttributesOnly"></a>
+                        <span class="name">
+                            <b>
+                            observationSetsDisplayedColumnsAttributesOnly</b>
+                            <a href="#observationSetsDisplayedColumnsAttributesOnly"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/dialogs/add-observation-set-dialog/add-observation-set-dialog.component.ts:31</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="paginator"></a>
+                        <span class="name">
+                            <b>
+                            paginator</b>
+                            <a href="#paginator"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>MatPaginator</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Decorators : </b>
+                            <br />
+                            <code>
+                                @ViewChild(MatPaginator)<br />
+                            </code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/dialogs/add-observation-set-dialog/add-observation-set-dialog.component.ts:32</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="selection"></a>
+                        <span class="name">
+                            <b>
+                            selection</b>
+                            <a href="#selection"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>new SelectionModel(true, [])</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/dialogs/add-observation-set-dialog/add-observation-set-dialog.component.ts:26</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="submitted"></a>
+                        <span class="name">
+                            <b>
+                            submitted</b>
+                            <a href="#submitted"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>false</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/dialogs/add-observation-set-dialog/add-observation-set-dialog.component.ts:29</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+</section>
+
+    <section>
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="f"></a>
+                        <span class="name"><b>f</b><a href="#f"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>f()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="117" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/dialogs/add-observation-set-dialog/add-observation-set-dialog.component.ts:117</a></div>
+                                </td>
+                            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description"><p>Convenience getter for easy access to form fields</p>
+</div>
+
+                        </td>
+                    </tr>
+
+            </tbody>
+        </table>
+</section>
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  Inject,
+  ViewChild
+} from &#x27;@angular/core&#x27;;
+import { MatDialogRef, MAT_DIALOG_DATA } from &#x27;@angular/material/dialog&#x27;;
+import { SelectionModel } from &#x27;@angular/cdk/collections&#x27;;
+import { FormGroup, FormBuilder, Validators } from &#x27;@angular/forms&#x27;;
+import { MatPaginator } from &#x27;@angular/material/paginator&#x27;;
+import { CustomSetType } from &#x27;@app/_models/metadata&#x27;;
+
+/**
+ * Add Observation Dialog Component
+ *
+ * Modal dialog component which is used to add a custom observation set
+ */
+@Component({
+  selector: &#x27;mev-add-observation-set-dialog&#x27;,
+  templateUrl: &#x27;./add-observation-set-dialog.component.html&#x27;,
+  styleUrls: [&#x27;./add-observation-set-dialog.component.scss&#x27;],
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class AddObservationSetDialogComponent implements OnInit {
+  selection &#x3D; new SelectionModel(true, []);
+  allObservationSetsDS;
+  observationForm: FormGroup;
+  submitted &#x3D; false;
+  observationSetsDisplayedColumns;
+  observationSetsDisplayedColumnsAttributesOnly;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  constructor(
+    private formBuilder: FormBuilder,
+    public dialogRef: MatDialogRef&lt;AddObservationSetDialogComponent&gt;,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
+
+  ngOnInit(): void {
+    this.observationForm &#x3D; this.formBuilder.group({
+      observationSetName: [&#x27;&#x27;, Validators.required],
+      observationSetColor: [&#x27;#000000&#x27;, Validators.required]
+    });
+    this.allObservationSetsDS &#x3D; this.data.observationSetDS;
+
+    this.observationSetsDisplayedColumns &#x3D; this.data.observationSetsDisplayedColumns;
+    this.observationSetsDisplayedColumnsAttributesOnly &#x3D; this.data.observationSetsDisplayedColumnsAttributesOnly;
+  }
+
+  ngAfterViewInit() {
+    this.allObservationSetsDS.paginator &#x3D; this.paginator;
+  }
+
+  /**
+   * Function is triggered when user clicks the Cancel button
+   *
+   */
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  submit() {
+    //empty stuff
+  }
+
+  /**
+   * Function is triggered when user clicks the Add button
+   *
+   */
+  confirmAdd() {
+    const name &#x3D; this.observationForm.value.observationSetName;
+    const color &#x3D; this.observationForm.value.observationSetColor;
+    const samples &#x3D; this.selection.selected;
+    const observationSet &#x3D; {
+      name: name,
+      color: color,
+      type: CustomSetType.ObservationSet,
+      elements: samples,
+      multiple: true
+    };
+    this.dialogRef.close(observationSet);
+  }
+
+  /**
+   * Whether the number of selected elements matches the total number of rows.
+   */
+  isAllSelected() {
+    const numSelected &#x3D; this.selection.selected.length;
+    const numRows &#x3D; this.allObservationSetsDS.filteredData.length;
+    return numSelected &#x3D;&#x3D;&#x3D; numRows;
+  }
+
+  /**
+   * Selects all rows if they are not all selected; otherwise clear selection.
+   */
+  masterToggle() {
+    this.isAllSelected()
+      ? this.selection.clear()
+      : this.allObservationSetsDS.filteredData.forEach(row &#x3D;&gt;
+          this.selection.select(row)
+        );
+  }
+
+  /**
+   * Filtering observations by name
+   */
+  applyFilter(filterValue: string) {
+    filterValue &#x3D; filterValue.trim();
+    filterValue &#x3D; filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+    this.allObservationSetsDS.filter &#x3D; filterValue;
+  }
+
+  /**
+   * Convenience getter for easy access to form fields
+   */
+  get f() {
+    return this.observationForm.controls;
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;container&quot;&gt;
+    &lt;p&gt;Enter the name of a new observation set and select samples. Then click the Add button.
+    &lt;/p&gt;
+
+    &lt;form class&#x3D;&quot;mat-dialog-content&quot; (ngSubmit)&#x3D;&quot;submit&quot; [formGroup]&#x3D;&quot;observationForm&quot;&gt;
+
+        &lt;div class&#x3D;&quot;form&quot;&gt;
+
+            &lt;mat-form-field class&#x3D;&quot;form-control&quot; color&#x3D;&quot;accent&quot;&gt;
+                &lt;mat-label&gt;Enter observation set name&lt;/mat-label&gt;
+                &lt;input matInput formControlName&#x3D;observationSetName name&#x3D;observationSetName&gt;
+            &lt;/mat-form-field&gt;
+
+            &lt;mat-form-field class&#x3D;&quot;form-control&quot; color&#x3D;&quot;accent&quot;&gt;
+                &lt;mat-label&gt;Select your color for the observation set:&lt;/mat-label&gt;
+                &lt;input type&#x3D;&quot;color&quot; class&#x3D;&quot;color-picker-input&quot; matInput formControlName&#x3D;observationSetColor name&#x3D;observationSetColor&gt;
+            &lt;/mat-form-field&gt;
+            
+            Select samples: 
+            &lt;div class&#x3D;&quot;mat-elevation-z8&quot;&gt;
+
+                &lt;div class&#x3D;&quot;filter-panel&quot;&gt;
+                    &lt;mat-form-field class&#x3D;&quot;form-control&quot;&gt;
+                      &lt;input matInput (keyup)&#x3D;&quot;applyFilter($event.target.value)&quot; placeholder&#x3D;&quot;Filter&quot;&gt;
+                    &lt;/mat-form-field&gt;
+                &lt;/div&gt;
+
+                &lt;table mat-table [dataSource]&#x3D;&quot;allObservationSetsDS&quot;&gt;
+
+                    &lt;ng-container matColumnDef&#x3D;&quot;select&quot;&gt;
+                        &lt;th mat-header-cell *matHeaderCellDef&gt;
+                            &lt;mat-checkbox (change)&#x3D;&quot;$event ? masterToggle() : null&quot;
+                                [checked]&#x3D;&quot;selection.hasValue() &amp;&amp; isAllSelected()&quot;
+                                [indeterminate]&#x3D;&quot;selection.hasValue() &amp;&amp; !isAllSelected()&quot;&gt;
+                            &lt;/mat-checkbox&gt;
+                        &lt;/th&gt;
+                        &lt;td mat-cell *matCellDef&#x3D;&quot;let row&quot;&gt;
+                            &lt;mat-checkbox (click)&#x3D;&quot;$event.stopPropagation()&quot;
+                                (change)&#x3D;&quot;$event ? selection.toggle(row) : null&quot; [checked]&#x3D;&quot;selection.isSelected(row)&quot;&gt;
+                            &lt;/mat-checkbox&gt;
+                        &lt;/td&gt;
+                    &lt;/ng-container&gt;
+    
+                    &lt;ng-container matColumnDef&#x3D;&quot;id&quot;&gt;
+                        &lt;th mat-header-cell *matHeaderCellDef&gt; Name &lt;/th&gt;
+                        &lt;td mat-cell *matCellDef&#x3D;&quot;let element&quot;&gt; {{element.id}} &lt;/td&gt;
+                    &lt;/ng-container&gt;
+    
+                    &lt;ng-container *ngFor&#x3D;&quot;let attrCol of observationSetsDisplayedColumnsAttributesOnly; let colIndex &#x3D; index&quot;
+                    matColumnDef&#x3D;&quot;{{attrCol}}&quot;&gt;
+                    &lt;th mat-header-cell *matHeaderCellDef&gt;{{ attrCol }}&lt;/th&gt;
+                    &lt;td mat-cell *matCellDef&#x3D;&quot;let element&quot;&gt; {{ element.attributes[attrCol] ? element.attributes[attrCol].value : &#x27;&#x27; }}&lt;/td&gt; 
+                    &lt;/ng-container&gt;
+    
+                    &lt;tr mat-header-row *matHeaderRowDef&#x3D;&quot;observationSetsDisplayedColumns&quot;&gt;&lt;/tr&gt;
+                    &lt;tr mat-row *matRowDef&#x3D;&quot;let row; columns: observationSetsDisplayedColumns;&quot;
+                        (click)&#x3D;&quot;selection.toggle(row)&quot;&gt;
+                    &lt;/tr&gt;
+                &lt;/table&gt;
+                &lt;mat-paginator [pageSizeOptions]&#x3D;&quot;[5, 10, 25]&quot;&gt;
+                &lt;/mat-paginator&gt;  
+            &lt;/div&gt;
+            
+
+            
+
+          
+
+        &lt;/div&gt;
+
+        &lt;div class&#x3D;&quot;button-panel&quot;&gt;
+            &lt;button mat-button [mat-dialog-close]&#x3D;&quot;1&quot; mat-raised-button color&#x3D;&quot;accent&quot;
+               [type]&#x3D;&quot;submit&quot; [disabled]&#x3D;&quot;!observationForm.valid&quot; (click)&#x3D;&quot;confirmAdd()&quot;&gt;Add&lt;/button&gt;
+            &lt;button mat-button (click)&#x3D;&quot;onNoClick()&quot; tabindex&#x3D;&quot;-1&quot;&gt;Cancel&lt;/button&gt;
+        &lt;/div&gt;
+    &lt;/form&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./add-observation-set-dialog.component.scss</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">.container {
+  font-size: 14px;
+}
+
+.mat-dialog-content {
+  overflow-y: auto;
+}
+
+.form-control {
+  width: 100%;
+}
+
+.filter-panel {
+  padding: 0 10px;
+}
+
+table {
+  width: 100%;
+}
+
+.color-picker-input {
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+}
+
+.button-panel {
+  margin-top: 25px;
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="container">    <p>Enter the name of a new observation set and select samples. Then click the Add button.    </p>    <form class="mat-dialog-content" (ngSubmit)="submit" [formGroup]="observationForm">        <div class="form">            <mat-form-field class="form-control" color="accent">                <mat-label>Enter observation set name</mat-label>                <input matInput formControlName=observationSetName name=observationSetName>            </mat-form-field>            <mat-form-field class="form-control" color="accent">                <mat-label>Select your color for the observation set:</mat-label>                <input type="color" class="color-picker-input" matInput formControlName=observationSetColor name=observationSetColor>            </mat-form-field>                        Select samples:             <div class="mat-elevation-z8">                <div class="filter-panel">                    <mat-form-field class="form-control">                      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">                    </mat-form-field>                </div>                <table mat-table [dataSource]="allObservationSetsDS">                    <ng-container matColumnDef="select">                        <th mat-header-cell *matHeaderCellDef>                            <mat-checkbox (change)="$event ? masterToggle() : null"                                [checked]="selection.hasValue() && isAllSelected()"                                [indeterminate]="selection.hasValue() && !isAllSelected()">                            </mat-checkbox>                        </th>                        <td mat-cell *matCellDef="let row">                            <mat-checkbox (click)="$event.stopPropagation()"                                (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">                            </mat-checkbox>                        </td>                    </ng-container>                        <ng-container matColumnDef="id">                        <th mat-header-cell *matHeaderCellDef> Name </th>                        <td mat-cell *matCellDef="let element"> {{element.id}} </td>                    </ng-container>                        <ng-container *ngFor="let attrCol of observationSetsDisplayedColumnsAttributesOnly; let colIndex = index"                    matColumnDef="{{attrCol}}">                    <th mat-header-cell *matHeaderCellDef>{{ attrCol }}</th>                    <td mat-cell *matCellDef="let element"> {{ element.attributes[attrCol] ? element.attributes[attrCol].value : \'\' }}</td>                     </ng-container>                        <tr mat-header-row *matHeaderRowDef="observationSetsDisplayedColumns"></tr>                    <tr mat-row *matRowDef="let row; columns: observationSetsDisplayedColumns;"                        (click)="selection.toggle(row)">                    </tr>                </table>                <mat-paginator [pageSizeOptions]="[5, 10, 25]">                </mat-paginator>              </div>                                          </div>        <div class="button-panel">            <button mat-button [mat-dialog-close]="1" mat-raised-button color="accent"               [type]="submit" [disabled]="!observationForm.valid" (click)="confirmAdd()">Add</button>            <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>        </div>    </form></div></div>'
+    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'mev-about'},{'name': 'AddAnnotationDialogComponent', 'selector': 'mev-add-annotation-dialog'},{'name': 'AddDialogComponent', 'selector': 'mev-add-dialog'},{'name': 'AddFileDialogComponent', 'selector': 'mev-add-file-dialog'},{'name': 'AddObservationSetDialogComponent', 'selector': 'mev-add-observation-set-dialog'},{'name': 'AddSampleSetComponent', 'selector': 'mev-add-sample-set'},{'name': 'AddWSDialogComponent', 'selector': 'mev-add-ws-dialog'},{'name': 'AnalysesComponent', 'selector': 'mev-analyses'},{'name': 'AnalysisFlowComponent', 'selector': 'mev-analysis-flow'},{'name': 'AnalysisPlottingResultComponent', 'selector': 'mev-analysis-plotting-result'},{'name': 'AnalysisResultComponent', 'selector': 'mev-analysis-result'},{'name': 'AppComponent', 'selector': 'mev-root'},{'name': 'BoxPlottingComponent', 'selector': 'mev-box-plotting'},{'name': 'DeleteDialogComponent', 'selector': 'mev-delete-dialog'},{'name': 'DeleteFileDialogComponent', 'selector': 'mev-delete-file-dialog'},{'name': 'DeleteSetDialogComponent', 'selector': 'mev-delete-set-dialog'},{'name': 'DeleteWSDialogComponent', 'selector': 'mev-delete-ws-dialog'},{'name': 'Deseq2Component', 'selector': 'mev-deseq2'},{'name': 'DownloadButtonComponent', 'selector': 'mev-download-button'},{'name': 'EditDialogComponent', 'selector': 'mev-edit-dialog'},{'name': 'EditFeatureSetDialogComponent', 'selector': 'mev-edit-feature-set-dialog'},{'name': 'EditFileDialogComponent', 'selector': 'mev-edit-file-dialog'},{'name': 'EditWSDialogComponent', 'selector': 'mev-edit-ws-dialog'},{'name': 'ExecutedOperationComponent', 'selector': 'mev-executed-operation'},{'name': 'FileListComponent', 'selector': 'mev-file-list'},{'name': 'GseaComponent', 'selector': 'mev-gsea'},{'name': 'HclComponent', 'selector': 'mev-hcl'},{'name': 'KmeansComponent', 'selector': 'mev-kmeans'},{'name': 'LimmaComponent', 'selector': 'mev-limma'},{'name': 'LoginComponent', 'selector': 'mev-login-form'},{'name': 'MetadataComponent', 'selector': 'mev-metadata'},{'name': 'OperationComponent', 'selector': 'mev-operation'},{'name': 'PasswordChangeComponent', 'selector': 'mev-password-change'},{'name': 'PreviewDialogComponent', 'selector': 'mev-preview-dialog'},{'name': 'ProgressSnackbarComponent', 'selector': 'mev-progress-snackbar'},{'name': 'RegisterComponent', 'selector': 'mev-register-form'},{'name': 'RequestPasswordResetComponent', 'selector': 'mev-request-password-reset'},{'name': 'ResponsePasswordResetComponent', 'selector': 'mev-response-password-reset'},{'name': 'RugPlotComponent', 'selector': 'mev-rug-plot'},{'name': 'ScatterPlotComponent', 'selector': 'mev-scatter-plot'},{'name': 'SettingsContainerComponent', 'selector': 'mev-settings'},{'name': 'SpinnerOverlayComponent', 'selector': 'mev-spinner-overlay'},{'name': 'TutorialComponent', 'selector': 'mev-tutorial'},{'name': 'ViewFileTypesDialogComponent', 'selector': 'mev-view-file-types-dialog'},{'name': 'ViewInfoDialogComponent', 'selector': 'mev-view-info-dialog'},{'name': 'ViewSetDialogComponent', 'selector': 'mev-view-set-dialog'},{'name': 'WorkareaComponent', 'selector': 'mev-workarea'},{'name': 'WorkspaceDetailComponent', 'selector': 'mev-workspace-detail'},{'name': 'WorkspaceListComponent', 'selector': 'mev-workspace-list'}];
+    var DIRECTIVES = [{'name': 'RtlSupportDirective', 'selector': '[rtl]'}];
+    var ACTUAL_COMPONENT = {'name': 'AddObservationSetDialogComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+                   
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'AddObservationSetDialogComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

@@ -1,0 +1,1853 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>web-mev documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	      <link rel="stylesheet" href="../styles/style.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">web-mev documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li>BoxPlottingComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>projects/web-mev/src/app/d3/components/box-plotting/box-plotting.component.ts</code>
+</p>
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Box Plotting Component</p>
+<p>Used for the Plotting operation (output view for the normalization methods)</p>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnChanges" target="_blank" >OnChanges</a></code>
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover">
+        <tbody>
+
+            <tr>
+                <td class="col-md-3">changeDetection</td>
+                <td class="col-md-9"><code>ChangeDetectionStrategy.Default</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>mev-box-plotting</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./box-plotting.component.scss</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./box-plotting.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#boxPlotData">boxPlotData</a>
+                            </li>
+                            <li>
+                                <a href="#boxPlotTypes">boxPlotTypes</a>
+                            </li>
+                            <li>
+                                <a href="#boxWidth">boxWidth</a>
+                            </li>
+                            <li>
+                                <a href="#containerId">containerId</a>
+                            </li>
+                            <li>
+                                <a href="#customObservationSets">customObservationSets</a>
+                            </li>
+                            <li>
+                                <a href="#customObservationSetsToPlot">customObservationSetsToPlot</a>
+                            </li>
+                            <li>
+                                <a href="#delta">delta</a>
+                            </li>
+                            <li>
+                                <a href="#imageName">imageName</a>
+                            </li>
+                            <li>
+                                <a href="#isWait">isWait</a>
+                            </li>
+                            <li>
+                                <a href="#margin">margin</a>
+                            </li>
+                            <li>
+                                <a href="#maxFeatureNumber">maxFeatureNumber</a>
+                            </li>
+                            <li>
+                                <a href="#outerHeight">outerHeight</a>
+                            </li>
+                            <li>
+                                <a href="#precision">precision</a>
+                            </li>
+                            <li>
+                                <a href="#resourceData">resourceData</a>
+                            </li>
+                            <li>
+                                <a href="#svgElement">svgElement</a>
+                            </li>
+                            <li>
+                                <a href="#tooltipOffsetX">tooltipOffsetX</a>
+                            </li>
+                            <li>
+                                <a href="#xCat">xCat</a>
+                            </li>
+                            <li>
+                                <a href="#xScale">xScale</a>
+                            </li>
+                            <li>
+                                <a href="#yCat">yCat</a>
+                            </li>
+                            <li>
+                                <a href="#yScale">yScale</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#createChart">createChart</a>
+                            </li>
+                            <li>
+                                <a href="#generateBoxPlot">generateBoxPlot</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnChanges">ngOnChanges</a>
+                            </li>
+                            <li>
+                                <a href="#onObservationCheck">onObservationCheck</a>
+                            </li>
+                            <li>
+                                <a href="#onResize">onResize</a>
+                            </li>
+                            <li>
+                                <a href="#reformatData">reformatData</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#outputs">outputs</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(apiService: <a href="../injectables/AnalysesService.html">AnalysesService</a>, metadataService: <a href="../injectables/MetadataService.html">MetadataService</a>, cdRef: <a href="https://angular.io/api/core/ChangeDetectorRef" target="_blank">ChangeDetectorRef</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">projects/web-mev/src/app/d3/components/box-plotting/box-plotting.component.ts:52</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>apiService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/AnalysesService.html" target="_self" >AnalysesService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>metadataService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/MetadataService.html" target="_self" >MetadataService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>cdRef</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://angular.io/api/core/ChangeDetectorRef" target="_blank" >ChangeDetectorRef</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+    <section>
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="outputs"></a>
+                        <b>outputs</b>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">projects/web-mev/src/app/d3/components/box-plotting/box-plotting.component.ts:28</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createChart"></a>
+                    <span class="name">
+                        <b>
+                            createChart
+                        </b>
+                        <a href="#createChart"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>createChart()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="134"
+                            class="link-to-prism">projects/web-mev/src/app/d3/components/box-plotting/box-plotting.component.ts:134</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Function to create box plot</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="generateBoxPlot"></a>
+                    <span class="name">
+                        <b>
+                            generateBoxPlot
+                        </b>
+                        <a href="#generateBoxPlot"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>generateBoxPlot()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="68"
+                            class="link-to-prism">projects/web-mev/src/app/d3/components/box-plotting/box-plotting.component.ts:68</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Function to retrieve data for box plot</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnChanges"></a>
+                    <span class="name">
+                        <b>
+                            ngOnChanges
+                        </b>
+                        <a href="#ngOnChanges"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnChanges()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="60"
+                            class="link-to-prism">projects/web-mev/src/app/d3/components/box-plotting/box-plotting.component.ts:60</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onObservationCheck"></a>
+                    <span class="name">
+                        <b>
+                            onObservationCheck
+                        </b>
+                        <a href="#onObservationCheck"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onObservationCheck(e)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="396"
+                            class="link-to-prism">projects/web-mev/src/app/d3/components/box-plotting/box-plotting.component.ts:396</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Function is triggered when the user checks/unchecks custom observation sets</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>e</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onResize"></a>
+                    <span class="name">
+                        <b>
+                            onResize
+                        </b>
+                        <a href="#onResize"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onResize(event)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="389"
+                            class="link-to-prism">projects/web-mev/src/app/d3/components/box-plotting/box-plotting.component.ts:389</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Function is triggered when resizing the chart</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="reformatData"></a>
+                    <span class="name">
+                        <b>
+                            reformatData
+                        </b>
+                        <a href="#reformatData"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>reformatData()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="83"
+                            class="link-to-prism">projects/web-mev/src/app/d3/components/box-plotting/box-plotting.component.ts:83</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Function to prepare data for box plot</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+        <h3 id="inputs">
+            Properties
+        </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="boxPlotData"></a>
+                        <span class="name">
+                            <b>
+                            boxPlotData</b>
+                            <a href="#boxPlotData"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>[]</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>[]</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">projects/web-mev/src/app/d3/components/box-plotting/box-plotting.component.ts:34</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="boxPlotTypes"></a>
+                        <span class="name">
+                            <b>
+                            boxPlotTypes</b>
+                            <a href="#boxPlotTypes"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>{}</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">projects/web-mev/src/app/d3/components/box-plotting/box-plotting.component.ts:35</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="boxWidth"></a>
+                        <span class="name">
+                            <b>
+                            boxWidth</b>
+                            <a href="#boxWidth"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>20</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">projects/web-mev/src/app/d3/components/box-plotting/box-plotting.component.ts:51</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="containerId"></a>
+                        <span class="name">
+                            <b>
+                            containerId</b>
+                            <a href="#containerId"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>&#x27;#boxPlot&#x27;</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">projects/web-mev/src/app/d3/components/box-plotting/box-plotting.component.ts:42</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="customObservationSets"></a>
+                        <span class="name">
+                            <b>
+                            customObservationSets</b>
+                            <a href="#customObservationSets"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>[]</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>[]</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">projects/web-mev/src/app/d3/components/box-plotting/box-plotting.component.ts:31</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="customObservationSetsToPlot"></a>
+                        <span class="name">
+                            <b>
+                            customObservationSetsToPlot</b>
+                            <a href="#customObservationSetsToPlot"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>[]</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>[]</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">projects/web-mev/src/app/d3/components/box-plotting/box-plotting.component.ts:32</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="delta"></a>
+                        <span class="name">
+                            <b>
+                            delta</b>
+                            <a href="#delta"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>0.1</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">projects/web-mev/src/app/d3/components/box-plotting/box-plotting.component.ts:50</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="imageName"></a>
+                        <span class="name">
+                            <b>
+                            imageName</b>
+                            <a href="#imageName"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>&#x27;Box plot&#x27;</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">projects/web-mev/src/app/d3/components/box-plotting/box-plotting.component.ts:43</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="isWait"></a>
+                        <span class="name">
+                            <b>
+                            isWait</b>
+                            <a href="#isWait"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>false</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">projects/web-mev/src/app/d3/components/box-plotting/box-plotting.component.ts:36</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="margin"></a>
+                        <span class="name">
+                            <b>
+                            margin</b>
+                            <a href="#margin"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>{ top: 50, right: 150, bottom: 100, left: 40 }</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">projects/web-mev/src/app/d3/components/box-plotting/box-plotting.component.ts:46</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="maxFeatureNumber"></a>
+                        <span class="name">
+                            <b>
+                            maxFeatureNumber</b>
+                            <a href="#maxFeatureNumber"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>80</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">projects/web-mev/src/app/d3/components/box-plotting/box-plotting.component.ts:44</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="outerHeight"></a>
+                        <span class="name">
+                            <b>
+                            outerHeight</b>
+                            <a href="#outerHeight"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>500</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">projects/web-mev/src/app/d3/components/box-plotting/box-plotting.component.ts:47</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="precision"></a>
+                        <span class="name">
+                            <b>
+                            precision</b>
+                            <a href="#precision"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>2</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">projects/web-mev/src/app/d3/components/box-plotting/box-plotting.component.ts:45</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="resourceData"></a>
+                        <span class="name">
+                            <b>
+                            resourceData</b>
+                            <a href="#resourceData"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>[]</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>[]</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">projects/web-mev/src/app/d3/components/box-plotting/box-plotting.component.ts:33</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="svgElement"></a>
+                        <span class="name">
+                            <b>
+                            svgElement</b>
+                            <a href="#svgElement"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://angular.io/api/core/ElementRef" target="_blank" >ElementRef</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Decorators : </b>
+                            <br />
+                            <code>
+                                @ViewChild(&#x27;boxPlot&#x27;)<br />
+                            </code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">projects/web-mev/src/app/d3/components/box-plotting/box-plotting.component.ts:29</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="tooltipOffsetX"></a>
+                        <span class="name">
+                            <b>
+                            tooltipOffsetX</b>
+                            <a href="#tooltipOffsetX"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>10</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">projects/web-mev/src/app/d3/components/box-plotting/box-plotting.component.ts:52</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="xCat"></a>
+                        <span class="name">
+                            <b>
+                            xCat</b>
+                            <a href="#xCat"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>&#x27;key&#x27;</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">projects/web-mev/src/app/d3/components/box-plotting/box-plotting.component.ts:48</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="xScale"></a>
+                        <span class="name">
+                            <b>
+                            xScale</b>
+                            <a href="#xScale"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">projects/web-mev/src/app/d3/components/box-plotting/box-plotting.component.ts:38</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="yCat"></a>
+                        <span class="name">
+                            <b>
+                            yCat</b>
+                            <a href="#yCat"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>&#x27;Value&#x27;</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">projects/web-mev/src/app/d3/components/box-plotting/box-plotting.component.ts:49</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="yScale"></a>
+                        <span class="name">
+                            <b>
+                            yScale</b>
+                            <a href="#yScale"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">projects/web-mev/src/app/d3/components/box-plotting/box-plotting.component.ts:39</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  ViewChild,
+  ElementRef,
+  OnChanges,
+  ChangeDetectorRef
+} from &#x27;@angular/core&#x27;;
+import { AnalysesService } from &#x27;@app/features/analysis/services/analysis.service&#x27;;
+import { MetadataService } from &#x27;@app/core/metadata/metadata.service&#x27;;
+import { Utils } from &#x27;@app/shared/utils/utils&#x27;;
+import * as d3 from &#x27;d3&#x27;;
+import d3Tip from &#x27;d3-tip&#x27;;
+
+/**
+ * Box Plotting Component
+ *
+ * Used for the Plotting operation (output view for the normalization methods)
+ */
+@Component({
+  selector: &#x27;mev-box-plotting&#x27;,
+  templateUrl: &#x27;./box-plotting.component.html&#x27;,
+  styleUrls: [&#x27;./box-plotting.component.scss&#x27;],
+  changeDetection: ChangeDetectionStrategy.Default
+})
+export class BoxPlottingComponent implements OnChanges {
+  @Input() outputs;
+  @ViewChild(&#x27;boxPlot&#x27;) svgElement: ElementRef;
+
+  customObservationSets &#x3D; [];
+  customObservationSetsToPlot &#x3D; [];
+  resourceData &#x3D; [];
+  boxPlotData &#x3D; [];
+  boxPlotTypes &#x3D; {};
+  isWait &#x3D; false;
+
+  xScale; // scale functions to transform data values into the the range
+  yScale;
+
+  /* Chart settings */
+  containerId &#x3D; &#x27;#boxPlot&#x27;;
+  imageName &#x3D; &#x27;Box plot&#x27;; // file name for downloaded SVG image
+  maxFeatureNumber &#x3D; 80;
+  precision &#x3D; 2;
+  margin &#x3D; { top: 50, right: 150, bottom: 100, left: 40 }; // chart margins
+  outerHeight &#x3D; 500;
+  xCat &#x3D; &#x27;key&#x27;; // field name in data for X axis
+  yCat &#x3D; &#x27;Value&#x27;;
+  delta &#x3D; 0.1; // used for X and Y axis ranges (we add delta to avoid bug when both max and min are zeros)
+  boxWidth &#x3D; 20; // the width of rectangular box
+  tooltipOffsetX &#x3D; 10; // to position the tooltip on the right side of the triggering element
+
+  constructor(
+    private apiService: AnalysesService,
+    private metadataService: MetadataService,
+    private cdRef: ChangeDetectorRef
+  ) {}
+
+  ngOnChanges(): void {
+    this.customObservationSets &#x3D; this.metadataService.getCustomObservationSets();
+    this.generateBoxPlot();
+  }
+
+  /**
+   * Function to retrieve data for box plot
+   */
+  generateBoxPlot() {
+    this.isWait &#x3D; true;
+    const resourceId &#x3D; this.outputs.input_matrix;
+    this.apiService.getResourceContent(resourceId).subscribe(response &#x3D;&gt; {
+      this.resourceData &#x3D; response;
+      this.reformatData();
+      this.isWait &#x3D; false;
+      this.cdRef.detectChanges();
+      this.createChart();
+    });
+  }
+
+  /**
+   * Function to prepare data for box plot
+   */
+  reformatData() {
+    if (this.resourceData.length) {
+      this.boxPlotTypes &#x3D; {};
+      if (this.customObservationSetsToPlot.length) {
+        this.customObservationSetsToPlot.forEach(set &#x3D;&gt; {
+          this.boxPlotTypes[set.name] &#x3D; {
+            label: set.name,
+            yCat: set.name,
+            color: set.color,
+            samples: set.elements.map(el &#x3D;&gt; el.id)
+          };
+        });
+      } else {
+        this.boxPlotTypes[&#x27;All samples&#x27;] &#x3D; {
+          label: &#x27;All samples&#x27;,
+          yCat: &#x27;All samples&#x27;,
+          color: &#x27;#f40357&#x27;,
+          samples: Object.keys(this.resourceData[0].values)
+        };
+      }
+
+      if (this.outputs.features?.elements?.length) {
+        const selectedFeatures &#x3D; this.outputs.features.elements.map(
+          el &#x3D;&gt; el.id
+        );
+        this.resourceData &#x3D; this.resourceData.filter(el &#x3D;&gt;
+          selectedFeatures.includes(el.rowname)
+        );
+      }
+
+      this.resourceData &#x3D; this.resourceData.slice(0, this.maxFeatureNumber);
+      const countsFormatted &#x3D; this.resourceData.map(elem &#x3D;&gt; {
+        const newElem &#x3D; { key: elem.rowname };
+        Object.keys(this.boxPlotTypes).forEach(key &#x3D;&gt; {
+          const numbers &#x3D; this.boxPlotTypes[key].samples.reduce(
+            (acc, cur) &#x3D;&gt; [...acc, elem.values[cur]],
+            []
+          );
+          newElem[this.boxPlotTypes[key].yCat] &#x3D; Utils.getBoxPlotStatistics(
+            numbers
+          );
+        });
+        return newElem;
+      });
+      this.boxPlotData &#x3D; countsFormatted;
+    }
+  }
+
+  /**
+   * Function to create box plot
+   */
+  createChart(): void {
+    const outerWidth &#x3D; this.svgElement.nativeElement.offsetWidth;
+    const outerHeight &#x3D; this.outerHeight;
+    const width &#x3D; outerWidth - this.margin.left - this.margin.right;
+    const height &#x3D; outerHeight - this.margin.top - this.margin.bottom;
+
+    const data &#x3D; this.boxPlotData;
+
+    d3.select(this.containerId)
+      .selectAll(&#x27;svg&#x27;)
+      .remove();
+
+    const svg &#x3D; d3
+      .select(this.containerId)
+      .append(&#x27;svg&#x27;)
+      .attr(&#x27;width&#x27;, outerWidth)
+      .attr(&#x27;height&#x27;, outerHeight)
+      .append(&#x27;g&#x27;)
+      .attr(
+        &#x27;transform&#x27;,
+        &#x27;translate(&#x27; + this.margin.left + &#x27;,&#x27; + this.margin.top + &#x27;)&#x27;
+      )
+      .style(&#x27;fill&#x27;, &#x27;none&#x27;);
+
+    // Tooltip
+    const tooltipOffsetX &#x3D; this.tooltipOffsetX;
+    const tip &#x3D; d3Tip()
+      .attr(&#x27;class&#x27;, &#x27;d3-tip&#x27;)
+      .offset([-10, 0])
+      .html((event, d) &#x3D;&gt; {
+        // if it is a hover over an individual point, show the value
+        if (d !&#x3D;&#x3D; Object(d)) return &#x27;Value: &#x27; + d.toFixed(this.precision);
+
+        // if it is a hover over a box plot, show table with basic statistic values
+        const htmlTable &#x3D;
+          &#x27;&lt;table&gt;&lt;thead&gt;&lt;th&gt;&lt;/th&gt;&#x27; +
+          Object.keys(this.boxPlotTypes)
+            .map(key &#x3D;&gt; &#x27;&lt;th&gt;&#x27; + this.boxPlotTypes[key].label + &#x27;&lt;/th&gt;&#x27;)
+            .join(&#x27;&#x27;) +
+          &#x27;&lt;thead&gt;&#x27; +
+          &#x27;&lt;tr&gt;&lt;td&gt;Q1&lt;/td&gt;&#x27; +
+          Object.keys(this.boxPlotTypes)
+            .map(
+              key &#x3D;&gt;
+                &#x27;&lt;td&gt;&#x27; +
+                d[this.boxPlotTypes[key].yCat].q1.toFixed(this.precision) +
+                &#x27;&lt;/td&gt;&#x27;
+            )
+            .join(&#x27;&#x27;) +
+          &#x27;&lt;/tr&gt;&#x27; +
+          &#x27;&lt;tr&gt;&lt;td&gt;Q2&lt;/td&gt;&#x27; +
+          Object.keys(this.boxPlotTypes)
+            .map(
+              key &#x3D;&gt;
+                &#x27;&lt;td&gt;&#x27; +
+                d[this.boxPlotTypes[key].yCat].median.toFixed(this.precision) +
+                &#x27;&lt;/td&gt;&#x27;
+            )
+            .join(&#x27;&#x27;) +
+          &#x27;&lt;/tr&gt;&#x27; +
+          &#x27;&lt;tr&gt;&lt;td&gt;Q3&lt;/td&gt;&#x27; +
+          Object.keys(this.boxPlotTypes)
+            .map(
+              key &#x3D;&gt;
+                &#x27;&lt;td&gt;&#x27; +
+                d[this.boxPlotTypes[key].yCat].q3.toFixed(this.precision) +
+                &#x27;&lt;/td&gt;&#x27;
+            )
+            .join(&#x27;&#x27;) +
+          &#x27;&lt;/tr&gt;&#x27; +
+          &#x27;&lt;tr&gt;&lt;td&gt;IQR&lt;/td&gt;&#x27; +
+          Object.keys(this.boxPlotTypes)
+            .map(
+              key &#x3D;&gt;
+                &#x27;&lt;td&gt;&#x27; +
+                d[this.boxPlotTypes[key].yCat].iqr.toFixed(this.precision) +
+                &#x27;&lt;/td&gt;&#x27;
+            )
+            .join(&#x27;&#x27;) +
+          &#x27;&lt;/tr&gt;&#x27; +
+          &#x27;&lt;tr&gt;&lt;td&gt;MIN&lt;/td&gt;&#x27; +
+          Object.keys(this.boxPlotTypes)
+            .map(
+              key &#x3D;&gt;
+                &#x27;&lt;td&gt;&#x27; +
+                d[this.boxPlotTypes[key].yCat].min.toFixed(this.precision) +
+                &#x27;&lt;/td&gt;&#x27;
+            )
+            .join(&#x27;&#x27;) +
+          &#x27;&lt;/tr&gt;&#x27; +
+          &#x27;&lt;tr&gt;&lt;td&gt;MAX&lt;/td&gt;&#x27; +
+          Object.keys(this.boxPlotTypes)
+            .map(
+              key &#x3D;&gt;
+                &#x27;&lt;td&gt;&#x27; +
+                d[this.boxPlotTypes[key].yCat].max.toFixed(this.precision) +
+                &#x27;&lt;/td&gt;&#x27;
+            )
+            .join(&#x27;&#x27;) +
+          &#x27;&lt;/tr&gt;&#x27; +
+          &#x27;&lt;/table&gt;&#x27;;
+        return &#x27;&lt;b&gt;&#x27; + d[this.xCat] + &#x27;&lt;/b&gt;&lt;br&gt;&#x27; + htmlTable;
+      });
+    svg.call(tip);
+
+    svg
+      .append(&#x27;rect&#x27;)
+      .attr(&#x27;width&#x27;, width)
+      .attr(&#x27;height&#x27;, height)
+      .style(&#x27;fill&#x27;, &#x27;transparent&#x27;);
+
+    /* Setting up X-axis and Y-axis*/
+    this.xScale &#x3D; d3
+      .scaleBand()
+      .rangeRound([0, width])
+      .domain(data.map(d &#x3D;&gt; d.key))
+      .paddingInner(1)
+      .paddingOuter(0.5);
+
+    this.yScale &#x3D; d3.scaleLinear().rangeRound([height, 0]);
+
+    const maxArr &#x3D; Object.keys(this.boxPlotTypes).map(key &#x3D;&gt;
+      d3.max(data, d &#x3D;&gt; &lt;number&gt;d[this.boxPlotTypes[key].yCat].max || 0)
+    );
+    const minArr &#x3D; Object.keys(this.boxPlotTypes).map(key &#x3D;&gt;
+      d3.min(data, d &#x3D;&gt; &lt;number&gt;d[this.boxPlotTypes[key].yCat].min || 0)
+    );
+    const yMax &#x3D; Math.max(...maxArr);
+    const yMin &#x3D; Math.min(...minArr);
+    const yRange &#x3D; yMax - yMin + this.delta; // add delta to avoid bug when both max and min are zeros
+
+    this.yScale.domain([
+      yMin - yRange * this.delta,
+      yMax + yRange * this.delta
+    ]);
+
+    svg
+      .append(&#x27;g&#x27;)
+      .attr(&#x27;transform&#x27;, &#x27;translate(0,&#x27; + height + &#x27;)&#x27;)
+      .attr(&#x27;class&#x27;, &#x27;x-axis&#x27;)
+      .call(d3.axisBottom(this.xScale))
+      .selectAll(&#x27;text&#x27;)
+      .style(&#x27;text-anchor&#x27;, &#x27;end&#x27;)
+      .attr(&#x27;dx&#x27;, &#x27;-.8em&#x27;)
+      .attr(&#x27;dy&#x27;, &#x27;.15em&#x27;)
+      .attr(&#x27;transform&#x27;, &#x27;rotate(-45)&#x27;);
+
+    svg.append(&#x27;g&#x27;).call(d3.axisLeft(this.yScale));
+
+    // Box plots
+    Object.keys(this.boxPlotTypes).forEach((key, i) &#x3D;&gt; {
+      const yCatProp &#x3D; this.boxPlotTypes[key].yCat;
+      const color &#x3D; this.boxPlotTypes[key].color;
+
+      // Main vertical line
+      svg
+        .selectAll(&#x27;.vertLines&#x27;)
+        .data(data)
+        .enter()
+        .append(&#x27;line&#x27;)
+        .attr(
+          &#x27;x1&#x27;,
+          (d: any) &#x3D;&gt;
+            this.xScale(d[this.xCat]) + (1.2 * i - 0.6) * this.boxWidth
+        )
+        .attr(
+          &#x27;x2&#x27;,
+          (d: any) &#x3D;&gt;
+            this.xScale(d[this.xCat]) + (1.2 * i - 0.6) * this.boxWidth
+        )
+        .attr(&#x27;y1&#x27;, (d: any) &#x3D;&gt; this.yScale(d[yCatProp].min))
+        .attr(&#x27;y2&#x27;, (d: any) &#x3D;&gt; this.yScale(d[yCatProp].max))
+        .attr(&#x27;stroke&#x27;, &#x27;black&#x27;)
+        .style(&#x27;width&#x27;, d &#x3D;&gt; 10);
+
+      svg
+        .selectAll(&#x27;.boxes&#x27;)
+        .data(data)
+        .enter()
+        .append(&#x27;rect&#x27;)
+        .attr(
+          &#x27;x&#x27;,
+          d &#x3D;&gt; this.xScale(d[this.xCat]) + (1.2 * i - 1.1) * this.boxWidth
+        )
+        .attr(&#x27;y&#x27;, d &#x3D;&gt; this.yScale(d[yCatProp].q3))
+        .attr(
+          &#x27;height&#x27;,
+          d &#x3D;&gt; this.yScale(d[yCatProp].q1) - this.yScale(d[yCatProp].q3)
+        )
+        .attr(&#x27;width&#x27;, d &#x3D;&gt; this.boxWidth)
+        .attr(&#x27;stroke&#x27;, &#x27;black&#x27;)
+        .style(&#x27;fill&#x27;, color)
+        .attr(&#x27;pointer-events&#x27;, &#x27;all&#x27;)
+        .on(&#x27;mouseover&#x27;, function(mouseEvent: any, d) {
+          tip.show(mouseEvent, d, this);
+          tip.style(&#x27;left&#x27;, mouseEvent.x + tooltipOffsetX + &#x27;px&#x27;);
+        })
+        .on(&#x27;mouseout&#x27;, tip.hide);
+
+      // Medians
+      svg
+        .selectAll(&#x27;.medianLines&#x27;)
+        .data(data)
+        .enter()
+        .append(&#x27;line&#x27;)
+        .attr(&#x27;x1&#x27;, d &#x3D;&gt; {
+          if (d[yCatProp].median !&#x3D;&#x3D; undefined)
+            return this.xScale(d[this.xCat]) + (1.2 * i - 1.1) * this.boxWidth;
+          return 0;
+        })
+        .attr(&#x27;x2&#x27;, d &#x3D;&gt; {
+          if (d[yCatProp].median !&#x3D;&#x3D; undefined)
+            return this.xScale(d[this.xCat]) + (1.2 * i - 0.1) * this.boxWidth;
+          return 0;
+        })
+        .attr(&#x27;y1&#x27;, d &#x3D;&gt; this.yScale(d[yCatProp].median))
+        .attr(&#x27;y2&#x27;, d &#x3D;&gt; this.yScale(d[yCatProp].median))
+        .attr(&#x27;stroke&#x27;, &#x27;black&#x27;)
+        .style(&#x27;width&#x27;, d &#x3D;&gt; 80);
+    });
+
+    // Legend
+    const boxPlotColors &#x3D; Object.keys(this.boxPlotTypes).map(key &#x3D;&gt; ({
+      label: this.boxPlotTypes[key].label,
+      color: this.boxPlotTypes[key].color
+    }));
+
+    const legend &#x3D; svg
+      .selectAll(&#x27;.legend&#x27;)
+      .data(boxPlotColors)
+      .enter()
+      .append(&#x27;g&#x27;)
+      .classed(&#x27;legend&#x27;, true)
+      .attr(&#x27;transform&#x27;, function(d, i) {
+        return &#x27;translate(0,&#x27; + i * 20 + &#x27;)&#x27;;
+      });
+
+    legend
+      .append(&#x27;circle&#x27;)
+      .attr(&#x27;r&#x27;, 5)
+      .attr(&#x27;cx&#x27;, width + 10)
+      .attr(&#x27;fill&#x27;, d &#x3D;&gt; d.color);
+
+    legend
+      .append(&#x27;text&#x27;)
+      .attr(&#x27;x&#x27;, width + 20)
+      .attr(&#x27;dy&#x27;, &#x27;.35em&#x27;)
+      .style(&#x27;fill&#x27;, &#x27;#000&#x27;)
+      .attr(&#x27;class&#x27;, &#x27;legend-label&#x27;)
+      .text(d &#x3D;&gt; d.label);
+  }
+
+  /**
+   * Function is triggered when resizing the chart
+   */
+  onResize(event) {
+    this.createChart();
+  }
+
+  /**
+   * Function is triggered when the user checks/unchecks custom observation sets
+   */
+  onObservationCheck(e) {
+    const sampleSet &#x3D; e.source.id;
+    const foundSet &#x3D; this.customObservationSets.find(
+      el &#x3D;&gt; el.name &#x3D;&#x3D;&#x3D; sampleSet
+    );
+
+    if (e.checked) {
+      this.customObservationSetsToPlot.push(foundSet);
+    } else {
+      this.customObservationSetsToPlot &#x3D; this.customObservationSetsToPlot.filter(
+        set &#x3D;&gt; set.name !&#x3D;&#x3D; foundSet.name
+      );
+    }
+    this.reformatData();
+    this.createChart();
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;mev-spinner-overlay *ngIf&#x3D;&quot;isWait&quot;&gt;&lt;/mev-spinner-overlay&gt;
+&lt;div *ngIf&#x3D;&quot;!isWait&quot;&gt;
+    &lt;section class&#x3D;&quot;observation-list-section&quot;&gt;
+        &lt;ul *ngIf&#x3D;&quot;customObservationSets.length&quot;&gt; Group observations by:
+            &lt;li *ngFor&#x3D;&quot;let set of customObservationSets&quot;&gt;
+                &lt;mat-checkbox (change)&#x3D;&quot;onObservationCheck($event)&quot; [id]&#x3D;&quot;set.name&quot;&gt;{{ set.name }}&lt;/mat-checkbox&gt;
+            &lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/section&gt;
+    &lt;div class&#x3D;&quot;button-panel&quot;&gt;
+        &lt;!-- &lt;button mat-raised-button color&#x3D;&quot;accent&quot; (click)&#x3D;&quot;onCreateCustomFeatureSet()&quot;&gt;
+          &lt;mat-icon&gt;add&lt;/mat-icon&gt;
+          Save as a feature set
+        &lt;/button&gt; --&gt;
+        &lt;mev-download-button [containerId]&#x3D;&quot;containerId&quot; [imageName]&#x3D;&quot;imageName&quot;&gt;&lt;/mev-download-button&gt;
+    &lt;/div&gt;
+    &lt;div #boxPlot id&#x3D;&quot;boxPlot&quot; class&#x3D;&quot;chart&quot; (window:resize)&#x3D;&quot;onResize($event)&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./box-plotting.component.scss</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">.observation-list-section {
+  margin: 20px 5px;
+
+  ul {
+    padding-left: 0;
+  }
+
+  li {
+    display: inline;
+    padding: 15px;
+  }
+}
+
+::ng-deep {
+  .d3-tip {
+    line-height: 1;
+    font-weight: normal;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 2px;
+    z-index: 9999;
+  }
+
+  .d3-tip table th,
+  td {
+    padding: 5px 10px;
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><mev-spinner-overlay *ngIf="isWait"></mev-spinner-overlay><div *ngIf="!isWait">    <section class="observation-list-section">        <ul *ngIf="customObservationSets.length"> Group observations by:            <li *ngFor="let set of customObservationSets">                <mat-checkbox (change)="onObservationCheck($event)" [id]="set.name">{{ set.name }}</mat-checkbox>            </li>        </ul>    </section>    <div class="button-panel">        <!-- <button mat-raised-button color="accent" (click)="onCreateCustomFeatureSet()">          <mat-icon>add</mat-icon>          Save as a feature set        </button> -->        <mev-download-button [containerId]="containerId" [imageName]="imageName"></mev-download-button>    </div>    <div #boxPlot id="boxPlot" class="chart" (window:resize)="onResize($event)"></div></div></div>'
+    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'mev-about'},{'name': 'AddAnnotationDialogComponent', 'selector': 'mev-add-annotation-dialog'},{'name': 'AddDialogComponent', 'selector': 'mev-add-dialog'},{'name': 'AddFileDialogComponent', 'selector': 'mev-add-file-dialog'},{'name': 'AddObservationSetDialogComponent', 'selector': 'mev-add-observation-set-dialog'},{'name': 'AddSampleSetComponent', 'selector': 'mev-add-sample-set'},{'name': 'AddWSDialogComponent', 'selector': 'mev-add-ws-dialog'},{'name': 'AnalysesComponent', 'selector': 'mev-analyses'},{'name': 'AnalysisFlowComponent', 'selector': 'mev-analysis-flow'},{'name': 'AnalysisPlottingResultComponent', 'selector': 'mev-analysis-plotting-result'},{'name': 'AnalysisResultComponent', 'selector': 'mev-analysis-result'},{'name': 'AppComponent', 'selector': 'mev-root'},{'name': 'BoxPlottingComponent', 'selector': 'mev-box-plotting'},{'name': 'DeleteDialogComponent', 'selector': 'mev-delete-dialog'},{'name': 'DeleteFileDialogComponent', 'selector': 'mev-delete-file-dialog'},{'name': 'DeleteSetDialogComponent', 'selector': 'mev-delete-set-dialog'},{'name': 'DeleteWSDialogComponent', 'selector': 'mev-delete-ws-dialog'},{'name': 'Deseq2Component', 'selector': 'mev-deseq2'},{'name': 'DownloadButtonComponent', 'selector': 'mev-download-button'},{'name': 'EditDialogComponent', 'selector': 'mev-edit-dialog'},{'name': 'EditFeatureSetDialogComponent', 'selector': 'mev-edit-feature-set-dialog'},{'name': 'EditFileDialogComponent', 'selector': 'mev-edit-file-dialog'},{'name': 'EditWSDialogComponent', 'selector': 'mev-edit-ws-dialog'},{'name': 'ExecutedOperationComponent', 'selector': 'mev-executed-operation'},{'name': 'FileListComponent', 'selector': 'mev-file-list'},{'name': 'GseaComponent', 'selector': 'mev-gsea'},{'name': 'HclComponent', 'selector': 'mev-hcl'},{'name': 'KmeansComponent', 'selector': 'mev-kmeans'},{'name': 'LimmaComponent', 'selector': 'mev-limma'},{'name': 'LoginComponent', 'selector': 'mev-login-form'},{'name': 'MetadataComponent', 'selector': 'mev-metadata'},{'name': 'OperationComponent', 'selector': 'mev-operation'},{'name': 'PasswordChangeComponent', 'selector': 'mev-password-change'},{'name': 'PreviewDialogComponent', 'selector': 'mev-preview-dialog'},{'name': 'ProgressSnackbarComponent', 'selector': 'mev-progress-snackbar'},{'name': 'RegisterComponent', 'selector': 'mev-register-form'},{'name': 'RequestPasswordResetComponent', 'selector': 'mev-request-password-reset'},{'name': 'ResponsePasswordResetComponent', 'selector': 'mev-response-password-reset'},{'name': 'RugPlotComponent', 'selector': 'mev-rug-plot'},{'name': 'ScatterPlotComponent', 'selector': 'mev-scatter-plot'},{'name': 'SettingsContainerComponent', 'selector': 'mev-settings'},{'name': 'SpinnerOverlayComponent', 'selector': 'mev-spinner-overlay'},{'name': 'TutorialComponent', 'selector': 'mev-tutorial'},{'name': 'ViewFileTypesDialogComponent', 'selector': 'mev-view-file-types-dialog'},{'name': 'ViewInfoDialogComponent', 'selector': 'mev-view-info-dialog'},{'name': 'ViewSetDialogComponent', 'selector': 'mev-view-set-dialog'},{'name': 'WorkareaComponent', 'selector': 'mev-workarea'},{'name': 'WorkspaceDetailComponent', 'selector': 'mev-workspace-detail'},{'name': 'WorkspaceListComponent', 'selector': 'mev-workspace-list'}];
+    var DIRECTIVES = [{'name': 'RtlSupportDirective', 'selector': '[rtl]'}];
+    var ACTUAL_COMPONENT = {'name': 'BoxPlottingComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+                   
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'BoxPlottingComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

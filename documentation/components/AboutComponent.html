@@ -64,6 +64,14 @@
     <code>projects/web-mev/src/app/features/about/about/about.component.ts</code>
 </p>
 
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>About component
+Used for the start WebMEV page</p>
+
+    </p>
 
 
     <p class="comment">
@@ -134,10 +142,11 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                <a href="#releaseButler">releaseButler</a>
+                                <a href="#routeAnimationsElements">routeAnimationsElements</a>
                             </li>
                             <li>
-                                <a href="#routeAnimationsElements">routeAnimationsElements</a>
+                                    <span class="modifier">Private</span>
+                                <a href="#twitter">twitter</a>
                             </li>
                         </ul>
                     </td>
@@ -152,7 +161,7 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                <a href="#ngAfterViewInit">ngAfterViewInit</a>
+                                <a href="#initTwitterWidget">initTwitterWidget</a>
                             </li>
                             <li>
                                 <a href="#ngOnInit">ngOnInit</a>
@@ -175,15 +184,45 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor()</code>
+<code>constructor(_router: <a href="https://angular.io/api/router/Router" target="_blank">Router</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">projects/web-mev/src/app/features/about/about/about.component.ts:13</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">projects/web-mev/src/app/features/about/about/about.component.ts:18</a></div>
                             </td>
                         </tr>
 
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>_router</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://angular.io/api/router/Router" target="_blank" >Router</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
             </tbody>
         </table>
 </section>
@@ -201,32 +240,34 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="ngAfterViewInit"></a>
+                    <a name="initTwitterWidget"></a>
                     <span class="name">
                         <b>
-                            ngAfterViewInit
+                            initTwitterWidget
                         </b>
-                        <a href="#ngAfterViewInit"><span class="icon ion-ios-link"></span></a>
+                        <a href="#initTwitterWidget"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>ngAfterViewInit()</code>
+<code>initTwitterWidget()</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="19"
-                            class="link-to-prism">projects/web-mev/src/app/features/about/about/about.component.ts:19</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="32"
+                            class="link-to-prism">projects/web-mev/src/app/features/about/about/about.component.ts:32</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Initialize twitter widget</p>
+</div>
 
                     <div class="io-description">
                         <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
@@ -258,14 +299,16 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="17"
-                            class="link-to-prism">projects/web-mev/src/app/features/about/about/about.component.ts:17</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="25"
+                            class="link-to-prism">projects/web-mev/src/app/features/about/about/about.component.ts:25</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Initialize twitter widget</p>
+</div>
 
                     <div class="io-description">
                         <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
@@ -285,32 +328,6 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="releaseButler"></a>
-                        <span class="name">
-                            <b>
-                            releaseButler</b>
-                            <a href="#releaseButler"><span class="icon ion-ios-link"></span></a>
-                        </span>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <i>Default value : </i><code>require(&#x27;../../../../assets/release-butler.png&#x27;)</code>
-                        </td>
-                    </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">projects/web-mev/src/app/features/about/about/about.component.ts:13</a></div>
-                            </td>
-                        </tr>
-
-
-            </tbody>
-        </table>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
                         <a name="routeAnimationsElements"></a>
                         <span class="name">
                             <b>
@@ -326,7 +343,35 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">projects/web-mev/src/app/features/about/about/about.component.ts:12</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">projects/web-mev/src/app/features/about/about/about.component.ts:17</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="twitter"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                            twitter</b>
+                            <a href="#twitter"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">projects/web-mev/src/app/features/about/about/about.component.ts:18</a></div>
                             </td>
                         </tr>
 
@@ -342,7 +387,12 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit, ChangeDetectionStrategy } from &#x27;@angular/core&#x27;;
 
 import { ROUTE_ANIMATIONS_ELEMENTS } from &#x27;../../../core/core.module&#x27;;
+import { Router, NavigationEnd } from &#x27;@angular/router&#x27;;
 
+/**
+ * About component
+ * Used for the start WebMEV page
+ */
 @Component({
   selector: &#x27;mev-about&#x27;,
   templateUrl: &#x27;./about.component.html&#x27;,
@@ -351,15 +401,44 @@ import { ROUTE_ANIMATIONS_ELEMENTS } from &#x27;../../../core/core.module&#x27;;
 })
 export class AboutComponent implements OnInit {
   routeAnimationsElements &#x3D; ROUTE_ANIMATIONS_ELEMENTS;
-  releaseButler &#x3D; require(&#x27;../../../../assets/release-butler.png&#x27;);
+  private twitter: any;
 
-  constructor() {}
+  constructor(private _router: Router) {}
 
-  ngOnInit() {}
+  /**
+   * Initialize twitter widget
+   */
+  ngOnInit() {
+    this.initTwitterWidget();
+  }
 
-  ngAfterViewInit(): void {
-    // display the latest tweets
-    (&lt;any&gt;window).twttr.widgets.load();
+  /**
+   * Initialize twitter widget
+   */
+  initTwitterWidget() {
+    this.twitter &#x3D; this._router.events.subscribe(val &#x3D;&gt; {
+      if (val instanceof NavigationEnd) {
+        (&lt;any&gt;window).twttr &#x3D; (function(d, s, id) {
+          let js: any,
+            fjs &#x3D; d.getElementsByTagName(s)[0],
+            t &#x3D; (&lt;any&gt;window).twttr || {};
+          if (d.getElementById(id)) return t;
+          js &#x3D; d.createElement(s);
+          js.id &#x3D; id;
+          js.src &#x3D; &#x27;https://platform.twitter.com/widgets.js&#x27;;
+          fjs.parentNode.insertBefore(js, fjs);
+
+          t._e &#x3D; [];
+          t.ready &#x3D; function(f: any) {
+            t._e.push(f);
+          };
+
+          return t;
+        })(document, &#x27;script&#x27;, &#x27;twitter-wjs&#x27;);
+
+        if ((&lt;any&gt;window).twttr.ready()) (&lt;any&gt;window).twttr.widgets.load();
+      }
+    });
   }
 }
 </code></pre>
@@ -657,10 +736,6 @@ mat-card {
   justify-content: space-between;
 }
 
-.github-header-image {
-  background-image: url(&#x27;https://material.angular.io/assets/img/examples/shiba1.jpg&#x27;);
-  background-size: cover;
-}
 .contributors {
   max-width: 700px;
   margin: 0 auto 60px auto;
@@ -771,7 +846,7 @@ mat-card {
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
         var COMPONENT_TEMPLATE = '<div><div class="background">  <div class="gradient">    <div class="container">      <div class="row">        <div class="col-md-3">          <mat-card>            <mat-card-title>Tweets by @WebMEV</mat-card-title>            <mat-card-content>              <a class="twitter-timeline"                 href="https://twitter.com/webmev"                 data-width="300" data-height="300" data-tweet-limit="3"                 data-chrome="noheader">              </a>            </mat-card-content>          </mat-card>        </div>        <div class="col-md-6">          <article>            <h1 class="mat-h1">{{ \'mev.title.long\' | translate }}</h1>            <div class="mev-section">              <p>WebMeV (Multiple Experiment Viewer) is a cloud-based application supporting <i><b>analysis</b></i>, <i><b>visualization</b></i>,                and <i><b>stratification</b></i> of large genomic data, particularly for RNASeq and microarray data.</p>              <p class="">With WebMeV platform, you can:</p>              <p><span class="mev-heading">Perform RNASeq Analysis</span> - Perform differential expression analysis                using RNASeq raw count data to draw biological insights.</p>              <p><span class="mev-heading">Access to Public Domain Data</span> - Directly search and pull TCGA and GEO                gene expression and sample attribute data in addition to private data for analysis</p>              <p><span class="mev-heading">Stratify Cohorts using Clinical Attributes</span> - Perform complex cohort                stratification using sophisticated regular expression, facet filter, and set operations.</p>            </div>            <div class="mev-section">              <p>Web MeV is being built to meet the challenge of exploring large public genomic data set and                Next-Generation Sequencing data with intuitive graphical interface for analysis. MeV is a free and                open-source cloud service platform that does not require log in to use.</p>            </div>            <div class="mev-section">              <p><span class="mev-heading">Where to start</span> - A series of videos tutorials are available on <a                href="https://www.youtube.com/watch?v=VqGpdotr-A4&amp;list=PLSUXpXpbiLkJFbC3LOMgBacvNSdNpw0nv">YouTube</a>                and accessible after entering the <a ui-sref="root.datasets.imports.tutorials"                                                     href="#/datasets/tutorials">WebMeV</a>. Example files for count                matrix and sample attribute are available here.</p>              <p><span class="mev-heading">Tutorials and Documentation</span> - tutorial documentation is available on                the <a href="https://github.com/dfci-cccb/mev/wiki">WebMev Wiki</a></p>              <p><span class="mev-heading">Customized Analysis</span> - Complex bioinformatics analysis outside the                scope of WebMeV functionalities can contact the Center for Cancer Computational Biology at Dana-Farber                Cancer Institute as consulting project.                <a href="http://cccb.dfci.harvard.edu/home">Click here for more information</a>.</p>            </div>            <!--div class="actions">              <a [ngClass]="routeAnimationsElements" mat-raised-button class="actions-main" color="primary" routerLink="../feature-list">                {{ \'mev.menu.features\' | translate }}              </a>              <a mat-raised-button class="actions-main" color="accent" routerLink="../examples" [ngClass]="routeAnimationsElements">                {{ \'mev.menu.examples\' | translate }}              </a>              <a mat-raised-button class="actions-main" color="warn" routerLink="../settings" [ngClass]="routeAnimationsElements">                {{ \'mev.about.change-theme\' | translate }}              </a>              <br>              <span [ngClass]="routeAnimationsElements">{{ \'mev.about.check-blogs\' | translate }}</span>              <br>              <a mat-raised-button                 [ngClass]="routeAnimationsElements"                 rel="noopener noreferrer"                 target="_blank"                 href="https://medium.com/@tomastrajan/the-complete-guide-to-angular-material-themes-4d165a9d24d1">                 <fa-icon [icon]="[\'fab\',\'medium-m\']"></fa-icon>                Material Theming              </a>            </div-->          </article>        </div>        <div class="col-md-3 mev-sidebar">          <!--div class="panel panel-info">            <div class="panel-body">              <form action="/signin/google" method="POST">                <button type="submit" class="btn btn-large btn-info btn-block hp-signin">Sign In With Google</button>                <input type="hidden" name="scope"                       value="https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo#email https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/tasks https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/latitude.all.best"/>                <input type="hidden" name="request_visible_actions"                       value="http://schemas.google.com/AddActivity http://schemas.google.com/BuyActivity http://schemas.google.com/CheckInActivity http://schemas.google.com/CommentActivity http://schemas.google.com/CreateActivity http://schemas.google.com/DiscoverActivity http://schemas.google.com/ListenActivity http://schemas.google.com/ReserveActivity http://schemas.google.com/ReviewActivity http://schemas.google.com/WantActivity"/>                <input type="hidden" name="access_type" value="offline"/>              </form>              <a ui-sref="root.datasets" class="btn btn-info btn-large btn-block hp-signin">Get Started</a>              <a ui-sref="root.datasets.imports.tutorials"                 class="btn btn-info btn-large btn-block hp-signin">Tutorials</a>            </div>          </div-->          <mat-card>            <mat-card-header>              <mat-card-title>                Browse              </mat-card-title>              <fa-icon [icon]="[\'fas\',\'info\']"></fa-icon>            </mat-card-header>            <mat-card-content>              <a href="https://sourceforge.net/projects/mev-tm4/">TM4 MeV Stand-Alone Client</a>              <br>              <a href="https://github.com/dfci-cccb/mev/archive/master.zip">Download Current Stable Version (.zip)</a>              <br>              <a href="https://github.com/dfci-cccb/mev/wiki">WebMev Wiki</a>              <br>            </mat-card-content>            <mat-card-header>              <mat-card-title>                What\'s Inside              </mat-card-title>              <fa-icon [icon]="[\'fas\',\'cogs\']"></fa-icon>            </mat-card-header>            <mat-card-content>              <a href="http://www.bioconductor.org">Bioconductor</a>              <br>              <a href="http://d3js.org/">D3.js</a>              <br>              <a href="http://www.r-project.org/">R Statistics Language</a>              <br>              <a href="http://openrefine.org/">Open Refine</a>              <br>            </mat-card-content>          </mat-card>          <mat-card>            <mat-card-header>              <mat-card-title>                GitHub              </mat-card-title>              <fa-icon [icon]="[\'fab\',\'github\']"></fa-icon>            </mat-card-header>            <mat-card-content>              See current developments and contribute to the project <a href="https://github.com/dfci-cccb/mev">              here</a>.              <br>              <br>              <a href="https://github.com/dfci-cccb/mev/issues">Have an issue or want to report a bug? Tell us about                it.</a>            </mat-card-content>          </mat-card>        </div>      </div>    </div>  </div></div></div>'
-    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'mev-about'},{'name': 'AddDialogComponent', 'selector': 'mev-add-dialog'},{'name': 'AddFileDialogComponent', 'selector': 'mev-add-file-dialog'},{'name': 'AddWSDialogComponent', 'selector': 'mev-add-ws-dialog'},{'name': 'AppComponent', 'selector': 'mev-root'},{'name': 'DeleteDialogComponent', 'selector': 'mev-delete-dialog'},{'name': 'DeleteFileDialogComponent', 'selector': 'mev-delete-file-dialog'},{'name': 'DeleteWSDialogComponent', 'selector': 'mev-delete-ws-dialog'},{'name': 'EditFileDialogComponent', 'selector': 'mev-edit-file-dialog'},{'name': 'EditWSDialogComponent', 'selector': 'mev-edit-ws-dialog'},{'name': 'FileListComponent', 'selector': 'mev-file-list'},{'name': 'LoginComponent', 'selector': 'mev-login-form'},{'name': 'PasswordChangeComponent', 'selector': 'mev-password-change'},{'name': 'ProgressSnackbarComponent', 'selector': 'mev-progress-snackbar'},{'name': 'RegisterComponent', 'selector': 'mev-register-form'},{'name': 'RequestPasswordResetComponent', 'selector': 'mev-request-password-reset'},{'name': 'ResponsePasswordResetComponent', 'selector': 'mev-response-password-reset'},{'name': 'SettingsContainerComponent', 'selector': 'mev-settings'},{'name': 'TutorialComponent', 'selector': 'mev-tutorial'},{'name': 'WorkareaComponent', 'selector': 'mev-workarea'},{'name': 'WorkspaceDetailComponent', 'selector': 'mev-workspace-detail'},{'name': 'WorkspaceListComponent', 'selector': 'mev-workspace-list'}];
+    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'mev-about'},{'name': 'AddAnnotationDialogComponent', 'selector': 'mev-add-annotation-dialog'},{'name': 'AddDialogComponent', 'selector': 'mev-add-dialog'},{'name': 'AddFileDialogComponent', 'selector': 'mev-add-file-dialog'},{'name': 'AddObservationSetDialogComponent', 'selector': 'mev-add-observation-set-dialog'},{'name': 'AddSampleSetComponent', 'selector': 'mev-add-sample-set'},{'name': 'AddWSDialogComponent', 'selector': 'mev-add-ws-dialog'},{'name': 'AnalysesComponent', 'selector': 'mev-analyses'},{'name': 'AnalysisFlowComponent', 'selector': 'mev-analysis-flow'},{'name': 'AnalysisPlottingResultComponent', 'selector': 'mev-analysis-plotting-result'},{'name': 'AnalysisResultComponent', 'selector': 'mev-analysis-result'},{'name': 'AppComponent', 'selector': 'mev-root'},{'name': 'BoxPlottingComponent', 'selector': 'mev-box-plotting'},{'name': 'DeleteDialogComponent', 'selector': 'mev-delete-dialog'},{'name': 'DeleteFileDialogComponent', 'selector': 'mev-delete-file-dialog'},{'name': 'DeleteSetDialogComponent', 'selector': 'mev-delete-set-dialog'},{'name': 'DeleteWSDialogComponent', 'selector': 'mev-delete-ws-dialog'},{'name': 'Deseq2Component', 'selector': 'mev-deseq2'},{'name': 'DownloadButtonComponent', 'selector': 'mev-download-button'},{'name': 'EditDialogComponent', 'selector': 'mev-edit-dialog'},{'name': 'EditFeatureSetDialogComponent', 'selector': 'mev-edit-feature-set-dialog'},{'name': 'EditFileDialogComponent', 'selector': 'mev-edit-file-dialog'},{'name': 'EditWSDialogComponent', 'selector': 'mev-edit-ws-dialog'},{'name': 'ExecutedOperationComponent', 'selector': 'mev-executed-operation'},{'name': 'FileListComponent', 'selector': 'mev-file-list'},{'name': 'GseaComponent', 'selector': 'mev-gsea'},{'name': 'HclComponent', 'selector': 'mev-hcl'},{'name': 'KmeansComponent', 'selector': 'mev-kmeans'},{'name': 'LimmaComponent', 'selector': 'mev-limma'},{'name': 'LoginComponent', 'selector': 'mev-login-form'},{'name': 'MetadataComponent', 'selector': 'mev-metadata'},{'name': 'OperationComponent', 'selector': 'mev-operation'},{'name': 'PasswordChangeComponent', 'selector': 'mev-password-change'},{'name': 'PreviewDialogComponent', 'selector': 'mev-preview-dialog'},{'name': 'ProgressSnackbarComponent', 'selector': 'mev-progress-snackbar'},{'name': 'RegisterComponent', 'selector': 'mev-register-form'},{'name': 'RequestPasswordResetComponent', 'selector': 'mev-request-password-reset'},{'name': 'ResponsePasswordResetComponent', 'selector': 'mev-response-password-reset'},{'name': 'RugPlotComponent', 'selector': 'mev-rug-plot'},{'name': 'ScatterPlotComponent', 'selector': 'mev-scatter-plot'},{'name': 'SettingsContainerComponent', 'selector': 'mev-settings'},{'name': 'SpinnerOverlayComponent', 'selector': 'mev-spinner-overlay'},{'name': 'TutorialComponent', 'selector': 'mev-tutorial'},{'name': 'ViewFileTypesDialogComponent', 'selector': 'mev-view-file-types-dialog'},{'name': 'ViewInfoDialogComponent', 'selector': 'mev-view-info-dialog'},{'name': 'ViewSetDialogComponent', 'selector': 'mev-view-set-dialog'},{'name': 'WorkareaComponent', 'selector': 'mev-workarea'},{'name': 'WorkspaceDetailComponent', 'selector': 'mev-workspace-detail'},{'name': 'WorkspaceListComponent', 'selector': 'mev-workspace-list'}];
     var DIRECTIVES = [{'name': 'RtlSupportDirective', 'selector': '[rtl]'}];
     var ACTUAL_COMPONENT = {'name': 'AboutComponent'};
 </script>

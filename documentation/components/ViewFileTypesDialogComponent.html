@@ -1,0 +1,908 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>web-mev documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	      <link rel="stylesheet" href="../styles/style.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">web-mev documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li>ViewFileTypesDialogComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>projects/web-mev/src/app/features/file-manager/components/dialogs/view-file-types-dialog/view-file-types-dialog.component.ts</code>
+</p>
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>View File Types Dialog Component</p>
+<p>Modal dialog component which is used to view detailed information about file types</p>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover">
+        <tbody>
+
+            <tr>
+                <td class="col-md-3">changeDetection</td>
+                <td class="col-md-9"><code>ChangeDetectionStrategy.OnPush</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>mev-view-file-types-dialog</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./view-file-types-dialog.component.scss</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./view-file-types-dialog.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#dialogRef">dialogRef</a>
+                            </li>
+                            <li>
+                                <a href="#isTableShown">isTableShown</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#ngOnInit">ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#onNoClick">onNoClick</a>
+                            </li>
+                            <li>
+                                <a href="#toggleShow">toggleShow</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(dialogRef: <a href="../components/ViewFileTypesDialogComponent.html">MatDialogRef<ViewFileTypesDialogComponent></a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">projects/web-mev/src/app/features/file-manager/components/dialogs/view-file-types-dialog/view-file-types-dialog.component.ts:23</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>dialogRef</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../components/ViewFileTypesDialogComponent.html" target="_self" >MatDialogRef&lt;ViewFileTypesDialogComponent&gt;</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <b>
+                            ngOnInit
+                        </b>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="26"
+                            class="link-to-prism">projects/web-mev/src/app/features/file-manager/components/dialogs/view-file-types-dialog/view-file-types-dialog.component.ts:26</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onNoClick"></a>
+                    <span class="name">
+                        <b>
+                            onNoClick
+                        </b>
+                        <a href="#onNoClick"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onNoClick()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="32"
+                            class="link-to-prism">projects/web-mev/src/app/features/file-manager/components/dialogs/view-file-types-dialog/view-file-types-dialog.component.ts:32</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Function is triggered when user clicks the Cancel button</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toggleShow"></a>
+                    <span class="name">
+                        <b>
+                            toggleShow
+                        </b>
+                        <a href="#toggleShow"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>toggleShow(type)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="41"
+                            class="link-to-prism">projects/web-mev/src/app/features/file-manager/components/dialogs/view-file-types-dialog/view-file-types-dialog.component.ts:41</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Function is triggered when user clicks the Show/hide example button</p>
+<p>Controls the visibility of example tables</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>type</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+        <h3 id="inputs">
+            Properties
+        </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="dialogRef"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Public</span>
+                            dialogRef</b>
+                            <a href="#dialogRef"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="../components/ViewFileTypesDialogComponent.html" target="_self" >MatDialogRef&lt;ViewFileTypesDialogComponent&gt;</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">projects/web-mev/src/app/features/file-manager/components/dialogs/view-file-types-dialog/view-file-types-dialog.component.ts:24</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="isTableShown"></a>
+                        <span class="name">
+                            <b>
+                            isTableShown</b>
+                            <a href="#isTableShown"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>{
+    numeric: false,
+    integer: false,
+    feature: false,
+    expression: false,
+    count: false,
+    annotation: false
+  }</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">projects/web-mev/src/app/features/file-manager/components/dialogs/view-file-types-dialog/view-file-types-dialog.component.ts:16</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit, ChangeDetectionStrategy } from &#x27;@angular/core&#x27;;
+import { MatDialogRef } from &#x27;@angular/material/dialog&#x27;;
+
+/**
+ * View File Types Dialog Component
+ *
+ * Modal dialog component which is used to view detailed information about file types
+ */
+@Component({
+  selector: &#x27;mev-view-file-types-dialog&#x27;,
+  templateUrl: &#x27;./view-file-types-dialog.component.html&#x27;,
+  styleUrls: [&#x27;./view-file-types-dialog.component.scss&#x27;],
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class ViewFileTypesDialogComponent implements OnInit {
+  isTableShown &#x3D; {
+    numeric: false,
+    integer: false,
+    feature: false,
+    expression: false,
+    count: false,
+    annotation: false
+  };
+  constructor(public dialogRef: MatDialogRef&lt;ViewFileTypesDialogComponent&gt;) {}
+
+  ngOnInit(): void {}
+
+  /**
+   * Function is triggered when user clicks the Cancel button
+   *
+   */
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  /**
+   * Function is triggered when user clicks the Show/hide example button
+   *
+   * Controls the visibility of example tables
+   */
+  toggleShow(type) {
+    this.isTableShown[type] &#x3D; !this.isTableShown[type];
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;dialog&quot;&gt;
+    &lt;header&gt;File types&lt;/header&gt;
+    &lt;main class&#x3D;&quot;container&quot;&gt;
+        &lt;h3&gt;Table-based formats&lt;/h3&gt;
+        &lt;div&gt;
+            &lt;mat-icon&gt;check&lt;/mat-icon&gt;&lt;b&gt;Numeric Table&lt;/b&gt; is a table of where all the entries are numbers except the first
+            column (which names the rows) and the first line (which gives the column names). The cell at the first row and column may be left blank.
+            &lt;a class&#x3D;&quot;show-more-link&quot; (click)&#x3D;&quot;toggleShow(&#x27;numeric&#x27;)&quot;&gt;
+                {{ isTableShown[&#x27;numeric&#x27;] ? &#x27;Hide example&#x27; : &#x27;Show example&#x27; }}
+            &lt;/a&gt;
+    
+            &lt;table class&#x3D;&quot;example-table&quot; *ngIf&#x3D;&quot;isTableShown[&#x27;numeric&#x27;]&quot;&gt;
+                &lt;tr&gt;
+                    &lt;th&gt;&lt;/th&gt;
+                    &lt;th&gt;Sample A&lt;/th&gt;
+                    &lt;th&gt;Sample B&lt;/th&gt;
+                    &lt;th&gt;Sample C&lt;/th&gt;
+                  &lt;/tr&gt;
+                  &lt;tr&gt;
+                    &lt;td&gt;gene1&lt;/td&gt;
+                    &lt;td&gt;1.1&lt;/td&gt;
+                    &lt;td&gt;2.2&lt;/td&gt;
+                    &lt;td&gt;3.3&lt;/td&gt;
+                  &lt;/tr&gt;
+                  &lt;tr&gt;
+                    &lt;td&gt;gene2&lt;/td&gt;
+                    &lt;td&gt;11.1&lt;/td&gt;
+                    &lt;td&gt;22.2&lt;/td&gt;
+                    &lt;td&gt;33.3&lt;/td&gt;
+                  &lt;/tr&gt;
+                  &lt;tr&gt;
+                    &lt;td&gt;gene3&lt;/td&gt;
+                    &lt;td&gt;111.1&lt;/td&gt;
+                    &lt;td&gt;222.2&lt;/td&gt;
+                    &lt;td&gt;333.3&lt;/td&gt;
+                  &lt;/tr&gt;
+            &lt;/table&gt;
+            &lt;br&gt;
+            &lt;mat-icon&gt;check&lt;/mat-icon&gt;&lt;b&gt;An Integer Table&lt;/b&gt; is a table of where all the entries are integers except the
+            first
+            column (which names the rows) and
+            the first line (which gives the column names). The cell at the first row and column may be left blank.
+            &lt;a class&#x3D;&quot;show-more-link&quot; (click)&#x3D;&quot;toggleShow(&#x27;integer&#x27;)&quot;&gt;
+                {{ isTableShown[&#x27;integer&#x27;] ? &#x27;Hide example&#x27; : &#x27;Show example&#x27; }}
+            &lt;/a&gt;
+    
+            &lt;table class&#x3D;&quot;example-table&quot; *ngIf&#x3D;&quot;isTableShown[&#x27;integer&#x27;]&quot;&gt;
+                &lt;tr&gt;
+                    &lt;th&gt;&lt;/th&gt;
+                    &lt;th&gt;Sample A&lt;/th&gt;
+                    &lt;th&gt;Sample B&lt;/th&gt;
+                    &lt;th&gt;Sample C&lt;/th&gt;
+                  &lt;/tr&gt;
+                  &lt;tr&gt;
+                    &lt;td&gt;gene1&lt;/td&gt;
+                    &lt;td&gt;1&lt;/td&gt;
+                    &lt;td&gt;2&lt;/td&gt;
+                    &lt;td&gt;3&lt;/td&gt;
+                  &lt;/tr&gt;
+                  &lt;tr&gt;
+                    &lt;td&gt;gene2&lt;/td&gt;
+                    &lt;td&gt;11&lt;/td&gt;
+                    &lt;td&gt;22&lt;/td&gt;
+                    &lt;td&gt;33&lt;/td&gt;
+                  &lt;/tr&gt;
+                  &lt;tr&gt;
+                    &lt;td&gt;gene3&lt;/td&gt;
+                    &lt;td&gt;111&lt;/td&gt;
+                    &lt;td&gt;222&lt;/td&gt;
+                    &lt;td&gt;333&lt;/td&gt;
+                  &lt;/tr&gt;
+            &lt;/table&gt;
+            &lt;br&gt;
+            &lt;mat-icon&gt;check&lt;/mat-icon&gt;&lt;b&gt;RNA-seq count matrix&lt;/b&gt; is a table of where all the entries are integers except
+            the first
+            column (which names the rows)
+            and the first line (which gives the column names). The cell at the first row and column may be left blank.
+            &lt;a class&#x3D;&quot;show-more-link&quot; (click)&#x3D;&quot;toggleShow(&#x27;count&#x27;)&quot;&gt;
+                {{ isTableShown[&#x27;count&#x27;] ? &#x27;Hide example&#x27; : &#x27;Show example&#x27; }}
+            &lt;/a&gt;
+    
+            &lt;table class&#x3D;&quot;example-table&quot; *ngIf&#x3D;&quot;isTableShown[&#x27;count&#x27;]&quot;&gt;
+                &lt;tr&gt;
+                    &lt;th&gt;&lt;/th&gt;
+                    &lt;th&gt;Sample A&lt;/th&gt;
+                    &lt;th&gt;Sample B&lt;/th&gt;
+                    &lt;th&gt;Sample C&lt;/th&gt;
+                  &lt;/tr&gt;
+                  &lt;tr&gt;
+                    &lt;td&gt;gene1&lt;/td&gt;
+                    &lt;td&gt;1&lt;/td&gt;
+                    &lt;td&gt;2&lt;/td&gt;
+                    &lt;td&gt;3&lt;/td&gt;
+                  &lt;/tr&gt;
+                  &lt;tr&gt;
+                    &lt;td&gt;gene2&lt;/td&gt;
+                    &lt;td&gt;11&lt;/td&gt;
+                    &lt;td&gt;22&lt;/td&gt;
+                    &lt;td&gt;33&lt;/td&gt;
+                  &lt;/tr&gt;
+                  &lt;tr&gt;
+                    &lt;td&gt;gene3&lt;/td&gt;
+                    &lt;td&gt;111&lt;/td&gt;
+                    &lt;td&gt;222&lt;/td&gt;
+                    &lt;td&gt;333&lt;/td&gt;
+                  &lt;/tr&gt;
+            &lt;/table&gt;
+            
+            &lt;br&gt;
+
+            &lt;mat-icon&gt;check&lt;/mat-icon&gt;&lt;b&gt;Expression matrix&lt;/b&gt; is a table of where all the entries are numbers except the
+            first
+            column (which names the rows) and
+            the first line (which gives the column names). The cell at the first row and column may be left blank.
+            &lt;a class&#x3D;&quot;show-more-link&quot; (click)&#x3D;&quot;toggleShow(&#x27;expression&#x27;)&quot;&gt;
+                {{ isTableShown[&#x27;expression&#x27;] ? &#x27;Hide example&#x27; : &#x27;Show example&#x27; }}
+            &lt;/a&gt;
+    
+            &lt;table class&#x3D;&quot;example-table&quot; *ngIf&#x3D;&quot;isTableShown[&#x27;expression&#x27;]&quot;&gt;
+                &lt;tr&gt;
+                    &lt;th&gt;&lt;/th&gt;
+                    &lt;th&gt;Sample A&lt;/th&gt;
+                    &lt;th&gt;Sample B&lt;/th&gt;
+                    &lt;th&gt;Sample C&lt;/th&gt;
+                  &lt;/tr&gt;
+                  &lt;tr&gt;
+                    &lt;td&gt;gene1&lt;/td&gt;
+                    &lt;td&gt;1.1&lt;/td&gt;
+                    &lt;td&gt;2.2&lt;/td&gt;
+                    &lt;td&gt;3.3&lt;/td&gt;
+                  &lt;/tr&gt;
+                  &lt;tr&gt;
+                    &lt;td&gt;gene2&lt;/td&gt;
+                    &lt;td&gt;11.1&lt;/td&gt;
+                    &lt;td&gt;22.2&lt;/td&gt;
+                    &lt;td&gt;33.3&lt;/td&gt;
+                  &lt;/tr&gt;
+                  &lt;tr&gt;
+                    &lt;td&gt;gene3&lt;/td&gt;
+                    &lt;td&gt;111.1&lt;/td&gt;
+                    &lt;td&gt;222.2&lt;/td&gt;
+                    &lt;td&gt;333.3&lt;/td&gt;
+                  &lt;/tr&gt;
+            &lt;/table&gt;
+            
+            &lt;br&gt;
+            &lt;mat-icon&gt;check&lt;/mat-icon&gt;&lt;b&gt;Feature table.&lt;/b&gt; This type of file describes the &quot;features&quot; of your data. In the
+            genomics context, one example of a
+            feature is a gene. Therefore, you could use this table to give additional information about each gene, such as
+            alternative symbols, oncogene status, or similar. Each row contains information about a single gene. Note,
+            however,
+            that this concept is completely general and not restricted to information about genes or transcripts.
+            
+            &lt;a class&#x3D;&quot;show-more-link&quot; (click)&#x3D;&quot;toggleShow(&#x27;feature&#x27;)&quot;&gt;
+                {{ isTableShown[&#x27;feature&#x27;] ? &#x27;Hide example&#x27; : &#x27;Show example&#x27; }}
+            &lt;/a&gt;
+    
+            &lt;table class&#x3D;&quot;example-table&quot; *ngIf&#x3D;&quot;isTableShown[&#x27;feature&#x27;]&quot;&gt;
+                &lt;tr&gt;
+                    &lt;th&gt;&lt;/th&gt;
+                    &lt;th&gt;logFoldChange&lt;/th&gt;
+                    &lt;th&gt;pvalue&lt;/th&gt;
+                    &lt;th&gt;FDR&lt;/th&gt;
+                  &lt;/tr&gt;
+                  &lt;tr&gt;
+                    &lt;td&gt;gene1&lt;/td&gt;
+                    &lt;td&gt;1.1&lt;/td&gt;
+                    &lt;td&gt;0.03&lt;/td&gt;
+                    &lt;td&gt;0.2&lt;/td&gt;
+                  &lt;/tr&gt;
+                  &lt;tr&gt;
+                    &lt;td&gt;gene2&lt;/td&gt;
+                    &lt;td&gt;2.2&lt;/td&gt;
+                    &lt;td&gt;0.01&lt;/td&gt;
+                    &lt;td&gt;0.03&lt;/td&gt;
+                  &lt;/tr&gt;
+                  &lt;tr&gt;
+                    &lt;td&gt;gene3&lt;/td&gt;
+                    &lt;td&gt;3.3&lt;/td&gt;
+                    &lt;td&gt;3e-06&lt;/td&gt;
+                    &lt;td&gt;0.001&lt;/td&gt;
+                  &lt;/tr&gt;
+            &lt;/table&gt;
+
+            &lt;br&gt;
+            &lt;mat-icon&gt;check&lt;/mat-icon&gt;&lt;b&gt;Annotation table.&lt;/b&gt; This type of file is used to add metadata to your samples.
+            The first
+            column has the sample name
+            and the remaining columns contain metadata about each sample (for instance, experimental group, treatment, or
+            similar.
+            
+            &lt;a class&#x3D;&quot;show-more-link&quot; (click)&#x3D;&quot;toggleShow(&#x27;annotation&#x27;)&quot;&gt;
+                {{ isTableShown[&#x27;annotation&#x27;] ? &#x27;Hide example&#x27; : &#x27;Show example&#x27; }}
+            &lt;/a&gt;
+    
+            &lt;table class&#x3D;&quot;example-table&quot; *ngIf&#x3D;&quot;isTableShown[&#x27;annotation&#x27;]&quot;&gt;
+                &lt;tr&gt;
+                    &lt;th&gt;&lt;/th&gt;
+                    &lt;th&gt;cell_type&lt;/th&gt;
+                    &lt;th&gt;treatment&lt;/th&gt;
+                  &lt;/tr&gt;
+                  &lt;tr&gt;
+                    &lt;td&gt;Sample A&lt;/td&gt;
+                    &lt;td&gt;CD4&lt;/td&gt;
+                    &lt;td&gt;Y&lt;/td&gt;
+                  &lt;/tr&gt;
+                  &lt;tr&gt;
+                    &lt;td&gt;Sample B&lt;/td&gt;
+                    &lt;td&gt;CD8&lt;/td&gt;
+                    &lt;td&gt;Y&lt;/td&gt;
+                  &lt;/tr&gt;
+                  &lt;tr&gt;
+                    &lt;td&gt;Sample C&lt;/td&gt;
+                    &lt;td&gt;Monocyte&lt;/td&gt;
+                    &lt;td&gt;N&lt;/td&gt;
+                  &lt;/tr&gt;
+            &lt;/table&gt;
+            &lt;br&gt;
+            &lt;mat-icon&gt;check&lt;/mat-icon&gt;&lt;b&gt;BED-format file&lt;/b&gt; is a three-column BED-format file
+        &lt;/div&gt;
+    
+        &lt;h3&gt;Sequence-based formats:&lt;/h3&gt;
+        &lt;div&gt;
+            &lt;mat-icon&gt;check&lt;/mat-icon&gt;&lt;b&gt;Fasta&lt;/b&gt; is FASTA-format sequence files.
+            &lt;br&gt;
+            &lt;mat-icon&gt;check&lt;/mat-icon&gt;&lt;b&gt;Fastq&lt;/b&gt; is FASTQ-format sequence files. The most common format used for
+            sequencing experiments.
+            &lt;br&gt;
+            &lt;mat-icon&gt;check&lt;/mat-icon&gt;&lt;b&gt;Alignment (SAM/BAM)&lt;/b&gt; is BAM or SAM-format aligned sequence files. Typically the
+            output of an alignment process.
+        &lt;/div&gt;
+        &lt;h3&gt;JSON format:&lt;/h3&gt;
+        &lt;p&gt;
+            &lt;mat-icon&gt;check&lt;/mat-icon&gt;&lt;b&gt;JSON-format file&lt;/b&gt; is used for data that is not easily represented in a
+            table-based format
+        &lt;/p&gt;
+        &lt;h3&gt;General Format:&lt;/h3&gt;
+        &lt;div&gt;
+            &lt;mat-icon&gt;check&lt;/mat-icon&gt;&lt;b&gt;A general file&lt;/b&gt; is typically used to denote an unspecified type.
+        &lt;/div&gt;
+    &lt;/main&gt;
+    &lt;footer mat-dialog-actions class&#x3D;&quot;btn-group&quot;&gt;
+        &lt;button mat-button (click)&#x3D;&quot;onNoClick()&quot; mat-raised-button color&#x3D;&quot;accent&quot;&gt;Close&lt;/button&gt;
+    &lt;/footer&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./view-file-types-dialog.component.scss</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">* {
+  font-size: 14px;
+}
+
+.dialog {
+  max-height: 670px;
+}
+
+header {
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+mat-icon {
+  font-size: 12px;
+  height: 14px;
+}
+
+.container {
+  text-align: justify;
+}
+
+h3 {
+  margin-top: 15px;
+}
+.show-more-link {
+  cursor: pointer;
+}
+
+.example-table {
+  margin: 10px auto;
+  border: 1px solid black;
+
+  th,
+  td {
+    padding: 5px 15px;
+    border: 1px solid black;
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="dialog">    <header>File types</header>    <main class="container">        <h3>Table-based formats</h3>        <div>            <mat-icon>check</mat-icon><b>Numeric Table</b> is a table of where all the entries are numbers except the first            column (which names the rows) and the first line (which gives the column names). The cell at the first row and column may be left blank.            <a class="show-more-link" (click)="toggleShow(\'numeric\')">                {{ isTableShown[\'numeric\'] ? \'Hide example\' : \'Show example\' }}            </a>                <table class="example-table" *ngIf="isTableShown[\'numeric\']">                <tr>                    <th></th>                    <th>Sample A</th>                    <th>Sample B</th>                    <th>Sample C</th>                  </tr>                  <tr>                    <td>gene1</td>                    <td>1.1</td>                    <td>2.2</td>                    <td>3.3</td>                  </tr>                  <tr>                    <td>gene2</td>                    <td>11.1</td>                    <td>22.2</td>                    <td>33.3</td>                  </tr>                  <tr>                    <td>gene3</td>                    <td>111.1</td>                    <td>222.2</td>                    <td>333.3</td>                  </tr>            </table>            <br>            <mat-icon>check</mat-icon><b>An Integer Table</b> is a table of where all the entries are integers except the            first            column (which names the rows) and            the first line (which gives the column names). The cell at the first row and column may be left blank.            <a class="show-more-link" (click)="toggleShow(\'integer\')">                {{ isTableShown[\'integer\'] ? \'Hide example\' : \'Show example\' }}            </a>                <table class="example-table" *ngIf="isTableShown[\'integer\']">                <tr>                    <th></th>                    <th>Sample A</th>                    <th>Sample B</th>                    <th>Sample C</th>                  </tr>                  <tr>                    <td>gene1</td>                    <td>1</td>                    <td>2</td>                    <td>3</td>                  </tr>                  <tr>                    <td>gene2</td>                    <td>11</td>                    <td>22</td>                    <td>33</td>                  </tr>                  <tr>                    <td>gene3</td>                    <td>111</td>                    <td>222</td>                    <td>333</td>                  </tr>            </table>            <br>            <mat-icon>check</mat-icon><b>RNA-seq count matrix</b> is a table of where all the entries are integers except            the first            column (which names the rows)            and the first line (which gives the column names). The cell at the first row and column may be left blank.            <a class="show-more-link" (click)="toggleShow(\'count\')">                {{ isTableShown[\'count\'] ? \'Hide example\' : \'Show example\' }}            </a>                <table class="example-table" *ngIf="isTableShown[\'count\']">                <tr>                    <th></th>                    <th>Sample A</th>                    <th>Sample B</th>                    <th>Sample C</th>                  </tr>                  <tr>                    <td>gene1</td>                    <td>1</td>                    <td>2</td>                    <td>3</td>                  </tr>                  <tr>                    <td>gene2</td>                    <td>11</td>                    <td>22</td>                    <td>33</td>                  </tr>                  <tr>                    <td>gene3</td>                    <td>111</td>                    <td>222</td>                    <td>333</td>                  </tr>            </table>                        <br>            <mat-icon>check</mat-icon><b>Expression matrix</b> is a table of where all the entries are numbers except the            first            column (which names the rows) and            the first line (which gives the column names). The cell at the first row and column may be left blank.            <a class="show-more-link" (click)="toggleShow(\'expression\')">                {{ isTableShown[\'expression\'] ? \'Hide example\' : \'Show example\' }}            </a>                <table class="example-table" *ngIf="isTableShown[\'expression\']">                <tr>                    <th></th>                    <th>Sample A</th>                    <th>Sample B</th>                    <th>Sample C</th>                  </tr>                  <tr>                    <td>gene1</td>                    <td>1.1</td>                    <td>2.2</td>                    <td>3.3</td>                  </tr>                  <tr>                    <td>gene2</td>                    <td>11.1</td>                    <td>22.2</td>                    <td>33.3</td>                  </tr>                  <tr>                    <td>gene3</td>                    <td>111.1</td>                    <td>222.2</td>                    <td>333.3</td>                  </tr>            </table>                        <br>            <mat-icon>check</mat-icon><b>Feature table.</b> This type of file describes the "features" of your data. In the            genomics context, one example of a            feature is a gene. Therefore, you could use this table to give additional information about each gene, such as            alternative symbols, oncogene status, or similar. Each row contains information about a single gene. Note,            however,            that this concept is completely general and not restricted to information about genes or transcripts.                        <a class="show-more-link" (click)="toggleShow(\'feature\')">                {{ isTableShown[\'feature\'] ? \'Hide example\' : \'Show example\' }}            </a>                <table class="example-table" *ngIf="isTableShown[\'feature\']">                <tr>                    <th></th>                    <th>logFoldChange</th>                    <th>pvalue</th>                    <th>FDR</th>                  </tr>                  <tr>                    <td>gene1</td>                    <td>1.1</td>                    <td>0.03</td>                    <td>0.2</td>                  </tr>                  <tr>                    <td>gene2</td>                    <td>2.2</td>                    <td>0.01</td>                    <td>0.03</td>                  </tr>                  <tr>                    <td>gene3</td>                    <td>3.3</td>                    <td>3e-06</td>                    <td>0.001</td>                  </tr>            </table>            <br>            <mat-icon>check</mat-icon><b>Annotation table.</b> This type of file is used to add metadata to your samples.            The first            column has the sample name            and the remaining columns contain metadata about each sample (for instance, experimental group, treatment, or            similar.                        <a class="show-more-link" (click)="toggleShow(\'annotation\')">                {{ isTableShown[\'annotation\'] ? \'Hide example\' : \'Show example\' }}            </a>                <table class="example-table" *ngIf="isTableShown[\'annotation\']">                <tr>                    <th></th>                    <th>cell_type</th>                    <th>treatment</th>                  </tr>                  <tr>                    <td>Sample A</td>                    <td>CD4</td>                    <td>Y</td>                  </tr>                  <tr>                    <td>Sample B</td>                    <td>CD8</td>                    <td>Y</td>                  </tr>                  <tr>                    <td>Sample C</td>                    <td>Monocyte</td>                    <td>N</td>                  </tr>            </table>            <br>            <mat-icon>check</mat-icon><b>BED-format file</b> is a three-column BED-format file        </div>            <h3>Sequence-based formats:</h3>        <div>            <mat-icon>check</mat-icon><b>Fasta</b> is FASTA-format sequence files.            <br>            <mat-icon>check</mat-icon><b>Fastq</b> is FASTQ-format sequence files. The most common format used for            sequencing experiments.            <br>            <mat-icon>check</mat-icon><b>Alignment (SAM/BAM)</b> is BAM or SAM-format aligned sequence files. Typically the            output of an alignment process.        </div>        <h3>JSON format:</h3>        <p>            <mat-icon>check</mat-icon><b>JSON-format file</b> is used for data that is not easily represented in a            table-based format        </p>        <h3>General Format:</h3>        <div>            <mat-icon>check</mat-icon><b>A general file</b> is typically used to denote an unspecified type.        </div>    </main>    <footer mat-dialog-actions class="btn-group">        <button mat-button (click)="onNoClick()" mat-raised-button color="accent">Close</button>    </footer></div></div>'
+    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'mev-about'},{'name': 'AddAnnotationDialogComponent', 'selector': 'mev-add-annotation-dialog'},{'name': 'AddDialogComponent', 'selector': 'mev-add-dialog'},{'name': 'AddFileDialogComponent', 'selector': 'mev-add-file-dialog'},{'name': 'AddObservationSetDialogComponent', 'selector': 'mev-add-observation-set-dialog'},{'name': 'AddSampleSetComponent', 'selector': 'mev-add-sample-set'},{'name': 'AddWSDialogComponent', 'selector': 'mev-add-ws-dialog'},{'name': 'AnalysesComponent', 'selector': 'mev-analyses'},{'name': 'AnalysisFlowComponent', 'selector': 'mev-analysis-flow'},{'name': 'AnalysisPlottingResultComponent', 'selector': 'mev-analysis-plotting-result'},{'name': 'AnalysisResultComponent', 'selector': 'mev-analysis-result'},{'name': 'AppComponent', 'selector': 'mev-root'},{'name': 'BoxPlottingComponent', 'selector': 'mev-box-plotting'},{'name': 'DeleteDialogComponent', 'selector': 'mev-delete-dialog'},{'name': 'DeleteFileDialogComponent', 'selector': 'mev-delete-file-dialog'},{'name': 'DeleteSetDialogComponent', 'selector': 'mev-delete-set-dialog'},{'name': 'DeleteWSDialogComponent', 'selector': 'mev-delete-ws-dialog'},{'name': 'Deseq2Component', 'selector': 'mev-deseq2'},{'name': 'DownloadButtonComponent', 'selector': 'mev-download-button'},{'name': 'EditDialogComponent', 'selector': 'mev-edit-dialog'},{'name': 'EditFeatureSetDialogComponent', 'selector': 'mev-edit-feature-set-dialog'},{'name': 'EditFileDialogComponent', 'selector': 'mev-edit-file-dialog'},{'name': 'EditWSDialogComponent', 'selector': 'mev-edit-ws-dialog'},{'name': 'ExecutedOperationComponent', 'selector': 'mev-executed-operation'},{'name': 'FileListComponent', 'selector': 'mev-file-list'},{'name': 'GseaComponent', 'selector': 'mev-gsea'},{'name': 'HclComponent', 'selector': 'mev-hcl'},{'name': 'KmeansComponent', 'selector': 'mev-kmeans'},{'name': 'LimmaComponent', 'selector': 'mev-limma'},{'name': 'LoginComponent', 'selector': 'mev-login-form'},{'name': 'MetadataComponent', 'selector': 'mev-metadata'},{'name': 'OperationComponent', 'selector': 'mev-operation'},{'name': 'PasswordChangeComponent', 'selector': 'mev-password-change'},{'name': 'PreviewDialogComponent', 'selector': 'mev-preview-dialog'},{'name': 'ProgressSnackbarComponent', 'selector': 'mev-progress-snackbar'},{'name': 'RegisterComponent', 'selector': 'mev-register-form'},{'name': 'RequestPasswordResetComponent', 'selector': 'mev-request-password-reset'},{'name': 'ResponsePasswordResetComponent', 'selector': 'mev-response-password-reset'},{'name': 'RugPlotComponent', 'selector': 'mev-rug-plot'},{'name': 'ScatterPlotComponent', 'selector': 'mev-scatter-plot'},{'name': 'SettingsContainerComponent', 'selector': 'mev-settings'},{'name': 'SpinnerOverlayComponent', 'selector': 'mev-spinner-overlay'},{'name': 'TutorialComponent', 'selector': 'mev-tutorial'},{'name': 'ViewFileTypesDialogComponent', 'selector': 'mev-view-file-types-dialog'},{'name': 'ViewInfoDialogComponent', 'selector': 'mev-view-info-dialog'},{'name': 'ViewSetDialogComponent', 'selector': 'mev-view-set-dialog'},{'name': 'WorkareaComponent', 'selector': 'mev-workarea'},{'name': 'WorkspaceDetailComponent', 'selector': 'mev-workspace-detail'},{'name': 'WorkspaceListComponent', 'selector': 'mev-workspace-list'}];
+    var DIRECTIVES = [{'name': 'RtlSupportDirective', 'selector': '[rtl]'}];
+    var ACTUAL_COMPONENT = {'name': 'ViewFileTypesDialogComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+                   
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'ViewFileTypesDialogComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

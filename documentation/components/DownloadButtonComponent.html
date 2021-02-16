@@ -35,7 +35,7 @@
 
 <ol class="breadcrumb">
   <li>Components</li>
-  <li>TutorialComponent</li>
+  <li>DownloadButtonComponent</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -61,25 +61,19 @@
     <h3>File</h3>
 </p>
 <p class="comment">
-    <code>projects/web-mev/src/app/features/tutorial/tutorial.component.ts</code>
+    <code>projects/web-mev/src/app/d3/components/download-button/download-button.component.ts</code>
 </p>
 
     <p class="comment">
         <h3>Description</h3>
     </p>
     <p class="comment">
-        <p>Tutorial Component</p>
-<p>Display youtube player with tutorials (the Tutorial page)</p>
+        <p>Download Button Component</p>
+<p>Used in D3 charts for downloading svg image</p>
 
     </p>
 
 
-    <p class="comment">
-        <h3>Implements</h3>
-    </p>
-    <p class="comment">
-                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
-    </p>
 
 
 <section>
@@ -103,19 +97,19 @@
 
             <tr>
                 <td class="col-md-3">selector</td>
-                <td class="col-md-9"><code>mev-tutorial</code></td>
+                <td class="col-md-9"><code>mev-download-button</code></td>
             </tr>
 
             <tr>
                 <td class="col-md-3">styleUrls</td>
-                <td class="col-md-9"><code>./tutorial.component.scss</code></td>
+                <td class="col-md-9"><code>./download-button.component.scss</code></td>
             </tr>
 
 
 
             <tr>
                 <td class="col-md-3">templateUrl</td>
-                <td class="col-md-9"><code>./tutorial.component.html</code></td>
+                <td class="col-md-9"><code>./download-button.component.html</code></td>
             </tr>
 
 
@@ -143,12 +137,29 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                <a href="#ngOnInit">ngOnInit</a>
+                                <a href="#onSaveImage">onSaveImage</a>
                             </li>
                         </ul>
                     </td>
                 </tr>
 
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#containerId">containerId</a>
+                            </li>
+                            <li>
+                                <a href="#imageName">imageName</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
 
 
 
@@ -168,7 +179,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">projects/web-mev/src/app/features/tutorial/tutorial.component.ts:14</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">projects/web-mev/src/app/d3/components/download-button/download-button.component.ts:17</a></div>
                             </td>
                         </tr>
 
@@ -176,7 +187,39 @@
         </table>
 </section>
 
-
+    <section>
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="containerId"></a>
+                        <b>containerId</b>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">projects/web-mev/src/app/d3/components/download-button/download-button.component.ts:16</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="imageName"></a>
+                        <b>imageName</b>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">projects/web-mev/src/app/d3/components/download-button/download-button.component.ts:17</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
 
 
 
@@ -189,32 +232,34 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="ngOnInit"></a>
+                    <a name="onSaveImage"></a>
                     <span class="name">
                         <b>
-                            ngOnInit
+                            onSaveImage
                         </b>
-                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                        <a href="#onSaveImage"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>ngOnInit()</code>
+<code>onSaveImage()</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="17"
-                            class="link-to-prism">projects/web-mev/src/app/features/tutorial/tutorial.component.ts:17</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="23"
+                            class="link-to-prism">projects/web-mev/src/app/d3/components/download-button/download-button.component.ts:23</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Function to download the svg image</p>
+</div>
 
                     <div class="io-description">
                         <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
@@ -230,77 +275,52 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit, ChangeDetectionStrategy } from &#x27;@angular/core&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, ChangeDetectionStrategy, Input } from &#x27;@angular/core&#x27;;
+import * as svgAsPng from &#x27;save-svg-as-png&#x27;;
 
 /**
- * Tutorial Component
+ * Download Button Component
  *
- * Display youtube player with tutorials (the Tutorial page)
+ * Used in D3 charts for downloading svg image
  */
 @Component({
-  selector: &#x27;mev-tutorial&#x27;,
-  templateUrl: &#x27;./tutorial.component.html&#x27;,
-  styleUrls: [&#x27;./tutorial.component.scss&#x27;],
+  selector: &#x27;mev-download-button&#x27;,
+  templateUrl: &#x27;./download-button.component.html&#x27;,
+  styleUrls: [&#x27;./download-button.component.scss&#x27;],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TutorialComponent implements OnInit {
+export class DownloadButtonComponent {
+  @Input() containerId;
+  @Input() imageName;
   constructor() {}
 
-  ngOnInit(): void {}
+  /**
+   * Function to download the svg image
+   */
+  onSaveImage() {
+    svgAsPng.saveSvgAsPng(
+      document.querySelector(this.containerId + &#x27; svg&#x27;),
+      this.imageName
+    );
+  }
 }
 </code></pre>
     </div>
 
     <div class="tab-pane fade " id="c-templateData">
-        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;container&quot; rtl&gt;
-  &lt;div class&#x3D;&quot;row justify-content-center&quot;&gt;
-    &lt;div class&#x3D;&quot;col-md-8 form-group&quot;&gt;
-      &lt;mat-card&gt;
-        &lt;mat-card-subtitle&gt;Please see the
-          &lt;a href&#x3D;&quot;https://www.youtube.com/watch?list&#x3D;PLSUXpXpbiLkJFbC3LOMgBacvNSdNpw0nv&amp;amp;v&#x3D;VqGpdotr-A4&quot;
-             target&#x3D;&quot;_blank&quot;&gt;
-            WebMev Tutorials
-          &lt;/a&gt;
-          playlist for more tutorials
-        &lt;/mat-card-subtitle&gt;
-        &lt;mat-card-content&gt;
-          &lt;youtube-player
-            videoId&#x3D;&quot;VqGpdotr-A4&quot;
-            suggestedQuality&#x3D;&quot;default&quot;
-            [height]&#x3D;&quot;250&quot;
-            [width]&#x3D;&quot;500&quot;&gt;
-          &lt;/youtube-player&gt;
-        &lt;/mat-card-content&gt;
-      &lt;/mat-card&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-
-
-&lt;div class&#x3D;&quot;container&quot;&gt;
-  &lt;div class&#x3D;&quot;row&quot;&gt;
-    &lt;div class&#x3D;&quot;offset-md-2 col-md-8&quot;&gt;
-
-
-    &lt;/div&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-</code></pre>
+        <pre class="line-numbers"><code class="language-html">&lt;button mat-button color&#x3D;&quot;accent&quot; (click)&#x3D;&quot;onSaveImage()&quot; title&#x3D;&quot;Click to download the image&quot;&gt;
+    &lt;mat-icon&gt;save_alt&lt;/mat-icon&gt;
+&lt;/button&gt;</code></pre>
     </div>
 
     <div class="tab-pane fade " id="c-styleData">
                 <p class="comment">
-                    <code>./tutorial.component.scss</code>
+                    <code>./download-button.component.scss</code>
                 </p>
-                <pre class="line-numbers"><code class="language-scss">a {
-  text-decoration: underline;
-}
-.mat-card-subtitle {
-  text-align: center;
-}
-
-.mat-card-content {
-  text-align: center;
+                <pre class="line-numbers"><code class="language-scss">button {
+  float: right;
+  position: relative;
+  top: 30px;
 }
 </code></pre>
     </div>
@@ -330,10 +350,10 @@ export class TutorialComponent implements OnInit {
 <script src="../js/libs/htmlparser.js"></script>
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
-        var COMPONENT_TEMPLATE = '<div><div class="container" rtl>  <div class="row justify-content-center">    <div class="col-md-8 form-group">      <mat-card>        <mat-card-subtitle>Please see the          <a href="https://www.youtube.com/watch?list=PLSUXpXpbiLkJFbC3LOMgBacvNSdNpw0nv&amp;v=VqGpdotr-A4"             target="_blank">            WebMev Tutorials          </a>          playlist for more tutorials        </mat-card-subtitle>        <mat-card-content>          <youtube-player            videoId="VqGpdotr-A4"            suggestedQuality="default"            [height]="250"            [width]="500">          </youtube-player>        </mat-card-content>      </mat-card>    </div>  </div></div><div class="container">  <div class="row">    <div class="offset-md-2 col-md-8">    </div>  </div></div></div>'
+        var COMPONENT_TEMPLATE = '<div><button mat-button color="accent" (click)="onSaveImage()" title="Click to download the image">    <mat-icon>save_alt</mat-icon></button></div>'
     var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'mev-about'},{'name': 'AddAnnotationDialogComponent', 'selector': 'mev-add-annotation-dialog'},{'name': 'AddDialogComponent', 'selector': 'mev-add-dialog'},{'name': 'AddFileDialogComponent', 'selector': 'mev-add-file-dialog'},{'name': 'AddObservationSetDialogComponent', 'selector': 'mev-add-observation-set-dialog'},{'name': 'AddSampleSetComponent', 'selector': 'mev-add-sample-set'},{'name': 'AddWSDialogComponent', 'selector': 'mev-add-ws-dialog'},{'name': 'AnalysesComponent', 'selector': 'mev-analyses'},{'name': 'AnalysisFlowComponent', 'selector': 'mev-analysis-flow'},{'name': 'AnalysisPlottingResultComponent', 'selector': 'mev-analysis-plotting-result'},{'name': 'AnalysisResultComponent', 'selector': 'mev-analysis-result'},{'name': 'AppComponent', 'selector': 'mev-root'},{'name': 'BoxPlottingComponent', 'selector': 'mev-box-plotting'},{'name': 'DeleteDialogComponent', 'selector': 'mev-delete-dialog'},{'name': 'DeleteFileDialogComponent', 'selector': 'mev-delete-file-dialog'},{'name': 'DeleteSetDialogComponent', 'selector': 'mev-delete-set-dialog'},{'name': 'DeleteWSDialogComponent', 'selector': 'mev-delete-ws-dialog'},{'name': 'Deseq2Component', 'selector': 'mev-deseq2'},{'name': 'DownloadButtonComponent', 'selector': 'mev-download-button'},{'name': 'EditDialogComponent', 'selector': 'mev-edit-dialog'},{'name': 'EditFeatureSetDialogComponent', 'selector': 'mev-edit-feature-set-dialog'},{'name': 'EditFileDialogComponent', 'selector': 'mev-edit-file-dialog'},{'name': 'EditWSDialogComponent', 'selector': 'mev-edit-ws-dialog'},{'name': 'ExecutedOperationComponent', 'selector': 'mev-executed-operation'},{'name': 'FileListComponent', 'selector': 'mev-file-list'},{'name': 'GseaComponent', 'selector': 'mev-gsea'},{'name': 'HclComponent', 'selector': 'mev-hcl'},{'name': 'KmeansComponent', 'selector': 'mev-kmeans'},{'name': 'LimmaComponent', 'selector': 'mev-limma'},{'name': 'LoginComponent', 'selector': 'mev-login-form'},{'name': 'MetadataComponent', 'selector': 'mev-metadata'},{'name': 'OperationComponent', 'selector': 'mev-operation'},{'name': 'PasswordChangeComponent', 'selector': 'mev-password-change'},{'name': 'PreviewDialogComponent', 'selector': 'mev-preview-dialog'},{'name': 'ProgressSnackbarComponent', 'selector': 'mev-progress-snackbar'},{'name': 'RegisterComponent', 'selector': 'mev-register-form'},{'name': 'RequestPasswordResetComponent', 'selector': 'mev-request-password-reset'},{'name': 'ResponsePasswordResetComponent', 'selector': 'mev-response-password-reset'},{'name': 'RugPlotComponent', 'selector': 'mev-rug-plot'},{'name': 'ScatterPlotComponent', 'selector': 'mev-scatter-plot'},{'name': 'SettingsContainerComponent', 'selector': 'mev-settings'},{'name': 'SpinnerOverlayComponent', 'selector': 'mev-spinner-overlay'},{'name': 'TutorialComponent', 'selector': 'mev-tutorial'},{'name': 'ViewFileTypesDialogComponent', 'selector': 'mev-view-file-types-dialog'},{'name': 'ViewInfoDialogComponent', 'selector': 'mev-view-info-dialog'},{'name': 'ViewSetDialogComponent', 'selector': 'mev-view-set-dialog'},{'name': 'WorkareaComponent', 'selector': 'mev-workarea'},{'name': 'WorkspaceDetailComponent', 'selector': 'mev-workspace-detail'},{'name': 'WorkspaceListComponent', 'selector': 'mev-workspace-list'}];
     var DIRECTIVES = [{'name': 'RtlSupportDirective', 'selector': '[rtl]'}];
-    var ACTUAL_COMPONENT = {'name': 'TutorialComponent'};
+    var ACTUAL_COMPONENT = {'name': 'DownloadButtonComponent'};
 </script>
 <script src="../js/tree.js"></script>
 
@@ -368,7 +388,7 @@ export class TutorialComponent implements OnInit {
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
-            var COMPODOC_CURRENT_PAGE_URL = 'TutorialComponent.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'DownloadButtonComponent.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 

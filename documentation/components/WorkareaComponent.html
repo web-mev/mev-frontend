@@ -64,6 +64,14 @@
     <code>projects/web-mev/src/app/features/workarea/workarea.component.ts</code>
 </p>
 
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Workarea Component</p>
+<p>Container component. Used to display 2 tabs for File Manager and Workspace Manager</p>
+
+    </p>
 
 
     <p class="comment">
@@ -134,6 +142,11 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#API_NAME">API_NAME</a>
+                            </li>
+                            <li>
                                 <a href="#selectedTabIndex">selectedTabIndex</a>
                             </li>
                         </ul>
@@ -152,7 +165,13 @@
                                 <a href="#goToNextTab">goToNextTab</a>
                             </li>
                             <li>
+                                <a href="#ngAfterViewInit">ngAfterViewInit</a>
+                            </li>
+                            <li>
                                 <a href="#ngOnInit">ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#onTabChange">onTabChange</a>
                             </li>
                         </ul>
                     </td>
@@ -177,7 +196,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">projects/web-mev/src/app/features/workarea/workarea.component.ts:10</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">projects/web-mev/src/app/features/workarea/workarea.component.ts:19</a></div>
                             </td>
                         </tr>
 
@@ -216,14 +235,57 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="16"
-                            class="link-to-prism">projects/web-mev/src/app/features/workarea/workarea.component.ts:16</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="39"
+                            class="link-to-prism">projects/web-mev/src/app/features/workarea/workarea.component.ts:39</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Method is triggered when the user clicks the Next button to show the next tab</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngAfterViewInit"></a>
+                    <span class="name">
+                        <b>
+                            ngAfterViewInit
+                        </b>
+                        <a href="#ngAfterViewInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngAfterViewInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="28"
+                            class="link-to-prism">projects/web-mev/src/app/features/workarea/workarea.component.ts:28</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Gets the default tab from local storage</p>
+</div>
 
                     <div class="io-description">
                         <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
@@ -255,8 +317,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="13"
-                            class="link-to-prism">projects/web-mev/src/app/features/workarea/workarea.component.ts:13</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="22"
+                            class="link-to-prism">projects/web-mev/src/app/features/workarea/workarea.component.ts:22</a></div>
                 </td>
             </tr>
 
@@ -272,12 +334,112 @@
             </tr>
         </tbody>
     </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onTabChange"></a>
+                    <span class="name">
+                        <b>
+                            onTabChange
+                        </b>
+                        <a href="#onTabChange"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onTabChange(event: MatTabChangeEvent)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="47"
+                            class="link-to-prism">projects/web-mev/src/app/features/workarea/workarea.component.ts:47</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Method is triggered when the user switched between tab and saves the active tab to local storage</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                            <code>MatTabChangeEvent</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </section>
     <section>
     
         <h3 id="inputs">
             Properties
         </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="API_NAME"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                                <span class="modifier">Readonly</span>
+                            API_NAME</b>
+                            <a href="#API_NAME"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>environment.appName</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">projects/web-mev/src/app/features/workarea/workarea.component.ts:18</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
         <table class="table table-sm table-bordered">
             <tbody>
                 <tr>
@@ -303,7 +465,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">projects/web-mev/src/app/features/workarea/workarea.component.ts:10</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">projects/web-mev/src/app/features/workarea/workarea.component.ts:19</a></div>
                             </td>
                         </tr>
 
@@ -317,6 +479,14 @@
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit, ChangeDetectionStrategy } from &#x27;@angular/core&#x27;;
+import { MatTabChangeEvent } from &#x27;@angular/material/tabs&#x27;;
+import { environment } from &#x27;@environments/environment&#x27;;
+
+/**
+ * Workarea Component
+ *
+ * Container component. Used to display 2 tabs for File Manager and Workspace Manager
+ */
 
 @Component({
   selector: &#x27;mev-workarea&#x27;,
@@ -325,14 +495,37 @@
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WorkareaComponent implements OnInit {
-  selectedTabIndex &#x3D; 0;  // the first tab is default
+  private readonly API_NAME &#x3D; environment.appName;
+  selectedTabIndex &#x3D; 0; // the first tab is default
   constructor() {}
 
   ngOnInit(): void {}
 
+  /**
+   * Gets the default tab from local storage
+   */
+
+  ngAfterViewInit() {
+    const index &#x3D;
+      localStorage.getItem(&#x60;${this.API_NAME}selectedTab&#x60;) ||
+      this.selectedTabIndex;
+    this.selectedTabIndex &#x3D; Number(index);
+  }
+
+  /**
+   * Method is triggered when the user clicks the Next button to show the next tab
+   */
 
   goToNextTab() {
     this.selectedTabIndex &#x3D; 1; // update tab index
+  }
+
+  /**
+   * Method is triggered when the user switched between tab and saves the active tab to local storage
+   */
+
+  onTabChange(event: MatTabChangeEvent) {
+    localStorage.setItem(&#x60;${this.API_NAME}selectedTab&#x60;, String(event.index));
   }
 }
 </code></pre>
@@ -340,11 +533,7 @@ export class WorkareaComponent implements OnInit {
 
     <div class="tab-pane fade " id="c-templateData">
         <pre class="line-numbers"><code class="language-html">&lt;section class&#x3D;&quot;workarea&quot;&gt;
-  &lt;h4&gt;
-    Use the Files tab to upload files and the Workspace tab to organize them...
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-  &lt;/h4&gt;
-  &lt;mat-tab-group animationDuration&#x3D;&quot;0ms&quot; color&#x3D;&quot;accent&quot; [(selectedIndex)]&#x3D;&quot;selectedTabIndex&quot;&gt;
+  &lt;mat-tab-group animationDuration&#x3D;&quot;0ms&quot; color&#x3D;&quot;accent&quot; (selectedTabChange)&#x3D;&quot;onTabChange($event)&quot; [(selectedIndex)]&#x3D;&quot;selectedTabIndex&quot;&gt;
     &lt;mat-tab&gt;
       &lt;ng-template mat-tab-label&gt;
         &lt;mat-icon class&#x3D;&quot;tab-icon&quot;&gt;file_copy&lt;/mat-icon&gt;
@@ -419,8 +608,8 @@ export class WorkareaComponent implements OnInit {
 <script src="../js/libs/htmlparser.js"></script>
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
-        var COMPONENT_TEMPLATE = '<div><section class="workarea">  <h4>    Use the Files tab to upload files and the Workspace tab to organize them...    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor  </h4>  <mat-tab-group animationDuration="0ms" color="accent" [(selectedIndex)]="selectedTabIndex">    <mat-tab>      <ng-template mat-tab-label>        <mat-icon class="tab-icon">file_copy</mat-icon>        Files      </ng-template>      <mev-file-list></mev-file-list>    </mat-tab>    <mat-tab>      <ng-template mat-tab-label>        <mat-icon class="tab-icon">work</mat-icon>        Workspaces      </ng-template>      <mev-workspace-list></mev-workspace-list>    </mat-tab>  </mat-tab-group></section><div class="workarea-footer" *ngIf="selectedTabIndex == 0">  <button mat-raised-button color="accent" (click)="goToNextTab()">    Next    <mat-icon aria-label="Next step">navigate_next</mat-icon>  </button></div></div>'
-    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'mev-about'},{'name': 'AddDialogComponent', 'selector': 'mev-add-dialog'},{'name': 'AddFileDialogComponent', 'selector': 'mev-add-file-dialog'},{'name': 'AddWSDialogComponent', 'selector': 'mev-add-ws-dialog'},{'name': 'AppComponent', 'selector': 'mev-root'},{'name': 'DeleteDialogComponent', 'selector': 'mev-delete-dialog'},{'name': 'DeleteFileDialogComponent', 'selector': 'mev-delete-file-dialog'},{'name': 'DeleteWSDialogComponent', 'selector': 'mev-delete-ws-dialog'},{'name': 'EditFileDialogComponent', 'selector': 'mev-edit-file-dialog'},{'name': 'EditWSDialogComponent', 'selector': 'mev-edit-ws-dialog'},{'name': 'FileListComponent', 'selector': 'mev-file-list'},{'name': 'LoginComponent', 'selector': 'mev-login-form'},{'name': 'PasswordChangeComponent', 'selector': 'mev-password-change'},{'name': 'ProgressSnackbarComponent', 'selector': 'mev-progress-snackbar'},{'name': 'RegisterComponent', 'selector': 'mev-register-form'},{'name': 'RequestPasswordResetComponent', 'selector': 'mev-request-password-reset'},{'name': 'ResponsePasswordResetComponent', 'selector': 'mev-response-password-reset'},{'name': 'SettingsContainerComponent', 'selector': 'mev-settings'},{'name': 'TutorialComponent', 'selector': 'mev-tutorial'},{'name': 'WorkareaComponent', 'selector': 'mev-workarea'},{'name': 'WorkspaceDetailComponent', 'selector': 'mev-workspace-detail'},{'name': 'WorkspaceListComponent', 'selector': 'mev-workspace-list'}];
+        var COMPONENT_TEMPLATE = '<div><section class="workarea">  <mat-tab-group animationDuration="0ms" color="accent" (selectedTabChange)="onTabChange($event)" [(selectedIndex)]="selectedTabIndex">    <mat-tab>      <ng-template mat-tab-label>        <mat-icon class="tab-icon">file_copy</mat-icon>        Files      </ng-template>      <mev-file-list></mev-file-list>    </mat-tab>    <mat-tab>      <ng-template mat-tab-label>        <mat-icon class="tab-icon">work</mat-icon>        Workspaces      </ng-template>      <mev-workspace-list></mev-workspace-list>    </mat-tab>  </mat-tab-group></section><div class="workarea-footer" *ngIf="selectedTabIndex == 0">  <button mat-raised-button color="accent" (click)="goToNextTab()">    Next    <mat-icon aria-label="Next step">navigate_next</mat-icon>  </button></div></div>'
+    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'mev-about'},{'name': 'AddAnnotationDialogComponent', 'selector': 'mev-add-annotation-dialog'},{'name': 'AddDialogComponent', 'selector': 'mev-add-dialog'},{'name': 'AddFileDialogComponent', 'selector': 'mev-add-file-dialog'},{'name': 'AddObservationSetDialogComponent', 'selector': 'mev-add-observation-set-dialog'},{'name': 'AddSampleSetComponent', 'selector': 'mev-add-sample-set'},{'name': 'AddWSDialogComponent', 'selector': 'mev-add-ws-dialog'},{'name': 'AnalysesComponent', 'selector': 'mev-analyses'},{'name': 'AnalysisFlowComponent', 'selector': 'mev-analysis-flow'},{'name': 'AnalysisPlottingResultComponent', 'selector': 'mev-analysis-plotting-result'},{'name': 'AnalysisResultComponent', 'selector': 'mev-analysis-result'},{'name': 'AppComponent', 'selector': 'mev-root'},{'name': 'BoxPlottingComponent', 'selector': 'mev-box-plotting'},{'name': 'DeleteDialogComponent', 'selector': 'mev-delete-dialog'},{'name': 'DeleteFileDialogComponent', 'selector': 'mev-delete-file-dialog'},{'name': 'DeleteSetDialogComponent', 'selector': 'mev-delete-set-dialog'},{'name': 'DeleteWSDialogComponent', 'selector': 'mev-delete-ws-dialog'},{'name': 'Deseq2Component', 'selector': 'mev-deseq2'},{'name': 'DownloadButtonComponent', 'selector': 'mev-download-button'},{'name': 'EditDialogComponent', 'selector': 'mev-edit-dialog'},{'name': 'EditFeatureSetDialogComponent', 'selector': 'mev-edit-feature-set-dialog'},{'name': 'EditFileDialogComponent', 'selector': 'mev-edit-file-dialog'},{'name': 'EditWSDialogComponent', 'selector': 'mev-edit-ws-dialog'},{'name': 'ExecutedOperationComponent', 'selector': 'mev-executed-operation'},{'name': 'FileListComponent', 'selector': 'mev-file-list'},{'name': 'GseaComponent', 'selector': 'mev-gsea'},{'name': 'HclComponent', 'selector': 'mev-hcl'},{'name': 'KmeansComponent', 'selector': 'mev-kmeans'},{'name': 'LimmaComponent', 'selector': 'mev-limma'},{'name': 'LoginComponent', 'selector': 'mev-login-form'},{'name': 'MetadataComponent', 'selector': 'mev-metadata'},{'name': 'OperationComponent', 'selector': 'mev-operation'},{'name': 'PasswordChangeComponent', 'selector': 'mev-password-change'},{'name': 'PreviewDialogComponent', 'selector': 'mev-preview-dialog'},{'name': 'ProgressSnackbarComponent', 'selector': 'mev-progress-snackbar'},{'name': 'RegisterComponent', 'selector': 'mev-register-form'},{'name': 'RequestPasswordResetComponent', 'selector': 'mev-request-password-reset'},{'name': 'ResponsePasswordResetComponent', 'selector': 'mev-response-password-reset'},{'name': 'RugPlotComponent', 'selector': 'mev-rug-plot'},{'name': 'ScatterPlotComponent', 'selector': 'mev-scatter-plot'},{'name': 'SettingsContainerComponent', 'selector': 'mev-settings'},{'name': 'SpinnerOverlayComponent', 'selector': 'mev-spinner-overlay'},{'name': 'TutorialComponent', 'selector': 'mev-tutorial'},{'name': 'ViewFileTypesDialogComponent', 'selector': 'mev-view-file-types-dialog'},{'name': 'ViewInfoDialogComponent', 'selector': 'mev-view-info-dialog'},{'name': 'ViewSetDialogComponent', 'selector': 'mev-view-set-dialog'},{'name': 'WorkareaComponent', 'selector': 'mev-workarea'},{'name': 'WorkspaceDetailComponent', 'selector': 'mev-workspace-detail'},{'name': 'WorkspaceListComponent', 'selector': 'mev-workspace-list'}];
     var DIRECTIVES = [{'name': 'RtlSupportDirective', 'selector': '[rtl]'}];
     var ACTUAL_COMPONENT = {'name': 'WorkareaComponent'};
 </script>

@@ -64,6 +64,14 @@
     <code>projects/web-mev/src/app/features/file-manager/components/progress-snackbar/progress-snackbar.component.ts</code>
 </p>
 
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>View Progress Snackbar Component</p>
+<p>Used to display the progress of file uploads</p>
+
+    </p>
 
 
     <p class="comment">
@@ -178,7 +186,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">projects/web-mev/src/app/features/file-manager/components/progress-snackbar/progress-snackbar.component.ts:12</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">projects/web-mev/src/app/features/file-manager/components/progress-snackbar/progress-snackbar.component.ts:16</a></div>
                             </td>
                         </tr>
 
@@ -259,8 +267,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="19"
-                            class="link-to-prism">projects/web-mev/src/app/features/file-manager/components/progress-snackbar/progress-snackbar.component.ts:19</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="23"
+                            class="link-to-prism">projects/web-mev/src/app/features/file-manager/components/progress-snackbar/progress-snackbar.component.ts:23</a></div>
                 </td>
             </tr>
 
@@ -303,7 +311,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">projects/web-mev/src/app/features/file-manager/components/progress-snackbar/progress-snackbar.component.ts:16</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">projects/web-mev/src/app/features/file-manager/components/progress-snackbar/progress-snackbar.component.ts:20</a></div>
                             </td>
                         </tr>
 
@@ -331,7 +339,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">projects/web-mev/src/app/features/file-manager/components/progress-snackbar/progress-snackbar.component.ts:15</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">projects/web-mev/src/app/features/file-manager/components/progress-snackbar/progress-snackbar.component.ts:19</a></div>
                             </td>
                         </tr>
 
@@ -363,7 +371,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">projects/web-mev/src/app/features/file-manager/components/progress-snackbar/progress-snackbar.component.ts:12</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">projects/web-mev/src/app/features/file-manager/components/progress-snackbar/progress-snackbar.component.ts:16</a></div>
                             </td>
                         </tr>
 
@@ -378,29 +386,33 @@
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit } from &#x27;@angular/core&#x27;;
 import { MatSnackBarRef } from &#x27;@angular/material/snack-bar&#x27;;
-import { FileService} from &#x27;@file-manager/services/file-manager.service&#x27;;
+import { FileService } from &#x27;@file-manager/services/file-manager.service&#x27;;
 
+/**
+ * View Progress Snackbar Component
+ *
+ * Used to display the progress of file uploads
+ */
 @Component({
   selector: &#x27;mev-progress-snackbar&#x27;,
   templateUrl: &#x27;./progress-snackbar.component.html&#x27;,
   styleUrls: [&#x27;./progress-snackbar.component.scss&#x27;]
 })
 export class ProgressSnackbarComponent implements OnInit {
-
   uploadProgressStatus &#x3D; &#x27;&#x27;;
 
   constructor(
     public snackBarRef: MatSnackBarRef&lt;ProgressSnackbarComponent&gt;,
     public fileService: FileService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    this.fileService.fileUploadsProgress.subscribe((data) &#x3D;&gt; {
-       let txt &#x3D; &#x27;&#x27;;
-       for (const key of Object.keys(data)) {
-         txt +&#x3D; &#x60;File ${key} is ${data[key].percent}% uploaded. &lt;br&gt;&#x60;
-       }       
-       this.uploadProgressStatus &#x3D; txt;
+    this.fileService.fileUploadsProgress.subscribe(data &#x3D;&gt; {
+      let txt &#x3D; &#x27;&#x27;;
+      for (const key of Object.keys(data)) {
+        txt +&#x3D; &#x60;File ${key} is ${data[key].percent}% uploaded. &lt;br&gt;&#x60;;
+      }
+      this.uploadProgressStatus &#x3D; txt;
     });
   }
 }
@@ -461,7 +473,7 @@ export class ProgressSnackbarComponent implements OnInit {
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
         var COMPONENT_TEMPLATE = '<div><div class=\'progress-snackbar-wrapper\'>    <b> Upload status:</b>    <button mat-icon-button class="close-button"(click)="snackBarRef.dismiss()">        <mat-icon class="close-icon" color="accent">close</mat-icon>      </button>    <div [innerHTML]="uploadProgressStatus"></div></div></div>'
-    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'mev-about'},{'name': 'AddDialogComponent', 'selector': 'mev-add-dialog'},{'name': 'AddFileDialogComponent', 'selector': 'mev-add-file-dialog'},{'name': 'AddWSDialogComponent', 'selector': 'mev-add-ws-dialog'},{'name': 'AppComponent', 'selector': 'mev-root'},{'name': 'DeleteDialogComponent', 'selector': 'mev-delete-dialog'},{'name': 'DeleteFileDialogComponent', 'selector': 'mev-delete-file-dialog'},{'name': 'DeleteWSDialogComponent', 'selector': 'mev-delete-ws-dialog'},{'name': 'EditFileDialogComponent', 'selector': 'mev-edit-file-dialog'},{'name': 'EditWSDialogComponent', 'selector': 'mev-edit-ws-dialog'},{'name': 'FileListComponent', 'selector': 'mev-file-list'},{'name': 'LoginComponent', 'selector': 'mev-login-form'},{'name': 'PasswordChangeComponent', 'selector': 'mev-password-change'},{'name': 'ProgressSnackbarComponent', 'selector': 'mev-progress-snackbar'},{'name': 'RegisterComponent', 'selector': 'mev-register-form'},{'name': 'RequestPasswordResetComponent', 'selector': 'mev-request-password-reset'},{'name': 'ResponsePasswordResetComponent', 'selector': 'mev-response-password-reset'},{'name': 'SettingsContainerComponent', 'selector': 'mev-settings'},{'name': 'TutorialComponent', 'selector': 'mev-tutorial'},{'name': 'WorkareaComponent', 'selector': 'mev-workarea'},{'name': 'WorkspaceDetailComponent', 'selector': 'mev-workspace-detail'},{'name': 'WorkspaceListComponent', 'selector': 'mev-workspace-list'}];
+    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'mev-about'},{'name': 'AddAnnotationDialogComponent', 'selector': 'mev-add-annotation-dialog'},{'name': 'AddDialogComponent', 'selector': 'mev-add-dialog'},{'name': 'AddFileDialogComponent', 'selector': 'mev-add-file-dialog'},{'name': 'AddObservationSetDialogComponent', 'selector': 'mev-add-observation-set-dialog'},{'name': 'AddSampleSetComponent', 'selector': 'mev-add-sample-set'},{'name': 'AddWSDialogComponent', 'selector': 'mev-add-ws-dialog'},{'name': 'AnalysesComponent', 'selector': 'mev-analyses'},{'name': 'AnalysisFlowComponent', 'selector': 'mev-analysis-flow'},{'name': 'AnalysisPlottingResultComponent', 'selector': 'mev-analysis-plotting-result'},{'name': 'AnalysisResultComponent', 'selector': 'mev-analysis-result'},{'name': 'AppComponent', 'selector': 'mev-root'},{'name': 'BoxPlottingComponent', 'selector': 'mev-box-plotting'},{'name': 'DeleteDialogComponent', 'selector': 'mev-delete-dialog'},{'name': 'DeleteFileDialogComponent', 'selector': 'mev-delete-file-dialog'},{'name': 'DeleteSetDialogComponent', 'selector': 'mev-delete-set-dialog'},{'name': 'DeleteWSDialogComponent', 'selector': 'mev-delete-ws-dialog'},{'name': 'Deseq2Component', 'selector': 'mev-deseq2'},{'name': 'DownloadButtonComponent', 'selector': 'mev-download-button'},{'name': 'EditDialogComponent', 'selector': 'mev-edit-dialog'},{'name': 'EditFeatureSetDialogComponent', 'selector': 'mev-edit-feature-set-dialog'},{'name': 'EditFileDialogComponent', 'selector': 'mev-edit-file-dialog'},{'name': 'EditWSDialogComponent', 'selector': 'mev-edit-ws-dialog'},{'name': 'ExecutedOperationComponent', 'selector': 'mev-executed-operation'},{'name': 'FileListComponent', 'selector': 'mev-file-list'},{'name': 'GseaComponent', 'selector': 'mev-gsea'},{'name': 'HclComponent', 'selector': 'mev-hcl'},{'name': 'KmeansComponent', 'selector': 'mev-kmeans'},{'name': 'LimmaComponent', 'selector': 'mev-limma'},{'name': 'LoginComponent', 'selector': 'mev-login-form'},{'name': 'MetadataComponent', 'selector': 'mev-metadata'},{'name': 'OperationComponent', 'selector': 'mev-operation'},{'name': 'PasswordChangeComponent', 'selector': 'mev-password-change'},{'name': 'PreviewDialogComponent', 'selector': 'mev-preview-dialog'},{'name': 'ProgressSnackbarComponent', 'selector': 'mev-progress-snackbar'},{'name': 'RegisterComponent', 'selector': 'mev-register-form'},{'name': 'RequestPasswordResetComponent', 'selector': 'mev-request-password-reset'},{'name': 'ResponsePasswordResetComponent', 'selector': 'mev-response-password-reset'},{'name': 'RugPlotComponent', 'selector': 'mev-rug-plot'},{'name': 'ScatterPlotComponent', 'selector': 'mev-scatter-plot'},{'name': 'SettingsContainerComponent', 'selector': 'mev-settings'},{'name': 'SpinnerOverlayComponent', 'selector': 'mev-spinner-overlay'},{'name': 'TutorialComponent', 'selector': 'mev-tutorial'},{'name': 'ViewFileTypesDialogComponent', 'selector': 'mev-view-file-types-dialog'},{'name': 'ViewInfoDialogComponent', 'selector': 'mev-view-info-dialog'},{'name': 'ViewSetDialogComponent', 'selector': 'mev-view-set-dialog'},{'name': 'WorkareaComponent', 'selector': 'mev-workarea'},{'name': 'WorkspaceDetailComponent', 'selector': 'mev-workspace-detail'},{'name': 'WorkspaceListComponent', 'selector': 'mev-workspace-list'}];
     var DIRECTIVES = [{'name': 'RtlSupportDirective', 'selector': '[rtl]'}];
     var ACTUAL_COMPONENT = {'name': 'ProgressSnackbarComponent'};
 </script>

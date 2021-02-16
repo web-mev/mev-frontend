@@ -1,0 +1,2280 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>web-mev documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	      <link rel="stylesheet" href="../styles/style.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">web-mev documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li>MetadataComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts</code>
+</p>
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Metadata Component</p>
+<p>Used to add, edit, remove custom observations sets and edit, remove custom feature sets.
+User&#39;s custom sets are stored in local storage only</p>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover">
+        <tbody>
+
+            <tr>
+                <td class="col-md-3">changeDetection</td>
+                <td class="col-md-9"><code>ChangeDetectionStrategy.Default</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>mev-metadata</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./metadata.component.scss</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./metadata.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#accordion">accordion</a>
+                            </li>
+                            <li>
+                                <a href="#customSetDS">customSetDS</a>
+                            </li>
+                            <li>
+                                <a href="#customSetsDisplayedColumns">customSetsDisplayedColumns</a>
+                            </li>
+                            <li>
+                                <a href="#datasource">datasource</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#dialog">dialog</a>
+                            </li>
+                            <li>
+                                <a href="#displayedColumns">displayedColumns</a>
+                            </li>
+                            <li>
+                                <a href="#displayedColumnsAttributesOnly">displayedColumnsAttributesOnly</a>
+                            </li>
+                            <li>
+                                <a href="#globalObservationSets">globalObservationSets</a>
+                            </li>
+                            <li>
+                                <a href="#isWait">isWait</a>
+                            </li>
+                            <li>
+                                <a href="#metadataObsDisplayedColumns">metadataObsDisplayedColumns</a>
+                            </li>
+                            <li>
+                                <a href="#metadataObsDisplayedColumnsAttributesOnly">metadataObsDisplayedColumnsAttributesOnly</a>
+                            </li>
+                            <li>
+                                <a href="#observationSetDS">observationSetDS</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#onDestroy">onDestroy</a>
+                            </li>
+                            <li>
+                                <a href="#paginator">paginator</a>
+                            </li>
+                            <li>
+                                <a href="#selection">selection</a>
+                            </li>
+                            <li>
+                                <a href="#storageSubscription">storageSubscription</a>
+                            </li>
+                            <li>
+                                <a href="#visObsDisplayedColumns">visObsDisplayedColumns</a>
+                            </li>
+                            <li>
+                                <a href="#visObsDisplayedColumnsSetsOnly">visObsDisplayedColumnsSetsOnly</a>
+                            </li>
+                            <li>
+                                <a href="#visObservationSetDS">visObservationSetDS</a>
+                            </li>
+                            <li>
+                                <a href="#workspaceId">workspaceId</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#generateMetadataColumns">generateMetadataColumns</a>
+                            </li>
+                            <li>
+                                <a href="#generateObservationSetsVisualization">generateObservationSetsVisualization</a>
+                            </li>
+                            <li>
+                                <a href="#getGlobalObservationSets">getGlobalObservationSets</a>
+                            </li>
+                            <li>
+                                <a href="#ngAfterViewInit">ngAfterViewInit</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnDestroy">ngOnDestroy</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit">ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#onChooseAnnotation">onChooseAnnotation</a>
+                            </li>
+                            <li>
+                                <a href="#onCreateObservationSet">onCreateObservationSet</a>
+                            </li>
+                            <li>
+                                <a href="#onDeleteCustomSet">onDeleteCustomSet</a>
+                            </li>
+                            <li>
+                                <a href="#onEditCustomSet">onEditCustomSet</a>
+                            </li>
+                            <li>
+                                <a href="#onViewCustomSet">onViewCustomSet</a>
+                            </li>
+                            <li>
+                                <a href="#viewCustomSetInfo">viewCustomSetInfo</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#workspaceResources">workspaceResources</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(service: <a href="../injectables/WorkspaceDetailService.html">WorkspaceDetailService</a>, metadataService: <a href="../injectables/MetadataService.html">MetadataService</a>, storage: <a href="../injectables/LclStorageService.html">LclStorageService</a>, route: <a href="https://angular.io/api/router/ActivatedRoute" target="_blank">ActivatedRoute</a>, cd: <a href="https://angular.io/api/core/ChangeDetectorRef" target="_blank">ChangeDetectorRef</a>, dialog: MatDialog)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="68" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:68</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>service</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/WorkspaceDetailService.html" target="_self" >WorkspaceDetailService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>metadataService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/MetadataService.html" target="_self" >MetadataService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>storage</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/LclStorageService.html" target="_self" >LclStorageService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>route</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://angular.io/api/router/ActivatedRoute" target="_blank" >ActivatedRoute</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>cd</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://angular.io/api/core/ChangeDetectorRef" target="_blank" >ChangeDetectorRef</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>dialog</td>
+                                                  
+                                                        <td>
+                                                                    <code>MatDialog</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+    <section>
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="workspaceResources"></a>
+                        <b>workspaceResources</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>WorkspaceResource[]</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:46</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="generateMetadataColumns"></a>
+                    <span class="name">
+                        <b>
+                            generateMetadataColumns
+                        </b>
+                        <a href="#generateMetadataColumns"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>generateMetadataColumns(currentObsSet)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="318"
+                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:318</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Make the list of columns for the Mat Table with current annotation</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>currentObsSet</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="generateObservationSetsVisualization"></a>
+                    <span class="name">
+                        <b>
+                            generateObservationSetsVisualization
+                        </b>
+                        <a href="#generateObservationSetsVisualization"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>generateObservationSetsVisualization()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="193"
+                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:193</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Method to display the list of custom observation sets in the Visualization mode</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getGlobalObservationSets"></a>
+                    <span class="name">
+                        <b>
+                            getGlobalObservationSets
+                        </b>
+                        <a href="#getGlobalObservationSets"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getGlobalObservationSets()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="338"
+                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:338</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Get the list of observations used in all files/resources included in the current workspace</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngAfterViewInit"></a>
+                    <span class="name">
+                        <b>
+                            ngAfterViewInit
+                        </b>
+                        <a href="#ngAfterViewInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngAfterViewInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="106"
+                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:106</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnDestroy"></a>
+                    <span class="name">
+                        <b>
+                            ngOnDestroy
+                        </b>
+                        <a href="#ngOnDestroy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnDestroy()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="110"
+                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:110</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <b>
+                            ngOnInit
+                        </b>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="79"
+                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:79</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onChooseAnnotation"></a>
+                    <span class="name">
+                        <b>
+                            onChooseAnnotation
+                        </b>
+                        <a href="#onChooseAnnotation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onChooseAnnotation()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="120"
+                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:120</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Method is triggered when the user clicks button &#39;Incorporate annotation&#39;</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onCreateObservationSet"></a>
+                    <span class="name">
+                        <b>
+                            onCreateObservationSet
+                        </b>
+                        <a href="#onCreateObservationSet"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onCreateObservationSet()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="137"
+                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:137</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Method is triggered when the user clicks button &#39;Create a custom observation set&#39;
+Display the list of all available samples from all files in the workspace</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onDeleteCustomSet"></a>
+                    <span class="name">
+                        <b>
+                            onDeleteCustomSet
+                        </b>
+                        <a href="#onDeleteCustomSet"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onDeleteCustomSet(setId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="230"
+                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:230</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Method is triggered when the user clicks icon &#39;Delete&#39;
+Delete a custom observation or feature set from the list</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>setId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onEditCustomSet"></a>
+                    <span class="name">
+                        <b>
+                            onEditCustomSet
+                        </b>
+                        <a href="#onEditCustomSet"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onEditCustomSet(set)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="249"
+                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:249</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Method is triggered when the user clicks icon &#39;Edit&#39;</p>
+<p>Edit a custom observation or feature set.
+For custom observation sets the user can update name, color, list of samples.
+For feature sets only names can be updated</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>set</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onViewCustomSet"></a>
+                    <span class="name">
+                        <b>
+                            onViewCustomSet
+                        </b>
+                        <a href="#onViewCustomSet"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onViewCustomSet(set)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="310"
+                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:310</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Method is triggered when the user clicks icon &#39;View&#39;
+View a custom observation or feature set.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>set</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="viewCustomSetInfo"></a>
+                    <span class="name">
+                        <b>
+                            viewCustomSetInfo
+                        </b>
+                        <a href="#viewCustomSetInfo"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>viewCustomSetInfo()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="355"
+                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:355</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Method is triggered when the user clicks a link in the Metadata tab description</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+        <h3 id="inputs">
+            Properties
+        </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="accordion"></a>
+                        <span class="name">
+                            <b>
+                            accordion</b>
+                            <a href="#accordion"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>MatAccordion</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Decorators : </b>
+                            <br />
+                            <code>
+                                @ViewChild(MatAccordion)<br />
+                            </code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:45</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="customSetDS"></a>
+                        <span class="name">
+                            <b>
+                            customSetDS</b>
+                            <a href="#customSetDS"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="53" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:53</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="customSetsDisplayedColumns"></a>
+                        <span class="name">
+                            <b>
+                            customSetsDisplayedColumns</b>
+                            <a href="#customSetsDisplayedColumns"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>string[]</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>[&#x27;name&#x27;, &#x27;type&#x27;, &#x27;actions&#x27;]</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:54</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="datasource"></a>
+                        <span class="name">
+                            <b>
+                            datasource</b>
+                            <a href="#datasource"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:62</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="dialog"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Public</span>
+                            dialog</b>
+                            <a href="#dialog"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>MatDialog</code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="76" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:76</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="displayedColumns"></a>
+                        <span class="name">
+                            <b>
+                            displayedColumns</b>
+                            <a href="#displayedColumns"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>[]</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>[&#x27;name&#x27;, &#x27;symbol&#x27;]</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:42</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="displayedColumnsAttributesOnly"></a>
+                        <span class="name">
+                            <b>
+                            displayedColumnsAttributesOnly</b>
+                            <a href="#displayedColumnsAttributesOnly"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>[]</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>[]</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:43</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="globalObservationSets"></a>
+                        <span class="name">
+                            <b>
+                            globalObservationSets</b>
+                            <a href="#globalObservationSets"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>[]</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>[]</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="60" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:60</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="isWait"></a>
+                        <span class="name">
+                            <b>
+                            isWait</b>
+                            <a href="#isWait"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>false</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="64" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:64</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="metadataObsDisplayedColumns"></a>
+                        <span class="name">
+                            <b>
+                            metadataObsDisplayedColumns</b>
+                            <a href="#metadataObsDisplayedColumns"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>string[]</code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:50</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="metadataObsDisplayedColumnsAttributesOnly"></a>
+                        <span class="name">
+                            <b>
+                            metadataObsDisplayedColumnsAttributesOnly</b>
+                            <a href="#metadataObsDisplayedColumnsAttributesOnly"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>string[]</code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:51</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="observationSetDS"></a>
+                        <span class="name">
+                            <b>
+                            observationSetDS</b>
+                            <a href="#observationSetDS"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:49</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="onDestroy"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                                <span class="modifier">Readonly</span>
+                            onDestroy</b>
+                            <a href="#onDestroy"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>new Subject&lt;void&gt;()</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="65" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:65</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="paginator"></a>
+                        <span class="name">
+                            <b>
+                            paginator</b>
+                            <a href="#paginator"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>MatPaginator</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Decorators : </b>
+                            <br />
+                            <code>
+                                @ViewChild(MatPaginator)<br />
+                            </code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="66" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:66</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="selection"></a>
+                        <span class="name">
+                            <b>
+                            selection</b>
+                            <a href="#selection"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>new SelectionModel(true, [])</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:63</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="storageSubscription"></a>
+                        <span class="name">
+                            <b>
+                            storageSubscription</b>
+                            <a href="#storageSubscription"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>Subscription</code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="68" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:68</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="visObsDisplayedColumns"></a>
+                        <span class="name">
+                            <b>
+                            visObsDisplayedColumns</b>
+                            <a href="#visObsDisplayedColumns"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>string[]</code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="57" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:57</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="visObsDisplayedColumnsSetsOnly"></a>
+                        <span class="name">
+                            <b>
+                            visObsDisplayedColumnsSetsOnly</b>
+                            <a href="#visObsDisplayedColumnsSetsOnly"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>string[]</code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:58</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="visObservationSetDS"></a>
+                        <span class="name">
+                            <b>
+                            visObservationSetDS</b>
+                            <a href="#visObservationSetDS"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:56</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="workspaceId"></a>
+                        <span class="name">
+                            <b>
+                            workspaceId</b>
+                            <a href="#workspaceId"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/components/metadata/metadata.component.ts:47</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  Input,
+  ViewChild,
+  ChangeDetectorRef
+} from &#x27;@angular/core&#x27;;
+import { ActivatedRoute } from &#x27;@angular/router&#x27;;
+import { Subject, Subscription } from &#x27;rxjs&#x27;;
+import { takeUntil, switchMap, delay } from &#x27;rxjs/operators&#x27;;
+import { MatTableDataSource } from &#x27;@angular/material/table&#x27;;
+import { MatAccordion } from &#x27;@angular/material/expansion&#x27;;
+import { MatDialog } from &#x27;@angular/material/dialog&#x27;;
+import { MatPaginator } from &#x27;@angular/material/paginator&#x27;;
+import { SelectionModel } from &#x27;@angular/cdk/collections&#x27;;
+
+import { AddAnnotationDialogComponent } from &#x27;./dialogs/add-annotation-dialog/add-annotation-dialog.component&#x27;;
+import { WorkspaceResource } from &#x27;../../models/workspace-resource&#x27;;
+import { WorkspaceDetailService } from &#x27;../../services/workspace-detail.service&#x27;;
+import { AddObservationSetDialogComponent } from &#x27;./dialogs/add-observation-set-dialog/add-observation-set-dialog.component&#x27;;
+import { DeleteSetDialogComponent } from &#x27;./dialogs/delete-set-dialog/delete-set-dialog.component&#x27;;
+import { ViewSetDialogComponent } from &#x27;./dialogs/view-set-dialog/view-set-dialog.component&#x27;;
+import { LclStorageService } from &#x27;@app/core/local-storage/lcl-storage.service&#x27;;
+import { MetadataService } from &#x27;@app/core/metadata/metadata.service&#x27;;
+import { EditFeatureSetDialogComponent } from &#x27;./dialogs/edit-feature-set-dialog/edit-feature-set-dialog.component&#x27;;
+import { ViewInfoDialogComponent } from &#x27;./dialogs/view-info-dialog/view-info-dialog.component&#x27;;
+
+/**
+ * Metadata Component
+ *
+ * Used to add, edit, remove custom observations sets and edit, remove custom feature sets.
+ * User&#x27;s custom sets are stored in local storage only
+ */
+@Component({
+  selector: &#x27;mev-metadata&#x27;,
+  templateUrl: &#x27;./metadata.component.html&#x27;,
+  styleUrls: [&#x27;./metadata.component.scss&#x27;],
+  changeDetection: ChangeDetectionStrategy.Default
+})
+export class MetadataComponent implements OnInit {
+  displayedColumns &#x3D; [&#x27;name&#x27;, &#x27;symbol&#x27;];
+  displayedColumnsAttributesOnly &#x3D; [];
+
+  @ViewChild(MatAccordion) accordion: MatAccordion;
+  @Input() workspaceResources: WorkspaceResource[];
+  workspaceId: string;
+
+  observationSetDS; // use in MatDataTable to display the current annotation
+  metadataObsDisplayedColumns: string[]; // columns for the Current Annotation table
+  metadataObsDisplayedColumnsAttributesOnly: string[];
+
+  customSetDS; // use in MatDataTable to display the list of custom observation/feature sets created by user
+  customSetsDisplayedColumns: string[] &#x3D; [&#x27;name&#x27;, &#x27;type&#x27;, &#x27;actions&#x27;]; // the list of columns for the Custom Sets table
+
+  visObservationSetDS; // use in MatDataTable to display visualisation for custom observation sets
+  visObsDisplayedColumns: string[];
+  visObsDisplayedColumnsSetsOnly: string[];
+
+  globalObservationSets &#x3D; []; // all samples from all resources
+
+  datasource;
+  selection &#x3D; new SelectionModel(true, []);
+  isWait &#x3D; false;
+  private readonly onDestroy &#x3D; new Subject&lt;void&gt;();
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  storageSubscription: Subscription;
+
+  constructor(
+    private service: WorkspaceDetailService,
+    private metadataService: MetadataService,
+    private storage: LclStorageService,
+    private route: ActivatedRoute,
+    private cd: ChangeDetectorRef,
+    public dialog: MatDialog
+  ) {}
+
+  ngOnInit(): void {
+    this.workspaceId &#x3D; this.route.snapshot.paramMap.get(&#x27;workspaceId&#x27;);
+
+    // check if there is a current annotation saved locally to display
+    const currentObsSet &#x3D;
+      JSON.parse(
+        localStorage.getItem(this.workspaceId + &#x27;_current_observation_set&#x27;)
+      ) || [];
+    this.generateMetadataColumns(currentObsSet);
+    this.observationSetDS &#x3D; new MatTableDataSource(currentObsSet);
+
+    // retrieve custom observation/feature sets
+    const customSet &#x3D; this.metadataService.getCustomSets();
+    this.customSetDS &#x3D; new MatTableDataSource(customSet);
+
+    // watch value changes
+    this.storageSubscription &#x3D; this.storage
+      .watch(this.workspaceId + &#x27;_custom_sets&#x27;)
+      .subscribe(response &#x3D;&gt; {
+        this.customSetDS &#x3D; new MatTableDataSource(
+          this.metadataService.getCustomSets()
+        );
+        this.generateObservationSetsVisualization(); // generate custom observation visualization
+        this.cd.markForCheck();
+      });
+  }
+
+  ngAfterViewInit() {
+    this.observationSetDS.paginator &#x3D; this.paginator;
+  }
+
+  ngOnDestroy() {
+    this.onDestroy.next();
+    this.onDestroy.complete();
+    this.storageSubscription.unsubscribe();
+  }
+
+  /**
+   * Method is triggered when the user clicks button &#x27;Incorporate annotation&#x27;
+   *
+   */
+  onChooseAnnotation() {
+    const dialogRef &#x3D; this.dialog.open(AddAnnotationDialogComponent, {
+      data: { workspaceResources: this.workspaceResources }
+    });
+    dialogRef.afterClosed().subscribe(newCustomSets &#x3D;&gt; {
+      if (newCustomSets) {
+        newCustomSets.forEach(newCustomSet &#x3D;&gt;
+          this.metadataService.addCustomSet(newCustomSet)
+        );
+      }
+    });
+  }
+
+  /**
+   * Method is triggered when the user clicks button &#x27;Create a custom observation set&#x27;
+   * Display the list of all available samples from all files in the workspace
+   */
+  onCreateObservationSet() {
+    this.isWait &#x3D; true;
+    this.globalObservationSets &#x3D; [];
+    this.service
+      .getWorkspaceMetadataObservations(this.workspaceId)
+      .pipe(
+        delay(500), // delay for spinner
+        switchMap(metadata &#x3D;&gt; {
+          if (metadata?.observation_set?.elements) {
+            this.globalObservationSets &#x3D; metadata.observation_set.elements;
+          }
+          const globalObservationSetsDS &#x3D; new MatTableDataSource(
+            this.globalObservationSets
+          );
+
+          // the list of columns for pop-up table to select samples for custom observation sets
+          const observationSetsDisplayedColumns &#x3D; [&#x27;select&#x27;, &#x27;id&#x27;];
+          const observationSetsDisplayedColumnsAttributesOnly &#x3D; [];
+
+          const obsSetsWithAttr &#x3D; this.globalObservationSets.filter(
+            set &#x3D;&gt; &#x27;attributes&#x27; in set
+          );
+          const attributes &#x3D; obsSetsWithAttr.length
+            ? obsSetsWithAttr[0].attributes
+            : {};
+
+          for (const attribute in attributes) {
+            if (attributes.hasOwnProperty(attribute)) {
+              observationSetsDisplayedColumns.push(attribute);
+              observationSetsDisplayedColumnsAttributesOnly.push(attribute);
+            }
+          }
+
+          this.isWait &#x3D; false;
+          const dialogRef &#x3D; this.dialog.open(AddObservationSetDialogComponent, {
+            data: {
+              observationSetDS: globalObservationSetsDS,
+              observationSetsDisplayedColumns: observationSetsDisplayedColumns,
+              observationSetsDisplayedColumnsAttributesOnly: observationSetsDisplayedColumnsAttributesOnly
+            }
+          });
+          return dialogRef.afterClosed();
+        }),
+
+        takeUntil(this.onDestroy)
+      )
+      .subscribe(newObservationSet &#x3D;&gt; {
+        if (newObservationSet) {
+          this.metadataService.addCustomSet(newObservationSet);
+        }
+      });
+  }
+
+  /**
+   * Method to display the list of custom observation sets in the Visualization mode
+   */
+  generateObservationSetsVisualization() {
+    const visTable &#x3D; [];
+    const customObservationSets &#x3D; this.metadataService.getCustomObservationSets();
+
+    this.visObsDisplayedColumns &#x3D; [
+      &#x27;id&#x27;,
+      ...customObservationSets.map(customSet &#x3D;&gt; customSet.name)
+    ];
+    this.visObsDisplayedColumnsSetsOnly &#x3D; customObservationSets.map(
+      customSet &#x3D;&gt; customSet.name
+    );
+
+    if (this.visObsDisplayedColumnsSetsOnly.length &gt; 0) {
+      this.getGlobalObservationSets().subscribe(data &#x3D;&gt; {
+        this.globalObservationSets &#x3D; data;
+        this.globalObservationSets.forEach(sample &#x3D;&gt; {
+          const elem &#x3D; { sampleName: sample.id };
+          customObservationSets.forEach(customSet &#x3D;&gt; {
+            if (customSet.elements.filter(e &#x3D;&gt; e.id &#x3D;&#x3D;&#x3D; sample.id).length &gt; 0) {
+              elem[customSet.name] &#x3D; customSet.color;
+            } else {
+              elem[customSet.name] &#x3D; &#x27;transparent&#x27;;
+            }
+          });
+
+          visTable.push(elem);
+        });
+        this.visObservationSetDS &#x3D; new MatTableDataSource(visTable);
+        this.cd.markForCheck();
+      });
+    }
+  }
+
+  /**
+   * Method is triggered when the user clicks icon &#x27;Delete&#x27;
+   * Delete a custom observation or feature set from the list
+   */
+  onDeleteCustomSet(setId: string) {
+    const dialogRef &#x3D; this.dialog.open(DeleteSetDialogComponent, {
+      data: { setId: setId }
+    });
+
+    dialogRef.afterClosed().subscribe(result &#x3D;&gt; {
+      if (result &#x3D;&#x3D;&#x3D; 1) {
+        this.metadataService.deleteCustomSet(setId);
+      }
+    });
+  }
+
+  /**
+   * Method is triggered when the user clicks icon &#x27;Edit&#x27;
+   *
+   * Edit a custom observation or feature set.
+   * For custom observation sets the user can update name, color, list of samples.
+   * For feature sets only names can be updated
+   */
+  onEditCustomSet(set) {
+    this.isWait &#x3D; true;
+    this.globalObservationSets &#x3D; [];
+    this.service
+      .getWorkspaceMetadataObservations(this.workspaceId)
+      .pipe(
+        delay(500), // delay for spinner
+        switchMap(metadata &#x3D;&gt; {
+          if (metadata?.observation_set?.elements) {
+            this.globalObservationSets &#x3D; metadata.observation_set.elements;
+          }
+          const globalObservationSetsDS &#x3D; new MatTableDataSource(
+            this.globalObservationSets
+          );
+
+          // the list of columns for pop-up table to select samples for custom observation sets
+          const observationSetsDisplayedColumns &#x3D; [&#x27;select&#x27;, &#x27;id&#x27;];
+          const observationSetsDisplayedColumnsAttributesOnly &#x3D; [];
+
+          const obsSetsWithAttr &#x3D; this.globalObservationSets.filter(
+            set &#x3D;&gt; &#x27;attributes&#x27; in set
+          );
+          const attributes &#x3D; obsSetsWithAttr.length
+            ? obsSetsWithAttr[0].attributes
+            : {};
+
+          for (const attribute in attributes) {
+            if (attributes.hasOwnProperty(attribute)) {
+              observationSetsDisplayedColumns.push(attribute);
+              observationSetsDisplayedColumnsAttributesOnly.push(attribute);
+            }
+          }
+
+          this.isWait &#x3D; false;
+          const dialogRef &#x3D; this.dialog.open(EditFeatureSetDialogComponent, {
+            data: {
+              name: set.name,
+              color: set.color,
+              type: set.type,
+              selectedElements: set.elements,
+              observationSetDS: globalObservationSetsDS,
+              observationSetsDisplayedColumns: observationSetsDisplayedColumns,
+              observationSetsDisplayedColumnsAttributesOnly: observationSetsDisplayedColumnsAttributesOnly
+            }
+          });
+          return dialogRef.afterClosed();
+        }),
+        takeUntil(this.onDestroy)
+      )
+      .subscribe(updatedObservationSet &#x3D;&gt; {
+        if (updatedObservationSet) {
+          this.metadataService.updateCustomSet(updatedObservationSet, set.name);
+        }
+      });
+  }
+
+  /**
+   * Method is triggered when the user clicks icon &#x27;View&#x27;
+   * View a custom observation or feature set.
+   */
+
+  onViewCustomSet(set) {
+    const dialogRef &#x3D; this.dialog.open(ViewSetDialogComponent, { data: set });
+    dialogRef.afterClosed().subscribe();
+  }
+
+  /**
+   * Make the list of columns for the Mat Table with current annotation
+   */
+  generateMetadataColumns(currentObsSet) {
+    if (currentObsSet &amp;&amp; currentObsSet.length) {
+      this.metadataObsDisplayedColumns &#x3D; [&#x27;id&#x27;];
+      this.metadataObsDisplayedColumnsAttributesOnly &#x3D; [];
+      let attributes &#x3D; {};
+      currentObsSet.forEach(
+        sample &#x3D;&gt; (attributes &#x3D; { ...attributes, ...sample.attributes })
+      );
+      for (const attribute in attributes) {
+        if (attributes.hasOwnProperty(attribute)) {
+          this.metadataObsDisplayedColumns.push(attribute);
+          this.metadataObsDisplayedColumnsAttributesOnly.push(attribute);
+        }
+      }
+    }
+  }
+
+  /**
+   * Get the list of observations used in all files/resources included in the current workspace
+   */
+  getGlobalObservationSets() {
+    let globalObservationSets &#x3D; [];
+    const subject &#x3D; new Subject&lt;any&gt;();
+    this.service
+      .getWorkspaceMetadataObservations(this.workspaceId)
+      .subscribe(metadata &#x3D;&gt; {
+        if (metadata?.observation_set?.elements) {
+          globalObservationSets &#x3D; metadata.observation_set.elements;
+        }
+        subject.next(globalObservationSets);
+      });
+    return subject.asObservable();
+  }
+
+  /**
+   * Method is triggered when the user clicks a link in the Metadata tab description
+   */
+  viewCustomSetInfo() {
+    this.dialog.open(ViewInfoDialogComponent);
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;mev-spinner-overlay *ngIf&#x3D;&quot;isWait&quot;&gt;&lt;/mev-spinner-overlay&gt;
+
+&lt;section class&#x3D;&quot;metadata-container&quot;&gt;
+  &lt;mat-card class&#x3D;&quot;metadata-card&quot;&gt;
+      &lt;mat-card-content class&#x3D;&quot;metadata-card__main&quot;&gt;
+          &lt;div class&#x3D;&quot;metadata-card__instruction&quot;&gt;
+            &lt;p&gt;
+              Here you can create &lt;a (click)&#x3D;&quot;viewCustomSetInfo()&quot;&gt;custom observation and feature sets&lt;/a&gt; to filter your data during
+              the analysis. You also can incorporate an annotation file as attributes to your custom observation set. 
+            &lt;/p&gt;
+            &lt;p *ngIf&#x3D;&quot;(workspaceResources| annotationFilesPipe)?.length &gt; 0; else noAnnotationFiles&quot;&gt;
+              Click the Incorporate annotations button to use your annotation file.
+            &lt;/p&gt;
+           &lt;ng-template #noAnnotationFiles&gt;
+             &lt;p&gt;Please upload an annotation file 
+               &lt;mat-icon class&#x3D;&quot;icon&quot; matTooltipClass&#x3D;&quot;tooltip&quot; fontSet&#x3D;&quot;material-icons-outlined&quot;
+              matTooltip&#x3D;&quot; An Annotation Table is a special type of table that is be responsible for annotating observations/samples (e.g. adding sample names and associated attributes like experimental group or other covariates). The first column gives the sample names and the remaining columns  each individually represent different covariates associated with that sample.&quot; aria-label&#x3D;&quot;Info tooltip about the field&quot;&gt;info
+            &lt;/mat-icon&gt;and add it to your workspace to. &lt;/p&gt;
+           &lt;/ng-template&gt;
+          &lt;/div&gt;
+          &lt;mat-divider [inset]&#x3D;&quot;true&quot;&gt;&lt;/mat-divider&gt;
+          &lt;div class&#x3D;&quot;metadata-card__content&quot;&gt;
+            &lt;div class&#x3D;&quot;control-group&quot;&gt;
+              &lt;div class&#x3D;&quot;btn-group&quot;&gt;
+                &lt;button mat-raised-button color&#x3D;&quot;accent&quot; (click)&#x3D;&quot;onCreateObservationSet()&quot;&gt;
+                  &lt;mat-icon aria-label&#x3D;&quot;Create an observation set&quot;&gt;add&lt;/mat-icon&gt;
+                  Create an observation set
+                &lt;/button&gt;
+      
+                &lt;button mat-raised-button color&#x3D;&quot;accent&quot; (click)&#x3D;&quot;onChooseAnnotation()&quot;
+                [disabled]&#x3D;&quot;(workspaceResources| annotationFilesPipe)?.length &#x3D;&#x3D;&#x3D; 0&quot;&gt;
+                  &lt;mat-icon aria-label&#x3D;&quot;Incorporate annotations&quot;&gt;add&lt;/mat-icon&gt;
+                  Incorporate annotations
+                  &lt;/button&gt;
+      
+              &lt;/div&gt;
+
+              &lt;mat-button-toggle-group #customSetsViewMode&#x3D;&quot;matButtonToggleGroup&quot; value&#x3D;&quot;tableMode&quot;&gt;
+                &lt;mat-button-toggle value&#x3D;&quot;tableMode&quot; aria-label&#x3D;&quot;Text align left&quot;&gt;
+                  Table view
+                &lt;/mat-button-toggle&gt;
+                &lt;mat-button-toggle value&#x3D;&quot;visMode&quot; aria-label&#x3D;&quot;Text align center&quot;&gt;
+                  Visualization
+                &lt;/mat-button-toggle&gt;
+              &lt;/mat-button-toggle-group&gt;
+            &lt;/div&gt;
+            &lt;div *ngIf&#x3D;&quot;!customSetDS || !customSetDS.data || customSetDS.data.length &#x3D;&#x3D;&#x3D; 0&quot;&gt;
+              No custom observation and feature sets available.
+            &lt;/div&gt;
+            &lt;div *ngIf&#x3D;&quot;customSetDS?.data?.length &gt; 0&quot;&gt;
+              &lt;table *ngIf&#x3D;&quot;customSetsViewMode.value &#x3D;&#x3D;&#x3D; &#x27;tableMode&#x27;&quot; mat-table [dataSource]&#x3D;&quot;customSetDS&quot;
+                class&#x3D;&quot;mat-elevation-z8&quot;&gt;
+                &lt;ng-container matColumnDef&#x3D;&quot;name&quot;&gt;
+                  &lt;th mat-header-cell *matHeaderCellDef&gt; Name &lt;/th&gt;
+                  &lt;td mat-cell *matCellDef&#x3D;&quot;let element&quot;&gt;
+                     &lt;span class&#x3D;&quot;sample-color&quot; [style.background-color]&#x3D;&quot;element.color&quot;&gt;&lt;/span&gt;
+                     {{element.name}} 
+                  &lt;/td&gt;
+                &lt;/ng-container&gt;
+      
+                &lt;ng-container matColumnDef&#x3D;&quot;type&quot;&gt;
+                  &lt;th mat-header-cell *matHeaderCellDef&gt; Type (Observation/Feature set) &lt;/th&gt;
+                  &lt;td mat-cell *matCellDef&#x3D;&quot;let element&quot;&gt; {{element.type}} &lt;/td&gt;
+                &lt;/ng-container&gt;
+      
+                &lt;ng-container matColumnDef&#x3D;&quot;actions&quot;&gt;
+                  &lt;th mat-header-cell *matHeaderCellDef&gt;Actions&lt;/th&gt;
+                  &lt;td mat-cell *matCellDef&#x3D;&quot;let element; let i&#x3D;index;&quot;&gt;
+                    &lt;button mat-icon-button color&#x3D;&quot;accent&quot; title&#x3D;&quot;View&quot; (click)&#x3D;&quot;onViewCustomSet(element)&quot;&gt;
+                      &lt;mat-icon aria-label&#x3D;&quot;View&quot;&gt;visibility&lt;/mat-icon&gt;
+                    &lt;/button&gt;
+                    &lt;button mat-icon-button color&#x3D;&quot;accent&quot; title&#x3D;&quot;Delete&quot; (click)&#x3D;&quot;onDeleteCustomSet(element.name)&quot;&gt;
+                      &lt;mat-icon aria-label&#x3D;&quot;Delete&quot;&gt;delete&lt;/mat-icon&gt;
+                    &lt;/button&gt;
+                    &lt;button mat-icon-button color&#x3D;&quot;accent&quot; title&#x3D;&quot;Edit&quot; (click)&#x3D;&quot;onEditCustomSet(element)&quot;&gt;
+                      &lt;mat-icon aria-label&#x3D;&quot;Edit&quot;&gt;edit&lt;/mat-icon&gt;
+                    &lt;/button&gt;
+                  &lt;/td&gt;
+                &lt;/ng-container&gt;
+      
+                &lt;tr mat-header-row *matHeaderRowDef&#x3D;&quot;customSetsDisplayedColumns&quot;&gt;&lt;/tr&gt;
+                &lt;tr mat-row *matRowDef&#x3D;&quot;let row; columns: customSetsDisplayedColumns;&quot;&gt;
+      
+              &lt;/table&gt;
+      
+      
+              &lt;table *ngIf&#x3D;&quot;customSetsViewMode.value &#x3D;&#x3D;&#x3D; &#x27;visMode&#x27;&quot; mat-table [dataSource]&#x3D;&quot;visObservationSetDS&quot;
+                class&#x3D;&quot;visualization-table&quot;&gt;
+                &lt;ng-container matColumnDef&#x3D;&quot;id&quot;&gt;
+                  &lt;th mat-header-cell *matHeaderCellDef&gt; Sample &lt;/th&gt;
+                  &lt;td mat-cell *matCellDef&#x3D;&quot;let element&quot;&gt; {{ element.sampleName }} &lt;/td&gt;
+                &lt;/ng-container&gt;
+      
+                &lt;ng-container *ngFor&#x3D;&quot;let setCol of visObsDisplayedColumnsSetsOnly&quot; matColumnDef&#x3D;&quot;{{setCol}}&quot;&gt;
+                  &lt;th mat-header-cell *matHeaderCellDef&gt;{{ setCol }}&lt;/th&gt;
+                  &lt;td mat-cell *matCellDef&#x3D;&quot;let element&quot;&gt;
+                    &lt;div class&#x3D;&quot;highlighted-cell&quot; [style.background-color]&#x3D;&quot;element[setCol]&quot;
+                      [ngClass]&#x3D;&quot;{&#x27;highlighted-cell2&#x27;: element[setCol] &#x3D;&#x3D;&#x3D; true}&quot;&gt;&lt;/div&gt;
+                  &lt;/td&gt;
+                &lt;/ng-container&gt;
+      
+      
+                &lt;tr mat-header-row *matHeaderRowDef&#x3D;&quot;visObsDisplayedColumns&quot;&gt;&lt;/tr&gt;
+                &lt;tr mat-row *matRowDef&#x3D;&quot;let row; columns: visObsDisplayedColumns;&quot;&gt;
+                &lt;/tr&gt;
+              &lt;/table&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+      &lt;/mat-card-content&gt;
+  &lt;/mat-card&gt;
+&lt;/section&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./metadata.component.scss</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">a:hover {
+  cursor: pointer;
+}
+
+.metadata-container {
+  margin: 20px;
+  width: 98%;
+}
+
+.mat-card {
+  overflow-x: scroll;
+}
+
+table {
+  width: 100%;
+}
+
+.mat-table-container {
+  width: 80%;
+  align-self: start;
+}
+
+.mat-header-cell {
+  text-transform: capitalize;
+}
+
+::ng-deep .mat-figure {
+  overflow: scroll;
+}
+
+.control-group {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px;
+}
+
+::ng-deep .mat-button-toggle-label-content {
+  line-height: 36px !important;
+}
+
+button {
+  margin-right: 10px;
+}
+
+.visualization-table {
+  width: auto;
+
+  .mat-cell {
+    width: 150px;
+  }
+
+  .mat-header-cell:nth-child(n + 2) {
+    text-align: center;
+  }
+
+  .highlighted-cell {
+    width: 20px;
+    height: 20px;
+    margin: auto;
+  }
+}
+
+.mat-button-toggle-group {
+  float: right;
+}
+
+.mat-button-toggle-label-content,
+.mat-button-toggle-group button div {
+  line-height: 35px;
+}
+
+.mat-cell.mat-column-comment {
+  cursor: pointer;
+}
+
+.annotation-text {
+  padding: 10px;
+}
+
+.hint-text {
+  opacity: 0.5;
+}
+
+.annotation-table-wrapper {
+  display: flex;
+}
+
+.add-column-btn {
+  position: relative;
+  left: -50px;
+  top: 15px;
+  cursor: pointer;
+}
+
+.icon {
+  font-size: 14px;
+}
+
+.sample-color {
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+
+::ng-deep .mat-tooltip {
+  font-size: 12px;
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><mev-spinner-overlay *ngIf="isWait"></mev-spinner-overlay><section class="metadata-container">  <mat-card class="metadata-card">      <mat-card-content class="metadata-card__main">          <div class="metadata-card__instruction">            <p>              Here you can create <a (click)="viewCustomSetInfo()">custom observation and feature sets</a> to filter your data during              the analysis. You also can incorporate an annotation file as attributes to your custom observation set.             </p>            <p *ngIf="(workspaceResources| annotationFilesPipe)?.length > 0; else noAnnotationFiles">              Click the Incorporate annotations button to use your annotation file.            </p>           <ng-template #noAnnotationFiles>             <p>Please upload an annotation file                <mat-icon class="icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"              matTooltip=" An Annotation Table is a special type of table that is be responsible for annotating observations/samples (e.g. adding sample names and associated attributes like experimental group or other covariates). The first column gives the sample names and the remaining columns  each individually represent different covariates associated with that sample." aria-label="Info tooltip about the field">info            </mat-icon>and add it to your workspace to. </p>           </ng-template>          </div>          <mat-divider [inset]="true"></mat-divider>          <div class="metadata-card__content">            <div class="control-group">              <div class="btn-group">                <button mat-raised-button color="accent" (click)="onCreateObservationSet()">                  <mat-icon aria-label="Create an observation set">add</mat-icon>                  Create an observation set                </button>                      <button mat-raised-button color="accent" (click)="onChooseAnnotation()"                [disabled]="(workspaceResources| annotationFilesPipe)?.length === 0">                  <mat-icon aria-label="Incorporate annotations">add</mat-icon>                  Incorporate annotations                  </button>                    </div>              <mat-button-toggle-group #customSetsViewMode="matButtonToggleGroup" value="tableMode">                <mat-button-toggle value="tableMode" aria-label="Text align left">                  Table view                </mat-button-toggle>                <mat-button-toggle value="visMode" aria-label="Text align center">                  Visualization                </mat-button-toggle>              </mat-button-toggle-group>            </div>            <div *ngIf="!customSetDS || !customSetDS.data || customSetDS.data.length === 0">              No custom observation and feature sets available.            </div>            <div *ngIf="customSetDS?.data?.length > 0">              <table *ngIf="customSetsViewMode.value === \'tableMode\'" mat-table [dataSource]="customSetDS"                class="mat-elevation-z8">                <ng-container matColumnDef="name">                  <th mat-header-cell *matHeaderCellDef> Name </th>                  <td mat-cell *matCellDef="let element">                     <span class="sample-color" [style.background-color]="element.color"></span>                     {{element.name}}                   </td>                </ng-container>                      <ng-container matColumnDef="type">                  <th mat-header-cell *matHeaderCellDef> Type (Observation/Feature set) </th>                  <td mat-cell *matCellDef="let element"> {{element.type}} </td>                </ng-container>                      <ng-container matColumnDef="actions">                  <th mat-header-cell *matHeaderCellDef>Actions</th>                  <td mat-cell *matCellDef="let element; let i=index;">                    <button mat-icon-button color="accent" title="View" (click)="onViewCustomSet(element)">                      <mat-icon aria-label="View">visibility</mat-icon>                    </button>                    <button mat-icon-button color="accent" title="Delete" (click)="onDeleteCustomSet(element.name)">                      <mat-icon aria-label="Delete">delete</mat-icon>                    </button>                    <button mat-icon-button color="accent" title="Edit" (click)="onEditCustomSet(element)">                      <mat-icon aria-label="Edit">edit</mat-icon>                    </button>                  </td>                </ng-container>                      <tr mat-header-row *matHeaderRowDef="customSetsDisplayedColumns"></tr>                <tr mat-row *matRowDef="let row; columns: customSetsDisplayedColumns;">                    </table>                          <table *ngIf="customSetsViewMode.value === \'visMode\'" mat-table [dataSource]="visObservationSetDS"                class="visualization-table">                <ng-container matColumnDef="id">                  <th mat-header-cell *matHeaderCellDef> Sample </th>                  <td mat-cell *matCellDef="let element"> {{ element.sampleName }} </td>                </ng-container>                      <ng-container *ngFor="let setCol of visObsDisplayedColumnsSetsOnly" matColumnDef="{{setCol}}">                  <th mat-header-cell *matHeaderCellDef>{{ setCol }}</th>                  <td mat-cell *matCellDef="let element">                    <div class="highlighted-cell" [style.background-color]="element[setCol]"                      [ngClass]="{\'highlighted-cell2\': element[setCol] === true}"></div>                  </td>                </ng-container>                            <tr mat-header-row *matHeaderRowDef="visObsDisplayedColumns"></tr>                <tr mat-row *matRowDef="let row; columns: visObsDisplayedColumns;">                </tr>              </table>            </div>          </div>      </mat-card-content>  </mat-card></section></div>'
+    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'mev-about'},{'name': 'AddAnnotationDialogComponent', 'selector': 'mev-add-annotation-dialog'},{'name': 'AddDialogComponent', 'selector': 'mev-add-dialog'},{'name': 'AddFileDialogComponent', 'selector': 'mev-add-file-dialog'},{'name': 'AddObservationSetDialogComponent', 'selector': 'mev-add-observation-set-dialog'},{'name': 'AddSampleSetComponent', 'selector': 'mev-add-sample-set'},{'name': 'AddWSDialogComponent', 'selector': 'mev-add-ws-dialog'},{'name': 'AnalysesComponent', 'selector': 'mev-analyses'},{'name': 'AnalysisFlowComponent', 'selector': 'mev-analysis-flow'},{'name': 'AnalysisPlottingResultComponent', 'selector': 'mev-analysis-plotting-result'},{'name': 'AnalysisResultComponent', 'selector': 'mev-analysis-result'},{'name': 'AppComponent', 'selector': 'mev-root'},{'name': 'BoxPlottingComponent', 'selector': 'mev-box-plotting'},{'name': 'DeleteDialogComponent', 'selector': 'mev-delete-dialog'},{'name': 'DeleteFileDialogComponent', 'selector': 'mev-delete-file-dialog'},{'name': 'DeleteSetDialogComponent', 'selector': 'mev-delete-set-dialog'},{'name': 'DeleteWSDialogComponent', 'selector': 'mev-delete-ws-dialog'},{'name': 'Deseq2Component', 'selector': 'mev-deseq2'},{'name': 'DownloadButtonComponent', 'selector': 'mev-download-button'},{'name': 'EditDialogComponent', 'selector': 'mev-edit-dialog'},{'name': 'EditFeatureSetDialogComponent', 'selector': 'mev-edit-feature-set-dialog'},{'name': 'EditFileDialogComponent', 'selector': 'mev-edit-file-dialog'},{'name': 'EditWSDialogComponent', 'selector': 'mev-edit-ws-dialog'},{'name': 'ExecutedOperationComponent', 'selector': 'mev-executed-operation'},{'name': 'FileListComponent', 'selector': 'mev-file-list'},{'name': 'GseaComponent', 'selector': 'mev-gsea'},{'name': 'HclComponent', 'selector': 'mev-hcl'},{'name': 'KmeansComponent', 'selector': 'mev-kmeans'},{'name': 'LimmaComponent', 'selector': 'mev-limma'},{'name': 'LoginComponent', 'selector': 'mev-login-form'},{'name': 'MetadataComponent', 'selector': 'mev-metadata'},{'name': 'OperationComponent', 'selector': 'mev-operation'},{'name': 'PasswordChangeComponent', 'selector': 'mev-password-change'},{'name': 'PreviewDialogComponent', 'selector': 'mev-preview-dialog'},{'name': 'ProgressSnackbarComponent', 'selector': 'mev-progress-snackbar'},{'name': 'RegisterComponent', 'selector': 'mev-register-form'},{'name': 'RequestPasswordResetComponent', 'selector': 'mev-request-password-reset'},{'name': 'ResponsePasswordResetComponent', 'selector': 'mev-response-password-reset'},{'name': 'RugPlotComponent', 'selector': 'mev-rug-plot'},{'name': 'ScatterPlotComponent', 'selector': 'mev-scatter-plot'},{'name': 'SettingsContainerComponent', 'selector': 'mev-settings'},{'name': 'SpinnerOverlayComponent', 'selector': 'mev-spinner-overlay'},{'name': 'TutorialComponent', 'selector': 'mev-tutorial'},{'name': 'ViewFileTypesDialogComponent', 'selector': 'mev-view-file-types-dialog'},{'name': 'ViewInfoDialogComponent', 'selector': 'mev-view-info-dialog'},{'name': 'ViewSetDialogComponent', 'selector': 'mev-view-set-dialog'},{'name': 'WorkareaComponent', 'selector': 'mev-workarea'},{'name': 'WorkspaceDetailComponent', 'selector': 'mev-workspace-detail'},{'name': 'WorkspaceListComponent', 'selector': 'mev-workspace-list'}];
+    var DIRECTIVES = [{'name': 'RtlSupportDirective', 'selector': '[rtl]'}];
+    var ACTUAL_COMPONENT = {'name': 'MetadataComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+                   
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'MetadataComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

@@ -1,0 +1,1466 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>web-mev documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	      <link rel="stylesheet" href="../styles/style.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">web-mev documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li>HclComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>projects/web-mev/src/app/d3/components/hcl/hcl.component.ts</code>
+</p>
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>HCL Component</p>
+<p>Used for Hierarchical Clustering (HCL) analysis</p>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnChanges" target="_blank" >OnChanges</a></code>
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover">
+        <tbody>
+
+            <tr>
+                <td class="col-md-3">changeDetection</td>
+                <td class="col-md-9"><code>ChangeDetectionStrategy.Default</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>mev-hcl</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./hcl.component.scss</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./hcl.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#customObservationSets">customObservationSets</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#dialog">dialog</a>
+                            </li>
+                            <li>
+                                <a href="#hierObsData">hierObsData</a>
+                            </li>
+                            <li>
+                                <a href="#margin">margin</a>
+                            </li>
+                            <li>
+                                <a href="#maxTextLabelLength">maxTextLabelLength</a>
+                            </li>
+                            <li>
+                                <a href="#obsImageName">obsImageName</a>
+                            </li>
+                            <li>
+                                <a href="#obsTreeContainerId">obsTreeContainerId</a>
+                            </li>
+                            <li>
+                                <a href="#outerHeight">outerHeight</a>
+                            </li>
+                            <li>
+                                <a href="#selectedSamples">selectedSamples</a>
+                            </li>
+                            <li>
+                                <a href="#svgElement">svgElement</a>
+                            </li>
+                            <li>
+                                <a href="#tooltipOffsetX">tooltipOffsetX</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#createChart">createChart</a>
+                            </li>
+                            <li>
+                                <a href="#generateHCL">generateHCL</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnChanges">ngOnChanges</a>
+                            </li>
+                            <li>
+                                <a href="#onCreateCustomSampleSet">onCreateCustomSampleSet</a>
+                            </li>
+                            <li>
+                                <a href="#onResize">onResize</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#outputs">outputs</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(apiService: <a href="../injectables/AnalysesService.html">AnalysesService</a>, metadataService: <a href="../injectables/MetadataService.html">MetadataService</a>, dialog: MatDialog)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">projects/web-mev/src/app/d3/components/hcl/hcl.component.ts:42</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>apiService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/AnalysesService.html" target="_self" >AnalysesService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>metadataService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/MetadataService.html" target="_self" >MetadataService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>dialog</td>
+                                                  
+                                                        <td>
+                                                                    <code>MatDialog</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+    <section>
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="outputs"></a>
+                        <b>outputs</b>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">projects/web-mev/src/app/d3/components/hcl/hcl.component.ts:29</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createChart"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            createChart
+                        </b>
+                        <a href="#createChart"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createChart(hierData: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, containerId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="73"
+                            class="link-to-prism">projects/web-mev/src/app/d3/components/hcl/hcl.component.ts:73</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Function to create dendrogram</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>hierData</td>
+                                    <td>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>containerId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="generateHCL"></a>
+                    <span class="name">
+                        <b>
+                            generateHCL
+                        </b>
+                        <a href="#generateHCL"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>generateHCL()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="61"
+                            class="link-to-prism">projects/web-mev/src/app/d3/components/hcl/hcl.component.ts:61</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Function to retrieve data for Observation HCL plot</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnChanges"></a>
+                    <span class="name">
+                        <b>
+                            ngOnChanges
+                        </b>
+                        <a href="#ngOnChanges"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnChanges()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="50"
+                            class="link-to-prism">projects/web-mev/src/app/d3/components/hcl/hcl.component.ts:50</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onCreateCustomSampleSet"></a>
+                    <span class="name">
+                        <b>
+                            onCreateCustomSampleSet
+                        </b>
+                        <a href="#onCreateCustomSampleSet"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onCreateCustomSampleSet()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="237"
+                            class="link-to-prism">projects/web-mev/src/app/d3/components/hcl/hcl.component.ts:237</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Function that is triggered when the user clicks the &quot;Create a custom sample&quot; button</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onResize"></a>
+                    <span class="name">
+                        <b>
+                            onResize
+                        </b>
+                        <a href="#onResize"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onResize(event)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="54"
+                            class="link-to-prism">projects/web-mev/src/app/d3/components/hcl/hcl.component.ts:54</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+        <h3 id="inputs">
+            Properties
+        </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="customObservationSets"></a>
+                        <span class="name">
+                            <b>
+                            customObservationSets</b>
+                            <a href="#customObservationSets"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>[]</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>[]</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">projects/web-mev/src/app/d3/components/hcl/hcl.component.ts:33</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="dialog"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Public</span>
+                            dialog</b>
+                            <a href="#dialog"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>MatDialog</code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">projects/web-mev/src/app/d3/components/hcl/hcl.component.ts:47</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="hierObsData"></a>
+                        <span class="name">
+                            <b>
+                            hierObsData</b>
+                            <a href="#hierObsData"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">projects/web-mev/src/app/d3/components/hcl/hcl.component.ts:31</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="margin"></a>
+                        <span class="name">
+                            <b>
+                            margin</b>
+                            <a href="#margin"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>{ top: 50, right: 300, bottom: 50, left: 50 }</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">projects/web-mev/src/app/d3/components/hcl/hcl.component.ts:39</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="maxTextLabelLength"></a>
+                        <span class="name">
+                            <b>
+                            maxTextLabelLength</b>
+                            <a href="#maxTextLabelLength"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>10</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">projects/web-mev/src/app/d3/components/hcl/hcl.component.ts:41</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="obsImageName"></a>
+                        <span class="name">
+                            <b>
+                            obsImageName</b>
+                            <a href="#obsImageName"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>&#x27;Hierarchical clustering - Observations&#x27;</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">projects/web-mev/src/app/d3/components/hcl/hcl.component.ts:38</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="obsTreeContainerId"></a>
+                        <span class="name">
+                            <b>
+                            obsTreeContainerId</b>
+                            <a href="#obsTreeContainerId"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>&#x27;#observationPlot&#x27;</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">projects/web-mev/src/app/d3/components/hcl/hcl.component.ts:37</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="outerHeight"></a>
+                        <span class="name">
+                            <b>
+                            outerHeight</b>
+                            <a href="#outerHeight"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>500</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">projects/web-mev/src/app/d3/components/hcl/hcl.component.ts:40</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="selectedSamples"></a>
+                        <span class="name">
+                            <b>
+                            selectedSamples</b>
+                            <a href="#selectedSamples"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>[]</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>[]</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">projects/web-mev/src/app/d3/components/hcl/hcl.component.ts:34</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="svgElement"></a>
+                        <span class="name">
+                            <b>
+                            svgElement</b>
+                            <a href="#svgElement"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://angular.io/api/core/ElementRef" target="_blank" >ElementRef</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Decorators : </b>
+                            <br />
+                            <code>
+                                @ViewChild(&#x27;treePlot&#x27;)<br />
+                            </code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">projects/web-mev/src/app/d3/components/hcl/hcl.component.ts:30</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="tooltipOffsetX"></a>
+                        <span class="name">
+                            <b>
+                            tooltipOffsetX</b>
+                            <a href="#tooltipOffsetX"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>10</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">projects/web-mev/src/app/d3/components/hcl/hcl.component.ts:42</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  OnChanges,
+  ElementRef,
+  ViewChild
+} from &#x27;@angular/core&#x27;;
+import { AnalysesService } from &#x27;@app/features/analysis/services/analysis.service&#x27;;
+import * as d3 from &#x27;d3&#x27;;
+import d3Tip from &#x27;d3-tip&#x27;;
+import { AddSampleSetComponent } from &#x27;../dialogs/add-sample-set/add-sample-set.component&#x27;;
+import { MatDialog } from &#x27;@angular/material/dialog&#x27;;
+import { MetadataService } from &#x27;@app/core/metadata/metadata.service&#x27;;
+import { CustomSetType } from &#x27;@app/_models/metadata&#x27;;
+
+/**
+ * HCL Component
+ *
+ * Used for Hierarchical Clustering (HCL) analysis
+ */
+@Component({
+  selector: &#x27;mev-hcl&#x27;,
+  templateUrl: &#x27;./hcl.component.html&#x27;,
+  styleUrls: [&#x27;./hcl.component.scss&#x27;],
+  changeDetection: ChangeDetectionStrategy.Default
+})
+export class HclComponent implements OnChanges {
+  @Input() outputs;
+  @ViewChild(&#x27;treePlot&#x27;) svgElement: ElementRef;
+  hierObsData;
+
+  customObservationSets &#x3D; [];
+  selectedSamples &#x3D; [];
+
+  /* Chart settings */
+  obsTreeContainerId &#x3D; &#x27;#observationPlot&#x27;; // chart container id
+  obsImageName &#x3D; &#x27;Hierarchical clustering - Observations&#x27;; // file name for downloaded SVG image
+  margin &#x3D; { top: 50, right: 300, bottom: 50, left: 50 }; // chart margins
+  outerHeight &#x3D; 500;
+  maxTextLabelLength &#x3D; 10;
+  tooltipOffsetX &#x3D; 10; // position the tooltip on the right side of the triggering element
+
+  constructor(
+    private apiService: AnalysesService,
+    private metadataService: MetadataService,
+    public dialog: MatDialog
+  ) {}
+
+  ngOnChanges(): void {
+    this.generateHCL();
+  }
+
+  onResize(event) {
+    this.createChart(this.hierObsData, this.obsTreeContainerId);
+  }
+
+  /**
+   * Function to retrieve data for Observation HCL plot
+   */
+  generateHCL() {
+    const obsResourceId &#x3D; this.outputs.observations_hcl;
+    this.customObservationSets &#x3D; this.metadataService.getCustomObservationSets();
+    this.apiService.getResourceContent(obsResourceId).subscribe(response &#x3D;&gt; {
+      this.hierObsData &#x3D; response;
+      this.createChart(this.hierObsData, this.obsTreeContainerId);
+    });
+  }
+
+  /**
+   * Function to create dendrogram
+   */
+  private createChart(hierData: any, containerId: string): void {
+    if (!hierData) return;
+
+    const outerWidth &#x3D; this.svgElement.nativeElement.offsetWidth;
+    const outerHeight &#x3D; this.outerHeight;
+    const width &#x3D; outerWidth - this.margin.left - this.margin.right;
+    const height &#x3D; outerHeight - this.margin.top - this.margin.bottom;
+
+    d3.select(containerId)
+      .selectAll(&#x27;svg&#x27;)
+      .remove();
+
+    const root &#x3D; d3.hierarchy(hierData);
+    let ifCustomObservationSetExists &#x3D; false;
+    root.leaves().map(leaf &#x3D;&gt; {
+      const sample &#x3D; leaf.data.name;
+      leaf.data.isLeaf &#x3D; true;
+      leaf.data.colors &#x3D; [];
+      this.customObservationSets.forEach(set &#x3D;&gt; {
+        if (set.elements.some(e &#x3D;&gt; e.id &#x3D;&#x3D;&#x3D; sample)) {
+          ifCustomObservationSetExists &#x3D; true;
+          leaf.data.colors.push(set.color);
+        }
+      });
+    });
+    const leafNodeNumber &#x3D; root.leaves().length; // calculate the number of nodes
+    // add extra px for every node above 20 to the set height
+    const addHeight &#x3D; leafNodeNumber &gt; 20 ? (leafNodeNumber - 20) * 30 : 0;
+    const canvasHeight &#x3D; height + addHeight;
+    const tree &#x3D; d3.cluster().size([canvasHeight, width - 200]);
+    tree(root);
+    const svg &#x3D; d3
+      .select(containerId)
+      .append(&#x27;svg&#x27;)
+      .attr(&#x27;width&#x27;, outerWidth)
+      .attr(&#x27;height&#x27;, outerHeight + addHeight)
+      .append(&#x27;g&#x27;)
+      .attr(
+        &#x27;transform&#x27;,
+        &#x27;translate(&#x27; + this.margin.left + &#x27;,&#x27; + this.margin.top + &#x27;)&#x27;
+      )
+      .style(&#x27;fill&#x27;, &#x27;none&#x27;);
+
+    svg
+      .selectAll(&#x27;path.link&#x27;)
+      .data(root.descendants().slice(1))
+      .enter()
+      .append(&#x27;path&#x27;)
+      .attr(&#x27;class&#x27;, &#x27;link&#x27;)
+      .attr(&#x27;d&#x27;, elbow);
+
+    const that &#x3D; this;
+    const node &#x3D; svg
+      .selectAll(&#x27;g.node&#x27;)
+      .data(root.descendants())
+      .enter()
+      .append(&#x27;g&#x27;)
+      .attr(&#x27;class&#x27;, &#x27;node&#x27;)
+      .attr(&#x27;transform&#x27;, d &#x3D;&gt; &#x27;translate(&#x27; + d[&#x27;y&#x27;] + &#x27;,&#x27; + d[&#x27;x&#x27;] + &#x27;)&#x27;)
+      .on(&#x27;click&#x27;, highlightNodes);
+
+    node
+      .append(&#x27;circle&#x27;)
+      .filter(d &#x3D;&gt; d.data.name.length &gt; 0)
+      .attr(&#x27;r&#x27;, 4);
+
+    const leafNode &#x3D; node.filter(d &#x3D;&gt; d.data.isLeaf &#x3D;&#x3D;&#x3D; true);
+
+    function highlightNodes(event, d: any) {
+      d.descendants().forEach(
+        node &#x3D;&gt;
+          (node.data.isHighlighted &#x3D; node.data.isHighlighted ? false : true)
+      );
+
+      that.selectedSamples &#x3D; root
+        .leaves()
+        .filter(leaf &#x3D;&gt; leaf.data.isHighlighted)
+        .map(leaf &#x3D;&gt; leaf.data.name);
+
+      d3.select(containerId)
+        .selectAll(&#x27;circle&#x27;)
+        .attr(&#x27;class&#x27;, (d: any) &#x3D;&gt; {
+          if (d.data.isHighlighted) return &#x27;highlighted&#x27;;
+        });
+    }
+
+    // Tooltip
+    const tooltipOffsetX &#x3D; this.tooltipOffsetX;
+    const tip &#x3D; d3Tip()
+      .attr(&#x27;class&#x27;, &#x27;d3-tip&#x27;)
+      .offset([-10, 0])
+      .html((event, d) &#x3D;&gt; d.data.name);
+    svg.call(tip);
+
+    const truncate &#x3D; input &#x3D;&gt;
+      input.length &gt; this.maxTextLabelLength
+        ? &#x60;${input.substring(0, this.maxTextLabelLength)}...&#x60;
+        : input;
+    leafNode
+      .append(&#x27;text&#x27;)
+      .attr(&#x27;dx&#x27;, 10)
+      .attr(&#x27;dy&#x27;, 3)
+      .attr(&#x27;class&#x27;, &#x27;textLabel&#x27;)
+      .text(d &#x3D;&gt; truncate(d.data.name))
+      .on(&#x27;mouseover&#x27;, function(mouseEvent: any, d) {
+        tip.show(mouseEvent, d, this);
+        tip.style(&#x27;left&#x27;, mouseEvent.x + tooltipOffsetX + &#x27;px&#x27;);
+      })
+      .on(&#x27;mouseout&#x27;, tip.hide);
+
+    // Color squares for leaf nodes to indicate custom sample sets
+    leafNode
+      .append(&#x27;g&#x27;)
+      .attr(&#x27;width&#x27;, 200)
+      .each((d, ix, nodes) &#x3D;&gt; {
+        d3.select(nodes[ix])
+          .selectAll(&#x27;sampleSetColors&#x27;)
+          .data(d[&#x27;data&#x27;].colors)
+          .enter()
+          .append(&#x27;rect&#x27;)
+          .attr(&#x27;x&#x27;, (el, i) &#x3D;&gt; 100 + 30 * i)
+          .attr(&#x27;y&#x27;, -10)
+          .attr(&#x27;height&#x27;, &#x27;20&#x27;)
+          .attr(&#x27;width&#x27;, &#x27;20&#x27;)
+          .attr(&#x27;fill&#x27;, (d: string) &#x3D;&gt; d || &#x27;transparent&#x27;);
+      });
+
+    // Legend (only if custom observations exist)
+    if (ifCustomObservationSetExists) {
+      const legend &#x3D; svg
+        .selectAll(&#x27;.legend&#x27;)
+        .data(this.customObservationSets)
+        .enter()
+        .append(&#x27;g&#x27;)
+        .classed(&#x27;legend&#x27;, true)
+        .attr(&#x27;transform&#x27;, function(d, i) {
+          return &#x27;translate(0,&#x27; + i * 20 + &#x27;)&#x27;;
+        });
+
+      legend
+        .append(&#x27;rect&#x27;)
+        .attr(&#x27;width&#x27;, 10)
+        .attr(&#x27;height&#x27;, 10)
+        .attr(&#x27;x&#x27;, width + 50)
+        .attr(&#x27;fill&#x27;, d &#x3D;&gt; d.color);
+
+      legend
+        .append(&#x27;text&#x27;)
+        .attr(&#x27;x&#x27;, width + 70)
+        // .attr(&#x27;dy&#x27;, &#x27;.5em&#x27;)
+        .attr(&#x27;y&#x27;, 8)
+        .style(&#x27;fill&#x27;, &#x27;#000&#x27;)
+        .attr(&#x27;class&#x27;, &#x27;legend-label&#x27;)
+        .text(d &#x3D;&gt; d.name);
+    }
+
+    function elbow(d) {
+      return &#x27;M&#x27; + d.parent.y + &#x27;,&#x27; + d.parent.x + &#x27;V&#x27; + d.x + &#x27;H&#x27; + d.y;
+    }
+  }
+
+  /**
+   * Function that is triggered when the user clicks the &quot;Create a custom sample&quot; button
+   */
+  onCreateCustomSampleSet() {
+    let samples &#x3D; this.selectedSamples.map(elem &#x3D;&gt; ({ id: elem }));
+    const dialogRef &#x3D; this.dialog.open(AddSampleSetComponent, {
+      data: { type: CustomSetType.ObservationSet }
+    });
+
+    dialogRef.afterClosed().subscribe(customSetData &#x3D;&gt; {
+      if (customSetData) {
+        const customSet &#x3D; {
+          name: customSetData.name,
+          type: CustomSetType.ObservationSet,
+          color: customSetData.color,
+          elements: samples,
+          multiple: true
+        };
+
+        // if the custom set has been successfully added, update the plot
+        if (this.metadataService.addCustomSet(customSet)) {
+          this.generateHCL();
+          this.selectedSamples &#x3D; [];
+        }
+      }
+    });
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;mat-card class&#x3D;&quot;analysis-card&quot;&gt;
+    &lt;mat-card-header&gt;
+        &lt;div mat-card-avatar class&#x3D;&quot;analysis-card__img&quot;&gt;&lt;/div&gt;
+        &lt;mat-card-title&gt;Hierarchical clustering: {{ outputs?.job_name }}&lt;/mat-card-title&gt;
+    &lt;/mat-card-header&gt;
+    &lt;mat-card-content class&#x3D;&quot;analysis-card__main&quot;&gt;
+        &lt;p class&#x3D;&quot;analysis-card__instruction&quot;&gt;
+            Click on a node in the dendrogram graph to select multiple observations. Then click the Add button to
+            save it as a new custom set.
+        &lt;/p&gt;
+        &lt;mat-divider [inset]&#x3D;&quot;true&quot;&gt;&lt;/mat-divider&gt;
+        &lt;div class&#x3D;&quot;analysis-card__content&quot;&gt;
+
+            &lt;div class&#x3D;&quot;hcl-container&quot;&gt;
+
+                &lt;div class&#x3D;&quot;chart-section&quot;&gt;
+                    &lt;div class&#x3D;&quot;chart-title&quot;&gt;Observation clustering&lt;/div&gt;                    
+                    &lt;div class&#x3D;&quot;sample-list-container&quot;&gt;
+                        &lt;button mat-raised-button color&#x3D;&quot;accent&quot; (click)&#x3D;&quot;onCreateCustomSampleSet()&quot;
+                            [disabled]&#x3D;&quot;!selectedSamples.length&quot;&gt;
+                            &lt;mat-icon&gt;add&lt;/mat-icon&gt;
+                            Save as a observation set
+                        &lt;/button&gt;
+                        &lt;div class&#x3D;&quot;sample-list&quot; *ngIf&#x3D;&quot;selectedSamples.length&quot;&gt; Selected samples:
+                            &lt;span class&#x3D;&quot;sample-list__item&quot; *ngFor&#x3D;&quot;let item of selectedSamples&quot;&gt;
+                                {{ item }}
+                            &lt;/span&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;mev-download-button [containerId]&#x3D;&quot;obsTreeContainerId&quot; [imageName]&#x3D;&quot;obsImageName&quot;&gt;&lt;/mev-download-button&gt;
+                    &lt;div class&#x3D;&quot;chart&quot; #treePlot id&#x3D;&quot;observationPlot&quot; (window:resize)&#x3D;&quot;onResize($event)&quot;&gt;&lt;/div&gt;
+
+                &lt;/div&gt;
+                &lt;mat-divider [inset]&#x3D;&quot;true&quot;&gt;&lt;/mat-divider&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/mat-card-content&gt;
+&lt;/mat-card&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./hcl.component.scss</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">.analysis-card__img {
+  background-image: url(&quot;data:image/svg+xml,%3Csvg xmlns&#x3D;&#x27;http://www.w3.org/2000/svg&#x27; xmlns:xlink&#x3D;&#x27;http://www.w3.org/1999/xlink&#x27; aria-hidden&#x3D;&#x27;true&#x27; focusable&#x3D;&#x27;false&#x27; width&#x3D;&#x27;1em&#x27; height&#x3D;&#x27;1em&#x27; style&#x3D;&#x27;-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);&#x27; preserveAspectRatio&#x3D;&#x27;xMidYMid meet&#x27; viewBox&#x3D;&#x27;0 0 32 32&#x27;%3E%3Cpath d&#x3D;&#x27;M26 6a3.996 3.996 0 0 0-3.858 3H17.93A7.996 7.996 0 1 0 9 17.93v4.212a4 4 0 1 0 2 0v-4.211a7.951 7.951 0 0 0 3.898-1.62l3.669 3.67A3.953 3.953 0 0 0 18 22a4 4 0 1 0 4-4a3.952 3.952 0 0 0-2.019.567l-3.67-3.67A7.95 7.95 0 0 0 17.932 11h4.211A3.993 3.993 0 1 0 26 6zM12 26a2 2 0 1 1-2-2a2.002 2.002 0 0 1 2 2zm-2-10a6 6 0 1 1 6-6a6.007 6.007 0 0 1-6 6zm14 6a2 2 0 1 1-2-2a2.002 2.002 0 0 1 2 2zm2-10a2 2 0 1 1 2-2a2.002 2.002 0 0 1-2 2z&#x27; fill&#x3D;&#x27;%2337474f&#x27;/%3E%3C/svg%3E&quot;);
+  background-size: 30px;
+  background-position: top center;
+  background-repeat: no-repeat;
+}
+
+.analysis-card__content {
+  padding-top: 1rem;
+}
+
+mat-expansion-panel {
+  width: 100%;
+}
+
+.chart-title {
+  color: #37474f;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 20px;
+}
+
+.chart {
+  text-align: center;
+}
+
+::ng-deep {
+  .mat-content {
+    display: inline !important;
+    text-align: center;
+  }
+  .node circle {
+    fill: #fff;
+    stroke: #37474f;
+    stroke-width: 1.5px;
+  }
+
+  .node circle:hover {
+    fill: #37474f;
+    cursor: pointer;
+  }
+
+  .node {
+    font: 11px sans-serif;
+    fill: gray;
+  }
+
+  .highlighted {
+    fill: #37474f !important;
+    stroke: #666 !important;
+    stroke-width: 2px !important;
+  }
+
+  .link {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 1.5px;
+  }
+
+  .rectLabel {
+    fill: transparent;
+    opacity: 1;
+  }
+
+  .textLabel {
+    fill: #000;
+  }
+
+  .legend-label {
+    font-size: 12px;
+  }
+
+  .d3-tip {
+    line-height: 1;
+    font-weight: bold;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 2px;
+    z-index: 1;
+  }
+}
+
+mat-card {
+  height: 100%;
+}
+
+.sample-list {
+  padding: 15px 0;
+}
+
+.sample-list__item:not(:last-child):after {
+  content: &#x27;, &#x27;;
+}
+
+.status-txt {
+  color: #75c075;
+  padding: 5px 0;
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><mat-card class="analysis-card">    <mat-card-header>        <div mat-card-avatar class="analysis-card__img"></div>        <mat-card-title>Hierarchical clustering: {{ outputs?.job_name }}</mat-card-title>    </mat-card-header>    <mat-card-content class="analysis-card__main">        <p class="analysis-card__instruction">            Click on a node in the dendrogram graph to select multiple observations. Then click the Add button to            save it as a new custom set.        </p>        <mat-divider [inset]="true"></mat-divider>        <div class="analysis-card__content">            <div class="hcl-container">                <div class="chart-section">                    <div class="chart-title">Observation clustering</div>                                        <div class="sample-list-container">                        <button mat-raised-button color="accent" (click)="onCreateCustomSampleSet()"                            [disabled]="!selectedSamples.length">                            <mat-icon>add</mat-icon>                            Save as a observation set                        </button>                        <div class="sample-list" *ngIf="selectedSamples.length"> Selected samples:                            <span class="sample-list__item" *ngFor="let item of selectedSamples">                                {{ item }}                            </span>                        </div>                    </div>                    <mev-download-button [containerId]="obsTreeContainerId" [imageName]="obsImageName"></mev-download-button>                    <div class="chart" #treePlot id="observationPlot" (window:resize)="onResize($event)"></div>                </div>                <mat-divider [inset]="true"></mat-divider>            </div>        </div>    </mat-card-content></mat-card></div>'
+    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'mev-about'},{'name': 'AddAnnotationDialogComponent', 'selector': 'mev-add-annotation-dialog'},{'name': 'AddDialogComponent', 'selector': 'mev-add-dialog'},{'name': 'AddFileDialogComponent', 'selector': 'mev-add-file-dialog'},{'name': 'AddObservationSetDialogComponent', 'selector': 'mev-add-observation-set-dialog'},{'name': 'AddSampleSetComponent', 'selector': 'mev-add-sample-set'},{'name': 'AddWSDialogComponent', 'selector': 'mev-add-ws-dialog'},{'name': 'AnalysesComponent', 'selector': 'mev-analyses'},{'name': 'AnalysisFlowComponent', 'selector': 'mev-analysis-flow'},{'name': 'AnalysisPlottingResultComponent', 'selector': 'mev-analysis-plotting-result'},{'name': 'AnalysisResultComponent', 'selector': 'mev-analysis-result'},{'name': 'AppComponent', 'selector': 'mev-root'},{'name': 'BoxPlottingComponent', 'selector': 'mev-box-plotting'},{'name': 'DeleteDialogComponent', 'selector': 'mev-delete-dialog'},{'name': 'DeleteFileDialogComponent', 'selector': 'mev-delete-file-dialog'},{'name': 'DeleteSetDialogComponent', 'selector': 'mev-delete-set-dialog'},{'name': 'DeleteWSDialogComponent', 'selector': 'mev-delete-ws-dialog'},{'name': 'Deseq2Component', 'selector': 'mev-deseq2'},{'name': 'DownloadButtonComponent', 'selector': 'mev-download-button'},{'name': 'EditDialogComponent', 'selector': 'mev-edit-dialog'},{'name': 'EditFeatureSetDialogComponent', 'selector': 'mev-edit-feature-set-dialog'},{'name': 'EditFileDialogComponent', 'selector': 'mev-edit-file-dialog'},{'name': 'EditWSDialogComponent', 'selector': 'mev-edit-ws-dialog'},{'name': 'ExecutedOperationComponent', 'selector': 'mev-executed-operation'},{'name': 'FileListComponent', 'selector': 'mev-file-list'},{'name': 'GseaComponent', 'selector': 'mev-gsea'},{'name': 'HclComponent', 'selector': 'mev-hcl'},{'name': 'KmeansComponent', 'selector': 'mev-kmeans'},{'name': 'LimmaComponent', 'selector': 'mev-limma'},{'name': 'LoginComponent', 'selector': 'mev-login-form'},{'name': 'MetadataComponent', 'selector': 'mev-metadata'},{'name': 'OperationComponent', 'selector': 'mev-operation'},{'name': 'PasswordChangeComponent', 'selector': 'mev-password-change'},{'name': 'PreviewDialogComponent', 'selector': 'mev-preview-dialog'},{'name': 'ProgressSnackbarComponent', 'selector': 'mev-progress-snackbar'},{'name': 'RegisterComponent', 'selector': 'mev-register-form'},{'name': 'RequestPasswordResetComponent', 'selector': 'mev-request-password-reset'},{'name': 'ResponsePasswordResetComponent', 'selector': 'mev-response-password-reset'},{'name': 'RugPlotComponent', 'selector': 'mev-rug-plot'},{'name': 'ScatterPlotComponent', 'selector': 'mev-scatter-plot'},{'name': 'SettingsContainerComponent', 'selector': 'mev-settings'},{'name': 'SpinnerOverlayComponent', 'selector': 'mev-spinner-overlay'},{'name': 'TutorialComponent', 'selector': 'mev-tutorial'},{'name': 'ViewFileTypesDialogComponent', 'selector': 'mev-view-file-types-dialog'},{'name': 'ViewInfoDialogComponent', 'selector': 'mev-view-info-dialog'},{'name': 'ViewSetDialogComponent', 'selector': 'mev-view-set-dialog'},{'name': 'WorkareaComponent', 'selector': 'mev-workarea'},{'name': 'WorkspaceDetailComponent', 'selector': 'mev-workspace-detail'},{'name': 'WorkspaceListComponent', 'selector': 'mev-workspace-list'}];
+    var DIRECTIVES = [{'name': 'RtlSupportDirective', 'selector': '[rtl]'}];
+    var ACTUAL_COMPONENT = {'name': 'HclComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+                   
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'HclComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

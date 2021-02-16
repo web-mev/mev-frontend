@@ -35,7 +35,7 @@
 
 <ol class="breadcrumb">
   <li>Components</li>
-  <li>TutorialComponent</li>
+  <li>SpinnerOverlayComponent</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -61,15 +61,15 @@
     <h3>File</h3>
 </p>
 <p class="comment">
-    <code>projects/web-mev/src/app/features/tutorial/tutorial.component.ts</code>
+    <code>projects/web-mev/src/app/shared/components/spinner-overlay/spinner-overlay.component.ts</code>
 </p>
 
     <p class="comment">
         <h3>Description</h3>
     </p>
     <p class="comment">
-        <p>Tutorial Component</p>
-<p>Display youtube player with tutorials (the Tutorial page)</p>
+        <p>Spinner Overlay Component</p>
+<p>Used as an indicator of progress</p>
 
     </p>
 
@@ -103,19 +103,19 @@
 
             <tr>
                 <td class="col-md-3">selector</td>
-                <td class="col-md-9"><code>mev-tutorial</code></td>
+                <td class="col-md-9"><code>mev-spinner-overlay</code></td>
             </tr>
 
             <tr>
                 <td class="col-md-3">styleUrls</td>
-                <td class="col-md-9"><code>./tutorial.component.scss</code></td>
+                <td class="col-md-9"><code>./spinner-overlay.component.scss</code></td>
             </tr>
 
 
 
             <tr>
                 <td class="col-md-3">templateUrl</td>
-                <td class="col-md-9"><code>./tutorial.component.html</code></td>
+                <td class="col-md-9"><code>./spinner-overlay.component.html</code></td>
             </tr>
 
 
@@ -168,7 +168,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">projects/web-mev/src/app/features/tutorial/tutorial.component.ts:14</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">projects/web-mev/src/app/shared/components/spinner-overlay/spinner-overlay.component.ts:14</a></div>
                             </td>
                         </tr>
 
@@ -208,7 +208,7 @@
             <tr>
                 <td class="col-md-4">
                     <div class="io-line">Defined in <a href="" data-line="17"
-                            class="link-to-prism">projects/web-mev/src/app/features/tutorial/tutorial.component.ts:17</a></div>
+                            class="link-to-prism">projects/web-mev/src/app/shared/components/spinner-overlay/spinner-overlay.component.ts:17</a></div>
                 </td>
             </tr>
 
@@ -233,17 +233,17 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit, ChangeDetectionStrategy } from &#x27;@angular/core&#x27;;
 
 /**
- * Tutorial Component
+ * Spinner Overlay Component
  *
- * Display youtube player with tutorials (the Tutorial page)
+ * Used as an indicator of progress
  */
 @Component({
-  selector: &#x27;mev-tutorial&#x27;,
-  templateUrl: &#x27;./tutorial.component.html&#x27;,
-  styleUrls: [&#x27;./tutorial.component.scss&#x27;],
+  selector: &#x27;mev-spinner-overlay&#x27;,
+  templateUrl: &#x27;./spinner-overlay.component.html&#x27;,
+  styleUrls: [&#x27;./spinner-overlay.component.scss&#x27;],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TutorialComponent implements OnInit {
+export class SpinnerOverlayComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {}
@@ -252,55 +252,34 @@ export class TutorialComponent implements OnInit {
     </div>
 
     <div class="tab-pane fade " id="c-templateData">
-        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;container&quot; rtl&gt;
-  &lt;div class&#x3D;&quot;row justify-content-center&quot;&gt;
-    &lt;div class&#x3D;&quot;col-md-8 form-group&quot;&gt;
-      &lt;mat-card&gt;
-        &lt;mat-card-subtitle&gt;Please see the
-          &lt;a href&#x3D;&quot;https://www.youtube.com/watch?list&#x3D;PLSUXpXpbiLkJFbC3LOMgBacvNSdNpw0nv&amp;amp;v&#x3D;VqGpdotr-A4&quot;
-             target&#x3D;&quot;_blank&quot;&gt;
-            WebMev Tutorials
-          &lt;/a&gt;
-          playlist for more tutorials
-        &lt;/mat-card-subtitle&gt;
-        &lt;mat-card-content&gt;
-          &lt;youtube-player
-            videoId&#x3D;&quot;VqGpdotr-A4&quot;
-            suggestedQuality&#x3D;&quot;default&quot;
-            [height]&#x3D;&quot;250&quot;
-            [width]&#x3D;&quot;500&quot;&gt;
-          &lt;/youtube-player&gt;
-        &lt;/mat-card-content&gt;
-      &lt;/mat-card&gt;
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;overlay&quot;&gt;
+    &lt;div class&#x3D;&quot;center&quot;&gt;
+      &lt;mat-spinner color&#x3D;&quot;accent&quot; diameter&#x3D;&quot;40&quot;&gt;&lt;/mat-spinner&gt;
     &lt;/div&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-
-
-&lt;div class&#x3D;&quot;container&quot;&gt;
-  &lt;div class&#x3D;&quot;row&quot;&gt;
-    &lt;div class&#x3D;&quot;offset-md-2 col-md-8&quot;&gt;
-
-
-    &lt;/div&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-</code></pre>
+&lt;/div&gt;</code></pre>
     </div>
 
     <div class="tab-pane fade " id="c-styleData">
                 <p class="comment">
-                    <code>./tutorial.component.scss</code>
+                    <code>./spinner-overlay.component.scss</code>
                 </p>
-                <pre class="line-numbers"><code class="language-scss">a {
-  text-decoration: underline;
-}
-.mat-card-subtitle {
-  text-align: center;
+                <pre class="line-numbers"><code class="language-scss">.overlay {
+  height: 100vh;
+  width: 100%;
+  background-color: rgba(230, 230, 230, 0.5);
+  z-index: 10;
+  top: 0;
+  left: 0;
+  position: fixed;
 }
 
-.mat-card-content {
-  text-align: center;
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -moz-transform: translateX(-50%) translateY(-50%);
+  -webkit-transform: translateX(-50%) translateY(-50%);
+  transform: translateX(-50%) translateY(-50%);
 }
 </code></pre>
     </div>
@@ -330,10 +309,10 @@ export class TutorialComponent implements OnInit {
 <script src="../js/libs/htmlparser.js"></script>
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
-        var COMPONENT_TEMPLATE = '<div><div class="container" rtl>  <div class="row justify-content-center">    <div class="col-md-8 form-group">      <mat-card>        <mat-card-subtitle>Please see the          <a href="https://www.youtube.com/watch?list=PLSUXpXpbiLkJFbC3LOMgBacvNSdNpw0nv&amp;v=VqGpdotr-A4"             target="_blank">            WebMev Tutorials          </a>          playlist for more tutorials        </mat-card-subtitle>        <mat-card-content>          <youtube-player            videoId="VqGpdotr-A4"            suggestedQuality="default"            [height]="250"            [width]="500">          </youtube-player>        </mat-card-content>      </mat-card>    </div>  </div></div><div class="container">  <div class="row">    <div class="offset-md-2 col-md-8">    </div>  </div></div></div>'
+        var COMPONENT_TEMPLATE = '<div><div class="overlay">    <div class="center">      <mat-spinner color="accent" diameter="40"></mat-spinner>    </div></div></div>'
     var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'mev-about'},{'name': 'AddAnnotationDialogComponent', 'selector': 'mev-add-annotation-dialog'},{'name': 'AddDialogComponent', 'selector': 'mev-add-dialog'},{'name': 'AddFileDialogComponent', 'selector': 'mev-add-file-dialog'},{'name': 'AddObservationSetDialogComponent', 'selector': 'mev-add-observation-set-dialog'},{'name': 'AddSampleSetComponent', 'selector': 'mev-add-sample-set'},{'name': 'AddWSDialogComponent', 'selector': 'mev-add-ws-dialog'},{'name': 'AnalysesComponent', 'selector': 'mev-analyses'},{'name': 'AnalysisFlowComponent', 'selector': 'mev-analysis-flow'},{'name': 'AnalysisPlottingResultComponent', 'selector': 'mev-analysis-plotting-result'},{'name': 'AnalysisResultComponent', 'selector': 'mev-analysis-result'},{'name': 'AppComponent', 'selector': 'mev-root'},{'name': 'BoxPlottingComponent', 'selector': 'mev-box-plotting'},{'name': 'DeleteDialogComponent', 'selector': 'mev-delete-dialog'},{'name': 'DeleteFileDialogComponent', 'selector': 'mev-delete-file-dialog'},{'name': 'DeleteSetDialogComponent', 'selector': 'mev-delete-set-dialog'},{'name': 'DeleteWSDialogComponent', 'selector': 'mev-delete-ws-dialog'},{'name': 'Deseq2Component', 'selector': 'mev-deseq2'},{'name': 'DownloadButtonComponent', 'selector': 'mev-download-button'},{'name': 'EditDialogComponent', 'selector': 'mev-edit-dialog'},{'name': 'EditFeatureSetDialogComponent', 'selector': 'mev-edit-feature-set-dialog'},{'name': 'EditFileDialogComponent', 'selector': 'mev-edit-file-dialog'},{'name': 'EditWSDialogComponent', 'selector': 'mev-edit-ws-dialog'},{'name': 'ExecutedOperationComponent', 'selector': 'mev-executed-operation'},{'name': 'FileListComponent', 'selector': 'mev-file-list'},{'name': 'GseaComponent', 'selector': 'mev-gsea'},{'name': 'HclComponent', 'selector': 'mev-hcl'},{'name': 'KmeansComponent', 'selector': 'mev-kmeans'},{'name': 'LimmaComponent', 'selector': 'mev-limma'},{'name': 'LoginComponent', 'selector': 'mev-login-form'},{'name': 'MetadataComponent', 'selector': 'mev-metadata'},{'name': 'OperationComponent', 'selector': 'mev-operation'},{'name': 'PasswordChangeComponent', 'selector': 'mev-password-change'},{'name': 'PreviewDialogComponent', 'selector': 'mev-preview-dialog'},{'name': 'ProgressSnackbarComponent', 'selector': 'mev-progress-snackbar'},{'name': 'RegisterComponent', 'selector': 'mev-register-form'},{'name': 'RequestPasswordResetComponent', 'selector': 'mev-request-password-reset'},{'name': 'ResponsePasswordResetComponent', 'selector': 'mev-response-password-reset'},{'name': 'RugPlotComponent', 'selector': 'mev-rug-plot'},{'name': 'ScatterPlotComponent', 'selector': 'mev-scatter-plot'},{'name': 'SettingsContainerComponent', 'selector': 'mev-settings'},{'name': 'SpinnerOverlayComponent', 'selector': 'mev-spinner-overlay'},{'name': 'TutorialComponent', 'selector': 'mev-tutorial'},{'name': 'ViewFileTypesDialogComponent', 'selector': 'mev-view-file-types-dialog'},{'name': 'ViewInfoDialogComponent', 'selector': 'mev-view-info-dialog'},{'name': 'ViewSetDialogComponent', 'selector': 'mev-view-set-dialog'},{'name': 'WorkareaComponent', 'selector': 'mev-workarea'},{'name': 'WorkspaceDetailComponent', 'selector': 'mev-workspace-detail'},{'name': 'WorkspaceListComponent', 'selector': 'mev-workspace-list'}];
     var DIRECTIVES = [{'name': 'RtlSupportDirective', 'selector': '[rtl]'}];
-    var ACTUAL_COMPONENT = {'name': 'TutorialComponent'};
+    var ACTUAL_COMPONENT = {'name': 'SpinnerOverlayComponent'};
 </script>
 <script src="../js/tree.js"></script>
 
@@ -368,7 +347,7 @@ export class TutorialComponent implements OnInit {
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
-            var COMPODOC_CURRENT_PAGE_URL = 'TutorialComponent.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'SpinnerOverlayComponent.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 

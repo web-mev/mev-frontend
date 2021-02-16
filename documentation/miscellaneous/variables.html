@@ -112,9 +112,6 @@
                             <a href="#getCurrentRouteUrl" title="projects/web-mev/e2e/src/utils/utils.ts"><b>getCurrentRouteUrl</b>&nbsp;&nbsp;&nbsp;(projects/.../utils.ts)</a>
                         </li>
                         <li>
-                            <a href="#googleLogoURL" title="projects/web-mev/src/app/features/user/login/login.component.ts"><b>googleLogoURL</b>&nbsp;&nbsp;&nbsp;(projects/.../login.component.ts)</a>
-                        </li>
-                        <li>
                             <a href="#INIT" title="projects/web-mev/src/app/core/settings/settings.effects.ts"><b>INIT</b>&nbsp;&nbsp;&nbsp;(projects/.../settings.effects.ts)</a>
                         </li>
                         <li>
@@ -221,9 +218,6 @@
                         </li>
                         <li>
                             <a href="#STEPS_PAGE" title="projects/web-mev/src/app/core/animations/route.animations.ts"><b>STEPS_PAGE</b>&nbsp;&nbsp;&nbsp;(projects/.../route.animations.ts)</a>
-                        </li>
-                        <li>
-                            <a href="#test_workspaceResources" title="projects/web-mev/src/app/features/workspace-detail/models/workspace-resource.ts"><b>test_workspaceResources</b>&nbsp;&nbsp;&nbsp;(projects/.../workspace-resource.ts)</a>
                         </li>
                         <li>
                             <a href="#" title="projects/web-mev/src/app/features/workspace-detail/pipes/search.ts"><b></b>&nbsp;&nbsp;&nbsp;(projects/.../search.ts)</a>
@@ -633,6 +627,7 @@
   envName: &#x27;PROD&#x27;,
   production: true,
   test: false,
+  apiUrl: &#x27;http://35.194.76.64/api&#x27;,
   i18nPrefix: &#x27;/mev&#x27;,
   versions: {
     app: packageJson.version,
@@ -775,7 +770,7 @@
   envName: &#x27;DEV&#x27;,
   production: false,
   test: false,
-  apiUrl: &#x27;http://localhost:8000/api&#x27;,
+  apiUrl: &#x27;http://35.194.76.64/api&#x27;,
   i18nPrefix: &#x27;&#x27;,
   versions: {
     app: packageJson.version,
@@ -837,36 +832,6 @@
                         <td class="col-md-4">
                             <i>Default value : </i><code>() &#x3D;&gt;
   browser.getCurrentUrl().then(url &#x3D;&gt; url.substr(url.lastIndexOf(&#x27;/&#x27;) + 1))</code>
-                        </td>
-                    </tr>
-
-
-            </tbody>
-        </table>
-</section>
-    <h3>projects/web-mev/src/app/features/user/login/login.component.ts</h3>
-    <section>
-    <h3></h3>        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="googleLogoURL"></a>
-                        <span class="name">
-                            <b>
-                            googleLogoURL</b>
-                            <a href="#googleLogoURL"><span class="icon ion-ios-link"></span></a>
-                        </span>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <i>Default value : </i><code>&#x27;@ass&#x27;</code>
                         </td>
                     </tr>
 
@@ -1094,10 +1059,12 @@
   MatChipsModule,
   MatCardModule,
   MatCheckboxModule,
+  MatGridListModule,
   MatListModule,
   MatMenuModule,
   MatIconModule,
   MatTooltipModule,
+  MatExpansionModule,
   MatSnackBarModule,
   MatSlideToggleModule,
   MatDividerModule,
@@ -1110,7 +1077,9 @@
   MatDatepickerModule,
   MatNativeDateModule,
   MatRippleModule,
-  MatToolbarModule
+  MatToolbarModule,
+  MatButtonToggleModule,
+  MatTreeModule
 ]</code>
                         </td>
                     </tr>
@@ -1809,102 +1778,6 @@
   selectSettings,
   settings &#x3D;&gt; settings.theme
 )</code>
-                        </td>
-                    </tr>
-
-
-            </tbody>
-        </table>
-</section>
-    <h3>projects/web-mev/src/app/features/workspace-detail/models/workspace-resource.ts</h3>
-    <section>
-    <h3></h3>        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="test_workspaceResources"></a>
-                        <span class="name">
-                            <b>
-                            test_workspaceResources</b>
-                            <a href="#test_workspaceResources"><span class="icon ion-ios-link"></span></a>
-                        </span>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <i>Type : </i>    <code>WorkspaceResource[]</code>
-
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <i>Default value : </i><code>[
-  {
-    id: &#x27;1234&#x27;,
-    url: &#x27;url1&#x27;,
-    name: &#x27;File Rawcount.tsv&#x27;,
-    resource_type: FileType.ALN,
-    owner_email: &#x27;amnsdbna@gahjsd.co&#x27;,
-    is_active: true,
-    is_public: true,
-    status: &#x27;some status&#x27;,
-    workspace: &#x27;Workspcae 1&#x27;,
-    created: new Date(&#x27;2019-01-16&#x27;),
-    size: 1024,
-  },
-  {
-    id: &#x27;1235&#x27;,
-    url: &#x27;url2&#x27;,
-    name: &#x27;File Rawcount 2.tsv&#x27;,
-    resource_type: FileType.BED,
-    owner_email: &#x27;ana@gahjsd.co&#x27;,
-    is_active: true,
-    is_public: true,
-    status: &#x27;some status&#x27;,
-    workspace: &#x27;Workspcae 1&#x27;,
-    created: new Date(&#x27;2020-01-16&#x27;),
-    size: 2048,
-  },
-  {
-    id: &#x27;1234&#x27;,
-    url: &#x27;url1&#x27;,
-    name: &#x27;File Rawcount.tsv&#x27;,
-    resource_type: FileType.ALN,
-    owner_email: &#x27;amnsdbna@gahjsd.co&#x27;,
-    is_active: true,
-    is_public: true,
-    status: &#x27;some status&#x27;,
-    workspace: &#x27;Workspcae 1&#x27;,
-    created: new Date(&#x27;2019-01-16&#x27;),
-    size: 1024,
-  },
-  {
-    id: &#x27;1235&#x27;,
-    url: &#x27;url2&#x27;,
-    name: &#x27;File Rawcount 2.tsv&#x27;,
-    resource_type: FileType.BED,
-    owner_email: &#x27;ana@gahjsd.co&#x27;,
-    is_active: true,
-    is_public: true,
-    status: &#x27;some status&#x27;,
-    workspace: &#x27;Workspcae 1&#x27;,
-    created: new Date(&#x27;2020-01-16&#x27;),
-    size: 2048,
-  },
-  {
-    id: &#x27;1234&#x27;,
-    url: &#x27;url1&#x27;,
-    name: &#x27;File Rawcount.tsv&#x27;,
-    resource_type: FileType.ALN,
-    owner_email: &#x27;amnsdbna@gahjsd.co&#x27;,
-    is_active: true,
-    is_public: true,
-    status: &#x27;some status&#x27;,
-    workspace: &#x27;Workspcae 1&#x27;,
-    created: new Date(&#x27;2019-01-16&#x27;),
-    size: 1024,
-  }
-]</code>
                         </td>
                     </tr>
 

@@ -58,7 +58,10 @@
                 <td class="col-md-4">
                     <ul class="index-list">
                         <li>
-                            <a href="#FileType" title="projects/web-mev/src/app/shared/models/file-type.ts"><b>FileType</b>&nbsp;&nbsp;&nbsp;(projects/.../file-type.ts)</a>
+                            <a href="#CustomSetType" title="projects/web-mev/src/app/_models/metadata.ts"><b>CustomSetType</b>&nbsp;&nbsp;&nbsp;(projects/.../metadata.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#operationExecution" title="projects/web-mev/src/app/features/analysis/components/executed-operation/executed-operation.component.ts"><b>operationExecution</b>&nbsp;&nbsp;&nbsp;(projects/.../executed-operation.component.ts)</a>
                         </li>
                     </ul>
                 </td>
@@ -67,101 +70,79 @@
     </table>
 </section>
 
-    <h3>projects/web-mev/src/app/shared/models/file-type.ts</h3>
+    <h3>projects/web-mev/src/app/_models/metadata.ts</h3>
     <section>
         <table class="table table-sm table-bordered">
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="FileType"></a>
-                        <span class="name"><b>FileType</b><a href="#FileType"><span class="icon ion-ios-link"></span></a></span>
+                        <a name="CustomSetType"></a>
+                        <span class="name"><b>CustomSetType</b><a href="#CustomSetType"><span class="icon ion-ios-link"></span></a></span>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-description"><p>File types</p>
-<p>These types are restricted to a set of common file formats.</p>
+                            <div class="io-description"><p>Custom set types</p>
 </div>
                         </td>
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                &nbsp;FQ
+                                &nbsp;ObservationSet
                             </td>
                         </tr>
                         <tr>
                             <td class="col-md-4">
-                                <i>Value : </i><code>FastaQ file</code>
+                                <i>Value : </i><code>Observation set</code>
                             </td>
                         </tr>
                         <tr>
                             <td class="col-md-4">
-                                &nbsp;FA
+                                &nbsp;FeatureSet
                             </td>
                         </tr>
                         <tr>
                             <td class="col-md-4">
-                                <i>Value : </i><code>Fasta file</code>
+                                <i>Value : </i><code>Feature set</code>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+    <h3>projects/web-mev/src/app/features/analysis/components/executed-operation/executed-operation.component.ts</h3>
+    <section>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="operationExecution"></a>
+                        <span class="name"><b>operationExecution</b><a href="#operationExecution"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-description"><p>Presentational states of operation execution process</p>
+</div>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;InProcess
                             </td>
                         </tr>
                         <tr>
                             <td class="col-md-4">
-                                &nbsp;ALN
+                                &nbsp;RunningAnalysis
                             </td>
                         </tr>
                         <tr>
                             <td class="col-md-4">
-                                <i>Value : </i><code>Alignment (SAM/BAM)</code>
+                                &nbsp;PreparingData
                             </td>
                         </tr>
                         <tr>
                             <td class="col-md-4">
-                                &nbsp;TBL
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                <i>Value : </i><code>General data table</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                &nbsp;MTX
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                <i>Value : </i><code>Numeric table</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                &nbsp;I_MTX
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                <i>Value : </i><code>Integer table</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                &nbsp;ANN
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                <i>Value : </i><code>Annotation table</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                &nbsp;BED
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                <i>Value : </i><code>BED-format file</code>
+                                &nbsp;Finished
                             </td>
                         </tr>
             </tbody>

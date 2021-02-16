@@ -122,4 +122,14 @@ The structure of the application includes a few main modules:
 
 
 ## <a name="AddNewComponent">**How to add a new visualization component**</a>
-TBD
+ 1. Create a new component in the D3/components folder. 
+ 2. Add the *outputs* property with the @Input() decorator. This property allows the parent component *ExecutedOperation* to share the result of an executed operation with a visualization component. The *outputs* property contains the following fields:
+ - operation, 
+ - job_name, 
+ - outputs, 
+ - inputs, 
+ - error_messages,\
+and they can be used in the visualization component.
+3. Add the new component to the *exports* array in *d3.module.ts* file.
+4. Open the *AnalysisResult* component template and add a *ng-container* for the newly created visualization component. Specify  *ngIf expression* using a new operation name.
+

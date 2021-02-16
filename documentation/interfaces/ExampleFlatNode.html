@@ -43,7 +43,7 @@
 
 <ol class="breadcrumb">
   <li>Interfaces</li>
-  <li>DropboxFile</li>
+  <li>ExampleFlatNode</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -61,9 +61,16 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>projects/web-mev/src/app/features/file-manager/models/dropbox.ts</code>
+            <code>projects/web-mev/src/app/features/analysis/components/analysis-list/analyses.component.ts</code>
         </p>
 
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Flat node with expandable and level information </p>
+
+            </p>
 
 
         <section>
@@ -79,23 +86,13 @@
                         <td class="col-md-4">
                             <ul class="index-list">
                                 <li>
-                                        <a href="#bytes">bytes</a>
+                                        <a href="#expandable">expandable</a>
                                 </li>
                                 <li>
-                                        <a href="#icon">icon</a>
-                                </li>
-                                <li>
-                                        <a href="#isDir">isDir</a>
-                                </li>
-                                <li>
-                                        <a href="#link">link</a>
+                                        <a href="#level">level</a>
                                 </li>
                                 <li>
                                         <a href="#name">name</a>
-                                </li>
-                                <li>
-                                            <span class="modifier">Optional</span>
-                                        <a href="#thumbnailLink">thumbnailLink</a>
                                 </li>
                             </ul>
                         </td>
@@ -112,71 +109,13 @@
                         <tbody>
                                 <tr>
                                     <td class="col-md-4">
-                                        <a name="bytes"></a>
-                                        <span class="name"><b>bytes</b><a href="#bytes"><span class="icon ion-ios-link"></span></a></span>
+                                        <a name="expandable"></a>
+                                        <span class="name"><b>expandable</b><a href="#expandable"><span class="icon ion-ios-link"></span></a></span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="col-md-4">
-                                        <code>bytes:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
-</code>
-                                    </td>
-                                </tr>
-
-
-                                    <tr>
-                                        <td class="col-md-4">
-                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
-
-                                        </td>
-                                    </tr>
-
-
-
-
-
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <a name="icon"></a>
-                                        <span class="name"><b>icon</b><a href="#icon"><span class="icon ion-ios-link"></span></a></span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <code>icon:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-</code>
-                                    </td>
-                                </tr>
-
-
-                                    <tr>
-                                        <td class="col-md-4">
-                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-
-                                        </td>
-                                    </tr>
-
-
-
-
-
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <a name="isDir"></a>
-                                        <span class="name"><b>isDir</b><a href="#isDir"><span class="icon ion-ios-link"></span></a></span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <code>isDir:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                        <code>expandable:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
 </code>
                                     </td>
                                 </tr>
@@ -199,13 +138,13 @@
                         <tbody>
                                 <tr>
                                     <td class="col-md-4">
-                                        <a name="link"></a>
-                                        <span class="name"><b>link</b><a href="#link"><span class="icon ion-ios-link"></span></a></span>
+                                        <a name="level"></a>
+                                        <span class="name"><b>level</b><a href="#level"><span class="icon ion-ios-link"></span></a></span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="col-md-4">
-                                        <code>link:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                        <code>level:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
 </code>
                                     </td>
                                 </tr>
@@ -213,7 +152,7 @@
 
                                     <tr>
                                         <td class="col-md-4">
-                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
 
                                         </td>
                                     </tr>
@@ -253,65 +192,167 @@
 
                         </tbody>
                     </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <a name="thumbnailLink"></a>
-                                        <span class="name"><b>thumbnailLink</b><a href="#thumbnailLink"><span class="icon ion-ios-link"></span></a></span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <code>thumbnailLink:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-</code>
-                                    </td>
-                                </tr>
-
-
-                                    <tr>
-                                        <td class="col-md-4">
-                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td class="col-md-4">
-                                            <i>Optional</i>
-                                        </td>
-                                    </tr>
-
-
-
-
-                        </tbody>
-                    </table>
             </section>
     </div>
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">export interface Dropbox {
-  choose(options: DropboxChooseOptions): void;
-}
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  Output,
+  EventEmitter
+} from &#x27;@angular/core&#x27;;
+import { AnalysesService } from &#x27;../../services/analysis.service&#x27;;
+import { ActivatedRoute } from &#x27;@angular/router&#x27;;
+import { Observable } from &#x27;rxjs&#x27;;
+import { Workspace } from &#x27;@app/features/workspace-manager/models/workspace&#x27;;
+import { Operation } from &#x27;../../models/operation&#x27;;
+import {
+  MatTreeFlatDataSource,
+  MatTreeFlattener
+} from &#x27;@angular/material/tree&#x27;;
+import { FlatTreeControl } from &#x27;@angular/cdk/tree&#x27;;
 
-export interface DropboxChooseOptions {
-  linkType: &#x27;direct&#x27; | &#x27;preview&#x27;; // &quot;direct&quot; is an expiring link to download the contents of the file
-  multiselect: boolean;
-  extensions?: string[];
-  folderselect: boolean;
-  success(files: DropboxFile[]); // Required. Called when a user selects an item in the Chooser.
-  cancel?(): void; // Optional. Called when the user closes the dialog without selecting a file and does not include any parameters.
-}
-
-interface DropboxFile {
+/**
+ * Operation category with nested structure.
+ * Each node has a name and an optional list of children.
+ */
+interface OperationCategoryNode {
   name: string;
-  link: string;
-  bytes: number;
-  icon: string;
-  thumbnailLink?: string;
-  isDir: boolean;
+  children?: Operation[];
+}
+
+/** Flat node with expandable and level information */
+interface ExampleFlatNode {
+  expandable: boolean;
+  name: string;
+  level: number;
+}
+
+/**
+ * Analyses Component
+ * Used to display the list of available operations as a tree structure (the Tools tab)
+ */
+@Component({
+  selector: &#x27;mev-analyses&#x27;,
+  templateUrl: &#x27;./analyses.component.html&#x27;,
+  styleUrls: [&#x27;./analyses.component.scss&#x27;],
+  changeDetection: ChangeDetectionStrategy.Default
+})
+export class AnalysesComponent implements OnInit {
+  workspaceId: string;
+  workspace$: Observable&lt;Workspace&gt;;
+  operations: Operation[];
+  operationCategories: any[];
+  selectedOperation: Operation;
+
+  @Output() executedOperationId: EventEmitter&lt;any&gt; &#x3D; new EventEmitter&lt;any&gt;();
+
+  treeControl &#x3D; new FlatTreeControl&lt;ExampleFlatNode&gt;(
+    node &#x3D;&gt; node.level,
+    node &#x3D;&gt; node.expandable
+  );
+
+  private _transformer &#x3D; (node: OperationCategoryNode, level: number) &#x3D;&gt; {
+    return {
+      expandable: !!node.children &amp;&amp; node.children.length &gt; 0,
+      level: level,
+      ...node
+    };
+  };
+
+  treeFlattener &#x3D; new MatTreeFlattener(
+    this._transformer,
+    node &#x3D;&gt; node.level,
+    node &#x3D;&gt; node.expandable,
+    node &#x3D;&gt; node.children
+  );
+
+  dataSource &#x3D; new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+
+  hasChild &#x3D; (_: number, node: ExampleFlatNode) &#x3D;&gt; node.expandable;
+
+  constructor(
+    private route: ActivatedRoute,
+    private apiService: AnalysesService
+  ) {}
+
+  /**
+   * Initialize the datasource for the Operation Tree
+   */
+  ngOnInit(): void {
+    this.workspaceId &#x3D; this.route.snapshot.paramMap.get(&#x27;workspaceId&#x27;);
+    this.workspace$ &#x3D; this.apiService.getWorkspaceDetail(this.workspaceId);
+
+    this.apiService.getOperations().subscribe(operations &#x3D;&gt; {
+      this.operations &#x3D; operations;
+    });
+
+    this.apiService.getOperationCategories().subscribe(operationCategories &#x3D;&gt; {
+      this.selectedOperation &#x3D; operationCategories[0].children[0]; // show the parameters for the 1st operation by default
+      operationCategories.push(this.getPlottingOperationCategory());
+      this.dataSource.data &#x3D; operationCategories;
+      this.treeControl.expand(this.treeControl.dataNodes[0]); // expand the 1st operation category by default
+    });
+  }
+
+  /**
+   * Add a &#x27;fake&#x27; operation for plotting. It is a frontend-only operation to provide
+   * view for the normalization methods
+   * The user can select a numerical matrix and custom feature set to view a boxplot showing the
+   * distribution of expressions
+   */
+  getPlottingOperationCategory() {
+    const op &#x3D; {
+      name: &#x27;Plotting&#x27;,
+      children: [
+        {
+          id: &#x27;Plotting&#x27;,
+          name: &#x27;Plot expressions&#x27;,
+          description: &#x27;Output view for the normalization methods&#x27;,
+          mode: &#x27;client&#x27;,
+          inputs: {
+            input_matrix: {
+              description:
+                &#x27;The input matrix. For example, a gene expression matrix for a cohort of samples.&#x27;,
+              name: &#x27;Input matrix:&#x27;,
+              required: true,
+              spec: {
+                attribute_type: &#x27;DataResource&#x27;,
+                many: false,
+                resource_types: [&#x27;MTX&#x27;, &#x27;I_MTX&#x27;, &#x27;EXP_MTX&#x27;, &#x27;RNASEQ_COUNT_MTX&#x27;]
+              }
+            },
+            features: {
+              description: &#x27;The genes/features to use in plotting&#x27;,
+              name: &#x27;Plot genes/features by:&#x27;,
+              required: false,
+              spec: {
+                attribute_type: &#x27;FeatureSet&#x27;
+              }
+            }
+          }
+        }
+      ]
+    };
+    return op;
+  }
+
+  /**
+   * Function is triggered when the user clicks on a specific operation in the Operation Tree
+   */
+  public showOperationDetails(operation) {
+    this.selectedOperation &#x3D; operation;
+  }
+
+  /**
+   * Function is triggered when the user starts an analysis and emits a newly created executed operation id
+   */
+  public showExecutedOperationResult(data: any) {
+    this.executedOperationId.emit(data);
+  }
 }
 </code></pre>
     </div>
@@ -340,7 +381,7 @@ interface DropboxFile {
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
-            var COMPODOC_CURRENT_PAGE_URL = 'DropboxFile.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'ExampleFlatNode.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 

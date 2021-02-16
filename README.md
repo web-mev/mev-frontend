@@ -49,6 +49,14 @@ ng serve --port 8080 --host mydomain.com
 
 (for development purposes we need a proper host pointing to localhost, because Google’s OAuth requires redirect URLs that can’t be localhost. So you can add an entry in the hosts file of your machine to associate mydomain.com to 127.0.0.1. The app will be run at http://mydomain.com:8080)
 
+- Compile the app into the output directory "dist":
+
+```sh
+
+ng build
+
+```
+
 - Generate project documentation:
 
 ```sh
@@ -59,38 +67,43 @@ npm run generate-docs
 
 ## <a name="Settings">**Settings**</a>
 
-- File _app.component.ts_
+- File _app.component.ts_\
   Use the following properties to update the application settings:
   -- _logo_: to update the application logo image
   -- _languages_: to set the list of available languages
   -- _sessionTimeout_: to set user idle / session timeout
   -- _navigation_: to set top navigation bar
 
-- File _themes/default-theme.scss_
+- File _environment.prod.ts_\
+  It is environment config to set the apiUrl variable ('http://35.194.76.64/api')
+
+- File _themes/default-theme.scss_\
   Here you can change the color theme, specifying primary, accent and warning colors that will be used on components
 
-- File _sentry-error-handler.ts_
+- File _sentry-error-handler.ts_\
   Use this file to set a configuration to handle error tracking
 
-- File _jwtConfig.ts_
+- File _jwtConfig.ts_\
   Use this file to update settings for JWT authentication: `whiteListedDomains`(domains that are allowed to receive the JWT) and `blackListedRoutes`(routes that are not allowed to receive the JWT token)
 
 ## <a name="Modules">**Modules and components info**</a>
 
 The structure of the application includes a few main modules:
 
-1.  File Manager Module
+1.  About Module\
+    Includes the About component which is responsible for the main start webMev page
+2.  File Manager Module\
     Includes components for uploading and managing user files. Users can upload files from local computer, Dropbox, rename files, edit file types, delete files.
     To add: download files to local computer, download to Dropbox
-2.  Workspace Manager Module
+3.  Workspace Manager Module\
     Contains the WorkspaceList component for managing user's workspace and a set of modal dialogs to add/edit/delete a workspace
-3.  Workspace Details Module
+4.  Workspace Details Module\
     It is used to display the content of a workspace. It contains the WorkspaceDetails component which is used to display list of files (resources) included in the selected workspace. Also contains components for managing workspace metadata (user's custom observation and feature sets saved in the local storage) and modal dialogs for create/edit/delete actions.
-4.  Analysis Module
+5.  Analysis Module\
     It contains components used on the Analysis Flow, Tools, Analyses Result.
-5.  D3 Module
+6.  D3 Module\
     It contains components (D3-charts and tables) used for different types of analyses (HCL, PCA, DESeq2, etc)
-6.  Shared Module
+7.  Shared Module\
     Contains commonly used directives, pipes, validators, help functions, shared components
 
 ## <a name="Features">**Features and bugs**</a>

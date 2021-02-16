@@ -38,7 +38,7 @@
 
 <ol class="breadcrumb">
   <li>Injectables</li>
-  <li>FileAdapter</li>
+  <li>WorkspaceResourceAdapter</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -56,7 +56,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>projects/web-mev/src/app/shared/models/file.ts</code>
+            <code>projects/web-mev/src/app/features/workspace-detail/models/workspace-resource.ts</code>
         </p>
 
 
@@ -118,8 +118,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="34"
-                            class="link-to-prism">projects/web-mev/src/app/shared/models/file.ts:34</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="26"
+                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/models/workspace-resource.ts:26</a></div>
                 </td>
             </tr>
 
@@ -156,7 +156,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/File.html" target="_self" >File</a></code>
+                        <b>Returns : </b>        <code><a href="../classes/WorkspaceResource.html" target="_self" >WorkspaceResource</a></code>
 
                     </div>
                     <div class="io-description">
@@ -172,30 +172,22 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &#x27;@angular/core&#x27;;
-import { Workspace } from &#x27;@app/features/workspace-manager/models/workspace&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { FileType } from &#x27;@app/shared/models/file-type&#x27;;
+import { Injectable } from &#x27;@angular/core&#x27;;
 
-/**
- * File or Resource
- *
- * Resource instance is created when MEV users upload files.
- * Resource instances are initially &quot;unattached&quot; meaning they are associated with their owner,
- * but have not been associated with any user workspaces.
- * Admins can, however, specify a Workspace in their request to create the Resource directly via the API.
- */
-
-export class File {
+export class WorkspaceResource {
   constructor(
     public id: string,
     public url: string,
     public name: string,
-    public resource_type: string, // FileType
+    public resource_type: FileType,
     public readable_resource_type: string,
     public owner_email: string,
     public is_active: boolean,
     public is_public: boolean,
     public status: string,
-    public workspaces: Workspace[],
+    public workspace: string,
+    public workspace_name: string,
     public created: Date,
     public size: number
   ) {}
@@ -204,16 +196,12 @@ export class File {
 @Injectable({
   providedIn: &#x27;root&#x27;
 })
-export class FileAdapter {
-  adapt(item: any): File {
+export class WorkspaceResourceAdapter {
+  adapt(item: any): WorkspaceResource {
     const re &#x3D; /[()]/g;
     const created_formatted &#x3D; item.created.replace(re, &#x27;&#x27;);
 
-    const workspace_names &#x3D; item.workspaces
-      .map(ws &#x3D;&gt; ws.workspace_name)
-      .join(&#x27;, &#x27;);
-
-    return new File(
+    return new WorkspaceResource(
       item.id,
       item.url,
       item.name,
@@ -223,7 +211,8 @@ export class FileAdapter {
       item.is_active,
       item.is_public,
       item.status,
-      workspace_names,
+      item.workspace,
+      item.workspace_name,
       new Date(created_formatted),
       item.size
     );
@@ -262,7 +251,7 @@ export class FileAdapter {
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
-            var COMPODOC_CURRENT_PAGE_URL = 'FileAdapter.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'WorkspaceResourceAdapter.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 

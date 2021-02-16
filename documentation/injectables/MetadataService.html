@@ -38,7 +38,7 @@
 
 <ol class="breadcrumb">
   <li>Injectables</li>
-  <li>UserService</li>
+  <li>MetadataService</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -56,14 +56,16 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>projects/web-mev/src/app/core/user/user.service.ts</code>
+            <code>projects/web-mev/src/app/core/metadata/metadata.service.ts</code>
         </p>
 
             <p class="comment">
                 <h3>Description</h3>
             </p>
             <p class="comment">
-                <p>User service</p>
+                <p>Metadata service</p>
+<p>Used for operations with workspace metadata (observation and feature sets defined in workspace)
+Uses local storage to save custom observation and feature sets</p>
 
             </p>
 
@@ -82,9 +84,7 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                    <span class="modifier">Private</span>
-                                    <span class="modifier">Readonly</span>
-                                <a href="#API_URL">API_URL</a>
+                                <a href="#result">result</a>
                             </li>
                         </ul>
                     </td>
@@ -99,25 +99,28 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                <a href="#activate">activate</a>
+                                <a href="#addCustomSet">addCustomSet</a>
                             </li>
                             <li>
-                                <a href="#changePassword">changePassword</a>
+                                <a href="#deleteCustomSet">deleteCustomSet</a>
                             </li>
                             <li>
-                                <a href="#delete">delete</a>
+                                <a href="#getCurrentRoutesChain">getCurrentRoutesChain</a>
                             </li>
                             <li>
-                                <a href="#get">get</a>
+                                <a href="#getCustomFeatureSets">getCustomFeatureSets</a>
                             </li>
                             <li>
-                                <a href="#getAll">getAll</a>
+                                <a href="#getCustomObservationSets">getCustomObservationSets</a>
                             </li>
                             <li>
-                                <a href="#register">register</a>
+                                <a href="#getCustomSets">getCustomSets</a>
                             </li>
                             <li>
-                                <a href="#update">update</a>
+                                <a href="#getParam">getParam</a>
+                            </li>
+                            <li>
+                                <a href="#updateCustomSet">updateCustomSet</a>
                             </li>
                         </ul>
                     </td>
@@ -137,12 +140,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(http: <a href="https://angular.io/api/common/http/HttpClient" target="_blank">HttpClient</a>)</code>
+<code>constructor(router: <a href="https://angular.io/api/router/Router" target="_blank">Router</a>, storage: <a href="../injectables/LclStorageService.html">LclStorageService</a>, notificationService: <a href="../injectables/NotificationService.html">NotificationService</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">projects/web-mev/src/app/core/user/user.service.ts:15</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">projects/web-mev/src/app/core/metadata/metadata.service.ts:17</a></div>
                             </td>
                         </tr>
 
@@ -160,10 +163,34 @@
                                         </thead>
                                         <tbody>
                                                 <tr>
-                                                        <td>http</td>
+                                                        <td>router</td>
                                                   
                                                         <td>
-                                                                        <code><a href="https://angular.io/api/common/http/HttpClient" target="_blank" >HttpClient</a></code>
+                                                                        <code><a href="https://angular.io/api/router/Router" target="_blank" >Router</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>storage</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/LclStorageService.html" target="_self" >LclStorageService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>notificationService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/NotificationService.html" target="_self" >NotificationService</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -189,164 +216,34 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="activate"></a>
+                    <a name="addCustomSet"></a>
                     <span class="name">
                         <b>
-                            activate
+                            addCustomSet
                         </b>
-                        <a href="#activate"><span class="icon ion-ios-link"></span></a>
+                        <a href="#addCustomSet"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>activate(body)</code>
+<code>addCustomSet(customSet: <a href="../interfaces/CustomSet.html">CustomSet</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="31"
-                            class="link-to-prism">projects/web-mev/src/app/core/user/user.service.ts:31</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="79"
+                            class="link-to-prism">projects/web-mev/src/app/core/metadata/metadata.service.ts:79</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>body</td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="changePassword"></a>
-                    <span class="name">
-                        <b>
-                            changePassword
-                        </b>
-                        <a href="#changePassword"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>changePassword(body)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="35"
-                            class="link-to-prism">projects/web-mev/src/app/core/user/user.service.ts:35</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>body</td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="delete"></a>
-                    <span class="name">
-                        <b>
-                            delete
-                        </b>
-                        <a href="#delete"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>delete(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="46"
-                            class="link-to-prism">projects/web-mev/src/app/core/user/user.service.ts:46</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
+                    <div class="io-description"><p>Add a new custom observation/feature set to user&#39;s storage</p>
+</div>
 
                     <div class="io-description">
                         <b>Parameters :</b>
@@ -360,9 +257,9 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>id</td>
+                                    <td>customSet</td>
                                     <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                                <code><a href="../interfaces/CustomSet.html" target="_self" >CustomSet</a></code>
                                     </td>
 
                                     <td>
@@ -377,7 +274,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
 
                     </div>
                     <div class="io-description">
@@ -391,32 +288,34 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="get"></a>
+                    <a name="deleteCustomSet"></a>
                     <span class="name">
                         <b>
-                            get
+                            deleteCustomSet
                         </b>
-                        <a href="#get"><span class="icon ion-ios-link"></span></a>
+                        <a href="#deleteCustomSet"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>get(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+<code>deleteCustomSet(customSetId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="19"
-                            class="link-to-prism">projects/web-mev/src/app/core/user/user.service.ts:19</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="128"
+                            class="link-to-prism">projects/web-mev/src/app/core/metadata/metadata.service.ts:128</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Add a new custom observation/feature set to user&#39;s storage</p>
+</div>
 
                     <div class="io-description">
                         <b>Parameters :</b>
@@ -430,9 +329,9 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>id</td>
+                                    <td>customSetId</td>
                                     <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                     </td>
 
                                     <td>
@@ -447,7 +346,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../interfaces/User.html" target="_self" >Observable&lt;User&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
 
                     </div>
                     <div class="io-description">
@@ -461,35 +360,37 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="getAll"></a>
+                    <a name="getCurrentRoutesChain"></a>
                     <span class="name">
                         <b>
-                            getAll
+                            getCurrentRoutesChain
                         </b>
-                        <a href="#getAll"><span class="icon ion-ios-link"></span></a>
+                        <a href="#getCurrentRoutesChain"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>getAll()</code>
+<code>getCurrentRoutesChain()</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="23"
-                            class="link-to-prism">projects/web-mev/src/app/core/user/user.service.ts:23</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="40"
+                            class="link-to-prism">projects/web-mev/src/app/core/metadata/metadata.service.ts:40</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Retrieves a chain of {ActivatedRoutes} from root to a leaf.</p>
+</div>
 
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../interfaces/User.html" target="_self" >Observable&lt;User[]&gt;</a></code>
+                        <b>Returns : </b>    <code>ActivatedRoute[]</code>
 
                     </div>
                 </td>
@@ -500,63 +401,38 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="register"></a>
+                    <a name="getCustomFeatureSets"></a>
                     <span class="name">
                         <b>
-                            register
+                            getCustomFeatureSets
                         </b>
-                        <a href="#register"><span class="icon ion-ios-link"></span></a>
+                        <a href="#getCustomFeatureSets"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>register(body)</code>
+<code>getCustomFeatureSets()</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="27"
-                            class="link-to-prism">projects/web-mev/src/app/core/user/user.service.ts:27</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="71"
+                            class="link-to-prism">projects/web-mev/src/app/core/metadata/metadata.service.ts:71</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Get all custom feature sets from user&#39;s storage</p>
+</div>
 
                     <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>body</td>
+                        <b>Returns : </b>        <code><a href="../interfaces/CustomSet.html" target="_self" >CustomSet[]</a></code>
 
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
-
-                    </div>
-                    <div class="io-description">
-                        
                     </div>
                 </td>
             </tr>
@@ -566,32 +442,116 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="update"></a>
+                    <a name="getCustomObservationSets"></a>
                     <span class="name">
                         <b>
-                            update
+                            getCustomObservationSets
                         </b>
-                        <a href="#update"><span class="icon ion-ios-link"></span></a>
+                        <a href="#getCustomObservationSets"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>update(user: <a href="../interfaces/User.html">User</a>, id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+<code>getCustomObservationSets()</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="39"
-                            class="link-to-prism">projects/web-mev/src/app/core/user/user.service.ts:39</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="63"
+                            class="link-to-prism">projects/web-mev/src/app/core/metadata/metadata.service.ts:63</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Get custom observation sets from user&#39;s storage</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../interfaces/CustomSet.html" target="_self" >CustomSet[]</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getCustomSets"></a>
+                    <span class="name">
+                        <b>
+                            getCustomSets
+                        </b>
+                        <a href="#getCustomSets"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getCustomSets()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="55"
+                            class="link-to-prism">projects/web-mev/src/app/core/metadata/metadata.service.ts:55</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Get all custom observation and feature sets from user&#39;s storage</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../interfaces/CustomSet.html" target="_self" >CustomSet[]</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getParam"></a>
+                    <span class="name">
+                        <b>
+                            getParam
+                        </b>
+                        <a href="#getParam"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getParam(param: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="28"
+                            class="link-to-prism">projects/web-mev/src/app/core/metadata/metadata.service.ts:28</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Traverses a router tree from root to a leaf looking for {@param}.</p>
+</div>
 
                     <div class="io-description">
                         <b>Parameters :</b>
@@ -605,21 +565,9 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>user</td>
+                                    <td>param</td>
                                     <td>
-                                                <code><a href="../interfaces/User.html" target="_self" >User</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>id</td>
-                                    <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                     </td>
 
                                     <td>
@@ -634,7 +582,91 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                        <b>Returns : </b>    <code>string | null</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateCustomSet"></a>
+                    <span class="name">
+                        <b>
+                            updateCustomSet
+                        </b>
+                        <a href="#updateCustomSet"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>updateCustomSet(customSet: <a href="../interfaces/CustomSet.html">CustomSet</a>, oldCustomSetId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="100"
+                            class="link-to-prism">projects/web-mev/src/app/core/metadata/metadata.service.ts:100</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Add a new custom observation/feature set to user&#39;s storage</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>customSet</td>
+                                    <td>
+                                                <code><a href="../interfaces/CustomSet.html" target="_self" >CustomSet</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>oldCustomSetId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
 
                     </div>
                     <div class="io-description">
@@ -654,24 +686,23 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="API_URL"></a>
+                        <a name="result"></a>
                         <span class="name">
                             <b>
-                                <span class="modifier">Private</span>
-                                <span class="modifier">Readonly</span>
-                            API_URL</b>
-                            <a href="#API_URL"><span class="icon ion-ios-link"></span></a>
+                            result</b>
+                            <a href="#result"><span class="icon ion-ios-link"></span></a>
                         </span>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                            <i>Default value : </i><code>environment.apiUrl</code>
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
                         </td>
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">projects/web-mev/src/app/core/user/user.service.ts:15</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">projects/web-mev/src/app/core/metadata/metadata.service.ts:17</a></div>
                             </td>
                         </tr>
 
@@ -685,52 +716,138 @@
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &#x27;@angular/core&#x27;;
-import { environment } from &#x27;@environments/environment&#x27;;
-import { User } from &#x27;@app/_models/user&#x27;;
-import { Observable } from &#x27;rxjs&#x27;;
-import { HttpClient } from &#x27;@angular/common/http&#x27;;
+import { CustomSet, CustomSetType } from &#x27;@app/_models/metadata&#x27;;
+import { ActivatedRoute, Router } from &#x27;@angular/router&#x27;;
+import { LclStorageService } from &#x27;../local-storage/lcl-storage.service&#x27;;
+import { NotificationService } from &#x27;../core.module&#x27;;
 
 /**
- * User service
+ * Metadata service
  *
+ * Used for operations with workspace metadata (observation and feature sets defined in workspace)
+ * Uses local storage to save custom observation and feature sets
  */
 @Injectable({
   providedIn: &#x27;root&#x27;
 })
-export class UserService {
-  private readonly API_URL &#x3D; environment.apiUrl;
+export class MetadataService {
+  result: string;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private router: Router,
+    private storage: LclStorageService,
+    private readonly notificationService: NotificationService
+  ) {}
 
-  get(id: number): Observable&lt;User&gt; {
-    return this.http.get&lt;any&gt;(&#x60;${this.API_URL}/users/${id}/&#x60;);
+  /**
+   * Traverses a router tree from root to a leaf looking for {@param}.
+   */
+  getParam(param: string): string | null {
+    for (const route of this.getCurrentRoutesChain()) {
+      if (route.snapshot.paramMap.has(param)) {
+        return route.snapshot.paramMap.get(param);
+      }
+    }
+    return null;
   }
 
-  getAll(): Observable&lt;User[]&gt; {
-    return this.http.get&lt;any[]&gt;(&#x60;${this.API_URL}/users/&#x60;);
+  /**
+   * Retrieves a chain of {ActivatedRoutes} from root to a leaf.
+   */
+  getCurrentRoutesChain(): ActivatedRoute[] {
+    let currentRoute &#x3D; this.router.routerState.root;
+    const results: ActivatedRoute[] &#x3D; [currentRoute];
+
+    while (currentRoute.firstChild) {
+      currentRoute &#x3D; currentRoute.firstChild;
+      results.push(currentRoute);
+    }
+
+    return results;
   }
 
-  register(body): Observable&lt;any&gt; {
-    return this.http.post&lt;any&gt;(&#x60;${this.API_URL}/users/register/&#x60;, body);
+  /**
+   * Get all custom observation and feature sets from user&#x27;s storage
+   */
+  getCustomSets(): CustomSet[] {
+    const workspaceId &#x3D; this.getParam(&#x27;workspaceId&#x27;); //this.route.snapshot.paramMap.get(&#x27;workspaceId&#x27;);
+    return this.storage.get(workspaceId + &#x27;_custom_sets&#x27;) || [];
   }
 
-  activate(body): Observable&lt;any&gt; {
-    return this.http.post&lt;any&gt;(&#x60;${this.API_URL}/users/activate/&#x60;, body);
+  /**
+   * Get custom observation sets from user&#x27;s storage
+   */
+  getCustomObservationSets(): CustomSet[] {
+    const customSets &#x3D; this.getCustomSets();
+    return customSets.filter(set &#x3D;&gt; set.type &#x3D;&#x3D;&#x3D; CustomSetType.ObservationSet);
   }
 
-  changePassword(body): Observable&lt;any&gt; {
-    return this.http.post&lt;any&gt;(&#x60;${this.API_URL}/users/change-password/&#x60;, body);
+  /**
+   * Get all custom feature sets from user&#x27;s storage
+   */
+  getCustomFeatureSets(): CustomSet[] {
+    const customSets &#x3D; this.getCustomSets();
+    return customSets.filter(set &#x3D;&gt; set.type &#x3D;&#x3D;&#x3D; CustomSetType.FeatureSet);
   }
 
-  update(user: User, id: number) {
-    return this.http.put&lt;any&gt;(
-      &#x60;${this.API_URL}/users/${id}/&#x60;,
-      JSON.stringify(user)
-    );
+  /**
+   * Add a new custom observation/feature set to user&#x27;s storage
+   */
+  addCustomSet(customSet: CustomSet): boolean {
+    const customSets &#x3D; this.getCustomSets();
+    if (customSets.some(set &#x3D;&gt; set.name &#x3D;&#x3D;&#x3D; customSet.name)) {
+      const errorMessage &#x3D;
+        &#x27;The observation/feature set with this name already exists.&#x27;;
+      this.notificationService.error(errorMessage);
+      return false;
+    } else {
+      customSets.push(customSet);
+      const workspaceId &#x3D; this.getParam(&#x27;workspaceId&#x27;);
+      this.storage.set(workspaceId + &#x27;_custom_sets&#x27;, customSets);
+      this.notificationService.success(
+        &#x27;The new custom set has been successfully created.&#x27;
+      );
+      return true;
+    }
   }
 
-  delete(id: number) {
-    return this.http.delete&lt;any&gt;(&#x60;${this.API_URL}/users/${id}/&#x60;);
+  /**
+   * Add a new custom observation/feature set to user&#x27;s storage
+   */
+  updateCustomSet(customSet: CustomSet, oldCustomSetId: string): boolean {
+    const customSets &#x3D; this.getCustomSets();
+
+    if (
+      customSet.name !&#x3D;&#x3D; oldCustomSetId &amp;&amp;
+      customSets.some(set &#x3D;&gt; set.name &#x3D;&#x3D;&#x3D; customSet.name)
+    ) {
+      const errorMessage &#x3D;
+        &#x27;The observation/feature set with this name already exists.&#x27;;
+      this.notificationService.error(errorMessage);
+      return false;
+    } else {
+      const foundIndex &#x3D; customSets.findIndex(
+        set &#x3D;&gt; set.name &#x3D;&#x3D;&#x3D; oldCustomSetId
+      );
+      customSets[foundIndex] &#x3D; { ...customSets[foundIndex], ...customSet }; //customSet;
+      const workspaceId &#x3D; this.getParam(&#x27;workspaceId&#x27;);
+      this.storage.set(workspaceId + &#x27;_custom_sets&#x27;, customSets);
+      this.notificationService.success(
+        &#x27;The custom set has been successfully updated.&#x27;
+      );
+      return true;
+    }
+  }
+
+  /**
+   * Add a new custom observation/feature set to user&#x27;s storage
+   */
+  deleteCustomSet(customSetId: string): void {
+    const customSets &#x3D; this.getCustomSets();
+    const foundIndex &#x3D; customSets.findIndex(set &#x3D;&gt; set.name &#x3D;&#x3D;&#x3D; customSetId);
+    customSets.splice(foundIndex, 1);
+    const workspaceId &#x3D; this.getParam(&#x27;workspaceId&#x27;);
+    this.storage.set(workspaceId + &#x27;_custom_sets&#x27;, customSets);
   }
 }
 </code></pre>
@@ -766,7 +883,7 @@ export class UserService {
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
-            var COMPODOC_CURRENT_PAGE_URL = 'UserService.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'MetadataService.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 

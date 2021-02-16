@@ -38,7 +38,7 @@
 
 <ol class="breadcrumb">
   <li>Injectables</li>
-  <li>FileAdapter</li>
+  <li>OperationInputAdapter</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -56,9 +56,16 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>projects/web-mev/src/app/shared/models/file.ts</code>
+            <code>projects/web-mev/src/app/features/analysis/models/operation-input.ts</code>
         </p>
 
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Operation Input Adapter</p>
+
+            </p>
 
 
 
@@ -118,8 +125,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="34"
-                            class="link-to-prism">projects/web-mev/src/app/shared/models/file.ts:34</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="60"
+                            class="link-to-prism">projects/web-mev/src/app/features/analysis/models/operation-input.ts:60</a></div>
                 </td>
             </tr>
 
@@ -156,7 +163,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/File.html" target="_self" >File</a></code>
+                        <b>Returns : </b>        <code><a href="../classes/OperationInput.html" target="_self" >OperationInput</a></code>
 
                     </div>
                     <div class="io-description">
@@ -173,60 +180,76 @@
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &#x27;@angular/core&#x27;;
-import { Workspace } from &#x27;@app/features/workspace-manager/models/workspace&#x27;;
 
 /**
- * File or Resource
+ * Operation Input Specification
  *
- * Resource instance is created when MEV users upload files.
- * Resource instances are initially &quot;unattached&quot; meaning they are associated with their owner,
- * but have not been associated with any user workspaces.
- * Admins can, however, specify a Workspace in their request to create the Resource directly via the API.
+ * Contains properties for dfferent types of operations
+ *       &quot;spec&quot;: {
+ *           &quot;attribute_type&quot;: &quot;DataResource&quot;,
+ *           &quot;resource_types&quot;: [&quot;RNASEQ_COUNT_MTX&quot;, &quot;I_MTX&quot;],
+ *           &quot;many&quot;: false
+ *       }
+ *    }
  */
-
-export class File {
+export class InputSpec {
   constructor(
-    public id: string,
-    public url: string,
-    public name: string,
-    public resource_type: string, // FileType
-    public readable_resource_type: string,
-    public owner_email: string,
-    public is_active: boolean,
-    public is_public: boolean,
-    public status: string,
-    public workspaces: Workspace[],
-    public created: Date,
-    public size: number
+    public attribute_type: string,
+    public resource_types?: string[],
+    public many?: boolean,
+    public min?: number,
+    public max?: number,
+    public default_value?: number | string,
+    public options?: string[]
   ) {}
 }
 
+/**
+ * Operation Input.
+ *
+ * The inputs to the analysis (a JSON document), e.g.:
+ *
+ *    {
+ *       &quot;description&quot;: &quot;The count matrix of expressions&quot;,
+ *       &quot;name&quot;: &quot;Count matrix:&quot;,
+ *       &quot;required&quot;: true,
+ *       &quot;spec&quot;: {
+ *           &quot;attribute_type&quot;: &quot;DataResource&quot;,
+ *           &quot;resource_types&quot;: [&quot;RNASEQ_COUNT_MTX&quot;, &quot;I_MTX&quot;],
+ *           &quot;many&quot;: false
+ *       }
+ *    }
+ */
+
+export class OperationInput {
+  constructor(
+    public description: string,
+    public name: string,
+    public required: boolean,
+    public spec: InputSpec
+  ) {}
+}
+
+/**
+ * Operation Input Adapter
+ *
+ */
 @Injectable({
   providedIn: &#x27;root&#x27;
 })
-export class FileAdapter {
-  adapt(item: any): File {
-    const re &#x3D; /[()]/g;
-    const created_formatted &#x3D; item.created.replace(re, &#x27;&#x27;);
-
-    const workspace_names &#x3D; item.workspaces
-      .map(ws &#x3D;&gt; ws.workspace_name)
-      .join(&#x27;, &#x27;);
-
-    return new File(
-      item.id,
-      item.url,
-      item.name,
-      item.resource_type,
-      item.readable_resource_type,
-      item.owner_email,
-      item.is_active,
-      item.is_public,
-      item.status,
-      workspace_names,
-      new Date(created_formatted),
-      item.size
+export class OperationInputAdapter {
+  adapt(item: any): OperationInput {
+    const spec &#x3D; new InputSpec(
+      item.spec.attribute_type,
+      item.spec.resource_types,
+      item.spec.many,
+      item.spec.min,
+      item.spec.max,
+      item.spec.default,
+      item.spec.options
     );
+
+    return new OperationInput(item.description, item.name, item.required, spec);
   }
 }
 </code></pre>
@@ -262,7 +285,7 @@ export class FileAdapter {
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
-            var COMPODOC_CURRENT_PAGE_URL = 'FileAdapter.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'OperationInputAdapter.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 

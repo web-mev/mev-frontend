@@ -38,7 +38,7 @@
 
 <ol class="breadcrumb">
   <li>Injectables</li>
-  <li>WorkspaceDetailService</li>
+  <li>AnalysesService</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -56,15 +56,15 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>projects/web-mev/src/app/features/workspace-detail/services/workspace-detail.service.ts</code>
+            <code>projects/web-mev/src/app/features/analysis/services/analysis.service.ts</code>
         </p>
 
             <p class="comment">
                 <h3>Description</h3>
             </p>
             <p class="comment">
-                <p>Workspace Detail service</p>
-<p>Used for operations within a current workspace</p>
+                <p>Analyses service</p>
+<p>Used for running operations and getting operation results in user&#39;s workspace</p>
 
             </p>
 
@@ -100,40 +100,34 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                <a href="#addResourceToWorkspace">addResourceToWorkspace</a>
+                                <a href="#executeOperation">executeOperation</a>
                             </li>
                             <li>
-                                <a href="#deleteResourceFromWorkspace">deleteResourceFromWorkspace</a>
+                                <a href="#getAvailableResourcesByParam">getAvailableResourcesByParam</a>
                             </li>
                             <li>
-                                <a href="#getAvailableResources">getAvailableResources</a>
+                                <a href="#getExecOperationDAG">getExecOperationDAG</a>
                             </li>
                             <li>
-                                <a href="#getConnectedResources">getConnectedResources</a>
+                                <a href="#getExecOperations">getExecOperations</a>
                             </li>
                             <li>
-                                <a href="#getResourceMetadata">getResourceMetadata</a>
+                                <a href="#getExecutedOperationResult">getExecutedOperationResult</a>
                             </li>
                             <li>
-                                <a href="#getResourceMetadataFeatures">getResourceMetadataFeatures</a>
+                                <a href="#getOperation">getOperation</a>
                             </li>
                             <li>
-                                <a href="#getResourceMetadataObservations">getResourceMetadataObservations</a>
+                                <a href="#getOperationCategories">getOperationCategories</a>
                             </li>
                             <li>
-                                <a href="#getResourcePreview">getResourcePreview</a>
+                                <a href="#getOperations">getOperations</a>
+                            </li>
+                            <li>
+                                <a href="#getResourceContent">getResourceContent</a>
                             </li>
                             <li>
                                 <a href="#getWorkspaceDetail">getWorkspaceDetail</a>
-                            </li>
-                            <li>
-                                <a href="#getWorkspaceMetadata">getWorkspaceMetadata</a>
-                            </li>
-                            <li>
-                                <a href="#getWorkspaceMetadataFeatures">getWorkspaceMetadataFeatures</a>
-                            </li>
-                            <li>
-                                <a href="#getWorkspaceMetadataObservations">getWorkspaceMetadataObservations</a>
                             </li>
                         </ul>
                     </td>
@@ -153,12 +147,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(httpClient: <a href="https://angular.io/api/common/http/HttpClient" target="_blank">HttpClient</a>, fileAdapter: <a href="../injectables/FileAdapter.html">FileAdapter</a>, wsAdapter: <a href="../injectables/WorkspaceResourceAdapter.html">WorkspaceResourceAdapter</a>)</code>
+<code>constructor(httpClient: <a href="https://angular.io/api/common/http/HttpClient" target="_blank">HttpClient</a>, opAdapter: <a href="../injectables/OperationAdapter.html">OperationAdapter</a>, fileAdapter: <a href="../injectables/FileAdapter.html">FileAdapter</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/services/workspace-detail.service.ts:22</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">projects/web-mev/src/app/features/analysis/services/analysis.service.ts:19</a></div>
                             </td>
                         </tr>
 
@@ -188,10 +182,10 @@
                                                     
                                                 </tr>
                                                 <tr>
-                                                        <td>fileAdapter</td>
+                                                        <td>opAdapter</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../injectables/FileAdapter.html" target="_self" >FileAdapter</a></code>
+                                                                        <code><a href="../injectables/OperationAdapter.html" target="_self" >OperationAdapter</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -200,10 +194,10 @@
                                                     
                                                 </tr>
                                                 <tr>
-                                                        <td>wsAdapter</td>
+                                                        <td>fileAdapter</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../injectables/WorkspaceResourceAdapter.html" target="_self" >WorkspaceResourceAdapter</a></code>
+                                                                        <code><a href="../injectables/FileAdapter.html" target="_self" >FileAdapter</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -229,33 +223,33 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="addResourceToWorkspace"></a>
+                    <a name="executeOperation"></a>
                     <span class="name">
                         <b>
-                            addResourceToWorkspace
+                            executeOperation
                         </b>
-                        <a href="#addResourceToWorkspace"><span class="icon ion-ios-link"></span></a>
+                        <a href="#executeOperation"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>addResourceToWorkspace(resourceId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, workspaceId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>executeOperation(operationId, workspaceId, inputs)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="159"
-                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/services/workspace-detail.service.ts:159</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="66"
+                            class="link-to-prism">projects/web-mev/src/app/features/analysis/services/analysis.service.ts:66</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-description"><p>Connect a file to the current workspace</p>
+                    <div class="io-description"><p>Run an operation</p>
 </div>
 
                     <div class="io-description">
@@ -264,16 +258,12 @@
                             <thead>
                                 <tr>
                                     <td>Name</td>
-                                    <td>Type</td>
                                     <td>Optional</td>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>resourceId</td>
-                                    <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                    </td>
+                                    <td>operationId</td>
 
                                     <td>
                                         No
@@ -283,9 +273,15 @@
                                 </tr>
                                 <tr>
                                     <td>workspaceId</td>
+
                                     <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                        No
                                     </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>inputs</td>
 
                                     <td>
                                         No
@@ -313,33 +309,33 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="deleteResourceFromWorkspace"></a>
+                    <a name="getAvailableResourcesByParam"></a>
                     <span class="name">
                         <b>
-                            deleteResourceFromWorkspace
+                            getAvailableResourcesByParam
                         </b>
-                        <a href="#deleteResourceFromWorkspace"><span class="icon ion-ios-link"></span></a>
+                        <a href="#getAvailableResourcesByParam"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>deleteResourceFromWorkspace(resourceId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, workspaceId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>getAvailableResourcesByParam(types: string[], workspaceId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="175"
-                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/services/workspace-detail.service.ts:175</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="167"
+                            class="link-to-prism">projects/web-mev/src/app/features/analysis/services/analysis.service.ts:167</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-description"><p>Delete a file from the current workspace</p>
+                    <div class="io-description"><p>Get the resources/files of a workspace that can be used for analyses</p>
 </div>
 
                     <div class="io-description">
@@ -354,9 +350,9 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>resourceId</td>
+                                    <td>types</td>
                                     <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            <code>string[]</code>
                                     </td>
 
                                     <td>
@@ -382,54 +378,13 @@
                     </div>
                     <div>
                     </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="getAvailableResources"></a>
-                    <span class="name">
-                        <b>
-                            getAvailableResources
-                        </b>
-                        <a href="#getAvailableResources"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>getAvailableResources()</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="33"
-                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/services/workspace-detail.service.ts:33</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>Get the list of resources that can be potentially added to a workspace</p>
-</div>
-
                     <div class="io-description">
                         <b>Returns : </b>        <code><a href="../classes/File.html" target="_self" >Observable&lt;File[]&gt;</a></code>
 
                     </div>
+                    <div class="io-description">
+                        
+                    </div>
                 </td>
             </tr>
         </tbody>
@@ -438,33 +393,33 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="getConnectedResources"></a>
+                    <a name="getExecOperationDAG"></a>
                     <span class="name">
                         <b>
-                            getConnectedResources
+                            getExecOperationDAG
                         </b>
-                        <a href="#getConnectedResources"><span class="icon ion-ios-link"></span></a>
+                        <a href="#getExecOperationDAG"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>getConnectedResources(workspaceId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>getExecOperationDAG(workspaceId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="47"
-                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/services/workspace-detail.service.ts:47</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="149"
+                            class="link-to-prism">projects/web-mev/src/app/features/analysis/services/analysis.service.ts:149</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-description"><p>Get the list of connected resources that has been already added to a workspace</p>
+                    <div class="io-description"><p>Get the list of executed operations of a workspace in the tree format</p>
 </div>
 
                     <div class="io-description">
@@ -496,7 +451,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;WorkspaceResource[]&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -510,33 +465,33 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="getResourceMetadata"></a>
+                    <a name="getExecOperations"></a>
                     <span class="name">
                         <b>
-                            getResourceMetadata
+                            getExecOperations
                         </b>
-                        <a href="#getResourceMetadata"><span class="icon ion-ios-link"></span></a>
+                        <a href="#getExecOperations"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>getResourceMetadata(resourceId: number | string)</code>
+<code>getExecOperations(workspaceId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="87"
-                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/services/workspace-detail.service.ts:87</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="140"
+                            class="link-to-prism">projects/web-mev/src/app/features/analysis/services/analysis.service.ts:140</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-description"><p>Get workspace resource metadata</p>
+                    <div class="io-description"><p>Get the list of executed operations of a workspace</p>
 </div>
 
                     <div class="io-description">
@@ -551,9 +506,9 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>resourceId</td>
+                                    <td>workspaceId</td>
                                     <td>
-                                            <code>number | string</code>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                     </td>
 
                                     <td>
@@ -582,33 +537,34 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="getResourceMetadataFeatures"></a>
+                    <a name="getExecutedOperationResult"></a>
                     <span class="name">
                         <b>
-                            getResourceMetadataFeatures
+                            getExecutedOperationResult
                         </b>
-                        <a href="#getResourceMetadataFeatures"><span class="icon ion-ios-link"></span></a>
+                        <a href="#getExecutedOperationResult"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>getResourceMetadataFeatures(resourceId: number | string)</code>
+<code>getExecutedOperationResult(executedOperationId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="135"
-                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/services/workspace-detail.service.ts:135</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="81"
+                            class="link-to-prism">projects/web-mev/src/app/features/analysis/services/analysis.service.ts:81</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-description"><p>Get workspace resource features</p>
+                    <div class="io-description"><p>Get operation results
+Send http-request every 2 seconds if the previous request returns and the status is 202, 204 or 208</p>
 </div>
 
                     <div class="io-description">
@@ -623,9 +579,9 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>resourceId</td>
+                                    <td>executedOperationId</td>
                                     <td>
-                                            <code>number | string</code>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                     </td>
 
                                     <td>
@@ -654,33 +610,33 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="getResourceMetadataObservations"></a>
+                    <a name="getOperation"></a>
                     <span class="name">
                         <b>
-                            getResourceMetadataObservations
+                            getOperation
                         </b>
-                        <a href="#getResourceMetadataObservations"><span class="icon ion-ios-link"></span></a>
+                        <a href="#getOperation"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>getResourceMetadataObservations(resourceId: number | string)</code>
+<code>getOperation(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="107"
-                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/services/workspace-detail.service.ts:107</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="54"
+                            class="link-to-prism">projects/web-mev/src/app/features/analysis/services/analysis.service.ts:54</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-description"><p>Get workspace resource observations</p>
+                    <div class="io-description"><p>Get the properties for a specific operation</p>
 </div>
 
                     <div class="io-description">
@@ -695,9 +651,9 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>resourceId</td>
+                                    <td>id</td>
                                     <td>
-                                            <code>number | string</code>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                     </td>
 
                                     <td>
@@ -712,7 +668,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
+                        <b>Returns : </b>        <code><a href="../classes/Operation.html" target="_self" >Observable&lt;Operation&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -726,33 +682,115 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="getResourcePreview"></a>
+                    <a name="getOperationCategories"></a>
                     <span class="name">
                         <b>
-                            getResourcePreview
+                            getOperationCategories
                         </b>
-                        <a href="#getResourcePreview"><span class="icon ion-ios-link"></span></a>
+                        <a href="#getOperationCategories"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>getResourcePreview(resourceId: number | string)</code>
+<code>getOperationCategories()</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="71"
-                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/services/workspace-detail.service.ts:71</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="46"
+                            class="link-to-prism">projects/web-mev/src/app/features/analysis/services/analysis.service.ts:46</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-description"><p>Preview workspace resource content. Display only the first 5 rows</p>
+                    <div class="io-description"><p>Get the list of all available operation categories</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getOperations"></a>
+                    <span class="name">
+                        <b>
+                            getOperations
+                        </b>
+                        <a href="#getOperations"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getOperations()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="31"
+                            class="link-to-prism">projects/web-mev/src/app/features/analysis/services/analysis.service.ts:31</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Get the list of all available workspace operations.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/Operation.html" target="_self" >Observable&lt;Operation[]&gt;</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getResourceContent"></a>
+                    <span class="name">
+                        <b>
+                            getResourceContent
+                        </b>
+                        <a href="#getResourceContent"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getResourceContent(resourceId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, pageIndex: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, pageSize: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, filters: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank">object</a>, sorting: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank">object</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="98"
+                            class="link-to-prism">projects/web-mev/src/app/features/analysis/services/analysis.service.ts:98</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Get the content of a workspace resource by resource id</p>
 </div>
 
                     <div class="io-description">
@@ -763,19 +801,82 @@
                                     <td>Name</td>
                                     <td>Type</td>
                                     <td>Optional</td>
+                                    <td>Default value</td>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>resourceId</td>
                                     <td>
-                                            <code>number | string</code>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                     </td>
 
                                     <td>
                                         No
                                     </td>
 
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>pageIndex</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>0</code>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>pageSize</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>0</code>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>filters</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>{}</code>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>sorting</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>{}</code>
+                                    </td>
 
                                 </tr>
                             </tbody>
@@ -809,22 +910,22 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>getWorkspaceDetail(workspaceId: number | string)</code>
+<code>getWorkspaceDetail(id: number | string)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="61"
-                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/services/workspace-detail.service.ts:61</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="158"
+                            class="link-to-prism">projects/web-mev/src/app/features/analysis/services/analysis.service.ts:158</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-description"><p>Get workspace properties</p>
+                    <div class="io-description"><p>Get the properies of a workspace</p>
 </div>
 
                     <div class="io-description">
@@ -839,7 +940,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>workspaceId</td>
+                                    <td>id</td>
                                     <td>
                                             <code>number | string</code>
                                     </td>
@@ -857,222 +958,6 @@
                     </div>
                     <div class="io-description">
                         <b>Returns : </b>        <code><a href="../classes/Workspace.html" target="_self" >Observable&lt;Workspace&gt;</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="getWorkspaceMetadata"></a>
-                    <span class="name">
-                        <b>
-                            getWorkspaceMetadata
-                        </b>
-                        <a href="#getWorkspaceMetadata"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>getWorkspaceMetadata(workspaceId: number | string)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="97"
-                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/services/workspace-detail.service.ts:97</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>Get workspace metadata</p>
-</div>
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>workspaceId</td>
-                                    <td>
-                                            <code>number | string</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="getWorkspaceMetadataFeatures"></a>
-                    <span class="name">
-                        <b>
-                            getWorkspaceMetadataFeatures
-                        </b>
-                        <a href="#getWorkspaceMetadataFeatures"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>getWorkspaceMetadataFeatures(workspaceId: number | string)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="147"
-                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/services/workspace-detail.service.ts:147</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>Get all workspace features</p>
-</div>
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>workspaceId</td>
-                                    <td>
-                                            <code>number | string</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="getWorkspaceMetadataObservations"></a>
-                    <span class="name">
-                        <b>
-                            getWorkspaceMetadataObservations
-                        </b>
-                        <a href="#getWorkspaceMetadataObservations"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>getWorkspaceMetadataObservations(workspaceId: number | string)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="121"
-                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/services/workspace-detail.service.ts:121</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>Get all workspace observations</p>
-</div>
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>workspaceId</td>
-                                    <td>
-                                            <code>number | string</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -1109,7 +994,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/services/workspace-detail.service.ts:22</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">projects/web-mev/src/app/features/analysis/services/analysis.service.ts:19</a></div>
                             </td>
                         </tr>
 
@@ -1125,184 +1010,183 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &#x27;@angular/core&#x27;;
 import { environment } from &#x27;@environments/environment&#x27;;
 import { HttpClient, HttpParams } from &#x27;@angular/common/http&#x27;;
-import { Workspace } from &#x27;@workspace-manager/models/workspace&#x27;;
-import { map } from &#x27;rxjs/operators&#x27;;
-import { Observable } from &#x27;rxjs&#x27;;
-import {
-  WorkspaceResource,
-  WorkspaceResourceAdapter
-} from &#x27;../models/workspace-resource&#x27;;
+import { map, switchMap, takeWhile } from &#x27;rxjs/operators&#x27;;
+import { Observable, interval } from &#x27;rxjs&#x27;;
 import { File, FileAdapter } from &#x27;@app/shared/models/file&#x27;;
+import { Workspace } from &#x27;@app/features/workspace-manager/models/workspace&#x27;;
+import { Operation, OperationAdapter } from &#x27;../models/operation&#x27;;
 
 /**
- * Workspace Detail service
+ * Analyses service
  *
- * Used for operations within a current workspace
+ * Used for running operations and getting operation results in user&#x27;s workspace
  */
 @Injectable({
   providedIn: &#x27;root&#x27;
 })
-export class WorkspaceDetailService {
+export class AnalysesService {
   private readonly API_URL &#x3D; environment.apiUrl;
+
   constructor(
     private httpClient: HttpClient,
-    private fileAdapter: FileAdapter,
-    private wsAdapter: WorkspaceResourceAdapter
+    private opAdapter: OperationAdapter,
+    private fileAdapter: FileAdapter
   ) {}
 
   /**
-   * Get the list of resources that can be potentially added to a workspace
+   * Get the list of all available workspace operations.
    *
    */
-  getAvailableResources(): Observable&lt;File[]&gt; {
-    return &lt;Observable&lt;File[]&gt;&gt;(
-      this.httpClient
-        .get(&#x60;${this.API_URL}/resources/&#x60;)
-        .pipe(
-          map((data: any[]) &#x3D;&gt; data.map(item &#x3D;&gt; this.fileAdapter.adapt(item)))
-        )
+  getOperations(): Observable&lt;Operation[]&gt; {
+    return this.httpClient.get(&#x60;${this.API_URL}/operations/&#x60;).pipe(
+      map((operations: Operation[]) &#x3D;&gt; {
+        operations &#x3D; operations.filter(
+          operation &#x3D;&gt; operation[&#x27;workspace_operation&#x27;] &#x3D;&#x3D;&#x3D; true // to exclude Dropbox operations and other operatins not related to workspace analysis
+        );
+        return operations.map(operation &#x3D;&gt; this.opAdapter.adapt(operation));
+      })
     );
   }
 
   /**
-   * Get the list of connected resources that has been already added to a workspace
+   * Get the list of all available operation categories
    *
    */
-  getConnectedResources(workspaceId: string): Observable&lt;WorkspaceResource[]&gt; {
-    return &lt;Observable&lt;WorkspaceResource[]&gt;&gt;(
-      this.httpClient
-        .get(&#x60;${this.API_URL}/workspaces/${workspaceId}/resources/&#x60;)
-        .pipe(
-          map((data: any[]) &#x3D;&gt; data.map(item &#x3D;&gt; this.wsAdapter.adapt(item)))
-        )
-    );
+  getOperationCategories(): Observable&lt;any&gt; {
+    return this.httpClient.get(&#x60;${this.API_URL}/operation-categories/&#x60;);
   }
 
   /**
-   * Get workspace properties
+   * Get the properties for a specific operation
    *
    */
-  getWorkspaceDetail(workspaceId: number | string): Observable&lt;Workspace&gt; {
-    return &lt;Observable&lt;Workspace&gt;&gt;(
-      this.httpClient.get(&#x60;${this.API_URL}/workspaces/${workspaceId}/&#x60;)
-    );
+  getOperation(id: string): Observable&lt;Operation&gt; {
+    return this.httpClient
+      .get(&#x60;${this.API_URL}/operations/${id}/&#x60;)
+      .pipe(
+        map((operationData: Operation) &#x3D;&gt; this.opAdapter.adapt(operationData))
+      );
   }
 
   /**
-   * Preview workspace resource content. Display only the first 5 rows
+   * Run an operation
    *
    */
-  getResourcePreview(resourceId: number | string): Observable&lt;any&gt; {
-    const params &#x3D; {
-      params: new HttpParams().set(&#x27;page&#x27;, &#x27;1&#x27;).set(&#x27;page_size&#x27;, &#x27;5&#x27;)
+  executeOperation(operationId, workspaceId, inputs): Observable&lt;any&gt; {
+    const body &#x3D; {
+      operation_id: operationId,
+      workspace_id: workspaceId,
+      job_name: inputs.job_name,
+      inputs: inputs
     };
-    return &lt;Observable&lt;any&gt;&gt;(
-      this.httpClient.get(
-        &#x60;${this.API_URL}/resources/${resourceId}/contents/&#x60;,
-        params
-      )
+
+    return this.httpClient.post(&#x60;${this.API_URL}/operations/run/&#x60;, body);
+  }
+
+  /**
+   * Get operation results
+   * Send http-request every 2 seconds if the previous request returns and the status is 202, 204 or 208
+   */
+  getExecutedOperationResult(executedOperationId: string): Observable&lt;any&gt; {
+    // check the status of the operation execution until the job is fully completed (i.e. status &#x3D; 200)
+    const codesInProcess &#x3D; [204, 202, 208]; // 204 - job is still running; 202 - job has completed and acknowledges that the &#x27;finalization&#x27; steps have started; 208 - job has completed and the finalization has started, but has not completed
+    return interval(2000).pipe(
+      switchMap(() &#x3D;&gt;
+        this.httpClient.get(
+          &#x60;${this.API_URL}/executed-operations/${executedOperationId}/&#x60;,
+          { observe: &#x27;response&#x27; }
+        )
+      ),
+      takeWhile(response &#x3D;&gt; codesInProcess.includes(response.status), true)
     );
   }
 
   /**
-   * Get workspace resource metadata
-   *
+   * Get the content of a workspace resource by resource id
    */
-  getResourceMetadata(resourceId: number | string): Observable&lt;any&gt; {
-    return &lt;Observable&lt;any&gt;&gt;(
-      this.httpClient.get(&#x60;${this.API_URL}/resources/${resourceId}/metadata/&#x60;)
-    );
-  }
-
-  /**
-   * Get workspace metadata
-   *
-   */
-  getWorkspaceMetadata(workspaceId: number | string): Observable&lt;any&gt; {
-    return &lt;Observable&lt;any&gt;&gt;(
-      this.httpClient.get(&#x60;${this.API_URL}/workspaces/${workspaceId}/metadata/&#x60;)
-    );
-  }
-
-  /**
-   * Get workspace resource observations
-   *
-   */
-  getResourceMetadataObservations(
-    resourceId: number | string
-  ): Observable&lt;any&gt; {
-    return &lt;Observable&lt;any&gt;&gt;(
-      this.httpClient.get(
-        &#x60;${this.API_URL}/resources/${resourceId}/metadata/observations/&#x60;
-      )
-    );
-  }
-
-  /**
-   * Get all workspace observations
-   *
-   */
-  getWorkspaceMetadataObservations(
-    workspaceId: number | string
-  ): Observable&lt;any&gt; {
-    return &lt;Observable&lt;any&gt;&gt;(
-      this.httpClient.get(
-        &#x60;${this.API_URL}/workspaces/${workspaceId}/metadata/observations/&#x60;
-      )
-    );
-  }
-
-  /**
-   * Get workspace resource features
-   *
-   */
-  getResourceMetadataFeatures(resourceId: number | string): Observable&lt;any&gt; {
-    return &lt;Observable&lt;any&gt;&gt;(
-      this.httpClient.get(
-        &#x60;${this.API_URL}/resources/${resourceId}/metadata/features/&#x60;
-      )
-    );
-  }
-
-  /**
-   * Get all workspace features
-   *
-   */
-  getWorkspaceMetadataFeatures(workspaceId: number | string): Observable&lt;any&gt; {
-    return &lt;Observable&lt;any&gt;&gt;(
-      this.httpClient.get(
-        &#x60;${this.API_URL}/workspaces/${workspaceId}/metadata/features/&#x60;
-      )
-    );
-  }
-
-  /**
-   * Connect a file to the current workspace
-   *
-   */
-  addResourceToWorkspace(
+  getResourceContent(
     resourceId: string,
-    workspaceId: string
+    pageIndex &#x3D; 0,
+    pageSize &#x3D; 0,
+    filters &#x3D; {},
+    sorting &#x3D; {}
   ): Observable&lt;any&gt; {
-    return &lt;Observable&lt;any&gt;&gt;(
-      this.httpClient.post(
-        &#x60;${this.API_URL}/workspaces/${workspaceId}/resources/add/&#x60;,
-        { resource_uuid: resourceId }
-      )
+    let params &#x3D; new HttpParams();
+
+    if (pageIndex) {
+      params &#x3D; params.append(&#x27;page&#x27;, pageIndex.toString());
+    }
+
+    if (pageSize) {
+      params &#x3D; params.append(&#x27;page_size&#x27;, pageSize.toString());
+    }
+
+    for (const field in filters) {
+      if (filters.hasOwnProperty(field)) {
+        // TSLint rule
+        const expression &#x3D; filters[field];
+        params &#x3D; params.append(field, expression.toString());
+      }
+    }
+
+    if (sorting.hasOwnProperty(&#x27;sortField&#x27;)) {
+      const sortDirection &#x3D; sorting[&#x27;sortDirection&#x27;] || &#x27;asc&#x27;;
+      params &#x3D; params.append(
+        &#x27;sort_vals&#x27;,
+        &#x27;[&#x27; + sortDirection + &#x27;]:&#x27; + sorting[&#x27;sortField&#x27;]
+      ); // query param for sorting should have the format: ?sort_vals&#x3D;[asc]:pvalue,[desc]:log2FoldChange
+    }
+
+    return this.httpClient.get(
+      &#x60;${this.API_URL}/resources/${resourceId}/contents/&#x60;,
+      { params: params }
     );
   }
 
   /**
-   * Delete a file from the current workspace
-   *
+   * Get the list of executed operations of a workspace
    */
-  deleteResourceFromWorkspace(
-    resourceId: string,
+  getExecOperations(workspaceId: string): Observable&lt;any&gt; {
+    return this.httpClient.get(
+      &#x60;${this.API_URL}/executed-operations/workspace/${workspaceId}/&#x60;
+    );
+  }
+
+  /**
+   * Get the list of executed operations of a workspace in the tree format
+   */
+  getExecOperationDAG(workspaceId: string): Observable&lt;any&gt; {
+    return this.httpClient.get(
+      &#x60;${this.API_URL}/executed-operations/workspace/${workspaceId}/tree/&#x60;
+    );
+  }
+
+  /**
+   * Get the properies of a workspace
+   */
+  getWorkspaceDetail(id: number | string): Observable&lt;Workspace&gt; {
+    return &lt;Observable&lt;Workspace&gt;&gt;(
+      this.httpClient.get(&#x60;${this.API_URL}/workspaces/${id}/&#x60;)
+    );
+  }
+
+  /**
+   * Get the resources/files of a workspace that can be used for analyses
+   */
+  getAvailableResourcesByParam(
+    types: string[],
     workspaceId: string
-  ): Observable&lt;any&gt; {
-    return &lt;Observable&lt;any&gt;&gt;(
-      this.httpClient.get(
-        &#x60;${this.API_URL}/workspaces/${workspaceId}/resources/${resourceId}/remove/&#x60;
+  ): Observable&lt;File[]&gt; {
+    return &lt;Observable&lt;File[]&gt;&gt;(
+      this.httpClient.get&lt;File[]&gt;(&#x60;${this.API_URL}/resources/&#x60;).pipe(
+        map(data &#x3D;&gt;
+          data.filter(
+            item &#x3D;&gt;
+              types.includes(item.resource_type) &amp;&amp;
+              item.workspaces.some(workspace &#x3D;&gt; workspace.id &#x3D;&#x3D;&#x3D; workspaceId)
+          )
+        ),
+        map((data: any[]) &#x3D;&gt; data.map(item &#x3D;&gt; this.fileAdapter.adapt(item)))
       )
     );
   }
@@ -1340,7 +1224,7 @@ export class WorkspaceDetailService {
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
-            var COMPODOC_CURRENT_PAGE_URL = 'WorkspaceDetailService.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'AnalysesService.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 

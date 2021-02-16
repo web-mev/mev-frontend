@@ -59,6 +59,14 @@
             <code>projects/web-mev/src/app/features/file-manager/services/file-manager.service.ts</code>
         </p>
 
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>File service</p>
+<p>Used for operations with file in the File Manager</p>
+
+            </p>
 
 
 
@@ -86,8 +94,17 @@
                                 <a href="#dialogData">dialogData</a>
                             </li>
                             <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#FILE_VALIDATION_PROGRESS_STATUSES">FILE_VALIDATION_PROGRESS_STATUSES</a>
+                            </li>
+                            <li>
                                     <span class="modifier">Public</span>
                                 <a href="#fileUploadsProgress">fileUploadsProgress</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#maxTime">maxTime</a>
                             </li>
                         </ul>
                     </td>
@@ -111,13 +128,17 @@
                                 <a href="#deleteFile">deleteFile</a>
                             </li>
                             <li>
+                                    <span class="modifier">Public</span>
                                 <a href="#getAllFiles">getAllFiles</a>
                             </li>
                             <li>
-                                <a href="#getAllFilesTest">getAllFilesTest</a>
+                                <a href="#getDialogData">getDialogData</a>
                             </li>
                             <li>
-                                <a href="#getDialogData">getDialogData</a>
+                                <a href="#getFilePreview">getFilePreview</a>
+                            </li>
+                            <li>
+                                <a href="#getFileTypes">getFileTypes</a>
                             </li>
                             <li>
                                 <a href="#updateFile">updateFile</a>
@@ -154,12 +175,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(httpClient: <a href="https://angular.io/api/common/http/HttpClient" target="_blank">HttpClient</a>, adapter: <a href="../injectables/FileAdapter.html">FileAdapter</a>, notificationService: <a href="../injectables/NotificationService.html">NotificationService</a>)</code>
+<code>constructor(httpClient: <a href="https://angular.io/api/common/http/HttpClient" target="_blank">HttpClient</a>, adapter: <a href="../injectables/FileAdapter.html">FileAdapter</a>, analysesService: <a href="../injectables/AnalysesService.html">AnalysesService</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">projects/web-mev/src/app/features/file-manager/services/file-manager.service.ts:20</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">projects/web-mev/src/app/features/file-manager/services/file-manager.service.ts:39</a></div>
                             </td>
                         </tr>
 
@@ -201,10 +222,10 @@
                                                     
                                                 </tr>
                                                 <tr>
-                                                        <td>notificationService</td>
+                                                        <td>analysesService</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../injectables/NotificationService.html" target="_self" >NotificationService</a></code>
+                                                                        <code><a href="../injectables/AnalysesService.html" target="_self" >AnalysesService</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -241,21 +262,23 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>addDropboxFile(file_source: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>addDropboxFile(files)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="112"
-                            class="link-to-prism">projects/web-mev/src/app/features/file-manager/services/file-manager.service.ts:112</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="139"
+                            class="link-to-prism">projects/web-mev/src/app/features/file-manager/services/file-manager.service.ts:139</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Add file, post method for Dropbox upload</p>
+</div>
 
                     <div class="io-description">
                         <b>Parameters :</b>
@@ -263,16 +286,12 @@
                             <thead>
                                 <tr>
                                     <td>Name</td>
-                                    <td>Type</td>
                                     <td>Optional</td>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>file_source</td>
-                                    <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                    </td>
+                                    <td>files</td>
 
                                     <td>
                                         No
@@ -286,7 +305,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                        <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -311,21 +330,25 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>addFile(formData: FormData, files: any[])</code>
+<code>addFile(files: any[])</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="72"
-                            class="link-to-prism">projects/web-mev/src/app/features/file-manager/services/file-manager.service.ts:72</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="94"
+                            class="link-to-prism">projects/web-mev/src/app/features/file-manager/services/file-manager.service.ts:94</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Add file, post method</p>
+<p>Execute the uploads sequentially, because uploading multiple files could potentially tie-up
+the server since a bunch of threads would be busy ingesting the data for a long time</p>
+</div>
 
                     <div class="io-description">
                         <b>Parameters :</b>
@@ -338,18 +361,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>formData</td>
-                                    <td>
-                                            <code>FormData</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
                                 <tr>
                                     <td>files</td>
                                     <td>
@@ -400,14 +411,16 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="137"
-                            class="link-to-prism">projects/web-mev/src/app/features/file-manager/services/file-manager.service.ts:137</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="169"
+                            class="link-to-prism">projects/web-mev/src/app/features/file-manager/services/file-manager.service.ts:169</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Delete file</p>
+</div>
 
                     <div class="io-description">
                         <b>Parameters :</b>
@@ -455,6 +468,7 @@
                     <a name="getAllFiles"></a>
                     <span class="name">
                         <b>
+                            <span class="modifier">Public</span>
                             getAllFiles
                         </b>
                         <a href="#getAllFiles"><span class="icon ion-ios-link"></span></a>
@@ -463,63 +477,27 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>getAllFiles()</code>
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getAllFiles()</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="40"
-                            class="link-to-prism">projects/web-mev/src/app/features/file-manager/services/file-manager.service.ts:40</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="67"
+                            class="link-to-prism">projects/web-mev/src/app/features/file-manager/services/file-manager.service.ts:67</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Get file list</p>
+</div>
 
                     <div class="io-description">
                         <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
-
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="getAllFilesTest"></a>
-                    <span class="name">
-                        <b>
-                            getAllFilesTest
-                        </b>
-                        <a href="#getAllFilesTest"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>getAllFilesTest()</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="52"
-                            class="link-to-prism">projects/web-mev/src/app/features/file-manager/services/file-manager.service.ts:52</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
 
                     </div>
                 </td>
@@ -548,8 +526,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="33"
-                            class="link-to-prism">projects/web-mev/src/app/features/file-manager/services/file-manager.service.ts:33</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="51"
+                            class="link-to-prism">projects/web-mev/src/app/features/file-manager/services/file-manager.service.ts:51</a></div>
                 </td>
             </tr>
 
@@ -559,6 +537,120 @@
 
                     <div class="io-description">
                         <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getFilePreview"></a>
+                    <span class="name">
+                        <b>
+                            getFilePreview
+                        </b>
+                        <a href="#getFilePreview"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getFilePreview(fileId: number | string)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="178"
+                            class="link-to-prism">projects/web-mev/src/app/features/file-manager/services/file-manager.service.ts:178</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Preview file content</p>
+<p>Display only the first 5 rows of file</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>fileId</td>
+                                    <td>
+                                            <code>number | string</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getFileTypes"></a>
+                    <span class="name">
+                        <b>
+                            getFileTypes
+                        </b>
+                        <a href="#getFileTypes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getFileTypes()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="59"
+                            class="link-to-prism">projects/web-mev/src/app/features/file-manager/services/file-manager.service.ts:59</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Get file resource list</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Observable&lt;FileType[]&gt;</code>
 
                     </div>
                 </td>
@@ -587,14 +679,16 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="125"
-                            class="link-to-prism">projects/web-mev/src/app/features/file-manager/services/file-manager.service.ts:125</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="157"
+                            class="link-to-prism">projects/web-mev/src/app/features/file-manager/services/file-manager.service.ts:157</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Update file properties, put method</p>
+</div>
 
                     <div class="io-description">
                         <b>Parameters :</b>
@@ -657,12 +751,12 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                            <i>Default value : </i><code>environment.apiUrl + &#x27;/resources&#x27;</code>
+                            <i>Default value : </i><code>environment.apiUrl</code>
                         </td>
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">projects/web-mev/src/app/features/file-manager/services/file-manager.service.ts:13</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">projects/web-mev/src/app/features/file-manager/services/file-manager.service.ts:25</a></div>
                             </td>
                         </tr>
 
@@ -694,7 +788,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">projects/web-mev/src/app/features/file-manager/services/file-manager.service.ts:15</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">projects/web-mev/src/app/features/file-manager/services/file-manager.service.ts:32</a></div>
                             </td>
                         </tr>
 
@@ -721,7 +815,44 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">projects/web-mev/src/app/features/file-manager/services/file-manager.service.ts:20</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">projects/web-mev/src/app/features/file-manager/services/file-manager.service.ts:39</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="FILE_VALIDATION_PROGRESS_STATUSES"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                                <span class="modifier">Readonly</span>
+                            FILE_VALIDATION_PROGRESS_STATUSES</b>
+                            <a href="#FILE_VALIDATION_PROGRESS_STATUSES"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>[]</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>[
+    &#x27;Validating...&#x27;,
+    &#x27;Processing...&#x27;
+  ]</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">projects/web-mev/src/app/features/file-manager/services/file-manager.service.ts:26</a></div>
                             </td>
                         </tr>
 
@@ -754,7 +885,40 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">projects/web-mev/src/app/features/file-manager/services/file-manager.service.ts:17</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">projects/web-mev/src/app/features/file-manager/services/file-manager.service.ts:34</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="maxTime"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                            maxTime</b>
+                            <a href="#maxTime"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>20000</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">projects/web-mev/src/app/features/file-manager/services/file-manager.service.ts:30</a></div>
                             </td>
                         </tr>
 
@@ -783,7 +947,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">projects/web-mev/src/app/features/file-manager/services/file-manager.service.ts:29</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">projects/web-mev/src/app/features/file-manager/services/file-manager.service.ts:47</a></div>
                                 </td>
                             </tr>
 
@@ -795,22 +959,41 @@
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &#x27;@angular/core&#x27;;
-import { BehaviorSubject, Observable} from &#x27;rxjs&#x27;;
-import { HttpClient, HttpEventType } from &#x27;@angular/common/http&#x27;;
-import { map } from &#x27;rxjs/operators&#x27;;
-import { NotificationService } from &#x27;@core/core.module&#x27;;
+import { BehaviorSubject, Observable, timer, forkJoin } from &#x27;rxjs&#x27;;
+import { HttpClient, HttpEventType, HttpParams } from &#x27;@angular/common/http&#x27;;
+import {
+  map,
+  switchMap,
+  takeWhile,
+  concatMap,
+  takeUntil
+} from &#x27;rxjs/operators&#x27;;
 import { File, FileAdapter } from &#x27;@app/shared/models/file&#x27;;
 import { environment } from &#x27;@environments/environment&#x27;;
+import { FileType } from &#x27;@app/shared/models/file-type&#x27;;
+import { AnalysesService } from &#x27;@app/features/analysis/services/analysis.service&#x27;;
 
+/**
+ * File service
+ *
+ * Used for operations with file in the File Manager
+ */
 @Injectable({
   providedIn: &#x27;root&#x27;
 })
 export class FileService {
-  private readonly API_URL &#x3D; environment.apiUrl + &#x27;/resources&#x27;;
+  private readonly API_URL &#x3D; environment.apiUrl;
+  private readonly FILE_VALIDATION_PROGRESS_STATUSES &#x3D; [
+    &#x27;Validating...&#x27;,
+    &#x27;Processing...&#x27;
+  ];
+  private maxTime &#x3D; 20000; //  check the file validation status only for the first 20 secs
 
   dataChange: BehaviorSubject&lt;File[]&gt; &#x3D; new BehaviorSubject&lt;File[]&gt;([]);
 
-  public fileUploadsProgress: BehaviorSubject&lt;Map&lt;string, object&gt;&gt; &#x3D; new BehaviorSubject&lt;Map&lt;string, object&gt;&gt;(new Map&lt;string, object&gt;());
+  public fileUploadsProgress: BehaviorSubject&lt;
+    Map&lt;string, object&gt;
+  &gt; &#x3D; new BehaviorSubject&lt;Map&lt;string, object&gt;&gt;(new Map&lt;string, object&gt;());
 
   // Temporarily stores data from dialogs
   dialogData: any;
@@ -818,9 +1001,8 @@ export class FileService {
   constructor(
     private httpClient: HttpClient,
     private adapter: FileAdapter,
-    private readonly notificationService: NotificationService
-  ) {
-  }
+    private analysesService: AnalysesService
+  ) {}
 
   get data(): File[] {
     return this.dataChange.getValue();
@@ -830,113 +1012,139 @@ export class FileService {
     return this.dialogData;
   }
 
-
-
-  // GET FILE LIST
-  getAllFiles(): void {
-    this.httpClient
-      .get&lt;File[]&gt;(&#x60;${this.API_URL}/&#x60;)
-      .pipe(
-        map((data: any[]) &#x3D;&gt; data.map((item) &#x3D;&gt; this.adapter.adapt(item))))
-      .subscribe(
-        data &#x3D;&gt; {
-          this.dataChange.next(data);
-        }
-      );
+  /**
+   * Get file resource list
+   *
+   */
+  getFileTypes(): Observable&lt;FileType[]&gt; {
+    return this.httpClient.get&lt;FileType[]&gt;(&#x60;${this.API_URL}/resource-types/&#x60;);
   }
 
-  getAllFilesTest(): Observable&lt;any&gt; {
-    return this.httpClient
-      .get&lt;File[]&gt;(&#x60;${this.API_URL}/&#x60;)
+  /**
+   * Get file list
+   *
+   */
+  public getAllFiles(): void {
+    // refresh the status of the resource validation process every 2 seconds
+    const maxTimer$ &#x3D; timer(this.maxTime);
+    timer(0, 2000)
       .pipe(
-        map((data: any[]) &#x3D;&gt; data.map((item) &#x3D;&gt; this.adapter.adapt(item))))
-    
+        concatMap(() &#x3D;&gt; this.httpClient.get(&#x60;${this.API_URL}/resources/&#x60;)),
+        map((files: File[]) &#x3D;&gt; files.map(file &#x3D;&gt; this.adapter.adapt(file))),
+        takeWhile(
+          files &#x3D;&gt;
+            files.some(file &#x3D;&gt;
+              this.FILE_VALIDATION_PROGRESS_STATUSES.includes(file.status)
+            ),
+          true
+        ),
+        takeUntil(maxTimer$)
+      )
+      .subscribe(data &#x3D;&gt; {
+        this.dataChange.next(data);
+      });
   }
 
+  /**
+   * Add file, post method
+   *
+   * Execute the uploads sequentially, because uploading multiple files could potentially tie-up
+   * the server since a bunch of threads would be busy ingesting the data for a long time
+   */
+  addFile(files: any[]): void {
+    const fileUploadsProgressMap &#x3D; new Map&lt;string, object&gt;();
 
-  // getAllFiles(): void {
-  //   interval(5000)
-  //     .pipe(
-  //       mergeMap(() &#x3D;&gt; this.httpClient.get&lt;File[]&gt;(&#x60;${this.API_URL}/&#x60;)
-  //     ))
-  //     .subscribe(data &#x3D;&gt; {
-  //       this.dataChange.next(data);
-  //     })
-  // }
-
-  // ADD, POST METHOD
-  addFile(formData: FormData, files: any[]): void {
-
-    // execute the uploads sequentially, because uploading multiple files could potentially tie-up 
-    // the server since a bunch of threads would be busy ingesting the data for a long time
-    this.getAllFiles();
-    let fileUploadsProgressMap &#x3D; new Map&lt;string, object&gt;()
-  
     for (let i &#x3D; 0; i &lt; files.length; i++) {
-      formData.set(&#x27;upload_file&#x27;, files[i], files[i].name);    
-      fileUploadsProgressMap[files[i].name] &#x3D; {&#x27;percent&#x27;: 0, &#x27;isUploaded&#x27;: false };
+      fileUploadsProgressMap[files[i].name] &#x3D; { percent: 0, isUploaded: false };
     }
     this.fileUploadsProgress.next(fileUploadsProgressMap);
-    this.dialogData &#x3D; formData; // to remove
 
-    
     for (let i &#x3D; 0; i &lt; files.length; i++) {
-       this.httpClient.post(&#x60;${this.API_URL}/upload/&#x60;, formData, {reportProgress: true, observe: &#x27;events&#x27; })
-        .subscribe(
-          event &#x3D;&gt; {            
-            switch (event.type) {
-              case HttpEventType.UploadProgress:
-                const percentDone &#x3D; Math.round((event.loaded * 100) / event.total);
-                fileUploadsProgressMap[files[i].name] &#x3D; {&#x27;percent&#x27;: percentDone, &#x27;isUploaded&#x27;: false };
-                this.fileUploadsProgress.next(fileUploadsProgressMap);
-                break;
-              case HttpEventType.Response:
-                //this.notificationService.success(&#x60;File ${files[i].name} has been successfully uploaded&#x60;);
-                fileUploadsProgressMap[files[i].name] &#x3D; {&#x27;percent&#x27;: 100, &#x27;isUploaded&#x27;: true };
-                this.fileUploadsProgress.next(fileUploadsProgressMap);
-                this.dialogData &#x3D; formData;
-            }
+      const formData &#x3D; new FormData();
+      formData.set(&#x27;upload_file&#x27;, files[i], files[i].name);
+
+      this.httpClient
+        .post(&#x60;${this.API_URL}/resources/upload/&#x60;, formData, {
+          reportProgress: true,
+          observe: &#x27;events&#x27;
+        })
+        .subscribe(event &#x3D;&gt; {
+          switch (event.type) {
+            case HttpEventType.UploadProgress:
+              const percentDone &#x3D; Math.round(
+                (event.loaded * 100) / event.total
+              );
+              fileUploadsProgressMap[files[i].name] &#x3D; {
+                percent: percentDone,
+                isUploaded: false
+              };
+              this.fileUploadsProgress.next(fileUploadsProgressMap);
+              break;
+            case HttpEventType.Response:
+              fileUploadsProgressMap[files[i].name] &#x3D; {
+                percent: 100,
+                isUploaded: true
+              };
+              this.fileUploadsProgress.next(fileUploadsProgressMap);
+              this.dialogData &#x3D; formData;
           }
-       );
-    };
+        });
+    }
   }
 
-
-
-
-  // ADD, POST METHOD for DROPBOX
-  addDropboxFile(file_source: string): void {
-
-    this.httpClient
-      .post(&#x60;${this.API_URL}/dropboxupload/&#x60;, file_source)
-      .subscribe(
-        data &#x3D;&gt; {
-          // this.dialogData &#x3D; data;
-          this.notificationService.success(&#x27;File has been successfully uploaded&#x27;);
-        }
+  /**
+   * Add file, post method for Dropbox upload
+   *
+   */
+  addDropboxFile(files): Observable&lt;any&gt; {
+    return this.httpClient
+      .post(&#x60;${this.API_URL}/resources/dropbox-upload/&#x60;, files)
+      .pipe(
+        switchMap(response &#x3D;&gt; {
+          return forkJoin(
+            response[&#x27;upload_ids&#x27;].map(execOperationId &#x3D;&gt;
+              this.analysesService.getExecutedOperationResult(execOperationId)
+            )
+          );
+        })
       );
   }
 
-  // UPDATE, PUT METHOD
+  /**
+   * Update file properties, put method
+   *
+   */
   updateFile(file: File): void {
     this.httpClient
-      .put(&#x60;${this.API_URL}/${file.id}/&#x60;, file)
-      .subscribe(
-        data &#x3D;&gt; {
-          this.dialogData &#x3D; file;
-        }
-      );
+      .put(&#x60;${this.API_URL}/resources/${file.id}/&#x60;, file)
+      .subscribe(data &#x3D;&gt; {
+        this.dialogData &#x3D; file;
+      });
   }
 
-
-  // DELETE METHOD
+  /**
+   * Delete file
+   *
+   */
   deleteFile(id: number | string): void {
-    this.httpClient
-      .delete(&#x60;${this.API_URL}/${id}/&#x60;)
-      .subscribe(
-        data &#x3D;&gt; {
-        }
-      );
+    this.httpClient.delete(&#x60;${this.API_URL}/resources/${id}/&#x60;).subscribe();
+  }
+
+  /**
+   * Preview file content
+   *
+   * Display only the first 5 rows of file
+   */
+  getFilePreview(fileId: number | string): Observable&lt;any&gt; {
+    const params &#x3D; {
+      params: new HttpParams().set(&#x27;page&#x27;, &#x27;1&#x27;).set(&#x27;page_size&#x27;, &#x27;5&#x27;)
+    };
+    return &lt;Observable&lt;any&gt;&gt;(
+      this.httpClient.get(
+        &#x60;${this.API_URL}/resources/${fileId}/contents/&#x60;,
+        params
+      )
+    );
   }
 }
 </code></pre>

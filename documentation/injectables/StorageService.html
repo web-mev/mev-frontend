@@ -38,7 +38,7 @@
 
 <ol class="breadcrumb">
   <li>Injectables</li>
-  <li>WorkspaceService</li>
+  <li>StorageService</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -56,7 +56,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>projects/web-mev/src/app/features/workspace-manager/services/workspace.service.ts</code>
+            <code>projects/web-mev/src/app/core/local-storage/storage.service.ts</code>
         </p>
 
 
@@ -76,14 +76,11 @@
                         <ul class="index-list">
                             <li>
                                     <span class="modifier">Private</span>
-                                    <span class="modifier">Readonly</span>
-                                <a href="#API_URL">API_URL</a>
+                                <a href="#storage">storage</a>
                             </li>
                             <li>
-                                <a href="#dataChange">dataChange</a>
-                            </li>
-                            <li>
-                                <a href="#dialogData">dialogData</a>
+                                    <span class="modifier">Private</span>
+                                <a href="#subjects">subjects</a>
                             </li>
                         </ul>
                     </td>
@@ -98,19 +95,19 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                <a href="#addWorkspace">addWorkspace</a>
+                                <a href="#clear">clear</a>
                             </li>
                             <li>
-                                <a href="#deleteWorkspace">deleteWorkspace</a>
+                                <a href="#get">get</a>
                             </li>
                             <li>
-                                <a href="#getAllWorkspaces">getAllWorkspaces</a>
+                                <a href="#remove">remove</a>
                             </li>
                             <li>
-                                <a href="#getDialogData">getDialogData</a>
+                                <a href="#set">set</a>
                             </li>
                             <li>
-                                <a href="#updateWorkspace">updateWorkspace</a>
+                                <a href="#watch">watch</a>
                             </li>
                         </ul>
                     </td>
@@ -120,20 +117,6 @@
 
 
 
-                    <tr>
-                        <td class="col-md-4">
-                            <h6><b>Accessors</b></h6>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <ul class="index-list">
-                                <li>
-                                    <a href="#data">data</a>
-                                </li>
-                            </ul>
-                        </td>
-                    </tr>
         </tbody>
     </table>
 </section>
@@ -144,17 +127,19 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(httpClient: <a href="https://angular.io/api/common/http/HttpClient" target="_blank">HttpClient</a>, adapter: <a href="../injectables/WorkspaceAdapter.html">WorkspaceAdapter</a>)</code>
+<code>constructor(storage: Storage)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">projects/web-mev/src/app/features/workspace-manager/services/workspace.service.ts:19</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">projects/web-mev/src/app/core/local-storage/storage.service.ts:9</a></div>
                             </td>
                         </tr>
 
                 <tr>
                     <td class="col-md-4">
+                            <div class="io-description"><p>Constructor with service injection</p>
+</div>
                             <div>
                                     <b>Parameters :</b>
                                     <table class="params">
@@ -167,22 +152,10 @@
                                         </thead>
                                         <tbody>
                                                 <tr>
-                                                        <td>httpClient</td>
+                                                        <td>storage</td>
                                                   
                                                         <td>
-                                                                        <code><a href="https://angular.io/api/common/http/HttpClient" target="_blank" >HttpClient</a></code>
-                                                        </td>
-                                                  
-                                                    <td>
-                                                            No
-                                                    </td>
-                                                    
-                                                </tr>
-                                                <tr>
-                                                        <td>adapter</td>
-                                                  
-                                                        <td>
-                                                                        <code><a href="../injectables/WorkspaceAdapter.html" target="_self" >WorkspaceAdapter</a></code>
+                                                                    <code>Storage</code>
                                                         </td>
                                                   
                                                     <td>
@@ -208,32 +181,75 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="addWorkspace"></a>
+                    <a name="clear"></a>
                     <span class="name">
                         <b>
-                            addWorkspace
+                            clear
                         </b>
-                        <a href="#addWorkspace"><span class="icon ion-ios-link"></span></a>
+                        <a href="#clear"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>addWorkspace(workspace: <a href="../classes/Workspace.html">Workspace</a>)</code>
+<code>clear()</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="44"
-                            class="link-to-prism">projects/web-mev/src/app/features/workspace-manager/services/workspace.service.ts:44</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="82"
+                            class="link-to-prism">projects/web-mev/src/app/core/local-storage/storage.service.ts:82</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>clear all available keys</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="get"></a>
+                    <span class="name">
+                        <b>
+                            get
+                        </b>
+                        <a href="#get"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>get(key: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="43"
+                            class="link-to-prism">projects/web-mev/src/app/core/local-storage/storage.service.ts:43</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>get data of given key</p>
+</div>
 
                     <div class="io-description">
                         <b>Parameters :</b>
@@ -247,9 +263,9 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>workspace</td>
+                                    <td>key</td>
                                     <td>
-                                                <code><a href="../classes/Workspace.html" target="_self" >Workspace</a></code>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                     </td>
 
                                     <td>
@@ -263,161 +279,13 @@
                     </div>
                     <div>
                     </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="deleteWorkspace"></a>
-                    <span class="name">
-                        <b>
-                            deleteWorkspace
-                        </b>
-                        <a href="#deleteWorkspace"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>deleteWorkspace(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="60"
-                            class="link-to-prism">projects/web-mev/src/app/features/workspace-manager/services/workspace.service.ts:60</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>id</td>
-                                    <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="getAllWorkspaces"></a>
-                    <span class="name">
-                        <b>
-                            getAllWorkspaces
-                        </b>
-                        <a href="#getAllWorkspaces"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>getAllWorkspaces()</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="34"
-                            class="link-to-prism">projects/web-mev/src/app/features/workspace-manager/services/workspace.service.ts:34</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
-
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="getDialogData"></a>
-                    <span class="name">
-                        <b>
-                            getDialogData
-                        </b>
-                        <a href="#getDialogData"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>getDialogData()</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="30"
-                            class="link-to-prism">projects/web-mev/src/app/features/workspace-manager/services/workspace.service.ts:30</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
                     <div class="io-description">
                         <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
 
                     </div>
+                    <div class="io-description">
+                        
+                    </div>
                 </td>
             </tr>
         </tbody>
@@ -426,32 +294,34 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="updateWorkspace"></a>
+                    <a name="remove"></a>
                     <span class="name">
                         <b>
-                            updateWorkspace
+                            remove
                         </b>
-                        <a href="#updateWorkspace"><span class="icon ion-ios-link"></span></a>
+                        <a href="#remove"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>updateWorkspace(workspace: <a href="../classes/Workspace.html">Workspace</a>)</code>
+<code>remove(key: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="51"
-                            class="link-to-prism">projects/web-mev/src/app/features/workspace-manager/services/workspace.service.ts:51</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="71"
+                            class="link-to-prism">projects/web-mev/src/app/core/local-storage/storage.service.ts:71</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>remove given key</p>
+</div>
 
                     <div class="io-description">
                         <b>Parameters :</b>
@@ -465,9 +335,9 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>workspace</td>
+                                    <td>key</td>
                                     <td>
-                                                <code><a href="../classes/Workspace.html" target="_self" >Workspace</a></code>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                     </td>
 
                                     <td>
@@ -483,6 +353,162 @@
                     </div>
                     <div class="io-description">
                         <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="set"></a>
+                    <span class="name">
+                        <b>
+                            set
+                        </b>
+                        <a href="#set"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>set(key: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="58"
+                            class="link-to-prism">projects/web-mev/src/app/core/local-storage/storage.service.ts:58</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>set value on given key</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>key</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>value</td>
+                                    <td>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="watch"></a>
+                    <span class="name">
+                        <b>
+                            watch
+                        </b>
+                        <a href="#watch"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>watch(key: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="25"
+                            class="link-to-prism">projects/web-mev/src/app/core/local-storage/storage.service.ts:25</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>watch data of given key</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>key</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -502,24 +528,24 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="API_URL"></a>
+                        <a name="storage"></a>
                         <span class="name">
                             <b>
                                 <span class="modifier">Private</span>
-                                <span class="modifier">Readonly</span>
-                            API_URL</b>
-                            <a href="#API_URL"><span class="icon ion-ios-link"></span></a>
+                            storage</b>
+                            <a href="#storage"><span class="icon ion-ios-link"></span></a>
                         </span>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                            <i>Default value : </i><code>environment.apiUrl + &#x27;/workspaces&#x27;</code>
+                            <i>Type : </i>    <code>Storage</code>
+
                         </td>
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">projects/web-mev/src/app/features/workspace-manager/services/workspace.service.ts:12</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">projects/web-mev/src/app/core/local-storage/storage.service.ts:8</a></div>
                             </td>
                         </tr>
 
@@ -530,57 +556,24 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="dataChange"></a>
+                        <a name="subjects"></a>
                         <span class="name">
                             <b>
-                            dataChange</b>
-                            <a href="#dataChange"><span class="icon ion-ios-link"></span></a>
+                                <span class="modifier">Private</span>
+                            subjects</b>
+                            <a href="#subjects"><span class="icon ion-ios-link"></span></a>
                         </span>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                            <i>Type : </i>        <code><a href="../classes/Workspace.html" target="_self" >BehaviorSubject&lt;Workspace[]&gt;</a></code>
-
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <i>Default value : </i><code>new BehaviorSubject&lt;Workspace[]&gt;(
-    []
-  )</code>
-                        </td>
-                    </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">projects/web-mev/src/app/features/workspace-manager/services/workspace.service.ts:14</a></div>
-                            </td>
-                        </tr>
-
-
-            </tbody>
-        </table>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="dialogData"></a>
-                        <span class="name">
-                            <b>
-                            dialogData</b>
-                            <a href="#dialogData"><span class="icon ion-ios-link"></span></a>
-                        </span>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <i>Type : </i>    <code>Map&lt;string | BehaviorSubject&lt;any&gt;&gt;</code>
 
                         </td>
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">projects/web-mev/src/app/features/workspace-manager/services/workspace.service.ts:19</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">projects/web-mev/src/app/core/local-storage/storage.service.ts:9</a></div>
                             </td>
                         </tr>
 
@@ -589,98 +582,94 @@
         </table>
 </section>
 
-            <section>
-    <h3 id="accessors">
-        Accessors
-    </h3>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="data"></a>
-                        <span class="name"><b>data</b><a href="#data"><span class="icon ion-ios-link"></span></a></span>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="col-md-4">
-                        <span class="accessor"><b>get</b><code>data()</code></span>
-                    </td>
-                </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">projects/web-mev/src/app/features/workspace-manager/services/workspace.service.ts:26</a></div>
-                                </td>
-                            </tr>
-
-            </tbody>
-        </table>
-</section>
     </div>
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &#x27;@angular/core&#x27;;
-import { HttpClient } from &#x27;@angular/common/http&#x27;;
-import { BehaviorSubject } from &#x27;rxjs&#x27;;
-import { map } from &#x27;rxjs/operators&#x27;;
-import { Workspace, WorkspaceAdapter } from &#x27;../models/workspace&#x27;;
-import { environment } from &#x27;@environments/environment&#x27;;
+import { BehaviorSubject, Observable } from &#x27;rxjs&#x27;;
 
 @Injectable({
   providedIn: &#x27;root&#x27;
 })
-export class WorkspaceService {
-  private readonly API_URL &#x3D; environment.apiUrl + &#x27;/workspaces&#x27;;
+export class StorageService {
+  private storage: Storage;
+  private subjects: Map&lt;string, BehaviorSubject&lt;any&gt;&gt;;
 
-  dataChange: BehaviorSubject&lt;Workspace[]&gt; &#x3D; new BehaviorSubject&lt;Workspace[]&gt;(
-    []
-  );
-
-  // Temporarily stores data from dialogs
-  dialogData: any;
-
-  constructor(
-    private httpClient: HttpClient,
-    private adapter: WorkspaceAdapter
-  ) {}
-
-  get data(): Workspace[] {
-    return this.dataChange.value;
+  /**
+   * Constructor with service injection
+   * @param storage
+   */
+  constructor(storage: Storage) {
+    this.storage &#x3D; storage;
+    this.subjects &#x3D; new Map&lt;string, BehaviorSubject&lt;any&gt;&gt;();
   }
 
-  getDialogData() {
-    return this.dialogData;
+  /**
+   * watch data of given key
+   * @param key
+   * @param defaultValue
+   */
+  watch(key: string): Observable&lt;any&gt; {
+    if (!this.subjects.has(key)) {
+      this.subjects.set(key, new BehaviorSubject&lt;any&gt;(null));
+    }
+    let item &#x3D; this.storage.getItem(key);
+    if (item &#x3D;&#x3D;&#x3D; &#x27;undefined&#x27;) {
+      item &#x3D; undefined;
+    } else {
+      item &#x3D; JSON.parse(item);
+    }
+    this.subjects.get(key).next(item);
+    return this.subjects.get(key).asObservable();
   }
 
-  getAllWorkspaces(): void {
-    this.httpClient
-      .get&lt;Workspace[]&gt;(&#x60;${this.API_URL}/&#x60;)
-      .pipe(map((data: any[]) &#x3D;&gt; data.map(item &#x3D;&gt; this.adapter.adapt(item))))
-      .subscribe(data &#x3D;&gt; {
-        this.dataChange.next(data);
-      });
+  /**
+   * get data of given key
+   * @param key
+   */
+  get(key: string): any {
+    let item &#x3D; this.storage.getItem(key);
+    if (item &#x3D;&#x3D;&#x3D; &#x27;undefined&#x27;) {
+      item &#x3D; undefined;
+    } else {
+      item &#x3D; JSON.parse(item);
+    }
+    return item;
   }
 
-  // ADD, POST METHOD
-  addWorkspace(workspace: Workspace): void {
-    this.httpClient.post(&#x60;${this.API_URL}/&#x60;, workspace).subscribe(data &#x3D;&gt; {
-      this.dialogData &#x3D; workspace;
-    });
+  /**
+   * set value on given key
+   * @param key
+   * @param value
+   */
+  set(key: string, value: any) {
+    this.storage.setItem(key, JSON.stringify(value));
+    if (!this.subjects.has(key)) {
+      this.subjects.set(key, new BehaviorSubject&lt;any&gt;(value));
+    } else {
+      this.subjects.get(key).next(value);
+    }
   }
 
-  // UPDATE, PUT METHOD
-  updateWorkspace(workspace: Workspace): void {
-    this.httpClient
-      .put(&#x60;${this.API_URL}/${workspace.id}/&#x60;, workspace)
-      .subscribe(data &#x3D;&gt; {
-        this.dialogData &#x3D; workspace;
-      });
+  /**
+   * remove given key
+   * @param key
+   */
+  remove(key: string) {
+    if (this.subjects.has(key)) {
+      this.subjects.get(key).complete();
+      this.subjects.delete(key);
+    }
+    this.storage.removeItem(key);
   }
 
-  // DELETE METHOD
-  deleteWorkspace(id: number): void {
-    this.httpClient.delete(&#x60;${this.API_URL}/${id}/&#x60;).subscribe();
+  /**
+   * clear all available keys
+   */
+  clear() {
+    this.subjects.clear();
+    this.storage.clear();
   }
 }
 </code></pre>
@@ -716,7 +705,7 @@ export class WorkspaceService {
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
-            var COMPODOC_CURRENT_PAGE_URL = 'WorkspaceService.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'StorageService.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 

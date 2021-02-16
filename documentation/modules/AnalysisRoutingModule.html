@@ -34,7 +34,7 @@
 
 <ol class="breadcrumb">
     <li>Modules</li>
-    <li>AboutRoutingModule</li>
+    <li>AnalysisRoutingModule</li>
 </ol>
 
 
@@ -54,7 +54,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>projects/web-mev/src/app/features/about/about-routing.module.ts</code>
+            <code>projects/web-mev/src/app/features/analysis/analysis-routing.module.ts</code>
         </p>
 
 
@@ -72,22 +72,16 @@
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { NgModule } from &#x27;@angular/core&#x27;;
 import { Routes, RouterModule } from &#x27;@angular/router&#x27;;
+import { AnalysesComponent } from &#x27;./components/analysis-list/analyses.component&#x27;;
+import { ExecutedOperationComponent } from &#x27;./components/executed-operation/executed-operation.component&#x27;;
 
-import { AboutComponent } from &#x27;./about/about.component&#x27;;
-
-const routes: Routes &#x3D; [
-  {
-    path: &#x27;&#x27;,
-    component: AboutComponent,
-    data: { title: &#x27;mev.menu.main&#x27; }
-  }
-];
+const routes: Routes &#x3D; [];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class AboutRoutingModule {}
+export class AnalysisRoutingModule {}
 </code></pre>
     </div>
 </div>
@@ -123,7 +117,7 @@ export class AboutRoutingModule {}
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'module';
-            var COMPODOC_CURRENT_PAGE_URL = 'AboutRoutingModule.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'AnalysisRoutingModule.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 

@@ -72,15 +72,41 @@
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { NgModule } from &#x27;@angular/core&#x27;;
 import { Routes, RouterModule } from &#x27;@angular/router&#x27;;
+import { WorkspaceDetailComponent } from &#x27;./components/workspace-detail/workspace-detail.component&#x27;;
 
+const routes: Routes &#x3D; [
+  // {
+  //   path: &#x27;:resourceId/metadata&#x27;,
+  //   component: MetadataComponent
+  // },
+  // {
+  //   path: &#x27;analyses&#x27;,
+  //   component: AnalysesComponent
+  // },
 
-const routes: Routes &#x3D; [];
+  // {
+  //   path: &#x27;executedOperation/:executedOperationId&#x27;,
+  //   component: ExecutedOperationComponent
+  // },
+  {
+    path: &#x27;&#x27;,
+    component: WorkspaceDetailComponent,
+    pathMatch: &#x27;full&#x27;
+    // children: [
+    //   {
+    //     path: &#x27;analyses&#x27;,
+    //     loadChildren: () &#x3D;&gt;
+    //     import(&#x27;../analysis/analysis.module&#x27;).then(m &#x3D;&gt; m.AnalysisModule),
+    //   }
+    // ]
+  }
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class WorkspaceDetailRoutingModule { }
+export class WorkspaceDetailRoutingModule {}
 </code></pre>
     </div>
 </div>

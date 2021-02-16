@@ -22,69 +22,93 @@
 <text text-anchor="start" x="429.7258" y="-15.4" font-family="sans-serif" font-size="14.00" fill="#000000"> &#160;Exports</text>
 <g id="clust1" class="cluster">
 <title>cluster_SharedModule</title>
-<polygon fill="none" stroke="#000000" stroke-dasharray="1,5" points="104,-70 104,-268 392,-268 392,-70 104,-70"/>
+<polygon fill="none" stroke="#000000" stroke-dasharray="1,5" points="8.5,-70 8.5,-268 487.5,-268 487.5,-70 8.5,-70"/>
 </g>
 <g id="clust2" class="cluster">
 <title>cluster_SharedModule_declarations</title>
-<polygon fill="none" stroke="#000000" points="116,-78 116,-130 380,-130 380,-78 116,-78"/>
+<polygon fill="none" stroke="#000000" points="21.5,-78 21.5,-130 473.5,-130 473.5,-78 21.5,-78"/>
 </g>
-<g id="clust6" class="cluster">
+<g id="clust7" class="cluster">
 <title>cluster_SharedModule_exports</title>
-<polygon fill="none" stroke="#000000" points="112,-208 112,-260 384,-260 384,-208 112,-208"/>
+<polygon fill="none" stroke="#000000" points="16.5,-208 16.5,-260 479.5,-260 479.5,-208 16.5,-208"/>
 </g>
 <!-- ByteNamePipe -->
 <g id="node1" class="node">
 <title>ByteNamePipe</title>
-<polygon fill="#ffffb3" stroke="#000000" points="372.2563,-122 271.7437,-122 271.7437,-86 372.2563,-86 372.2563,-122"/>
-<text text-anchor="middle" x="322" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">ByteNamePipe</text>
+<polygon fill="#ffffb3" stroke="#000000" points="465.7563,-122 365.2437,-122 365.2437,-86 465.7563,-86 465.7563,-122"/>
+<text text-anchor="middle" x="415.5" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">ByteNamePipe</text>
 </g>
 <!-- SharedModule -->
-<g id="node3" class="node">
+<g id="node4" class="node">
 <title>SharedModule</title>
-<polygon fill="#8dd3c7" stroke="#000000" points="239.4231,-187 236.4231,-191 215.4231,-191 212.4231,-187 140.5769,-187 140.5769,-151 239.4231,-151 239.4231,-187"/>
-<text text-anchor="middle" x="190" y="-164.8" font-family="Times,serif" font-size="14.00" fill="#000000">SharedModule</text>
+<polygon fill="#8dd3c7" stroke="#000000" points="331.9231,-187 328.9231,-191 307.9231,-191 304.9231,-187 233.0769,-187 233.0769,-151 331.9231,-151 331.9231,-187"/>
+<text text-anchor="middle" x="282.5" y="-164.8" font-family="Times,serif" font-size="14.00" fill="#000000">SharedModule</text>
 </g>
 <!-- ByteNamePipe&#45;&gt;SharedModule -->
 <g id="edge1" class="edge">
 <title>ByteNamePipe&#45;&gt;SharedModule</title>
-<path fill="none" stroke="#000000" d="M338.876,-122.0225C338.876,-139.3734 338.876,-163 338.876,-163 338.876,-163 249.5736,-163 249.5736,-163"/>
-<polygon fill="#000000" stroke="#000000" points="249.5736,-159.5001 239.5736,-163 249.5735,-166.5001 249.5736,-159.5001"/>
+<path fill="none" stroke="#000000" d="M433.0427,-122.0225C433.0427,-139.3734 433.0427,-163 433.0427,-163 433.0427,-163 341.7933,-163 341.7933,-163"/>
+<polygon fill="#000000" stroke="#000000" points="341.7933,-159.5001 331.7933,-163 341.7933,-166.5001 341.7933,-159.5001"/>
 </g>
 <!-- RtlSupportDirective -->
 <g id="node2" class="node">
 <title>RtlSupportDirective</title>
-<polygon fill="#ffffb3" stroke="#000000" points="253.5352,-122 124.4648,-122 124.4648,-86 253.5352,-86 253.5352,-122"/>
-<text text-anchor="middle" x="189" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">RtlSupportDirective</text>
+<polygon fill="#ffffb3" stroke="#000000" points="347.0352,-122 217.9648,-122 217.9648,-86 347.0352,-86 347.0352,-122"/>
+<text text-anchor="middle" x="282.5" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">RtlSupportDirective</text>
 </g>
 <!-- RtlSupportDirective&#45;&gt;SharedModule -->
 <g id="edge2" class="edge">
 <title>RtlSupportDirective&#45;&gt;SharedModule</title>
-<path fill="none" stroke="#000000" d="M190,-122.1061C190,-122.1061 190,-140.991 190,-140.991"/>
-<polygon fill="#000000" stroke="#000000" points="186.5001,-140.9909 190,-150.991 193.5001,-140.991 186.5001,-140.9909"/>
+<path fill="none" stroke="#000000" d="M282.5,-122.1061C282.5,-122.1061 282.5,-140.991 282.5,-140.991"/>
+<polygon fill="#000000" stroke="#000000" points="279.0001,-140.9909 282.5,-150.991 286.0001,-140.991 279.0001,-140.9909"/>
+</g>
+<!-- SpinnerOverlayComponent -->
+<g id="node3" class="node">
+<title>SpinnerOverlayComponent</title>
+<polygon fill="#ffffb3" stroke="#000000" points="199.4678,-122 29.5322,-122 29.5322,-86 199.4678,-86 199.4678,-122"/>
+<text text-anchor="middle" x="114.5" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">SpinnerOverlayComponent</text>
+</g>
+<!-- SpinnerOverlayComponent&#45;&gt;SharedModule -->
+<g id="edge3" class="edge">
+<title>SpinnerOverlayComponent&#45;&gt;SharedModule</title>
+<path fill="none" stroke="#000000" d="M141.9946,-122.0225C141.9946,-139.3734 141.9946,-163 141.9946,-163 141.9946,-163 222.9631,-163 222.9631,-163"/>
+<polygon fill="#000000" stroke="#000000" points="222.9631,-166.5001 232.9631,-163 222.963,-159.5001 222.9631,-166.5001"/>
 </g>
 <!-- ByteNamePipe  -->
-<g id="node4" class="node">
+<g id="node5" class="node">
 <title>ByteNamePipe </title>
-<polygon fill="#fb8072" stroke="#000000" points="376.2563,-252 271.7437,-252 271.7437,-216 376.2563,-216 376.2563,-252"/>
-<text text-anchor="middle" x="324" y="-229.8" font-family="Times,serif" font-size="14.00" fill="#000000">ByteNamePipe </text>
+<polygon fill="#fb8072" stroke="#000000" points="471.7563,-252 367.2437,-252 367.2437,-216 471.7563,-216 471.7563,-252"/>
+<text text-anchor="middle" x="419.5" y="-229.8" font-family="Times,serif" font-size="14.00" fill="#000000">ByteNamePipe </text>
 </g>
 <!-- SharedModule&#45;&gt;ByteNamePipe  -->
-<g id="edge3" class="edge">
+<g id="edge4" class="edge">
 <title>SharedModule&#45;&gt;ByteNamePipe </title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M239.2636,-175C270.6219,-175 305.374,-175 305.374,-175 305.374,-175 305.374,-205.9775 305.374,-205.9775"/>
-<polygon fill="#000000" stroke="#000000" points="301.8741,-205.9774 305.374,-215.9775 308.8741,-205.9775 301.8741,-205.9774"/>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M331.7365,-175C363.9914,-175 400.2073,-175 400.2073,-175 400.2073,-175 400.2073,-205.9775 400.2073,-205.9775"/>
+<polygon fill="#000000" stroke="#000000" points="396.7074,-205.9774 400.2073,-215.9775 403.7074,-205.9775 396.7074,-205.9774"/>
 </g>
 <!-- RtlSupportDirective  -->
-<g id="node5" class="node">
+<g id="node6" class="node">
 <title>RtlSupportDirective </title>
-<polygon fill="#fb8072" stroke="#000000" points="253.5344,-252 120.4656,-252 120.4656,-216 253.5344,-216 253.5344,-252"/>
-<text text-anchor="middle" x="187" y="-229.8" font-family="Times,serif" font-size="14.00" fill="#000000">RtlSupportDirective </text>
+<polygon fill="#fb8072" stroke="#000000" points="349.0344,-252 215.9656,-252 215.9656,-216 349.0344,-216 349.0344,-252"/>
+<text text-anchor="middle" x="282.5" y="-229.8" font-family="Times,serif" font-size="14.00" fill="#000000">RtlSupportDirective </text>
 </g>
 <!-- SharedModule&#45;&gt;RtlSupportDirective  -->
-<g id="edge4" class="edge">
+<g id="edge5" class="edge">
 <title>SharedModule&#45;&gt;RtlSupportDirective </title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M190,-187.1061C190,-187.1061 190,-205.991 190,-205.991"/>
-<polygon fill="#000000" stroke="#000000" points="186.5001,-205.9909 190,-215.991 193.5001,-205.991 186.5001,-205.9909"/>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M282.5,-187.1061C282.5,-187.1061 282.5,-205.991 282.5,-205.991"/>
+<polygon fill="#000000" stroke="#000000" points="279.0001,-205.9909 282.5,-215.991 286.0001,-205.991 279.0001,-205.9909"/>
+</g>
+<!-- SpinnerOverlayComponent  -->
+<g id="node7" class="node">
+<title>SpinnerOverlayComponent </title>
+<polygon fill="#fb8072" stroke="#000000" points="198.4684,-252 24.5316,-252 24.5316,-216 198.4684,-216 198.4684,-252"/>
+<text text-anchor="middle" x="111.5" y="-229.8" font-family="Times,serif" font-size="14.00" fill="#000000">SpinnerOverlayComponent </text>
+</g>
+<!-- SharedModule&#45;&gt;SpinnerOverlayComponent  -->
+<g id="edge6" class="edge">
+<title>SharedModule&#45;&gt;SpinnerOverlayComponent </title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M233.107,-175C174.8274,-175 85.7554,-175 85.7554,-175 85.7554,-175 85.7554,-205.9775 85.7554,-205.9775"/>
+<polygon fill="#000000" stroke="#000000" points="82.2553,-205.9775 85.7554,-215.9775 89.2553,-205.9774 82.2553,-205.9775"/>
 </g>
 </g>
 </svg>

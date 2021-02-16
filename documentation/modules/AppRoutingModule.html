@@ -78,18 +78,19 @@ import { RequestPasswordResetComponent } from &#x27;@app/features/user/request-p
 import { TutorialComponent } from &#x27;@features/tutorial/tutorial.component&#x27;;
 import { AuthGuardService } from &#x27;@core/auth/auth-guard.service&#x27;;
 import { WorkareaComponent } from &#x27;@features/workarea/workarea.component&#x27;;
-import { WorkspaceDetailComponent } from &#x27;@features/workspace-detail/components/workspace-detail/workspace-detail.component&#x27;;
 import { ResponsePasswordResetComponent } from &#x27;./features/user/response-password-reset/response-password-reset.component&#x27;;
 import { PasswordChangeComponent } from &#x27;./features/user/password-change/password-change.component&#x27;;
 
 const routes: Routes &#x3D; [
   {
+    path: &#x27;&#x27;,
+    redirectTo: &#x27;about&#x27;,
+    pathMatch: &#x27;full&#x27;
+  },
+  {
     path: &#x27;about&#x27;,
     loadChildren: () &#x3D;&gt;
-      &quot;import(&#x27;./features/about/about.module&#x27;).then(\
-        m &#x3D;&gt; m.AboutModule\
-      )&quot; /*,
-    canActivate: [AuthGuardService]*/
+      &quot;import(&#x27;./features/about/about.module&#x27;).then(m &#x3D;&gt; m.AboutModule)&quot;
   },
   {
     path: &#x27;tutorial&#x27;,
@@ -101,13 +102,30 @@ const routes: Routes &#x3D; [
     canActivate: [AuthGuardService]
   },
   {
-    path: &#x27;workspace/:workspaceId&#x27;,
-    component: WorkspaceDetailComponent
-  },
-  {
     path: &#x27;settings&#x27;,
     loadChildren: () &#x3D;&gt;
       &quot;import(&#x27;./features/settings/settings.module&#x27;).then(m &#x3D;&gt; m.SettingsModule)&quot;
+  },
+
+  {
+    path: &#x27;workspace/:workspaceId&#x27;,
+    loadChildren: () &#x3D;&gt;
+      &quot;import(&#x27;./features/workspace-detail/workspace-detail.module&#x27;).then(\
+        m &#x3D;&gt; m.WorkspaceDetailModule\
+      )&quot;,
+    canActivate: [AuthGuardService]
+  },
+  {
+    path: &#x27;analyses&#x27;,
+    loadChildren: () &#x3D;&gt;
+      &quot;import(&#x27;./features/analysis/analysis.module&#x27;).then(m &#x3D;&gt; m.AnalysisModule)&quot;,
+    canActivate: [AuthGuardService]
+  },
+  {
+    path: &#x27;analyses/:workspaceId&#x27;,
+    loadChildren: () &#x3D;&gt;
+      &quot;import(&#x27;./features/analysis/analysis.module&#x27;).then(m &#x3D;&gt; m.AnalysisModule)&quot;,
+    canActivate: [AuthGuardService]
   },
   {
     path: &#x27;login&#x27;,
@@ -133,11 +151,7 @@ const routes: Routes &#x3D; [
     path: &#x27;change-password&#x27;,
     component: PasswordChangeComponent
   },
-  {
-    path: &#x27;&#x27;,
-    redirectTo: &#x27;about&#x27;,
-    pathMatch: &#x27;full&#x27;
-  },
+
   {
     path: &#x27;**&#x27;,
     redirectTo: &#x27;feature-list&#x27;
@@ -145,10 +159,8 @@ const routes: Routes &#x3D; [
 ];
 
 @NgModule({
-  // useHash supports github.io demo page, remove in your app
   imports: [
     RouterModule.forRoot(routes, {
-      useHash: true,
       scrollPositionRestoration: &#x27;enabled&#x27;,
       preloadingStrategy: PreloadAllModules,
       enableTracing: true

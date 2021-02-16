@@ -1,10 +1,14 @@
+
 # WebMEV
 
 - [General information](#GeneralInformation)
-- [Installation](#Installation)
+- [Running locally](#Running)
+- [Deployment](#Deployment)
+- [Documentation](#Documentation)
 - [Settings](#Settings)
-- [Modules and components info](#Modules)
 - [Features and bugs ](#Features)
+- [Modules and components info](#Modules)
+- [How to add a new visualization component](#AddNewComponent)
 
 ## <a name="GeneralInformation">**General information**</a>
 
@@ -19,17 +23,16 @@ Sentry error tracking and monitoring: http://35.199.2.238:9000/organizations/sen
 The application is based on a Angular Material Starter project:
 https://github.com/tomastrajan/angular-ngrx-material-starter
 
-## <a name="Installation">**Installation**</a>
-
-Install the dependencies:
+## <a name="Running">**Running locally**</a>
+To run locally check that you have Node.js and Angular CLI installed.
+Then download the source code and install the dependencies:
 
 ```sh
 
 npm install
 
 ```
-
-- Run the local development server:
+Use the following command to build, watch and run your application locally:
 
 ```sh
 
@@ -37,9 +40,9 @@ ng serve
 
 ```
 
-(you can access the app at http://localhost:4200)
+After that you can access the app at http://localhost:4200
 
-or
+But for development purposes we need a proper host pointing to localhost, because Google’s OAuth requires redirect URLs that cannot be localhost. You can add an entry in the hosts file of your machine to associate mydomain.com to 127.0.0.1 and use the following command:
 
 ```sh
 
@@ -47,17 +50,23 @@ ng serve --port 8080 --host mydomain.com
 
 ```
 
-(for development purposes we need a proper host pointing to localhost, because Google’s OAuth requires redirect URLs that can’t be localhost. So you can add an entry in the hosts file of your machine to associate mydomain.com to 127.0.0.1. The app will be run at http://mydomain.com:8080)
+and the application will be run at http://mydomain.com:8080.
 
-- Compile the app into the output directory "dist":
+
+## <a name="Deployment">**Deployment**</a>
+
+Before deploying the project run it locally first. To build the application run 
 
 ```sh
 
 ng build
 
 ```
+That creates a *dist* folder in the application root directory with all the static files that are needed for the deployment.\
+We have an Apache web server running  on a virtual machine instance on Google Compute Engine.  So to update files, copy the contents of the *dist* directory to the Apache html (*/var/www/html/web-mev*) directory of the VM.
 
-- Generate project documentation:
+## <a name="Documentation">**Documentation**</a>
+To generate project documentation:
 
 ```sh
 
@@ -68,11 +77,11 @@ npm run generate-docs
 ## <a name="Settings">**Settings**</a>
 
 - File _app.component.ts_\
-  Use the following properties to update the application settings:
-  -- _logo_: to update the application logo image
-  -- _languages_: to set the list of available languages
-  -- _sessionTimeout_: to set user idle / session timeout
-  -- _navigation_: to set top navigation bar
+  Use the following properties to update the application settings:\
+  -- _logo_: to update the application logo image\
+  -- _languages_: to set the list of available languages\
+  -- _sessionTimeout_: to set user idle / session timeout\
+  -- _navigation_: to set top navigation bar\
 
 - File _environment.prod.ts_\
   It is environment config to set the apiUrl variable ('http://35.194.76.64/api')
@@ -85,6 +94,10 @@ npm run generate-docs
 
 - File _jwtConfig.ts_\
   Use this file to update settings for JWT authentication: `whiteListedDomains`(domains that are allowed to receive the JWT) and `blackListedRoutes`(routes that are not allowed to receive the JWT token)
+
+## <a name="Features">**Features and bugs**</a>
+
+https://docs.google.com/spreadsheets/d/1hyKzuzDYb5nYS1AKZByssyCLNSQS-FxEqEdQ82IakQ8/edit#gid=0
 
 ## <a name="Modules">**Modules and components info**</a>
 
@@ -106,6 +119,7 @@ The structure of the application includes a few main modules:
 7.  Shared Module\
     Contains commonly used directives, pipes, validators, help functions, shared components
 
-## <a name="Features">**Features and bugs**</a>
 
-https://docs.google.com/spreadsheets/d/1hyKzuzDYb5nYS1AKZByssyCLNSQS-FxEqEdQ82IakQ8/edit#gid=0
+
+## <a name="AddNewComponent">**How to add a new visualization component**</a>
+TBD

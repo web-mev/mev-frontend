@@ -41,7 +41,7 @@
 
 <ol class="breadcrumb">
   <li>Pipes</li>
-  <li>FilterPipe</li>
+  <li>AnnotationFilesPipe</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -60,14 +60,14 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>projects/web-mev/src/app/features/workspace-detail/pipes/search.ts</code>
+            <code>projects/web-mev/src/app/features/workspace-detail/pipes/annotation-files.ts</code>
         </p>
 
             <p class="comment">
                 <h3>Description</h3>
             </p>
             <p class="comment">
-                <p>Pipe for text searching</p>
+                <p>Pipe to include only annotation files from the list of all available resources</p>
 
             </p>
 
@@ -78,7 +78,7 @@
                 <tbody>
                     <tr>
                         <td class="col-md-3">Name</td>
-                        <td class="col-md-9">filter</td>
+                        <td class="col-md-9">annotationFilesPipe</td>
                     </tr>
                 </tbody>
             </table>
@@ -104,15 +104,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>transform(resources: WorkspaceResource[], find: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>transform(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="12"
-                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/pipes/search.ts:12</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="10"
+                            class="link-to-prism">projects/web-mev/src/app/features/workspace-detail/pipes/annotation-files.ts:10</a></div>
                 </td>
             </tr>
 
@@ -132,21 +132,9 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>resources</td>
+                                    <td>value</td>
                                     <td>
-                                            <code>WorkspaceResource[]</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>find</td>
-                                    <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
                                     </td>
 
                                     <td>
@@ -161,7 +149,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>WorkspaceResource[]</code>
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
 
                     </div>
                     <div class="io-description">
@@ -178,42 +166,17 @@
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Pipe, PipeTransform } from &#x27;@angular/core&#x27;;
-import { WorkspaceResource } from &#x27;@features/workspace-detail/models/workspace-resource&#x27;;
-const { isArray } &#x3D; Array;
 
 /**
- * Pipe for text searching
+ * Pipe to include only annotation files from the list of all available resources
  */
 @Pipe({
-  name: &#x27;filter&#x27;
+  name: &#x27;annotationFilesPipe&#x27;
 })
-export class FilterPipe implements PipeTransform {
-  transform(resources: WorkspaceResource[], find: string): WorkspaceResource[] {
-    if (!resources) return [];
-    if (!find) return resources;
-    find &#x3D; find.toLowerCase();
-    return search(resources, find);
+export class AnnotationFilesPipe implements PipeTransform {
+  transform(value: any): any {
+    return value.filter(item &#x3D;&gt; item.resource_type &#x3D;&#x3D; &#x27;ANN&#x27;);
   }
-}
-
-function search(entries: any[], search: string) {
-  search &#x3D; search.toLowerCase();
-
-  return entries.filter(function(obj) {
-    const keys: string[] &#x3D; Object.keys(obj);
-    return keys.some(function(key) {
-      const value &#x3D; obj[key];
-      if (isArray(value)) {
-        return value.some(v &#x3D;&gt; {
-          return v.toLowerCase().includes(search);
-        });
-      } else if (!isArray(value)) {
-        return String(value)
-          .toLowerCase()
-          .includes(search);
-      }
-    });
-  });
 }
 </code></pre>
     </div>
@@ -245,7 +208,7 @@ function search(entries: any[], search: string) {
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'pipe';
-            var COMPODOC_CURRENT_PAGE_URL = 'FilterPipe.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'AnnotationFilesPipe.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 

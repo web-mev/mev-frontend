@@ -37,10 +37,33 @@
   display: flex;
 }
 
+.tree-container {
+  background-color: #ddebf2;
+}
+
+.hidden {
+  display: none;
+}
+
+.collapseBtn {
+  text-align: right;
+  padding: 10px;
+  cursor: pointer;
+
+  .mat-icon:hover {
+    color: grey;
+  }
+}
+
 mat-tree {
-  background-color: #ddebf2 !important;
+  background-color: transparent !important;
   width: 300px;
   min-height: 500px;
+
+  &.collapsed {
+    width: 50px;
+    visibility: hidden;
+  }
 
   mat-tree-node {
     padding-right: 15px;

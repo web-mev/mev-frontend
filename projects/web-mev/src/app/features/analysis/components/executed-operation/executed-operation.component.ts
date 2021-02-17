@@ -69,6 +69,7 @@ export class ExecutedOperationComponent implements OnInit {
   categories = new Set();
   subcategories = [];
 
+  isTreePanelCollapsed = false;
   activeNode: Operation;
   treeControl = new FlatTreeControl<ExampleFlatNode>(
     node => node.level,
@@ -296,5 +297,12 @@ export class ExecutedOperationComponent implements OnInit {
 
   public ngOnDestroy(): void {
     this.executedOperationResultSubscription.unsubscribe();
+  }
+
+  /**
+   * Control if the left side panel is collapsed or expanded
+   */
+  toggleTreePanel(): void {
+    this.isTreePanelCollapsed = !this.isTreePanelCollapsed;
   }
 }

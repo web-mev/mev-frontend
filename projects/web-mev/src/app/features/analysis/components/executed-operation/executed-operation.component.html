@@ -9,28 +9,36 @@
     No executed operations available
   </p>
   <div *ngIf="dataSource.data.length !== 0" class="vertical-tab-container">
-    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
-      <!-- tree node template for leaf nodes -->
-      <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding [ngClass]="{ 'active-node': activeNode?.id === node.id }">
-        <!-- use a disabled button to provide padding for tree leaf -->
-        <!-- <button mat-icon-button disabled></button> -->
-        <button (click)="onSelectExecOperation(node)">
-          {{ node.name }} 
-          <mat-icon *ngIf="isOperationExecuting(node)" class="mat-icon--timer">timer</mat-icon>
-          <mat-icon *ngIf="node.job_failed" class="mat-icon--error">error_outline</mat-icon>                          
-        </button>
-      </mat-tree-node>
-      <!-- tree node template for expandable nodes -->
-      <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
-        <button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
-          <mat-icon class="mat-icon-rtl-mirror">
-            {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-          </mat-icon>
-          {{node.name}}
-        </button>
-        
-      </mat-tree-node>
-    </mat-tree>
+    <div class="tree-container">
+      <div class="collapseBtn" (click)="toggleTreePanel()" title="Click the button to toggle between showing and hiding the panel content"> 
+        <mat-icon color="accent" [ngClass]="{'hidden': isTreePanelCollapsed}">arrow_back</mat-icon>
+        <mat-icon color="accent" [ngClass]="{'hidden': !isTreePanelCollapsed}">arrow_forward</mat-icon>
+      </div>
+
+      <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" [ngClass]="{'collapsed': isTreePanelCollapsed}">
+        <!-- tree node template for leaf nodes -->
+        <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding [ngClass]="{ 'active-node': activeNode?.id === node.id }">
+          <!-- use a disabled button to provide padding for tree leaf -->
+          <!-- <button mat-icon-button disabled></button> -->
+          <button (click)="onSelectExecOperation(node)">
+            {{ node.name }} 
+            <mat-icon *ngIf="isOperationExecuting(node)" class="mat-icon--timer">timer</mat-icon>
+            <mat-icon *ngIf="node.job_failed" class="mat-icon--error">error_outline</mat-icon>                          
+          </button>
+        </mat-tree-node>
+        <!-- tree node template for expandable nodes -->
+        <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+          <button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
+            <mat-icon class="mat-icon-rtl-mirror">
+              {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+            </mat-icon>
+            {{node.name}}
+          </button>
+          
+        </mat-tree-node>
+      </mat-tree>
+    </div>
+   
 
     <mat-divider [vertical]="true"></mat-divider>
 

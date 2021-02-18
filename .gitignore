@@ -37,6 +37,7 @@ yarn.lock
 npm-debug.log
 testem.log
 /typings
+.vagrant/
 
 # e2e
 /e2e/src/*.js

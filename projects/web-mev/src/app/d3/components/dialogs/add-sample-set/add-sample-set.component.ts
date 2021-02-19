@@ -22,13 +22,13 @@ export class AddSampleSetComponent {
   ngOnInit(): void {
     // if no custom set type is passed, assume Observation set by default
     this.customSetType = this.data?.type || CustomSetType.ObservationSet;
-
+    const name = this.data?.name || '';
     if (this.customSetType === CustomSetType.FeatureSet) {
       this.isObservationSet = false;
     }
 
     this.setForm = this.formBuilder.group({
-      customSetName: [this.data.name, [Validators.required]],
+      customSetName: [name, [Validators.required]],
       customSetColor: [
         '#000000',
         [...(this.isObservationSet ? [Validators.required] : [])]

@@ -8,10 +8,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 
 import { WorkspaceService } from '@workspace-manager/services/workspace.service';
-import {
-  Workspace,
-  WorkspaceAdapter
-} from '@workspace-manager/models/workspace';
+import { Workspace } from '@workspace-manager/models/workspace';
 import { AddWSDialogComponent } from '@app/features/workspace-manager/components/dialogs/add-ws-dialog/add-ws-dialog.component';
 import { EditWSDialogComponent } from '@app/features/workspace-manager/components/dialogs/edit-ws-dialog/edit-ws-dialog.component';
 import { DeleteWSDialogComponent } from '@app/features/workspace-manager/components/dialogs/delete-ws-dialog/delete-ws-dialog.component';
@@ -29,15 +26,13 @@ export class WorkspaceListComponent implements OnInit {
     'file_number',
     'actions'
   ];
-  exampleDatabase: WorkspaceService | null;
   dataSource: ExampleDataSource | null;
   id: string;
 
   constructor(
     public httpClient: HttpClient,
     public dialog: MatDialog,
-    public workspaceService: WorkspaceService,
-    private adapter: WorkspaceAdapter
+    public workspaceService: WorkspaceService
   ) {}
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -59,11 +54,6 @@ export class WorkspaceListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === 1) {
-        // After dialog is closed we're doing frontend updates
-        // For add we're just pushing a new row inside WorkspaceService
-        this.exampleDatabase.dataChange.value.push(
-          this.workspaceService.getDialogData()
-        );
         this.refresh();
       }
     });
@@ -77,16 +67,6 @@ export class WorkspaceListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === 1) {
-        // When using an edit things are little different, firstly we find record inside WorkspaceService by id
-        const foundIndex = this.exampleDatabase.dataChange.value.findIndex(
-          x => x.id === this.id
-        );
-        // Then you update that record using data from dialogData (values you entered)
-        this.exampleDatabase.dataChange.value[
-          foundIndex
-        ] = this.workspaceService.getDialogData();
-        // And lastly refresh table
-
         this.refresh();
       }
     });
@@ -100,20 +80,14 @@ export class WorkspaceListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === 1) {
-        const foundIndex = this.exampleDatabase.dataChange.value.findIndex(
-          x => x.id === this.id
-        );
-        // for delete we use splice in order to remove single object from WorkspaceService
-        this.exampleDatabase.dataChange.value.splice(foundIndex, 1);
         this.refresh();
       }
     });
   }
 
   public loadData() {
-    this.exampleDatabase = new WorkspaceService(this.httpClient, this.adapter);
     this.dataSource = new ExampleDataSource(
-      this.exampleDatabase,
+      this.workspaceService,
       this.paginator,
       this.sort
     );

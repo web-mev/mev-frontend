@@ -22,12 +22,11 @@ import { MatSort } from '@angular/material/sort';
 
 import { NotificationService } from '@core/core.module';
 import { FileService } from '@file-manager/services/file-manager.service';
-import { File, FileAdapter } from '@app/shared/models/file';
+import { File } from '@app/shared/models/file';
 import { AddFileDialogComponent } from '@app/features/file-manager/components/dialogs/add-file-dialog/add-file-dialog.component';
 import { EditFileDialogComponent } from '@app/features/file-manager/components/dialogs/edit-file-dialog/edit-file-dialog.component';
 import { DeleteFileDialogComponent } from '@app/features/file-manager/components/dialogs/delete-file-dialog/delete-file-dialog.component';
 import { Dropbox, DropboxChooseOptions } from '@file-manager/models/dropbox';
-import { AnalysesService } from '@app/features/analysis/services/analysis.service';
 import { PreviewDialogComponent } from '@app/features/workspace-detail/components/dialogs/preview-dialog/preview-dialog.component';
 import { ViewFileTypesDialogComponent } from '../dialogs/view-file-types-dialog/view-file-types-dialog.component';
 
@@ -61,7 +60,6 @@ export class FileListComponent implements OnInit {
     'is_public',
     'actions'
   ];
-  exampleDatabase: FileService | null;
   dataSource: ExampleDataSource | null;
   id: string;
   uploadProgressData: Map<string, object>;
@@ -73,9 +71,7 @@ export class FileListComponent implements OnInit {
     public httpClient: HttpClient,
     public dialog: MatDialog,
     public fileService: FileService,
-    private adapter: FileAdapter,
     private readonly notificationService: NotificationService,
-    private readonly analysesService: AnalysesService,
     private ref: ChangeDetectorRef
   ) {}
 
@@ -128,16 +124,7 @@ export class FileListComponent implements OnInit {
       data: { file: File }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result === 1) {
-        // After dialog is closed we're doing frontend updates
-        // For add we're just pushing a new row inside FileService
-
-        this.exampleDatabase.dataChange.value.push(
-          this.fileService.getDialogData()
-        );
-      }
-    });
+    dialogRef.afterClosed().subscribe(() => {});
   }
 
   /**
@@ -181,15 +168,6 @@ export class FileListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === 1) {
-        // When using an edit things are little different, firstly we find record inside FileService by id
-        const foundIndex = this.exampleDatabase.dataChange.value.findIndex(
-          x => x.id === this.id
-        );
-        // Then you update that record using data from dialogData (values you entered)
-        this.exampleDatabase.dataChange.value[
-          foundIndex
-        ] = this.fileService.getDialogData();
-        // And lastly refresh table
         this.refresh();
       }
     });
@@ -257,24 +235,14 @@ export class FileListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === 1) {
-        const foundIndex = this.exampleDatabase.dataChange.value.findIndex(
-          x => x.id === this.id
-        );
-        // for delete we use splice in order to remove single object from FileService
-        this.exampleDatabase.dataChange.value.splice(foundIndex, 1);
         this.refresh();
       }
     });
   }
 
   public loadData() {
-    this.exampleDatabase = new FileService(
-      this.httpClient,
-      this.adapter,
-      this.analysesService
-    );
     this.dataSource = new ExampleDataSource(
-      this.exampleDatabase,
+      this.fileService,
       this.paginator,
       this.sort
     );

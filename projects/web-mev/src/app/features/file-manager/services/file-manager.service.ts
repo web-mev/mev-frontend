@@ -126,7 +126,6 @@ export class FileService {
                 isUploaded: true
               };
               this.fileUploadsProgress.next(fileUploadsProgressMap);
-              this.dialogData = formData;
           }
         });
     }
@@ -157,9 +156,7 @@ export class FileService {
   updateFile(file: File): void {
     this.httpClient
       .put(`${this.API_URL}/resources/${file.id}/`, file)
-      .subscribe(data => {
-        this.dialogData = file;
-      });
+      .subscribe(data => {});
   }
 
   /**

@@ -223,8 +223,12 @@ export class Deseq2Component implements OnInit, AfterViewInit {
       const newElem = { key: elem.name };
       newElem[this.yExperCat] = Utils.getBoxPlotStatistics(experNumbers);
       newElem[this.yBaseCat] = Utils.getBoxPlotStatistics(baseNumbers);
-      newElem[this.yExperPoints] = experNumbers;
-      newElem[this.yBasePoints] = baseNumbers;
+      const experPts = [];
+      experSamples.forEach((k,i) => experPts.push({label: k, value: experNumbers[i]}));
+      const basePts = [];
+      baseSamples.forEach((k,i) => basePts.push({label: k, value: baseNumbers[i]}));
+      newElem[this.yExperPoints] = experPts;
+      newElem[this.yBasePoints] = basePts;
       return newElem;
     });
     this.boxPlotData = countsFormatted;
@@ -296,8 +300,11 @@ export class Deseq2Component implements OnInit, AfterViewInit {
       .attr('class', 'd3-tip')
       .offset([-10, 0])
       .html((event, d) => {
-        // if it is a hover over an individual point, show the value
-        if (d !== Object(d)) return 'Value: ' + d.toFixed(this.precision);
+
+        // if the pt_label exists we know we are hovering over an individual point
+        if ('pt_label' in d ){
+          return d.label + ': ' + d.value.toFixed(this.precision);
+        }
 
         // if it is a hover over a box plot, show table with basic statistic values
         const htmlTable =
@@ -385,8 +392,8 @@ export class Deseq2Component implements OnInit, AfterViewInit {
 
     // Box plots
     Object.keys(this.boxPlotTypes).forEach((key, i) => {
-      const yCatProp = this.boxPlotTypes[key].yCat;
-      const yPointsProp = this.boxPlotTypes[key].yPoints;
+      const yCatProp = this.boxPlotTypes[key].yCat; //e.g. 'experValues'
+      const yPointsProp = this.boxPlotTypes[key].yPoints; //e.g. 'experPoints'
       const color = this.boxPlotTypes[key].color;
 
       // Main vertical line
@@ -471,7 +478,7 @@ export class Deseq2Component implements OnInit, AfterViewInit {
                 this.jitterWidth / 2 +
                 Math.random() * this.jitterWidth
             )
-            .attr('cy', d => this.yScale(d))
+            .attr('cy', d => this.yScale(d['value']))
             .attr('r', 3)
             .style('fill', color)
             .attr('stroke', '#000000')

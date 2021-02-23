@@ -1,7 +1,11 @@
+<!-- <mat-form-field>
+    <input matInput placeholder="Search..." #input>
+</mat-form-field> -->
+
 <mat-card class="analysis-card">
   <mat-card-header>
     <div mat-card-avatar class="analysis-card__img"></div>
-    <mat-card-title>Limma: {{ outputs?.job_name }}</mat-card-title>
+    <mat-card-title>{{analysisName}}: {{ outputs?.job_name }}</mat-card-title>
   </mat-card-header>
   <mat-card-content class="analysis-card__main">
     <p class="analysis-card__instruction">
@@ -64,7 +68,7 @@
       <mev-spinner-overlay *ngIf="dataSource.loading$ | async"></mev-spinner-overlay>
 
       <div class="mat-elevation-z8">
-        <mat-table class="deseq-table" [dataSource]="dataSource" matSort [matSortActive]="defaultSorting.field"
+        <mat-table class="dge-table" [dataSource]="dataSource" matSort [matSortActive]="defaultSorting.field"
           [matSortDirection]="defaultSorting.direction" matSortDisableClear>
 
           <ng-container matColumnDef="name">
@@ -113,7 +117,7 @@
       </div>
 
       <div class="button-panel">
-        <button mat-raised-button color="accent" (click)="onCreateCustomFeatureSet()">
+        <button mat-raised-button color="accent" [disabled]="dataSource.featuresCount > maxFeatureSetSize" (click)="onCreateCustomFeatureSet()">
           <mat-icon>add</mat-icon>
           Save as a feature set
         </button>

@@ -11,6 +11,8 @@ import { GseaComponent } from './components/gsea/gsea/gsea.component';
 import { RugPlotComponent } from './components/rug-plot/rug-plot/rug-plot.component';
 import { KmeansComponent } from './components/kmeans/kmeans/kmeans.component';
 import { BoxPlottingComponent } from './components/box-plotting/box-plotting.component';
+import { DifferentialExpressionComponent } from './components/differential_expression/differential_expression.component';
+import { EdgerComponent } from './components/edger/edger.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,9 @@ import { BoxPlottingComponent } from './components/box-plotting/box-plotting.com
     GseaComponent,
     RugPlotComponent,
     KmeansComponent,
-    BoxPlottingComponent
+    BoxPlottingComponent,
+    DifferentialExpressionComponent,
+    EdgerComponent
   ],
   imports: [CommonModule, SharedModule],
   exports: [
@@ -34,7 +38,8 @@ import { BoxPlottingComponent } from './components/box-plotting/box-plotting.com
     GseaComponent,
     RugPlotComponent,
     KmeansComponent,
-    BoxPlottingComponent
+    BoxPlottingComponent,
+    EdgerComponent
   ]
 })
 export class D3Module {}

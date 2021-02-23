@@ -11,6 +11,10 @@
         <mev-limma [outputs]="outputs"></mev-limma>
     </ng-container>
 
+    <ng-container *ngIf="operationName === 'edgeR'">
+        <mev-edger [outputs]="outputs"></mev-edger>
+    </ng-container>
+
     <ng-container *ngIf="operationName === 'Hierarchical clustering (HCL)'">
         <mev-hcl [outputs]="outputs"></mev-hcl>
     </ng-container>

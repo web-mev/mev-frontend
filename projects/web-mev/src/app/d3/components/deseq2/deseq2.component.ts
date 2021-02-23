@@ -21,6 +21,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddSampleSetComponent } from '../dialogs/add-sample-set/add-sample-set.component';
 import { MetadataService } from '@app/core/metadata/metadata.service';
 import { Utils } from '@app/shared/utils/utils';
+import { NotificationService } from '../../../core/core.module';
 
 /**
  * Deseq2 Component
@@ -66,6 +67,12 @@ export class Deseq2Component implements OnInit, AfterViewInit {
   defaultPageIndex = 0;
   defaultPageSize = 10;
   defaultSorting = { field: 'padj', direction: 'asc' };
+
+  // Controls how large a custom FeatureSet can be.
+  // Otherwise, clicking the 'add features set' button
+  // with a full table could create exceptionally large feature sets
+  // (which aren't typically useful anyway)
+  maxFeatureSetSize = 500;
 
   /* Table filters */
   allowedFilters = {
@@ -121,7 +128,8 @@ export class Deseq2Component implements OnInit, AfterViewInit {
   constructor(
     private analysesService: AnalysesService,
     public dialog: MatDialog,
-    private metadataService: MetadataService
+    private metadataService: MetadataService,
+    private readonly notificationService: NotificationService
   ) {
     this.dataSource = new FeaturesDataSource(this.analysesService);
 
@@ -272,23 +280,48 @@ export class Deseq2Component implements OnInit, AfterViewInit {
    * Function that is triggered when the user clicks the "Create a custom sample" button
    */
   onCreateCustomFeatureSet() {
-    const features = this.dataSource.featuresSubject.value.map(elem => ({
-      id: elem.name
-    }));
+
+    // We don't want to create exceptionally large feature sets. Check
+    // that they don't exceed some preset size
+    const setSize = this.dataSource.featuresCount;
+    if (setSize > this.maxFeatureSetSize){
+      const errorMessage = `The current size of 
+        your set (${setSize}) is larger than the 
+        maximum allowable size (${this.maxFeatureSetSize}).
+        Please filter the table further to reduce the size.`
+      this.notificationService.error(errorMessage);
+      return;
+    }
+    
     const dialogRef = this.dialog.open(AddSampleSetComponent, {
       data: { type: CustomSetType.FeatureSet }
     });
 
     dialogRef.afterClosed().subscribe(customSetData => {
       if (customSetData) {
-        const customSet = {
-          name: customSetData.name,
-          type: CustomSetType.FeatureSet,
-          elements: features,
-          multiple: true
-        };
-
-        this.metadataService.addCustomSet(customSet);
+        // We want ALL of the features passing the filter, not just those shown on the immediate
+        // page in the table.
+        const filterValues = this.createFilters();
+        this.analysesService
+          .getResourceContent(
+            this.dgeResourceId,
+            null,
+            null,
+            filterValues,
+            {}
+          )
+          .subscribe(features => {
+            const elements = features.map(feature => {
+               return {id: feature.rowname};
+            });
+            const customSet = {
+              name: customSetData.name,
+              type: CustomSetType.FeatureSet,
+              elements: elements,
+              multiple: true
+            };
+            this.metadataService.addCustomSet(customSet);
+          });
       }
     });
   }
@@ -547,9 +580,9 @@ export class Deseq2Component implements OnInit, AfterViewInit {
   }
 
   /**
-   * Function to load features by filters, pages and sorting settings specified by a user
+   * Function to construct the parameter filters that are passed to the backend
    */
-  loadFeaturesPage() {
+  createFilters(){
     const formValues = this.filterForm.value; // i.e. {name: "asdfgh", pvalue: 3, pvalue_operator: "lte", log2FoldChange: 2, log2FoldChange_operator: "lte"}
     const paramFilter = {}; // has values {'log2FoldChange': '[absgt]:2'};
     for (const key in this.allowedFilters) {
@@ -566,6 +599,14 @@ export class Deseq2Component implements OnInit, AfterViewInit {
         }
       }
     }
+    return paramFilter;
+  }
+
+  /**
+   * Function to load features by filters, pages and sorting settings specified by a user
+   */
+  loadFeaturesPage() {
+    const paramFilter = this.createFilters();
 
     const sorting = {
       sortField: this.sort.active,

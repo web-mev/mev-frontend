@@ -117,7 +117,7 @@
       </div>
 
       <div class="button-panel">
-        <button mat-raised-button color="accent" (click)="onCreateCustomFeatureSet()">
+        <button mat-raised-button color="accent" [disabled]="dataSource.featuresCount > maxFeatureSetSize" (click)="onCreateCustomFeatureSet()">
           <mat-icon>add</mat-icon>
           Save as a feature set
         </button>

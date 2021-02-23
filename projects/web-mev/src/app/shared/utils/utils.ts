@@ -47,4 +47,22 @@ export class Utils {
       max: d3.max(numbers) // q3 + 1.5 * interQuantileRange
     };
   }
+
+  /*
+  *  Compares to lists of strings. Returns a boolean indicating their set equality.
+  */
+  public static stringArraysEquivalent(listA: string[], listB: string[]) {
+    let setA = new Set(listA);
+    let setB = new Set(listB);
+
+    let _difference = new Set(setA)
+    for (let elem of setB) {
+        if (_difference.has(elem)) {
+            _difference.delete(elem)
+        } else {
+            _difference.add(elem)
+        }
+    }
+    return _difference.size == 0;
+  }
 }

@@ -16,7 +16,7 @@ import { DataSource } from '@angular/cdk/table';
 import * as d3 from 'd3';
 import d3Tip from 'd3-tip';
 import { FormGroup, FormControl } from '@angular/forms';
-import { CustomSetType } from '@app/_models/metadata';
+import { CustomSetType, CustomSet } from '@app/_models/metadata';
 import { MatDialog } from '@angular/material/dialog';
 import { AddSampleSetComponent } from '../dialogs/add-sample-set/add-sample-set.component';
 import { MetadataService } from '@app/core/metadata/metadata.service';
@@ -65,7 +65,7 @@ export class Deseq2Component implements OnInit, AfterViewInit {
 
   defaultPageIndex = 0;
   defaultPageSize = 10;
-  defaultSorting = { field: 'log2FoldChange', direction: 'asc' };
+  defaultSorting = { field: 'padj', direction: 'asc' };
 
   /* Table filters */
   allowedFilters = {
@@ -116,6 +116,7 @@ export class Deseq2Component implements OnInit, AfterViewInit {
   yBasePoints = this.boxPlotTypes.Base.yPoints; // field name in data for Y axis (used to draw individual points for baseline samples)
   xScale; // scale functions to transform data values into the the range
   yScale;
+  customObservationSets: CustomSet[];
 
   constructor(
     private analysesService: AnalysesService,
@@ -168,6 +169,7 @@ export class Deseq2Component implements OnInit, AfterViewInit {
 
   ngOnChanges(): void {
     this.initializeFeatureResource();
+    this.customObservationSets = this.metadataService.getCustomObservationSets();
   }
 
   initializeFeatureResource(): void {
@@ -211,6 +213,29 @@ export class Deseq2Component implements OnInit, AfterViewInit {
       elem => elem.id
     );
 
+    /* The input to the deseq2 analysis is two observation sets. To populate that option,
+    *  the user would have had to define those. To keep everything consistent, we query
+    *  the existing observation sets and compare them to the baseSamples/experSamples. If they
+    *  match, then we color the groups based on the colors assigned to those observation sets.
+    */
+    this.customObservationSets.forEach(
+      obsSet => {
+        const obsSetSamples = obsSet.elements.map(elem => elem.id);
+        if (Utils.stringArraysEquivalent(obsSetSamples, baseSamples)) {
+          // matches the baseSamples array
+          if(obsSet.color) {
+            this.boxPlotTypes.Base.color = obsSet.color
+          }
+        }
+        if (Utils.stringArraysEquivalent(obsSetSamples, experSamples)) {
+          // matches the experSamples array
+          if(obsSet.color) {
+            this.boxPlotTypes.Experimental.color = obsSet.color
+          }
+        }
+      }
+    );
+
     const countsFormatted = this.boxPlotData.map(elem => {
       const baseNumbers = baseSamples.reduce(
         (acc, cur) => [...acc, elem[cur]],
@@ -224,9 +249,9 @@ export class Deseq2Component implements OnInit, AfterViewInit {
       newElem[this.yExperCat] = Utils.getBoxPlotStatistics(experNumbers);
       newElem[this.yBaseCat] = Utils.getBoxPlotStatistics(baseNumbers);
       const experPts = [];
-      experSamples.forEach((k,i) => experPts.push({label: k, value: experNumbers[i]}));
+      experSamples.forEach((k,i) => experPts.push({pt_label: k, value: experNumbers[i]}));
       const basePts = [];
-      baseSamples.forEach((k,i) => basePts.push({label: k, value: baseNumbers[i]}));
+      baseSamples.forEach((k,i) => basePts.push({pt_label: k, value: baseNumbers[i]}));
       newElem[this.yExperPoints] = experPts;
       newElem[this.yBasePoints] = basePts;
       return newElem;
@@ -303,7 +328,7 @@ export class Deseq2Component implements OnInit, AfterViewInit {
 
         // if the pt_label exists we know we are hovering over an individual point
         if ('pt_label' in d ){
-          return d.label + ': ' + d.value.toFixed(this.precision);
+          return d.pt_label + ': ' + d.value.toFixed(this.precision);
         }
 
         // if it is a hover over a box plot, show table with basic statistic values

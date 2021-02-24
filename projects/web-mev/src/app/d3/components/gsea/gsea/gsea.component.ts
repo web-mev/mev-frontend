@@ -37,7 +37,7 @@ export class GseaComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   /* Table settings */
-  displayedColumns = ['pathway', 'ranks', 'pval', 'padj', 'NES', 'actions'];
+  displayedColumns = ['pathway', 'ranks', 'pval', 'padj', 'NES', 'leadingEdge', 'actions'];
 
   operators = [
     { id: 'eq', name: ' = ' },
@@ -51,7 +51,7 @@ export class GseaComponent implements OnInit {
 
   defaultPageIndex = 0;
   defaultPageSize = 10;
-  defaultSorting = { field: 'pathway', direction: 'asc' };
+  defaultSorting = { field: 'pval', direction: 'asc' };
 
   /* Table filters */
   allowedFilters = {
@@ -59,6 +59,11 @@ export class GseaComponent implements OnInit {
       defaultValue: '',
       hasOperator: true,
       operatorDefaultValue: 'lte'
+    },
+    NES: {
+      defaultValue: 0,
+      hasOperator: true,
+      operatorDefaultValue: 'absgt'
     }
   };
 

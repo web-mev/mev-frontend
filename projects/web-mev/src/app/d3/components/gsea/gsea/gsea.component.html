@@ -5,10 +5,11 @@
   </mat-card-header>
   <mat-card-content class="analysis-card__main">
     <p class="analysis-card__instruction">
-      Use the table pagination component at the bottom of the table to navigate
-      between a set of table and chart results. <br>
-      You can sort data in alphabetical and numerical order,
-      or use filters to hide data you don't want to see.
+      Use the table to navigate
+      the fgsea results. <br>
+    </p>
+    <p class="analysis-card__instruction">
+      You can create custom gene sets based on the "leading edge" genes of each pathway.
     </p>
     <mat-divider [inset]="true"></mat-divider>
     <div class="analysis-card__content">
@@ -29,7 +30,21 @@
               <input matInput formControlName="padj" type=number step=any min=0>
             </mat-form-field>
           </div>
-
+          <div class="filter">
+            <span class="label">
+              Enrichment score (NES):
+            </span>
+            <mat-form-field class="form-control form-control__small" color="accent">
+              <mat-select formControlName="NES_operator">
+                <mat-option *ngFor="let operator of operators" [value]="operator.id">
+                  {{ operator.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field class="form-control">
+              <input matInput formControlName="NES" type=number step=any min=0>
+            </mat-form-field>
+          </div>
           <button type="submit" [disabled]="!filterForm.valid" mat-raised-button color="accent">Apply filters</button>
         </form>
 
@@ -45,7 +60,7 @@
           </ng-container>
 
           <ng-container matColumnDef="NES">
-            <mat-header-cell *matHeaderCellDef>NES</mat-header-cell>
+            <mat-header-cell *matHeaderCellDef mat-sort-header>NES</mat-header-cell>
             <mat-cell class="description-cell" *matCellDef="let row">{{row.NES}}</mat-cell>
           </ng-container>
 
@@ -59,8 +74,13 @@
             <mat-cell class="description-cell" *matCellDef="let row">{{row.pval}}</mat-cell>
           </ng-container>
 
+          <ng-container matColumnDef="leadingEdge">
+            <mat-header-cell *matHeaderCellDef>Leading Edge size</mat-header-cell>
+            <mat-cell class="description-cell" *matCellDef="let row">{{row.leadingEdge.length}}</mat-cell>
+          </ng-container>
+
           <ng-container matColumnDef="ranks">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>Gene ranks</mat-header-cell>
+            <mat-header-cell *matHeaderCellDef >Gene ranks</mat-header-cell>
             <mat-cell class="description-cell" *matCellDef="let row">
               <mev-rug-plot [plotData]="row.ranks"></mev-rug-plot>
             </mat-cell>

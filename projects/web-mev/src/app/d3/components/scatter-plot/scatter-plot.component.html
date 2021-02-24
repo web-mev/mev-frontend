@@ -5,7 +5,10 @@
     </mat-card-header>
     <mat-card-content class="analysis-card__main">
         <p class="analysis-card__instruction">
-            To select points click the toggle button to enable the Selection mode. Then click the Add button to save a custom sample set.
+            Enable the <i>select points</i> mode to allow the grouping of points and creation of custom sets. 
+        </p>
+        <p class="analysis-card__instruction">
+            Those sets can be used in other analyses (e.g. differential expression) to examine differences between the groups.
         </p>
         <mat-divider [inset]="true"></mat-divider>
         <div class="analysis-card__content">
@@ -54,9 +57,11 @@
                         Save as a sample set
                     </button>
                     <div class="sample-list" *ngIf="selectedSamples.length"> Selected samples:
-                        <span class="sample-list__item" *ngFor="let item of selectedSamples">
-                            {{ item.sample }} ({{ item.x_coord.toFixed(2) }}; {{ item.y_coord.toFixed(2) }})
-                        </span>
+                        <mat-chip-list>
+                            <mat-chip *ngFor="let item of selectedSamples" color="primary">
+                                {{ item.sample }}
+                            </mat-chip>
+                        </mat-chip-list>
                     </div>
                 </div>          
 

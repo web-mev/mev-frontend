@@ -288,8 +288,8 @@ export class ScatterPlotComponent implements OnChanges {
       .text(
         this.xCat.toUpperCase() +
           ' (Explained variance: ' +
-          this.xVariance +
-          ')'
+          (100*this.xVariance).toFixed(this.precision) +
+          '%)'
       );
 
     this.gY = group
@@ -307,8 +307,8 @@ export class ScatterPlotComponent implements OnChanges {
       .text(
         this.yCat.toUpperCase() +
           ' (Explained variance: ' +
-          this.yVariance +
-          ')'
+          (100*this.yVariance).toFixed(this.precision) +
+          '%)'
       );
 
     const objects = group
@@ -418,9 +418,9 @@ export class ScatterPlotComponent implements OnChanges {
 
         if (this.isBrushed(extent, x_coord, y_coord)) {
           this.selectedSamples.push({
-            ...(d as object),
-            x_coord: d[this.xCat],
-            y_coord: d[this.yCat]
+            ...(d as object)//,
+            //x_coord: d[this.xCat],
+            //y_coord: d[this.yCat]
           });
           return true;
         }

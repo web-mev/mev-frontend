@@ -13,6 +13,7 @@ import { KmeansComponent } from './components/kmeans/kmeans/kmeans.component';
 import { BoxPlottingComponent } from './components/box-plotting/box-plotting.component';
 import { DifferentialExpressionComponent } from './components/differential_expression/differential_expression.component';
 import { EdgerComponent } from './components/edger/edger.component';
+import { RnaSeqNormalizationComponent } from './components/rnaseq-normalization/rnaseq-normalization.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { EdgerComponent } from './components/edger/edger.component';
     KmeansComponent,
     BoxPlottingComponent,
     DifferentialExpressionComponent,
-    EdgerComponent
+    EdgerComponent,
+    RnaSeqNormalizationComponent
   ],
   imports: [CommonModule, SharedModule],
   exports: [
@@ -39,7 +41,8 @@ import { EdgerComponent } from './components/edger/edger.component';
     RugPlotComponent,
     KmeansComponent,
     BoxPlottingComponent,
-    EdgerComponent
+    EdgerComponent,
+    RnaSeqNormalizationComponent
   ]
 })
 export class D3Module {}

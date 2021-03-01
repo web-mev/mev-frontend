@@ -12,7 +12,11 @@ import { DataSource } from '@angular/cdk/table';
 import { tap, finalize } from 'rxjs/operators';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { MatDialog } from '@angular/material/dialog';
+import { CustomSetType } from '@app/_models/metadata';
+import { AddSampleSetComponent } from '../dialogs/add-sample-set/add-sample-set.component';
 import { AnalysesService } from '@app/features/analysis/services/analysis.service';
+import { MetadataService } from '@app/core/metadata/metadata.service';
 import { NotificationService } from '../../../core/core.module';
 
 @Component({
@@ -40,42 +44,48 @@ export class RnaSeqNormalizationComponent implements OnInit, AfterViewInit  {
     maxFeatureSetSize = 500;
 
     /* Table settings */
-    staticCols = ['name', 'meanExp'];
+    staticCols = ['name', '__rowmean__'];
     dynamicColumns; // will be filled further by dataSource
     displayColumns; // will be the concatenation of static + dynamic cols
 
-    operators = [
+    numerical_operators = [
         { id: 'eq', name: ' = ' },
         { id: 'gte', name: ' >=' },
         { id: 'gt', name: ' > ' },
         { id: 'lte', name: ' <=' },
         { id: 'lt', name: ' < ' }
     ];
+    string_operators = [
+        { id: 'startswith', name: ' Starts with: '},
+        { id: 'case-ins-eq', name: ' = (case-insensitive) '},
+        { id: 'eq', name: ' = (strict) '}
+    ];
 
     defaultPageIndex = 0;
     defaultPageSize = 10;
-    defaultSorting = { field: 'meanExp', direction: 'desc' };
+    defaultSorting = { field: '__rowmean__', direction: 'desc' };
 
     /* Table filters */
     allowedFilters = {
         /*name: { defaultValue: '', hasOperator: false },*/
-        geneName: {
+        __rowname__: {
             defaultValue: '',
-            hasOperator: false
+            hasOperator: true,
+            operatorDefaultValue: 'startswith'
         },
-        // meanExp: {
-        //     defaultValue: 0,
-        //     hasOperator: true,
-        //     operatorDefaultValue: 'gte'
-        // }
+        __rowmean__: {
+            defaultValue: 0,
+            hasOperator: true,
+            operatorDefaultValue: 'gte'
+        }
     };
 
     filterForm = new FormGroup({});
 
     constructor(
         private analysesService: AnalysesService,
-        //public dialog: MatDialog,
-        //private metadataService: MetadataService,
+        public dialog: MatDialog,
+        private metadataService: MetadataService,
         private readonly notificationService: NotificationService
     ){
         this.dataSource = new ExpressionMatrixDataSource(this.analysesService);
@@ -132,17 +142,20 @@ export class RnaSeqNormalizationComponent implements OnInit, AfterViewInit  {
             sortField: this.defaultSorting.field,
             sortDirection: this.defaultSorting.direction
         };
+        const paramFilter = this.createFilters();
+
         this.dataSource.loadData(
             this.resourceId,
-            {},
-            // sorting,
-            {},
+            paramFilter,
+            sorting,
+            //{},
             this.defaultPageIndex,
             this.defaultPageSize
         );
         this.dataSource.sampleNames$.subscribe( data => {
                 this.dynamicColumns = data
                 this.displayColumns = [...this.staticCols, ...data];
+                console.log(this.displayColumns);
             }
         );
     }
@@ -181,8 +194,8 @@ export class RnaSeqNormalizationComponent implements OnInit, AfterViewInit  {
         this.dataSource.loadData(
             this.resourceId,
             paramFilter,
-            // sorting,
-            {},
+            sorting,
+            //{},
             this.paginator.pageIndex,
             this.paginator.pageSize
         );
@@ -192,12 +205,60 @@ export class RnaSeqNormalizationComponent implements OnInit, AfterViewInit  {
      * Function is triggered when submitting the form with table filters
      */
     onSubmit() {
+        console.log('submit!');
         this.paginator.pageIndex = this.defaultPageIndex;
         this.loadPage();
     }
 
-    onCreateCustomFeatureSet() {
+   /**
+   * Function that is triggered when the user clicks the "Create a custom sample" button
+   */
+  onCreateCustomFeatureSet() {
+
+    // We don't want to create exceptionally large feature sets. Check
+    // that they don't exceed some preset size
+    const setSize = this.dataSource.expCount;
+    if (setSize > this.maxFeatureSetSize){
+      const errorMessage = `The current size of 
+        your set (${setSize}) is larger than the 
+        maximum allowable size (${this.maxFeatureSetSize}).
+        Please filter the table further to reduce the size.`
+      this.notificationService.error(errorMessage);
+      return;
     }
+    
+    const dialogRef = this.dialog.open(AddSampleSetComponent, {
+      data: { type: CustomSetType.FeatureSet }
+    });
+
+    dialogRef.afterClosed().subscribe(customSetData => {
+      if (customSetData) {
+        // We want ALL of the features passing the filter, not just those shown on the immediate
+        // page in the table.
+        const filterValues = this.createFilters();
+        this.analysesService
+          .getResourceContent(
+            this.resourceId,
+            null,
+            null,
+            filterValues,
+            {}
+          )
+          .subscribe(features => {
+            const elements = features.map(feature => {
+               return {id: feature.rowname};
+            });
+            const customSet = {
+              name: customSetData.name,
+              type: CustomSetType.FeatureSet,
+              elements: elements,
+              multiple: true
+            };
+            this.metadataService.addCustomSet(customSet);
+          });
+      }
+    });
+  }
 
 }
 
@@ -250,13 +311,15 @@ export class ExpressionMatrixDataSource implements DataSource<GeneExpression> {
                         );
                         return {
                             geneName: dataRow.rowname,
-                            meanExp: 0,
+                            meanExp: dataRow['__rowmean__'],
                             expressions: truncated_expressions
                         };
                     }
                 );
                 // extract the sample names to populate the columns
-                this.sampleNamesSubject.next(Object.keys(expFormatted[0].expressions));
+                if (this.expCount > 0){
+                    this.sampleNamesSubject.next(Object.keys(expFormatted[0].expressions));
+                }
                 return this.expSubject.next(expFormatted);
             }
         );

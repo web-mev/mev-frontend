@@ -1,18 +1,27 @@
 <mev-spinner-overlay *ngIf="isWait"></mev-spinner-overlay>
-<div *ngIf="!isWait">
+<div *ngIf="plotReady && (boxPlotData.length > 0)">
     <section class="observation-list-section">
-        <ul *ngIf="customObservationSets.length"> Group observations by:
-            <li *ngFor="let set of customObservationSets">
-                <mat-checkbox (change)="onObservationCheck($event)" [id]="set.name">{{ set.name }}</mat-checkbox>
-            </li>
-        </ul>
+    <ul *ngIf="customObservationSets.length"> Group observations by:
+        <li *ngFor="let set of customObservationSets">
+            <mat-checkbox (change)="onObservationCheck($event)" [id]="set.name">{{ set.name }}</mat-checkbox>
+        </li>
+    </ul>
     </section>
+    <section>
+        <mat-checkbox (click)="togglePoints()">Show individual samples</mat-checkbox>
+    </section>
+    <div *ngIf="warnMsg.length > 0">
+        <mat-card class="warn">
+            {{warnMsg}}
+        </mat-card>
+    </div>
     <div class="button-panel">
-        <!-- <button mat-raised-button color="accent" (click)="onCreateCustomFeatureSet()">
-          <mat-icon>add</mat-icon>
-          Save as a feature set
-        </button> -->
         <mev-download-button [containerId]="containerId" [imageName]="imageName"></mev-download-button>
     </div>
-    <div #boxPlot id="boxPlot" class="chart" (window:resize)="onResize($event)"></div>
 </div>
+<div *ngIf="plotReady && (boxPlotData.length === 0) && !isWait">
+    <mat-card class="no-data-error">
+        No data to plot. Please check your input selections and retry.
+    </mat-card> 
+</div>
+<div #boxPlot id="boxPlot" class="chart" (window:resize)="onResize($event)"></div>

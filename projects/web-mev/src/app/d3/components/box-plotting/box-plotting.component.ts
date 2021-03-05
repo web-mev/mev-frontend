@@ -5,9 +5,9 @@ import {
   ViewChild,
   ElementRef,
   OnChanges,
-  ChangeDetectorRef
+  OnInit,
+  AfterViewInit
 } from '@angular/core';
-import { AnalysesService } from '@app/features/analysis/services/analysis.service';
 import { MetadataService } from '@app/core/metadata/metadata.service';
 import { Utils } from '@app/shared/utils/utils';
 import * as d3 from 'd3';
@@ -16,65 +16,88 @@ import d3Tip from 'd3-tip';
 /**
  * Box Plotting Component
  *
- * Used for the Plotting operation (output view for the normalization methods)
+ * Expects inputs giving the expressions and a feature set
  */
 @Component({
-  selector: 'mev-box-plotting',
+  selector: 'd3-boxplot',
   templateUrl: './box-plotting.component.html',
   styleUrls: ['./box-plotting.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default
 })
-export class BoxPlottingComponent implements OnChanges {
-  @Input() outputs;
-  @ViewChild('boxPlot') svgElement: ElementRef;
+export class D3BoxPlotComponent implements OnInit, OnChanges, AfterViewInit {
+  /*
+  An array of items where each item looks like:
+  { 'rowname': 'A1BG', 'values': {'sA':1, 'sB':2,...}}
+  that is, values is an object where the keys are samples/observations
+  and they point at the expression for that sample
+  */
+  @Input() resourceData;
+  @Input() isWait;
+  
+  @ViewChild('boxPlot')
+  svgElement: ElementRef;
 
   customObservationSets = [];
   customObservationSetsToPlot = [];
-  resourceData = [];
   boxPlotData = [];
   boxPlotTypes = {};
-  isWait = false;
+  plotReady = false;
+  warnMsg = '';
 
   xScale; // scale functions to transform data values into the the range
   yScale;
 
   /* Chart settings */
   containerId = '#boxPlot';
+  showPoints = false; //to toggle whether the user wants to see invididual points
   imageName = 'Box plot'; // file name for downloaded SVG image
   maxFeatureNumber = 80;
   precision = 2;
-  margin = { top: 50, right: 150, bottom: 100, left: 40 }; // chart margins
+  margin = { top: 50, right: 150, bottom: 100, left: 60 }; // chart margins
   outerHeight = 500;
   xCat = 'key'; // field name in data for X axis
   yCat = 'Value';
+  statsKey = 'stats'
+  pointsKey = 'points'
   delta = 0.1; // used for X and Y axis ranges (we add delta to avoid bug when both max and min are zeros)
-  boxWidth = 20; // the width of rectangular box
+  gap = 0.1 // fraction of the box width to act as a gap between sibling boxes
+  // each gene/feature is given an amount of horizontal space in which to plot. That space is
+  // dependent on the width of the screen and the number of genes/features. Assuming we have
+  // sufficient space, we fill each 'bin' to this fraction. This fraction (along with the total
+  // width and number of genes) sets the dynamic width of the boxes.
+  // Once there is not enough room we default to the minimum width and the boxes will overrun each
+  // other. (no way around that.)
+  fillFraction = 0.8;
+  minBoxWidth = 10; // the minimum width of rectangular box
   tooltipOffsetX = 10; // to position the tooltip on the right side of the triggering element
 
   constructor(
-    private apiService: AnalysesService,
     private metadataService: MetadataService,
-    private cdRef: ChangeDetectorRef
   ) {}
 
-  ngOnChanges(): void {
+  ngOnInit() {
     this.customObservationSets = this.metadataService.getCustomObservationSets();
     this.generateBoxPlot();
   }
 
-  /**
-   * Function to retrieve data for box plot
-   */
+  ngOnChanges(): void {
+    this.generateBoxPlot();
+  }
+
+  ngAfterViewInit() {
+  }
+
   generateBoxPlot() {
-    this.isWait = true;
-    const resourceId = this.outputs.input_matrix;
-    this.apiService.getResourceContent(resourceId).subscribe(response => {
-      this.resourceData = response;
+    if (this.svgElement){
       this.reformatData();
-      this.isWait = false;
-      this.cdRef.detectChanges();
       this.createChart();
-    });
+      this.plotReady = true;
+    }
+  }
+
+  togglePoints() {
+    this.showPoints = !this.showPoints;
+    this.generateBoxPlot();
   }
 
   /**
@@ -101,16 +124,8 @@ export class BoxPlottingComponent implements OnChanges {
         };
       }
 
-      if (this.outputs.features?.elements?.length) {
-        const selectedFeatures = this.outputs.features.elements.map(
-          el => el.id
-        );
-        this.resourceData = this.resourceData.filter(el =>
-          selectedFeatures.includes(el.rowname)
-        );
-      }
-
       this.resourceData = this.resourceData.slice(0, this.maxFeatureNumber);
+      //console.log(this.resourceData);
       const countsFormatted = this.resourceData.map(elem => {
         const newElem = { key: elem.rowname };
         Object.keys(this.boxPlotTypes).forEach(key => {
@@ -118,14 +133,30 @@ export class BoxPlottingComponent implements OnChanges {
             (acc, cur) => [...acc, elem.values[cur]],
             []
           );
-          newElem[this.boxPlotTypes[key].yCat] = Utils.getBoxPlotStatistics(
-            numbers
+          const valDict = this.boxPlotTypes[key].samples.map(
+            sampleName => {
+              return {pt_label: sampleName, value: elem.values[sampleName]}
+            }
           );
+          console.log('valdict: ', valDict);
+          let stats = Utils.getBoxPlotStatistics(numbers);
+          let d = {};
+          d[this.statsKey] = stats;
+          d[this.pointsKey] = valDict;
+          newElem[this.boxPlotTypes[key].yCat] = d;
         });
         return newElem;
       });
       this.boxPlotData = countsFormatted;
+    } else {
+      this.boxPlotData = [];
     }
+  }
+
+  clearChart() {
+    d3.select(this.containerId)
+    .selectAll('svg')
+    .remove();
   }
 
   /**
@@ -138,10 +169,11 @@ export class BoxPlottingComponent implements OnChanges {
     const height = outerHeight - this.margin.top - this.margin.bottom;
 
     const data = this.boxPlotData;
+    this.clearChart();
 
-    d3.select(this.containerId)
-      .selectAll('svg')
-      .remove();
+    if (data.length === 0){
+      return
+    }
 
     const svg = d3
       .select(this.containerId)
@@ -157,14 +189,23 @@ export class BoxPlottingComponent implements OnChanges {
 
     // Tooltip
     const tooltipOffsetX = this.tooltipOffsetX;
-    const tip = d3Tip()
+
+    // tool tip for individual points (if displayed)
+    const pointTip = d3Tip()
+      .attr('class', 'd3-tip')
+      .offset([-10, 0])
+      .html((event, d) => { 
+        return d.pt_label + ': ' + d.value.toFixed(this.precision);
+       });
+    svg.call(pointTip);
+
+    const boxToolTip = d3Tip()
       .attr('class', 'd3-tip')
       .offset([-10, 0])
       .html((event, d) => {
-        // if it is a hover over an individual point, show the value
-        if (d !== Object(d)) return 'Value: ' + d.toFixed(this.precision);
+        console.log('HOVER:', d);
 
-        // if it is a hover over a box plot, show table with basic statistic values
+        // Show table with basic statistic values
         const htmlTable =
           '<table><thead><th></th>' +
           Object.keys(this.boxPlotTypes)
@@ -176,7 +217,7 @@ export class BoxPlottingComponent implements OnChanges {
             .map(
               key =>
                 '<td>' +
-                d[this.boxPlotTypes[key].yCat].q1.toFixed(this.precision) +
+                d[this.boxPlotTypes[key].yCat][this.statsKey].q1.toFixed(this.precision) +
                 '</td>'
             )
             .join('') +
@@ -186,7 +227,7 @@ export class BoxPlottingComponent implements OnChanges {
             .map(
               key =>
                 '<td>' +
-                d[this.boxPlotTypes[key].yCat].median.toFixed(this.precision) +
+                d[this.boxPlotTypes[key].yCat][this.statsKey].median.toFixed(this.precision) +
                 '</td>'
             )
             .join('') +
@@ -196,7 +237,7 @@ export class BoxPlottingComponent implements OnChanges {
             .map(
               key =>
                 '<td>' +
-                d[this.boxPlotTypes[key].yCat].q3.toFixed(this.precision) +
+                d[this.boxPlotTypes[key].yCat][this.statsKey].q3.toFixed(this.precision) +
                 '</td>'
             )
             .join('') +
@@ -206,7 +247,7 @@ export class BoxPlottingComponent implements OnChanges {
             .map(
               key =>
                 '<td>' +
-                d[this.boxPlotTypes[key].yCat].iqr.toFixed(this.precision) +
+                d[this.boxPlotTypes[key].yCat][this.statsKey].iqr.toFixed(this.precision) +
                 '</td>'
             )
             .join('') +
@@ -216,7 +257,7 @@ export class BoxPlottingComponent implements OnChanges {
             .map(
               key =>
                 '<td>' +
-                d[this.boxPlotTypes[key].yCat].min.toFixed(this.precision) +
+                d[this.boxPlotTypes[key].yCat][this.statsKey].min.toFixed(this.precision) +
                 '</td>'
             )
             .join('') +
@@ -226,7 +267,7 @@ export class BoxPlottingComponent implements OnChanges {
             .map(
               key =>
                 '<td>' +
-                d[this.boxPlotTypes[key].yCat].max.toFixed(this.precision) +
+                d[this.boxPlotTypes[key].yCat][this.statsKey].max.toFixed(this.precision) +
                 '</td>'
             )
             .join('') +
@@ -234,7 +275,7 @@ export class BoxPlottingComponent implements OnChanges {
           '</table>';
         return '<b>' + d[this.xCat] + '</b><br>' + htmlTable;
       });
-    svg.call(tip);
+    svg.call(boxToolTip);
 
     svg
       .append('rect')
@@ -253,10 +294,10 @@ export class BoxPlottingComponent implements OnChanges {
     this.yScale = d3.scaleLinear().rangeRound([height, 0]);
 
     const maxArr = Object.keys(this.boxPlotTypes).map(key =>
-      d3.max(data, d => <number>d[this.boxPlotTypes[key].yCat].max || 0)
+      d3.max(data, d => <number>d[this.boxPlotTypes[key].yCat][this.statsKey].max || 0)
     );
     const minArr = Object.keys(this.boxPlotTypes).map(key =>
-      d3.min(data, d => <number>d[this.boxPlotTypes[key].yCat].min || 0)
+      d3.min(data, d => <number>d[this.boxPlotTypes[key].yCat][this.statsKey].min || 0)
     );
     const yMax = Math.max(...maxArr);
     const yMin = Math.min(...minArr);
@@ -281,9 +322,32 @@ export class BoxPlottingComponent implements OnChanges {
     svg.append('g').call(d3.axisLeft(this.yScale));
 
     // Box plots
+    const num_categories = Object.keys(this.boxPlotTypes).length;
+    // how much space is 'allotted' for each gene/feature
+    const xStep = this.xScale.step();
+    const numFeatures = data.length;
+    let boxWidth = (this.fillFraction*xStep)/num_categories;
+    if(boxWidth < this.minBoxWidth){
+      boxWidth = this.minBoxWidth;
+      this.warnMsg = `Note that the screen width and number of features
+        are such that the plot may not render correctly. Either decrease the
+        size of the gene/feature set or increase the browser window size if
+        not already maximized.
+      `
+    } else {
+      // if this isn't there the message will not go away once it has been triggered
+      this.warnMsg = '';
+    }
+    let gap = this.gap*boxWidth;
+    const total_width = num_categories*boxWidth + (num_categories - 1)*gap;
     Object.keys(this.boxPlotTypes).forEach((key, i) => {
-      const yCatProp = this.boxPlotTypes[key].yCat;
+      // key is the group name
+      const yCatProp = this.boxPlotTypes[key].yCat; //  the group name. Here same as key
       const color = this.boxPlotTypes[key].color;
+
+      // where we "start" the plot relative to the x-position
+      // for each plot element (gene)
+      const x0 = 0.5*total_width;
 
       // Main vertical line
       svg
@@ -294,15 +358,17 @@ export class BoxPlottingComponent implements OnChanges {
         .attr(
           'x1',
           (d: any) =>
-            this.xScale(d[this.xCat]) + (1.2 * i - 0.6) * this.boxWidth
+            //this.xScale(d[this.xCat]) + (1.2 * i - 0.6) * this.boxWidth
+            this.xScale(d[this.xCat]) - x0 + 0.5*boxWidth + i*(boxWidth + gap)
         )
         .attr(
           'x2',
           (d: any) =>
-            this.xScale(d[this.xCat]) + (1.2 * i - 0.6) * this.boxWidth
+            //this.xScale(d[this.xCat]) + (1.2 * i - 0.6) * this.boxWidth
+            this.xScale(d[this.xCat]) - x0 + 0.5*boxWidth + i*(boxWidth + gap)
         )
-        .attr('y1', (d: any) => this.yScale(d[yCatProp].min))
-        .attr('y2', (d: any) => this.yScale(d[yCatProp].max))
+        .attr('y1', (d: any) => this.yScale(d[yCatProp][this.statsKey].min))
+        .attr('y2', (d: any) => this.yScale(d[yCatProp][this.statsKey].max))
         .attr('stroke', 'black')
         .style('width', d => 10);
 
@@ -313,22 +379,23 @@ export class BoxPlottingComponent implements OnChanges {
         .append('rect')
         .attr(
           'x',
-          d => this.xScale(d[this.xCat]) + (1.2 * i - 1.1) * this.boxWidth
+          //d => this.xScale(d[this.xCat]) + (1.2 * i - 1.1) * this.boxWidth
+          d => this.xScale(d[this.xCat]) - x0 + i*(boxWidth + gap)
         )
-        .attr('y', d => this.yScale(d[yCatProp].q3))
+        .attr('y', d => this.yScale(d[yCatProp][this.statsKey].q3))
         .attr(
           'height',
-          d => this.yScale(d[yCatProp].q1) - this.yScale(d[yCatProp].q3)
+          d => this.yScale(d[yCatProp][this.statsKey].q1) - this.yScale(d[yCatProp][this.statsKey].q3)
         )
-        .attr('width', d => this.boxWidth)
+        .attr('width', d => boxWidth)
         .attr('stroke', 'black')
         .style('fill', color)
         .attr('pointer-events', 'all')
         .on('mouseover', function(mouseEvent: any, d) {
-          tip.show(mouseEvent, d, this);
-          tip.style('left', mouseEvent.x + tooltipOffsetX + 'px');
+          boxToolTip.show(mouseEvent, d, this);
+          boxToolTip.style('left', mouseEvent.x + tooltipOffsetX + 'px');
         })
-        .on('mouseout', tip.hide);
+        .on('mouseout', boxToolTip.hide);
 
       // Medians
       svg
@@ -337,19 +404,87 @@ export class BoxPlottingComponent implements OnChanges {
         .enter()
         .append('line')
         .attr('x1', d => {
-          if (d[yCatProp].median !== undefined)
-            return this.xScale(d[this.xCat]) + (1.2 * i - 1.1) * this.boxWidth;
+          if (d[yCatProp][this.statsKey].median !== undefined)
+            //return this.xScale(d[this.xCat]) + (1.2 * i - 1.1) * this.boxWidth;
+            return this.xScale(d[this.xCat]) - x0 + i*(boxWidth + gap)
+
           return 0;
         })
         .attr('x2', d => {
-          if (d[yCatProp].median !== undefined)
-            return this.xScale(d[this.xCat]) + (1.2 * i - 0.1) * this.boxWidth;
+          if (d[yCatProp][this.statsKey].median !== undefined)
+            //return this.xScale(d[this.xCat]) + (1.2 * i - 0.1) * this.boxWidth;
+            return this.xScale(d[this.xCat]) - x0 + i*(boxWidth + gap) + boxWidth;
+
           return 0;
         })
-        .attr('y1', d => this.yScale(d[yCatProp].median))
-        .attr('y2', d => this.yScale(d[yCatProp].median))
+        .attr('y1', d => this.yScale(d[yCatProp][this.statsKey].median))
+        .attr('y2', d => this.yScale(d[yCatProp][this.statsKey].median))
         .attr('stroke', 'black')
         .style('width', d => 80);
+
+       // Add individual points with jitter
+       // Since the outer loop is iterating over the groups/observationSets,
+       // the index i is related to the current group
+      if (this.showPoints) {
+        svg
+          .selectAll('genePoints')
+          .data(data) //recall, an array where each item concerns a single gene
+          .enter()//going gene-by-gene
+          // hence in an accessor function d looks like
+          /*
+              {
+                "key": "TXNIP",
+                "RHS": {
+                    'stats':{
+                      "q1": 95707,
+                      "median": 141675,
+                      "q3": 172371,
+                      "iqr": 76664,
+                      "min": 79023,
+                      "max": 197500
+                    },
+                    'points': [
+                      {pt_label: 'sampleA', 'value': 44}
+                      ...
+                    ]
+                },
+                "LHS": {
+                  "q1": 155988,
+                  "median": 159530,
+                  "q3": 169860,
+                  "iqr": 13872,
+                  "min": 92409,
+                  "max": 236318
+                }
+              }
+          */
+          .each((d, idx, nodes) => {
+            // d now concerns a single gene
+            let groupDataForFeature = d[yCatProp][this.pointsKey];
+            let featureName = d[this.xCat];
+            d3.select(nodes[idx])
+              .selectAll('.indPoints')
+              .data(groupDataForFeature)
+              .enter()
+              .append('circle')
+              .attr(
+                'cx', d=>
+                this.xScale(data[idx][this.xCat]) -
+                  x0 + i*(boxWidth + gap) 
+                  + Math.random() * boxWidth
+              )
+              .attr('cy', d => this.yScale(d['value']))
+              .attr('r', 3)
+              .style('fill', color)
+              .attr('stroke', '#000000')
+              .attr('pointer-events', 'all')
+              .on('mouseover', function(mouseEvent: any, d) {
+                pointTip.show(mouseEvent, d, this);
+                pointTip.style('left', mouseEvent.x + tooltipOffsetX + 'px');
+              })
+              .on('mouseout', pointTip.hide);
+          });
+        }
     });
 
     // Legend

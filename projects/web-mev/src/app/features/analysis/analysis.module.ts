@@ -11,7 +11,7 @@ import { D3Module } from '@app/d3/d3.module';
 import { NgxCsvParserModule } from 'ngx-csv-parser';
 import { AnalysisFlowComponent } from './components/analysis-flow/analysis-flow.component';
 import { AnalysisPlottingResultComponent } from './components/analysis-plotting-result/analysis-plotting-result.component';
-
+import { PlottingMenuComponent } from './components/plotting-menu/plotting-menu.component';
 @NgModule({
   declarations: [
     AnalysesComponent,
@@ -19,13 +19,15 @@ import { AnalysisPlottingResultComponent } from './components/analysis-plotting-
     ExecutedOperationComponent,
     AnalysisResultComponent,
     AnalysisFlowComponent,
-    AnalysisPlottingResultComponent
+    AnalysisPlottingResultComponent,
+    PlottingMenuComponent
   ],
   exports: [
     OperationComponent,
     AnalysesComponent,
     ExecutedOperationComponent,
-    AnalysisFlowComponent
+    AnalysisFlowComponent,
+    PlottingMenuComponent
   ],
   imports: [
     CommonModule,

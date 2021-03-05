@@ -1,0 +1,89 @@
+.container {
+    font-size: 14px !important;
+    max-width: 98%;
+    margin: 20px;
+  }
+  
+  .plot-container {
+    margin: 0 20px;
+    width: 98%;
+  }
+
+  .mat-form-field {
+    width: 350px;
+  }
+  
+  ::ng-deep {
+    .category label {
+      text-transform: uppercase;
+    }
+  
+    .subcategory label {
+      padding-left: 40px;
+    }
+  
+    .operation span {
+      padding-left: 50px;
+    }
+  }
+  
+  .vertical-tab-container {
+    margin: 20px 0;
+    display: flex;
+  }
+  
+  .tree-container {
+    background-color: #ddebf2;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  .collapseBtn {
+    text-align: right;
+    padding: 10px;
+    cursor: pointer;
+  
+    .mat-icon:hover {
+      color: grey;
+    }
+  }
+  
+  mat-tree {
+    background-color: transparent !important;
+    width: 300px;
+    min-height: 500px;
+  
+    &.collapsed {
+      width: 50px;
+      visibility: hidden;
+    }
+  
+    mat-tree-node {
+      padding-right: 15px;
+    }
+  
+    button {
+      display: flex;
+      align-items: center;
+      border: 0;
+      background: none;
+      white-space: normal;
+      padding-right: 15px;
+      padding-left: 15px;
+      text-align: left;
+      overflow: hidden;
+  
+      &:hover {
+        color: grey;
+      }
+  
+    }
+  
+    .active-node {
+      font-weight: bold;
+      background-color: #eee !important;
+    }
+  }
+  

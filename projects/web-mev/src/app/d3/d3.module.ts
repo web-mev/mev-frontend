@@ -10,10 +10,12 @@ import { DownloadButtonComponent } from './components/download-button/download-b
 import { GseaComponent } from './components/gsea/gsea/gsea.component';
 import { RugPlotComponent } from './components/rug-plot/rug-plot/rug-plot.component';
 import { KmeansComponent } from './components/kmeans/kmeans/kmeans.component';
-import { BoxPlottingComponent } from './components/box-plotting/box-plotting.component';
+import { D3BoxPlotComponent } from './components/box-plotting/box-plotting.component';
 import { DifferentialExpressionComponent } from './components/differential_expression/differential_expression.component';
 import { EdgerComponent } from './components/edger/edger.component';
 import { RnaSeqNormalizationComponent } from './components/rnaseq-normalization/rnaseq-normalization.component';
+import { BoxplotComponent } from './components/boxplot/boxplot.component';
+import { HeatmapComponent } from './components/heatmap/heatmap.component';
 
 @NgModule({
   declarations: [
@@ -26,10 +28,12 @@ import { RnaSeqNormalizationComponent } from './components/rnaseq-normalization/
     GseaComponent,
     RugPlotComponent,
     KmeansComponent,
-    BoxPlottingComponent,
+    D3BoxPlotComponent,
     DifferentialExpressionComponent,
     EdgerComponent,
-    RnaSeqNormalizationComponent
+    RnaSeqNormalizationComponent,
+    BoxplotComponent,
+    HeatmapComponent
   ],
   imports: [CommonModule, SharedModule],
   exports: [
@@ -40,9 +44,11 @@ import { RnaSeqNormalizationComponent } from './components/rnaseq-normalization/
     GseaComponent,
     RugPlotComponent,
     KmeansComponent,
-    BoxPlottingComponent,
+    D3BoxPlotComponent,
     EdgerComponent,
-    RnaSeqNormalizationComponent
+    RnaSeqNormalizationComponent,
+    BoxplotComponent,
+    HeatmapComponent
   ]
 })
 export class D3Module {}

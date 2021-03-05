@@ -1,0 +1,26 @@
+.label {
+    padding-right: 10px;
+    font-weight: bolder;
+  }
+  
+  .analyses-header__icon {
+    font-size: 14px;
+  }
+  
+  .form-control {
+    width: 500px;
+    padding-bottom: 50px;
+  }
+
+  .analysis-card__img {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' baseProfile='tiny' x='0px' y='0px' height='100px' width='125px' viewBox='-10 -10 100 125' xml:space='preserve'%3E%3Cpath d='M25.8,37H30v31H19v16h11v4H5v-4h10V68H5V37h4H25.8z M19,9h11V5H5v4h10v11H5v13h4h16.8H30V20H19v-5.6V9z M42.6,67H39v11h10v9H39v4h24v-4H53v-9h10V67h-3.6H42.6z M63,27v-4H39v4h10v24H39v12h3.6h16.8H63V51H53V27H63z M74.2,51H70v13h10v27 H70v4h25v-4H84V64h11V51h-4H74.2z M95,20v-4H70v4h10v5H70v22h4.2H91h4V25H84v-5H95z'/%3E%3C/svg%3E");
+    background-size: 40px;
+    background-position: top center;
+    background-repeat: no-repeat;
+  }
+  
+  .analysis-card__content {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  

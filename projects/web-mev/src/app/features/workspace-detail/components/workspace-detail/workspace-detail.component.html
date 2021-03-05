@@ -155,6 +155,12 @@
     </ng-template>
   </mat-tab>
 
+  <mat-tab label="Plotting">
+    <ng-template matTabContent>
+      <mev-plotting-menu></mev-plotting-menu>
+    </ng-template>
+  </mat-tab>
+
   <mat-tab label="Analyses Result">
     <ng-template matTabContent>
       <mev-executed-operation [execOperationId]="execOperationId"></mev-executed-operation>

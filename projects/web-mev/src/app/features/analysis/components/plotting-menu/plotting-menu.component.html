@@ -1,8 +1,5 @@
 <section class="container">
 
-    <p>
-      Instructions lorem ipsum.
-    </p>
     <p *ngIf="dataSource.data.length === 0">
       No plotting operations available
     </p>
@@ -40,7 +37,12 @@
   
       <div class="plot-container">
         <ng-container *ngIf="currentPlotType === ''">
-        Choose from the plotting tools in the menu
+          <p class="instruction">
+            Choose from the plotting tools in the menu
+          </p>
+          <p>
+            These visualizations and plotting operations can be run independent of any analyses you may have run.
+          </p>
         </ng-container>
         <ng-container *ngIf="currentPlotType === 'boxplot'">
             <mev-boxplot [workspaceId]="workspaceId"></mev-boxplot>

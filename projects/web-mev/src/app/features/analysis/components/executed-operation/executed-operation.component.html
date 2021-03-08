@@ -1,12 +1,8 @@
 <section class="container">
-
-  <p>
-    The analysis pane on the left side displays the list of executed opertations.
-    Expand and collapse the list of operations clicking on an operation category.
-    Click on an operation to view results.
-  </p>
   <p *ngIf="dataSource.data.length === 0">
-    No executed operations available
+    <span class="no-ops-warn">
+      You have not run any operations. Navigate to the tools panel to get started!
+    </span>
   </p>
   <div *ngIf="dataSource.data.length !== 0" class="vertical-tab-container">
     <div class="tree-container">
@@ -43,6 +39,15 @@
     <mat-divider [vertical]="true"></mat-divider>
 
     <div class="operation-container">
+      <div *ngIf="!execOperationId">
+        <p class="instruction-header">
+          Choose from the menu to view the analyses that have been run.
+        </p>
+        <p>
+          The panel on the left side displays the list of running and completed executed operations.
+          Click to view results and any output visualizations.
+        </p>
+      </div>
       <!-- <div *ngIf="selectedExecOperationId && isInProgress" class="operation-status">Building chart, please wait...</div> -->
       <div *ngIf="operationExecutionState === operationExecutionStateType.RunningAnalysis" class="operation-status">
         Running analysis, please wait...

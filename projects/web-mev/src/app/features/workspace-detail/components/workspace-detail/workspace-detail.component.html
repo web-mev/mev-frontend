@@ -131,6 +131,7 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;">
 
       </table>
+      <div class="no-files-warn" *ngIf="workspaceResources?.length === 0">No files are present in your workspace.</div>
       <mat-paginator #paginator [pageSizeOptions]="[5, 10, 25]" [pageIndex]="0" [pageSize]="10">
       </mat-paginator>
     </div>
@@ -152,6 +153,12 @@
   <mat-tab label="Tools">
     <ng-template matTabContent>
       <mev-analyses (executedOperationId)="showExecutedOperationResult($event)"></mev-analyses>
+    </ng-template>
+  </mat-tab>
+
+  <mat-tab label="Plotting">
+    <ng-template matTabContent>
+      <mev-plotting-menu></mev-plotting-menu>
     </ng-template>
   </mat-tab>
 

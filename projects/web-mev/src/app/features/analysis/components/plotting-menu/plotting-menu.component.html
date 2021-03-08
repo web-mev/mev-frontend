@@ -1,0 +1,56 @@
+<section class="container">
+
+    <p *ngIf="dataSource.data.length === 0">
+      No plotting operations available
+    </p>
+    <div *ngIf="dataSource.data.length !== 0" class="vertical-tab-container">
+      <div class="tree-container">
+        <div class="collapseBtn" (click)="togglePanel()" title="Click the button to toggle between showing and hiding the panel content"> 
+          <mat-icon color="accent" [ngClass]="{'hidden': isNavPanelCollapsed}">arrow_back</mat-icon>
+          <mat-icon color="accent" [ngClass]="{'hidden': !isNavPanelCollapsed}">arrow_forward</mat-icon>
+        </div>
+  
+        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" [ngClass]="{'collapsed': isNavPanelCollapsed}">
+          <!-- tree node template for leaf nodes -->
+          <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding [ngClass]="{ 'active-node': activeNode?.id === node.id }">
+            <!-- use a disabled button to provide padding for tree leaf -->
+            <!-- <button mat-icon-button disabled></button> -->
+            <button (click)="onSelectNode(node)">
+              {{ node.name }}                          
+            </button>
+          </mat-tree-node>
+          <!-- tree node template for expandable nodes -->
+          <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+            <button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
+              <mat-icon class="mat-icon-rtl-mirror">
+                {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+              </mat-icon>
+              {{node.name}}
+            </button>
+            
+          </mat-tree-node>
+        </mat-tree>
+      </div>
+     
+  
+      <mat-divider [vertical]="true"></mat-divider>
+  
+      <div class="plot-container">
+        <ng-container *ngIf="currentPlotType === ''">
+          <p class="instruction">
+            Choose from the plotting tools in the menu
+          </p>
+          <p>
+            These visualizations and plotting operations can be run independent of any analyses you may have run.
+          </p>
+        </ng-container>
+        <ng-container *ngIf="currentPlotType === 'boxplot'">
+            <mev-boxplot [workspaceId]="workspaceId"></mev-boxplot>
+        </ng-container>
+        <ng-container *ngIf="currentPlotType === 'heatmap'">
+            <mev-heatmap></mev-heatmap>
+        </ng-container>        
+      </div>
+    </div>
+  
+  </section>

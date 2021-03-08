@@ -11,6 +11,22 @@
   }
 }
 
+.warn {
+  margin-top: 10px;
+  font-weight: bolder;
+  width: 500px;
+  color: #856404;
+background-color: #fff3cd;
+  /*border-color: #ffeeba;*/
+}
+
+.no-data-error {
+  margin-top: 50px;
+  color: red;
+  font-weight: bolder;
+  width: 500px;
+}
+
 ::ng-deep {
   .d3-tip {
     line-height: 1;

@@ -172,7 +172,7 @@ export class WorkspaceDetailComponent implements OnInit {
    *
    */
   goToAnalysesTab() {
-    this.selectedTabIndex = 4;
+    this.selectedTabIndex = 5;
   }
 
   /**

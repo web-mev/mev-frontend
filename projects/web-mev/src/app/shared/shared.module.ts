@@ -32,6 +32,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatRadioModule } from '@angular/material/radio';
+
 
 import {
   FontAwesomeModule,
@@ -93,7 +95,8 @@ const MatModules = [
   MatToolbarModule,
   MatButtonToggleModule,
   MatTreeModule,
-  MatSidenavModule
+  MatSidenavModule,
+  MatRadioModule
 ];
 
 @NgModule({

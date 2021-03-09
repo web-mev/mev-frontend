@@ -1,0 +1,56 @@
+.mat-radio-button ~ .mat-radio-button {
+    margin-left: 16px;
+  }
+
+.section-col {
+    margin: 20px 5px;
+}
+
+.button-panel {
+    margin-top: 30px;
+}
+
+.size-input-field {
+    margin-right: 10px;
+}
+
+.observation-list-section {
+    margin: 20px 5px;
+  
+    ul {
+      padding-left: 0;
+    }
+  
+    li {
+      display: inline;
+      padding: 15px;
+    }
+  }
+
+.plot-options {
+    margin-top:10px;
+}
+
+.plot-options-header {
+    font-size: 18px;
+}
+
+.options-outer {
+    display: flex;
+    flex-direction: column;
+}
+
+.options-inner {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.info {
+    font-size: 11px;
+}
+
+#info-icon {
+    font-size:14px;
+}
+

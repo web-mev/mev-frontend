@@ -14,8 +14,10 @@ import { D3BoxPlotComponent } from './components/box-plotting/box-plotting.compo
 import { DifferentialExpressionComponent } from './components/differential_expression/differential_expression.component';
 import { EdgerComponent } from './components/edger/edger.component';
 import { RnaSeqNormalizationComponent } from './components/rnaseq-normalization/rnaseq-normalization.component';
-import { BoxplotComponent } from './components/boxplot/boxplot.component';
-import { HeatmapComponent } from './components/heatmap/heatmap.component';
+import { BoxplotFormComponent } from './components/boxplot/boxplot.component';
+import { HeatmapFormComponent } from './components/heatmap/heatmap.component';
+import { MevBaseExpressionPlotFormComponent } from './components/base-expression-plot-form/base-expression-plot-form.component';
+import { D3HeatmapPlotComponent } from './components/heatmap-plotter/heatmap-plotter.component';
 
 @NgModule({
   declarations: [
@@ -32,8 +34,10 @@ import { HeatmapComponent } from './components/heatmap/heatmap.component';
     DifferentialExpressionComponent,
     EdgerComponent,
     RnaSeqNormalizationComponent,
-    BoxplotComponent,
-    HeatmapComponent
+    BoxplotFormComponent,
+    HeatmapFormComponent,
+    MevBaseExpressionPlotFormComponent,
+    D3HeatmapPlotComponent
   ],
   imports: [CommonModule, SharedModule],
   exports: [
@@ -47,8 +51,8 @@ import { HeatmapComponent } from './components/heatmap/heatmap.component';
     D3BoxPlotComponent,
     EdgerComponent,
     RnaSeqNormalizationComponent,
-    BoxplotComponent,
-    HeatmapComponent
+    BoxplotFormComponent,
+    HeatmapFormComponent
   ]
 })
 export class D3Module {}

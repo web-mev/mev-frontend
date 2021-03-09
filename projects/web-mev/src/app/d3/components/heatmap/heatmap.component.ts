@@ -1,16 +1,16 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { MevBaseExpressionPlotFormComponent } from '../base-expression-plot-form/base-expression-plot-form.component';
+
 
 @Component({
   selector: 'mev-heatmap',
   templateUrl: './heatmap.component.html',
   styleUrls: ['./heatmap.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Default
 })
-export class HeatmapComponent implements OnInit {
+export class HeatmapFormComponent extends MevBaseExpressionPlotFormComponent {
 
-  constructor() { }
-
-  ngOnInit(): void {
+  ngOnInit() {
+    super.ngOnInit();
   }
-
 }

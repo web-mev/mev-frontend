@@ -1,0 +1,94 @@
+<mev-spinner-overlay *ngIf="isWait"></mev-spinner-overlay>
+<div *ngIf="plotReady && (heatmapData.length > 0)">
+    <mat-card class="plot-options"> 
+        <p class="plot-options-header">Plot options</p>
+        <form [formGroup]="imgAdjustForm" (ngSubmit)="onSubmit()">
+            <div class="options-outer">
+                <div class="options-inner">
+                    <section>
+                        <mat-radio-group
+                        class=""
+                        formControlName="imgOrientation">
+                        <!-- (change)="changeOrientation($event)"> -->
+                        <mat-radio-button class="" [value]="samplesInRowsKey">
+                            {{samplesInRowsText}}
+                        </mat-radio-button>
+                        <mat-radio-button class="" [value]="samplesInColumnsKey">
+                            {{samplesInColumnsText}}
+                            </mat-radio-button>
+                        </mat-radio-group>                 
+                    </section>
+                    <section>
+                        <!-- <mat-checkbox (change)="changeAspectRatio($event)" [checked]="squareTiles">Equal-sized tiles?</mat-checkbox> -->
+                        <mat-checkbox formControlName="imgAspectRatio" [checked]="squareTiles">Equal-sized tiles?</mat-checkbox>
+                    </section>
+                </div>
+                <div class="options-inner">
+                    <section class="section-col">
+                            <div>
+                            <mat-form-field class="size-input-field">
+                                <mat-label>Width</mat-label>
+                                <input type="number" matInput formControlName="imgWidth" placeholder="Enter the width in pixels, e.g. 1000">
+                            </mat-form-field>
+                            Current: {{this.finalWidth}}
+                            </div>
+                            <div>
+                            <mat-form-field class="size-input-field">
+                            <mat-label>Height</mat-label>
+                            <input type="number" matInput formControlName="imgHeight" placeholder="Enter the height in pixels, e.g. 1000">
+                            </mat-form-field>
+                            Current: {{this.finalHeight}}
+                            <p class="info">
+                                <mat-icon id="info-icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                                aria-label="Info tooltip about the field">info
+                              </mat-icon> Note that this is not an exact specification due to constraints
+                              imposed by other options and the layout configuration.
+                            </p>
+                            </div>
+
+                    </section>
+                    <!-- <section class="observation-list-section">
+                        <ul *ngIf="customObservationSets.length"> Group observations by:
+                            <li *ngFor="let set of customGroups.controls; let i=index">
+                                <mat-checkbox [formControl]="set">{{ customObservationSets[i].name }}</mat-checkbox>
+                            </li>
+                        </ul>
+
+                    </section> -->
+                </div>
+                <div class="options-inner">
+                    <div>
+                    <section>
+                        <mat-checkbox formControlName="imgObsLabels" [checked]="showObsLabels">Show observation/sample labels</mat-checkbox>
+                    </section>
+                    <section>
+                        <mat-checkbox formControlName="imgFeatureLabels" [checked]="showFeatureLabels">Show feature/gene labels</mat-checkbox>
+                    </section>
+                    </div>
+                </div>
+                <div class="button-panel">
+                    <button mat-raised-button color="accent" type="submit">
+                        Adjust plot
+                </button>
+                </div>
+            </div>
+        </form>
+        <div>
+            <div *ngIf="warnMsg.length > 0">
+                <mat-card class="warn">
+                    {{warnMsg}}
+                </mat-card>
+            </div>
+            <div>
+                <mev-download-button [containerId]="containerId" [imageName]="imageName"></mev-download-button>
+            </div>
+        </div>
+    </mat-card>
+</div>
+<div *ngIf="plotReady && (heatmapData.length === 0) && !isWait">
+    <mat-card class="no-data-error">
+        No data to plot. Please check your input selections and retry.
+    </mat-card> 
+</div>
+<div #heatmap id="heatmap" class="chart" (window:resize)="onResize($event)"></div>
+

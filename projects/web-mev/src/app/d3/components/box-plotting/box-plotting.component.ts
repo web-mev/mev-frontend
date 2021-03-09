@@ -17,6 +17,7 @@ import d3Tip from 'd3-tip';
  * Box Plotting Component
  *
  * Expects inputs giving the expressions and a feature set
+ * This component does the actual plotting.
  */
 @Component({
   selector: 'd3-boxplot',
@@ -50,7 +51,7 @@ export class D3BoxPlotComponent implements OnInit, OnChanges, AfterViewInit {
   /* Chart settings */
   containerId = '#boxPlot';
   showPoints = false; //to toggle whether the user wants to see invididual points
-  imageName = 'Box plot'; // file name for downloaded SVG image
+  imageName = 'box_plot'; // file name for downloaded SVG image
   maxFeatureNumber = 80;
   precision = 2;
   margin = { top: 50, right: 150, bottom: 100, left: 60 }; // chart margins

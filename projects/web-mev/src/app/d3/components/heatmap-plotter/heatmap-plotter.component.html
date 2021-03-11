@@ -1,11 +1,19 @@
 <mev-spinner-overlay *ngIf="isWait"></mev-spinner-overlay>
 <div *ngIf="plotReady && (heatmapData.length > 0)">
-    <mat-card class="plot-options"> 
-        <p class="plot-options-header">Plot options</p>
+        <mat-expansion-panel #accordion (opened)="panelOpenState = true"
+        (closed)="panelOpenState = false">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                <span class="plot-options-header">Plot options</span>
+            </mat-panel-title>
+            <mat-panel-description *ngIf="!panelOpenState">
+                Open to customize your heatmap
+              </mat-panel-description>
+          </mat-expansion-panel-header>
         <form [formGroup]="imgAdjustForm" (ngSubmit)="onSubmit()">
             <div class="options-outer">
                 <div class="options-inner">
-                    <section>
+                    <div>
                         <mat-radio-group
                         class=""
                         formControlName="imgOrientation">
@@ -17,62 +25,97 @@
                             {{samplesInColumnsText}}
                             </mat-radio-button>
                         </mat-radio-group>                 
-                    </section>
-                    <section>
-                        <!-- <mat-checkbox (change)="changeAspectRatio($event)" [checked]="squareTiles">Equal-sized tiles?</mat-checkbox> -->
-                        <mat-checkbox formControlName="imgAspectRatio" [checked]="squareTiles">Equal-sized tiles?</mat-checkbox>
-                    </section>
-                </div>
-                <div class="options-inner">
-                    <section class="section-col">
-                            <div>
-                            <mat-form-field class="size-input-field">
-                                <mat-label>Width</mat-label>
-                                <input type="number" matInput formControlName="imgWidth" placeholder="Enter the width in pixels, e.g. 1000">
-                            </mat-form-field>
-                            Current: {{this.finalWidth}}
-                            </div>
-                            <div>
-                            <mat-form-field class="size-input-field">
-                            <mat-label>Height</mat-label>
-                            <input type="number" matInput formControlName="imgHeight" placeholder="Enter the height in pixels, e.g. 1000">
-                            </mat-form-field>
-                            Current: {{this.finalHeight}}
-                            <p class="info">
-                                <mat-icon id="info-icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-                                aria-label="Info tooltip about the field">info
-                              </mat-icon> Note that this is not an exact specification due to constraints
-                              imposed by other options and the layout configuration.
-                            </p>
-                            </div>
+                    </div>
 
-                    </section>
-                    <!-- <section class="observation-list-section">
-                        <ul *ngIf="customObservationSets.length"> Group observations by:
-                            <li *ngFor="let set of customGroups.controls; let i=index">
-                                <mat-checkbox [formControl]="set">{{ customObservationSets[i].name }}</mat-checkbox>
-                            </li>
-                        </ul>
-
-                    </section> -->
+                    <div id="obs-sets-wrapper">
+                        <div class="observation-list-section section-item">
+                            <div *ngIf="customObservationSets.length" class="option-header">Group observations by:</div>
+                            <ul *ngIf="customObservationSets.length">
+                                <li *ngFor="let set of customGroups.controls; let i=index">
+                                    <mat-checkbox [id]="customObservationSets[i].name" (change)="onObservationCheck($event)" [formControl]="set">{{ customObservationSets[i].name }}</mat-checkbox>
+                                </li>
+                            </ul>
+                        </div>
+                        <span *ngIf="customObservationSetsToPlot.length">Drag and drop to reorder:</span>
+                        <mat-chip-list
+                            ordering-list
+                            class="obs-list"
+                            cdkDropList 
+                            cdkDropListOrientation="horizontal"
+                            (cdkDropListDropped)="drop($event)">
+                            <mat-chip
+                                ordering-list-item
+                                class="obs-chip"
+                                cdkDrag
+                                *ngFor="let o of customObservationSetsToPlot">
+                                {{o.name}}
+                            </mat-chip>
+                        </mat-chip-list>
+                    </div>
+                    <div class="section-item">
+                        <div>
+                            <mat-checkbox formControlName="imgObsLabels" [checked]="showObsLabels">Show observation/sample labels</mat-checkbox>
+                        </div>
+                        <div>
+                            <mat-checkbox formControlName="imgFeatureLabels" [checked]="showFeatureLabels">Show feature/gene labels</mat-checkbox>
+                        </div>
+                    </div>
                 </div>
                 <div class="options-inner">
                     <div>
-                    <section>
-                        <mat-checkbox formControlName="imgObsLabels" [checked]="showObsLabels">Show observation/sample labels</mat-checkbox>
-                    </section>
-                    <section>
-                        <mat-checkbox formControlName="imgFeatureLabels" [checked]="showFeatureLabels">Show feature/gene labels</mat-checkbox>
-                    </section>
+                        <div class="option-header">Choose a color map: </div>
+                        <mat-form-field id="colormap-selector" appearance="fill">
+                            <mat-select formControlName="colormaps">
+                                <mat-option *ngFor="let cmap of colormapList" [value]="cmap">
+                                    {{cmap}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="section-item">
+                        <!-- <mat-checkbox (change)="changeAspectRatio($event)" [checked]="squareTiles">Equal-sized tiles?</mat-checkbox> -->
+                        <mat-checkbox formControlName="imgAspectRatio" [checked]="squareTiles">Equal-sized tiles?</mat-checkbox>
+                    </div>
+                    <div class="section-item">
+                        <div class="option-header">Set a custom size  <mat-icon class="info__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                            matTooltip="Note that this is not an exact specification due to constraints imposed by other options and the layout configuration." aria-label="Info tooltip about the field">info
+                          </mat-icon></div>
+                        <div>
+                        <mat-form-field class="size-input-field">
+                            <mat-label>Width</mat-label>
+                            <input type="number" matInput formControlName="imgWidth" placeholder="Enter the width in pixels, e.g. 1000">
+                        </mat-form-field>
+                        Current: {{this.finalWidth}}
+                        </div>
+                        <div>
+                        <mat-form-field class="size-input-field">
+                        <mat-label>Height</mat-label>
+                        <input type="number" matInput formControlName="imgHeight" placeholder="Enter the height in pixels, e.g. 1000">
+                        </mat-form-field>
+                        Current: {{this.finalHeight}}
+                        <p class="info">
+                           
+                            <!-- <mat-icon id="info-icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                            aria-label="Info tooltip about the field">info
+                          </mat-icon> Note that this is not an exact specification due to constraints
+                          imposed by other options and the layout configuration. -->
+                        </p>
+                        </div>
+                    </div>
+                    <div class="section-item">
+                        <div>
+                            <mat-checkbox formControlName="logScale" [checked]="logScale">Plot on log2 scale?</mat-checkbox>
+                        </div>
                     </div>
                 </div>
-                <div class="button-panel">
-                    <button mat-raised-button color="accent" type="submit">
-                        Adjust plot
-                </button>
-                </div>
+            </div>
+            <div class="button-panel">
+                <button mat-raised-button color="accent" type="submit">
+                    Adjust plot
+            </button>
             </div>
         </form>
+        </mat-expansion-panel>
         <div>
             <div *ngIf="warnMsg.length > 0">
                 <mat-card class="warn">
@@ -83,7 +126,6 @@
                 <mev-download-button [containerId]="containerId" [imageName]="imageName"></mev-download-button>
             </div>
         </div>
-    </mat-card>
 </div>
 <div *ngIf="plotReady && (heatmapData.length === 0) && !isWait">
     <mat-card class="no-data-error">

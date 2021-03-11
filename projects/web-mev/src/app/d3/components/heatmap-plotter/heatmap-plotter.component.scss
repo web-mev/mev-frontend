@@ -2,8 +2,8 @@
     margin-left: 16px;
   }
 
-.section-col {
-    margin: 20px 5px;
+.section-item {
+    margin: 20px 0px;
 }
 
 .button-panel {
@@ -15,7 +15,6 @@
 }
 
 .observation-list-section {
-    margin: 20px 5px;
   
     ul {
       padding-left: 0;
@@ -32,25 +31,85 @@
 }
 
 .plot-options-header {
-    font-size: 18px;
+    font-size: 20px;
 }
 
 .options-outer {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    margin-top: 10px;
 }
 
 .options-inner {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
+    margin: 0px 30px;
 }
 
-.info {
-    font-size: 11px;
+    
+.default-theme .cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+  
+
+.default-theme .cdk-drop-list-dragging {
+transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
-#info-icon {
-    font-size:14px;
+mat-chip[ordering-list-item] {
+    cursor: move;
 }
 
+mat-chip[ordering-list-item] .cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+  
+mat-chip-list[ordering-list] .cdk-drop-list-dragging {
+transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drag-placeholder {
+    opacity: 0.0;
+}
+  
+.cdk-drag-preview {
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+                0 8px 10px 1px rgba(0, 0, 0, 0.14),
+                0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  }
+  
+  
+.obs-list.cdk-drop-list-dragging .obs-chip:not(.cdk-drag-placeholder) {
+transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+  
+
+::ng-deep {
+    .d3-tip {
+      line-height: 1;
+      font-weight: normal;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      border-radius: 2px;
+      z-index: 9999;
+    }
+  
+    .d3-tip table th,
+    td {
+      padding: 5px 10px;
+    }
+  }
+
+#colormap-selector {
+    min-width: 300px;
+}
+
+.info__icon {
+    font-size: 14px;
+  }
+
+.option-header {
+    font-size: 16px;
+}

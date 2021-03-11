@@ -33,7 +33,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatRadioModule } from '@angular/material/radio';
-
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import {
   FontAwesomeModule,
@@ -106,6 +106,7 @@ const MatModules = [
 
     TranslateModule,
     ...MatModules,
+    DragDropModule,
     FontAwesomeModule
   ],
   declarations: [RtlSupportDirective, ByteNamePipe, SpinnerOverlayComponent],

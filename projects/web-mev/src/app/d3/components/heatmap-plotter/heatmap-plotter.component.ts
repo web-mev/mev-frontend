@@ -4,13 +4,17 @@ import {
   Input,
   ChangeDetectionStrategy,
   ElementRef,
-  ViewChild
+  ViewChild,
+  ɵSWITCH_IVY_ENABLED__POST_R3__
 } from '@angular/core';
+import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import { FormGroup, Validators, FormBuilder, FormArray, FormControl } from '@angular/forms';
 import { MetadataService } from '@app/core/metadata/metadata.service';
 import * as d3 from 'd3';
 import d3Tip from 'd3-tip';
 //import {MatRadioModule} from '@angular/material/radio';
+import {MatExpansionPanel} from '@angular/material/expansion';
+
 @Component({
   selector: 'd3-heatmap',
   templateUrl: './heatmap-plotter.component.html',
@@ -30,6 +34,8 @@ export class D3HeatmapPlotComponent implements OnInit {
  @ViewChild('heatmap')
  svgElement: ElementRef;
 
+ @ViewChild(MatExpansionPanel) plotOptionsPanel: MatExpansionPanel;
+
  customObservationSets = [];
  customObservationSetsToPlot = [];
  heatmapData = [];
@@ -37,18 +43,21 @@ export class D3HeatmapPlotComponent implements OnInit {
  warnMsg = '';
  imgAdjustForm: FormGroup;
  imgAdjustFormSubmitted = false;
+ panelOpenState = false;
 
  // heatmap settings
  imageName = 'heatmap'; // file name for downloaded SVG image
  precision = 2;
  outerHeight = 500;
  minTileSize = 20;
+ tooltipOffsetX = 10; // to position the tooltip on the right side of the triggering element
  finalWidth;
  finalHeight;
  origWidth;
  origHeight;
  showObsLabels = true; //whether to label the obs
  showFeatureLabels = true; //whether to label the features
+ logScale = false;
  margin = { top: 50, right: 150, bottom: 100, left: 60 }; // chart margins
  containerId = '#heatmap';
  // for common reference when determining the orientation of the heatmap
@@ -63,10 +72,23 @@ export class D3HeatmapPlotComponent implements OnInit {
  ];
  orientation;
  // after the user interacts with the radio, this will be true forever
- userOrientationSelected = false;  
+ userOrientationSelected = false; 
 
  // after the user interacts with the sizing form, this will be true forever
  userSpecifiedSize = false;
+
+ colormapOptions = {
+   'Brown-blue-green': d3.interpolateBrBG,
+   'Purple-green': d3.interpolatePRGn,
+   'Purple-orange': d3.interpolatePuOr,
+   'Red-blue': d3.interpolateRdBu,
+   'Red-yellow-blue': d3.interpolateRdYlBu,
+   'Viridis': d3.interpolateViridis,
+   'Ciridis': d3.interpolateCividis
+ }
+ colormapList = Object.keys(this.colormapOptions);
+ defaultColormap = 'Viridis';
+ selectedColormap = '';
 
   constructor(
     private metadataService: MetadataService,
@@ -86,6 +108,8 @@ export class D3HeatmapPlotComponent implements OnInit {
       'imgAspectRatio': ['', ''],
       'imgObsLabels': [this.showObsLabels, ''],
       'imgFeatureLabels': [this.showFeatureLabels, ''],
+      'logScale': [this.logScale, ''],
+      'colormaps': [this.defaultColormap,''],
       'imgGroups': groupControlsArr
     })
     this.generateHeatmap();
@@ -102,6 +126,9 @@ export class D3HeatmapPlotComponent implements OnInit {
     }
   }
 
+  /*
+  * Accessor function used by the html template
+  */
   get customGroups() {
     return this.imgAdjustForm.get('imgGroups') as FormArray;
   }
@@ -115,8 +142,6 @@ export class D3HeatmapPlotComponent implements OnInit {
 
   onSubmit() {
     this.imgAdjustFormSubmitted = true;
-    console.log(this.imgAdjustForm);
-    console.log('????????????');
 
     this.userSpecifiedSize = false;
 
@@ -124,19 +149,14 @@ export class D3HeatmapPlotComponent implements OnInit {
     if(w) {
       this.finalWidth = w;
       this.userSpecifiedSize = true;
-      console.log('Requested width: ', w);
     } else {
-      console.log('Did not specify width');
       this.finalWidth = this.origWidth;
     }
     let h = this.imgAdjustForm.value['imgHeight'];
     if(h){
       this.finalHeight = h;
       this.userSpecifiedSize = true;
-      console.log('Requested height: ', h);
     } else {
-      console.log('Did not specify height');
-
       this.finalHeight = this.origHeight;
     }
 
@@ -161,6 +181,20 @@ export class D3HeatmapPlotComponent implements OnInit {
       this.showFeatureLabels = false;
     }
 
+    if(this.imgAdjustForm.value['logScale']){
+      this.logScale = true;
+    } else {
+      this.logScale = false;
+    }
+
+    let chosenMap = this.imgAdjustForm.value['colormaps'];
+    if (this.colormapList.includes(chosenMap)){
+      this.selectedColormap = chosenMap;
+    }
+
+    // 
+    this.panelOpenState = false;
+    this.plotOptionsPanel.close();
     this.createHeatmap();
   }
 
@@ -179,12 +213,13 @@ export class D3HeatmapPlotComponent implements OnInit {
   }
 
   createHeatmap() {
-    if(this.resourceData.length === 0){
-      return
-    }
 
     // before doing anything, get rid of anything that may have been there
     this.clearChart();
+
+    if(this.resourceData.length === 0){
+      return
+    }
 
     let outerWidth, outerHeight;
     if (this.userSpecifiedSize) {
@@ -197,17 +232,18 @@ export class D3HeatmapPlotComponent implements OnInit {
       outerWidth = this.origWidth;
       outerHeight = this.origHeight;
     }
-    console.log('pt0: ', outerWidth, outerHeight);
 
     const width = outerWidth - this.margin.left - this.margin.right;
     const height = outerHeight - this.margin.top - this.margin.bottom;
-    console.log('pt1: ', width, height);
 
     // reformat the data so it's easier to work with in d3
     let reformattedData = [];
     let allFeatures = [];
     let allObservations = [];
-    let minVal, maxVal
+    let minVal = null;
+    let maxVal = null;
+    let orderedObservations = [];
+
     this.heatmapData.forEach(
       (item, idx) => {
         let rowname = item.rowname;
@@ -216,28 +252,57 @@ export class D3HeatmapPlotComponent implements OnInit {
         allFeatures.push(rowname);
         if(idx == 0){
           allObservations = Object.keys(valueMap);
-          minVal = d3.min(Object.values(valueMap));
-          maxVal = d3.max(Object.values(valueMap));
+
+          // If the user requested plotting specific observation sets (in order!)
+          // we have to rearrange the allObservations array
+          if(this.customObservationSetsToPlot.length > 0){
+            this.customObservationSetsToPlot.forEach(
+              obsSet => {
+                obsSet.elements.forEach(
+                  el => orderedObservations.push(el.id)
+                )
+              }
+            );
+          } else {
+            orderedObservations = allObservations;
+          }
+
+          let initVals = [];
+          for (let [obsId, v] of Object.entries(valueMap)){
+            const val = Number(v);
+            if(orderedObservations.includes(obsId)){
+              initVals.push(val);
+            }
+          }
+
+          // set the min/max values to start
+          minVal = d3.min(initVals);
+          maxVal = d3.max(initVals);
         }
-        for (const [obsId, val] of Object.entries(valueMap)) {
+        for (let [obsId, v] of Object.entries(valueMap)) {
+          const val = Number(v);
           if (val < minVal){
             minVal = val;
           } else if (val > maxVal){
             maxVal = val;
           }
+
+          if(orderedObservations.includes(obsId)){
          reformattedData.push(
            {
               featureId: rowname,
               obsId: obsId,
-              value: val
+              value: this.logScale ? Math.log2(val): val
            }
          ); 
         }
+       }
       }
     );
-
-    console.log('Obs:', allObservations.length);
-    console.log('Features: ', allFeatures.length);
+    if(this.logScale){
+      minVal = Math.log2(minVal);
+      maxVal = Math.log2(maxVal);
+    }
 
     /* To produce a reasonable initial plot, we default to plotting
     * such that the greater of genes or samples aligns with the 
@@ -255,21 +320,20 @@ export class D3HeatmapPlotComponent implements OnInit {
       this.f['imgOrientation'].setValue(this.orientation);
     }
     /* Setting up X-axis and Y-axis*/
+
     let xDomain, yDomain, xSelector, ySelector, featureAxis, obsAxis;
     if (this.orientation === this.samplesInColumnsKey) {
 
-      console.log('samples in columns')
       // if in this orientation, the x values should
       // correspond to samples/observations
-      xDomain = allObservations;
+      xDomain = orderedObservations;
       yDomain = allFeatures;
       xSelector = 'obsId';
       ySelector = 'featureId';
       featureAxis = 'y';
       obsAxis = 'x'
     } else { // if they want the samples corresponding to rows
-      console.log('samples in rows')
-      yDomain = allObservations;
+      yDomain = orderedObservations;
       xDomain = allFeatures;
       ySelector = 'obsId';
       xSelector = 'featureId';
@@ -284,26 +348,21 @@ export class D3HeatmapPlotComponent implements OnInit {
     // use the bandwidth to establish the final sizes
     let xB = xScale.bandwidth();
     let yB = yScale.bandwidth();
-    console.log('Before adjustment, we have: (xB,yB)=', xB, yB);
 
     let tileX, tileY;
     if(this.squareTiles){
       // set the ratio to the smaller of the two scales. Otherwise we would 
       // exceed the "natural" exterior dimensions of the figure
-      console.log('Requested squares')
       if(xB <= yB){
-        console.log('horizontal dist is less. Set to XB')
         this.finalWidth = xB*(xDomain.length);
         this.finalHeight = xB*(yDomain.length);
         tileX = tileY = xB;
       } else {
-        console.log('vertical dist is less. Set to yB')
         this.finalWidth = yB*(xDomain.length);
         this.finalHeight = yB*(yDomain.length);
         tileX = tileY = yB;
       }
     } else {
-      console.log('unequal tiles')
       this.finalWidth = xB*(xDomain.length);
       this.finalHeight = yB*(yDomain.length);
       tileX = xB;
@@ -313,6 +372,14 @@ export class D3HeatmapPlotComponent implements OnInit {
     // reset the scales to the final widths/height so everything lines up well
     xScale = this.makeScale(xDomain, [this.margin.left, this.margin.left + this.finalWidth]);
     yScale = this.makeScale(yDomain, [this.margin.top, this.margin.top + this.finalHeight]);
+
+    // tool tip for individual points (if displayed)
+    const pointTip = d3Tip()
+      .attr('class', 'd3-tip')
+      .offset([-10, 0])
+      .html((event, d) => { 
+        return '(' + d.featureId + ', '+ d.obsId +'): ' +d.value.toFixed(this.precision);
+       });
 
     const svg = d3
       .select(this.containerId)
@@ -332,9 +399,19 @@ export class D3HeatmapPlotComponent implements OnInit {
       .attr('height', height)
       .style('fill', 'transparent');
 
+    const tooltipOffsetX = this.tooltipOffsetX;
+    svg.call(pointTip);
+
     let heatmapTiles = svg.append('g');
-    heatmapTiles.selectAll('rect')
-      .data(reformattedData)
+    let selection = heatmapTiles.selectAll('rect')
+      .data(reformattedData, (d) => '(' +d['obsId'] + ',' + d['featureId'] + ')');
+
+    if(this.selectedColormap === ''){
+      this.selectedColormap = this.defaultColormap;
+    }
+    let colormapInterpolator = this.colormapOptions[this.selectedColormap];
+
+    selection
       .enter()
       .append('rect')
       .attr('x', d=> xScale(d[xSelector]))
@@ -342,10 +419,19 @@ export class D3HeatmapPlotComponent implements OnInit {
       .attr('height', tileY)
       .attr('width', tileX)
       .attr('fill', d => {
-        return d3.interpolateBrBG(
+        return colormapInterpolator(
           (d['value'] - minVal)/(maxVal-minVal)
         )
       })
+      .on('mouseover', function(mouseEvent: any, d) {
+        pointTip.show(mouseEvent, d, this);
+        pointTip.style('left', mouseEvent.x + tooltipOffsetX + 'px');
+      })
+      .on('mouseout', pointTip.hide);
+
+    selection
+      .exit()
+      .remove();
 
     if (this.showObsLabels || this.showFeatureLabels){
       let axesContainer = svg.append('g');
@@ -376,12 +462,6 @@ export class D3HeatmapPlotComponent implements OnInit {
     }
   }
 
-  // makeAxis(container) {
-  //   return container.append('g')
-  //   .call(d3.axisLeft(yScale))
-  //   .attr('transform', 'translate('+ this.margin.left +', 0 )')
-  // }
-
   /**
    * Function is triggered when resizing the chart
    */
@@ -390,21 +470,22 @@ export class D3HeatmapPlotComponent implements OnInit {
   }
 
   onObservationCheck(e) {
-    console.log('check~');
-    // const sampleSet = e.source.id;
-    // const foundSet = this.customObservationSets.find(
-    //   el => el.name === sampleSet
-    // );
+    const sampleSet = e.source.id;
+    const foundSet = this.customObservationSets.find(
+      el => el.name === sampleSet
+    );
 
-    // if (e.checked) {
-    //   this.customObservationSetsToPlot.push(foundSet);
-    // } else {
-    //   this.customObservationSetsToPlot = this.customObservationSetsToPlot.filter(
-    //     set => set.name !== foundSet.name
-    //   );
-    // }
-    // this.reformatData();
-    // this.createChart();
+    if (e.checked) {
+      this.customObservationSetsToPlot.push(foundSet);
+    } else {
+      this.customObservationSetsToPlot = this.customObservationSetsToPlot.filter(
+        set => set.name !== foundSet.name
+      );
+    }
+  }
+
+  drop(event: CdkDragDrop<any[]>) {
+    moveItemInArray(this.customObservationSetsToPlot, event.previousIndex, event.currentIndex);
   }
 
 }

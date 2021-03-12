@@ -291,10 +291,7 @@ export class OperationComponent implements OnChanges {
       }
     }
 
-    controlsConfig['job_name'] = [
-      '',
-      [...(this.operation.mode !== 'client' ? [Validators.required] : [])]
-    ];
+    controlsConfig['job_name'] = ['', [Validators.required]];
     this.analysesForm = this.formBuilder.group(controlsConfig);
   }
 
@@ -302,13 +299,9 @@ export class OperationComponent implements OnChanges {
    * Load operation data before creating form controls
    */
   loadData() {
-    if (this.operation.mode === 'client') {
-      this.createForm(this.operation);
-    } else {
       this.apiService.getOperation(this.operation.id).subscribe(data => {
         this.createForm(data);
       });
-    }
   }
 
   onSubmit() {

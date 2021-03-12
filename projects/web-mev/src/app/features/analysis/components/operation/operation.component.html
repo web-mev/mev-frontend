@@ -219,16 +219,10 @@
     </div>
   </ng-container>
 
-  <div *ngIf="operation.mode !== 'client'; else plotContainer">
+  <div>
     <button mat-raised-button color="accent" type="submit" [disabled]="!analysesForm.valid"
       (click)="startAnalysis()">Run
     </button>
   </div>
-
-  <ng-template #plotContainer>
-    <button mat-raised-button color="accent" [disabled]="!analysesForm.valid" (click)="showPlots()">Show plots
-    </button>
-
-  </ng-template>
 
 </form>

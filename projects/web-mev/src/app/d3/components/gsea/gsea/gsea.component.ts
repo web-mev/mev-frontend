@@ -156,6 +156,7 @@ export class GseaComponent implements OnInit {
       if (customSetData) {
         const customSet = {
           name: customSetData.name,
+          color: customSetData.color,
           type: CustomSetType.FeatureSet,
           elements: features,
           multiple: true

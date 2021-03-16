@@ -31,7 +31,8 @@ export class AddSampleSetComponent {
       customSetName: [name, [Validators.required]],
       customSetColor: [
         '#000000',
-        [...(this.isObservationSet ? [Validators.required] : [])]
+        //[...(this.isObservationSet ? [Validators.required] : [])]
+        [Validators.required]
       ]
     });
   }

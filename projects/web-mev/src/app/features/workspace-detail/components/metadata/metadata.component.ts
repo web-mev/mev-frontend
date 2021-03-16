@@ -534,15 +534,19 @@ export class MetadataComponent implements OnInit {
           if (data) {
             let payload = tmpPayload;
             payload['sets'] = data['ordering'];
-            this.metadataService.differenceCustomSets(payload).subscribe( customSetData => {       
-              const customSet: CustomSet = {
-                name: data.name,
-                type: setType,
-                color: data.color,
-                elements: customSetData.elements,
-                multiple: customSetData.multiple
-              };
-              this.metadataService.addCustomSet(customSet);
+            this.metadataService.differenceCustomSets(payload).subscribe( customSetData => { 
+              if (customSetData.elements.length === 0){
+                this.notificationService.warn('The difference set was empty. As a result, no new set has been created.')
+              } else {     
+                const customSet: CustomSet = {
+                  name: data.name,
+                  type: setType,
+                  color: data.color,
+                  elements: customSetData.elements,
+                  multiple: customSetData.multiple
+                };
+                this.metadataService.addCustomSet(customSet);
+              }
             });
           }
         }

@@ -317,6 +317,7 @@ export class DifferentialExpressionComponent implements OnInit, AfterViewInit {
             });
             const customSet = {
               name: customSetData.name,
+              color: customSetData.color,
               type: CustomSetType.FeatureSet,
               elements: elements,
               multiple: true

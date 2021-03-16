@@ -25,7 +25,10 @@ import { LclStorageService } from '@app/core/local-storage/lcl-storage.service';
 import { MetadataService } from '@app/core/metadata/metadata.service';
 import { EditFeatureSetDialogComponent } from './dialogs/edit-feature-set-dialog/edit-feature-set-dialog.component';
 import { ViewInfoDialogComponent } from './dialogs/view-info-dialog/view-info-dialog.component';
-
+import { CustomSet, CustomSetType } from '@app/_models/metadata';
+import { NotificationService } from '@app/core/core.module';
+import { AddCustomSetComponent } from '@app/shared/components/add-custom-set/add-custom-set.component';
+import { SetDifferenceDialogComponent } from './dialogs/set-difference-dialog/set-difference-dialog.component';
 /**
  * Metadata Component
  *
@@ -46,12 +49,12 @@ export class MetadataComponent implements OnInit {
   @Input() workspaceResources: WorkspaceResource[];
   workspaceId: string;
 
-  observationSetDS; // use in MatDataTable to display the current annotation
+  //observationSetDS; // use in MatDataTable to display the current annotation
   metadataObsDisplayedColumns: string[]; // columns for the Current Annotation table
   metadataObsDisplayedColumnsAttributesOnly: string[];
 
   customSetDS; // use in MatDataTable to display the list of custom observation/feature sets created by user
-  customSetsDisplayedColumns: string[] = ['name', 'type', 'actions']; // the list of columns for the Custom Sets table
+  customSetsDisplayedColumns: string[] = ['select', 'name', 'type', 'size', 'actions']; // the list of columns for the Custom Sets table
 
   visObservationSetDS; // use in MatDataTable to display visualisation for custom observation sets
   visObsDisplayedColumns: string[];
@@ -60,7 +63,7 @@ export class MetadataComponent implements OnInit {
   globalObservationSets = []; // all samples from all resources
 
   datasource;
-  selection = new SelectionModel(true, []);
+  selection = new SelectionModel<CustomSet>(true, []);
   isWait = false;
   private readonly onDestroy = new Subject<void>();
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -73,19 +76,20 @@ export class MetadataComponent implements OnInit {
     private storage: LclStorageService,
     private route: ActivatedRoute,
     private cd: ChangeDetectorRef,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private readonly notificationService: NotificationService,
   ) {}
 
   ngOnInit(): void {
     this.workspaceId = this.route.snapshot.paramMap.get('workspaceId');
 
     // check if there is a current annotation saved locally to display
-    const currentObsSet =
-      JSON.parse(
-        localStorage.getItem(this.workspaceId + '_current_observation_set')
-      ) || [];
-    this.generateMetadataColumns(currentObsSet);
-    this.observationSetDS = new MatTableDataSource(currentObsSet);
+    // const currentObsSet =
+    //   JSON.parse(
+    //     localStorage.getItem(this.workspaceId + '_current_observation_set')
+    //   ) || [];
+    //this.generateMetadataColumns(currentObsSet);
+    //this.observationSetDS = new MatTableDataSource(currentObsSet);
 
     // retrieve custom observation/feature sets
     const customSet = this.metadataService.getCustomSets();
@@ -100,11 +104,14 @@ export class MetadataComponent implements OnInit {
         );
         this.generateObservationSetsVisualization(); // generate custom observation visualization
         this.cd.markForCheck();
+        console.log('in the callback for the storage subscription');
+        this.selection.clear();
       });
   }
 
   ngAfterViewInit() {
-    this.observationSetDS.paginator = this.paginator;
+    //this.observationSetDS.paginator = this.paginator;
+    this.customSetDS.paginator = this.paginator;
   }
 
   ngOnDestroy() {
@@ -315,22 +322,22 @@ export class MetadataComponent implements OnInit {
   /**
    * Make the list of columns for the Mat Table with current annotation
    */
-  generateMetadataColumns(currentObsSet) {
-    if (currentObsSet && currentObsSet.length) {
-      this.metadataObsDisplayedColumns = ['id'];
-      this.metadataObsDisplayedColumnsAttributesOnly = [];
-      let attributes = {};
-      currentObsSet.forEach(
-        sample => (attributes = { ...attributes, ...sample.attributes })
-      );
-      for (const attribute in attributes) {
-        if (attributes.hasOwnProperty(attribute)) {
-          this.metadataObsDisplayedColumns.push(attribute);
-          this.metadataObsDisplayedColumnsAttributesOnly.push(attribute);
-        }
-      }
-    }
-  }
+  // generateMetadataColumns(currentObsSet) {
+  //   if (currentObsSet && currentObsSet.length) {
+  //     this.metadataObsDisplayedColumns = ['id'];
+  //     this.metadataObsDisplayedColumnsAttributesOnly = [];
+  //     let attributes = {};
+  //     currentObsSet.forEach(
+  //       sample => (attributes = { ...attributes, ...sample.attributes })
+  //     );
+  //     for (const attribute in attributes) {
+  //       if (attributes.hasOwnProperty(attribute)) {
+  //         this.metadataObsDisplayedColumns.push(attribute);
+  //         this.metadataObsDisplayedColumnsAttributesOnly.push(attribute);
+  //       }
+  //     }
+  //   }
+  // }
 
   /**
    * Get the list of observations used in all files/resources included in the current workspace
@@ -355,4 +362,192 @@ export class MetadataComponent implements OnInit {
   viewCustomSetInfo() {
     this.dialog.open(ViewInfoDialogComponent);
   }
+
+
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.customSetDS.data.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle(ev) {
+    if(ev){
+      this.isAllSelected() ?
+          this.selection.clear() :
+          this.customSetDS.data.forEach(row => this.selection.select(row));
+          console.log('selected(master): ', this.selection.selected);
+    } else {
+      return null;
+    }
+  }
+
+  /** The label for the checkbox on the passed row */
+  checkboxLabel(row?: CustomSet): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} ${row.name}`;
+  }
+
+  rowClicked(ev, row: CustomSet) {
+    if(ev){
+      this.selection.toggle(row);
+    } else {
+      return null;
+    }
+  }
+
+  prepForSetOperations(){
+    console.log(this.selection.selected);
+    let setNames = [];
+    const setTypes = new Set(this.selection.selected.map( s => s['type']));
+    if(setTypes.size > 1) {
+      const msg = 'You can only intersect sets of the same type.';
+      this.notificationService.warn(msg)
+      return;
+    } else {
+      let setsArr = [];
+      for(const s of this.selection.selected) {
+        const obj = {
+          multiple: s['multiple'],
+          elements: s['elements']
+        }
+        setsArr.push(obj)
+        setNames.push(s['name']);
+      }
+      const setType = [...setTypes][0]; // converts the set into a list- it's a single item if we are here anyway
+      const t = setType === CustomSetType.FeatureSet ? 'feature' : 'observation';
+      const payload = {
+        sets: setsArr,
+        set_type: t
+      }
+      return {
+        payload: payload,
+        setType: setType,
+        setNames: setNames
+      }
+    }
+  }
+
+  makeSetIntersection() {
+    const setData = this.prepForSetOperations();
+    if(setData) {
+      const setType = setData.setType
+      const payload = setData.payload;
+      this.metadataService.intersectCustomSets(payload).subscribe(
+        newSet => {
+          if(newSet.elements.length === 0){
+            this.notificationService.warn('The intersection was empty. No set was created.');
+            return;
+          }
+          // open the dialog to name the new set and set its color
+          const dialogRef = this.dialog.open(AddCustomSetComponent, {
+              data : {
+                type: setType
+              }  
+            }
+          );
+          dialogRef.afterClosed().subscribe(customSetData => {
+            if (customSetData) {
+              const customSet: CustomSet = {
+                name: customSetData.name,
+                type: setType,
+                color: customSetData.color,
+                elements: newSet.elements,
+                multiple: newSet.multiple
+              };
+              this.metadataService.addCustomSet(customSet);
+            }
+          });
+        }
+      );
+    }
+  }
+
+
+  makeSetUnion() {
+    const setData = this.prepForSetOperations();
+    if(setData) {
+      const setType = setData.setType
+      const payload = setData.payload;
+      this.metadataService.unionCustomSets(payload).subscribe(
+        newSet => {
+          if(newSet.elements.length === 0){
+            // Shouldn't get here since union is only empty if merging empty sets, but guard anyway
+            this.notificationService.warn('The union was empty. No set was created.');
+            return;
+          }
+          // open the dialog to name the new set and set its color
+          const dialogRef = this.dialog.open(AddCustomSetComponent, {
+              data : {
+                type: setType
+              }  
+            }
+          );
+          dialogRef.afterClosed().subscribe(customSetData => {
+            if (customSetData) {
+              const customSet: CustomSet = {
+                name: customSetData.name,
+                type: setType,
+                color: customSetData.color,
+                elements: newSet.elements,
+                multiple: newSet.multiple
+              };
+              this.metadataService.addCustomSet(customSet);
+            }
+          });
+        }
+      );
+    }
+  }
+
+  makeSetDifference(){   
+    const setData = this.prepForSetOperations();
+    if(setData) {
+      const setType = setData.setType
+      const tmpPayload = setData.payload;
+      const setNames = setData.setNames;
+
+      const firstSet = tmpPayload['sets'][0];
+      const secondSet = tmpPayload['sets'][1];
+      const firstName = setNames[0];
+      const secondName = setNames[1];
+
+      const dialogRef = this.dialog.open(SetDifferenceDialogComponent, {
+        data: {
+          setA: firstSet,
+          setB: secondSet,
+          setAName: firstName,
+          setBName: secondName
+        }
+      });
+      dialogRef.afterClosed().subscribe(
+        data => {
+          // Note that the dialog passing this information
+          // hasn't done anything yet. Instead, the dialog
+          // was used to collect the info that will now be 
+          // handled on the server side. After that (if successful)
+          // we will add it to the client side sets.
+          console.log('new set:', data);
+          if (data) {
+            let payload = tmpPayload;
+            payload['sets'] = data['ordering'];
+            this.metadataService.differenceCustomSets(payload).subscribe( customSetData => {       
+              const customSet: CustomSet = {
+                name: data.name,
+                type: setType,
+                color: data.color,
+                elements: customSetData.elements,
+                multiple: customSetData.multiple
+              };
+              this.metadataService.addCustomSet(customSet);
+            });
+          }
+        }
+      );
+    }
+  }
+
 }

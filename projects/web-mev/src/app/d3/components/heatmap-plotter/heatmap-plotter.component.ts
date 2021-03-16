@@ -485,6 +485,7 @@ export class D3HeatmapPlotComponent implements OnInit {
   }
 
   drop(event: CdkDragDrop<any[]>) {
+    console.log('DROP');
     moveItemInArray(this.customObservationSetsToPlot, event.previousIndex, event.currentIndex);
   }
 

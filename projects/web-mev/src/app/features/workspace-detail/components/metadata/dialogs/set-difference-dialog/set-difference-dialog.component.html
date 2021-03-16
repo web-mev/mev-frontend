@@ -1,0 +1,65 @@
+<div class="container">
+    <p>
+        To perform a set difference, the order matters. For example, consider the following: 
+    </p>
+        <ul>
+            <li>
+                set A with elements: "x", "y"
+            </li>
+            <li>
+                set B with elements: "x", "z"
+            </li>
+        </ul>         
+
+    <p>
+        If the order is (A,B), then the set difference contains only "y"; that is, "y" is the only element
+        of set A that is not in set B. 
+    </p>
+    
+    <p>
+        If the order is reversed to be (B,A), then the set difference contains only "z"; that is, "z" is the only element
+        of set B that is not in set A. 
+    </p>
+    <mat-divider></mat-divider>
+    <form class="mat-dialog-content" (ngSubmit)="submit" [formGroup]="setupForm">
+
+        <div class="form">
+            <p>
+                Current ordering (drag/drop to reorder):
+            </p>
+            <div class="ordering-wrapper">
+                <mat-chip-list
+                ordering-list
+                class="set-list"
+                cdkDropList 
+                cdkDropListOrientation="horizontal"
+                (cdkDropListDropped)="drop($event)">
+                <mat-chip
+                    ordering-list-item
+                    class="set-chip"
+                    cdkDrag
+                    *ngFor="let s of setNames">
+                    {{s}}
+                </mat-chip>
+                </mat-chip-list>
+            </div>
+
+            <mat-form-field class="form-control" color="accent">
+                <mat-label>Enter the set name</mat-label>
+                <input matInput formControlName=setName name=setName>
+            </mat-form-field>
+
+            <mat-form-field class="form-control" color="accent">
+                <mat-label>Select your color for the observation set:</mat-label>
+                <input type="color" class="color-picker-input" matInput formControlName=setColor name=setColor>
+            </mat-form-field>
+
+        </div>
+
+        <div class="button-panel">
+            <button mat-button [mat-dialog-close]="1" mat-raised-button color="accent"
+               [type]="submit" [disabled]="!setupForm.valid" (click)="confirmCreate()">Create</button>
+            <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
+        </div>
+    </form>
+</div>

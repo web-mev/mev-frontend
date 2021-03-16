@@ -64,6 +64,7 @@ import { RtlSupportDirective } from './directives/rtl-support/rtl-support.direct
 import { MatSortModule } from '@angular/material/sort';
 import { ByteNamePipe } from '@app/shared/pipes/byte-name.pipe';
 import { SpinnerOverlayComponent } from './components/spinner-overlay/spinner-overlay.component';
+import { AddCustomSetComponent } from './components/add-custom-set/add-custom-set.component';
 
 const MatModules = [
   MatButtonModule,
@@ -103,13 +104,13 @@ const MatModules = [
   imports: [
     CommonModule,
     FormsModule,
-
+    ReactiveFormsModule,
     TranslateModule,
     ...MatModules,
     DragDropModule,
     FontAwesomeModule
   ],
-  declarations: [RtlSupportDirective, ByteNamePipe, SpinnerOverlayComponent],
+  declarations: [RtlSupportDirective, ByteNamePipe, SpinnerOverlayComponent, AddCustomSetComponent],
   exports: [
     CommonModule,
     FormsModule,
@@ -120,7 +121,8 @@ const MatModules = [
     FontAwesomeModule,
     RtlSupportDirective,
     ByteNamePipe,
-    SpinnerOverlayComponent
+    SpinnerOverlayComponent,
+    AddCustomSetComponent
   ]
 })
 export class SharedModule {

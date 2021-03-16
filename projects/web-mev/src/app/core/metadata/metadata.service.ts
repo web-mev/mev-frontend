@@ -3,7 +3,9 @@ import { CustomSet, CustomSetType } from '@app/_models/metadata';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LclStorageService } from '../local-storage/lcl-storage.service';
 import { NotificationService } from '../core.module';
-
+import { Observable } from 'rxjs';
+import { environment } from '@environments/environment';
+import { HttpClient } from '@angular/common/http';
 /**
  * Metadata service
  *
@@ -15,11 +17,13 @@ import { NotificationService } from '../core.module';
 })
 export class MetadataService {
   result: string;
+  private readonly API_URL = environment.apiUrl;
 
   constructor(
     private router: Router,
     private storage: LclStorageService,
-    private readonly notificationService: NotificationService
+    private readonly notificationService: NotificationService,
+    private httpClient: HttpClient,
   ) {}
 
   /**
@@ -131,5 +135,33 @@ export class MetadataService {
     customSets.splice(foundIndex, 1);
     const workspaceId = this.getParam('workspaceId');
     this.storage.set(workspaceId + '_custom_sets', customSets);
+  }
+
+
+  intersectCustomSets(payload): Observable<any> {
+    return <Observable<any>>(
+      this.httpClient.post(
+        `${this.API_URL}/metadata/intersect/`,
+        payload
+      )
+    );
+  }
+
+  unionCustomSets(payload): Observable<any> {
+    return <Observable<any>>(
+      this.httpClient.post(
+        `${this.API_URL}/metadata/union/`,
+        payload
+      )
+    );
+  }
+
+  differenceCustomSets(payload): Observable<any> {
+    return <Observable<any>>(
+      this.httpClient.post(
+        `${this.API_URL}/metadata/set-difference/`,
+        payload
+      )
+    );
   }
 }

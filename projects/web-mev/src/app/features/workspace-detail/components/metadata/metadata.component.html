@@ -5,18 +5,16 @@
       <mat-card-content class="metadata-card__main">
           <div class="metadata-card__instruction">
             <p>
-              Here you can create <a (click)="viewCustomSetInfo()">custom observation and feature sets</a> to filter your data during
-              the analysis. You also can incorporate an annotation file as attributes to your custom observation set. 
+              Create and manage <a (click)="viewCustomSetInfo()">custom observation and feature sets</a> to filter and stratify your data. You also can incorporate an annotation file as attributes to your custom observation set. 
             </p>
-            <p *ngIf="(workspaceResources| annotationFilesPipe)?.length > 0; else noAnnotationFiles">
-              Click the Incorporate annotations button to use your annotation file.
-            </p>
-           <ng-template #noAnnotationFiles>
-             <p>Please upload an annotation file 
-               <mat-icon class="icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+            <p>
+              By incorporating an annotation file<mat-icon class="icon inline-icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
               matTooltip=" An Annotation Table is a special type of table that is be responsible for annotating observations/samples (e.g. adding sample names and associated attributes like experimental group or other covariates). The first column gives the sample names and the remaining columns  each individually represent different covariates associated with that sample." aria-label="Info tooltip about the field">info
-            </mat-icon>and add it to your workspace to. </p>
-           </ng-template>
+            </mat-icon>, you can also add custom attributes/covariates to your observations and features. 
+            </p>
+            <p>
+              Additional sets can be created through the available set operations.
+            </p>
           </div>
           <mat-divider [inset]="true"></mat-divider>
           <div class="metadata-card__content">
@@ -27,12 +25,40 @@
                   Create an observation set
                 </button>
       
+                <span 
+                  [matTooltip]="'Add an annotation file to this workspace to incorporate annotations.'"
+                  [matTooltipDisabled]="(workspaceResources| annotationFilesPipe)?.length > 0">
                 <button mat-raised-button color="accent" (click)="onChooseAnnotation()"
                 [disabled]="(workspaceResources| annotationFilesPipe)?.length === 0">
                   <mat-icon aria-label="Incorporate annotations">add</mat-icon>
                   Incorporate annotations
                   </button>
-      
+                </span>
+
+                <span 
+                [matTooltip]="'Select two or more sets to perform an intersection'"
+                [matTooltipDisabled]="selection.selected.length > 1">
+                <button [disabled]="selection.selected.length < 2" mat-raised-button color="accent" (click)="makeSetIntersection()">
+                  <mat-icon aria-label="Create from set intersection">add</mat-icon>
+                  Create set from intersection
+                </button>
+                </span>
+                <span 
+                [matTooltip]="'Select two or more sets to perform a union'"
+                [matTooltipDisabled]="selection.selected.length > 1">
+                <button [disabled]="selection.selected.length < 2" mat-raised-button color="accent" (click)="makeSetUnion()">
+                  <mat-icon aria-label="Create from set union">add</mat-icon>
+                  Create set from union
+                </button>
+                </span>
+                <span 
+                [matTooltip]="'Select two sets to perform a set difference. For clarity, we only allow a set difference between exactly two sets.'"
+                [matTooltipDisabled]="selection.selected.length === 2">
+                <button [disabled]="selection.selected.length !== 2" mat-raised-button color="accent" (click)="makeSetDifference()">
+                  <mat-icon aria-label="Create from set difference">add</mat-icon>
+                  Create from set difference
+                </button>
+                </span>
               </div>
 
               <mat-button-toggle-group #customSetsViewMode="matButtonToggleGroup" value="tableMode">
@@ -50,6 +76,26 @@
             <div *ngIf="customSetDS?.data?.length > 0">
               <table *ngIf="customSetsViewMode.value === 'tableMode'" mat-table [dataSource]="customSetDS"
                 class="mat-elevation-z8">
+
+
+                <!-- Checkbox Column -->
+                <ng-container matColumnDef="select">
+                  <th mat-header-cell *matHeaderCellDef>
+                    <mat-checkbox (change)="masterToggle($event)"
+                                  [checked]="selection.hasValue() && isAllSelected()"
+                                  [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                  [aria-label]="checkboxLabel()">
+                    </mat-checkbox>
+                  </th>
+                  <td mat-cell *matCellDef="let row">
+                    <mat-checkbox (click)="$event.stopPropagation()"
+                                  (change)="rowClicked($event, row)"
+                                  [checked]="selection.isSelected(row)"
+                                  [aria-label]="checkboxLabel(row)">
+                    </mat-checkbox>
+                  </td>
+                </ng-container>
+
                 <ng-container matColumnDef="name">
                   <th mat-header-cell *matHeaderCellDef> Name </th>
                   <td mat-cell *matCellDef="let element">
@@ -62,7 +108,12 @@
                   <th mat-header-cell *matHeaderCellDef> Type (Observation/Feature set) </th>
                   <td mat-cell *matCellDef="let element"> {{element.type}} </td>
                 </ng-container>
-      
+
+                <ng-container matColumnDef="size">
+                  <th mat-header-cell *matHeaderCellDef> Size </th>
+                  <td mat-cell *matCellDef="let element"> {{element.elements.length}} </td>
+                </ng-container>
+
                 <ng-container matColumnDef="actions">
                   <th mat-header-cell *matHeaderCellDef>Actions</th>
                   <td mat-cell *matCellDef="let element; let i=index;">

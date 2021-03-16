@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '@app/shared/shared.module';
 import { WorkspaceDetailRoutingModule } from './workspace-detail-routing.module';
@@ -23,6 +23,8 @@ import { AnalysisModule } from '../analysis/analysis.module';
 import { EditFeatureSetDialogComponent } from './components/metadata/dialogs/edit-feature-set-dialog/edit-feature-set-dialog.component';
 import { EditDialogComponent } from './components/dialogs/edit-dialog/edit-dialog/edit-dialog.component';
 import { ViewInfoDialogComponent } from './components/metadata/dialogs/view-info-dialog/view-info-dialog.component';
+import { SetDifferenceDialogComponent } from './components/metadata/dialogs/set-difference-dialog/set-difference-dialog.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -40,18 +42,21 @@ import { ViewInfoDialogComponent } from './components/metadata/dialogs/view-info
     ViewSetDialogComponent,
     EditFeatureSetDialogComponent,
     EditDialogComponent,
-    ViewInfoDialogComponent
+    ViewInfoDialogComponent,
+    SetDifferenceDialogComponent
   ],
   exports: [],
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     SharedModule,
     SatPopoverModule,
     RouterModule,
     AngularMultiSelectModule,
     AnalysisModule,
-    WorkspaceDetailRoutingModule
+    WorkspaceDetailRoutingModule,
+    DragDropModule
   ]
 })
 export class WorkspaceDetailModule {}

@@ -40,6 +40,8 @@ export class D3HeatmapPlotComponent implements OnInit {
  customObservationSetsToPlot = [];
  heatmapData = [];
  plotReady = false;
+ tilesTooSmall = false;
+ validPlot = false;
  warnMsg = '';
  imgAdjustForm: FormGroup;
  imgAdjustFormSubmitted = false;
@@ -49,7 +51,7 @@ export class D3HeatmapPlotComponent implements OnInit {
  imageName = 'heatmap'; // file name for downloaded SVG image
  precision = 2;
  outerHeight = 500;
- minTileSize = 20;
+ minTileSize = 5;
  tooltipOffsetX = 10; // to position the tooltip on the right side of the triggering element
  finalWidth;
  finalHeight;
@@ -218,6 +220,7 @@ export class D3HeatmapPlotComponent implements OnInit {
     this.clearChart();
 
     if(this.resourceData.length === 0){
+      this.validPlot = false;
       return
     }
 
@@ -292,14 +295,39 @@ export class D3HeatmapPlotComponent implements OnInit {
            {
               featureId: rowname,
               obsId: obsId,
-              value: this.logScale ? Math.log2(val): val
+              value: val // we want to display the true data on hover. Even if logged, that will only affect the color.
            }
          ); 
         }
        }
       }
     );
+    let pseudocount = 0;
     if(this.logScale){
+
+      // if the minimum is less than zero, we can't take the log.
+      // Since the plot is effectively qualitative (since it's a visual depiction)
+      // we simply tranlate all the numbers so that the minimum is zero
+      if (minVal < 0){
+        let offset = Math.abs(minVal);
+        minVal += offset;
+        maxVal += offset;
+      }
+
+      // at this point we have non-negative numbers. May still have an issue
+      // where we try to take a log of zero. If we were guaranteed integer count
+      // data, we could just add a pseudocount. However, we may be dealing some other
+      // kind of data (e.g. on a range of [0,1]) where that would ruin the plot.
+      // As a workaround to this, we add our "pseudocount" as a fraction (say, 0.1%) of the data's range
+      // For example, if the range goes from [0,1], adding 0.001 won't affect the qualitative nature
+      // of the plot. Same goes for larger ranges. e.g. if it's [0,100], then making the minimum=0.1
+      // is not going to materially affect the visual.
+      if (minVal === 0) {
+        pseudocount = 0.001*(maxVal - minVal);
+        minVal += pseudocount;
+        maxVal += pseudocount;
+      }
+
       minVal = Math.log2(minVal);
       maxVal = Math.log2(maxVal);
     }
@@ -369,6 +397,19 @@ export class D3HeatmapPlotComponent implements OnInit {
       tileY = yB;
     }
 
+    if (tileX < this.minTileSize){
+      this.tilesTooSmall = true;
+    } else if (tileY < this.minTileSize) {
+      this.tilesTooSmall = true;
+    } else {
+      this.tilesTooSmall = false;
+    }
+
+    if (this.tilesTooSmall){
+      this.validPlot = false;
+      return;
+    }
+
     // reset the scales to the final widths/height so everything lines up well
     xScale = this.makeScale(xDomain, [this.margin.left, this.margin.left + this.finalWidth]);
     yScale = this.makeScale(yDomain, [this.margin.top, this.margin.top + this.finalHeight]);
@@ -410,7 +451,6 @@ export class D3HeatmapPlotComponent implements OnInit {
       this.selectedColormap = this.defaultColormap;
     }
     let colormapInterpolator = this.colormapOptions[this.selectedColormap];
-
     selection
       .enter()
       .append('rect')
@@ -419,8 +459,13 @@ export class D3HeatmapPlotComponent implements OnInit {
       .attr('height', tileY)
       .attr('width', tileX)
       .attr('fill', d => {
+        // note that 'value' is the actual value of the data.
+        // If we are log-transforming for the plot, we only use that transform
+        // to represent the color. This way, the user can still see the true 
+        // value of the data on the mouseover event
+        let dataValue = this.logScale ? Math.log2(d['value'] + pseudocount) : d['value'];
         return colormapInterpolator(
-          (d['value'] - minVal)/(maxVal-minVal)
+          (dataValue - minVal)/(maxVal-minVal)
         )
       })
       .on('mouseover', function(mouseEvent: any, d) {
@@ -460,6 +505,9 @@ export class D3HeatmapPlotComponent implements OnInit {
         }
       }
     }
+
+    this.validPlot = true;
+
   }
 
   /**
@@ -485,7 +533,6 @@ export class D3HeatmapPlotComponent implements OnInit {
   }
 
   drop(event: CdkDragDrop<any[]>) {
-    console.log('DROP');
     moveItemInArray(this.customObservationSetsToPlot, event.previousIndex, event.currentIndex);
   }
 

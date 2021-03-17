@@ -10,9 +10,9 @@
     <section>
         <mat-checkbox (click)="togglePoints()">Show individual samples</mat-checkbox>
     </section>
-    <div *ngIf="warnMsg.length > 0">
-        <mat-card class="warn">
-            {{warnMsg}}
+    <div *ngIf="warnMsgArr.length > 0">
+        <mat-card class="warn" *ngFor="let warnMsg of warnMsgArr">
+            <p>{{warnMsg}}</p>
         </mat-card>
     </div>
     <div class="button-panel">

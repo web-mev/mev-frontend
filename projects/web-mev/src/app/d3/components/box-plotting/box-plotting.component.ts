@@ -43,7 +43,10 @@ export class D3BoxPlotComponent implements OnInit, OnChanges, AfterViewInit {
   boxPlotData = [];
   boxPlotTypes = {};
   plotReady = false;
-  warnMsg = '';
+  // we end up truncating the data if there are too many genes/features. 
+  // This allows us to persist the warning message about this truncation
+  fullDataSize; 
+  warnMsgArr = [];
 
   xScale; // scale functions to transform data values into the the range
   yScale;
@@ -90,6 +93,7 @@ export class D3BoxPlotComponent implements OnInit, OnChanges, AfterViewInit {
 
   generateBoxPlot() {
     if (this.svgElement){
+      this.warnMsgArr = [];
       this.reformatData();
       this.createChart();
       this.plotReady = true;
@@ -125,8 +129,19 @@ export class D3BoxPlotComponent implements OnInit, OnChanges, AfterViewInit {
         };
       }
 
+      // only set this once--
+      if (this.fullDataSize === undefined){
+        this.fullDataSize = this.resourceData.length;
+      }
+
+      if (this.fullDataSize > this.maxFeatureNumber){
+        this.warnMsgArr.push(`Note that some of the features have been
+          removed since the size of the set exceeded the maximum
+          number of features (${this.maxFeatureNumber})
+        `)
+      }
       this.resourceData = this.resourceData.slice(0, this.maxFeatureNumber);
-      //console.log(this.resourceData);
+
       const countsFormatted = this.resourceData.map(elem => {
         const newElem = { key: elem.rowname };
         Object.keys(this.boxPlotTypes).forEach(key => {
@@ -139,7 +154,6 @@ export class D3BoxPlotComponent implements OnInit, OnChanges, AfterViewInit {
               return {pt_label: sampleName, value: elem.values[sampleName]}
             }
           );
-          console.log('valdict: ', valDict);
           let stats = Utils.getBoxPlotStatistics(numbers);
           let d = {};
           d[this.statsKey] = stats;
@@ -204,7 +218,6 @@ export class D3BoxPlotComponent implements OnInit, OnChanges, AfterViewInit {
       .attr('class', 'd3-tip')
       .offset([-10, 0])
       .html((event, d) => {
-        console.log('HOVER:', d);
 
         // Show table with basic statistic values
         const htmlTable =
@@ -330,14 +343,11 @@ export class D3BoxPlotComponent implements OnInit, OnChanges, AfterViewInit {
     let boxWidth = (this.fillFraction*xStep)/num_categories;
     if(boxWidth < this.minBoxWidth){
       boxWidth = this.minBoxWidth;
-      this.warnMsg = `Note that the screen width and number of features
+      this.warnMsgArr.push(`Note that the screen width and number of features
         are such that the plot may not render correctly. Either decrease the
         size of the gene/feature set or increase the browser window size if
         not already maximized.
-      `
-    } else {
-      // if this isn't there the message will not go away once it has been triggered
-      this.warnMsg = '';
+      `)
     }
     let gap = this.gap*boxWidth;
     const total_width = num_categories*boxWidth + (num_categories - 1)*gap;
@@ -542,7 +552,6 @@ export class D3BoxPlotComponent implements OnInit, OnChanges, AfterViewInit {
         set => set.name !== foundSet.name
       );
     }
-    this.reformatData();
-    this.createChart();
+    this.generateBoxPlot();
   }
 }

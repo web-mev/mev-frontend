@@ -400,7 +400,6 @@ export class MetadataComponent implements OnInit {
   }
 
   prepForSetOperations(){
-    console.log(this.selection.selected);
     let setNames = [];
     const setTypes = new Set(this.selection.selected.map( s => s['type']));
     if(setTypes.size > 1) {
@@ -421,7 +420,8 @@ export class MetadataComponent implements OnInit {
       const t = setType === CustomSetType.FeatureSet ? 'feature' : 'observation';
       const payload = {
         sets: setsArr,
-        set_type: t
+        set_type: t,
+        ignore_attributes: true // for these operations, we don't care about merging the attributes
       }
       return {
         payload: payload,

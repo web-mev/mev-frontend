@@ -122,7 +122,7 @@
                     {{warnMsg}}
                 </mat-card>
             </div>
-            <div>
+            <div *ngIf="validPlot">
                 <mev-download-button [containerId]="containerId" [imageName]="imageName"></mev-download-button>
             </div>
         </div>
@@ -130,6 +130,13 @@
 <div *ngIf="plotReady && (heatmapData.length === 0) && !isWait">
     <mat-card class="no-data-error">
         No data to plot. Please check your input selections and retry.
+    </mat-card> 
+</div>
+<div *ngIf="plotReady && (tilesTooSmall) && !isWait">
+    <mat-card class="no-data-error">
+        Given the current dimensions of the screen and data, the heatmap tiles
+        are smaller than the permitted minimum size. Either decrease the number of observations
+        or features you are plotting, or increase the size of the plot.
     </mat-card> 
 </div>
 <div #heatmap id="heatmap" class="chart" (window:resize)="onResize($event)"></div>

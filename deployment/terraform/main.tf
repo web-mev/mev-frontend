@@ -33,6 +33,7 @@ resource "google_compute_instance" "mev_frontend" {
   name         = "dev-webmev-frontend"
   machine_type = "e2-medium"
   tags         = ["web", "dev"]
+  metadata_startup_script = file("provision.sh")
 
   boot_disk {
     initialize_params {

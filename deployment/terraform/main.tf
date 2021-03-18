@@ -2,7 +2,7 @@ terraform {
   required_version = "~> 0.14.8"
   required_providers {
     google = {
-      source = "hashicorp/google"
+      source  = "hashicorp/google"
       version = "~> 3.60.0"
     }
   }
@@ -10,9 +10,9 @@ terraform {
 
 provider "google" {
   credentials = file(var.credentials_file)
-  project = var.project_id
-  region  = var.region
-  zone    = var.zone
+  project     = var.project_id
+  region      = var.region
+  zone        = var.zone
 }
 
 resource "google_compute_network" "mev_vpc_network" {
@@ -30,9 +30,10 @@ resource "google_compute_firewall" "mev_firewall" {
 }
 
 resource "google_compute_instance" "mev_frontend" {
-  name         = "dev-webmev-frontend"
-  machine_type = "e2-medium"
-  tags         = ["web", "dev"]
+  name                    = "dev-webmev-frontend"
+  machine_type            = "e2-medium"
+  tags                    = ["web", "dev"]
+
   metadata_startup_script = file("provision.sh")
 
   boot_disk {

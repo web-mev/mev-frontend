@@ -10,7 +10,7 @@ import { ProgressSnackbarComponent } from '@file-manager/components/progress-sna
 
 import { SharedModule } from '@app/shared/shared.module';
 import { ViewFileTypesDialogComponent } from './components/dialogs/view-file-types-dialog/view-file-types-dialog.component';
-
+import { FileDownloadDirective } from './directives/file-download'
 @NgModule({
   declarations: [
     FileListComponent,
@@ -18,7 +18,8 @@ import { ViewFileTypesDialogComponent } from './components/dialogs/view-file-typ
     EditFileDialogComponent,
     DeleteFileDialogComponent,
     ProgressSnackbarComponent,
-    ViewFileTypesDialogComponent
+    ViewFileTypesDialogComponent,
+    FileDownloadDirective
   ],
   exports: [FileListComponent],
   imports: [CommonModule, FileManagerRoutingModule, SharedModule]

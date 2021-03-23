@@ -108,10 +108,14 @@
           <mat-icon aria-label="Delete">delete</mat-icon>
         </button>
 
-        <button mat-icon-button color="accent" title="Download" disabled>
+        <a fileDownload
+        [resourceId]="row.id">
+        <button mat-icon-button color="accent" title="Download"
+          [disabled]="!row.is_active"
+          >
           <mat-icon aria-label="Download">get_app</mat-icon>
         </button>
-
+        </a>
         <button mat-icon-button color="accent" title="Download to DropBox" disabled>
           <mat-icon aria-label="Download">cloud_download</mat-icon>
         </button>

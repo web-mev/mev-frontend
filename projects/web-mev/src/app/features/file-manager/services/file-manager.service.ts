@@ -67,7 +67,7 @@ export class FileService {
   public getAllFiles(): void {
     // refresh the status of the resource validation process every 2 seconds
     const maxTimer$ = timer(this.maxTime);
-    timer(0, 2000)
+    timer(0, 5000)
       .pipe(
         concatMap(() => this.httpClient.get(`${this.API_URL}/resources/`)),
         map((files: File[]) => files.map(file => this.adapter.adapt(file))),
@@ -181,6 +181,20 @@ export class FileService {
         `${this.API_URL}/resources/${fileId}/contents/`,
         params
       )
+    );
+  }
+
+  /**
+   * Download a file
+   *
+   */
+  downloadFile(id: number | string): Observable<any> {
+    return this.httpClient.get(
+      `${this.API_URL}/resources/download/${id}/`,
+      {
+        responseType: 'blob',
+        observe: 'response'
+      }
     );
   }
 }

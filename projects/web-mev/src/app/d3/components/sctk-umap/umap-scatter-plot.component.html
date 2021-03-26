@@ -1,0 +1,51 @@
+<mat-card class="analysis-card">
+    <mat-card-header>
+        <div mat-card-avatar class="analysis-card__img"></div>
+        <mat-card-title>UMAP dimensional reduction: {{ outputs?.job_name }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="analysis-card__main">
+        <p class="analysis-card__instruction">
+            Enable the <i>select points</i> mode to allow the grouping of points (cells) and creation of custom sets. 
+        </p>
+        <p class="analysis-card__instruction">
+            Those sets can be used in other analyses (e.g. differential expression) to examine differences between the cell clusters.
+        </p>
+        <mat-divider [inset]="true"></mat-divider>
+        <div class="analysis-card__content">
+            <mat-button-toggle-group #chartMode="matButtonToggleGroup" [(ngModel)]="chartViewMode">
+                <mat-button-toggle value="zoomMode" (change)="onChartViewChange($event.value)"
+                    aria-label="Text align center">
+                    <mat-icon aria-label="Zooming/panning">zoom_in</mat-icon> Zooming/panning
+                </mat-button-toggle>
+                <mat-button-toggle value="selectionMode" (change)="onChartViewChange($event.value)"
+                    aria-label="Text align left">
+                    <mat-icon aria-label="Select points">near_me</mat-icon> Select points
+                </mat-button-toggle>
+            </mat-button-toggle-group>
+            
+            <section class="observation-list-section">
+                
+                <ul *ngIf="customObservationSets.length"> Conditional formatting: 
+                    <li *ngFor="let set of customObservationSets">
+                        <mat-checkbox (change)="onObservationCheck($event)" [checked]="isCustomObservationSetChecked(set.name)" [id]="set.name">{{set.name}}</mat-checkbox>
+                    </li>
+                </ul>
+            </section>          
+                
+                <div class="sample-list-container">
+                    <button mat-raised-button color="accent" (click)="onCreateCustomSampleSet()" 
+                    [disabled]="!selectedSamples.length">
+                        <mat-icon>add</mat-icon>
+                        Save as a sample set
+                    </button>
+                    <div class="sample-list" *ngIf="selectedSamples.length"> 
+                        Selected cells: {{selectedSamples.length}} 
+                    </div>
+                </div>          
+
+            <mev-download-button [containerId]="containerId" [imageName]="imageName"></mev-download-button>
+            <div #scatterPlot id="scatterPlot" class="chart" (window:resize)="onResize($event)"></div>
+            
+        </div>
+    </mat-card-content>
+</mat-card>

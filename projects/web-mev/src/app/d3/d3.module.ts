@@ -18,6 +18,7 @@ import { BoxplotFormComponent } from './components/boxplot/boxplot.component';
 import { HeatmapFormComponent } from './components/heatmap/heatmap.component';
 import { MevBaseExpressionPlotFormComponent } from './components/base-expression-plot-form/base-expression-plot-form.component';
 import { D3HeatmapPlotComponent } from './components/heatmap-plotter/heatmap-plotter.component';
+import { UmapScatterPlotComponent } from './components/sctk-umap/umap-scatter-plot.component'
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
@@ -38,7 +39,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     BoxplotFormComponent,
     HeatmapFormComponent,
     MevBaseExpressionPlotFormComponent,
-    D3HeatmapPlotComponent
+    D3HeatmapPlotComponent,
+    UmapScatterPlotComponent
   ],
   imports: [CommonModule, SharedModule, DragDropModule],
   exports: [
@@ -53,7 +55,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     EdgerComponent,
     RnaSeqNormalizationComponent,
     BoxplotFormComponent,
-    HeatmapFormComponent
+    HeatmapFormComponent,
+    UmapScatterPlotComponent
   ]
 })
 export class D3Module {}

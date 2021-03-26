@@ -163,34 +163,36 @@ export class ExecutedOperationComponent implements OnInit {
               this.execOperationId
             );
 
-            // expand the parent nodes if there is an operation selected
-            const nodesToExpand = [
-              execOperation.operation.operation_name,
-              ...execOperation.operation.categories
-            ];
-            this.treeControl.dataNodes.forEach((node, i) => {
-              if (nodesToExpand.includes(node.name)) {
-                this.treeControl.expand(this.treeControl.dataNodes[i]);
+            if(execOperation){
+              // expand the parent nodes if there is an operation selected
+              const nodesToExpand = [
+                execOperation.operation.operation_name,
+                ...execOperation.operation.categories
+              ];
+              this.treeControl.dataNodes.forEach((node, i) => {
+                if (nodesToExpand.includes(node.name)) {
+                  this.treeControl.expand(this.treeControl.dataNodes[i]);
+                }
+              });
+              this.activeNode = execOperation;
+              this.selectedExecOperationName = execOperation.job_name;
+
+              // if the opertion has been already completed, just extract its data from the list
+              if (execOperation?.outputs || execOperation?.error_messages) {
+                this.outputs = {
+                  operation: execOperation.operation,
+                  job_name: execOperation.job_name,
+                  ...execOperation.outputs,
+                  ...execOperation.inputs,
+                  error_messages: execOperation.error_messages
+                };
+                return of({ body: execOperation });
               }
-            });
-            this.activeNode = execOperation;
-            this.selectedExecOperationName = execOperation.job_name;
 
-            // if the opertion has been already completed, just extract its data from the list
-            if (execOperation?.outputs || execOperation?.error_messages) {
-              this.outputs = {
-                operation: execOperation.operation,
-                job_name: execOperation.job_name,
-                ...execOperation.outputs,
-                ...execOperation.inputs,
-                error_messages: execOperation.error_messages
-              };
-              return of({ body: execOperation });
+              return this.apiService.getExecutedOperationResult(
+                this.execOperationId
+              );
             }
-
-            return this.apiService.getExecutedOperationResult(
-              this.execOperationId
-            );
           }
           return of();
         })

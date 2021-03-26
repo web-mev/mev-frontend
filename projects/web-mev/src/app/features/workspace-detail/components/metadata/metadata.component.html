@@ -133,9 +133,11 @@
                 <tr mat-row *matRowDef="let row; columns: customSetsDisplayedColumns;">
       
               </table>
-      
-      
-              <table *ngIf="customSetsViewMode.value === 'visMode'" mat-table [dataSource]="visObservationSetDS"
+              <div *ngIf="customSetsViewMode.value === 'visMode' && tooManyObservations" class="too-many-obs">
+                Your workspace has a total of {{observationCount}} samples/observations and the set visualization
+                has been disabled.
+              </div>
+              <table *ngIf="customSetsViewMode.value === 'visMode' && !tooManyObservations" mat-table [dataSource]="visObservationSetDS"
                 class="visualization-table">
                 <ng-container matColumnDef="id">
                   <th mat-header-cell *matHeaderCellDef> Sample </th>

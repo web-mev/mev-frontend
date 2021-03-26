@@ -7,7 +7,7 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subject, Subscription } from 'rxjs';
+import { Subject, Subscription, of } from 'rxjs';
 import { takeUntil, switchMap, delay } from 'rxjs/operators';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatAccordion } from '@angular/material/expansion';
@@ -52,6 +52,16 @@ export class MetadataComponent implements OnInit {
   //observationSetDS; // use in MatDataTable to display the current annotation
   metadataObsDisplayedColumns: string[]; // columns for the Current Annotation table
   metadataObsDisplayedColumnsAttributesOnly: string[];
+
+  // if we have more than this amount of observations, we disable various 
+  // options since making a UI that is responsive, etc. is cumbersome
+  maxObservations = 500;
+
+  // a boolean which tracks whether we have exceeded the number of permitted observations.
+  // Used to enable/disable certain parts of the UI so it doesn't grind to a halt.
+  tooManyObservations = false; 
+
+  observationCount;
 
   customSetDS; // use in MatDataTable to display the list of custom observation/feature sets created by user
   customSetsDisplayedColumns: string[] = ['select', 'name', 'type', 'size', 'actions']; // the list of columns for the Custom Sets table
@@ -145,44 +155,59 @@ export class MetadataComponent implements OnInit {
     this.isWait = true;
     this.globalObservationSets = [];
     this.service
-      .getWorkspaceMetadataObservations(this.workspaceId)
+      .getWorkspaceMetadataObservations(this.workspaceId, this.maxObservations)
       .pipe(
         delay(500), // delay for spinner
         switchMap(metadata => {
-          if (metadata?.observation_set?.elements) {
-            this.globalObservationSets = metadata.observation_set.elements;
-          }
-          const globalObservationSetsDS = new MatTableDataSource(
-            this.globalObservationSets
-          );
+          console.log('META:');
+          console.log(metadata);
+          this.observationCount = metadata['count']
+          if(this.observationCount > this.maxObservations){
+            let msg = `Your workspace has greater than ${this.maxObservations} observations/samples
+            and manual set creation has been disabled. You may still define custom sets in your analysis
+            outputs or with an annotation file, however.`;
+            this.notificationService.warn(msg);
+            this.isWait = false;
+            this.tooManyObservations = true;
+            return of();
 
-          // the list of columns for pop-up table to select samples for custom observation sets
-          const observationSetsDisplayedColumns = ['select', 'id'];
-          const observationSetsDisplayedColumnsAttributesOnly = [];
-
-          const obsSetsWithAttr = this.globalObservationSets.filter(
-            set => 'attributes' in set
-          );
-          const attributes = obsSetsWithAttr.length
-            ? obsSetsWithAttr[0].attributes
-            : {};
-
-          for (const attribute in attributes) {
-            if (attributes.hasOwnProperty(attribute)) {
-              observationSetsDisplayedColumns.push(attribute);
-              observationSetsDisplayedColumnsAttributesOnly.push(attribute);
+          } else {
+            this.tooManyObservations = false;
+            if (metadata?.results) {
+              this.globalObservationSets = metadata.results;
             }
-          }
+            const globalObservationSetsDS = new MatTableDataSource(
+              this.globalObservationSets
+            );
 
-          this.isWait = false;
-          const dialogRef = this.dialog.open(AddObservationSetDialogComponent, {
-            data: {
-              observationSetDS: globalObservationSetsDS,
-              observationSetsDisplayedColumns: observationSetsDisplayedColumns,
-              observationSetsDisplayedColumnsAttributesOnly: observationSetsDisplayedColumnsAttributesOnly
+            // the list of columns for pop-up table to select samples for custom observation sets
+            const observationSetsDisplayedColumns = ['select', 'id'];
+            const observationSetsDisplayedColumnsAttributesOnly = [];
+
+            const obsSetsWithAttr = this.globalObservationSets.filter(
+              set => 'attributes' in set
+            );
+            const attributes = obsSetsWithAttr.length
+              ? obsSetsWithAttr[0].attributes
+              : {};
+
+            for (const attribute in attributes) {
+              if (attributes.hasOwnProperty(attribute)) {
+                observationSetsDisplayedColumns.push(attribute);
+                observationSetsDisplayedColumnsAttributesOnly.push(attribute);
+              }
             }
-          });
-          return dialogRef.afterClosed();
+
+            this.isWait = false;
+            const dialogRef = this.dialog.open(AddObservationSetDialogComponent, {
+              data: {
+                observationSetDS: globalObservationSetsDS,
+                observationSetsDisplayedColumns: observationSetsDisplayedColumns,
+                observationSetsDisplayedColumnsAttributesOnly: observationSetsDisplayedColumnsAttributesOnly
+              }
+            });
+            return dialogRef.afterClosed();
+          }
         }),
 
         takeUntil(this.onDestroy)
@@ -212,6 +237,7 @@ export class MetadataComponent implements OnInit {
     if (this.visObsDisplayedColumnsSetsOnly.length > 0) {
       this.getGlobalObservationSets().subscribe(data => {
         this.globalObservationSets = data;
+        
         this.globalObservationSets.forEach(sample => {
           const elem = { sampleName: sample.id };
           customObservationSets.forEach(customSet => {
@@ -225,6 +251,7 @@ export class MetadataComponent implements OnInit {
           visTable.push(elem);
         });
         this.visObservationSetDS = new MatTableDataSource(visTable);
+        this.isWait = false;
         this.cd.markForCheck();
       });
     }
@@ -257,12 +284,18 @@ export class MetadataComponent implements OnInit {
     this.isWait = true;
     this.globalObservationSets = [];
     this.service
-      .getWorkspaceMetadataObservations(this.workspaceId)
+      .getWorkspaceMetadataObservations(this.workspaceId, this.maxObservations)
       .pipe(
         delay(500), // delay for spinner
         switchMap(metadata => {
-          if (metadata?.observation_set?.elements) {
-            this.globalObservationSets = metadata.observation_set.elements;
+          if (metadata?.results) {
+            if(metadata['count'] > this.maxObservations){
+              this.tooManyObservations = true;
+            } else {
+              this.tooManyObservations = false;
+            }
+            this.observationCount = metadata['count']
+            this.globalObservationSets = metadata.results;
           }
           const globalObservationSetsDS = new MatTableDataSource(
             this.globalObservationSets
@@ -293,7 +326,7 @@ export class MetadataComponent implements OnInit {
               color: set.color,
               type: set.type,
               selectedElements: set.elements,
-              observationSetDS: globalObservationSetsDS,
+              observationSetDS: this.tooManyObservations? null : globalObservationSetsDS,
               observationSetsDisplayedColumns: observationSetsDisplayedColumns,
               observationSetsDisplayedColumnsAttributesOnly: observationSetsDisplayedColumnsAttributesOnly
             }
@@ -343,13 +376,21 @@ export class MetadataComponent implements OnInit {
    * Get the list of observations used in all files/resources included in the current workspace
    */
   getGlobalObservationSets() {
+    this.isWait = true;
     let globalObservationSets = [];
     const subject = new Subject<any>();
     this.service
-      .getWorkspaceMetadataObservations(this.workspaceId)
+      .getWorkspaceMetadataObservations(this.workspaceId, this.maxObservations)
       .subscribe(metadata => {
-        if (metadata?.observation_set?.elements) {
-          globalObservationSets = metadata.observation_set.elements;
+        if (metadata?.results) {
+          this.observationCount = metadata['count']
+          if(this.observationCount > this.maxObservations){
+            this.tooManyObservations = true;
+            globalObservationSets = [];
+          } else {
+            this.tooManyObservations = false;
+            globalObservationSets = metadata.results;
+          }
         }
         subject.next(globalObservationSets);
       });

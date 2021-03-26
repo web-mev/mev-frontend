@@ -59,18 +59,22 @@ export class EditFeatureSetDialogComponent implements OnInit {
       this.allObservationSetsDS = this.data.observationSetDS;
       this.observationSetsDisplayedColumns = this.data.observationSetsDisplayedColumns;
       this.observationSetsDisplayedColumnsAttributesOnly = this.data.observationSetsDisplayedColumnsAttributesOnly;
-      this.allObservationSetsDS.data
-        .filter(el =>
-          this.data.selectedElements.some(selEl => selEl.id === el.id)
-        )
-        .forEach(row => {
-          this.selection.select(row);
-        });
+
+      // this can be null if there were too many observations and we block manual editing of the set members
+      if(this.allObservationSetsDS){
+        this.allObservationSetsDS.data
+          .filter(el =>
+            this.data.selectedElements.some(selEl => selEl.id === el.id)
+          )
+          .forEach(row => {
+            this.selection.select(row);
+          });
+      }
     }
   }
 
   ngAfterViewInit() {
-    if (this.isObservationSet) {
+    if (this.isObservationSet && this.allObservationSetsDS) {
       this.allObservationSetsDS.paginator = this.paginator;
     }
   }

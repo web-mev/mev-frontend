@@ -119,11 +119,16 @@ export class WorkspaceDetailService {
    *
    */
   getWorkspaceMetadataObservations(
-    workspaceId: number | string
+    workspaceId: number | string,
+    maxSize: number
   ): Observable<any> {
+    const params = {
+      params: new HttpParams().set('page_size', '' + maxSize)
+    };
     return <Observable<any>>(
       this.httpClient.get(
-        `${this.API_URL}/workspaces/${workspaceId}/metadata/observations/`
+        `${this.API_URL}/workspaces/${workspaceId}/metadata/observations/`,
+        params
       )
     );
   }

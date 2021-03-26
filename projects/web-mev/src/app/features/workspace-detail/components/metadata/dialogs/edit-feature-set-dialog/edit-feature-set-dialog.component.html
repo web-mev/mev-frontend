@@ -22,7 +22,11 @@
                     name=observationSetColor>
             </mat-form-field>
 
-            <div *ngIf="isObservationSet">
+            <div *ngIf="isObservationSet && !allObservationSetsDS">
+                Note that custom set editing has been disabled due to a large number of samples/observations
+                in your workspace.
+            </div>
+            <div *ngIf="isObservationSet && allObservationSetsDS">
                 Select samples:
                 <div class="mat-elevation-z8">
                     <div class="filter-panel">

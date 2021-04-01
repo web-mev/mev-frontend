@@ -20,6 +20,7 @@ import { MevBaseExpressionPlotFormComponent } from './components/base-expression
 import { D3HeatmapPlotComponent } from './components/heatmap-plotter/heatmap-plotter.component';
 import { UmapScatterPlotComponent } from './components/sctk-umap/umap-scatter-plot.component'
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { SctkSeuratClusterComponent } from './components/sctk-seurat-cluster/sctk-seurat-cluster.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     HeatmapFormComponent,
     MevBaseExpressionPlotFormComponent,
     D3HeatmapPlotComponent,
-    UmapScatterPlotComponent
+    UmapScatterPlotComponent,
+    SctkSeuratClusterComponent
   ],
   imports: [CommonModule, SharedModule, DragDropModule],
   exports: [
@@ -56,7 +58,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     RnaSeqNormalizationComponent,
     BoxplotFormComponent,
     HeatmapFormComponent,
-    UmapScatterPlotComponent
+    UmapScatterPlotComponent,
+    SctkSeuratClusterComponent
   ]
 })
 export class D3Module {}

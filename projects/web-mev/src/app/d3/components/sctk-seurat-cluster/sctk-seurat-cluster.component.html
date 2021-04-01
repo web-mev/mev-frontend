@@ -1,0 +1,26 @@
+<mat-card class="analysis-card">
+    <mat-card-header>
+        <div mat-card-avatar class="analysis-card__img"></div>
+        <mat-card-title>SCTK Seurat clustering: {{ outputs?.job_name }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="analysis-card__main">
+        <mat-divider [inset]="true"></mat-divider>
+        <div class="analysis-card__content">       
+            <p> The Seurat clustering algorithm identified <strong>{{clusterCount}}</strong> clusters </p>
+            <p>
+                You can choose to 
+                   select these clusters and add them to your workspace metadata. This will allow you to
+                   overlay these clusters on plots and use them to identify groups for other analyses,
+                   such as differential expression analysis.
+               </p>
+            <p>Note that
+                the cluster assignments may not be the same each time and may not 
+                visually match up with any "visual clusters" you may identify on,
+                for example, the UMAP plot.
+            </p>
+            <mev-download-button [containerId]="containerId" [imageName]="imageName"></mev-download-button>
+            <div #distPlot id="distPlot" class="chart" (window:resize)="onResize($event)"></div>
+            
+        </div>
+    </mat-card-content>
+</mat-card>

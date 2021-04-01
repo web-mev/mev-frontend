@@ -34,6 +34,10 @@
     <ng-container *ngIf="operationName === 'SCTK UMAP dimensional reduction'">
         <mev-sctk-umap-scatter-plot [outputs]="outputs"></mev-sctk-umap-scatter-plot>
     </ng-container>
+
+    <ng-container *ngIf="operationName === 'Seurat clustering'">
+        <mev-sctk-seurat-cluster [outputs]="outputs"></mev-sctk-seurat-cluster>
+    </ng-container>
 </div>
 
 <ng-template #error>

@@ -1,0 +1,26 @@
+<div class="container">
+  <h3 mat-dialog-title>Specify a descriptive name for your clusters</h3>
+
+  <p>By default, the clusters are named by numbers. To avoid confusion,
+    specify a meaningful "prefix" that will be applied to these clusters.
+    For example, if the prefix is "xyz", then the clusters will be added
+    to your metadata as "xyz_0", "xyz_1", and so on.
+  </p>
+  <form class="mat-dialog-content" [formGroup]="labelForm" (ngSubmit)="submit">
+
+    <div class="form">
+
+      <mat-form-field class="form-control" color="accent">
+        <mat-label>Prefix:</mat-label>
+        <input matInput formControlName=clusterPrefix>
+      </mat-form-field>
+    </div>
+
+    <div mat-dialog-actions>
+      <button mat-button mat-raised-button color="accent" (click)="confirmAdd()" 
+        [type]="submit" [disabled]="!labelForm.valid" [mat-dialog-close]="1">Add clusters</button>
+      <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
+    </div>
+    <p></p>
+  </form>
+</div>

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ScatterPlotComponent } from './components/scatter-plot/scatter-plot.component';
 import { SharedModule } from '@app/shared/shared.module';
 import { AddSampleSetComponent } from './components/dialogs/add-sample-set/add-sample-set.component';
+import { ClusterLabelerComponent } from './components/dialogs/cluster-labeler/cluster-labeler.component';
 import { Deseq2Component } from './components/deseq2/deseq2.component';
 import { LimmaComponent } from './components/limma/limma.component';
 import { HclComponent } from './components/hcl/hcl.component';
@@ -26,6 +27,7 @@ import { SctkSeuratClusterComponent } from './components/sctk-seurat-cluster/sct
   declarations: [
     ScatterPlotComponent,
     AddSampleSetComponent,
+    ClusterLabelerComponent,
     Deseq2Component,
     LimmaComponent,
     HclComponent,

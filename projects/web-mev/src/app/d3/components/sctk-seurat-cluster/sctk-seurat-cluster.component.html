@@ -18,6 +18,11 @@
                 visually match up with any "visual clusters" you may identify on,
                 for example, the UMAP plot.
             </p>
+            <button mat-raised-button color="accent" (click)="importClusters()" 
+            [disabled]="clusterCount === 0">
+                <mat-icon>add</mat-icon>
+                Add these clusters to your workspace metadata
+            </button>
             <mev-download-button [containerId]="containerId" [imageName]="imageName"></mev-download-button>
             <div #distPlot id="distPlot" class="chart" (window:resize)="onResize($event)"></div>
             

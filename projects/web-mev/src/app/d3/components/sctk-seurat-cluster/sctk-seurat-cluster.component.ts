@@ -6,9 +6,13 @@ import {
   ViewChild,
   ElementRef 
 } from '@angular/core';
-
+import { MatDialog } from '@angular/material/dialog';
 import { AnalysesService } from '@app/features/analysis/services/analysis.service';
 import { MetadataService } from '@app/core/metadata/metadata.service';
+import { ClusterLabelerComponent } from '../dialogs/cluster-labeler/cluster-labeler.component';
+import { CustomSetType } from '@app/_models/metadata';
+import { Utils } from '@app/shared/utils/utils';
+import { NotificationService } from '@app/core/core.module';
 import * as d3 from 'd3';
 import d3Tip from 'd3-tip';
 
@@ -50,8 +54,10 @@ export class SctkSeuratClusterComponent implements OnInit {
   tooltipOffsetX = 10; // to position the tooltip on the right side of the triggering element
 
   constructor(
+    public dialog: MatDialog,
     private apiService: AnalysesService,
-    private metadataService: MetadataService
+    private metadataService: MetadataService,
+    private readonly notificationService: NotificationService
   ) { }
 
   ngOnInit(): void {
@@ -84,8 +90,61 @@ export class SctkSeuratClusterComponent implements OnInit {
     this.distData = reformattedData;
   }
 
-  onResize(event) {
+  onResize(event): void {
     this.createChart();
+  }
+
+  importClusters(): void {
+    const dialogRef = this.dialog.open(ClusterLabelerComponent);
+
+    dialogRef.afterClosed().subscribe(
+      data => {
+        const prefix = data.prefix;
+        // now run through the file contents and assign to the proper cluster
+        this.apiService
+        .getResourceContent(this.clustersResourceId)
+        .subscribe(response => {
+          if (response.length) {
+            let fileContents = response;
+
+            // initialize a bunch of observation sets
+            // that we will populate
+            const customSets = {};
+            Object.keys(this.distData).forEach(
+              clusterID => {
+                customSets[clusterID] = {
+                  name: prefix + '_' + clusterID,
+                  type: CustomSetType.ObservationSet,
+                  elements: [],
+                  color: Utils.getRandomColor(),
+                  multiple: true
+                };
+              } 
+            );
+
+            // now fill:
+            response.forEach(obj => {
+              const sampleId = obj.rowname;
+              const assignedCluster = obj.values['seurat_cluster'];
+              customSets[assignedCluster].elements.push(
+                {
+                  id: sampleId,
+                  attributes: {}
+                }
+              )
+            });
+
+            // store using the metadata service
+            for (let k of Object.keys(customSets)) {
+              this.metadataService.addCustomSet(customSets[k], false);
+            }
+            this.notificationService.success(
+              'Your Seurat clusters have been added to your metadata.'
+            );
+          }
+        });
+      }
+    )
   }
 
   createChart(): void {

@@ -80,7 +80,7 @@ export class MetadataService {
   /**
    * Add a new custom observation/feature set to user's storage
    */
-  addCustomSet(customSet: CustomSet): boolean {
+  addCustomSet(customSet: CustomSet, showMsg = true): boolean {
     const customSets = this.getCustomSets();
     if (customSets.some(set => set.name === customSet.name)) {
       const errorMessage =
@@ -91,9 +91,11 @@ export class MetadataService {
       customSets.push(customSet);
       const workspaceId = this.getParam('workspaceId');
       this.storage.set(workspaceId + '_custom_sets', customSets);
-      this.notificationService.success(
-        'The new custom set has been successfully created.'
-      );
+      if (showMsg){
+        this.notificationService.success(
+          'The new custom set has been successfully created.'
+        );
+      }
       return true;
     }
   }

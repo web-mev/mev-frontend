@@ -76,6 +76,28 @@ npm run generate-docs
 
 ```
 
+## <a name="GCP">GCP</a>
+
+* To configure:
+  1. Install [Google Cloud SDK](https://cloud.google.com/sdk/docs/install) and [Terraform](https://www.terraform.io/downloads.html)
+  1. Add service account with Editor role for the project
+  1. Add and download service account key
+  1. `cd deployment/terraform`
+  1. `terraform init`
+  1. `cp terraform.tfvars.template terraform.tfvars`
+  1. edit `terraform.tfvars` to assign required configuration values 
+
+* To build mev-frontend infrastructure:
+  ```shell
+  terraform apply
+  ```
+  You can access the instance using the returned IP address
+
+* To delete mev-frontend infrastructure:
+  ```shell
+  terraform destroy
+  ```
+
 ## <a name="Settings">**Settings**</a>
 
 - File _app.component.ts_\

@@ -38,6 +38,11 @@
     <ng-container *ngIf="operationName === 'Seurat clustering'">
         <mev-sctk-seurat-cluster [outputs]="outputs"></mev-sctk-seurat-cluster>
     </ng-container>
+
+    <ng-container *ngIf="operationName === 'MAST Single-cell differential expression'">
+        <mev-mast-dge [outputs]="outputs"></mev-mast-dge>
+    </ng-container>
+
 </div>
 
 <ng-template #error>

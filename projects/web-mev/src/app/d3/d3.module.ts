@@ -14,6 +14,7 @@ import { KmeansComponent } from './components/kmeans/kmeans/kmeans.component';
 import { D3BoxPlotComponent } from './components/box-plotting/box-plotting.component';
 import { DifferentialExpressionComponent } from './components/differential_expression/differential_expression.component';
 import { EdgerComponent } from './components/edger/edger.component';
+import { MastDgeComponent } from './components/sctk-mast/sctk-mast.component';
 import { RnaSeqNormalizationComponent } from './components/rnaseq-normalization/rnaseq-normalization.component';
 import { BoxplotFormComponent } from './components/boxplot/boxplot.component';
 import { HeatmapFormComponent } from './components/heatmap/heatmap.component';
@@ -38,6 +39,7 @@ import { SctkSeuratClusterComponent } from './components/sctk-seurat-cluster/sct
     D3BoxPlotComponent,
     DifferentialExpressionComponent,
     EdgerComponent,
+    MastDgeComponent,
     RnaSeqNormalizationComponent,
     BoxplotFormComponent,
     HeatmapFormComponent,
@@ -57,6 +59,7 @@ import { SctkSeuratClusterComponent } from './components/sctk-seurat-cluster/sct
     KmeansComponent,
     D3BoxPlotComponent,
     EdgerComponent,
+    MastDgeComponent,
     RnaSeqNormalizationComponent,
     BoxplotFormComponent,
     HeatmapFormComponent,

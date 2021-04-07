@@ -3,12 +3,20 @@ import { DifferentialExpressionComponent } from '../differential_expression/diff
 
 @Component({
   selector: 'mev-edger',
-  templateUrl: '../differential_expression/differential_expression.component.html',
+  templateUrl: './edger.component.html',
   styleUrls: ['../differential_expression/differential_expression.component.scss']
 })
 export class EdgerComponent extends DifferentialExpressionComponent {
     imageName = 'edgeR'
     analysisName = 'edgeR'
+
+    displayedColumns = [
+        'name',
+        'log2FoldChange',
+        'statistic',
+        'pvalue',
+        'padj'
+      ];
 
     ngOnInit() {
         super.ngOnInit();

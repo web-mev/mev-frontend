@@ -32,12 +32,17 @@ yarn.lock
 # misc
 /.sass-cache
 /connect.lock
-/coverage
 /libpeerconnection.log
 npm-debug.log
 testem.log
 /typings
-.vagrant/
+
+# deployment
+/.vagrant/
+.terraform/
+.terraform.tfstate*
+terraform.tfstate*
+terraform.tfvars
 
 # e2e
 /e2e/src/*.js

@@ -12,10 +12,12 @@ import {
   BehaviorSubject,
   fromEvent,
   merge,
+  timer,
+  interval,
   Observable,
   Subscription
 } from 'rxjs';
-import { map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { map, debounceTime, distinctUntilChanged, takeUntil, filter, tap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -29,6 +31,7 @@ import { DeleteFileDialogComponent } from '@app/features/file-manager/components
 import { Dropbox, DropboxChooseOptions } from '@file-manager/models/dropbox';
 import { PreviewDialogComponent } from '@app/features/workspace-detail/components/dialogs/preview-dialog/preview-dialog.component';
 import { ViewFileTypesDialogComponent } from '../dialogs/view-file-types-dialog/view-file-types-dialog.component';
+import { FileType } from '@app/shared/models/file-type';
 
 declare var Dropbox: Dropbox;
 
@@ -63,6 +66,16 @@ export class FileListComponent implements OnInit {
   dataSource: ExampleDataSource | null;
   id: string;
   uploadProgressData: Map<string, object>;
+  availableResourceTypes = {};
+
+  // due to the polling nature of the file browser, once a user selects a resource type in the dropdown,
+  // we need to keep track of what they did. Otherwise, when the polling feature refreshes the table, the 
+  // selection they made disappears. This object tracks this so we can prevent that from happening.
+  validatingInfo = {};
+
+  // this allows us to initiate and stop polling behavior when files are being validated. 
+  // We track a list of file identifiers (UUID) that are currently being validated by the backend.
+  private currentlyValidatingBS: BehaviorSubject<Array<string>> = new BehaviorSubject([]);
   isWait = false;
   Object = Object;
   private fileUploadProgressSubscription: Subscription = new Subscription();
@@ -81,6 +94,7 @@ export class FileListComponent implements OnInit {
 
   ngOnInit() {
     this.loadData();
+    this.loadResourceTypes();
 
     this.fileUploadProgressSubscription = this.fileService.fileUploadsProgress.subscribe(
       uploadProgressData => {
@@ -107,6 +121,17 @@ export class FileListComponent implements OnInit {
     );
   }
 
+  loadResourceTypes() {
+    this.fileService.getFileTypes().subscribe((fileTypes: FileType[]) => {
+      fileTypes.forEach(
+        type =>
+          (this.availableResourceTypes[type.resource_type_key] = {
+            title: type.resource_type_title
+          })
+      );
+    });
+  }
+
   public ngOnDestroy(): void {
     this.fileUploadProgressSubscription.unsubscribe();
   }
@@ -114,6 +139,94 @@ export class FileListComponent implements OnInit {
   refresh() {
     this.loadData();
   }
+
+  /*
+  * Starts a polling routine which checks for the validation status
+  */
+  startPollingRefresh(maxSecs: number){
+
+    // wait 100ms, then emit every 5s
+    const intervalSource = timer(100,5000);
+
+    // only continue this for the number of seconds requested
+    const timer$ = timer(maxSecs*1000);
+    const validationListEmpty = this.currentlyValidatingBS.pipe(
+      filter(id_list => id_list.length === 0)
+    )
+    const mergedObservable = merge(timer$, validationListEmpty)
+    intervalSource.pipe(
+      takeUntil(mergedObservable)
+    ).subscribe(
+      x=>this.refresh()
+    )
+  }
+
+  setResourceType($event, row){
+    this.validatingInfo[row.id] = $event.value;
+    const updateData: any = {
+      id: row.id,
+      resource_type: $event.value
+    };
+    row.is_active = false;
+    this.fileService.updateFile(updateData).subscribe(data => {
+
+      // get the current files being validated and add this new one
+      const filesBeingValidated = this.currentlyValidatingBS.value;
+      filesBeingValidated.push(data['id']);
+
+      this.currentlyValidatingBS.next(filesBeingValidated);
+
+      this.refresh();
+      this.startPollingRefresh(120);
+    });
+  }
+
+  getResourceTypeVal(row) {
+    if (row.resource_type) {
+      // if the resource was already validated for another type, but we are attempting to
+      // change it, this keeps the dropdown on this "new" selected value. Otherwise, the refresh of the table
+      // will appear to revert to the old type
+      if (Object.keys(this.validatingInfo).includes(row.id)){
+        if (row.is_active){
+          // if we are here, it means that the file has completed validation.
+          delete this.validatingInfo[row.id];
+
+          // also need to modify the behaviorsubject that is tracking this file.
+          // This will then trigger the polling behavior to cease before the maximum
+          // polling time is reached.
+          const filesBeingValidated = this.currentlyValidatingBS.value;
+          const updatedArray = [];
+
+          // if there are multiple files simultaneously being validated, we 
+          // need to ensure we keep those.
+          for(const i in filesBeingValidated){
+            const uuid = filesBeingValidated[i];
+            if (row.id !== uuid){
+              updatedArray.push(uuid);
+            }
+          }
+          this.currentlyValidatingBS.next(updatedArray);
+
+          return row.resource_type
+        } else {
+          return this.validatingInfo[row.id];
+        }
+      }
+
+      // simply return the already-validated resource type.
+      return row.resource_type
+
+    } else {
+      // the resource type may be null, but we may be in the process of 
+      // validating it. Return the value that the user just set, which is 
+      // stored in the validatingInfo object
+      if (Object.keys(this.validatingInfo).includes(row.id)){
+        return this.validatingInfo[row.id];
+      }
+      return '---';
+    }
+  }
+
 
   /**
    * Open a modal dialog to upload files
@@ -162,13 +275,23 @@ export class FileListComponent implements OnInit {
    */
   editItem(i: number, id: string, file_name: string, resource_type: string) {
     this.id = id;
+
     const dialogRef = this.dialog.open(EditFileDialogComponent, {
       data: { id: id, name: file_name, resource_type: resource_type }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result === 1) {
-        this.refresh();
+      if (result !== null) {
+        this.dataSource.renderedData[i]['is_active'] = false; 
+        this.dataSource.renderedData[i]['status'] = 'Validating...'; 
+        this.validatingInfo[id] = resource_type;
+
+        // get the current files being validated and add this new one
+        const filesBeingValidated = this.currentlyValidatingBS.value;
+        filesBeingValidated.push(id);
+        this.currentlyValidatingBS.next(filesBeingValidated);
+
+        this.startPollingRefresh(120);
       }
     });
   }
@@ -241,11 +364,15 @@ export class FileListComponent implements OnInit {
   }
 
   public loadData() {
-    this.dataSource = new ExampleDataSource(
-      this.fileService,
-      this.paginator,
-      this.sort
-    );
+    if(this.dataSource){
+      this.dataSource.connect();
+    } else {
+      this.dataSource = new ExampleDataSource(
+        this.fileService,
+        this.paginator,
+        this.sort
+      );
+    }
     fromEvent(this.filter.nativeElement, 'keyup')
       .pipe(debounceTime(150), distinctUntilChanged())
       .subscribe(() => {
@@ -285,6 +412,7 @@ export class ExampleDataSource extends DataSource<File> {
    * Connect function called by the table to retrieve one stream containing the data to render.
    */
   connect(): Observable<File[]> {
+
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
       this._exampleDatabase.dataChange,
@@ -315,7 +443,6 @@ export class ExampleDataSource extends DataSource<File> {
           startIndex,
           this._paginator.pageSize
         );
-
         return this.renderedData;
       })
     );

@@ -44,6 +44,6 @@ export class EditDialogComponent {
    *
    */
   stopEdit(): void {
-    this.fileService.updateFile(this.data);
+    this.fileService.updateFile(this.data).subscribe(data => {});
   }
 }

@@ -52,9 +52,14 @@
 
     <ng-container matColumnDef="resource_type">
       <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">File type</mat-header-cell>
-      <mat-cell *matCellDef="let row"
-        [ngClass]="{'warning-cell': !row.resource_type, 'warning-cell--asterisk ': !row.resource_type}">
-        {{ row.readable_resource_type || 'Please specify file type' }}</mat-cell>
+      <mat-cell *matCellDef="let row">
+        <mat-select (selectionChange)="setResourceType($event, row)" [value]="getResourceTypeVal(row)">
+          <mat-option value="---" disabled>Please specify file type</mat-option>
+          <mat-option *ngFor="let type of availableResourceTypes | keyvalue" [value]="type.key">
+            {{ type.value.title }}
+          </mat-option>
+        </mat-select>
+      </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="status">

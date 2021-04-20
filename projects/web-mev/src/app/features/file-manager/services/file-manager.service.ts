@@ -65,7 +65,19 @@ export class FileService {
    *
    */
   public getAllFiles(): void {
-    // refresh the status of the resource validation process every 2 seconds
+    this.httpClient.get(`${this.API_URL}/resources/`).pipe(
+      map((files: File[]) => files.map(file => this.adapter.adapt(file)))    
+    ).subscribe(data => {
+      this.dataChange.next(data);
+    })
+  }
+
+  /**
+   * File info retrieval using polling
+   *
+   */
+  public getAllFilesPolled(): void {
+    // refresh the status of the resource validation process every 5 seconds
     const maxTimer$ = timer(this.maxTime);
     timer(0, 5000)
       .pipe(
@@ -153,10 +165,9 @@ export class FileService {
    * Update file properties, put method
    *
    */
-  updateFile(file: File): void {
-    this.httpClient
+  updateFile(file: File): Observable<any> {
+    return this.httpClient
       .put(`${this.API_URL}/resources/${file.id}/`, file)
-      .subscribe(data => {});
   }
 
   /**

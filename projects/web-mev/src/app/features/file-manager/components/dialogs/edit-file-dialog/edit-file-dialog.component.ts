@@ -42,7 +42,7 @@ export class EditFileDialogComponent implements OnInit {
    *
    */
   onNoClick(): void {
-    this.dialogRef.close();
+    this.dialogRef.close(null);
   }
 
   /**
@@ -50,7 +50,9 @@ export class EditFileDialogComponent implements OnInit {
    *
    */
   stopEdit(): void {
-    this.fileService.updateFile(this.data);
+    this.fileService.updateFile(this.data).subscribe(data => {
+      this.dialogRef.close(data);
+    });
   }
 
   loadResourceTypes() {

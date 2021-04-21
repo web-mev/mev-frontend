@@ -21,20 +21,29 @@
             <h1 class="mat-h1">{{ 'mev.title.long' | translate }}</h1>
             <div class="mev-section">
               <p>WebMeV (Multiple Experiment Viewer) is a cloud-based application supporting <i><b>analysis</b></i>, <i><b>visualization</b></i>,
-                and <i><b>stratification</b></i> of large genomic data, particularly for RNASeq and microarray data.</p>
+                and <i><b>stratification</b></i> of large genomic data, particularly for RNA-Seq and microarray data.</p>
+
+              <p>Past versions of WebMeV were limited to analyses with relatively small memory and computational resources. In this updated version, we
+                  incorporate a number of technologies that will allow large-scale processing of raw sequencing data, greatly expanding the capabilities
+                  of an interactive, browser-based analysis tool.
+              </p>
               <p class="">With WebMeV platform, you can:</p>
-              <p><span class="mev-heading">Perform RNASeq Analysis</span> - Perform differential expression analysis
-                using RNASeq raw count data to draw biological insights.</p>
-              <p><span class="mev-heading">Access to Public Domain Data</span> - Directly search and pull TCGA and GEO
+              <p><span class="mev-heading">Perform integrative, reproducible NGS analysis</span>, including clustering, differential expression,
+                and functional analysis. Much of the analyses focus on using transcriptome/RNA-Seq data, but the platform is not limited to this application.
+                We continue to update and add new analyses, so check back frequently.
+              </p>
+              <p><span class="mev-heading">Access to Public Domain Data (<i>coming soon</i>)</span> - Directly search and pull TCGA and GEO
                 gene expression and sample attribute data in addition to private data for analysis</p>
               <p><span class="mev-heading">Stratify Cohorts using Clinical Attributes</span> - Perform complex cohort
-                stratification using sophisticated regular expression, facet filter, and set operations.</p>
+                stratification using familiar search and filtering capabilities.</p>
             </div>
 
             <div class="mev-section">
-              <p>Web MeV is being built to meet the challenge of exploring large public genomic data set and
-                Next-Generation Sequencing data with intuitive graphical interface for analysis. MeV is a free and
-                open-source cloud service platform that does not require log in to use.</p>
+              <p>WebMeV was built to meet the challenge of exploring large public genomic data set and
+                Next-Generation Sequencing data with intuitive graphical interface for analysis. WebMeV is a <i>free and open-source</i>
+                 cloud service platform. All analyses are version-controlled and made available through our GitHub repository. This enables
+                 transparent and reproducible analysis that can be run on any computational infrastructure, independent of the WebMeV platform. 
+                </p>
             </div>
 
             <div class="mev-section">
@@ -121,13 +130,25 @@
               <fa-icon [icon]="['fas','cogs']"></fa-icon>
             </mat-card-header>
             <mat-card-content>
+              <a href="https://www.djangoproject.org">Django project</a>
+              <br>
+              <a href="https://angular.io">Angular</a>
+              <br>
               <a href="http://www.bioconductor.org">Bioconductor</a>
               <br>
               <a href="http://d3js.org/">D3.js</a>
               <br>
+              <a href="http://www.docker.com/">Docker</a>
+              <br>
+              <a href="https://github.com/openwdl/wdl">Workflow Definition Language (WDL)</a>
+              <br>
+              <a href="https://cromwell.readthedocs.io/en/stable/">Cromwell workflow engine</a>
+              <br>
               <a href="http://www.r-project.org/">R Statistics Language</a>
               <br>
-              <a href="http://openrefine.org/">Open Refine</a>
+              <a href="https://python.org/">Python</a>
+              <br>
+              <a href="https://scikit-learn.org/">Scikit-Learn</a>
               <br>
             </mat-card-content>
           </mat-card>
@@ -141,12 +162,13 @@
             </mat-card-header>
 
             <mat-card-content>
-              See current developments and contribute to the project <a href="https://github.com/dfci-cccb/mev">
+              See current developments and contribute to the project <a href="https://github.com/web-mev">
               here</a>.
               <br>
               <br>
-              <a href="https://github.com/dfci-cccb/mev/issues">Have an issue or want to report a bug? Tell us about
-                it.</a>
+              <a href="https://github.com/web-mev/mev-backend/">Backend API</a>
+                <br>
+                <a href="https://github.com/web-mev/mev-frontend/">Frontend application</a>
             </mat-card-content>
           </mat-card>
 

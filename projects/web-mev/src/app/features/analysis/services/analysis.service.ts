@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { map, switchMap, takeWhile } from 'rxjs/operators';
+import { map, concatMap, takeWhile } from 'rxjs/operators';
 import { Observable, interval } from 'rxjs';
 import { File, FileAdapter } from '@app/shared/models/file';
 import { Workspace } from '@app/features/workspace-manager/models/workspace';
@@ -76,13 +76,15 @@ export class AnalysesService {
 
   /**
    * Get operation results
-   * Send http-request every 2 seconds if the previous request returns and the status is 202, 204 or 208
+   * Send http-request every x seconds (see below) if the previous request returns and the status is 202, 204 or 208
    */
   getExecutedOperationResult(executedOperationId: string): Observable<any> {
     // check the status of the operation execution until the job is fully completed (i.e. status = 200)
     const codesInProcess = [204, 202, 208]; // 204 - job is still running; 202 - job has completed and acknowledges that the 'finalization' steps have started; 208 - job has completed and the finalization has started, but has not completed
-    return interval(2000).pipe(
-      switchMap(() =>
+    return interval(3000).pipe(
+      // originally this was using switchMap. However, the backend very rarely raised problems due to race conditions
+      // In principle, concatMap should wait for each response to complete so we don't end up with this issue.
+      concatMap(() =>
         this.httpClient.get(
           `${this.API_URL}/executed-operations/${executedOperationId}/`,
           { observe: 'response' }

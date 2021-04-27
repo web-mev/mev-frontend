@@ -1,14 +1,21 @@
 <mev-spinner-overlay *ngIf="isWait"></mev-spinner-overlay>
 
 <div class="instruction">
-  Upload and manage your files here. The table below shows all files associated with your
+  <p>
+  Upload and manage your files here.
+</p> 
+<p>
+The table below shows all files associated with your
   account. After your files have been uploaded and validated, you can add them to
   workspaces to conduct your analysis.
+</p>
+<p>
   Note that we need to know what type of file we are working with. Hence, after upload, we
   ask that you specify a file type. To learn more about the available file types and their
   formats, <a (click)="viewFileTypes()">click here</a>. If applicable, you can preview the file to check that we have parsed it correctly. If
   something does not appear to be correct, you may have to edit your file offline and
   upload again.
+  </p>
 </div>
 <div class="file-btn-group">
   <div>

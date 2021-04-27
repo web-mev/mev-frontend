@@ -155,6 +155,16 @@ export class AnalysesService {
   }
 
   /**
+   * Save the executed operations of a workspace for a user. Creates a new file for them
+   */
+  exportExecOperationDAG(workspaceId: string): Observable<any> {
+    return this.httpClient.get(
+      `${this.API_URL}/executed-operations/workspace/${workspaceId}/tree/save`,
+      { observe: 'response' }
+    );
+  }
+
+  /**
    * Get the properies of a workspace
    */
   getWorkspaceDetail(id: number | string): Observable<Workspace> {

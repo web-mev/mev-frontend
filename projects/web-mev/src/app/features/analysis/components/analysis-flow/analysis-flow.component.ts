@@ -13,6 +13,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { PreviewDialogComponent } from '@app/features/workspace-detail/components/dialogs/preview-dialog/preview-dialog.component';
 import { WorkspaceDetailService } from '@app/features/workspace-detail/services/workspace-detail.service';
+import { NotificationService } from '../../../../core/core.module';
 
 /**
  * Analysis Flow Component.
@@ -29,6 +30,9 @@ export class AnalysisFlowComponent implements OnInit {
 
   noDataIsAvailable = false;
   isWait = false; // to control spinner
+
+  workspaceDagData;
+  workspaceId;
 
   /* DAG Chart settings */
   containerId = '#dagPlot';
@@ -50,12 +54,14 @@ export class AnalysisFlowComponent implements OnInit {
     private route: ActivatedRoute,
     private analysesService: AnalysesService,
     private workspaceDetailService: WorkspaceDetailService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private readonly notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
-    const workspaceId = this.route.snapshot.paramMap.get('workspaceId');
-    this.analysesService.getExecOperationDAG(workspaceId).subscribe(data => {
+    this.workspaceId = this.route.snapshot.paramMap.get('workspaceId');
+    this.analysesService.getExecOperationDAG(this.workspaceId).subscribe(data => {
+      this.workspaceDagData = data;
       this.buildDAG(data);
     });
   }
@@ -237,5 +243,14 @@ export class AnalysisFlowComponent implements OnInit {
    * Function performs a ‘workspace export’ which takes the graph
    * and make some ‘full record’ including the operation versions, etc.
    */
-  saveAnalysisHistory() {}
+  saveAnalysisHistory() {
+    this.analysesService.exportExecOperationDAG(this.workspaceId).subscribe(response => {
+      if (response.status === 201) {
+      this.notificationService.success('The current workspace state was saved to your files.');
+      } else {
+        this.notificationService.error('There was a problem exporting your workspace state. An admin has been notified.');
+ 
+      }
+    });
+  }
 }

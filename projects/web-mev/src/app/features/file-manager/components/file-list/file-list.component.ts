@@ -334,6 +334,11 @@ export class FileListComponent implements OnInit {
           previewData: previewData
         }
       });
+    },
+    error => {
+      // error was already reported to the user--
+      this.isWait = false;
+      this.ref.markForCheck();
     });
   }
 

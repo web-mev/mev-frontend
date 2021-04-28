@@ -105,7 +105,7 @@ The table below shows all files associated with your
       <mat-header-cell *matHeaderCellDef class="file-table-header">Actions</mat-header-cell>
 
       <mat-cell *matCellDef="let row; let i=index;">
-        <button mat-icon-button color="accent" title="Preview"
+        <button mat-icon-button color="accent" title="Preview" [disabled]="!row.is_active"
           (click)="previewItem(row.id)">
           <mat-icon aria-label="Preview">visibility</mat-icon>
         </button>

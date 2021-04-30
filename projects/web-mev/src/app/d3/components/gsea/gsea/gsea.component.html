@@ -61,17 +61,17 @@
 
           <ng-container matColumnDef="NES">
             <mat-header-cell *matHeaderCellDef mat-sort-header>NES</mat-header-cell>
-            <mat-cell class="description-cell" *matCellDef="let row">{{row.NES}}</mat-cell>
+            <mat-cell class="description-cell" *matCellDef="let row">{{row.NES | number: '1.1-3'}}</mat-cell>
           </ng-container>
 
           <ng-container matColumnDef="padj">
             <mat-header-cell *matHeaderCellDef mat-sort-header>P-value adjusted</mat-header-cell>
-            <mat-cell class="description-cell" *matCellDef="let row">{{row.padj}}</mat-cell>
+            <mat-cell class="description-cell" *matCellDef="let row">{{row.padj | number: '1.1-4'}}</mat-cell>
           </ng-container>
 
           <ng-container matColumnDef="pval">
             <mat-header-cell *matHeaderCellDef mat-sort-header>P-value</mat-header-cell>
-            <mat-cell class="description-cell" *matCellDef="let row">{{row.pval}}</mat-cell>
+            <mat-cell class="description-cell" *matCellDef="let row">{{row.pval | number: '1.1-4' }}</mat-cell>
           </ng-container>
 
           <ng-container matColumnDef="leadingEdge">

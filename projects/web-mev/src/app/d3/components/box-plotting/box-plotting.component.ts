@@ -236,7 +236,7 @@ export class D3BoxPlotComponent implements OnInit, OnChanges, AfterViewInit {
             )
             .join('') +
           '</tr>' +
-          '<tr><td>Q2</td>' +
+          '<tr><td>Median</td>' +
           Object.keys(this.boxPlotTypes)
             .map(
               key =>

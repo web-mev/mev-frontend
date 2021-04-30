@@ -99,7 +99,16 @@ export class DifferentialExpressionComponent implements OnInit, AfterViewInit {
   outerHeight = 700;
   precision = 2;
   delta = 0.1; // used for X and Y axis ranges (we add delta to avoid bug when both max and min are zeros)
-  boxWidth = 20; // the width of rectangular box
+  gap = 0.1 // fraction of the box width to act as a gap between sibling boxes
+  // each gene/feature is given an amount of horizontal space in which to plot. That space is
+  // dependent on the width of the screen and the number of genes/features. Assuming we have
+  // sufficient space, we fill each 'bin' to this fraction. This fraction (along with the total
+  // width and number of genes) sets the dynamic width of the boxes.
+  // Once there is not enough room we default to the minimum width and the boxes will overrun each
+  // other. (no way around that.)
+  fillFraction = 0.8;
+  minBoxWidth = 10; // the minimum width of rectangular box
+  //boxWidth = 20; // the width of rectangular box
   jitterWidth = 10;
   tooltipOffsetX = 10; // to position the tooltip on the right side of the triggering element
 
@@ -378,7 +387,7 @@ export class DifferentialExpressionComponent implements OnInit, AfterViewInit {
           '</td><td>' +
           d[this.yBaseCat].q1.toFixed(this.precision) +
           '</td></tr>' +
-          '<tr><td>Q2</td><td>' +
+          '<tr><td>Median</td><td>' +
           d[this.yExperCat].median.toFixed(this.precision) +
           '</td><td>' +
           d[this.yBaseCat].median.toFixed(this.precision) +
@@ -451,10 +460,29 @@ export class DifferentialExpressionComponent implements OnInit, AfterViewInit {
     svg.append('g').call(d3.axisLeft(this.yScale));
 
     // Box plots
+    const num_categories = Object.keys(this.boxPlotTypes).length;
+    // how much space is 'allotted' for each gene/feature
+    const xStep = this.xScale.step();
+    const numFeatures = data.length;
+    let boxWidth = (this.fillFraction*xStep)/num_categories;
+    if(boxWidth < this.minBoxWidth){
+      boxWidth = this.minBoxWidth;
+      // this.warnMsgArr.push(`Note that the screen width and number of features
+      //   are such that the plot may not render correctly. Either decrease the
+      //   size of the gene/feature set or increase the browser window size if
+      //   not already maximized.
+      // `)
+    }
+    let gap = this.gap*boxWidth;
+    const total_width = num_categories*boxWidth + (num_categories - 1)*gap;
     Object.keys(this.boxPlotTypes).forEach((key, i) => {
       const yCatProp = this.boxPlotTypes[key].yCat; //e.g. 'experValues'
       const yPointsProp = this.boxPlotTypes[key].yPoints; //e.g. 'experPoints'
       const color = this.boxPlotTypes[key].color;
+
+      // where we "start" the plot relative to the x-position
+      // for each plot element (gene)
+      const x0 = 0.5*total_width;
 
       // Main vertical line
       svg
@@ -465,12 +493,16 @@ export class DifferentialExpressionComponent implements OnInit, AfterViewInit {
         .attr(
           'x1',
           (d: any) =>
-            this.xScale(d[this.xCat]) + (1.2 * i - 0.6) * this.boxWidth
+            //this.xScale(d[this.xCat]) + (1.2 * i - 0.6) * this.boxWidth
+            this.xScale(d[this.xCat]) - x0 + 0.5*boxWidth + i*(boxWidth + gap)
+
         )
         .attr(
           'x2',
           (d: any) =>
-            this.xScale(d[this.xCat]) + (1.2 * i - 0.6) * this.boxWidth
+            //this.xScale(d[this.xCat]) + (1.2 * i - 0.6) * this.boxWidth
+            this.xScale(d[this.xCat]) - x0 + 0.5*boxWidth + i*(boxWidth + gap)
+
         )
         .attr('y1', (d: any) => this.yScale(d[yCatProp].min))
         .attr('y2', (d: any) => this.yScale(d[yCatProp].max))
@@ -484,14 +516,16 @@ export class DifferentialExpressionComponent implements OnInit, AfterViewInit {
         .append('rect')
         .attr(
           'x',
-          d => this.xScale(d[this.xCat]) + (1.2 * i - 1.1) * this.boxWidth
+          //d => this.xScale(d[this.xCat]) + (1.2 * i - 1.1) * this.boxWidth
+          d => this.xScale(d[this.xCat]) - x0 + i*(boxWidth + gap)
+
         )
         .attr('y', d => this.yScale(d[yCatProp].q3))
         .attr(
           'height',
           d => this.yScale(d[yCatProp].q1) - this.yScale(d[yCatProp].q3)
         )
-        .attr('width', this.boxWidth)
+        .attr('width', d=>boxWidth)
         .attr('stroke', 'black')
         .style('fill', color)
         .attr('pointer-events', 'all')
@@ -508,13 +542,25 @@ export class DifferentialExpressionComponent implements OnInit, AfterViewInit {
         .enter()
         .append('line')
         .attr(
-          'x1',
-          d => this.xScale(d[this.xCat]) + (1.2 * i - 1.1) * this.boxWidth
+          'x1', d => {
+            if (d[yCatProp].median !== undefined){
+              return this.xScale(d[this.xCat]) - x0 + i*(boxWidth + gap)
+            }
+            return 0;
+          }
+
         )
-        .attr(
-          'x2',
-          d => this.xScale(d[this.xCat]) + (1.2 * i - 0.1) * this.boxWidth
-        )
+        // .attr(
+        //   'x2',
+        //   d => this.xScale(d[this.xCat]) + (1.2 * i - 0.1) * this.boxWidth
+        // )
+        .attr('x2', d => {
+          if (d[yCatProp].median !== undefined){
+            //return this.xScale(d[this.xCat]) + (1.2 * i - 0.1) * this.boxWidth;
+            return this.xScale(d[this.xCat]) - x0 + i*(boxWidth + gap) + boxWidth;
+          }
+          return 0;
+        })
         .attr('y1', d => this.yScale(d[yCatProp].median))
         .attr('y2', d => this.yScale(d[yCatProp].median))
         .attr('stroke', 'black')
@@ -531,12 +577,18 @@ export class DifferentialExpressionComponent implements OnInit, AfterViewInit {
             .data(d[yPointsProp])
             .enter()
             .append('circle')
+            // .attr(
+            //   'cx',
+            //   this.xScale(data[ix][this.xCat]) +
+            //     (1.2 * i - 0.6) * this.boxWidth -
+            //     this.jitterWidth / 2 +
+            //     Math.random() * this.jitterWidth
+            // )
             .attr(
-              'cx',
-              this.xScale(data[ix][this.xCat]) +
-                (1.2 * i - 0.6) * this.boxWidth -
-                this.jitterWidth / 2 +
-                Math.random() * this.jitterWidth
+              'cx', d=>
+              this.xScale(data[ix][this.xCat]) -
+                x0 + i*(boxWidth + gap) 
+                + Math.random() * boxWidth
             )
             .attr('cy', d => this.yScale(d['value']))
             .attr('r', 3)

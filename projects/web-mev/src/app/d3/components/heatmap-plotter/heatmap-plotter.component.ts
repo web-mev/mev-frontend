@@ -60,7 +60,7 @@ export class D3HeatmapPlotComponent implements OnInit {
  showObsLabels = true; //whether to label the obs
  showFeatureLabels = true; //whether to label the features
  logScale = false;
- margin = { top: 50, right: 150, bottom: 100, left: 60 }; // chart margins
+ margin = { top: 50, right: 150, bottom: 200, left: 100 }; // chart margins
  containerId = '#heatmap';
  // for common reference when determining the orientation of the heatmap
  samplesInColumnsKey = '__SIC__';
@@ -485,7 +485,12 @@ export class D3HeatmapPlotComponent implements OnInit {
         if (obsAxis === 'x'){
           axesContainer.append('g')
           .call(d3.axisBottom(xScale))
-          .attr('transform', 'translate(0,' + (this.margin.top + this.finalHeight) + ')');
+          .attr('transform', 'translate(0,' + (this.margin.top + this.finalHeight) + ')')
+          .selectAll('text')
+          .attr("y", -4)
+          .attr("x", 9)
+          .attr("transform", "rotate(90)")
+          .style("text-anchor", "start");
         } else {
           axesContainer.append('g')
           .call(d3.axisLeft(yScale))
@@ -497,7 +502,12 @@ export class D3HeatmapPlotComponent implements OnInit {
         if (featureAxis === 'x'){
           axesContainer.append('g')
           .call(d3.axisBottom(xScale))
-          .attr('transform', 'translate(0,' + (this.margin.top + this.finalHeight) + ')');
+          .attr('transform', 'translate(0,' + (this.margin.top + this.finalHeight) + ')')
+          .selectAll('text')
+          .attr("y", -4)
+          .attr("x", 9)
+          .attr("transform", "rotate(90)")
+          .style("text-anchor", "start");
         } else {
           axesContainer.append('g')
           .call(d3.axisLeft(yScale))

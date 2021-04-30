@@ -81,7 +81,7 @@ The table below shows all files associated with your
 
     <ng-container matColumnDef="created">
       <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">Creation date</mat-header-cell>
-      <mat-cell *matCellDef="let row"> {{ row.created | date :'medium' }}</mat-cell>
+      <mat-cell *matCellDef="let row"> {{ row.created + ' UTC' | date :'MMM dd, yyyy HH:mm:ss' }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="is_active">

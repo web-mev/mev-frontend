@@ -1,2 +1,4 @@
-project = "<PROJECT_ID>"
-credentials_file = "<NAME>.json"
+project_id = ""
+credentials_file = ""
+domain = ""
+managed_dns_zone = ""

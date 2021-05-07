@@ -56,7 +56,12 @@ resource "google_compute_instance" "mev_frontend" {
   machine_type            = "e2-standard-2"
   tags                    = ["allow-ssh", "allow-health-check"]
 
-  metadata_startup_script = file("provision.sh")
+  metadata_startup_script = templatefile("provision.sh",
+    {
+      environment = var.environment,
+      backend_url = var.backend_url
+    }
+  )
 
   boot_disk {
     initialize_params {

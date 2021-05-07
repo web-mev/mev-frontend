@@ -21,3 +21,11 @@ variable "domain" {
 variable "managed_dns_zone" {
   description = "The GCP managed zone. Only the short name- NOT the long, url-like string."
 }
+
+variable "environment" {
+  description = "The environment we are deploying in."
+}
+
+variable "backend_url" {
+  description = "The url or IP address (with protocol) of the API. No trailing slash."
+}

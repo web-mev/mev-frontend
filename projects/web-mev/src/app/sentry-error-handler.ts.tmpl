@@ -4,7 +4,7 @@ import { environment } from '../environments/environment';
 import * as Sentry from '@sentry/browser';
 
 Sentry.init({
-  dsn: 'http://073dd22ef4a5468b8d9b532111756e08@35.199.2.238:9000/2',
+  dsn: '__SENTRY_DSN__',
   // TryCatch has to be configured to disable XMLHttpRequest wrapping, as we are going to handle
   // http module exceptions manually in Angular's ErrorHandler and we don't want it to capture the same error twice.
   // Please note that TryCatch configuration requires at least @sentry/browser v5.16.0.

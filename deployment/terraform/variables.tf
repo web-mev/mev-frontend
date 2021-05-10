@@ -33,3 +33,7 @@ variable "backend_url" {
 variable "google_oauth_client_id" {
   description = "The ID of the OAuth2 client to use. Something like <client ID>.apps.googleusercontent.com"
 }
+
+variable "sentry_dsn" {
+  description = "The DSN of the Sentry application. Include the protocol. Something like http://<id>@<domain>:9000/2 or similar"
+}

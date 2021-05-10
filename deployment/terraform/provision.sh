@@ -8,6 +8,7 @@ set -x
 ENVIRONMENT=${environment}
 API_ENDPOINT=${backend_url}/api
 GOOGLE_OAUTH_CLIENT_ID=${google_oauth_client_id}
+SENTRY_DSN=${sentry_dsn}
 
 /usr/bin/curl -fsSL https://deb.nodesource.com/setup_15.x | /usr/bin/bash -
 /usr/bin/apt-get install -y apache2 nodejs
@@ -18,6 +19,7 @@ cd mev-frontend || exit 1
 
 # Regardless of the deployment environment, point the JWT file to the API
 sed -e 's?__API_URL__?'"$API_ENDPOINT"'?g' projects/web-mev/src/app/jwtConfig.ts.tmpl > projects/web-mev/src/app/jwtConfig.ts
+sed -e 's?__SENTRY_DSN__?'"$SENTRY_DSN"'?g' projects/web-mev/src/app/sentry-error-handler.ts.tmpl > projects/web-mev/src/app/sentry-error-handler.ts
 
 # Depending on the deployment environment, fill-in the appropriate environment.ts file
 if [ $ENVIRONMENT = 'prod' ]; then

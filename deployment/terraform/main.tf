@@ -60,7 +60,8 @@ resource "google_compute_instance" "mev_frontend" {
     {
       environment = var.environment,
       backend_url = var.backend_url,
-      google_oauth_client_id = var.google_oauth_client_id
+      google_oauth_client_id = var.google_oauth_client_id,
+      sentry_dsn = var.sentry_dsn
     }
   )
 

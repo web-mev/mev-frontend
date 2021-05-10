@@ -36,6 +36,8 @@ import { ResponsePasswordResetComponent } from './features/user/response-passwor
 import { PasswordChangeComponent } from './features/user/password-change/password-change.component';
 import { SentryErrorHandler } from './sentry-error-handler';
 
+import {environment} from '../../src/environments/environment';
+
 @NgModule({
   imports: [
     // angular
@@ -103,8 +105,8 @@ import { SentryErrorHandler } from './sentry-error-handler';
           {
             id: GoogleLoginProvider.PROVIDER_ID,
             provider: new GoogleLoginProvider(
-              '963687796352-nrlmm9b4g5s5kcgv6fnlkhtutv5v34bh.apps.googleusercontent.com' // 'Google ClientId here'
-            )
+                environment.googleOAuthClient
+              )
           }
         ]
       } as SocialAuthServiceConfig

@@ -29,3 +29,7 @@ variable "environment" {
 variable "backend_url" {
   description = "The url or IP address (with protocol) of the API. No trailing slash."
 }
+
+variable "google_oauth_client_id" {
+  description = "The ID of the OAuth2 client to use. Something like <client ID>.apps.googleusercontent.com"
+}

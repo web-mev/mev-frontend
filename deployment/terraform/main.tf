@@ -59,7 +59,8 @@ resource "google_compute_instance" "mev_frontend" {
   metadata_startup_script = templatefile("provision.sh",
     {
       environment = var.environment,
-      backend_url = var.backend_url
+      backend_url = var.backend_url,
+      google_oauth_client_id = var.google_oauth_client_id
     }
   )
 

@@ -10,9 +10,16 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 4200, host: 4200
 
   config.vm.provider "virtualbox" do |vb|
-    vb.memory = 2048
-    vb.cpus = 2
+    vb.memory = 4096
+    vb.cpus = 1
   end
 
-  config.vm.provision :shell, path: "deployment/provision.sh"
+  config.vm.provision :shell do |s| 
+    s.path = "vagrant/provision.sh"
+    s.env = {
+      API_ENDPOINT:ENV['MEV_API'],
+      GOOGLE_OAUTH_CLIENT_ID:ENV['MEV_GOOGLE_OAUTH_CLIENT_ID'],
+      SENTRY_DSN:ENV['MEV_SENTRY_DSN']
+    }
+  end
 end

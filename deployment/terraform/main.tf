@@ -61,7 +61,8 @@ resource "google_compute_instance" "mev_frontend" {
       environment = terraform.workspace,
       backend_url = var.backend_url,
       google_oauth_client_id = var.google_oauth_client_id,
-      sentry_dsn = var.sentry_dsn
+      sentry_dsn = var.sentry_dsn,
+      dropbox_app_key = var.dropbox_app_key
     }
   )
 

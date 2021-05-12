@@ -33,3 +33,7 @@ variable "google_oauth_client_id" {
 variable "sentry_dsn" {
   description = "The DSN of the Sentry application. Include the protocol. Something like http://<id>@<domain>:9000/2 or similar"
 }
+
+variable "dropbox_app_key" {
+  description = "The public app key for the Dropbox chooser."
+}

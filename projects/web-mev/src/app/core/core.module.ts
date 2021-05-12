@@ -2,8 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule, Optional, SkipSelf, ErrorHandler } from '@angular/core';
 import {
   HttpClientModule,
-  HttpClient,
-  HTTP_INTERCEPTORS
+  HttpClient
 } from '@angular/common/http';
 import {
   StoreRouterConnectingModule,
@@ -49,7 +48,6 @@ import {
 import { AnimationsService } from './animations/animations.service';
 import { CustomSerializer } from './router/custom-serializer';
 import { LocalStorageService } from './local-storage/local-storage.service';
-import { HttpErrorInterceptor } from '@core/interceptors/http-error.interceptor';
 import { GoogleAnalyticsEffects } from './google-analytics/google-analytics.effects';
 import { NotificationService } from './notifications/notification.service';
 import { SettingsEffects } from './settings/settings.effects';
@@ -150,7 +148,6 @@ export function HttpLoaderFactory(http: HttpClient) {
   ],
   declarations: [],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
     { provide: RouterStateSerializer, useClass: CustomSerializer }
   ],
   exports: [

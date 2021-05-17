@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from '@app/core/authentication/authentication.service';
 import { UserService } from '@app/core/user/user.service';
+import { NotificationService } from '@core/core.module';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
@@ -36,7 +37,8 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private authenticationService: AuthenticationService,
     private userService: UserService,
-    private socialAuthService: SocialAuthService
+    private socialAuthService: SocialAuthService,
+    private readonly notificationService: NotificationService
   ) {
     // redirect to home if already logged in
     if (this.authenticationService.currentUserValue) {
@@ -123,6 +125,12 @@ export class LoginComponent implements OnInit {
         .subscribe(result => {
           this.router.navigate(['/workarea']);
         });
+    }, err => {
+      this.loading = false;
+      let error_msg = err['error'];
+      if(error_msg !== 'popup_closed_by_user'){
+        this.notificationService.error('Experienced an error with Google login. If this persists, please contact the WebMEV team.');
+      }
     });
   }
 

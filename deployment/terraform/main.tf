@@ -16,11 +16,11 @@ provider "google" {
 }
 
 resource "google_compute_network" "mev_frontend_network" {
-  name = "webmev-frontend-network"
+  name = "webmev-${terraform.workspace}-frontend-network"
 }
 
 resource "google_compute_firewall" "mev_firewall" {
-  name    = "webmev-frontend-firewall"
+  name    = "webmev-${terraform.workspace}-frontend-firewall"
   network = google_compute_network.mev_frontend_network.name
 
   allow {
@@ -33,7 +33,7 @@ resource "google_compute_firewall" "mev_firewall" {
 }
 
 resource "google_compute_firewall" "allow_hc_firewall" {
-  name    = "webmev-healthcheck-firewall"
+  name    = "webmev-${terraform.workspace}-healthcheck-firewall"
   network = google_compute_network.mev_frontend_network.name
 
   allow {
@@ -48,11 +48,11 @@ resource "google_compute_firewall" "allow_hc_firewall" {
 }
 
 resource "google_compute_global_address" "lb-static-ip" {
-  name = "webmev-lb-static-address"
+  name = "webmev-${terraform.workspace}-lb-static-address"
 }
 
 resource "google_compute_instance" "mev_frontend" {
-  name                    = "webmev-frontend"
+  name                    = "webmev-${terraform.workspace}-frontend"
   machine_type            = "e2-standard-2"
   tags                    = ["allow-ssh", "allow-health-check"]
 
@@ -62,7 +62,8 @@ resource "google_compute_instance" "mev_frontend" {
       backend_url = var.backend_url,
       google_oauth_client_id = var.google_oauth_client_id,
       sentry_dsn = var.sentry_dsn,
-      dropbox_app_key = var.dropbox_app_key
+      dropbox_app_key = var.dropbox_app_key,
+      analytics_tag = var.analytics_tag
     }
   )
 
@@ -87,9 +88,8 @@ resource "google_dns_record_set" "set" {
   rrdatas      = [google_compute_global_address.lb-static-ip.address]
 }
 
-
 resource "google_compute_instance_group" "frontend_ig" {
-  name        = "frontend-ig"
+  name        = "frontend-${terraform.workspace}-ig"
   description = "Instance group for the frontend server"
 
   instances = [
@@ -106,7 +106,7 @@ resource "google_compute_instance_group" "frontend_ig" {
 
 
 resource "google_compute_health_check" "http-health-check" {
-  name = "frontend-health-check"
+  name = "frontend-${terraform.workspace}-health-check"
 
   timeout_sec        = 2
   check_interval_sec = 5
@@ -119,7 +119,7 @@ resource "google_compute_health_check" "http-health-check" {
 }
 
 resource "google_compute_backend_service" "frontend_service" {
-  name          = "mev-frontend-service"
+  name          = "mev-${terraform.workspace}-frontend-service"
   health_checks = [google_compute_health_check.http-health-check.id]
   protocol = "HTTP"
   port_name = "http"
@@ -133,17 +133,17 @@ resource "google_compute_backend_service" "frontend_service" {
 }
 
 resource "google_compute_url_map" "urlmap" {
-  name = "mev-frontend-urlmap"
+  name = "mev-${terraform.workspace}-frontend-urlmap"
 
   default_service = google_compute_backend_service.frontend_service.id
 
   host_rule {
     hosts = [var.domain]
-    path_matcher = "frontend-pm"
+    path_matcher = "frontend-${terraform.workspace}-pm"
   }
 
   path_matcher {
-    name = "frontend-pm"
+    name = "frontend-${terraform.workspace}-pm"
     default_service = google_compute_backend_service.frontend_service.id
 
     path_rule {
@@ -155,23 +155,14 @@ resource "google_compute_url_map" "urlmap" {
 }
 
 resource "google_compute_target_https_proxy" "mev_frontend_lb" {
-  name             = "frontend-https-proxy"
+  name             = "frontend-${terraform.workspace}-https-proxy"
   url_map          = google_compute_url_map.urlmap.id
-  ssl_certificates = [google_compute_managed_ssl_certificate.frontend_ssl_cert.id]
-}
-
-
-resource "google_compute_managed_ssl_certificate" "frontend_ssl_cert" {
-  name = "front-test-cert"
-
-  managed {
-    domains = ["${var.domain}."]
-  }
+  ssl_certificates = [var.ssl_cert]
 }
 
 
 resource "google_compute_global_forwarding_rule" "https_fwd" {
-  name       = "mev-forwarding-rule"
+  name       = "webmev-frontend-${terraform.workspace}-forwarding-rule"
   target     = google_compute_target_https_proxy.mev_frontend_lb.id
   port_range = 443
   ip_address = google_compute_global_address.lb-static-ip.address
@@ -179,7 +170,7 @@ resource "google_compute_global_forwarding_rule" "https_fwd" {
 
   
 resource "google_compute_url_map" "https_redirect" {
-  name            = "frontend-https-redirect"
+  name            = "webmev-frontend-${terraform.workspace}-https-redirect"
 
   default_url_redirect {
     https_redirect         = true
@@ -189,12 +180,12 @@ resource "google_compute_url_map" "https_redirect" {
 }
 
 resource "google_compute_target_http_proxy" "https_redirect" {
-  name   = "frontend-http-proxy"
+  name   = "webmev-frontend-${terraform.workspace}-http-proxy"
   url_map          = google_compute_url_map.https_redirect.id
 }
 
 resource "google_compute_global_forwarding_rule" "https_redirect" {
-  name   = "mev-lb-http"
+  name   = "webmev-frontend-${terraform.workspace}-lb-http"
 
   target = google_compute_target_http_proxy.https_redirect.id
   port_range = "80"

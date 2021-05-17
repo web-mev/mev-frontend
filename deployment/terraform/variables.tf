@@ -37,3 +37,11 @@ variable "sentry_dsn" {
 variable "dropbox_app_key" {
   description = "The public app key for the Dropbox chooser."
 }
+
+variable "ssl_cert" {
+  description = "The identifiers for the SSL certificate to use for the load balancer."
+}
+
+variable "analytics_tag" {
+  description = "The key to associate the page with a particular google analytics stream. Like G-XXXXXX"
+}

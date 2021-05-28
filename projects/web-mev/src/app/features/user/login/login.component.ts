@@ -129,7 +129,7 @@ export class LoginComponent implements OnInit {
       this.loading = false;
       let error_msg = err['error'];
       if(error_msg !== 'popup_closed_by_user'){
-        this.notificationService.error('Experienced an error with Google login. If this persists, please contact the WebMEV team.');
+        this.notificationService.error('Experienced an error with Google login. If this persists, please contact the WebMeV team.');
       }
     });
   }

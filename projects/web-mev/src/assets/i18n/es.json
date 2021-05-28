@@ -31,7 +31,7 @@
   "mev.features.typescript": "Experiencia superior de desarrollador, completado de código, refactorización y menos errores",
   "mev.footer.changelog": "Mostrar historial de cambios",
   "mev.header.github": "Repositorio del Proyecto en Github",
-  "mev.menu.main": "WebMEV",
+  "mev.menu.main": "WebMeV",
   "mev.menu.tutorial": "Tutorial",
   "mev.menu.start": "Get started",
   "mev.menu.examples": "Ejemplos",
@@ -63,6 +63,6 @@
   "mev.settings.themes.sticky-header": "",
   "mev.settings.themes.title": "Temas",
   "mev.settings.title": "Ajustes",
-  "mev.title.long": "Welcome to the Web MEV",
-  "mev.title.short": "Web MeV"
+  "mev.title.long": "Welcome to the WebMeV",
+  "mev.title.short": "WebMeV"
 }

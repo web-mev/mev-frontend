@@ -31,7 +31,7 @@
   "mev.features.typescript": "Superior developer experience, code completion, refactoring and less bugs",
   "mev.footer.changelog": "Show changelog",
   "mev.header.github": "Project Github Repository",
-  "mev.menu.main": "WebMEV",
+  "mev.menu.main": "WebMeV",
   "mev.menu.tutorial": "Tutorial",
   "mev.menu.start": "Get started",
   "mev.menu.examples": "Examples",
@@ -64,5 +64,5 @@
   "mev.settings.themes.title": "Themes",
   "mev.settings.title": "Settings",
   "mev.title.long": "Welcome to WebMeV",
-  "mev.title.short": "Web MeV"
+  "mev.title.short": "WebMeV"
 }

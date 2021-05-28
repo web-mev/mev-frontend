@@ -1,7 +1,7 @@
 const packageJson = require('../../../../package.json');
 
 export const environment = {
-  appName: 'Web MeV',
+  appName: 'WebMeV',
   envName: 'TEST',
   production: false,
   test: true,

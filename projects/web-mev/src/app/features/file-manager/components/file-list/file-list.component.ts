@@ -102,17 +102,18 @@ export class FileListComponent implements OnInit {
 
         // show % of upload
         let txt = '';
-        for (const key of Object.keys(uploadProgressData)) {
-          txt += `File ${key} is ${uploadProgressData[key].percent}% uploaded. \n`;
+        let uploadCompletionArray = [];
+        for (const key of uploadProgressData.keys()) {
+          let info = uploadProgressData.get(key);
+          uploadCompletionArray.push(info['isUploaded']);
+          const percentUploaded = info['percent'];
+          txt += `File ${key} is ${percentUploaded}% uploaded. \n`;
         }
         this.uploadInProgressMsg = txt;
         this.ref.markForCheck();
 
         // refresh table if all files are uploaded
-        const allFilesUploaded = Object.keys(uploadProgressData).every(
-          key => uploadProgressData[key].isUploaded
-        );
-        if (allFilesUploaded) {
+        if(uploadCompletionArray.every((element) => element)){
           this.refresh();
           this.uploadInProgressMsg = '';
           this.ref.markForCheck();

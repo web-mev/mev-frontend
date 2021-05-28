@@ -107,7 +107,7 @@ export class FileService {
     const fileUploadsProgressMap = new Map<string, object>();
 
     for (let i = 0; i < files.length; i++) {
-      fileUploadsProgressMap[files[i].name] = { percent: 0, isUploaded: false };
+      fileUploadsProgressMap.set(files[i].name,{ percent: 0, isUploaded: false });
     }
     this.fileUploadsProgress.next(fileUploadsProgressMap);
 
@@ -126,20 +126,24 @@ export class FileService {
               const percentDone = Math.round(
                 (event.loaded * 100) / event.total
               );
-              fileUploadsProgressMap[files[i].name] = {
+              fileUploadsProgressMap.set(files[i].name, {
                 percent: percentDone,
                 isUploaded: false
-              };
+              });
               this.fileUploadsProgress.next(fileUploadsProgressMap);
               break;
             case HttpEventType.Response:
-              fileUploadsProgressMap[files[i].name] = {
+              fileUploadsProgressMap.set(files[i].name, {
                 percent: 100,
                 isUploaded: true
-              };
+              });
               this.fileUploadsProgress.next(fileUploadsProgressMap);
           }
-        });
+        }, err => {
+          fileUploadsProgressMap.delete(files[i].name);
+          this.fileUploadsProgress.next(fileUploadsProgressMap); 
+        }
+        );
     }
   }
 

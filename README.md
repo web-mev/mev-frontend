@@ -22,6 +22,15 @@ Sentry error tracking and monitoring: http://35.199.2.238:9000/organizations/sen
 The application is based on a Angular Material Starter project:
 https://github.com/tomastrajan/angular-ngrx-material-starter
 
+## Quick start
+Requires [Git](https://git-scm.com/), [VirtualBox](https://www.virtualbox.org/), and [Vagrant](https://www.vagrantup.com/)
+```shell
+git clone https://github.com/web-mev/mev-frontend.git
+cd mev-frontend
+vagrant up
+```
+Open http://localhost:8080 in a web browser
+
 ## <a name="Running">**Running locally**</a>
 
 To run locally check that you have Node.js and Angular CLI installed.

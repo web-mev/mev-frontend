@@ -50,7 +50,11 @@ export class HttpErrorInterceptor implements HttpInterceptor {
           errorMessage = `Error: ${detail}`; // Message: ${error.message}
         }
         this.notificationService.error(errorMessage);
-        return throwError(errorMessage);
+        if(error.status === 500){
+          return throwError(errorMessage);
+        } else {
+          return next.handle(request);
+        }
       })
     );
   }

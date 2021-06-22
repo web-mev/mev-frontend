@@ -5,7 +5,7 @@ import {
   HttpInterceptor,
   HttpErrorResponse
 } from '@angular/common/http';
-import { Observable, throwError, BehaviorSubject } from 'rxjs';
+import { Observable, throwError, BehaviorSubject, of } from 'rxjs';
 import { catchError, filter, take, switchMap } from 'rxjs/operators';
 import { AuthenticationService } from '@app/core/authentication/authentication.service';
 
@@ -30,10 +30,23 @@ export class TokenInterceptor implements HttpInterceptor {
 
     return next.handle(request).pipe(
       catchError(error => {
+        // if we received a 401, we need to refresh the token
         if (error instanceof HttpErrorResponse && error.status === 401) {
           return this.handle401Error(request, next);
         } else {
-          return throwError(error);
+          //if the error was something OTHER than a 401...
+          if(error.status === 500){
+            // The API had an error. throw it so it will be logged and trigger the 
+            // error popup
+            return throwError(error);
+          } else {
+            // for a 400 or 404, we don't want to always show the "something went wrong"
+            // popup by sentry. A 400 would be raised, for instance, if someone tried to
+            // name a workspace with a name that has alreaday been used. That's not an application
+            // error.
+            // We need to return an observable from HttpInterceptors
+            return of();
+          }
         }
       })
     );

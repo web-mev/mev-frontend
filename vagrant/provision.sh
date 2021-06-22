@@ -15,7 +15,7 @@ SENTRY_DSN=${SENTRY_DSN}
 DROPBOX_APP_KEY=${DROPBOX_APP_KEY}
 set +o allexport
 
-/usr/bin/curl -fsSL https://deb.nodesource.com/setup_15.x | /usr/bin/bash -
+/usr/bin/curl -fsSL https://deb.nodesource.com/setup_16.x | /usr/bin/bash -
 /usr/bin/apt-get install -y apache2 nodejs
 
 # to avoid errors caused by high IO in the shared folder

@@ -25,32 +25,26 @@ https://github.com/tomastrajan/angular-ngrx-material-starter
 
 ## <a name="vagrant">Running locally using Vagrant</a>
 
-Install Vagrant and Virtualbox according to their instructions. The steps below assume those are both in place and working.
+1. Install [Git](https://git-scm.com/), [VirtualBox](https://www.virtualbox.org/), and [Vagrant](https://www.vagrantup.com/)
+1. Clone the repository: `git clone https://github.com/web-mev/mev-frontend.git`
+1. Fill out the `vagrant/env.tmpl` with appropriate variables. Best to copy that (e.g. to `vagrant/env.txt`) so you don't accidentally commit any changes to that template file.
+1. Source those environment variables: `source vagrant/env.txt` so they are now in your shell session.
+1. Start and provision the VM with `vagrant up`
+1. Open http://localhost:8080 in a web browser
 
-* To configure:
-  1. Clone the repository
-  2. Fill out the `vagrant/env.tmpl` with appropriate variables. Best to copy that (e.g. to `vagrant/env.txt`) so you don't accidentally commit any changes to that template file.
-  3. Source those environment variables: `source vagrant/env.txt` so they are now in your shell session.
-  4. Start and provision the VM with `vagrant up --provision`
-  5. After the provisioning is complete, SSH in with `vagrant ssh`
-
-Once in the VM, all the packages should be installed, but the application is not being served. To serve:
-
+For development:
+1. SSH in with `vagrant ssh`
+1. To serve the app using Angular web server:
 ```sh
-
 ng serve --host 0.0.0.0 --disable-host-check
-
 ```
 Note that Node will warn that the `--disable-host-check` is a security issue. Since we are working on localhost, this is a moot point. 
 
 Also note that the files on your host machine will be located at `/vagrant` inside the VM.
 
-If you are editing/saving files locally (on your host machine, NOT the VM), Node's "auto detect" feature may not detect any changes which would normally trigger a re-build process. If that is the case, you may try to add an additional flag (`--poll`) to your serve command, e.g. 
-
+If you are editing/saving files locally (on your host machine, NOT the VM), Node's "auto detect" feature may not detect any changes which would normally trigger a re-build process. If that is the case, you may try to add an additional flag (`--poll`) to your serve command, e.g.
 ```sh
-
 ng serve --host 0.0.0.0 --disable-host-check --poll 2000
-
 ```
 where the argument value (e.g. `2000` above) is the polling period in milliseconds.
 

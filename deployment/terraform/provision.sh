@@ -12,7 +12,7 @@ SENTRY_DSN=${sentry_dsn}
 DROPBOX_APP_KEY=${dropbox_app_key}
 ANALYTICS_TAG=${analytics_tag}
 
-/usr/bin/curl -fsSL https://deb.nodesource.com/setup_15.x | /usr/bin/bash -
+/usr/bin/curl -fsSL https://deb.nodesource.com/setup_16.x | /usr/bin/bash -
 /usr/bin/apt-get install -y apache2 nodejs
 
 /usr/bin/git clone https://github.com/web-mev/mev-frontend.git

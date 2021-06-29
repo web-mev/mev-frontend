@@ -20,9 +20,10 @@ import { BoxplotFormComponent } from './components/boxplot/boxplot.component';
 import { HeatmapFormComponent } from './components/heatmap/heatmap.component';
 import { MevBaseExpressionPlotFormComponent } from './components/base-expression-plot-form/base-expression-plot-form.component';
 import { D3HeatmapPlotComponent } from './components/heatmap-plotter/heatmap-plotter.component';
-import { UmapScatterPlotComponent } from './components/sctk-umap/umap-scatter-plot.component'
+import { UmapScatterPlotComponent } from './components/sctk-umap/umap-scatter-plot.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { SctkSeuratClusterComponent } from './components/sctk-seurat-cluster/sctk-seurat-cluster.component';
+import { SctkDoubletDetectionComponent } from './components/sctk-doublet-detection/sctk-doublet-detection.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { SctkSeuratClusterComponent } from './components/sctk-seurat-cluster/sct
     MevBaseExpressionPlotFormComponent,
     D3HeatmapPlotComponent,
     UmapScatterPlotComponent,
-    SctkSeuratClusterComponent
+    SctkSeuratClusterComponent,
+    SctkDoubletDetectionComponent
   ],
   imports: [CommonModule, SharedModule, DragDropModule],
   exports: [

@@ -43,6 +43,10 @@
         <mev-mast-dge [outputs]="outputs"></mev-mast-dge>
     </ng-container>
 
+    <ng-container *ngIf="operationName === 'QC Doublet Detection'">
+      <mev-sctk-doublet-detection [outputs]="outputs"></mev-sctk-doublet-detection>
+    </ng-container>
+
 </div>
 
 <ng-template #error>

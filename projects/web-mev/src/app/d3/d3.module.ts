@@ -66,7 +66,8 @@ import { SctkDoubletDetectionComponent } from './components/sctk-doublet-detecti
     BoxplotFormComponent,
     HeatmapFormComponent,
     UmapScatterPlotComponent,
-    SctkSeuratClusterComponent
+    SctkSeuratClusterComponent,
+    SctkDoubletDetectionComponent
   ]
 })
 export class D3Module {}

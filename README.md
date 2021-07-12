@@ -1,7 +1,7 @@
 # WebMEV
 
 - [General information](#GeneralInformation)
-- [Running locally](#Running)
+- [Running locally](#vagrant)
 - [Deployment](#Deployment)
 - [Documentation](#Documentation)
 - [Settings](#Settings)
@@ -48,61 +48,16 @@ ng serve --host 0.0.0.0 --disable-host-check --poll 2000
 ```
 where the argument value (e.g. `2000` above) is the polling period in milliseconds.
 
-## <a name="Running">**Running locally**</a>
+The application will be available on your host machine at localhost:4200
 
-To run locally check that you have Node.js and Angular CLI installed.
-Then download the source code and install the dependencies:
-
-```sh
-
-npm install
-
-```
-
-Use the following command to build, watch and run your application locally:
+If you wish to use Google-based authentication on the development machine (instead of username/password authentication), you will need a proper host pointing to localhost, because Google’s OAuth requires redirect URLs that cannot be localhost. You can add an entry in the hosts file of your machine (e.g. `/etc/hosts`) to associate mydomain.com to 127.0.0.1 and use the following command:
 
 ```sh
-
-ng serve
-
+ng serve --host mydomain.com --disable-host-check --poll 2000
 ```
 
-After that you can access the app at http://localhost:4200
 
-But for development purposes we need a proper host pointing to localhost, because Google’s OAuth requires redirect URLs that cannot be localhost. You can add an entry in the hosts file of your machine to associate mydomain.com to 127.0.0.1 and use the following command:
-
-```sh
-
-ng serve --port 8080 --host mydomain.com
-
-```
-
-and the application will be run at http://mydomain.com:8080.
-
-## <a name="Deployment">**Deployment**</a>
-
-Before deploying the project run it locally first. To build the application run
-
-```sh
-
-ng build
-
-```
-
-That creates a _dist_ folder in the application root directory with all the static files that are needed for the deployment.\
-We have an Apache web server running on a virtual machine instance on Google Compute Engine. So to update files, copy the contents of the _dist_ directory to the Apache html (_/var/www/html/web-mev_) directory of the VM.
-
-## <a name="Documentation">**Documentation**</a>
-
-To generate project documentation:
-
-```sh
-
-npm run generate-docs
-
-```
-
-## <a name="GCP">GCP</a>
+## <a name="Deployment">**Deployment on GCP**</a>
 
 * To configure:
   1. Install [Google Cloud SDK](https://cloud.google.com/sdk/docs/install) and [Terraform](https://www.terraform.io/downloads.html)

@@ -25,12 +25,6 @@
     "generate-docs": "compodoc -p ./tsconfig.json",
     "serve-docs": "compodoc -s ./tsconfig.json"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
-  },
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
@@ -104,7 +98,6 @@
     "express": "^4.16.4",
     "firebase-tools": "^8.0.0",
     "fuzzy": "^0.1.3",
-    "husky": "^4.2.1",
     "inquirer": "^6.2.2",
     "inquirer-autocomplete-prompt": "^1.0.1",
     "jasmine-core": "~3.5.0",

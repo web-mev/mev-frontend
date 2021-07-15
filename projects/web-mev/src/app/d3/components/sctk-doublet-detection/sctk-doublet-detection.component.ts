@@ -5,15 +5,13 @@ import {
   ViewChild,
   AfterViewInit,
   Input
-} from '@angular/core';import {
-  ExpressionMatrixDataSource,
-  GeneExpression
-} from '@app/d3/components/rnaseq-normalization/rnaseq-normalization.component';
+
+} from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
-import { AnalysesService } from '@features/analysis/services/analysis.service';
+import { AnalysesService } from '@app/features/analysis/services/analysis.service';
 import { merge, BehaviorSubject, Observable } from 'rxjs';
 import { tap, finalize } from 'rxjs/operators';
 import { MetadataService } from '@app/core/metadata/metadata.service';
@@ -125,7 +123,7 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
       () => (this.paginator.pageIndex = this.defaultPageIndex)
     );
     this.dataSource.connect().subscribe(expData => {
-      this.boxPlotData = expData;
+      // this.boxPlotData = expData;
       //this.preprocessBoxPlotData();
       //this.createChart();
     });
@@ -309,11 +307,23 @@ export class ExpressionMatrixDataSource implements DataSource<QCDoubletDetection
       .subscribe(
         data => {
           this.qcCount = data.count;
-          const qcFormatted = data.results.map(dataRow => {
-            const newDataRow = { name : dataRow.rowname, ...dataRow.values };
-          });
-          return this.qcSubject.next(qcFormatted)
+          const qcFormatted = data.results.map(
+            dataRow => {
+              return {
+                name: dataRow.rowname,
+                QCStatus: dataRow.QCStatus
+              };
+            }
+          );
+          return this.qcSubject.next(qcFormatted);
         });
+        // data => {
+        //   this.qcCount = data.count;
+        //   const qcFormatted = data.results.map(dataRow => {
+        //     const newDataRow = { name : dataRow.rowname, ...dataRow.values };
+        //   });
+        //   return this.qcSubject.next(qcFormatted)
+        // });
   }
 
   connect(): Observable<QCDoubletDetection[]> {

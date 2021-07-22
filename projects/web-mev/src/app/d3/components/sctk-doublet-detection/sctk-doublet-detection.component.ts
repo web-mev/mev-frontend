@@ -4,16 +4,16 @@ import {
   ChangeDetectionStrategy,
   ViewChild,
   AfterViewInit,
-  Input
-} from '@angular/core';import {
-  ExpressionMatrixDataSource,
-  GeneExpression
-} from '@app/d3/components/rnaseq-normalization/rnaseq-normalization.component';
+  Input,
+  ElementRef
+} from '@angular/core';
+import * as d3 from 'd3';
+import d3Tip from 'd3-tip';
 import { FormGroup, FormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
-import { AnalysesService } from '@features/analysis/services/analysis.service';
+import { AnalysesService } from '@app/features/analysis/services/analysis.service';
 import { merge, BehaviorSubject, Observable } from 'rxjs';
 import { tap, finalize } from 'rxjs/operators';
 import { MetadataService } from '@app/core/metadata/metadata.service';
@@ -21,11 +21,9 @@ import { NotificationService } from '../../../core/core.module';
 import { AddSampleSetComponent } from '@app/d3/components/dialogs/add-sample-set/add-sample-set.component';
 import { CustomSetType } from '@app/_models/metadata';
 import { DataSource } from '@angular/cdk/table';
-//import { MetadataService } from '@core/metadata/metadata.service';
-//import { NotificationService } from '@core/notifications/notification.service';
 
 @Component({
-  selector: 'mev-sctk-doublet-detection',
+  selector: 'mev-sctk-doubletfinder',
   templateUrl: './sctk-doublet-detection.component.html',
   styleUrls: ['./sctk-doublet-detection.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default
@@ -34,11 +32,19 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
   @Input() outputs;
   dataSource: ExpressionMatrixDataSource; // datasource for MatTable
   resourceId;
+  donutPlotData;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild('donutPlot') svgElement: ElementRef;
   imageName = 'doublet_detection';
-  analysisName = 'QC Doublet Detection';
+  analysisName = 'SCTK Doublet Finder';
+
+  /* Chart settings */
+  containerId = '#donutPlot';
+  precision = 2;
+  margin = { top: 50, right: 300, bottom: 50, left: 70 }; // chart margins
+  outerHeight = 500;
 
   // Controls how large a custom FeatureSet can be.
   // Otherwise, clicking the 'add features set' button
@@ -47,17 +53,10 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
   maxFeatureSetSize = 500;
 
   /* Table settings */
-  staticCols = ['name', 'QCStatus'];
+  staticCols = ['name', 'doublet_class'];
   dynamicColumns; // will be filled further by dataSource
   displayColumns; // will be the concatenation of static + dynamic cols
 
-  numerical_operators = [
-    { id: 'eq', name: ' = ' },
-    { id: 'gte', name: ' >=' },
-    { id: 'gt', name: ' > ' },
-    { id: 'lte', name: ' <=' },
-    { id: 'lt', name: ' < ' }
-  ];
   string_operators = [
     { id: 'startswith', name: ' Starts with: '},
     { id: 'case-ins-eq', name: ' = (case-insensitive) '},
@@ -66,7 +65,7 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
 
   defaultPageIndex = 0;
   defaultPageSize = 10;
-  defaultSorting = { field: 'QCStatus', direction: 'desc' };
+  defaultSorting = { field: 'doublet_class', direction: 'desc' };
 
   /* Table filters */
   allowedFilters = {
@@ -76,7 +75,7 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
       hasOperator: true,
       operatorDefaultValue: 'startswith'
     },
-    QCStatus: {
+    doublet_class: {
       defaultValue: '',
       hasOperator: true,
       operatorDefaultValue: 'startswith'
@@ -125,16 +124,16 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
       () => (this.paginator.pageIndex = this.defaultPageIndex)
     );
     this.dataSource.connect().subscribe(expData => {
-      this.boxPlotData = expData;
+      this.donutPlotData = expData;
       //this.preprocessBoxPlotData();
-      //this.createChart();
+      this.createChart();
     });
     merge(this.sort.sortChange, this.paginator.page)
       .pipe(
         tap(() => {
           this.loadPage();
           //   this.preprocessBoxPlotData();
-          //   this.createChart();
+          this.createChart();
         })
       )
       .subscribe();
@@ -147,7 +146,13 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
   }
 
   initData(): void {
-    this.resourceId = this.outputs.qc_results;
+    console.log('init data')
+    console.log(this.outputs)
+    // this.resourceId = this.outputs.qc_results;
+    this.resourceId = this.outputs['SctkDoubletFinder.doublet_ids']
+    console.log(this.resourceId)
+
+
     const sorting = {
       sortField: this.defaultSorting.field,
       sortDirection: this.defaultSorting.direction
@@ -165,16 +170,18 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
     this.dataSource.sampleNames$.subscribe( data => {
         this.dynamicColumns = data
         this.displayColumns = [...this.staticCols, ...data];
-        //console.log(this.displayColumns);
       }
     );
+    console.log('init data log of datasource')
+    console.log(this.dataSource)
+
   }
 
   /**
    * Function to construct the parameter filters that are passed to the backend
    */
   createFilters(){
-    const formValues = this.filterForm.value; // i.e. {name: "asdfgh", QCStatus: "doublet"}
+    const formValues = this.filterForm.value; // i.e. {name: "asdfgh", doublet_class: "doublet"}
     const paramFilter = {}; // has values {'log2FoldChange': '[absgt]:2'};
     for (const key in this.allowedFilters) {
       if (
@@ -209,6 +216,8 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
       this.paginator.pageIndex,
       this.paginator.pageSize
     );
+    console.log('log from load page')
+    console.log(this.dataSource)
   }
 
   /**
@@ -271,12 +280,71 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
     });
   }
 
-  //TODO: Define createChart function here for donut plot
+  /**
+   * Function is triggered when resizing the chart
+   */
+  onResize(event) {
+    this.createChart();
+  }
+
+  createChart(): void {
+    const outerWidth = this.svgElement.nativeElement.offsetWidth;
+    const outerHeight = this.outerHeight;
+    const width = outerWidth - this.margin.left - this.margin.right;
+    const height = outerHeight - this.margin.top - this.margin.bottom;
+    //const width = 960;
+    //const height = 500;
+    const radius = Math.min(width, height) / 2;
+
+    // const data = this.donutPlotData.reduce((a, {name, doublet_class}) => {
+    //   a[doublet_class] = a[doublet_class] || 0;
+    //   a[doublet_class] += 1;
+    //   return a;
+    // }, {});
+    const data = {singlet:243, doublet:53}
+    console.log("donut data")
+    console.log(data)
+    d3.select(this.containerId)
+      .selectAll('svg')
+      .remove();
+
+    const svg = d3
+      .select(this.containerId)
+      .append('svg')
+      .attr('width', width)
+      .attr('height', height)
+      .append('g')
+      .attr(
+        'transform',
+        'translate(' + width / 2 + ',' + height / 2 + ')'
+      )
+
+    const color = d3.scaleOrdinal()
+      .range(["#98abc5", "#8a89a6"]);
+
+    const pie = d3.pie()
+      .value(d=>d[1]);
+    const data_ready = pie(Object.entries(data))
+
+    // // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
+    svg
+      .selectAll('whatever')
+      .data(data_ready)
+      .join('path')
+      .attr('d', d3.arc()
+        .innerRadius(100)         // This is the size of the donut hole
+        .outerRadius(radius)
+      )
+      .attr('fill', d => color(d.data[0]))
+      .attr("stroke", "black")
+      .style("stroke-width", "2px")
+      .style("opacity", 0.7)
+  }
 }
 
 export interface QCDoubletDetection {
   name: string;
-  QCStatus: string;
+  doublet_class: string;
 }
 
 export class ExpressionMatrixDataSource implements DataSource<QCDoubletDetection> {
@@ -309,10 +377,15 @@ export class ExpressionMatrixDataSource implements DataSource<QCDoubletDetection
       .subscribe(
         data => {
           this.qcCount = data.count;
-          const qcFormatted = data.results.map(dataRow => {
-            const newDataRow = { name : dataRow.rowname, ...dataRow.values };
-          });
-          return this.qcSubject.next(qcFormatted)
+          const qcFormatted = data.results.map(
+            dataRow => {
+              return {
+                name: dataRow.rowname,
+                doublet_class: dataRow.values["doublet_class"]
+              };
+            }
+          );
+          return this.qcSubject.next(qcFormatted);
         });
   }
 

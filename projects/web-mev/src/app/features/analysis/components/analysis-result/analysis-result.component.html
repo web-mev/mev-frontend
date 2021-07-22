@@ -3,6 +3,11 @@
         <mev-scatter-plot *ngIf="outputs" [outputs]="outputs"></mev-scatter-plot>
     </ng-container>
 
+    <ng-container *ngIf="operationName === 'SCTK Doublet Finder'">
+      <p>Hello world!</p>
+      <mev-sctk-doubletfinder [outputs]="outputs"></mev-sctk-doubletfinder>
+    </ng-container>
+
     <ng-container *ngIf="operationName === 'DESeq2'">
         <mev-deseq2 [outputs]="outputs"></mev-deseq2>
     </ng-container>
@@ -41,10 +46,6 @@
 
     <ng-container *ngIf="operationName === 'MAST Single-cell differential expression'">
         <mev-mast-dge [outputs]="outputs"></mev-mast-dge>
-    </ng-container>
-
-    <ng-container *ngIf="operationName === 'QC Doublet Detection'">
-      <mev-sctk-doublet-detection [outputs]="outputs"></mev-sctk-doublet-detection>
     </ng-container>
 
 </div>

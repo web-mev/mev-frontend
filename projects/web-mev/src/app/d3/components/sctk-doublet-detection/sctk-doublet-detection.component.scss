@@ -13,6 +13,19 @@
   font-size: 14px;
 }
 
+.donut-tip {
+  position: absolute;
+  text-align: center;
+  width: 60px;
+  height: 28px;
+  padding: 2px;
+  font: 16px sans-serif;
+  background: lightsteelblue;
+  border: 0px;
+  border-radius: 8px;
+  pointer-events: none;
+}
+
 .filter {
   margin-right: 25px;
   display: inline;

@@ -33,6 +33,7 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
   dataSource: ExpressionMatrixDataSource; // datasource for MatTable
   resourceId;
   donutPlotData;
+  tablePageData;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -42,6 +43,7 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
 
   selectedSamples = [];
   customObservationSets = [];
+  customSampleSetClass;
 
   /* Chart settings */
   containerId = '#donutPlot';
@@ -128,19 +130,27 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
       () => (this.paginator.pageIndex = this.defaultPageIndex)
     );
     this.dataSource.connect().subscribe(expData => {
-      this.donutPlotData = expData;
-      //this.preprocessBoxPlotData();
-      this.createChart();
+      this.tablePageData = expData;
     });
     merge(this.sort.sortChange, this.paginator.page)
       .pipe(
         tap(() => {
           this.loadPage();
-          //   this.preprocessBoxPlotData();
-          this.createChart();
         })
       )
       .subscribe();
+
+    this.analysesService
+      .getResourceContent(this.resourceId, 1, 10 ** 4)
+      .subscribe(data => {
+        this.donutPlotData = data.results.map(dataRow => {
+          return {
+            name: dataRow.rowname,
+            doublet_class: dataRow.values['doublet_class']
+          };
+        });
+        this.createChart();
+      });
   }
 
   ngOnChanges(): void {
@@ -150,11 +160,7 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
   }
 
   initData(): void {
-    console.log('init data');
-    console.log(this.outputs);
-    // this.resourceId = this.outputs.qc_results;
     this.resourceId = this.outputs['SctkDoubletFinder.doublet_ids'];
-    console.log(this.resourceId);
 
     const sorting = {
       sortField: this.defaultSorting.field,
@@ -174,8 +180,6 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
       this.dynamicColumns = data;
       this.displayColumns = [...this.staticCols, ...data];
     });
-    console.log('init data log of datasource');
-    console.log(this.dataSource);
   }
 
   /**
@@ -217,8 +221,6 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
       this.paginator.pageIndex,
       this.paginator.pageSize
     );
-    console.log('log from load page');
-    console.log(this.dataSource);
   }
 
   /**
@@ -293,6 +295,19 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
     }
   }
 
+  /**
+   * Function that is triggered when the user clicks on an arc of the donut plot
+   */
+  arcSelectionHandler(): void {
+    if (!this.customSampleSetClass) {
+      this.selectedSamples = [];
+    } else {
+      this.selectedSamples = this.donutPlotData.filter(
+        samples => samples.doublet_class === this.customSampleSetClass
+      );
+    }
+  }
+
   createChart(): void {
     const outerWidth = this.svgElement.nativeElement.offsetWidth;
     const outerHeight = this.outerHeight;
@@ -301,15 +316,14 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
     //const width = 960;
     //const height = 500;
     const radius = Math.min(width, height) / 2;
+    const _this = this;
 
-    // const data = this.donutPlotData.reduce((a, {name, doublet_class}) => {
-    //   a[doublet_class] = a[doublet_class] || 0;
-    //   a[doublet_class] += 1;
-    //   return a;
-    // }, {});
-    const data = { singlet: 243, doublet: 53 };
-    console.log('donut data');
-    console.log(data);
+    const data = this.donutPlotData.reduce((a, { name, doublet_class }) => {
+      a[doublet_class] = a[doublet_class] || 0;
+      a[doublet_class] += 1;
+      return a;
+    }, {});
+
     d3.select(this.containerId)
       .selectAll('svg')
       .remove();
@@ -342,18 +356,22 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
       .style('text-align', 'center')
       .style('font-weight', 'bold');
 
+    const arc = d3
+      .arc()
+      .innerRadius(100)
+      .outerRadius(radius);
+
+    const selectedArc = d3
+      .arc()
+      .innerRadius(100)
+      .outerRadius(radius + 30);
+
     // // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
     svg
       .selectAll('allSlices')
       .data(data_ready)
       .join('path')
-      .attr(
-        'd',
-        d3
-          .arc()
-          .innerRadius(100) // This is the size of the donut hole
-          .outerRadius(radius)
-      )
+      .attr('d', arc)
       .attr('fill', d => color(d.data[0]))
       .attr('stroke', 'black')
       .style('stroke-width', '2px')
@@ -384,6 +402,22 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
           .transition()
           .duration(50)
           .style('opacity', 0);
+      })
+      .on('click', function(event, d) {
+        if (_this.customSampleSetClass) {
+          d3.select(this)
+            .transition()
+            .duration(1000)
+            .attr('d', arc);
+          _this.customSampleSetClass = null;
+        } else {
+          d3.select(this)
+            .transition()
+            .duration(1000)
+            .attr('d', selectedArc);
+          _this.customSampleSetClass = d.data[0];
+        }
+        _this.arcSelectionHandler();
       });
 
     const legendRectSize = 13;
@@ -423,6 +457,13 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
    * Function that is triggered when the user clicks the "Create a custom sample" button
    */
   onCreateCustomSampleSet() {
+    const samples = this.chartViewMode
+      ? this.selectedSamples.map(elem => {
+          const sample = { id: elem.name };
+          return sample;
+        })
+      : null;
+
     const dialogRef = this.dialog.open(AddSampleSetComponent);
 
     dialogRef.afterClosed().subscribe(customSetData => {
@@ -438,7 +479,7 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
               name: customSetData.name,
               color: customSetData.color,
               type: CustomSetType.ObservationSet,
-              elements: elements,
+              elements: this.chartViewMode ? samples : elements,
               multiple: true
             };
 

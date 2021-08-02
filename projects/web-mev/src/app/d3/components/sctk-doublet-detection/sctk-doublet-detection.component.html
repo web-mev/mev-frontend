@@ -91,6 +91,13 @@
       <div [ngStyle]="{'display' : chartViewMode ? 'initial' : 'none'}">
         <mev-download-button [containerId]="containerId" [imageName]="imageName"></mev-download-button>
         <div #donutPlot id="donutPlot" class="chart" (window:resize)="onResize($event)"></div>
+        <div class="sample-list-container">
+          <button mat-raised-button color="accent" (click)="onCreateCustomSampleSet()"
+                  [disabled]="!selectedSamples.length">
+            <mat-icon>add</mat-icon>
+            Save as a sample set
+          </button>
+        </div>
       </div>
 
     </div>

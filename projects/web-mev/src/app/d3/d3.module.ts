@@ -24,6 +24,7 @@ import { UmapScatterPlotComponent } from './components/sctk-umap/umap-scatter-pl
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { SctkSeuratClusterComponent } from './components/sctk-seurat-cluster/sctk-seurat-cluster.component';
 import { SctkDoubletDetectionComponent } from './components/sctk-doublet-detection/sctk-doublet-detection.component';
+import { SctkCxdsDoubletDetectionComponent } from './components/sctk-cxds-doublet-detection/sctk-cxds-doublet-detection.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { SctkDoubletDetectionComponent } from './components/sctk-doublet-detecti
     D3HeatmapPlotComponent,
     UmapScatterPlotComponent,
     SctkSeuratClusterComponent,
-    SctkDoubletDetectionComponent
+    SctkDoubletDetectionComponent,
+    SctkCxdsDoubletDetectionComponent
   ],
   imports: [CommonModule, SharedModule, DragDropModule],
   exports: [
@@ -67,7 +69,8 @@ import { SctkDoubletDetectionComponent } from './components/sctk-doublet-detecti
     HeatmapFormComponent,
     UmapScatterPlotComponent,
     SctkSeuratClusterComponent,
-    SctkDoubletDetectionComponent
+    SctkDoubletDetectionComponent,
+    SctkCxdsDoubletDetectionComponent
   ]
 })
 export class D3Module {}

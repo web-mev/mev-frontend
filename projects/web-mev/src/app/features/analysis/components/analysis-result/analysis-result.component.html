@@ -7,6 +7,10 @@
       <mev-sctk-doubletfinder [outputs]="outputs"></mev-sctk-doubletfinder>
     </ng-container>
 
+    <ng-container *ngIf="operationName === 'SCTK Cxds Doublet Finder'">
+      <mev-sctk-cxds [outputs]="outputs"></mev-sctk-cxds>
+    </ng-container>
+
     <ng-container *ngIf="operationName === 'DESeq2'">
         <mev-deseq2 [outputs]="outputs"></mev-deseq2>
     </ng-container>

@@ -25,6 +25,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { SctkSeuratClusterComponent } from './components/sctk-seurat-cluster/sctk-seurat-cluster.component';
 import { SctkDoubletDetectionComponent } from './components/sctk-doublet-detection/sctk-doublet-detection.component';
 import { SctkCxdsDoubletDetectionComponent } from './components/sctk-cxds-doublet-detection/sctk-cxds-doublet-detection.component';
+import { SctkCellDoubletDetectionComponent } from '@app/d3/components/sctk-cell-doublet-detection/sctk-cell-doublet-detection.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { SctkCxdsDoubletDetectionComponent } from './components/sctk-cxds-double
     UmapScatterPlotComponent,
     SctkSeuratClusterComponent,
     SctkDoubletDetectionComponent,
-    SctkCxdsDoubletDetectionComponent
+    SctkCxdsDoubletDetectionComponent,
+    SctkCellDoubletDetectionComponent
   ],
   imports: [CommonModule, SharedModule, DragDropModule],
   exports: [
@@ -70,7 +72,8 @@ import { SctkCxdsDoubletDetectionComponent } from './components/sctk-cxds-double
     UmapScatterPlotComponent,
     SctkSeuratClusterComponent,
     SctkDoubletDetectionComponent,
-    SctkCxdsDoubletDetectionComponent
+    SctkCxdsDoubletDetectionComponent,
+    SctkCellDoubletDetectionComponent
   ]
 })
 export class D3Module {}

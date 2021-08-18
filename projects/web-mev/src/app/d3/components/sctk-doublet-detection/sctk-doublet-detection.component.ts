@@ -8,7 +8,6 @@ import {
   ElementRef
 } from '@angular/core';
 import * as d3 from 'd3';
-import d3Tip from 'd3-tip';
 import { FormGroup, FormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -40,6 +39,7 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
   @ViewChild('donutPlot') svgElement: ElementRef;
   imageName = 'doublet_detection';
   analysisName = 'SCTK Doublet Finder';
+  resourceIdName = 'SctkDoubletFinder.doublet_ids';
 
   selectedSamples = [];
   customObservationSets = [];
@@ -160,7 +160,9 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
   }
 
   initData(): void {
-    this.resourceId = this.outputs['SctkDoubletFinder.doublet_ids'];
+    console.log(this.outputs);
+    //this.resourceId = this.outputs['SctkDoubletFinder.doublet_ids'];
+    this.resourceId = this.outputs[this.resourceIdName];
 
     const sorting = {
       sortField: this.defaultSorting.field,
@@ -313,8 +315,8 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
     const outerHeight = this.outerHeight;
     const width = outerWidth - this.margin.left - this.margin.right;
     const height = outerHeight - this.margin.top - this.margin.bottom;
-    //const width = 960;
-    //const height = 500;
+    // const width = 960;
+    // const height = 500;
     const radius = Math.min(width, height) / 2;
     const _this = this;
 

@@ -330,7 +330,8 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
       .selectAll('svg')
       .remove();
 
-    const svg = d3
+    let svg;
+    svg = d3
       .select(this.containerId)
       .append('svg')
       .attr('width', width)
@@ -341,7 +342,8 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
     const color = d3.scaleOrdinal().range(['#193A6F', '#F98125']);
 
     const pie = d3.pie().value(d => d[1]);
-    const data_ready = pie(Object.entries(data));
+    const pre_pie_data: any = Object.entries(data);
+    const data_ready = pie(pre_pie_data);
 
     const donutTip = d3
       .select(this.containerId)
@@ -368,7 +370,7 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
       .innerRadius(100)
       .outerRadius(radius + 30);
 
-    // // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
+    // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
     svg
       .selectAll('allSlices')
       .data(data_ready)

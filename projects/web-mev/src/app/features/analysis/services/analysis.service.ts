@@ -137,6 +137,16 @@ export class AnalysesService {
   }
 
   /**
+   * Get the list of executed operations for a user, regardless of whether they
+   * are workspace operations or not
+   */
+   getAllNonWorkspaceExecOperations(): Observable<any> {
+    return this.httpClient.get(
+      `${this.API_URL}/non-workspace-executed-operations/`
+    );
+  }
+
+  /**
    * Get the list of executed operations of a workspace
    */
   getExecOperations(workspaceId: string): Observable<any> {

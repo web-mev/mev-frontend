@@ -1,6 +1,16 @@
 import { Injectable, NgZone } from '@angular/core';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 
+function setDuration(duration: number|null, defaultDuration: number):number{
+  var d;
+  if (duration){
+    d = duration;
+  } else {
+    d = defaultDuration;
+  }
+  return d;
+}
+
 /**
  * Notification service
  *
@@ -14,37 +24,42 @@ export class NotificationService {
     private readonly zone: NgZone
   ) {}
 
-  default(message: string) {
+  default(message: string, duration?: number) {
+    var d = setDuration(duration, 2000);
     this.show(message, {
-      duration: 2000,
+      duration: d,
       panelClass: 'default-notification-overlay'
     });
   }
 
-  info(message: string) {
+  info(message: string, duration?: number) {
+    var d = setDuration(duration, 2000);
     this.show(message, {
-      duration: 2000,
+      duration: d,
       panelClass: 'info-notification-overlay'
     });
   }
 
-  success(message: string) {
+  success(message: string, duration?: number) {
+    var d = setDuration(duration, 2000);
     this.show(message, {
-      duration: 2000,
+      duration: d,
       panelClass: 'success-notification-overlay'
     });
   }
 
-  warn(message: string) {
+  warn(message: string, duration?: number) {
+    var d = setDuration(duration, 10000);
     this.show(message, {
-      duration: 10000,
+      duration: d,
       panelClass: 'warning-notification-overlay'
     });
   }
 
-  error(message: string) {
+  error(message: string, duration?: number) {
+    var d = setDuration(duration, 10000);
     this.show(message, {
-      duration: 10000,
+      duration: d,
       panelClass: 'error-notification-overlay'
     });
   }

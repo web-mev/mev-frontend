@@ -2,6 +2,14 @@ variable "project_id" {
   description = "GCP project ID"
 }
 
+variable "environment" {
+  description = "Sets which environment (dev, prod) we are deploying in. If the value is not 'prod', then it is ignored."
+}
+
+variable "commit_id" {
+  description = "The git commit hash to deploy"
+}
+
 variable "credentials_file" {
   description = "Path to JSON file with GCP service account key"
 }

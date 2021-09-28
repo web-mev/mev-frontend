@@ -11,12 +11,14 @@ GOOGLE_OAUTH_CLIENT_ID=${google_oauth_client_id}
 SENTRY_DSN=${sentry_dsn}
 DROPBOX_APP_KEY=${dropbox_app_key}
 ANALYTICS_TAG=${analytics_tag}
+GIT_COMMIT=${commit_id}
 
 /usr/bin/curl -fsSL https://deb.nodesource.com/setup_16.x | /usr/bin/bash -
 /usr/bin/apt-get install -y apache2 nodejs
 
 /usr/bin/git clone https://github.com/web-mev/mev-frontend.git
 cd mev-frontend || exit 1
+git checkout -q $GIT_COMMIT
 /usr/bin/npm install
 
 # Regardless of the deployment environment, point the JWT file to the API

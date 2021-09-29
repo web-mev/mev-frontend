@@ -27,8 +27,7 @@ https://github.com/tomastrajan/angular-ngrx-material-starter
 
 1. Install [Git](https://git-scm.com/), [VirtualBox](https://www.virtualbox.org/), and [Vagrant](https://www.vagrantup.com/)
 1. Clone the repository: `git clone https://github.com/web-mev/mev-frontend.git`
-1. Fill out the `vagrant/env.tmpl` with appropriate variables. Best to copy that (e.g. to `vagrant/env.txt`) so you don't accidentally commit any changes to that template file.
-1. Source those environment variables: `source vagrant/env.txt` so they are now in your shell session.
+1. `cp vagrant/env.tmpl vagrant/env.txt` and fill the variables with appropriate values.
 1. Start and provision the VM with `vagrant up`
 1. Open http://localhost:8080 in a web browser
 
@@ -36,7 +35,7 @@ For development:
 1. SSH in with `vagrant ssh`
 1. To serve the app using Angular web server:
 ```sh
-ng serve --host 0.0.0.0 --disable-host-check
+/vagrant/node_modules/@angular/cli/bin/ng serve --host 0.0.0.0 --disable-host-check
 ```
 Note that Node will warn that the `--disable-host-check` is a security issue. Since we are working on localhost, this is a moot point. 
 
@@ -44,7 +43,7 @@ Also note that the files on your host machine will be located at `/vagrant` insi
 
 If you are editing/saving files locally (on your host machine, NOT the VM), Node's "auto detect" feature may not detect any changes which would normally trigger a re-build process. If that is the case, you may try to add an additional flag (`--poll`) to your serve command, e.g.
 ```sh
-ng serve --host 0.0.0.0 --disable-host-check --poll 2000
+/vagrant/node_modules/@angular/cli/bin/ng serve --host 0.0.0.0 --disable-host-check --poll 2000
 ```
 where the argument value (e.g. `2000` above) is the polling period in milliseconds.
 
@@ -53,7 +52,7 @@ The application will be available on your host machine at localhost:4200
 If you wish to use Google-based authentication on the development machine (instead of username/password authentication), you will need a proper host pointing to localhost, because Google’s OAuth requires redirect URLs that cannot be localhost. You can add an entry in the hosts file of your machine (e.g. `/etc/hosts`) to associate mydomain.com to 127.0.0.1 and use the following command:
 
 ```sh
-ng serve --host mydomain.com --disable-host-check --poll 2000
+/vagrant/node_modules/@angular/cli/bin/ng serve --host mydomain.com --disable-host-check --poll 2000
 ```
 
 

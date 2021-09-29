@@ -3,6 +3,7 @@ import { Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { FileService } from '@file-manager/services/file-manager.service';
 import { FormControl, Validators } from '@angular/forms';
 import { FileType } from '@app/shared/models/file-type';
+import { environment } from '@environments/environment';
 
 /**
  * Add File Dialog Component
@@ -24,6 +25,7 @@ export class AddFileDialogComponent {
   public isLargeFile: boolean;
   public fileSelected: boolean;
   public validSelections: boolean;
+  private readonly MAX_UPLOAD_SIZE_BYTES = environment.maximumUploadSizeBytes;
 
   constructor(
     public dialogRef: MatDialogRef<AddFileDialogComponent>,
@@ -54,7 +56,7 @@ export class AddFileDialogComponent {
     // However, that catch (in the http-error interceptor) is a fall-back option.
     // We should attempt to block right up front. Set this to a reasonably large
     // value (e.g. 512Mb)
-    const fileSizeThreshold = 536870912;
+    const fileSizeThreshold = this.MAX_UPLOAD_SIZE_BYTES;
 
     this.potentialFilesToUpload = event.target.files;
     if (!this.potentialFilesToUpload) {

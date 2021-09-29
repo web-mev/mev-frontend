@@ -65,6 +65,7 @@ resource "google_compute_instance" "mev_frontend" {
       sentry_dsn = var.sentry_dsn,
       dropbox_app_key = var.dropbox_app_key,
       analytics_tag = var.analytics_tag,
+      max_upload_size_bytes = var.max_upload_size_bytes,
       commit_id = var.commit_id
     }
   )

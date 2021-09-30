@@ -81,7 +81,6 @@ export class UmapScatterPlotComponent implements OnChanges {
    * Function to retrieve data for plot
    */
   generateScatterPlot() {
-    this.chartViewMode = 'zoomMode'; // default mode
     const resourceId = this.outputs['SctkUmapDimensionReduce.umap_output'];
 
     this.apiService
@@ -352,6 +351,15 @@ export class UmapScatterPlotComponent implements OnChanges {
       .style('fill', '#000')
       .attr('class', 'legend-label')
       .text(d => d.name);
+
+      // this may seem trivial here, but it keeps the plot mode (zoom/pan vs. select)
+      // consistent. Otherwise it gets reset to be zoom each time this function is called.
+      this.onChartViewChange(this.chartViewMode);
+
+      // resets since otherwise you will see "selected samples" (the count) when the plot does not show any
+      // as being brushed.
+      this.selectedSamples = [];
+
   }
 
   /**

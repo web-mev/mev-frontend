@@ -24,6 +24,7 @@ import { UmapScatterPlotComponent } from './components/sctk-umap/umap-scatter-pl
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { SctkSeuratClusterComponent } from './components/sctk-seurat-cluster/sctk-seurat-cluster.component';
 import { CombatseqComponent } from './components/combatseq/combatseq.component';
+import { WgcnaComponent } from './components/wgcna/wgcna.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { CombatseqComponent } from './components/combatseq/combatseq.component';
     D3HeatmapPlotComponent,
     UmapScatterPlotComponent,
     SctkSeuratClusterComponent,
-    CombatseqComponent
+    CombatseqComponent,
+    WgcnaComponent
   ],
   imports: [CommonModule, SharedModule, DragDropModule],
   exports: [
@@ -67,7 +69,8 @@ import { CombatseqComponent } from './components/combatseq/combatseq.component';
     HeatmapFormComponent,
     UmapScatterPlotComponent,
     SctkSeuratClusterComponent,
-    CombatseqComponent
+    CombatseqComponent,
+    WgcnaComponent
   ]
 })
 export class D3Module {}

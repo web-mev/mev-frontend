@@ -47,6 +47,10 @@
         <mev-combatseq [outputs]="outputs"></mev-combatseq>
     </ng-container>
 
+    <ng-container *ngIf="operationName === 'WGCNA'">
+        <mev-wgcna [outputs]="outputs"></mev-wgcna>
+    </ng-container>
+
 </div>
 
 <ng-template #error>

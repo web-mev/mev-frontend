@@ -55,6 +55,10 @@
         <mev-mast-dge [outputs]="outputs"></mev-mast-dge>
     </ng-container>
 
+    <ng-container *ngIf="operationName === 'ComBat-seq'">
+        <mev-combatseq [outputs]="outputs"></mev-combatseq>
+    </ng-container>
+
 </div>
 
 <ng-template #error>

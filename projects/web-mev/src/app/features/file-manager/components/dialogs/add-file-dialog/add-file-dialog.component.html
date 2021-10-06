@@ -10,18 +10,26 @@
         Select files
       </button>
       <!--span *ngIf="file_name" id="file-label"> {{ file_name }} </span-->
-      <div *ngIf="fileNames" class="upload-info">
-        You selected the following file(s):
+      <div *ngIf="validSelections" class="upload-info">
+        You selected the following file(s) for upload:
         <ul>
           <li *ngFor="let fileName of fileNames">
             <span id="file-label"> {{ fileName }}
             </span>
           </li>
         </ul>
+      </div>
+      <div>
         <span *ngIf="isLargeFile" class="upload-warning"> 
-          The file specified is larger than what MeV is configured to support. 
-          Please use Dropbox to upload large files (>500Mb). 
-        </span> 
+            One or more of your selected files is larger than what WebMeV is configured to support for direct uploads. 
+            Please use another upload method more appropriate for large files. 
+          </span> 
+          <ul>
+            <li *ngFor="let fileName of largeFileNames">
+              <span id="file-label" class="upload-warning"> {{ fileName }}
+              </span>
+            </li>
+          </ul>
       </div>
       
       <input type="file" #fileUpload (change)="setFile($event)" id="fileUpload" name="upload_file" multiple="multiple" required style="display:none;"/>
@@ -48,7 +56,7 @@
     </div-->
 
     <div mat-dialog-actions>
-      <button mat-button mat-raised-button color="accent" [type]="submit" [disabled]="!(formControl.valid && fileSelected)" [mat-dialog-close]="1" (click)="confirmAdd()">Upload</button>
+      <button mat-button mat-raised-button color="accent" [type]="submit" [disabled]="!(formControl.valid && validSelections)" [mat-dialog-close]="1" (click)="confirmAdd()">Upload</button>
       <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
     </div>
     <p></p>

@@ -1,5 +1,5 @@
 terraform {
-  required_version = "~> 0.14.8"
+  required_version = "~> 1.0.4"
   required_providers {
     google = {
       source  = "hashicorp/google"
@@ -59,11 +59,14 @@ resource "google_compute_instance" "mev_frontend" {
   metadata_startup_script = templatefile("provision.sh",
     {
       environment = terraform.workspace,
-      backend_url = var.backend_url,
+      backend_domain = var.backend_domain,
+      api_endpoint = "${var.backend_protocol}://${var.backend_domain}${var.api_root}"
       google_oauth_client_id = var.google_oauth_client_id,
       sentry_dsn = var.sentry_dsn,
       dropbox_app_key = var.dropbox_app_key,
-      analytics_tag = var.analytics_tag
+      analytics_tag = var.analytics_tag,
+      max_upload_size_bytes = var.max_upload_size_bytes,
+      commit_id = var.commit_id
     }
   )
 
@@ -106,7 +109,7 @@ resource "google_compute_instance_group" "frontend_ig" {
 
 
 resource "google_compute_health_check" "http-health-check" {
-  name = "frontend-${terraform.workspace}-health-check"
+  name = "${terraform.workspace}-frontend-health-check"
 
   timeout_sec        = 2
   check_interval_sec = 5
@@ -170,7 +173,7 @@ resource "google_compute_global_forwarding_rule" "https_fwd" {
 
   
 resource "google_compute_url_map" "https_redirect" {
-  name            = "webmev-frontend-${terraform.workspace}-https-redirect"
+  name            = "${terraform.workspace}-frontend-https-redirect"
 
   default_url_redirect {
     https_redirect         = true

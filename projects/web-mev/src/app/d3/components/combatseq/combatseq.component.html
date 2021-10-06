@@ -1,0 +1,16 @@
+<mat-card class="analysis-card">
+    <mat-card-header>
+      <div mat-card-avatar class="analysis-card__img"></div>
+      <mat-card-title>{{analysisName}}: {{ outputs?.job_name }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="analysis-card__main">
+      <p class="analysis-card__instruction">
+        The output of this analysis is a new integer-based count matrix and there is no output visualization.
+      </p>
+      <p class="analysis-card__instruction">
+        You can check if the analysis removed any unwanted batch effects by performing a clustering operation, such as PCA. Hopefully, you will note that 
+        variation due to experimental artifacts is reduced. For instance, biological replicates from a similar phenotype would have tighter clustering.
+      </p>  
+    </mat-card-content>
+  
+  </mat-card>

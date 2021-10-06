@@ -26,6 +26,8 @@ import { SctkSeuratClusterComponent } from './components/sctk-seurat-cluster/sct
 import { SctkDoubletDetectionComponent } from './components/sctk-doublet-detection/sctk-doublet-detection.component';
 import { SctkCxdsDoubletDetectionComponent } from './components/sctk-cxds-doublet-detection/sctk-cxds-doublet-detection.component';
 import { SctkCellDoubletDetectionComponent } from '@app/d3/components/sctk-cell-doublet-detection/sctk-cell-doublet-detection.component';
+import { CombatseqComponent } from './components/combatseq/combatseq.component';
+
 
 @NgModule({
   declarations: [
@@ -53,6 +55,7 @@ import { SctkCellDoubletDetectionComponent } from '@app/d3/components/sctk-cell-
     SctkDoubletDetectionComponent,
     SctkCxdsDoubletDetectionComponent,
     SctkCellDoubletDetectionComponent
+    CombatseqComponent
   ],
   imports: [CommonModule, SharedModule, DragDropModule],
   exports: [
@@ -74,6 +77,7 @@ import { SctkCellDoubletDetectionComponent } from '@app/d3/components/sctk-cell-
     SctkDoubletDetectionComponent,
     SctkCxdsDoubletDetectionComponent,
     SctkCellDoubletDetectionComponent
+    CombatseqComponent
   ]
 })
 export class D3Module {}

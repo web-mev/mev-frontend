@@ -221,8 +221,6 @@ export class ExecutedOperationComponent implements OnInit {
    * Function is triggered when the user selects an operation in the tree
    */
   onSelectExecOperation(execOperation) {
-    console.log('SELECTED');
-    console.log(execOperation);
     this.activeNode = execOperation;
     this.operationExecutionState = operationExecution.InProcess;
 

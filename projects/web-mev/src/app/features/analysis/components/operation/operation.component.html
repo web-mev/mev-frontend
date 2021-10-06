@@ -106,8 +106,14 @@
         <mat-error *ngIf="f[intField.key].errors.required">
           This field is required
         </mat-error>
-        <mat-error *ngIf="f[intField.key].errors.min || f[intField.key].errors.max || f[intField.key].errors.pattern">
+        <mat-error *ngIf="f[intField.key].errors.pattern">
+          The value should be an integer.
+        </mat-error>
+        <mat-error *ngIf="f[intField.key].errors.min">
           The value should be an integer greater than or equal to {{ intField.min }}
+        </mat-error>
+        <mat-error *ngIf="f[intField.key].errors.max">
+          The value should be an integer less than or equal to {{ intField.max }}
         </mat-error>
       </div>
     </mat-form-field>

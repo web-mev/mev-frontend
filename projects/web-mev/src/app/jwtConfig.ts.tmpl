@@ -5,9 +5,9 @@ export function jwtOptionsFactory(authService: AuthenticationService) {
     tokenGetter: () => {
       return authService.getJwtToken();
     },
-    whitelistedDomains: ['__API_URL__', 'localhost'],
+    whitelistedDomains: ['__MEV_DOMAIN__', 'localhost'],
     blacklistedRoutes: [
-      'https://__API_URL__/api/token/',
+      'https://__MEV_DOMAIN__/api/token/',
       'http://localhost:8000/api/token/'
     ]
   };

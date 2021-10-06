@@ -3,6 +3,7 @@ import { Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { FileService } from '@file-manager/services/file-manager.service';
 import { FormControl, Validators } from '@angular/forms';
 import { FileType } from '@app/shared/models/file-type';
+import { environment } from '@environments/environment';
 
 /**
  * Add File Dialog Component
@@ -15,12 +16,16 @@ import { FileType } from '@app/shared/models/file-type';
   styleUrls: ['./add-file-dialog.component.scss']
 })
 export class AddFileDialogComponent {
+  private potentialFilesToUpload: any[] = [];
   private filesToUpload: any[] = [];
   public resourceTypes = Object.keys(FileType);
   @ViewChild('fileUpload', { static: false }) fileUpload: ElementRef;
   public fileNames: string[];
+  public largeFileNames: string[];
   public isLargeFile: boolean;
   public fileSelected: boolean;
+  public validSelections: boolean;
+  private readonly MAX_UPLOAD_SIZE_BYTES = environment.maximumUploadSizeBytes;
 
   constructor(
     public dialogRef: MatDialogRef<AddFileDialogComponent>,
@@ -46,23 +51,35 @@ export class AddFileDialogComponent {
    * For large files a warning message is displayed
    */
   setFile(event) {
-    const fileSizeTreshold = 524288000;
 
-    this.filesToUpload = event.target.files;
-    if (!this.filesToUpload) {
+    // the server will respond with a 413 status code if the body is too large.
+    // However, that catch (in the http-error interceptor) is a fall-back option.
+    // We should attempt to block right up front. Set this to a reasonably large
+    // value (e.g. 512Mb)
+    const fileSizeThreshold = this.MAX_UPLOAD_SIZE_BYTES;
+
+    this.potentialFilesToUpload = event.target.files;
+    if (!this.potentialFilesToUpload) {
       return;
     }
-    this.fileSelected = this.filesToUpload.length > 0;
+    this.fileSelected = this.potentialFilesToUpload.length > 0;
 
     // clean previous selection if exists
+    this.filesToUpload = [];
     this.fileNames = [];
+    this.largeFileNames = [];
     this.isLargeFile = false;
+    this.validSelections = false;
 
-    for (let i = 0; i < this.filesToUpload.length; i++) {
-      if (this.filesToUpload[i].size >= fileSizeTreshold) {
+    for (let i = 0; i < this.potentialFilesToUpload.length; i++) {
+      if (this.potentialFilesToUpload[i].size >= fileSizeThreshold) {
         this.isLargeFile = true;
+        this.largeFileNames.push(this.potentialFilesToUpload[i].name);
+      } else {
+        this.fileNames.push(this.potentialFilesToUpload[i].name);
+        this.validSelections = true;
+        this.filesToUpload.push(this.potentialFilesToUpload[i]);
       }
-      this.fileNames.push(this.filesToUpload[i].name);
     }
   }
 

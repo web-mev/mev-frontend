@@ -42,7 +42,8 @@ testem.log
 .terraform/
 .terraform.tfstate*
 terraform.tfstate*
-terraform.tfvars
+terraform.tfvars*
+/deployment/terraform/*.json
 
 # e2e
 /e2e/src/*.js
@@ -60,3 +61,12 @@ debug.log
 /.firebase
 .firebaserc
 firebase.json
+
+# files that are created by the templating process upon provisioning:
+/projects/web-mev/src/app/jwtConfig.ts
+/projects/web-mev/src/app/sentry-error-handler.ts
+/projects/web-mev/src/environments/environment.ts
+/projects/web-mev/src/index.html
+
+# local deployment environment variables
+/vagrant/env.txt

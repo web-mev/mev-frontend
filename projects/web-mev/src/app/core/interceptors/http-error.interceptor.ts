@@ -24,7 +24,6 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = '';
-
         if (typeof error === 'string') {
           return throwError(error);
         }
@@ -37,6 +36,13 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         ) {
           return next.handle(request);
         }
+        if (
+          error instanceof HttpErrorResponse &&
+          error.status === 413){
+            errorMessage = 'The file you are attempting to upload is too large for our basic upload process. Please use an alternate method suitable for large files.';
+            this.notificationService.error(errorMessage);
+            return throwError(errorMessage);
+          }
         if (error.error instanceof ErrorEvent) {
           errorMessage = `Error: ${error.error.message}`;
         } else {

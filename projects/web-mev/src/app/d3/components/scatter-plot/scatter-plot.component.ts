@@ -83,7 +83,6 @@ export class ScatterPlotComponent implements OnChanges {
    * Function to retrieve data for PCA plot
    */
   generatePCAPlot() {
-    this.chartViewMode = 'zoomMode'; // default mode
     const resourceId = this.outputs.pca_coordinates;
     const pca_explained_variances = [];
     let i = 1;
@@ -380,6 +379,16 @@ export class ScatterPlotComponent implements OnChanges {
       .style('fill', '#000')
       .attr('class', 'legend-label')
       .text(d => d.name);
+
+      // this may seem trivial here, but it keeps the plot mode (zoom/pan vs. select)
+      // consistent. Otherwise it gets reset to be zoom each time this function is called.
+      this.onChartViewChange(this.chartViewMode);
+
+      // resets since otherwise you will see "selected samples" when the plot does not show any
+      // as being brushed.
+      this.selectedSamples = [];
+
+
   }
 
   /**

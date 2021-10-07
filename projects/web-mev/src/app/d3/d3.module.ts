@@ -54,7 +54,7 @@ import { CombatseqComponent } from './components/combatseq/combatseq.component';
     SctkSeuratClusterComponent,
     SctkDoubletDetectionComponent,
     SctkCxdsDoubletDetectionComponent,
-    SctkCellDoubletDetectionComponent
+    SctkCellDoubletDetectionComponent,
     CombatseqComponent
   ],
   imports: [CommonModule, SharedModule, DragDropModule],
@@ -76,7 +76,7 @@ import { CombatseqComponent } from './components/combatseq/combatseq.component';
     SctkSeuratClusterComponent,
     SctkDoubletDetectionComponent,
     SctkCxdsDoubletDetectionComponent,
-    SctkCellDoubletDetectionComponent
+    SctkCellDoubletDetectionComponent,
     CombatseqComponent
   ]
 })

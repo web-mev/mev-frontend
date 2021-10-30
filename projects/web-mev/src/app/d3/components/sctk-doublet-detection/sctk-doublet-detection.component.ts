@@ -315,9 +315,7 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
     const outerHeight = this.outerHeight;
     const width = outerWidth - this.margin.left - this.margin.right;
     const height = outerHeight - this.margin.top - this.margin.bottom;
-    // const width = 960;
-    // const height = 500;
-    const radius = Math.min(width, height) / 2;
+    const radius = Math.min(width, height) / 2 - 15;
     const _this = this;
 
     const data = this.donutPlotData.reduce((a, { name, doublet_class }) => {
@@ -368,7 +366,7 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
     const selectedArc = d3
       .arc()
       .innerRadius(100)
-      .outerRadius(radius + 30);
+      .outerRadius(radius + 10);
 
     // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
     svg

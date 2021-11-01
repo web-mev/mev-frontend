@@ -1,0 +1,11 @@
+<div class="instruction">
+ 
+    Below are public datasets that we have curated for use within WebMeV. 
+
+ <div class="cardList">
+    <a *ngFor="let pd of publicDatasets"
+    class="cardList__item card" matRipple matRippleColor="rgba(158, 158, 158, 0.22)">
+        <public-dataset-card [pd]="pd"></public-dataset-card>
+    </a>
+  </div>
+</div>

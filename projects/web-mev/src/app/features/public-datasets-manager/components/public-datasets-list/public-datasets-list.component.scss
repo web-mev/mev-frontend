@@ -1,0 +1,48 @@
+.instruction {
+  font-size: 14px;
+  padding-top: 10px;
+}
+
+.mat-header-cell {
+  background: #eeeeee;
+}
+
+.mat-cell a {
+  color: #03a9f4;
+  text-decoration: underline;
+}
+
+.no-results {
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  font-size: 12px;
+}
+
+.cardList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.cardList > * {
+  box-sizing: border-box;
+}
+
+.cardList__item {
+  margin: 15px;
+  flex: 0 1 calc(33.3% - 32px);
+}
+
+@media screen and (max-width: 959px) {
+  .cardList__item {
+    flex: 0 1 calc(50% - 32px);
+  }
+}
+
+@media screen and (max-width: 599px) {
+  .cardList {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+}

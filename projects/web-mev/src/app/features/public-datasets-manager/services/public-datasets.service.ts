@@ -28,4 +28,20 @@ export class PublicDatasetService {
       )
     );
   }
+
+  makeSolrQuery(url_suffix: string): Observable<any> {
+    let url = this.API_URL + 'query/' + url_suffix;
+    return this.httpClient.get(url)
+  }
+
+  createDataset(datasetTag: string, payload: any): Observable<any>{
+
+    let url = this.API_URL + `create/${datasetTag}/`;
+    return <Observable<any>>(
+      this.httpClient.post(
+        url,
+        payload
+      )
+    );
+  }
 }

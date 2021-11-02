@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { PublicDataset } from '../../models/public-dataset';
 
 @Component({
@@ -9,6 +9,7 @@ import { PublicDataset } from '../../models/public-dataset';
 export class PublicDatasetCardComponent implements OnInit {
 
   @Input() pd?: PublicDataset;
+  @Output() chooseDatasetEvent = new EventEmitter<string>();
 
   constructor() { }
 
@@ -16,7 +17,7 @@ export class PublicDatasetCardComponent implements OnInit {
   }
 
   viewDataset(datasetTag: string){
-    console.log('look at ' + datasetTag);
+    this.chooseDatasetEvent.emit(datasetTag);
   }
 
 }

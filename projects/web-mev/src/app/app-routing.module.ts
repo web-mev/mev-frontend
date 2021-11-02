@@ -5,7 +5,6 @@ import { RegisterComponent } from '@app/features/user/register/register.componen
 import { RequestPasswordResetComponent } from '@app/features/user/request-password-reset/request-password-reset.component';
 import { TutorialComponent } from '@features/tutorial/tutorial.component';
 import { AuthGuardService } from '@core/auth/auth-guard.service';
-import { WorkareaComponent } from '@features/workarea/workarea.component';
 import { ResponsePasswordResetComponent } from './features/user/response-password-reset/response-password-reset.component';
 import { PasswordChangeComponent } from './features/user/password-change/password-change.component';
 
@@ -26,7 +25,10 @@ const routes: Routes = [
   },
   {
     path: 'workarea',
-    component: WorkareaComponent,
+    loadChildren: () =>
+      import('./features/workarea/workarea.module').then(
+        m => m.WorkareaModule
+      ),
     canActivate: [AuthGuardService]
   },
   {

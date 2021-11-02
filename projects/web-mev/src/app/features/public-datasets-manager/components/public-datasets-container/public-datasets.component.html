@@ -1,0 +1,12 @@
+<ng-container *ngIf="chosenDataset === ''">
+    <mev-public-datasets-list (datasetSelectedEvent)="setDataset($event)"></mev-public-datasets-list>
+</ng-container>
+
+    <div *ngIf="chosenDataset !== ''" id="go-back" (click)="backToBrowse()">
+        <mat-icon class="nav__icon" aria-label="Back to datasets">reply</mat-icon>
+        <span class="nav__text">Back to browsing datasets</span>
+    </div>
+
+<ng-container *ngIf="chosenDataset === 'tcga-rnaseq'">
+    <tcga-rnaseq-explorer></tcga-rnaseq-explorer>
+</ng-container>

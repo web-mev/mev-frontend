@@ -5,7 +5,7 @@
  <div class="cardList">
     <a *ngFor="let pd of publicDatasets"
     class="cardList__item card" matRipple matRippleColor="rgba(158, 158, 158, 0.22)">
-        <public-dataset-card [pd]="pd"></public-dataset-card>
+        <public-dataset-card [pd]="pd" (chooseDatasetEvent)="chooseDataset($event)"></public-dataset-card>
     </a>
   </div>
 </div>

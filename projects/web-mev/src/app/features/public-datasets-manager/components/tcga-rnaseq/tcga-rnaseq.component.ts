@@ -4,7 +4,8 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef
   } from '@angular/core';
-  
+import { NotificationService } from '@core/notifications/notification.service';
+import { forkJoin } from 'rxjs';
 import { PublicDatasetService } from '../../services/public-datasets.service';
 
   @Component({
@@ -21,14 +22,15 @@ import { PublicDatasetService } from '../../services/public-datasets.service';
     tissue_list = [];
     tissue_dict = {};
     selectedNames = [];
+    isWaiting = false;
 
     constructor(
         private cdRef: ChangeDetectorRef,
-        public pdService: PublicDatasetService
+        public pdService: PublicDatasetService,
+        private readonly notificationService: NotificationService
       ) {}
 
     ngOnInit(): void {
-        console.log('in rnaseq init...');
 
         // get the faceted view of the TCGA cancer types (and how
         // many samples are in each)
@@ -37,7 +39,7 @@ import { PublicDatasetService } from '../../services/public-datasets.service';
             data => {
                 this.tcga_types_list = [];
                 this.tcga_type_dict = {}
-                console.log('Received:');
+
                 // solr returns a list with the facets interleaved with the 
                 // counts in a single list
                 let facet_list = data['facet_counts']['facet_fields']['project_id'];
@@ -49,7 +51,6 @@ import { PublicDatasetService } from '../../services/public-datasets.service';
                         count: facet_list[2*i + 1]
                     })
                 }
-                console.log(this.tcga_type_dict);
                 this.cdRef.markForCheck();
             }
         );
@@ -59,7 +60,6 @@ import { PublicDatasetService } from '../../services/public-datasets.service';
             data => {
                 this.tissue_list = [];
                 this.tissue_dict = {};
-                console.log('Received:');
                 // solr returns a list with the facets interleaved with the 
                 // counts in a single list
                 let facet_list = data['facet_counts']['facet_fields']['tissue_or_organ_of_origin'];
@@ -71,7 +71,6 @@ import { PublicDatasetService } from '../../services/public-datasets.service';
                         count: facet_list[2*i + 1]
                     })
                 }
-                console.log(this.tissue_dict);
                 this.cdRef.markForCheck();
             }
         );
@@ -79,65 +78,74 @@ import { PublicDatasetService } from '../../services/public-datasets.service';
     }
 
     checkboxSelection(event, name: string) {
-        console.log(event);
-        console.log('name: ' + name);
         if(event['checked']){
-            console.log('Check!');
             this.selectedNames.push(name);
         } else {
-            console.log('NOT!');
             let index = this.selectedNames.indexOf(name);
             if (index > -1) {
                 this.selectedNames.splice(index, 1);
             }
         }
-        console.log('list: ' + this.selectedNames);
     }
 
     // Called when the user toggles between types so that we don't
     // combine selections based on both tcga types and tissue types.
     onTypeToggle(){
-
         this.selectedNames = [];
     }
 
-    private getSampleIds(url_suffix: string){
-        let id_list = [];
-        this.pdService.makeSolrQuery(url_suffix).subscribe(
-            data => {
-                let doc_list = data['response']['docs'];
-                for(let i=0; i<doc_list.length; i++){
-                    id_list.push(doc_list[i]['id']);
-                }
-            }
-        );
-        console.log(id_list);
-        return id_list;
-    }
-
+    /**
+     * Used to query the samples in the selected types
+     * and initiate the creation of the count matrix 
+     * + annotation file
+     */
     createDataset(dataType: string){
-        console.log('here~');
-        console.log(dataType);
+        this.isWaiting = true;
+        this.cdRef.markForCheck();
         let url_suffix = '';
-        let payload = {};
+        // will have TCGA type (or tissue) addressing an Observable
+        let $observable_dict = {};
         if(dataType === 'byType'){
             for(let i in this.selectedNames){
                 let tcga_id = this.selectedNames[i];
                 let count = this.tcga_type_dict[tcga_id];
                 url_suffix = this.datasetTag + `?q=project_id:${tcga_id}&rows=${count}&fl=id`;
-                payload[tcga_id] = this.getSampleIds(url_suffix);
+                $observable_dict[tcga_id] = this.pdService.makeSolrQuery(url_suffix);
             }
         } else if(dataType === 'byTissue'){
             for(let i in this.selectedNames){
                 let tissue_name = this.selectedNames[i];
                 let count = this.tissue_dict[tissue_name];
                 url_suffix = this.datasetTag + `?q=tissue_or_organ_of_origin:${tissue_name}&rows=${count}&fl=id`;
+                $observable_dict[tissue_name] = this.pdService.makeSolrQuery(url_suffix);
             }
         }
-        console.log(payload);
-        let final_payload = {
-            'filters': payload
-        };
-        this.pdService.createDataset('tcga-rnaseq',final_payload).subscribe();
+        // forkJoin forces all the observables to complete and then takes
+        // their results. If we don't do this, the subsequent request to
+        // create the dataset can be 'waiting' for the list of sample IDs
+        // and hence the request for dataset creation will be incomplete/invalid.
+        forkJoin($observable_dict).subscribe(
+            results => {
+                let filter_payload = {};
+                let doc_list = [];
+                Object.keys(results).forEach(key => {
+                    doc_list = results[key]['response']['docs'];
+                    filter_payload[key] = doc_list.map(doc => doc['id']);
+                });
+                let final_payload = {
+                    'filters': filter_payload
+                };
+                this.pdService.createDataset('tcga-rnaseq',final_payload).subscribe(
+                    results => {
+                        console.log(results);
+                        this.isWaiting = false;
+                        this.cdRef.markForCheck();
+                        this.notificationService.success('Your files are now available.' +
+                            ' Note that you may need to refresh the file listing.'
+                        );
+                    }
+                );  
+            }    
+        );
     }
   }

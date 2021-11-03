@@ -1,9 +1,11 @@
 <div class="header">
     Browse and create TCGA RNA-seq data
 </div>
-
+<mev-spinner-overlay *ngIf="isWaiting"></mev-spinner-overlay>
 <p>
-   Select based on either the TCGA project or by tissue type
+   Select based on either the TCGA project or by tissue type. After selecting one or more 
+   groups, click the "Create dataset" button to create a new count matrix and annotation
+   file. 
 </p>
 
 <div class="btn-panel">

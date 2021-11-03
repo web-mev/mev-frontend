@@ -25,12 +25,10 @@ export class PublicDatasetsListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log('in list init...');
     this.loadData();
   }
 
   public loadData() {
-    console.log('load...');
     this.pdService.getPublicDatasets().subscribe(
       data => {
         this.publicDatasets = data;
@@ -40,7 +38,6 @@ export class PublicDatasetsListComponent implements OnInit {
   }
 
   chooseDataset(datasetTag: string) {
-    console.log('emit' + datasetTag + ' in list component');
     this.datasetSelectedEvent.emit(datasetTag);
   }
 

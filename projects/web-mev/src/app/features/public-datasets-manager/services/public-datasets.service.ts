@@ -29,6 +29,16 @@ export class PublicDatasetService {
     );
   }
 
+  getPublicDatasetDetails(datasetTag: string): Observable<PublicDataset>{
+    let url = this.API_URL + datasetTag;
+    return <Observable<PublicDataset>>(this.httpClient
+      .get(url)
+      .pipe(
+        map((data: any) =>  this.adapter.adapt(data))
+      )
+    );
+  }
+
   makeSolrQuery(url_suffix: string): Observable<any> {
     let url = this.API_URL + 'query/' + url_suffix;
     return this.httpClient.get(url)

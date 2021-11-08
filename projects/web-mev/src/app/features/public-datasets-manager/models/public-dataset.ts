@@ -6,7 +6,8 @@ export class PublicDataset {
     public public_name: string,
     public created: Date,
     public description: string,
-    public tag: string
+    public tag: string,
+    public additional_metadata: object
   ) {}
 }
 
@@ -20,7 +21,8 @@ export class PublicDatasetAdapter {
       item.public_name, 
       new Date(item.created), 
       item.description,
-      item.index_name
+      item.index_name,
+      item.additional_metadata
       );
   }
 }

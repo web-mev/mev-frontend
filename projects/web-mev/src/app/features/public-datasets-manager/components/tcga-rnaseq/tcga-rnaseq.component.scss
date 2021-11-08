@@ -3,6 +3,10 @@
     font-weight: 500;
 }
 
+.explain {
+  margin-top:20px;
+}
+
 .mat-header-cell {
     background: #eeeeee;
   }
@@ -24,6 +28,10 @@
     justify-content: flex-start;
   }
   
+  .tcga-card .italicized{
+    font-style: italic;
+  }
+
   .cardList > * {
     box-sizing: border-box;
   }
@@ -62,5 +70,5 @@
   }
 
   .btn-panel {
-      margin:10px;
+      margin:20px 0 20px 0;
   }

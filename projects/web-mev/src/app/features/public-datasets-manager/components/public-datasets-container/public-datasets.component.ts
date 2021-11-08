@@ -14,11 +14,9 @@ export class PublicDatasetsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log('in public datasets container init...');
   }
 
   setDataset(datasetTag: string){
-      console.log('setting dataset in container coimponent');
     this.chosenDataset = datasetTag;
   }
 

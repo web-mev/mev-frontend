@@ -1,5 +1,7 @@
-<div *ngIf="pd">
- <mat-card class="pd-card">
+<div *ngIf="pd" class="cardList">
+ <mat-card class="cardList__item card pd-card"
+ matRipple matRippleColor="rgba(158, 158, 158, 0.22)"
+ >
       <mat-card-title class="card-title">{{pd.public_name}}</mat-card-title>
     <mat-card-content>
       <div [innerHTML]="pd.description"></div>

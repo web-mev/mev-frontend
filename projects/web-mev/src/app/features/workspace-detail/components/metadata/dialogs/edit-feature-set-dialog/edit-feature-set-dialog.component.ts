@@ -125,7 +125,18 @@ export class EditFeatureSetDialogComponent implements OnInit {
   confirmEdit() {
     const name = this.observationForm.value.observationSetName;
     const color = this.observationForm.value.observationSetColor;
-    const samples = this.selection.selected;
+
+    // if there are too many observations/samples in the workspace, then we disable the ability
+    // to manually select/unselect. In that case, we need to preserve the original set of Observations.
+    // Below, we use the this.allObservationSetsDS (which is null if manual editing is disabled) to
+    // guide whether we take the elements from the table (this.selection.selected) OR keep the original
+    // elements, which is contained in this.data.selectedElements
+    let samples;
+    if(this.allObservationSetsDS){
+      samples = this.selection.selected;
+    } else {
+      samples = this.data.selectedElements;
+    }
     const observationSet = {
       name: name,
       color: color,

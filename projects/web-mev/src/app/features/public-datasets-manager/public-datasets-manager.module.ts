@@ -5,6 +5,7 @@ import { PublicDatasetsManagerRoutingModule } from './public-datasets-manager-ro
 import { PublicDatasetsListComponent } from './components/public-datasets-list/public-datasets-list.component';
 import { PublicDatasetCardComponent } from './components/public-dataset-card/public-dataset-card.component';
 import { TcgaRnaseqComponent } from './components/tcga-rnaseq/tcga-rnaseq.component';
+import { TargetRnaseqComponent } from './components/target-rnaseq/target-rnaseq.component';
 import { SharedModule } from '@app/shared/shared.module';
 import { PublicDatasetsComponent } from './components/public-datasets-container/public-datasets.component'
 
@@ -13,7 +14,8 @@ import { PublicDatasetsComponent } from './components/public-datasets-container/
     PublicDatasetsComponent,
     PublicDatasetsListComponent,
     PublicDatasetCardComponent,
-    TcgaRnaseqComponent
+    TcgaRnaseqComponent,
+    TargetRnaseqComponent
   ],
   exports: [
     PublicDatasetsComponent

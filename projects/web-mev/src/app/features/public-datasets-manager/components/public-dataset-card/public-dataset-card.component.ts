@@ -17,6 +17,7 @@ export class PublicDatasetCardComponent implements OnInit {
   }
 
   viewDataset(datasetTag: string){
+    console.log('view ' + datasetTag);
     this.chooseDatasetEvent.emit(datasetTag);
   }
 

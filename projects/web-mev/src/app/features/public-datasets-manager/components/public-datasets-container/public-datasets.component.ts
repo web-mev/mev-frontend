@@ -17,6 +17,7 @@ export class PublicDatasetsComponent implements OnInit {
   }
 
   setDataset(datasetTag: string){
+    console.log('Set dataset to ' + datasetTag);
     this.chosenDataset = datasetTag;
   }
 

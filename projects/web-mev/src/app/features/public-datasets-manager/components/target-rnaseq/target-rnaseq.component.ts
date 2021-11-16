@@ -9,14 +9,14 @@ import { PublicDatasetService } from '../../services/public-datasets.service';
 import {GdcRnaseqComponent} from '../gdc_base/gdc-base.component';
 
   @Component({
-    selector: 'tcga-rnaseq-explorer',
-    templateUrl: './tcga-rnaseq.component.html',
-    styleUrls: ['../gdc_base/gdc-base.component.scss', './tcga-rnaseq.component.scss'],
+    selector: 'target-rnaseq-explorer',
+    templateUrl: './target-rnaseq.component.html',
+    styleUrls: ['../gdc_base/gdc-base.component.scss','./target-rnaseq.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
   })
-  export class TcgaRnaseqComponent extends GdcRnaseqComponent implements OnInit{
-    datasetTag = 'tcga-rnaseq';
-    name_map_key = 'tcga_type_to_name_map'
+  export class TargetRnaseqComponent extends GdcRnaseqComponent implements OnInit{
+    datasetTag = 'target-rnaseq';
+    name_map_key = 'target_type_to_name_map'
 
     constructor(
         public cdRef: ChangeDetectorRef,
@@ -28,6 +28,7 @@ import {GdcRnaseqComponent} from '../gdc_base/gdc-base.component';
 
 
     ngOnInit(): void {
+        console.log('init TARGET...');
         this.fetchData(this.datasetTag, this.name_map_key);
     }
 

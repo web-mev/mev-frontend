@@ -19,6 +19,7 @@ import { AddAnnotationDialogComponent } from './dialogs/add-annotation-dialog/ad
 import { WorkspaceResource } from '../../models/workspace-resource';
 import { WorkspaceDetailService } from '../../services/workspace-detail.service';
 import { AddObservationSetDialogComponent } from './dialogs/add-observation-set-dialog/add-observation-set-dialog.component';
+import { AddFeatureSetDialogComponent } from './dialogs/add-feature-set-dialog/add-feature-set-dialog.component';
 import { DeleteSetDialogComponent } from './dialogs/delete-set-dialog/delete-set-dialog.component';
 import { ViewSetDialogComponent } from './dialogs/view-set-dialog/view-set-dialog.component';
 import { LclStorageService } from '@app/core/local-storage/lcl-storage.service';
@@ -145,6 +146,17 @@ export class MetadataComponent implements OnInit {
         );
       }
     });
+  }
+
+  onCreateFeatureSet() {
+      const dialogRef = this.dialog.open(AddFeatureSetDialogComponent);
+      dialogRef.afterClosed().subscribe(newFeatureSet => {
+        if (newFeatureSet) {
+          console.log('new feature set:');
+          console.log(newFeatureSet);
+          this.metadataService.addCustomSet(newFeatureSet);
+        }
+      });
   }
 
   /**

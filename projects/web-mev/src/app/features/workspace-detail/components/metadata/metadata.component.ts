@@ -115,7 +115,6 @@ export class MetadataComponent implements OnInit {
         );
         this.generateObservationSetsVisualization(); // generate custom observation visualization
         this.cd.markForCheck();
-        console.log('in the callback for the storage subscription');
         this.selection.clear();
       });
   }
@@ -152,8 +151,6 @@ export class MetadataComponent implements OnInit {
       const dialogRef = this.dialog.open(AddFeatureSetDialogComponent);
       dialogRef.afterClosed().subscribe(newFeatureSet => {
         if (newFeatureSet) {
-          console.log('new feature set:');
-          console.log(newFeatureSet);
           this.metadataService.addCustomSet(newFeatureSet);
         }
       });
@@ -171,8 +168,6 @@ export class MetadataComponent implements OnInit {
       .pipe(
         delay(500), // delay for spinner
         switchMap(metadata => {
-          console.log('META:');
-          console.log(metadata);
           this.observationCount = metadata['count']
           if(this.observationCount > this.maxObservations){
             let msg = `Your workspace has greater than ${this.maxObservations} observations/samples
@@ -293,6 +288,85 @@ export class MetadataComponent implements OnInit {
    * For feature sets only names can be updated
    */
   onEditCustomSet(set) {
+    if(set.type === CustomSetType.ObservationSet){
+      this.editObservationSet(set);
+    } else {
+      this.editFeatureSet(set);
+    }
+  }
+
+  editFeatureSet(set){
+    this.isWait = true;
+
+    this.globalObservationSets = [];
+    this.service
+      .getWorkspaceMetadataObservations(this.workspaceId, this.maxObservations)
+      .pipe(
+        delay(500), // delay for spinner
+        switchMap(metadata => {
+          if (metadata?.results) {
+            if(metadata['count'] > this.maxObservations){
+              this.tooManyObservations = true;
+            } else {
+              this.tooManyObservations = false;
+            }
+            this.observationCount = metadata['count']
+            this.globalObservationSets = metadata.results;
+          }
+          const globalObservationSetsDS = new MatTableDataSource(
+            this.globalObservationSets
+          );
+
+          // the list of columns for pop-up table to select samples for custom observation sets
+          const observationSetsDisplayedColumns = ['select', 'id'];
+          const observationSetsDisplayedColumnsAttributesOnly = [];
+
+          const obsSetsWithAttr = this.globalObservationSets.filter(
+            set => 'attributes' in set
+          );
+          const attributes = obsSetsWithAttr.length
+            ? obsSetsWithAttr[0].attributes
+            : {};
+
+          for (const attribute in attributes) {
+            if (attributes.hasOwnProperty(attribute)) {
+              observationSetsDisplayedColumns.push(attribute);
+              observationSetsDisplayedColumnsAttributesOnly.push(attribute);
+            }
+          }
+
+          let ds = [];
+          for(let element_idx in set.elements){
+            let element = set.elements[element_idx];
+            ds.push({
+              id:element.id,
+              attributes: {}
+            })
+          }
+          this.isWait = false;
+          const dialogRef = this.dialog.open(EditFeatureSetDialogComponent, {
+            data: {
+              name: set.name,
+              color: set.color,
+              type: set.type,
+              selectedElements: set.elements,
+              observationSetDS: this.tooManyObservations? null : new MatTableDataSource(ds),
+              observationSetsDisplayedColumns: observationSetsDisplayedColumns,
+              observationSetsDisplayedColumnsAttributesOnly: observationSetsDisplayedColumnsAttributesOnly
+            }
+          });
+          return dialogRef.afterClosed();
+        }),
+        takeUntil(this.onDestroy)
+      )
+      .subscribe(updatedObservationSet => {
+        if (updatedObservationSet) {
+          this.metadataService.updateCustomSet(updatedObservationSet, set.name);
+        }
+      });
+  }
+
+  editObservationSet(set){
     this.isWait = true;
     this.globalObservationSets = [];
     this.service
@@ -430,7 +504,6 @@ export class MetadataComponent implements OnInit {
       this.isAllSelected() ?
           this.selection.clear() :
           this.customSetDS.data.forEach(row => this.selection.select(row));
-          console.log('selected(master): ', this.selection.selected);
     } else {
       return null;
     }
@@ -583,7 +656,6 @@ export class MetadataComponent implements OnInit {
           // was used to collect the info that will now be 
           // handled on the server side. After that (if successful)
           // we will add it to the client side sets.
-          console.log('new set:', data);
           if (data) {
             let payload = tmpPayload;
             payload['sets'] = data['ordering'];

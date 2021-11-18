@@ -55,7 +55,7 @@ export class EditFeatureSetDialogComponent implements OnInit {
       ]
     });
 
-    if (this.isObservationSet) {
+    //if (this.isObservationSet) {
       this.allObservationSetsDS = this.data.observationSetDS;
       this.observationSetsDisplayedColumns = this.data.observationSetsDisplayedColumns;
       this.observationSetsDisplayedColumnsAttributesOnly = this.data.observationSetsDisplayedColumnsAttributesOnly;
@@ -70,11 +70,11 @@ export class EditFeatureSetDialogComponent implements OnInit {
             this.selection.select(row);
           });
       }
-    }
+    //}
   }
 
   ngAfterViewInit() {
-    if (this.isObservationSet && this.allObservationSetsDS) {
+    if (this.allObservationSetsDS) {
       this.allObservationSetsDS.paginator = this.paginator;
     }
   }
@@ -131,30 +131,37 @@ export class EditFeatureSetDialogComponent implements OnInit {
     // Below, we use the this.allObservationSetsDS (which is null if manual editing is disabled) to
     // guide whether we take the elements from the table (this.selection.selected) OR keep the original
     // elements, which is contained in this.data.selectedElements
-    let samples;
-    if(this.allObservationSetsDS){
-      samples = this.selection.selected;
-    } else {
-      samples = this.data.selectedElements;
-    }
+    let samples = this.selection.selected;
+    // if(this.allObservationSetsDS){
+    //   samples = this.selection.selected;
+    // } else {
+    //   samples = this.data.selectedElements;
+    // }
     const observationSet = {
       name: name,
       color: color,
       type: this.customSetType,
+      elements: samples,
       multiple: true
     };
 
     // for Feature sets users can't update sample list
-    if (this.customSetType === CustomSetType.ObservationSet) {
-      observationSet['elements'] = samples;
-    }
+    // if (this.customSetType === CustomSetType.ObservationSet) {
+    //   observationSet['elements'] = samples;
+    // }
     this.dialogRef.close(observationSet);
   }
 
   /**
    * Filtering observations by name
    */
-  applyFilter(filterValue: string) {
+  applyObservationFilter(filterValue: string) {
+    filterValue = filterValue.trim();
+    filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+    this.allObservationSetsDS.filter = filterValue;
+  }
+
+  applyFeatureFilter(filterValue: string) {
     filterValue = filterValue.trim();
     filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
     this.allObservationSetsDS.filter = filterValue;

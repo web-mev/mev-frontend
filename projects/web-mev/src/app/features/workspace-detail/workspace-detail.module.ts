@@ -21,7 +21,7 @@ import { DeleteSetDialogComponent } from './components/metadata/dialogs/delete-s
 import { ViewSetDialogComponent } from './components/metadata/dialogs/view-set-dialog/view-set-dialog.component';
 import { SatPopoverModule } from '@ncstate/sat-popover';
 import { AnalysisModule } from '../analysis/analysis.module';
-import { EditSetDialogComponent } from './components/metadata/dialogs/edit-feature-set-dialog/edit-feature-set-dialog.component';
+import { EditSetDialogComponent } from './components/metadata/dialogs/edit-set-dialog/edit-set-dialog.component';
 import { EditDialogComponent } from './components/dialogs/edit-dialog/edit-dialog/edit-dialog.component';
 import { ViewInfoDialogComponent } from './components/metadata/dialogs/view-info-dialog/view-info-dialog.component';
 import { SetDifferenceDialogComponent } from './components/metadata/dialogs/set-difference-dialog/set-difference-dialog.component';

@@ -24,7 +24,7 @@ import { DeleteSetDialogComponent } from './dialogs/delete-set-dialog/delete-set
 import { ViewSetDialogComponent } from './dialogs/view-set-dialog/view-set-dialog.component';
 import { LclStorageService } from '@app/core/local-storage/lcl-storage.service';
 import { MetadataService } from '@app/core/metadata/metadata.service';
-import { EditSetDialogComponent } from './dialogs/edit-feature-set-dialog/edit-feature-set-dialog.component';
+import { EditSetDialogComponent } from './dialogs/edit-set-dialog/edit-set-dialog.component';
 import { ViewInfoDialogComponent } from './dialogs/view-info-dialog/view-info-dialog.component';
 import { CustomSet, CustomSetType } from '@app/_models/metadata';
 import { NotificationService } from '@app/core/core.module';

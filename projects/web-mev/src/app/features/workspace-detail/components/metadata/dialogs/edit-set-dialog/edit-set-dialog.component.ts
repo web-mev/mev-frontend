@@ -19,9 +19,9 @@ import { CustomSetType } from '@app/_models/metadata';
  * For Feature sets the user can update name
  */
 @Component({
-  selector: 'mev-edit-feature-set-dialog',
-  templateUrl: './edit-feature-set-dialog.component.html',
-  styleUrls: ['./edit-feature-set-dialog.component.scss'],
+  selector: 'mev-edit-set-dialog',
+  templateUrl: './edit-set-dialog.component.html',
+  styleUrls: ['./edit-set-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class EditSetDialogComponent implements OnInit {

@@ -24,7 +24,7 @@ import { CustomSetType } from '@app/_models/metadata';
   styleUrls: ['./edit-feature-set-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default
 })
-export class EditFeatureSetDialogComponent implements OnInit {
+export class EditSetDialogComponent implements OnInit {
   selection = new SelectionModel(true, []);
   customSetType: string;
   isObservationSet = true;
@@ -37,7 +37,7 @@ export class EditFeatureSetDialogComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    public dialogRef: MatDialogRef<EditFeatureSetDialogComponent>,
+    public dialogRef: MatDialogRef<EditSetDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 

@@ -24,7 +24,7 @@ import { DeleteSetDialogComponent } from './dialogs/delete-set-dialog/delete-set
 import { ViewSetDialogComponent } from './dialogs/view-set-dialog/view-set-dialog.component';
 import { LclStorageService } from '@app/core/local-storage/lcl-storage.service';
 import { MetadataService } from '@app/core/metadata/metadata.service';
-import { EditFeatureSetDialogComponent } from './dialogs/edit-feature-set-dialog/edit-feature-set-dialog.component';
+import { EditSetDialogComponent } from './dialogs/edit-feature-set-dialog/edit-feature-set-dialog.component';
 import { ViewInfoDialogComponent } from './dialogs/view-info-dialog/view-info-dialog.component';
 import { CustomSet, CustomSetType } from '@app/_models/metadata';
 import { NotificationService } from '@app/core/core.module';
@@ -296,74 +296,31 @@ export class MetadataComponent implements OnInit {
   }
 
   editFeatureSet(set){
-    this.isWait = true;
 
-    this.globalObservationSets = [];
-    this.service
-      .getWorkspaceMetadataObservations(this.workspaceId, this.maxObservations)
-      .pipe(
-        delay(500), // delay for spinner
-        switchMap(metadata => {
-          if (metadata?.results) {
-            if(metadata['count'] > this.maxObservations){
-              this.tooManyObservations = true;
-            } else {
-              this.tooManyObservations = false;
-            }
-            this.observationCount = metadata['count']
-            this.globalObservationSets = metadata.results;
-          }
-          const globalObservationSetsDS = new MatTableDataSource(
-            this.globalObservationSets
-          );
-
-          // the list of columns for pop-up table to select samples for custom observation sets
-          const observationSetsDisplayedColumns = ['select', 'id'];
-          const observationSetsDisplayedColumnsAttributesOnly = [];
-
-          const obsSetsWithAttr = this.globalObservationSets.filter(
-            set => 'attributes' in set
-          );
-          const attributes = obsSetsWithAttr.length
-            ? obsSetsWithAttr[0].attributes
-            : {};
-
-          for (const attribute in attributes) {
-            if (attributes.hasOwnProperty(attribute)) {
-              observationSetsDisplayedColumns.push(attribute);
-              observationSetsDisplayedColumnsAttributesOnly.push(attribute);
-            }
-          }
-
-          let ds = [];
-          for(let element_idx in set.elements){
-            let element = set.elements[element_idx];
-            ds.push({
-              id:element.id,
-              attributes: {}
-            })
-          }
-          this.isWait = false;
-          const dialogRef = this.dialog.open(EditFeatureSetDialogComponent, {
-            data: {
-              name: set.name,
-              color: set.color,
-              type: set.type,
-              selectedElements: set.elements,
-              observationSetDS: this.tooManyObservations? null : new MatTableDataSource(ds),
-              observationSetsDisplayedColumns: observationSetsDisplayedColumns,
-              observationSetsDisplayedColumnsAttributesOnly: observationSetsDisplayedColumnsAttributesOnly
-            }
-          });
-          return dialogRef.afterClosed();
-        }),
-        takeUntil(this.onDestroy)
-      )
-      .subscribe(updatedObservationSet => {
-        if (updatedObservationSet) {
-          this.metadataService.updateCustomSet(updatedObservationSet, set.name);
-        }
-      });
+    let ds = [];
+    for(let element_idx in set.elements){
+      let element = set.elements[element_idx];
+      ds.push({
+        id:element.id,
+        attributes: {}
+      })
+    }
+    const dialogRef = this.dialog.open(EditSetDialogComponent, {
+      data: {
+        name: set.name,
+        color: set.color,
+        type: set.type,
+        selectedElements: set.elements,
+        observationSetDS: new MatTableDataSource(ds),
+        observationSetsDisplayedColumns: ['select', 'id'],
+        observationSetsDisplayedColumnsAttributesOnly: []
+      }
+    });
+    dialogRef.afterClosed().subscribe(updatedObservationSet => {
+      if (updatedObservationSet) {
+        this.metadataService.updateCustomSet(updatedObservationSet, set.name);
+      }
+    });
   }
 
   editObservationSet(set){
@@ -406,7 +363,7 @@ export class MetadataComponent implements OnInit {
           }
 
           this.isWait = false;
-          const dialogRef = this.dialog.open(EditFeatureSetDialogComponent, {
+          const dialogRef = this.dialog.open(EditSetDialogComponent, {
             data: {
               name: set.name,
               color: set.color,

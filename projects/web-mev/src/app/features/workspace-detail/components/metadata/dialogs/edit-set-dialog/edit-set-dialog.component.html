@@ -9,24 +9,24 @@
         </p>
     </ng-template>
 
-    <form class="mat-dialog-content" (ngSubmit)="submit" [formGroup]="observationForm">
+    <form class="mat-dialog-content" (ngSubmit)="submit" [formGroup]="editingForm">
         <div class="form">
             <mat-form-field class="form-control" color="accent">
                 <mat-label>Enter {{ customSetType | lowercase}} name</mat-label>
-                <input matInput formControlName=observationSetName name=observationSetName>
+                <input matInput formControlName=customSetName name=customSetName>
             </mat-form-field>
 
             <mat-form-field class="form-control" color="accent">
                 <mat-label>Select your color for your set:</mat-label>
-                <input type="color" class="color-picker-input" matInput formControlName=observationSetColor
-                    name=observationSetColor>
+                <input type="color" class="color-picker-input" matInput formControlName=customSetColor
+                    name=customSetColor>
             </mat-form-field>
 
-            <div *ngIf="isObservationSet && !allObservationSetsDS">
+            <div *ngIf="isObservationSet && !setsUniverseDS">
                 Note that manual set editing has been disabled due to a large number of samples/observations
                in your workspace. You may still edit the name and color of the set above, however.
             </div>
-            <div *ngIf="isObservationSet && allObservationSetsDS">
+            <div *ngIf="isObservationSet && setsUniverseDS">
                 Select samples:
                 <div class="mat-elevation-z8">
                     <div class="filter-panel">
@@ -35,7 +35,7 @@
                         </mat-form-field>
                     </div>
 
-                    <table mat-table [dataSource]="allObservationSetsDS">
+                    <table mat-table [dataSource]="setsUniverseDS">
 
                         <ng-container matColumnDef="select">
                             <th mat-header-cell *matHeaderCellDef>
@@ -58,15 +58,15 @@
                         </ng-container>
 
                         <ng-container
-                            *ngFor="let attrCol of observationSetsDisplayedColumnsAttributesOnly; let colIndex = index"
+                            *ngFor="let attrCol of setsDisplayedColumnsAttributesOnly; let colIndex = index"
                             matColumnDef="{{attrCol}}">
                             <th mat-header-cell *matHeaderCellDef>{{ attrCol }}</th>
                             <td mat-cell *matCellDef="let element">
                                 {{ element.attributes[attrCol] ? element.attributes[attrCol].value : '' }}</td>
                         </ng-container>
 
-                        <tr mat-header-row *matHeaderRowDef="observationSetsDisplayedColumns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: observationSetsDisplayedColumns;"
+                        <tr mat-header-row *matHeaderRowDef="setsDisplayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: setsDisplayedColumns;"
                             (click)="selection.toggle(row)">
                         </tr>
                     </table>
@@ -84,7 +84,7 @@
                         </mat-form-field>
                     </div>
 
-                    <table mat-table [dataSource]="allObservationSetsDS">
+                    <table mat-table [dataSource]="setsUniverseDS">
 
                         <ng-container matColumnDef="select">
                             <th mat-header-cell *matHeaderCellDef>
@@ -107,15 +107,15 @@
                         </ng-container>
 
                         <ng-container
-                            *ngFor="let attrCol of observationSetsDisplayedColumnsAttributesOnly; let colIndex = index"
+                            *ngFor="let attrCol of setsDisplayedColumnsAttributesOnly; let colIndex = index"
                             matColumnDef="{{attrCol}}">
                             <th mat-header-cell *matHeaderCellDef>{{ attrCol }}</th>
                             <td mat-cell *matCellDef="let element">
                                 {{ element.attributes[attrCol] ? element.attributes[attrCol].value : '' }}</td>
                         </ng-container>
 
-                        <tr mat-header-row *matHeaderRowDef="observationSetsDisplayedColumns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: observationSetsDisplayedColumns;"
+                        <tr mat-header-row *matHeaderRowDef="setsDisplayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: setsDisplayedColumns;"
                             (click)="selection.toggle(row)">
                         </tr>
                     </table>
@@ -127,7 +127,7 @@
         </div>
         <div class="button-panel">
             <button mat-button [mat-dialog-close]="1" mat-raised-button color="accent" [type]="submit"
-                [disabled]="!observationForm.valid" (click)="confirmEdit()">Save</button>
+                [disabled]="!editingForm.valid" (click)="confirmEdit()">Save</button>
             <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
         </div>
     </form>

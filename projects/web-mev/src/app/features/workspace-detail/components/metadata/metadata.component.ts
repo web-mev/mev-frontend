@@ -311,9 +311,9 @@ export class MetadataComponent implements OnInit {
         color: set.color,
         type: set.type,
         selectedElements: set.elements,
-        observationSetDS: new MatTableDataSource(ds),
-        observationSetsDisplayedColumns: ['select', 'id'],
-        observationSetsDisplayedColumnsAttributesOnly: []
+        setDS: new MatTableDataSource(ds),
+        setsDisplayedColumns: ['select', 'id'],
+        setsDisplayedColumnsAttributesOnly: []
       }
     });
     dialogRef.afterClosed().subscribe(updatedObservationSet => {
@@ -345,8 +345,8 @@ export class MetadataComponent implements OnInit {
           );
 
           // the list of columns for pop-up table to select samples for custom observation sets
-          const observationSetsDisplayedColumns = ['select', 'id'];
-          const observationSetsDisplayedColumnsAttributesOnly = [];
+          const setsDisplayedColumns = ['select', 'id'];
+          const setsDisplayedColumnsAttributesOnly = [];
 
           const obsSetsWithAttr = this.globalObservationSets.filter(
             set => 'attributes' in set
@@ -357,8 +357,8 @@ export class MetadataComponent implements OnInit {
 
           for (const attribute in attributes) {
             if (attributes.hasOwnProperty(attribute)) {
-              observationSetsDisplayedColumns.push(attribute);
-              observationSetsDisplayedColumnsAttributesOnly.push(attribute);
+              setsDisplayedColumns.push(attribute);
+              setsDisplayedColumnsAttributesOnly.push(attribute);
             }
           }
 
@@ -369,9 +369,9 @@ export class MetadataComponent implements OnInit {
               color: set.color,
               type: set.type,
               selectedElements: set.elements,
-              observationSetDS: this.tooManyObservations? null : globalObservationSetsDS,
-              observationSetsDisplayedColumns: observationSetsDisplayedColumns,
-              observationSetsDisplayedColumnsAttributesOnly: observationSetsDisplayedColumnsAttributesOnly
+              setDS: this.tooManyObservations? null : globalObservationSetsDS,
+              setsDisplayedColumns: setsDisplayedColumns,
+              setsDisplayedColumnsAttributesOnly: setsDisplayedColumnsAttributesOnly
             }
           });
           return dialogRef.afterClosed();

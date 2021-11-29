@@ -16,9 +16,9 @@ import { RegisterComponent } from './features/user/register/register.component';
 import { TutorialComponent } from './features/tutorial/tutorial.component';
 import { YouTubePlayerModule } from '@angular/youtube-player';
 
-import { WorkareaComponent } from './features/workarea/workarea.component';
 import { FileManagerModule } from './features/file-manager/file-manager.module';
 import { WorkspaceManagerModule } from './features/workspace-manager/workspace-manager.module';
+import { PublicDatasetsManagerModule } from './features/public-datasets-manager/public-datasets-manager.module';
 import { TokenInterceptor } from '@core/interceptors/token-interceptor.interceptor';
 
 import { SharedModule } from '@app/shared/shared.module';
@@ -69,6 +69,7 @@ import {environment} from '../../src/environments/environment';
     // app
     FileManagerModule,
     WorkspaceManagerModule,
+    PublicDatasetsManagerModule,
     AppRoutingModule
   ],
   declarations: [
@@ -76,7 +77,6 @@ import {environment} from '../../src/environments/environment';
     LoginComponent,
     RegisterComponent,
     TutorialComponent,
-    WorkareaComponent,
     RequestPasswordResetComponent,
     ResponsePasswordResetComponent,
     PasswordChangeComponent

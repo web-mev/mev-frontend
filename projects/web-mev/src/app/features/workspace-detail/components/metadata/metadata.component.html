@@ -27,7 +27,10 @@
                   <mat-icon aria-label="Create an observation set">add</mat-icon>
                   Create an observation set
                 </button>
-      
+                <button mat-raised-button color="accent" (click)="onCreateFeatureSet()">
+                  <mat-icon aria-label="Create a feature set">add</mat-icon>
+                  Create a feature/gene set
+                </button>
                 <span 
                   [matTooltip]="'Add an annotation file to this workspace to incorporate annotations.'"
                   [matTooltipDisabled]="(workspaceResources| annotationFilesPipe)?.length > 0">

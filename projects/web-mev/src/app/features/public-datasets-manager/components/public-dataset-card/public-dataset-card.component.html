@@ -1,0 +1,14 @@
+<div *ngIf="pd" class="cardList">
+ <mat-card class="cardList__item card pd-card"
+ matRipple matRippleColor="rgba(158, 158, 158, 0.22)"
+ >
+      <mat-card-title class="card-title">{{pd.public_name}}</mat-card-title>
+    <mat-card-content>
+      <div [innerHTML]="pd.description"></div>
+    </mat-card-content>
+    <mat-card-footer>
+      <mat-icon fontSet="material-icons-outlined" title="Explore dataset" (click)="viewDataset(pd.tag)">
+        arrow_forward</mat-icon>
+  </mat-card-footer>
+  </mat-card>
+</div>

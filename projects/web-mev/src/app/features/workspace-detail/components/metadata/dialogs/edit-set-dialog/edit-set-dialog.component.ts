@@ -19,25 +19,25 @@ import { CustomSetType } from '@app/_models/metadata';
  * For Feature sets the user can update name
  */
 @Component({
-  selector: 'mev-edit-feature-set-dialog',
-  templateUrl: './edit-feature-set-dialog.component.html',
-  styleUrls: ['./edit-feature-set-dialog.component.scss'],
+  selector: 'mev-edit-set-dialog',
+  templateUrl: './edit-set-dialog.component.html',
+  styleUrls: ['./edit-set-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default
 })
-export class EditFeatureSetDialogComponent implements OnInit {
+export class EditSetDialogComponent implements OnInit {
   selection = new SelectionModel(true, []);
   customSetType: string;
   isObservationSet = true;
-  allObservationSetsDS;
-  observationForm: FormGroup;
+  setsUniverseDS;
+  editingForm: FormGroup;
   submitted = false;
-  observationSetsDisplayedColumns;
-  observationSetsDisplayedColumnsAttributesOnly;
+  setsDisplayedColumns;
+  setsDisplayedColumnsAttributesOnly;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(
     private formBuilder: FormBuilder,
-    public dialogRef: MatDialogRef<EditFeatureSetDialogComponent>,
+    public dialogRef: MatDialogRef<EditSetDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
@@ -47,35 +47,30 @@ export class EditFeatureSetDialogComponent implements OnInit {
     if (this.customSetType === CustomSetType.FeatureSet) {
       this.isObservationSet = false;
     }
-    this.observationForm = this.formBuilder.group({
-      observationSetName: [this.data.name, Validators.required],
-      observationSetColor: [
-        this.data.color,
-        [...(this.isObservationSet ? [Validators.required] : [])]
-      ]
+    this.editingForm = this.formBuilder.group({
+      customSetName: [this.data.name, Validators.required],
+      customSetColor: [this.data.color, Validators.required]
     });
 
-    if (this.isObservationSet) {
-      this.allObservationSetsDS = this.data.observationSetDS;
-      this.observationSetsDisplayedColumns = this.data.observationSetsDisplayedColumns;
-      this.observationSetsDisplayedColumnsAttributesOnly = this.data.observationSetsDisplayedColumnsAttributesOnly;
+    this.setsUniverseDS = this.data.setDS;
+    this.setsDisplayedColumns = this.data.setsDisplayedColumns;
+    this.setsDisplayedColumnsAttributesOnly = this.data.setsDisplayedColumnsAttributesOnly;
 
-      // this can be null if there were too many observations and we block manual editing of the set members
-      if(this.allObservationSetsDS){
-        this.allObservationSetsDS.data
-          .filter(el =>
-            this.data.selectedElements.some(selEl => selEl.id === el.id)
-          )
-          .forEach(row => {
-            this.selection.select(row);
-          });
-      }
+    // this can be null if there were too many observations and we block manual editing of the set members
+    if(this.setsUniverseDS){
+      this.setsUniverseDS.data
+        .filter(el =>
+          this.data.selectedElements.some(selEl => selEl.id === el.id)
+        )
+        .forEach(row => {
+          this.selection.select(row);
+        });
     }
   }
 
   ngAfterViewInit() {
-    if (this.isObservationSet && this.allObservationSetsDS) {
-      this.allObservationSetsDS.paginator = this.paginator;
+    if (this.setsUniverseDS) {
+      this.setsUniverseDS.paginator = this.paginator;
     }
   }
 
@@ -96,7 +91,7 @@ export class EditFeatureSetDialogComponent implements OnInit {
    */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.allObservationSetsDS.filteredData.length;
+    const numRows = this.setsUniverseDS.filteredData.length;
     return numSelected === numRows;
   }
 
@@ -106,7 +101,7 @@ export class EditFeatureSetDialogComponent implements OnInit {
   masterToggle() {
     this.isAllSelected()
       ? this.selection.clear()
-      : this.allObservationSetsDS.filteredData.forEach(row =>
+      : this.setsUniverseDS.filteredData.forEach(row =>
           this.selection.select(row)
         );
   }
@@ -115,7 +110,7 @@ export class EditFeatureSetDialogComponent implements OnInit {
    * Convenience getter for easy access to form fields
    */
   get f() {
-    return this.observationForm.controls;
+    return this.editingForm.controls;
   }
 
   /**
@@ -123,40 +118,37 @@ export class EditFeatureSetDialogComponent implements OnInit {
    *
    */
   confirmEdit() {
-    const name = this.observationForm.value.observationSetName;
-    const color = this.observationForm.value.observationSetColor;
+    const name = this.editingForm.value.customSetName;
+    const color = this.editingForm.value.customSetColor;
 
     // if there are too many observations/samples in the workspace, then we disable the ability
     // to manually select/unselect. In that case, we need to preserve the original set of Observations.
-    // Below, we use the this.allObservationSetsDS (which is null if manual editing is disabled) to
+    // Below, we use the this.setsUniverseDS (which is null if manual editing is disabled) to
     // guide whether we take the elements from the table (this.selection.selected) OR keep the original
     // elements, which is contained in this.data.selectedElements
-    let samples;
-    if(this.allObservationSetsDS){
-      samples = this.selection.selected;
-    } else {
-      samples = this.data.selectedElements;
-    }
-    const observationSet = {
+    const finalSet = {
       name: name,
       color: color,
       type: this.customSetType,
+      elements: this.selection.selected,
       multiple: true
     };
 
-    // for Feature sets users can't update sample list
-    if (this.customSetType === CustomSetType.ObservationSet) {
-      observationSet['elements'] = samples;
-    }
-    this.dialogRef.close(observationSet);
+    this.dialogRef.close(finalSet);
   }
 
   /**
    * Filtering observations by name
    */
-  applyFilter(filterValue: string) {
+  applyObservationFilter(filterValue: string) {
     filterValue = filterValue.trim();
     filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-    this.allObservationSetsDS.filter = filterValue;
+    this.setsUniverseDS.filter = filterValue;
+  }
+
+  applyFeatureFilter(filterValue: string) {
+    filterValue = filterValue.trim();
+    filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+    this.setsUniverseDS.filter = filterValue;
   }
 }

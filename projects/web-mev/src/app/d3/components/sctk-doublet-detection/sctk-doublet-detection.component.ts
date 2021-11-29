@@ -160,7 +160,6 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
   }
 
   initData(): void {
-    console.log(this.outputs);
     //this.resourceId = this.outputs['SctkDoubletFinder.doublet_ids'];
     this.resourceId = this.outputs[this.resourceIdName];
 
@@ -317,6 +316,8 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
     const height = outerHeight - this.margin.top - this.margin.bottom;
     const radius = Math.min(width, height) / 2 - 15;
     const _this = this;
+    let singletReference;
+    let doubletReference;
 
     const data = this.donutPlotData.reduce((a, { name, doublet_class }) => {
       a[doublet_class] = a[doublet_class] || 0;
@@ -407,17 +408,51 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
       })
       .on('click', function(event, d) {
         if (_this.customSampleSetClass) {
-          d3.select(this)
-            .transition()
-            .duration(1000)
-            .attr('d', arc);
-          _this.customSampleSetClass = null;
+          if (_this.customSampleSetClass == d.data[0]) {
+            d3.select(this)
+              .transition()
+              .duration(1000)
+              .attr('d', arc);
+            _this.customSampleSetClass = null;
+          } else {
+            d3.select(this)
+              .transition()
+              .duration(1000)
+              .attr('d', selectedArc);
+
+            if (_this.customSampleSetClass == 'singlet') {
+              d3.select(singletReference)
+                .transition()
+                .duration(1000)
+                .attr('d', arc);
+            } else if (_this.customSampleSetClass == 'doublet') {
+              d3.select(doubletReference)
+                .transition()
+                .duration(1000)
+                .attr('d', arc);
+            }
+
+            _this.customSampleSetClass = d.data[0];
+
+            if (!singletReference && _this.customSampleSetClass == 'singlet') {
+              singletReference = this;
+            }
+            if (!doubletReference && _this.customSampleSetClass == 'doublet') {
+              doubletReference = this;
+            }
+          }
         } else {
           d3.select(this)
             .transition()
             .duration(1000)
             .attr('d', selectedArc);
           _this.customSampleSetClass = d.data[0];
+          if (!singletReference && _this.customSampleSetClass == 'singlet') {
+            singletReference = this;
+          }
+          if (!doubletReference && _this.customSampleSetClass == 'doublet') {
+            doubletReference = this;
+          }
         }
         _this.arcSelectionHandler();
       });

@@ -1,10 +1,10 @@
-import { 
-  Component, 
-  OnInit, 
+import {
+  Component,
+  OnInit,
   ChangeDetectionStrategy,
   Input,
   ViewChild,
-  ElementRef 
+  ElementRef
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AnalysesService } from '@app/features/analysis/services/analysis.service';
@@ -119,7 +119,7 @@ export class SctkSeuratClusterComponent implements OnInit {
                   color: Utils.getRandomColor(),
                   multiple: true
                 };
-              } 
+              }
             );
 
             // now fill:
@@ -178,7 +178,7 @@ export class SctkSeuratClusterComponent implements OnInit {
     const tTip = d3Tip()
       .attr('class', 'd3-tip')
       .offset([-10, 0])
-      .html((event, d) => { 
+      .html((event, d) => {
         return 'Cluster ' + d.clusterId + ': ' + d.count + ' cells';
        });
     svg.call(tTip);
@@ -213,7 +213,7 @@ export class SctkSeuratClusterComponent implements OnInit {
 
     svg.append('g')
       .attr("transform",
-            "translate(" + (width/2) + " ," + 
+            "translate(" + (width/2) + " ," +
                            (height + this.margin.top - 20) + ")")
       .append('text')
       .style("text-anchor", "middle")

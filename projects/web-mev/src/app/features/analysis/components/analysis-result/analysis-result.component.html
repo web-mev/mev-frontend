@@ -3,6 +3,18 @@
         <mev-scatter-plot *ngIf="outputs" [outputs]="outputs"></mev-scatter-plot>
     </ng-container>
 
+    <ng-container *ngIf="operationName === 'SCTK Doublet Finder'">
+      <mev-sctk-doubletfinder [outputs]="outputs"></mev-sctk-doubletfinder>
+    </ng-container>
+
+    <ng-container *ngIf="operationName === 'SCTK Cxds Doublet Finder'">
+      <mev-sctk-cxds [outputs]="outputs"></mev-sctk-cxds>
+    </ng-container>
+
+    <ng-container *ngIf="operationName === 'SCTK Doublet Cells'">
+      <mev-sctk-cell [outputs]="outputs"></mev-sctk-cell>
+    </ng-container>
+
     <ng-container *ngIf="operationName === 'DESeq2'">
         <mev-deseq2 [outputs]="outputs"></mev-deseq2>
     </ng-container>

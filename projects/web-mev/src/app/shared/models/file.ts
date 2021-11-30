@@ -22,6 +22,7 @@ export class File {
     public is_public: boolean,
     public status: string,
     public workspaces: Workspace[],
+    public workspace_names: string,
     public created: Date,
     public size: number
   ) {}
@@ -49,6 +50,7 @@ export class FileAdapter {
       item.is_active,
       item.is_public,
       item.status,
+      item.workspaces,
       workspace_names,
       new Date(created_formatted),
       item.size

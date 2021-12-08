@@ -1,0 +1,36 @@
+<h3>Data distribution for {{fieldName}}</h3>
+<p>Below, we visualize your data with a jittered one-dimensional plot</p>
+<p>Define subgroups by adding range selections.</p>
+<div id="continuous-display-wrapper">
+    <form [formGroup]="rangeInputForm" class="rangeInputForm">
+
+    <mat-form-field class="chip-list">
+        <mat-label>Add ranges</mat-label>
+        <mat-chip-list #chipList aria-label="Feature/gene selection">
+          <mat-chip
+          class="foo"
+            *ngFor="let range of rangeSet"
+            [selectable]="selectable"
+            [removable]="removable"
+            (removed)="remove(range)">
+            {{range.rangeText}}
+                <mat-icon class="rm-icon" (click)="remove(range)" aria-label="remove range">cancel</mat-icon>
+          </mat-chip>
+          <input
+          placeholder="Enter a range specification and hit Enter"
+          matInput
+          formControlName=individualRangeSpec
+          name=individualRangeSpec
+          [matChipInputFor]="chipList"
+          (matChipInputTokenEnd)="onAddRange($event)">
+        </mat-chip-list>
+        <mat-error *ngIf="rangeInputError">{{errorMessage}}</mat-error>
+      </mat-form-field>
+
+      <mat-icon  matTooltipClass="tooltip"
+      matTooltip="{{explainText}}" aria-label="Info tooltip about the field">info
+    </mat-icon>
+      </form>
+    <svg id="svg-container" width="800" height="200"></svg>
+</div>
+

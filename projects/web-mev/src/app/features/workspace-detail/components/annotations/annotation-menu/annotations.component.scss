@@ -1,0 +1,35 @@
+   .ann-container {
+    margin: 20px;
+    width: 98%;
+  }
+  
+  .mat-card {
+    overflow-x: scroll;
+  }
+
+  .ann-card__content {
+      margin-top: 20px;
+  }
+  
+  .form-wrapper {
+    display: flex;
+    flex-direction: column;
+    padding-top: 6px;
+    max-width: 50%;
+  }
+
+  .value-type-group {
+      margin-left:20px;
+  }
+
+  .radio-b {
+      margin-left: 10px;
+  }
+
+  #showBtn {
+      margin-top: 20px;
+  }
+
+  #displayWrapper {
+    margin-top: 40px;
+  }

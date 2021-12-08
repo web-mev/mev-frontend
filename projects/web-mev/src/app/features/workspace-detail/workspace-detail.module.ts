@@ -10,6 +10,9 @@ import { DeleteDialogComponent } from './components/dialogs/delete-dialog/delete
 import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
 import { ValidFilesPipe } from './pipes/valid-files';
 import { AnnotationFilesPipe } from './pipes/annotation-files';
+import { AnnotationComponent } from './components/annotations/annotation-menu/annotations.component';
+import { ContinuousDistributionDisplayComponent} from './components/annotations/continuous-distribution-display/continuous-distribution-display.component';
+import { FactorDisplayComponent } from './components/annotations/factor-display/factor-display.component';
 
 import { PreviewDialogComponent } from './components/dialogs/preview-dialog/preview-dialog.component';
 import { MetadataComponent } from './components/metadata/metadata.component';
@@ -45,7 +48,10 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     EditSetDialogComponent,
     EditDialogComponent,
     ViewInfoDialogComponent,
-    SetDifferenceDialogComponent
+    SetDifferenceDialogComponent,
+    AnnotationComponent,
+    ContinuousDistributionDisplayComponent,
+    FactorDisplayComponent
   ],
   exports: [],
   imports: [

@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, FormControl, FormGroupDirective, NgForm } from 
 import {ErrorStateMatcher} from '@angular/material/core';
 
 import * as d3 from 'd3';
+import d3Tip from 'd3-tip';
 
 class NumericRange {
     start;
@@ -88,12 +89,12 @@ class NumericRange {
 @Component({
   selector: 'continuous-distribution-ann-display',
   templateUrl: './continuous-distribution-display.component.html',
-  styleUrls: ['./continuous-distribution-display.component.css']
+  styleUrls: ['./continuous-distribution-display.component.scss']
 })
 export class ContinuousDistributionDisplayComponent implements OnInit {
 
   @Input() fieldName: string = '';
-  @Input() data: number[] = [];
+  @Input() data: any[] = [];
   @ViewChild('chipList') chipList;
 
   svg;
@@ -130,6 +131,11 @@ export class ContinuousDistributionDisplayComponent implements OnInit {
   "(" will exclude the endoint. You can use a combination of brackets and braces. For example, "[10,20)" \
   includes all numbers x such that 10 \u2264 x < 20)';
 
+  dataTypeWarning = 'Some or all of the data could not be parsed as a number. As a result, the plot results \
+    may be unpredictable. Most often this is caused by attempting to plot categorical data on a continuous/numerical \
+    scale. Please check that the selected data is appropriate for this visualization.';
+  showDataTypeWarning = false;
+
   errorMessage = '';
   rangeInputError;
 
@@ -156,7 +162,7 @@ export class ContinuousDistributionDisplayComponent implements OnInit {
     this.axisLabelGrp = this.svg.append('g');
     this.arcTheta = Math.asin(this.delta/this.parenRadius);
     this.rangeSet = [];
-
+      console.log(this.data);
     this.setupPlot();
     this.drawPts();
   }
@@ -189,6 +195,7 @@ export class ContinuousDistributionDisplayComponent implements OnInit {
             this.rangeInputForm.controls['individualRangeSpec'].setValue('');
             this.drawBinLines();
             this.highlightPts();
+
           } catch(ex){
               console.log(ex);
              this.chipList.errorState = true;
@@ -217,10 +224,21 @@ export class ContinuousDistributionDisplayComponent implements OnInit {
 
   setupPlot(){
 
-      let ext = d3.extent(this.data, d=> d);
+      // check for non-numerical types
+      let found = false;
+      let i = 0;
+      while(!found && (i < this.data.length)){
+        if(isNaN(parseFloat(this.data[i].val))){
+            this.showDataTypeWarning = true;
+            found = true; //to exit the while loop early
+        }
+        i += 1;
+      }
+
+      let ext = d3.extent(this.data, d=> d.val);
 
       this.xScale = d3.scaleLinear()
-          .domain(d3.extent(this.data, d=> d))
+          .domain(d3.extent(this.data, d=> d.val))
           .range([this.offset, this.width-this.offset]);
 
       this.yScale = d3.scaleLinear()
@@ -233,7 +251,13 @@ export class ContinuousDistributionDisplayComponent implements OnInit {
   }
 
   drawPts() {
-
+    const tip = d3Tip()
+    .attr('class', 'd3-tip')
+    .offset([-10, 0])
+    .html((event, d) => {
+      return (d.id + ': ' + d.val);
+    });
+    this.svg.call(tip);
       this.plotGrp
           .selectAll('circle')
           .data(this.data)
@@ -241,8 +265,10 @@ export class ContinuousDistributionDisplayComponent implements OnInit {
           .append('circle')
           .attr('r', 5)
           .attr('fill', this.unselectedColor)
-          .attr('cx', d => this.xScale(d))
-          .attr('cy', d => this.yScale(Math.random()));
+          .attr('cx', d => this.xScale(d.val))
+          .attr('cy', d => this.yScale(Math.random()))
+          .on('mouseover', tip.show)
+          .on('mouseout', tip.hide);
   }
 
   isInRange(x){
@@ -268,17 +294,17 @@ export class ContinuousDistributionDisplayComponent implements OnInit {
           .append('circle')
           .attr('r', 5)
           .attr('fill', d=>{
-            if(this.isInRange(d)){
+            if(this.isInRange(d.val)){
                 return selCol
             } else {
                 return unselCol
             }
           })
-          .attr('cx', d => this.xScale(d))
+          .attr('cx', d => this.xScale(d.val))
           .attr('cy', d => this.yScale(Math.random())),
           update => update
           .attr('fill', d=>{
-              if(this.isInRange(d)){
+              if(this.isInRange(d.val)){
                   return selCol
               } else {
                   return unselCol
@@ -418,10 +444,6 @@ drawRangeBoundaries(selection, drawFn, direction){
           while(!found && i < this.rangeSet.length){
               let r = this.rangeSet[i];
               let isContainedIn = r.contains(d);
-            //   let x0 = this.rangeSet[i].start;
-            //   let x1 = this.rangeSet[i].end;
-
-            //   if ((d < x1) && (d >= x0)){
             if(isContainedIn){
                 binCounts[i] += 1;
                 found = true;
@@ -458,5 +480,9 @@ drawRangeBoundaries(selection, drawFn, direction){
     )
     this.binCountsGrp.style('text-anchor', 'middle');
 
+  }
+
+  saveObsSets(){
+      console.log('SAVE');
   }
 }

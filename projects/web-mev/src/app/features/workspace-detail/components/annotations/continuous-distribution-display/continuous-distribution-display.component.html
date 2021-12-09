@@ -1,5 +1,7 @@
 <h3>Data distribution for {{fieldName}}</h3>
-<p>Below, we visualize your data with a jittered one-dimensional plot</p>
+<p>Below, we visualize your data with a jittered one-dimensional plot. The vertical jittering allows us to more easily view
+  the one-dimensional data without overlapping points.
+</p>
 <p>Define subgroups by adding range selections.</p>
 <div id="continuous-display-wrapper">
     <form [formGroup]="rangeInputForm" class="rangeInputForm">
@@ -27,10 +29,14 @@
         <mat-error *ngIf="rangeInputError">{{errorMessage}}</mat-error>
       </mat-form-field>
 
-      <mat-icon  matTooltipClass="tooltip"
+      <mat-icon  matTooltipClass="tooltip" fontSet="material-icons-outlined"
       matTooltip="{{explainText}}" aria-label="Info tooltip about the field">info
     </mat-icon>
       </form>
+      <p *ngIf="showDataTypeWarning" class="warn">{{dataTypeWarning}}</p>
+      <button mat-raised-button color="accent" [disabled]="rangeSet.length === 0" (click)="saveObsSets()">
+        Create observation/sample sets
+      </button>
     <svg id="svg-container" width="800" height="200"></svg>
 </div>
 

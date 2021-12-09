@@ -5,14 +5,16 @@
         <mat-card-content class="metadata-card__main">
             <div class="metadata-card__instruction">
                 <p>
-                    Instruction
+                    Select an annotation file to create groups of samples/observations. These groups can be used for comparative analyses or plotting.
                 </p>
             </div>
             <mat-divider [inset]="true"></mat-divider>
             <div class="ann-card__content">
-
+                <div *ngIf="files.length === 0">
+                    <p class="warn">There are no annotation files in this workspace.</p>
+                </div>
                 <form [formGroup]="form">
-                    <div class="form-wrapper">
+                    <div class="form-wrapper" *ngIf="files.length > 0">
                         <mat-form-field class="form-control" color="accent">
                             <mat-label>Annotation file</mat-label>
                             <mat-select formControlName=annotation [(value)]="selectedAnnotationFileId"
@@ -33,7 +35,11 @@
                         </mat-form-field>
 
                         <div *ngIf="showValueTypes">
-                            <mat-label>How would you like to treat this data?</mat-label>
+                            <mat-label>How would you like to treat this data?
+                                <mat-icon matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                                matTooltip="{{continuousVersusFactorDesc}}" aria-label="Info about continuous versus discrete values">info
+                              </mat-icon>
+                            </mat-label>
                             <mat-radio-group formControlName=valueType class="form-control value-type-group" (change)="onValueTypeChange($event)">
                                 <mat-radio-button *ngFor="let vt of VALUE_TYPES" [value]="vt" class="radio-b">
                                     {{vt}}
@@ -42,7 +48,7 @@
                         </div>
 
                         <div id="showBtn" *ngIf="displayButtonVisible">
-                            <button mat-raised-button color="primary" [disabled]="!displayButtonActive" (click)="showTheData()">
+                            <button mat-raised-button color="accent" [disabled]="!displayButtonActive" (click)="showTheData()">
                                 {{displayButtonText}}
                             </button>
                         </div>

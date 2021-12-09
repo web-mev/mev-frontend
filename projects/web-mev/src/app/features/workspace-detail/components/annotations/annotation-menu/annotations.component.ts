@@ -27,7 +27,7 @@ export class AnnotationComponent implements OnInit {
   isWait: boolean;
 
   CONTINUOUS = 'Continuous';
-  FACTOR = 'Factor';
+  FACTOR = 'Categorical';
   VALUE_TYPES = [this.CONTINUOUS, this.FACTOR];
   showValueTypes: boolean;
   
@@ -39,6 +39,10 @@ export class AnnotationComponent implements OnInit {
 
   annotationFileContent;
   attributeData;
+
+  continuousVersusFactorDesc = 'We can treat the data as continuous/numeric or as a finite number of discrete "categories". \
+    An example of continuous/numeric would be age or weight. Categorical data includes tumor staging, ethnicity, or similar. \
+    For numerical data, we allow you to manually define "bins" to stratify your samples.';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -137,7 +141,7 @@ onSelectAnnotationFile() {
     if (hasFile && attrChosen && hasValueTypeSelected){
       this.displayButtonActive = true;
       this.displayButtonVisible = true;
-      this.displayButtonText = `Display ${this.selectedAttribute} as ${this.selectedValueType}`;
+      this.displayButtonText = `Display ${this.selectedAttribute} as ${this.selectedValueType.toLowerCase()}`;
     } else {
       this.displayButtonActive = false;
       this.displayButtonVisible = false;
@@ -151,7 +155,12 @@ onSelectAnnotationFile() {
 
     let selectedData = [];
     for(let item of this.annotationFileContent){
-      selectedData.push(item.values[this.selectedAttribute]);
+      selectedData.push(
+        {
+          id: item.rowname,
+          val: item.values[this.selectedAttribute]
+        }
+      );
     }
     this.attributeData = selectedData;
     this.dataIsDisplayed = true;

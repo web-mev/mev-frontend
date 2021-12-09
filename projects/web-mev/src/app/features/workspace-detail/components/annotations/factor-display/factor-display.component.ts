@@ -1,10 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
 import * as d3 from 'd3';
+import d3Tip from 'd3-tip';
+import { Utils } from '@app/shared/utils/utils';
 
 @Component({
   selector: 'factor-ann-display',
   templateUrl: './factor-display.component.html',
-  styleUrls: ['./factor-display.component.css']
+  styleUrls: ['./factor-display.component.scss']
 })
 export class FactorDisplayComponent implements OnInit {
 
@@ -20,7 +22,8 @@ export class FactorDisplayComponent implements OnInit {
   yScale;
   bandwidth;
   maxY;
-  offset = 20;
+  containerId = '#factor-display-wrapper'
+  offset = 40;
   width = 800;
   height = 400;
   innerHeight = this.height - this.offset;
@@ -29,7 +32,7 @@ export class FactorDisplayComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(this.data);
-    this.svg = d3.select('#svg-container');
+    //this.svg = d3.select('#svg-container');
     this.countBins();
     this.setupPlot();
     this.makeBarPlot();
@@ -56,7 +59,18 @@ export class FactorDisplayComponent implements OnInit {
   }
 
   setupPlot(){
-    this.svg.attr('transform', 'translate(' + this.offset + ',' + this.offset + ')');
+    this.svg = d3
+      .select(this.containerId)
+      .append('svg')
+      .attr('width', outerWidth)
+      .attr('height', outerHeight)
+      .append('g')
+      .attr(
+        'transform',
+        'translate(' + this.offset + ',' + this.offset + ')'
+      )
+      .style('fill', 'none');
+    //this.svg.attr('transform', 'translate(' + this.offset + ',' + this.offset + ')');
     this.barsGrp = this.svg.append('g');
     this.xAxisLabelGrp = this.svg.append('g');
     this.yAxisLabelGrp = this.svg.append('g');
@@ -87,6 +101,19 @@ export class FactorDisplayComponent implements OnInit {
 
   makeBarPlot(){
     console.log(this.binData);
+
+    const tip = d3Tip()
+    .attr('class', 'd3-tip')
+    .offset([-10, 0])
+    .html((event, d) => {
+      console.log(event);
+      console.log(d);
+      return (
+        '<span>' + d.key + ':' + d.count + '</span>'
+      );
+    });
+  this.svg.call(tip);
+
     this.barsGrp
       .selectAll('rect')
       .data(this.binData)
@@ -102,6 +129,10 @@ export class FactorDisplayComponent implements OnInit {
         return this.innerHeight - this.yScale(d.count);
       })
       .attr('width', this.bandwidth)
+      .attr('fill', d=>Utils.getRandomColor())
+      .attr('pointer-events', 'all')
+      .on('mouseover', tip.show)
+      .on('mouseout', tip.hide);
 
 
   }

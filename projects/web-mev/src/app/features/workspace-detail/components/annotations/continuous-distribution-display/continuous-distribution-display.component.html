@@ -1,43 +1,35 @@
 <h3>Data distribution for {{fieldName}}</h3>
-<p>Below, we visualize your data with a jittered one-dimensional plot. The vertical jittering allows us to more easily view
+<p>Below, we visualize your data with a jittered one-dimensional plot. The vertical jittering allows us to more easily
+  view
   the one-dimensional data without overlapping points.
 </p>
 <p>Define subgroups by adding range selections.</p>
 <div id="continuous-display-wrapper">
-    <form [formGroup]="rangeInputForm" class="rangeInputForm">
+  <form [formGroup]="rangeInputForm" class="rangeInputForm">
 
     <mat-form-field class="chip-list">
-        <mat-label>Add ranges</mat-label>
-        <mat-chip-list #chipList aria-label="Feature/gene selection">
-          <mat-chip
-          class="foo"
-            *ngFor="let range of rangeSet"
-            [selectable]="selectable"
-            [removable]="removable"
-            (removed)="remove(range)">
-            {{range.rangeText}}
-                <mat-icon class="rm-icon" (click)="remove(range)" aria-label="remove range">cancel</mat-icon>
-          </mat-chip>
-          <input
-          placeholder="Enter a range specification and hit Enter"
-          matInput
-          formControlName=individualRangeSpec
-          name=individualRangeSpec
-          [matChipInputFor]="chipList"
-          (matChipInputTokenEnd)="onAddRange($event)">
-        </mat-chip-list>
-        <mat-error *ngIf="rangeInputError">{{errorMessage}}</mat-error>
-      </mat-form-field>
+      <mat-label>Add ranges</mat-label>
+      <mat-chip-list #chipList aria-label="Feature/gene selection">
+        <mat-chip class="foo" *ngFor="let range of rangeSet" [selectable]="selectable" [removable]="removable"
+          (removed)="remove(range)">
+          {{range.toString()}}
+          <mat-icon class="rm-icon" (click)="remove(range)" aria-label="remove range">cancel</mat-icon>
+        </mat-chip>
+        <input placeholder="Enter a range specification and hit Enter" matInput formControlName=individualRangeSpec
+          name=individualRangeSpec [matChipInputFor]="chipList" (matChipInputTokenEnd)="onAddRange($event)">
+      </mat-chip-list>
+      <mat-error *ngIf="rangeInputError">{{errorMessage}}</mat-error>
+    </mat-form-field>
 
-      <mat-icon  matTooltipClass="tooltip" fontSet="material-icons-outlined"
-      matTooltip="{{explainText}}" aria-label="Info tooltip about the field">info
+    <mat-icon matTooltipClass="tooltip" fontSet="material-icons-outlined" matTooltip="{{explainText}}"
+      aria-label="Info tooltip about the field">info
     </mat-icon>
-      </form>
-      <p *ngIf="showDataTypeWarning" class="warn">{{dataTypeWarning}}</p>
-      <p *ngIf="showDataRangeWarning" class="warn">{{dataRangeWarning}}</p>
-      <button id="createObsSetBtn" mat-raised-button color="accent" [disabled]="createObsSetBtnDisabled" (click)="saveObsSets()">
-        Create observation/sample sets
-      </button>
-    <div id="svg-display-wrapper"></div>
+  </form>
+  <p *ngIf="showDataTypeWarning" class="warn">{{dataTypeWarning}}</p>
+  <p *ngIf="showDataRangeWarning" class="warn">{{dataRangeWarning}}</p>
+  <button id="createObsSetBtn" mat-raised-button color="accent" [disabled]="createObsSetBtnDisabled"
+    (click)="saveObsSets()">
+    Create observation/sample sets
+  </button>
+  <div id="svg-display-wrapper"></div>
 </div>
-

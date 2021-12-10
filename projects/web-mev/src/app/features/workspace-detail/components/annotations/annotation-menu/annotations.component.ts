@@ -17,13 +17,13 @@ import * as d3 from 'd3';
 export class AnnotationComponent implements OnInit {
 
   @Input() workspaceResources = [];
+
   form: FormGroup;
   selectedAnnotationFileId: string;
   selectedAttribute: string;
   selectedValueType: string;
   files = [];
   attributes = [];
-
   isWait: boolean;
 
   CONTINUOUS = 'Continuous';
@@ -31,6 +31,8 @@ export class AnnotationComponent implements OnInit {
   VALUE_TYPES = [this.CONTINUOUS, this.FACTOR];
   showValueTypes: boolean;
   
+  // these are a bit redundant, but we keep the button hidden
+  // PLUS make it inactive based on these booleans.
   displayButtonVisible = false;
   displayButtonActive = false;
   displayButtonText = 'DEFAULT';
@@ -58,63 +60,40 @@ ngOnInit(): void {
     valueType: ['']
   });
   this.files = this.workspaceResources;
-  console.log('init of ann component: ', this.workspaceResources)
   this.isWait = false;
   this.showValueTypes = false;
 }
 
-onSelectAnnotationFile() {
+  /**
+   * Executed when an annotation file is chosen
+   */
+  onSelectAnnotationFile() {
 
-  // reset values so the lower fields aren't stale
-  this.showValueTypes = false;
-  this.selectedValueType = '';
-  this.selectedAttribute = '';
-  this.form.controls['attribute'].setValue('');
-  this.form.controls['valueType'].setValue('');
-  this.updateDisplayButton();
+    // reset values so the lower fields aren't stale
+    this.showValueTypes = false;
+    this.selectedValueType = '';
+    this.selectedAttribute = '';
+    this.form.controls['attribute'].setValue('');
+    this.form.controls['valueType'].setValue('');
+    this.updateDisplayButton();
 
-  // fetch the attributes of this file:
-  this.isWait = true;
-  this.apiService
-  .getResourceContent(this.selectedAnnotationFileId)
-  .subscribe(response => {
-    this.isWait = false;
-    if (response.length) {
-      // api will respond with an array of items like:
-//   {
-//     "rowname": "b3054bf3-4d49-53a1-a77c-f22965f9d4fb",
-//     "values": {
-//         "ethnicity": "not hispanic or latino",
-//         "gender": "female",
-//         "race": "white",
-//         "vital_status": "Dead",
-//         "age_at_diagnosis": 1064.0,
-//         "days_to_last_follow_up": 659.0,
-//         "inss_stage": "Stage 4",
-//         "last_known_disease_status": "not reported",
-//         "morphology": "9500/3",
-//         "primary_diagnosis": "Neuroblastoma, NOS",
-//         "progression_or_recurrence": "not reported",
-//         "site_of_resection_or_biopsy": "Not Reported",
-//         "tissue_or_organ_of_origin": "Kidney, NOS",
-//         "tumor_grade": "Not Reported",
-//         "year_of_diagnosis": 2004.0,
-//         "dbgap_accession_number": "phs000467",
-//         "disease_type": "Neuroblastoma",
-//         "name": "Neuroblastoma",
-//         "primary_site": "Nervous System",
-//         "project_id": "TARGET-NBL",
-//         "case_id": "e88037ef-beb8-5874-a175-ae5fa9bf8ebb"
-//     }
-// }
-      this.annotationFileContent = response;
-      this.attributes = Object.keys(response[0].values);
-    }
-  });
-}
+    // fetch the attributes of this file:
+    this.isWait = true;
+    this.apiService
+      .getResourceContent(this.selectedAnnotationFileId)
+      .subscribe(response => {
+        this.isWait = false;
+        if (response.length) {
+          this.annotationFileContent = response;
+          this.attributes = Object.keys(response[0].values);
+        }
+      });
+  }
 
+  /**
+   * Executed when one of the annotation fields is selected
+   */
   onSelectAttribute() {
-    console.log('Selected:', this.selectedAttribute);
     this.selectedValueType = '';
     this.updateDisplayButton();
     this.form.controls['valueType'].setValue('');
@@ -122,9 +101,12 @@ onSelectAnnotationFile() {
 
   }
 
+  /**
+   * When the radio button changes to toggle between the continuous
+   * and categorical display
+   */
   onValueTypeChange(event: MatRadioChange) {
     this.selectedValueType = event.value;
-    console.log(`radio changed to ${this.selectedValueType}`);
     if (this.selectedValueType.length > 0) {
       this.displayButtonActive = true;
     }
@@ -132,9 +114,11 @@ onSelectAnnotationFile() {
     this.updateDisplayButton();
   }
 
+  /**
+   * This function contains logic which controls both the 
+   * active/inactive status and the text inside the button
+   */
   updateDisplayButton(): void {
-    console.log('update bn');
-
     let hasFile = this.selectedAnnotationFileId.length > 0;
     let attrChosen = this.selectedAttribute ? this.selectedAttribute.length > 0 : false;
     let hasValueTypeSelected = this.selectedValueType? this.selectedValueType.length > 0 : false;
@@ -150,8 +134,12 @@ onSelectAnnotationFile() {
 
   }
 
+  /**
+   * After all the selections have been made the button is clicked,
+   * this prepares the data to be sent to the child component
+   * which handles the display of the data
+   */
   showTheData(){
-    console.log('go show!');
 
     let selectedData = [];
     for(let item of this.annotationFileContent){

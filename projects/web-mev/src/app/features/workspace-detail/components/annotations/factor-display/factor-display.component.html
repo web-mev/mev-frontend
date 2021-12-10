@@ -1,31 +1,26 @@
 <h3>Data distribution for {{fieldName}}</h3>
 <form [formGroup]="form">
-<button id="createObsSetBtn" mat-raised-button color="accent" [disabled]="createObsSetBtnDisabled" (click)="saveObsSets()">
-    Create observation/sample sets
-  </button>
+    <button id="createObsSetBtn" mat-raised-button color="accent" [disabled]="createObsSetBtnDisabled"
+        (click)="saveObsSets()">
+        Create observation/sample sets
+    </button>
 
-  <angular2-multiselect *ngIf="allCategories.length" 
-    formControlName=categories 
-    [data]="allCategories"
-    class="form-control" 
-    [settings]="dropdownSettings" 
-    (onSelect)="onSelect($event)"
-    (onDeSelect)="onSelect($event)"
-    (onSelectAll)="onSelect($event)"
-    (onDeSelectAll)="onSelect($event)">
-  <c-item>
-    <ng-template let-item="item">
-      <label>{{ item.name }}</label>
-    </ng-template>
-  </c-item>
-  <c-badge>
-    <ng-template let-item="item">
-      <label>{{ item.name }}</label>
-    </ng-template>
-  </c-badge>
-</angular2-multiselect>
+    <div class="selectWrapper">
+    <angular2-multiselect *ngIf="allCategories.length" formControlName=categories [data]="allCategories"
+        class="form-control" [settings]="dropdownSettings" (onSelect)="onSelect($event)" (onDeSelect)="onSelect($event)"
+        (onSelectAll)="onSelect($event)" (onDeSelectAll)="onSelect($event)">
+        <c-item>
+            <ng-template let-item="item">
+                <label>{{ item.name }}</label>
+            </ng-template>
+        </c-item>
+        <c-badge>
+            <ng-template let-item="item">
+                <label>{{ item.name }}</label>
+            </ng-template>
+        </c-badge>
+    </angular2-multiselect>
+    </div>
 </form>
-<div id="factor-display-wrapper">
-    <!-- <svg id="svg-container" width="800" height="400"></svg> -->
-</div>
+<div id="factor-display-wrapper"></div>
 

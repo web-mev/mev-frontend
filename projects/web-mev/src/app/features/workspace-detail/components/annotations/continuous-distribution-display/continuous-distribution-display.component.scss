@@ -16,7 +16,11 @@
   }
 
   .warn {
-      color: red;
+      color: rgba(238, 154, 66, 1);
+  }
+
+  #createObsSetBtn{
+    margin-top:20px;
   }
 
   ::ng-deep{

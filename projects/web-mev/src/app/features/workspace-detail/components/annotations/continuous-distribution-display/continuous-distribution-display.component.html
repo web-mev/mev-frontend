@@ -34,9 +34,10 @@
     </mat-icon>
       </form>
       <p *ngIf="showDataTypeWarning" class="warn">{{dataTypeWarning}}</p>
-      <button mat-raised-button color="accent" [disabled]="rangeSet.length === 0" (click)="saveObsSets()">
+      <p *ngIf="showDataRangeWarning" class="warn">{{dataRangeWarning}}</p>
+      <button id="createObsSetBtn" mat-raised-button color="accent" [disabled]="createObsSetBtnDisabled" (click)="saveObsSets()">
         Create observation/sample sets
       </button>
-    <svg id="svg-container" width="800" height="200"></svg>
+    <div id="svg-display-wrapper"></div>
 </div>
 

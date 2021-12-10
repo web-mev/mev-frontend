@@ -1,11 +1,16 @@
-import { ViewFlags } from '@angular/compiler/src/core';
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
-import {ErrorStateMatcher} from '@angular/material/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { FormGroup, FormBuilder } from '@angular/forms';
+
+import { MetadataService } from '@app/core/metadata/metadata.service';
+import { CustomSet, CustomSetType } from '@app/_models/metadata';
+import { Utils } from '@app/shared/utils/utils';
 
 import * as d3 from 'd3';
 import d3Tip from 'd3-tip';
 
+/**
+ * This is a data structure that helps with the user-defined ranges
+ */
 class NumericRange {
     start;
     end;
@@ -64,7 +69,11 @@ class NumericRange {
         }
     }
 
-    contains(x){
+    /**
+     *  Returns a boolean based on whether the passed arg x is contained
+     *  in the range
+     */
+    contains(x: number){
         let greater_than_start;
         if(this.start_inclusive){
             greater_than_start = x >= this.start
@@ -83,6 +92,29 @@ class NumericRange {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Allows for checking if a range has already been
+     * specified by the users
+     */
+    equals(other: NumericRange){
+        let conditions = [
+            this.start === other.start,
+            this.end === other.end,
+            this.start_inclusive === other.start_inclusive,
+            this.end_inclusive === other.end_inclusive,
+        ]
+        return conditions.every(x => x);
+    }
+
+    /**
+     * Returns a string representation of the range
+     */
+    toString(){
+        let firstChar = this.start_inclusive ? '[' : '(';
+        let finalChar = this.end_inclusive ? ']' : ')';
+        return `${firstChar}${this.start},${this.end}${finalChar}`;
     }
 }
 
@@ -106,11 +138,11 @@ export class ContinuousDistributionDisplayComponent implements OnInit {
   binCountsGrp;
   binLabelsGrp;
   axisLabelGrp;
-
   
-  selectedColor = 'rgba(79, 175, 219, 0.47)';
-  unselectedColor = '#c8c8c85c';
+  selectedColor = 'rgba(79, 175, 219, 0.4)';
+  unselectedColor = 'rgba(200,200,200,0.4)';
   
+  containerId = '#svg-display-wrapper';
   height = 200;
   width = 800;
   yc = 100;
@@ -122,6 +154,9 @@ export class ContinuousDistributionDisplayComponent implements OnInit {
   bins;
   xScale;
   yScale;
+  minX;
+  maxX;
+  d3NumFormat;
   rangeSet: NumericRange[];
   selectable = true;
   removable = true;
@@ -136,13 +171,19 @@ export class ContinuousDistributionDisplayComponent implements OnInit {
     scale. Please check that the selected data is appropriate for this visualization.';
   showDataTypeWarning = false;
 
+  dataRangeWarning = 'One or more of the endpoints from your ranges falls outside of the data limits.\
+    This is not an error, but the end of your range may not be visible on the plot.';
+  showDataRangeWarning = false;
+
   errorMessage = '';
   rangeInputError;
+
+  createObsSetBtnDisabled = true;
 
   rangeInputForm: FormGroup;
   constructor(
     private formBuilder: FormBuilder,
-
+    private metadataService: MetadataService
   ) { }
 
   ngOnInit(): void {
@@ -150,8 +191,16 @@ export class ContinuousDistributionDisplayComponent implements OnInit {
         individualRangeSpec: ['']
       });
 
-    this.svg = d3.select('#svg-container');
-
+    this.svg = d3
+      .select(this.containerId)
+      .append('svg')
+      .attr('width', this.width)
+      .attr('height', this.height)
+      .append('g')
+      .attr(
+        'transform',
+        'translate(' + this.offset + ',0)'
+      );
     this.leftBracketsGrp = this.svg.append('g');
     this.rightBracketsGrp = this.svg.append('g');
     this.leftParensGrp = this.svg.append('g');
@@ -162,7 +211,7 @@ export class ContinuousDistributionDisplayComponent implements OnInit {
     this.axisLabelGrp = this.svg.append('g');
     this.arcTheta = Math.asin(this.delta/this.parenRadius);
     this.rangeSet = [];
-      console.log(this.data);
+    this.d3NumFormat = d3.format(',');
     this.setupPlot();
     this.drawPts();
   }
@@ -184,12 +233,19 @@ export class ContinuousDistributionDisplayComponent implements OnInit {
       if (isValid){
           try{
           let nr = new NumericRange(rangeSpec);
+            let i = 0;
+            let foundMatch = false;
+            while((i < this.rangeSet.length) && !foundMatch){
+                if(this.rangeSet[i].equals(nr)){
+                    foundMatch = true;
+                }
+                i += 1;
+            }
+            if(foundMatch){
+                throw('This range was already specified.');
+            }
             this.rangeSet.push(nr);
-            // todo: check for already exists
-            // let index = this.rangeSet.indexOf(rangeSpec);
-            // if (index === -1) {
-            //     this.rangeSet.push(rangeSpec);
-            // }
+
             this.chipList.errorState = false;
             this.rangeInputError = false;
             this.rangeInputForm.controls['individualRangeSpec'].setValue('');
@@ -237,8 +293,20 @@ export class ContinuousDistributionDisplayComponent implements OnInit {
 
       let ext = d3.extent(this.data, d=> d.val);
 
+      // keep track of the min and max data values so we can
+      // warn users about ranges that are outside
+      this.minX = ext[0];
+      this.maxX = ext[1];
+
+      let rangeLength = 1.1*(this.maxX - this.minX);
+      //expand the range so we don't cut off the endpoints
+
+      let domainStart = (0.5*(this.maxX - this.minX) - 0.5*rangeLength);
+      let domainEnd = (0.5*(this.maxX - this.minX) + 0.5*rangeLength);
+
+
       this.xScale = d3.scaleLinear()
-          .domain(d3.extent(this.data, d=> d.val))
+          .domain([domainStart, domainEnd])
           .range([this.offset, this.width-this.offset]);
 
       this.yScale = d3.scaleLinear()
@@ -247,6 +315,7 @@ export class ContinuousDistributionDisplayComponent implements OnInit {
 
       this.axisLabelGrp
           .attr('transform', "translate(0," + (this.height - this.offset) + ")")
+          .attr('class', 'x-axis')
           .call(d3.axisBottom(this.xScale));
   }
 
@@ -258,19 +327,29 @@ export class ContinuousDistributionDisplayComponent implements OnInit {
       return (d.id + ': ' + d.val);
     });
     this.svg.call(tip);
-      this.plotGrp
+      
+    let ptsSelection = this.plotGrp
           .selectAll('circle')
-          .data(this.data)
-          .enter()
-          .append('circle')
-          .attr('r', 5)
-          .attr('fill', this.unselectedColor)
-          .attr('cx', d => this.xScale(d.val))
-          .attr('cy', d => this.yScale(Math.random()))
-          .on('mouseover', tip.show)
-          .on('mouseout', tip.hide);
+          .data(this.data);
+    ptsSelection.join(
+          enter => enter
+            .append('circle')
+            .attr('r', 5)
+            .attr('fill', this.unselectedColor)
+            .attr('cx', d => this.xScale(d.val))
+            .attr('cy', d => this.yScale(Math.random()))
+            .on('mouseover', tip.show)
+            .on('mouseout', tip.hide),
+        update => update
+            .append('circle')
+            .attr('r', 5)
+            .attr('fill', this.unselectedColor)
+            .attr('cx', d => this.xScale(d.val))
+            .attr('cy', d => this.yScale(Math.random()))
+            .on('mouseover', tip.show)
+            .on('mouseout', tip.hide)
+    );
   }
-
   isInRange(x){
     for (let r of this.rangeSet){
         let isContainedIn = r.contains(x);
@@ -381,6 +460,7 @@ drawRangeBoundaries(selection, drawFn, direction){
     let rightBrackets = [];
     let leftParens = [];
     let rightParens = [];
+    this.showDataRangeWarning = false;
     for (let r of this.rangeSet){
         if(r.start_inclusive){
             leftBrackets.push(r.start);
@@ -392,6 +472,9 @@ drawRangeBoundaries(selection, drawFn, direction){
         } else {
             rightParens.push(r.end);
         }    
+        if((r.end > this.maxX) || (r.start < this.minX)){
+            this.showDataRangeWarning = true;
+        }
     }
     let selection = this.leftBracketsGrp
         .selectAll('path')
@@ -423,11 +506,11 @@ drawRangeBoundaries(selection, drawFn, direction){
               .append('text')
               .attr('x', d=>this.xScale(d))
               .attr('y', this.yc+this.delta+this.offset)
-              .text(d=>d),
+              .text(d=>this.d3NumFormat(d)),
           update => update
               .attr('x', d=>this.xScale(d))
               .attr('y', this.yc+this.delta+this.offset)
-              .text(d=>d),
+              .text(d=>this.d3NumFormat(d)),
           exit => exit.remove()
       );
       this.binLabelsGrp.style('text-anchor', 'middle');
@@ -443,7 +526,7 @@ drawRangeBoundaries(selection, drawFn, direction){
           var i = 0;
           while(!found && i < this.rangeSet.length){
               let r = this.rangeSet[i];
-              let isContainedIn = r.contains(d);
+              let isContainedIn = r.contains(d.val);
             if(isContainedIn){
                 binCounts[i] += 1;
                 found = true;
@@ -451,13 +534,27 @@ drawRangeBoundaries(selection, drawFn, direction){
             i += 1;
         }
     });
+
+    if(binCounts.every(d=>d===0)){
+        this.createObsSetBtnDisabled = true;
+    } else {
+        this.createObsSetBtnDisabled = false;
+    }
+
     let binData = [];
     for(let i=0; i < binCounts.length; i++){
         let x0 = this.rangeSet[i].start;
         let x1 = this.rangeSet[i].end;
+        let xc = x0 + 0.5*(x1 - x0);
+        if (xc > this.maxX){
+            xc = this.maxX;
+        }
+        if(xc < this.minX){
+            xc = this.minX;
+        }
         binData.push(
             {
-                x: x0 + 0.5*(x1 - x0),
+                x: xc,
                 c: binCounts[i]
             }
         );
@@ -470,19 +567,50 @@ drawRangeBoundaries(selection, drawFn, direction){
         enter => enter
             .append('text')
             .attr('x', d=>this.xScale(d.x))
-            .attr('y', this.yc-this.delta)
-            .text(d=>d.c),
+            .attr('y', this.yc-1.1*this.delta)
+            .text(d=>this.d3NumFormat(d.c)),
         update => update
             .attr('x', d=>this.xScale(d.x))
-            .attr('y', this.yc-this.delta)
-            .text(d=>d.c),
+            .attr('y', this.yc-1.1*this.delta)
+            .text(d=>this.d3NumFormat(d.c)),
         exit => exit.remove()
     )
     this.binCountsGrp.style('text-anchor', 'middle');
 
   }
 
-  saveObsSets(){
-      console.log('SAVE');
-  }
+    saveObsSets() {
+        console.log('SAVE');
+        let selectedSamples = [];
+        let obsSets = new Map<string, any[]>();
+        this.data.forEach(d => {
+            let found = false;
+            let i = 0;
+            while(!found && i < this.rangeSet.length){
+                let r = this.rangeSet[i];
+                if(r.contains(d.val)){
+                    let rangeStr = `${this.fieldName}_${r.toString()}`;
+                    let obj = {id: d.id}
+                    if (obsSets.has(rangeStr)){
+                        obsSets.get(rangeStr).push(obj);
+                    } else {
+                        obsSets.set(rangeStr, [obj]);
+                    }
+                }
+              i += 1;
+          }
+        });
+        console.log(obsSets);
+
+        for(let z of obsSets.entries()){
+            const observationSet: CustomSet = {
+                name: z[0],
+                type: CustomSetType.ObservationSet,
+                color: Utils.getRandomColor(),
+                elements: z[1],
+                multiple: true
+            };
+            this.metadataService.addCustomSet(observationSet)
+        }
+    }
 }

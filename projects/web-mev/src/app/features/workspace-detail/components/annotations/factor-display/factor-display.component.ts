@@ -1,6 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+
 import * as d3 from 'd3';
 import d3Tip from 'd3-tip';
+import { MetadataService } from '@app/core/metadata/metadata.service';
+import { CustomSet, CustomSetType } from '@app/_models/metadata';
 import { Utils } from '@app/shared/utils/utils';
 
 @Component({
@@ -13,7 +17,9 @@ export class FactorDisplayComponent implements OnInit {
   @Input() fieldName: string = '';
   @Input() data: any[] = [];
 
-  binData;
+  form: FormGroup;
+  binCounts;
+  countMap;
   svg;
   barsGrp;
   xAxisLabelGrp;
@@ -27,35 +33,73 @@ export class FactorDisplayComponent implements OnInit {
   width = 800;
   height = 400;
   innerHeight = this.height - this.offset;
+  createObsSetBtnDisabled;
 
-  constructor() { }
+  dropdownSettings = {};
+  allCategories = [];
+  colorMap;
+
+  constructor(private metadataService: MetadataService,
+    private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
     console.log(this.data);
-    //this.svg = d3.select('#svg-container');
+
+    this.form = this.formBuilder.group(
+      {
+        categories: ['']
+      }
+    );
+
+    this.dropdownSettings = {
+      primaryKey: 'name',
+      text: 'Select custom observation sets to create',
+      selectAllText: 'Select All',
+      unSelectAllText: 'Unselect All',
+      classes: 'resource-dropdown'
+    };
+    this.createObsSetBtnDisabled = true;
     this.countBins();
     this.setupPlot();
     this.makeBarPlot();
   }
 
+  onSelect(event: any) {
+    console.log('in selection method');
+    let selectedCategories = this.form.controls['categories'].value;
+    if (selectedCategories.length > 0){
+      this.createObsSetBtnDisabled = false;
+    } else {
+      this.createObsSetBtnDisabled = true;
+    }
+
+  }
+
   countBins() {
-    let countMap = new Map<string, number>();
+    this.countMap = new Map<string, string[]>();
     for(let x of this.data){
-      if(countMap.has(x)){
-        countMap.set(x, countMap.get(x) + 1);
+      if(this.countMap.has(x.val)){
+        this.countMap.get(x.val).push(x.id);
       } else {
-        countMap.set(x, 1);
+        this.countMap.set(x.val, [x.id]);
       }
     }
-    this.binData = [];
-    for(let[k,v] of countMap.entries()){
-      this.binData.push(
+    this.binCounts = [];
+    this.colorMap = new Map<string, string>();
+    for(let[k,v] of this.countMap.entries()){
+      this.binCounts.push(
         {
           key: k,
-          count: v
+          count: v.length
         }
       );
+      this.allCategories.push({
+        name: k
+      })
+      this.colorMap.set(k, Utils.getRandomColor());
     }
+    console.log(this.countMap);
+    console.log(this.binCounts);
   }
 
   setupPlot(){
@@ -70,14 +114,14 @@ export class FactorDisplayComponent implements OnInit {
         'translate(' + this.offset + ',' + this.offset + ')'
       )
       .style('fill', 'none');
-    //this.svg.attr('transform', 'translate(' + this.offset + ',' + this.offset + ')');
+
     this.barsGrp = this.svg.append('g');
     this.xAxisLabelGrp = this.svg.append('g');
     this.yAxisLabelGrp = this.svg.append('g');
 
-    this.maxY = d3.max(this.binData.map(d=>d.count));
+    this.maxY = d3.max(this.binCounts.map(d=>d.count));
     console.log(this.maxY);
-    let xCats = this.binData.map( d=> d.key)
+    let xCats = this.binCounts.map( d=> d.key)
     this.xScale = d3.scaleBand()
         .domain(xCats)
         .range([this.offset, this.width-this.offset])
@@ -100,7 +144,7 @@ export class FactorDisplayComponent implements OnInit {
 }
 
   makeBarPlot(){
-    console.log(this.binData);
+    console.log(this.binCounts);
 
     const tip = d3Tip()
     .attr('class', 'd3-tip')
@@ -116,7 +160,7 @@ export class FactorDisplayComponent implements OnInit {
 
     this.barsGrp
       .selectAll('rect')
-      .data(this.binData)
+      .data(this.binCounts)
       .enter()
       .append('rect')
       .attr('x', d=>this.xScale(d.key))
@@ -129,12 +173,39 @@ export class FactorDisplayComponent implements OnInit {
         return this.innerHeight - this.yScale(d.count);
       })
       .attr('width', this.bandwidth)
-      .attr('fill', d=>Utils.getRandomColor())
+      .attr('fill', d=>this.colorMap.get(d.key))
       .attr('pointer-events', 'all')
       .on('mouseover', tip.show)
       .on('mouseout', tip.hide);
 
 
   }
+
+
+  saveObsSets() {
+    console.log('SAVE');
+    //console.log(this.binCounts);
+    let selectedCategories = this.form.controls['categories'].value;
+    console.log(selectedCategories);
+    let obsSets = new Map<string, any[]>();
+    for(let categoryObj of selectedCategories){
+      let category = categoryObj.name;
+      if(this.countMap.has(category)){
+        let items = this.countMap.get(category).map(x => {
+          return {
+            id: x
+          }
+        });
+        const observationSet: CustomSet = {
+          name: `${this.fieldName}:${category}`,
+          type: CustomSetType.ObservationSet,
+          color: this.colorMap.get(category),
+          elements: items,
+          multiple: true
+      };
+        this.metadataService.addCustomSet(observationSet)
+      }
+    }  
+}
 
 }

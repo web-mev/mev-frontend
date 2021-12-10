@@ -298,12 +298,13 @@ export class ContinuousDistributionDisplayComponent implements OnInit {
       this.minX = ext[0];
       this.maxX = ext[1];
 
-      let rangeLength = 1.1*(this.maxX - this.minX);
+      let dataRange = this.maxX - this.minX;
+
+      let rangeLength = 1.1*dataRange;
       //expand the range so we don't cut off the endpoints
 
-      let domainStart = (0.5*(this.maxX - this.minX) - 0.5*rangeLength);
-      let domainEnd = (0.5*(this.maxX - this.minX) + 0.5*rangeLength);
-
+      let domainStart = this.minX + 0.5*dataRange - 0.5*rangeLength;
+      let domainEnd = this.minX + 0.5*dataRange + 0.5*rangeLength;
 
       this.xScale = d3.scaleLinear()
           .domain([domainStart, domainEnd])

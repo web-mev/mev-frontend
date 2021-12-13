@@ -15,7 +15,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { SelectionModel } from '@angular/cdk/collections';
 
-import { AddAnnotationDialogComponent } from './dialogs/add-annotation-dialog/add-annotation-dialog.component';
 import { WorkspaceResource } from '../../models/workspace-resource';
 import { WorkspaceDetailService } from '../../services/workspace-detail.service';
 import { AddObservationSetDialogComponent } from './dialogs/add-observation-set-dialog/add-observation-set-dialog.component';
@@ -128,23 +127,6 @@ export class MetadataComponent implements OnInit {
     this.onDestroy.next();
     this.onDestroy.complete();
     this.storageSubscription.unsubscribe();
-  }
-
-  /**
-   * Method is triggered when the user clicks button 'Incorporate annotation'
-   *
-   */
-  onChooseAnnotation() {
-    const dialogRef = this.dialog.open(AddAnnotationDialogComponent, {
-      data: { workspaceResources: this.workspaceResources }
-    });
-    dialogRef.afterClosed().subscribe(newCustomSets => {
-      if (newCustomSets) {
-        newCustomSets.forEach(newCustomSet =>
-          this.metadataService.addCustomSet(newCustomSet)
-        );
-      }
-    });
   }
 
   onCreateFeatureSet() {

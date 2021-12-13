@@ -31,15 +31,6 @@
                   <mat-icon aria-label="Create a feature set">add</mat-icon>
                   Create a feature/gene set
                 </button>
-                <span 
-                  [matTooltip]="'Add an annotation file to this workspace to incorporate annotations.'"
-                  [matTooltipDisabled]="(workspaceResources| annotationFilesPipe)?.length > 0">
-                <button mat-raised-button color="accent" (click)="onChooseAnnotation()"
-                [disabled]="(workspaceResources| annotationFilesPipe)?.length === 0">
-                  <mat-icon aria-label="Incorporate annotations">add</mat-icon>
-                  Incorporate annotations
-                  </button>
-                </span>
                 <button mat-button [matMenuTriggerFor]="setMenu" mat-raised-button color="accent">
                   <mat-icon>more_vert</mat-icon> Set operations
                 </button>

@@ -1,0 +1,19 @@
+<div class="container">
+    <h3 mat-dialog-title>Please provide a name for this data export</h3>
+
+    <form mat-dialog-content>
+
+        <div class="form">
+            <mat-form-field color="accent">
+                <input matInput [formControl]="exportNameFormControl" class="form-control" placeholder="Export name">
+                <mat-error *ngIf="exportNameFormControl.errors">{{errorMsg}}</mat-error>
+            </mat-form-field>
+        </div>
+
+        <div mat-dialog-actions>
+            <button mat-raised-button color="accent" [disabled]="exportNameFormControl.errors" (click)="confirmExportName()">OK</button>
+            <button mat-raised-button color="accent" (click)="useAutoname()" tabindex="-1">Skip custom name</button>
+            <button mat-raised-button color="accent" (click)="cancel()" tabindex="-1">Cancel creation</button>
+        </div>
+    </form>
+</div>

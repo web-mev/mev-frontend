@@ -5,6 +5,8 @@ import {
   } from '@angular/core';
 import { NotificationService } from '@core/notifications/notification.service';
 import { PublicDatasetService } from '../../services/public-datasets.service';
+import { MatDialog } from '@angular/material/dialog';
+import { PublicDatasetExportNameDialogComponent } from '../export-name-dialog/export-name-dialog.component';
 import { forkJoin } from 'rxjs';
 
   @Component({
@@ -27,7 +29,8 @@ import { forkJoin } from 'rxjs';
     constructor(
         public cdRef: ChangeDetectorRef,
         public pdService: PublicDatasetService,
-        public notificationService: NotificationService
+        public notificationService: NotificationService,
+        public dialog: MatDialog,
       ) {}
 
 
@@ -141,11 +144,15 @@ import { forkJoin } from 'rxjs';
      * + annotation file
      */
     _createDataset(dataType: string, datasetTag: string){
-        this.isWaiting = true;
+        let $observable_dict = {};
+
+        const dialogRef = this.dialog.open(PublicDatasetExportNameDialogComponent, {disableClose: true});
+      
+        $observable_dict['output_name'] = dialogRef.afterClosed();
+        //this.isWaiting = true;
         this.cdRef.markForCheck();
         let url_suffix = '';
         // will have type (TCGA, TARGET, etc. identifier) (or tissue) addressing an Observable
-        let $observable_dict = {};
         if(dataType === 'byType'){
             for(let i in this.selectedNames){
                 let type_id = this.selectedNames[i];
@@ -171,7 +178,11 @@ import { forkJoin } from 'rxjs';
         // and hence the request for dataset creation will be incomplete/invalid.
         forkJoin($observable_dict).subscribe(
             results => {
-                console.log(results);
+                let datasetName = results['output_name'];
+                delete results['output_name'];
+                if (datasetName === null ){
+                    return;
+                }
                 let filter_payload = {};
                 let doc_list = [];
                 Object.keys(results).forEach(key => {
@@ -195,8 +206,11 @@ import { forkJoin } from 'rxjs';
                     }
                 });
                 let final_payload = {
-                    'filters': filter_payload
+                    'filters': filter_payload,
+                    'output_name': datasetName
                 };
+                this.isWaiting = true;
+                this.cdRef.markForCheck();
                 this.pdService.createDataset(datasetTag,final_payload).subscribe(
                     results => {
                         this.isWaiting = false;

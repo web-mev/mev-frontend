@@ -8,6 +8,7 @@ import { TcgaRnaseqComponent } from './components/tcga-rnaseq/tcga-rnaseq.compon
 import { TargetRnaseqComponent } from './components/target-rnaseq/target-rnaseq.component';
 import { SharedModule } from '@app/shared/shared.module';
 import { PublicDatasetsComponent } from './components/public-datasets-container/public-datasets.component'
+import { PublicDatasetExportNameDialogComponent } from './components/export-name-dialog/export-name-dialog.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { PublicDatasetsComponent } from './components/public-datasets-container/
     PublicDatasetsListComponent,
     PublicDatasetCardComponent,
     TcgaRnaseqComponent,
-    TargetRnaseqComponent
+    TargetRnaseqComponent,
+    PublicDatasetExportNameDialogComponent
   ],
   exports: [
     PublicDatasetsComponent

@@ -7,6 +7,7 @@ import {
 import { NotificationService } from '@core/notifications/notification.service';
 import { PublicDatasetService } from '../../services/public-datasets.service';
 import {GdcRnaseqComponent} from '../gdc_base/gdc-base.component';
+import { MatDialog } from '@angular/material/dialog';
 
   @Component({
     selector: 'tcga-rnaseq-explorer',
@@ -21,9 +22,11 @@ import {GdcRnaseqComponent} from '../gdc_base/gdc-base.component';
     constructor(
         public cdRef: ChangeDetectorRef,
         public pdService: PublicDatasetService,
-        public notificationService: NotificationService
+        public notificationService: NotificationService,
+        public dialog: MatDialog
+
       ) {
-        super(cdRef, pdService, notificationService);
+        super(cdRef, pdService, notificationService, dialog);
       }
 
 

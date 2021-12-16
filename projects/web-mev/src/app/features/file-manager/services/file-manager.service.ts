@@ -85,8 +85,11 @@ export class FileService {
         map((files: File[]) => files.map(file => this.adapter.adapt(file))),
         takeWhile(
           files =>
-            files.some(file =>
-              this.FILE_VALIDATION_PROGRESS_STATUSES.includes(file.status)
+            files.some(file => {
+              let file_is_inactive = !(file.is_active);
+              let waiting =  this.FILE_VALIDATION_PROGRESS_STATUSES.includes(file.status);
+              return (file_is_inactive || waiting)
+            }
             ),
           true
         ),

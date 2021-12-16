@@ -5,6 +5,7 @@ import {
   } from '@angular/core';
 import { NotificationService } from '@core/notifications/notification.service';
 import { PublicDatasetService } from '../../services/public-datasets.service';
+import { FileService } from '@app/features/file-manager/services/file-manager.service';
 import { MatDialog } from '@angular/material/dialog';
 import { PublicDatasetExportNameDialogComponent } from '../export-name-dialog/export-name-dialog.component';
 import { forkJoin } from 'rxjs';
@@ -30,6 +31,7 @@ import { forkJoin } from 'rxjs';
         public cdRef: ChangeDetectorRef,
         public pdService: PublicDatasetService,
         public notificationService: NotificationService,
+        public fileService: FileService,
         public dialog: MatDialog,
       ) {}
 
@@ -148,8 +150,11 @@ import { forkJoin } from 'rxjs';
 
         const dialogRef = this.dialog.open(PublicDatasetExportNameDialogComponent, {disableClose: true});
       
+        // we add the observable returned by `afterClosed` so that we can simultaneously query the backend
+        // for sample IDs corresponding to the users selection(s) PLUS get any custom name they provide
+        // for this data export. By putting all these observables into an object, we can then use the forkJoin
+        // method below to ensure everything is prepared to send the final request which will create the new file(s)
         $observable_dict['output_name'] = dialogRef.afterClosed();
-        //this.isWaiting = true;
         this.cdRef.markForCheck();
         let url_suffix = '';
         // will have type (TCGA, TARGET, etc. identifier) (or tissue) addressing an Observable
@@ -180,6 +185,11 @@ import { forkJoin } from 'rxjs';
             results => {
                 let datasetName = results['output_name'];
                 delete results['output_name'];
+
+                // a value of `null` here is a signal that the user aborted
+                // creation of the dataset via the modal (the one which asks
+                // them to provide a custom name for the data export). Hence, we 
+                // bail if a null is encountered
                 if (datasetName === null ){
                     return;
                 }
@@ -215,8 +225,9 @@ import { forkJoin } from 'rxjs';
                     results => {
                         this.isWaiting = false;
                         this.cdRef.markForCheck();
-                        this.notificationService.success('Your files are now available.' +
-                            ' Note that you may need to refresh the file listing.'
+                        this.fileService.getAllFilesPolled();
+                        this.notificationService.success('Your files are being prepared.' +
+                            ' You can check the status of these in the file browser.'
                         );
                     }
                 );  

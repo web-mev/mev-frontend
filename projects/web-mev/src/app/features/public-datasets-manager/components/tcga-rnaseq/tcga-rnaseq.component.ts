@@ -4,6 +4,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef
   } from '@angular/core';
+import { FileService } from '@app/features/file-manager/services/file-manager.service';
 import { NotificationService } from '@core/notifications/notification.service';
 import { PublicDatasetService } from '../../services/public-datasets.service';
 import {GdcRnaseqComponent} from '../gdc_base/gdc-base.component';
@@ -23,10 +24,11 @@ import { MatDialog } from '@angular/material/dialog';
         public cdRef: ChangeDetectorRef,
         public pdService: PublicDatasetService,
         public notificationService: NotificationService,
+        public fileService: FileService,
         public dialog: MatDialog
 
       ) {
-        super(cdRef, pdService, notificationService, dialog);
+        super(cdRef, pdService, notificationService, fileService, dialog);
       }
 
 

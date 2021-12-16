@@ -114,6 +114,7 @@ export class FileListComponent implements OnInit {
 
         // refresh table if all files are uploaded
         if(uploadCompletionArray.every((element) => element)){
+          console.log('completed upload. now refresh')
           this.refresh();
           this.uploadInProgressMsg = '';
           this.ref.markForCheck();
@@ -371,8 +372,10 @@ export class FileListComponent implements OnInit {
 
   public loadData() {
     if(this.dataSource){
+      console.log('was existing datasource. call connect.')
       this.dataSource.connect();
     } else {
+      console.log('create a new datasource')
       this.dataSource = new ExampleDataSource(
         this.fileService,
         this.paginator,
@@ -426,7 +429,7 @@ export class ExampleDataSource extends DataSource<File> {
       this._filterChange,
       this._paginator.page
     ];
-    this._exampleDatabase.getAllFiles();
+    this._exampleDatabase.getAllFilesPolled();
 
     return merge(...displayDataChanges).pipe(
       map(() => {

@@ -6,6 +6,7 @@ import {
     HostListener,
     Host
 } from '@angular/core';
+import {saveAs} from "file-saver";
 import { Subject } from 'rxjs';
 import { takeUntil, map, tap } from 'rxjs/operators';
 
@@ -25,18 +26,39 @@ export class FileDownloadDirective implements OnDestroy {
 
     @HostListener('click')
     onClick(): void {
+        this.fileService.fetchDownloadUrl(this.resourceId)
+            .subscribe(x => {
+                let u = x['url'];
+                let download_type = x['download_type'];
+
+                // if the server responds that the download_type is "local",
+                // then we are downloading directly from the api server.
+                if (download_type === 'local'){
+                    this.initiateDownload();
+                } else {                
+                    const link = document.createElement('a')
+                    link.setAttribute('href', u);
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+            });
+    }
+
+    // starts the process of a direct download from the api server
+    private initiateDownload(){
         this.fileService.downloadFile(this.resourceId)
-            .pipe(
-                takeUntil(this.destroy$),
-                tap(response => {
-                    this.downloadFile(
-                        response.body, 
-                        this.parseFilename(response),
-                        response.headers.get('Content-Type')
-                    );
-                })
-            )
-            .subscribe(x => {});
+        .pipe(
+            takeUntil(this.destroy$),
+            tap(response => {
+                this.downloadFile(
+                    response.body, 
+                    this.parseFilename(response),
+                    response.headers.get('Content-Type')
+                );
+            })
+        ).subscribe();
     }
 
     private parseFilename(response): string {
@@ -49,7 +71,6 @@ export class FileDownloadDirective implements OnDestroy {
             return urlBase;
         } else {
             let matches = /filename="(.*?)"/g.exec(contentDisposition);
-            console.log('matches:', matches);
             return matches && matches.length > 1 ? matches[1] : null;
         }
     }
@@ -61,6 +82,7 @@ export class FileDownloadDirective implements OnDestroy {
         } else {
             const link = document.createElement('a');
             if (link.download !== undefined) {
+
                 // Browsers that support HTML5 download attribute
                 const url = URL.createObjectURL(blob);
 

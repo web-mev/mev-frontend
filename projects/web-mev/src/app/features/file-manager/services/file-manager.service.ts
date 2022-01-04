@@ -215,4 +215,14 @@ export class FileService {
       }
     );
   }
+
+    /**
+   * Get a download url from the server
+   *
+   */
+     fetchDownloadUrl(id: number | string): Observable<any> {
+      return this.httpClient.get(
+        `${this.API_URL}/resources/download-url/${id}/`
+      );
+    }
 }

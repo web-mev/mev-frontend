@@ -6,7 +6,6 @@ import {
     HostListener,
     Host
 } from '@angular/core';
-import {saveAs} from "file-saver";
 import { Subject } from 'rxjs';
 import { takeUntil, map, tap } from 'rxjs/operators';
 

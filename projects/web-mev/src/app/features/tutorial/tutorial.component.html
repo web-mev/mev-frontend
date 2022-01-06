@@ -2,33 +2,40 @@
   <div class="row justify-content-center">
     <div class="col-md-8 form-group">
       <mat-card>
+        <h3>WebMeV Tutorial</h3>
         <p>For a quickstart and case-study on RNA-Seq data, see our documentation at <a href="https://web-mev.github.io/">https://web-mev.github.io/</a></p>
 
         <p>Example data for universal human reference (UHR) and human brain reference (HBR). From 
           <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4793214/">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4793214/</a>:
-          <br>
-          <br>
-          <a href="https://storage.googleapis.com/mev-example-data/hbr_and_uhr_counts.tsv">Example count matrix</a>
-          <br>
-          <a href="https://storage.googleapis.com/mev-example-data/hbr_and_uhr_annotations.csv">Example annotations</a>
-          <br>
-          <a href="https://storage.googleapis.com/mev-example-data/sctk_1k.csv">Example single-cell dataset (counts only)</a>
         </p>
-        <!-- <mat-card-subtitle>Please see the
-          <a href="https://www.youtube.com/watch?list=PLSUXpXpbiLkJFbC3LOMgBacvNSdNpw0nv&amp;v=VqGpdotr-A4"
-             target="_blank">
-            WebMeV Tutorials
-          </a>
-          playlist for more tutorials
-        </mat-card-subtitle> -->
-        <!-- <mat-card-content>
-          <youtube-player
-            videoId="VqGpdotr-A4"
-            suggestedQuality="default"
-            [height]="250"
-            [width]="500">
-          </youtube-player>
-        </mat-card-content> -->
+          <br>
+          <h4>Tutorial files</h4>
+          <p>You can download the files to your computer by clicking the link.</p>
+          <p>You may directly add files to your WebMeV account by clicking the button (visible if logged in).</p>
+          
+          <table id="tutorial-files" mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Description</th>
+              <td mat-cell *matCellDef="let element">
+                 <a href="{{element.direct_url}}">{{element.name}} </a>
+              </td>
+            </ng-container>
+          
+            <ng-container matColumnDef="add_button">
+              <th mat-header-cell *matHeaderCellDef>  </th>
+              <td mat-cell *matCellDef="let element">
+                <button mat-raised-button color="accent" 
+                  (click)="addFile(element.bucket_path, element.resource_type)">
+                  <mat-icon aria-label="Add file to account">add</mat-icon>
+                  Add to my account
+                </button>
+              </td>
+            </ng-container>
+          
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
       </mat-card>
     </div>
   </div>

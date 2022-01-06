@@ -109,6 +109,14 @@ export class D3BoxPlotComponent implements OnInit, OnChanges, AfterViewInit {
    * Function to prepare data for box plot
    */
   reformatData() {
+
+    // it's possible that an observation set chosen by the user has no samples intersecting
+    // with the data source. In this case, it's important that we track this and don't show those
+    // empty sets.
+    // Similarly, we can warn about sets where some of the samples are missing.
+    const emptySets = new Set();
+    const partialSets = new Set();
+
     if (this.resourceData.length) {
       this.boxPlotTypes = {};
       if (this.customObservationSetsToPlot.length) {
@@ -145,20 +153,42 @@ export class D3BoxPlotComponent implements OnInit, OnChanges, AfterViewInit {
       const countsFormatted = this.resourceData.map(elem => {
         const newElem = { key: elem.rowname };
         Object.keys(this.boxPlotTypes).forEach(key => {
-          const numbers = this.boxPlotTypes[key].samples.reduce(
-            (acc, cur) => [...acc, elem.values[cur]],
-            []
+          // track the number of samples in this observation set. This will allow
+          // us to inform users if their data source does not have all those samples.
+          let numSamples = this.boxPlotTypes[key].samples.length;
+          const valDict = this.boxPlotTypes[key].samples.reduce(
+            (acc, cur) => {
+              // acc is the accumulated array
+              // cur is the name of the sample.
+              // note that if the resourceData does not contain this sample, then
+              // it's possible elem.values[cur] can be undefined. This happens in situations
+              // where a user makes a plot from data that is a subset of the total data. For
+              // instance, if they are plotting normalized expressions from deseq2, then the only
+              // samples in that expression matrix will be for those in the contrast. If you then chose
+              // to display samples that were not featured in that contrast, the samples will not be found
+              let expVal = elem.values[cur];
+              if (expVal === undefined){
+                // if expVal was undefined, just return the same array
+                return acc;
+              }
+              return [...acc, {pt_label: cur, value: expVal}];
+            }, []
           );
-          const valDict = this.boxPlotTypes[key].samples.map(
-            sampleName => {
-              return {pt_label: sampleName, value: elem.values[sampleName]}
-            }
+          const numbers = valDict.map(
+            x => x.value
           );
-          let stats = Utils.getBoxPlotStatistics(numbers);
-          let d = {};
-          d[this.statsKey] = stats;
-          d[this.pointsKey] = valDict;
-          newElem[this.boxPlotTypes[key].yCat] = d;
+          if (numbers.length > 0){        
+            let stats = Utils.getBoxPlotStatistics(numbers);
+            let d = {};
+            d[this.statsKey] = stats;
+            d[this.pointsKey] = valDict;
+            newElem[this.boxPlotTypes[key].yCat] = d;
+          } else {
+            emptySets.add(key);
+          }
+          if ((numbers.length > 0) && (numSamples > numbers.length)) {
+            partialSets.add(key);
+          }
         });
         return newElem;
       });
@@ -166,6 +196,16 @@ export class D3BoxPlotComponent implements OnInit, OnChanges, AfterViewInit {
     } else {
       this.boxPlotData = [];
     }
+    // Now, cull any empty sets from boxPlotTypes so we don't attempt to plot them later
+    emptySets.forEach((x: string) =>{
+      delete this.boxPlotTypes[x];
+      this.warnMsgArr.push(`Note that the samples of observation set "${x}" 
+      are not included in the expression data source you are plotting from.`);
+    });
+    partialSets.forEach((x:string) => 
+      this.warnMsgArr.push(`Note that some of the samples of observation set "${x}" 
+      were not found in the expression data source you are plotting from.`)
+    );
   }
 
   clearChart() {

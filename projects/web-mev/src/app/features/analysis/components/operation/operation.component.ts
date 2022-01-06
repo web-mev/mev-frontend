@@ -235,6 +235,30 @@ export class OperationComponent implements OnChanges {
             controlsConfig[key] = configPosIntField;
             break;
           }
+          case 'BoundedInteger': {
+            const boundedIntField = {
+              key: key,
+              name: input.name,
+              min: input.spec.min,
+              max: input.spec.max,
+              desc: input.description,
+              required: input.required
+            };
+            this.intFields.push(boundedIntField);
+
+            const configBoundedIntField = [
+              input.spec.default_value,
+              [
+                ...(input.required ? [Validators.required] : []),
+                Validators.min(input.spec.min),
+                Validators.max(input.spec.max),
+                Validators.pattern(/^[0-9]\d*$/)
+              ]
+            ];
+            controlsConfig[key] = configBoundedIntField;
+            break;
+          }
+
           case 'String': {
             const textField = {
               key: key,

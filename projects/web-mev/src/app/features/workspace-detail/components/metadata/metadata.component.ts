@@ -15,15 +15,15 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { SelectionModel } from '@angular/cdk/collections';
 
-import { AddAnnotationDialogComponent } from './dialogs/add-annotation-dialog/add-annotation-dialog.component';
 import { WorkspaceResource } from '../../models/workspace-resource';
 import { WorkspaceDetailService } from '../../services/workspace-detail.service';
 import { AddObservationSetDialogComponent } from './dialogs/add-observation-set-dialog/add-observation-set-dialog.component';
+import { AddFeatureSetDialogComponent } from './dialogs/add-feature-set-dialog/add-feature-set-dialog.component';
 import { DeleteSetDialogComponent } from './dialogs/delete-set-dialog/delete-set-dialog.component';
 import { ViewSetDialogComponent } from './dialogs/view-set-dialog/view-set-dialog.component';
 import { LclStorageService } from '@app/core/local-storage/lcl-storage.service';
 import { MetadataService } from '@app/core/metadata/metadata.service';
-import { EditFeatureSetDialogComponent } from './dialogs/edit-feature-set-dialog/edit-feature-set-dialog.component';
+import { EditSetDialogComponent } from './dialogs/edit-set-dialog/edit-set-dialog.component';
 import { ViewInfoDialogComponent } from './dialogs/view-info-dialog/view-info-dialog.component';
 import { CustomSet, CustomSetType } from '@app/_models/metadata';
 import { NotificationService } from '@app/core/core.module';
@@ -114,7 +114,6 @@ export class MetadataComponent implements OnInit {
         );
         this.generateObservationSetsVisualization(); // generate custom observation visualization
         this.cd.markForCheck();
-        console.log('in the callback for the storage subscription');
         this.selection.clear();
       });
   }
@@ -130,21 +129,13 @@ export class MetadataComponent implements OnInit {
     this.storageSubscription.unsubscribe();
   }
 
-  /**
-   * Method is triggered when the user clicks button 'Incorporate annotation'
-   *
-   */
-  onChooseAnnotation() {
-    const dialogRef = this.dialog.open(AddAnnotationDialogComponent, {
-      data: { workspaceResources: this.workspaceResources }
-    });
-    dialogRef.afterClosed().subscribe(newCustomSets => {
-      if (newCustomSets) {
-        newCustomSets.forEach(newCustomSet =>
-          this.metadataService.addCustomSet(newCustomSet)
-        );
-      }
-    });
+  onCreateFeatureSet() {
+      const dialogRef = this.dialog.open(AddFeatureSetDialogComponent);
+      dialogRef.afterClosed().subscribe(newFeatureSet => {
+        if (newFeatureSet) {
+          this.metadataService.addCustomSet(newFeatureSet);
+        }
+      });
   }
 
   /**
@@ -159,8 +150,6 @@ export class MetadataComponent implements OnInit {
       .pipe(
         delay(500), // delay for spinner
         switchMap(metadata => {
-          console.log('META:');
-          console.log(metadata);
           this.observationCount = metadata['count']
           if(this.observationCount > this.maxObservations){
             let msg = `Your workspace has greater than ${this.maxObservations} observations/samples
@@ -281,6 +270,42 @@ export class MetadataComponent implements OnInit {
    * For feature sets only names can be updated
    */
   onEditCustomSet(set) {
+    if(set.type === CustomSetType.ObservationSet){
+      this.editObservationSet(set);
+    } else {
+      this.editFeatureSet(set);
+    }
+  }
+
+  editFeatureSet(set){
+
+    let ds = [];
+    for(let element_idx in set.elements){
+      let element = set.elements[element_idx];
+      ds.push({
+        id:element.id,
+        attributes: {}
+      })
+    }
+    const dialogRef = this.dialog.open(EditSetDialogComponent, {
+      data: {
+        name: set.name,
+        color: set.color,
+        type: set.type,
+        selectedElements: set.elements,
+        setDS: new MatTableDataSource(ds),
+        setsDisplayedColumns: ['select', 'id'],
+        setsDisplayedColumnsAttributesOnly: []
+      }
+    });
+    dialogRef.afterClosed().subscribe(updatedObservationSet => {
+      if (updatedObservationSet) {
+        this.metadataService.updateCustomSet(updatedObservationSet, set.name);
+      }
+    });
+  }
+
+  editObservationSet(set){
     this.isWait = true;
     this.globalObservationSets = [];
     this.service
@@ -302,8 +327,8 @@ export class MetadataComponent implements OnInit {
           );
 
           // the list of columns for pop-up table to select samples for custom observation sets
-          const observationSetsDisplayedColumns = ['select', 'id'];
-          const observationSetsDisplayedColumnsAttributesOnly = [];
+          const setsDisplayedColumns = ['select', 'id'];
+          const setsDisplayedColumnsAttributesOnly = [];
 
           const obsSetsWithAttr = this.globalObservationSets.filter(
             set => 'attributes' in set
@@ -314,21 +339,21 @@ export class MetadataComponent implements OnInit {
 
           for (const attribute in attributes) {
             if (attributes.hasOwnProperty(attribute)) {
-              observationSetsDisplayedColumns.push(attribute);
-              observationSetsDisplayedColumnsAttributesOnly.push(attribute);
+              setsDisplayedColumns.push(attribute);
+              setsDisplayedColumnsAttributesOnly.push(attribute);
             }
           }
 
           this.isWait = false;
-          const dialogRef = this.dialog.open(EditFeatureSetDialogComponent, {
+          const dialogRef = this.dialog.open(EditSetDialogComponent, {
             data: {
               name: set.name,
               color: set.color,
               type: set.type,
               selectedElements: set.elements,
-              observationSetDS: this.tooManyObservations? null : globalObservationSetsDS,
-              observationSetsDisplayedColumns: observationSetsDisplayedColumns,
-              observationSetsDisplayedColumnsAttributesOnly: observationSetsDisplayedColumnsAttributesOnly
+              setDS: this.tooManyObservations? null : globalObservationSetsDS,
+              setsDisplayedColumns: setsDisplayedColumns,
+              setsDisplayedColumnsAttributesOnly: setsDisplayedColumnsAttributesOnly
             }
           });
           return dialogRef.afterClosed();
@@ -418,7 +443,6 @@ export class MetadataComponent implements OnInit {
       this.isAllSelected() ?
           this.selection.clear() :
           this.customSetDS.data.forEach(row => this.selection.select(row));
-          console.log('selected(master): ', this.selection.selected);
     } else {
       return null;
     }
@@ -571,7 +595,6 @@ export class MetadataComponent implements OnInit {
           // was used to collect the info that will now be 
           // handled on the server side. After that (if successful)
           // we will add it to the client side sets.
-          console.log('new set:', data);
           if (data) {
             let payload = tmpPayload;
             payload['sets'] = data['ordering'];

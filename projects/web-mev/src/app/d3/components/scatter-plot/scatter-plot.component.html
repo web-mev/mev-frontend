@@ -5,7 +5,7 @@
     </mat-card-header>
     <mat-card-content class="analysis-card__main">
         <p class="analysis-card__instruction">
-            Enable the <i>select points</i> mode to allow the grouping of points and creation of custom sets. 
+            Enable the <i>select points</i> mode to allow the grouping of points and creation of custom sets.
         </p>
         <p class="analysis-card__instruction">
             Those sets can be used in other analyses (e.g. differential expression) to examine differences between the groups.
@@ -40,18 +40,18 @@
                     </mat-option>
                 </mat-select>
             </div>
-            
+
             <section class="observation-list-section">
-                
-                <ul *ngIf="customObservationSets.length"> Conditional formatting: 
+
+                <ul *ngIf="customObservationSets.length"> Conditional formatting:
                     <li *ngFor="let set of customObservationSets">
                         <mat-checkbox (change)="onObservationCheck($event)" [checked]="isCustomObservationSetChecked(set.name)" [id]="set.name">{{set.name}}</mat-checkbox>
                     </li>
                 </ul>
-            </section>          
-                
+            </section>
+
                 <div class="sample-list-container">
-                    <button mat-raised-button color="accent" (click)="onCreateCustomSampleSet()" 
+                    <button mat-raised-button color="accent" (click)="onCreateCustomSampleSet()"
                     [disabled]="!selectedSamples.length">
                         <mat-icon>add</mat-icon>
                         Save as a sample set
@@ -63,11 +63,11 @@
                             </mat-chip>
                         </mat-chip-list>
                     </div>
-                </div>          
+                </div>
 
             <mev-download-button [containerId]="containerId" [imageName]="imageName"></mev-download-button>
             <div #scatterPlot id="scatterPlot" class="chart" (window:resize)="onResize($event)"></div>
-            
+
         </div>
     </mat-card-content>
 </mat-card>

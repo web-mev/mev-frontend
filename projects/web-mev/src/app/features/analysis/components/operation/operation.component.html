@@ -6,7 +6,7 @@
   <!-- OPERATION NAME -->
   <ng-container *ngIf="operation.mode !== 'client'">
     <div class="label">
-      Operation name:
+      Operation name:*
       <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
         matTooltip="Type operation name" aria-label="Info tooltip about the field">info
       </mat-icon>
@@ -20,7 +20,7 @@
   <!-- SINGLE SELECT LISTS FOR RESOURCES -->
   <div *ngFor="let resourceField of resourceFields">
     <div class="label">
-      {{ resourceField.name }}
+      {{ resourceField.name }}<span *ngIf="resourceField.required">*</span>
       <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
         matTooltip="{{ resourceField.desc}}" aria-label="Info tooltip about the field">info
       </mat-icon>
@@ -45,7 +45,7 @@
   <div *ngFor="let multipleResourceField of multipleResourceFields">
     <div class="form-control form-control--multiselect">
       <div class="label">
-        {{ multipleResourceField.name }}
+        {{ multipleResourceField.name }}<span *ngIf="multipleResourceField.required">*</span>
         <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
           matTooltip="{{ multipleResourceField.desc}}" aria-label="Info tooltip about the field">info
         </mat-icon>
@@ -73,7 +73,7 @@
 
   <div *ngFor="let numField of numFields">
     <div class="label">
-      {{ numField.name }}
+      {{ numField.name }}<span *ngIf="numField.required">*</span>
       <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
         matTooltip="{{ numField.desc}}" aria-label="Info tooltip about the field">info
       </mat-icon>
@@ -95,7 +95,7 @@
 
   <div *ngFor="let intField of intFields">
     <div class="label">
-      {{ intField.name }}
+      {{ intField.name }}<span *ngIf="intField.required">*</span>
       <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
         matTooltip="{{ intField.desc}}" aria-label="Info tooltip about the field">info
       </mat-icon>
@@ -106,8 +106,14 @@
         <mat-error *ngIf="f[intField.key].errors.required">
           This field is required
         </mat-error>
-        <mat-error *ngIf="f[intField.key].errors.min || f[intField.key].errors.max || f[intField.key].errors.pattern">
+        <mat-error *ngIf="f[intField.key].errors.pattern">
+          The value should be an integer.
+        </mat-error>
+        <mat-error *ngIf="f[intField.key].errors.min">
           The value should be an integer greater than or equal to {{ intField.min }}
+        </mat-error>
+        <mat-error *ngIf="f[intField.key].errors.max">
+          The value should be an integer less than or equal to {{ intField.max }}
         </mat-error>
       </div>
     </mat-form-field>
@@ -118,7 +124,7 @@
 
   <div *ngFor="let textField of textFields">
     <div class="label">
-      {{ textField.name }}
+      {{ textField.name }}<span *ngIf="textField.required">*</span>
       <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
         matTooltip="{{ textField.desc}}" aria-label="Info tooltip about the field">info
       </mat-icon>
@@ -138,7 +144,7 @@
   <!-- SINGLE SELECT LISTS FOR OBSERVATION SETS -->
   <div *ngFor="let observationField of observationFields">
     <div class="label">
-      {{ observationField.name }}
+      {{ observationField.name }}<span *ngIf="observationField.required">*</span>
       <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
         matTooltip="{{ observationField.desc}}" aria-label="Info tooltip about the field">info
       </mat-icon>
@@ -161,7 +167,7 @@
   <!-- SINGLE SELECT LISTS FOR FEATURE SETS -->
   <div *ngFor="let featureField of featureFields">
     <div class="label">
-      {{ featureField.name }}
+      {{ featureField.name }}<span *ngIf="featureField.required">*</span>
       <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
         matTooltip="{{ featureField.desc}}" aria-label="Info tooltip about the field">info
       </mat-icon>
@@ -185,7 +191,7 @@
   <!-- SINGLE SELECT LISTS FOR OPERATION OPTIONS -->
   <div *ngFor="let optionField of optionFields">
     <div class="label">
-      {{ optionField.name }}
+      {{ optionField.name }}<span *ngIf="optionField.required">*</span>
       <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
         matTooltip="{{ optionField.desc}}" aria-label="Info tooltip about the field">info
       </mat-icon>
@@ -211,7 +217,7 @@
       <mat-checkbox [formControlName]="booleanField.key" [checked]="booleanField.checked">
       </mat-checkbox>
       <span class="label">
-        {{ booleanField.name }}
+        {{ booleanField.name }}<span *ngIf="booleanField.required">*</span>
         <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
           matTooltip="{{ booleanField.desc}}" aria-label="Info tooltip about the field">info
         </mat-icon>

@@ -27,41 +27,42 @@
                   <mat-icon aria-label="Create an observation set">add</mat-icon>
                   Create an observation set
                 </button>
-      
-                <span 
-                  [matTooltip]="'Add an annotation file to this workspace to incorporate annotations.'"
-                  [matTooltipDisabled]="(workspaceResources| annotationFilesPipe)?.length > 0">
-                <button mat-raised-button color="accent" (click)="onChooseAnnotation()"
-                [disabled]="(workspaceResources| annotationFilesPipe)?.length === 0">
-                  <mat-icon aria-label="Incorporate annotations">add</mat-icon>
-                  Incorporate annotations
-                  </button>
-                </span>
+                <button mat-raised-button color="accent" (click)="onCreateFeatureSet()">
+                  <mat-icon aria-label="Create a feature set">add</mat-icon>
+                  Create a feature/gene set
+                </button>
+                <button mat-button [matMenuTriggerFor]="setMenu" mat-raised-button color="accent">
+                  <mat-icon>more_vert</mat-icon> Set operations
+                </button>
+                  <mat-menu #setMenu="matMenu">
+                    <span 
+                    [matTooltip]="'Select two or more sets to perform an intersection'"
+                    [matTooltipDisabled]="selection.selected.length > 1">
+                    <button mat-menu-item [disabled]="selection.selected.length < 2" (click)="makeSetIntersection()">
+                      <mat-icon aria-label="Create from set intersection">add</mat-icon>
+                      Create set from intersection
+                    </button>
+                    </span>
+                    <span 
+                    [matTooltip]="'Select two or more sets to perform a union'"
+                    [matTooltipDisabled]="selection.selected.length > 1">
+                    <button mat-menu-item [disabled]="selection.selected.length < 2" (click)="makeSetUnion()">
+                      <mat-icon aria-label="Create from set union">add</mat-icon>
+                      Create set from union
+                    </button>
+                    </span>
+                    <span 
+                    [matTooltip]="'Select two sets to perform a set difference. For clarity, we only allow a set difference between exactly two sets.'"
+                    [matTooltipDisabled]="selection.selected.length === 2">
+                    <button mat-menu-item [disabled]="selection.selected.length !== 2" (click)="makeSetDifference()">
+                      <mat-icon aria-label="Create from set difference">add</mat-icon>
+                      Create from set difference
+                    </button>
+                    </span>
+                </mat-menu>
 
-                <span 
-                [matTooltip]="'Select two or more sets to perform an intersection'"
-                [matTooltipDisabled]="selection.selected.length > 1">
-                <button [disabled]="selection.selected.length < 2" mat-raised-button color="accent" (click)="makeSetIntersection()">
-                  <mat-icon aria-label="Create from set intersection">add</mat-icon>
-                  Create set from intersection
-                </button>
-                </span>
-                <span 
-                [matTooltip]="'Select two or more sets to perform a union'"
-                [matTooltipDisabled]="selection.selected.length > 1">
-                <button [disabled]="selection.selected.length < 2" mat-raised-button color="accent" (click)="makeSetUnion()">
-                  <mat-icon aria-label="Create from set union">add</mat-icon>
-                  Create set from union
-                </button>
-                </span>
-                <span 
-                [matTooltip]="'Select two sets to perform a set difference. For clarity, we only allow a set difference between exactly two sets.'"
-                [matTooltipDisabled]="selection.selected.length === 2">
-                <button [disabled]="selection.selected.length !== 2" mat-raised-button color="accent" (click)="makeSetDifference()">
-                  <mat-icon aria-label="Create from set difference">add</mat-icon>
-                  Create from set difference
-                </button>
-                </span>
+
+                
               </div>
 
               <mat-button-toggle-group #customSetsViewMode="matButtonToggleGroup" value="tableMode">

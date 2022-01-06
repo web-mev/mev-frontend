@@ -37,7 +37,16 @@ export class AddDialogComponent implements OnInit {
   ngOnInit(): void {
     this.workspaceId = this.data.workspaceId;
     this.apiService.getAvailableResources().subscribe(data => {
-      this.files = data;
+      let final_files = [];
+      // Below, we filter out files that are already in this workspace so
+      // the size of the displayed list is shorter
+      for( let f of data ) {
+        let workspace_ids_for_resource = f.workspaces.map(w => w['id']);
+        if(!workspace_ids_for_resource.includes(this.workspaceId)){
+          final_files.push(f)
+        }
+      }
+      this.files = final_files;
     });
 
     this.dropdownSettings = {

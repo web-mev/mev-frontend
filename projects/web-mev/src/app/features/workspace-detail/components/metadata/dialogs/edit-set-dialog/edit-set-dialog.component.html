@@ -1,0 +1,134 @@
+<div class="container">
+    <p *ngIf="isObservationSet; else featureSetText">
+        Update the name of the observation set, its color and sample list. Then click the Save button.
+    </p>
+
+    <ng-template #featureSetText>
+        <p>
+            Update the name of the feature set. Then click the Save button.
+        </p>
+    </ng-template>
+
+    <form class="mat-dialog-content" (ngSubmit)="submit" [formGroup]="editingForm">
+        <div class="form">
+            <mat-form-field class="form-control" color="accent">
+                <mat-label>Enter {{ customSetType | lowercase}} name</mat-label>
+                <input matInput formControlName=customSetName name=customSetName>
+            </mat-form-field>
+
+            <mat-form-field class="form-control" color="accent">
+                <mat-label>Select your color for your set:</mat-label>
+                <input type="color" class="color-picker-input" matInput formControlName=customSetColor
+                    name=customSetColor>
+            </mat-form-field>
+
+            <div *ngIf="isObservationSet && !setsUniverseDS">
+                Note that manual set editing has been disabled due to a large number of samples/observations
+               in your workspace. You may still edit the name and color of the set above, however.
+            </div>
+            <div *ngIf="isObservationSet && setsUniverseDS">
+                Select samples:
+                <div class="mat-elevation-z8">
+                    <div class="filter-panel">
+                        <mat-form-field class="form-control">
+                            <input matInput (keyup)="applyObservationFilter($event.target.value)" placeholder="Filter">
+                        </mat-form-field>
+                    </div>
+
+                    <table mat-table [dataSource]="setsUniverseDS">
+
+                        <ng-container matColumnDef="select">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <mat-checkbox (change)="$event ? masterToggle() : null"
+                                    [checked]="selection.hasValue() && isAllSelected()"
+                                    [indeterminate]="selection.hasValue() && !isAllSelected()">
+                                </mat-checkbox>
+                            </th>
+                            <td mat-cell *matCellDef="let row">
+                                <mat-checkbox (click)="$event.stopPropagation()"
+                                    (change)="$event ? selection.toggle(row) : null"
+                                    [checked]="selection.isSelected(row)">
+                                </mat-checkbox>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="id">
+                            <th mat-header-cell *matHeaderCellDef> Name </th>
+                            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+                        </ng-container>
+
+                        <ng-container
+                            *ngFor="let attrCol of setsDisplayedColumnsAttributesOnly; let colIndex = index"
+                            matColumnDef="{{attrCol}}">
+                            <th mat-header-cell *matHeaderCellDef>{{ attrCol }}</th>
+                            <td mat-cell *matCellDef="let element">
+                                {{ element.attributes[attrCol] ? element.attributes[attrCol].value : '' }}</td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="setsDisplayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: setsDisplayedColumns;"
+                            (click)="selection.toggle(row)">
+                        </tr>
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 25]">
+                    </mat-paginator>
+                </div>
+            </div>
+
+            <div *ngIf="!isObservationSet">
+                Selected features:
+                <div class="mat-elevation-z8">
+                    <div class="filter-panel">
+                        <mat-form-field class="form-control">
+                            <input matInput (keyup)="applyFeatureFilter($event.target.value)" placeholder="Filter">
+                        </mat-form-field>
+                    </div>
+
+                    <table mat-table [dataSource]="setsUniverseDS">
+
+                        <ng-container matColumnDef="select">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <mat-checkbox (change)="$event ? masterToggle() : null"
+                                    [checked]="selection.hasValue() && isAllSelected()"
+                                    [indeterminate]="selection.hasValue() && !isAllSelected()">
+                                </mat-checkbox>
+                            </th>
+                            <td mat-cell *matCellDef="let row">
+                                <mat-checkbox (click)="$event.stopPropagation()"
+                                    (change)="$event ? selection.toggle(row) : null"
+                                    [checked]="selection.isSelected(row)">
+                                </mat-checkbox>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="id">
+                            <th mat-header-cell *matHeaderCellDef> Name </th>
+                            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+                        </ng-container>
+
+                        <ng-container
+                            *ngFor="let attrCol of setsDisplayedColumnsAttributesOnly; let colIndex = index"
+                            matColumnDef="{{attrCol}}">
+                            <th mat-header-cell *matHeaderCellDef>{{ attrCol }}</th>
+                            <td mat-cell *matCellDef="let element">
+                                {{ element.attributes[attrCol] ? element.attributes[attrCol].value : '' }}</td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="setsDisplayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: setsDisplayedColumns;"
+                            (click)="selection.toggle(row)">
+                        </tr>
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 25]">
+                    </mat-paginator>
+                </div>
+            </div>            
+
+        </div>
+        <div class="button-panel">
+            <button mat-button [mat-dialog-close]="1" mat-raised-button color="accent" [type]="submit"
+                [disabled]="!editingForm.valid" (click)="confirmEdit()">Save</button>
+            <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
+        </div>
+    </form>
+</div>

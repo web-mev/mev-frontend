@@ -144,6 +144,12 @@
     </ng-template>
   </mat-tab>
 
+  <mat-tab label="Annotations">
+    <ng-template matTabContent>
+      <mev-annotations [workspaceResources]="workspaceResources"></mev-annotations>
+    </ng-template>
+  </mat-tab>
+
   <mat-tab label="Analysis Flow">
     <ng-template matTabContent>
       <mev-analysis-flow (executedOperationId)="showExecutedOperationResult($event)"></mev-analysis-flow>

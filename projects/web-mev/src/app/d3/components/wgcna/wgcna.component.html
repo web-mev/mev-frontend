@@ -9,6 +9,10 @@
          create feature sets from these genes, which can then be used as inputs to gene set (e.g. 
          fGSEA) or GO-term enrichment analyses.
       </p> 
+      <button mat-raised-button color="accent" title="Check QC"
+      (click)="showQC()">
+      Show QC plot
+    </button>
       <div class="mat-elevation-z8">
         <mat-table class="" [dataSource]="dataSource">
 

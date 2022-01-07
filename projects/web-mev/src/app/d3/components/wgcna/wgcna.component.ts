@@ -15,6 +15,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MetadataService } from '@app/core/metadata/metadata.service';
 import { CustomSetType } from '@app/_models/metadata';
 import { AddSampleSetComponent } from '../dialogs/add-sample-set/add-sample-set.component';
+import { WGCNAQcPlotComponent } from './wgcna_qc_plot.component';
 
 export interface WGCNAModule {
   module_name: string;
@@ -45,7 +46,8 @@ export class WgcnaComponent implements OnInit, AfterViewInit {
 
   constructor(
     private analysesService: AnalysesService,
-    public dialog: MatDialog,
+    public fsDialog: MatDialog,
+    public qcDialog: MatDialog,
     private metadataService: MetadataService
   ) {
     this.dataSource = new WGCNADataSource(this.analysesService);
@@ -80,12 +82,21 @@ export class WgcnaComponent implements OnInit, AfterViewInit {
     );
   }
 
+  showQC(){
+    const dialogRef = this.qcDialog.open(WGCNAQcPlotComponent, {
+      data: {
+        abc: 'abc'
+      }
+    });
+    dialogRef.afterClosed().subscribe();
+  }
+
   createFeatureSet(row){
 
     const features = row.module_genes.map(elem => ({
       id: elem
     }));
-    const dialogRef = this.dialog.open(AddSampleSetComponent, {
+    const dialogRef = this.fsDialog.open(AddSampleSetComponent, {
       data: { type: CustomSetType.FeatureSet }
     });
 

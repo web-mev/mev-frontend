@@ -1,0 +1,18 @@
+<h3>QC plot</h3>
+<p>To create the gene modules, WGCNA needs to select a parameter that 
+    controls the network topology (essentially, which genes are "connected" by
+    means of their co-expression). 
+</p>
+<p>The process for selecting this parameter is heuristic- there is no single correct answer. Typically, 
+    the most informative gene modules are found when the parameter is selected at the "elbow" of the plot
+    below. This is the point after the steep ascent, but prior to where it begins to level off.
+</p>
+<p>
+    If you did not manually set this parameter, we used a heuristic algorithm to select one based on the data.
+    However, if the selected point does not appear to be close to that "elbow", you might choose to take note 
+    of where that elbow is and re-run WGCNA with a manually set value.
+</p>
+<div id="wgcnaPlot"></div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()" tabindex="-1">Close</button>
+</div>

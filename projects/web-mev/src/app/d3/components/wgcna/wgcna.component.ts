@@ -11,6 +11,10 @@ import { finalize, tap } from 'rxjs/operators';
 import { DataSource } from '@angular/cdk/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { AnalysesService } from '@app/features/analysis/services/analysis.service';
+import { MatDialog } from '@angular/material/dialog';
+import { MetadataService } from '@app/core/metadata/metadata.service';
+import { CustomSetType } from '@app/_models/metadata';
+import { AddSampleSetComponent } from '../dialogs/add-sample-set/add-sample-set.component';
 
 export interface WGCNAModule {
   module_name: string;
@@ -41,6 +45,8 @@ export class WgcnaComponent implements OnInit, AfterViewInit {
 
   constructor(
     private analysesService: AnalysesService,
+    public dialog: MatDialog,
+    private metadataService: MetadataService
   ) {
     this.dataSource = new WGCNADataSource(this.analysesService);
   }
@@ -75,8 +81,27 @@ export class WgcnaComponent implements OnInit, AfterViewInit {
   }
 
   createFeatureSet(row){
-    console.log('Create FS!');
-    console.log(row);
+
+    const features = row.module_genes.map(elem => ({
+      id: elem
+    }));
+    const dialogRef = this.dialog.open(AddSampleSetComponent, {
+      data: { type: CustomSetType.FeatureSet }
+    });
+
+    dialogRef.afterClosed().subscribe(customSetData => {
+      if (customSetData) {
+        const customSet = {
+          name: customSetData.name,
+          color: customSetData.color,
+          type: CustomSetType.FeatureSet,
+          elements: features,
+          multiple: true
+        };
+
+        this.metadataService.addCustomSet(customSet);
+      }
+    });
   } 
 }
 

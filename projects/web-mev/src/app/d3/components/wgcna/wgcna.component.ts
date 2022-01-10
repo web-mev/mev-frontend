@@ -4,7 +4,9 @@ import {
   Input,
   OnInit,
   ViewChild,
-  AfterViewInit
+  AfterViewInit,
+  OnDestroy
+  
 } from '@angular/core';
 import { BehaviorSubject, Observable, merge } from 'rxjs';
 import { finalize, tap } from 'rxjs/operators';
@@ -23,6 +25,23 @@ export interface WGCNAModule {
   module_size: number;
 }
 
+const xData: number[] = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30];
+const yData = [-0.395209276564604,0.000181464794426609,0.319297262771095,0.601067168394457,0.7695023948817,0.876964416299025,0.88701899855348,0.906664050360751,0.902306458185746,0.905494944436844,0.897228524058429,0.863385570441117,0.339675408249748,0.342288977524127,0.345117515314592,0.908110276016868,0.910241957941012,0.914723879531402,0.913025842750759,0.897654002402207,0.900894108035066,0.905244339078664,0.908473377611907,0.939843040492537,0.938145815134975,0.921153063077473,0.926065094240271,0.958738511022182,0.96491898558337,0.967627246072219];
+let xyData = [];
+for (let i=0; i<xData.length; i++){
+    xyData.push(
+        {
+            x: xData[i],
+            y: yData[i]
+        }
+    );
+}
+const beta = 5;
+const FINAL_DATA = {
+  pts: xyData,
+  beta: beta
+}
+
 /**
  * Used for WGCNA output where we have both gene modules
  * and a QC plot
@@ -33,138 +52,21 @@ export interface WGCNAModule {
   styleUrls: ['./wgcna.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default
 })
-export class WgcnaComponent implements OnInit, AfterViewInit {
+export class WgcnaComponent implements OnInit {
   @Input() outputs;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  modulesResourceId;
+  qcId;
 
   analysisName = 'WGCNA';
-  dataSource: WGCNADataSource;
 
-  displayedColumns = ['module_id','module_size', 'actions'];
-  defaultPageIndex = 0;
-  defaultPageSize = 10;
-
-  constructor(
-    private analysesService: AnalysesService,
-    public fsDialog: MatDialog,
-    public qcDialog: MatDialog,
-    private metadataService: MetadataService
-  ) {
-    this.dataSource = new WGCNADataSource(this.analysesService);
+  constructor() {
+    console.log('in main constructor');
   }
 
   ngOnInit() {
-    this.fetchData();
+    console.log('init main component');
+    this.modulesResourceId = this.outputs['module_results'];
+    this.qcId = this.outputs['network_connectivity_thresholds'];
   }
 
-  fetchData() {
-   this.dataSource.loadData(
-     this.outputs['module_results'],
-     {},
-     {},
-     this.defaultPageIndex,
-     this.defaultPageSize
-     );
-  }
-
-  ngAfterViewInit() {
-
-    this.paginator.page.subscribe(
-      () => {
-        this.dataSource.loadData(
-          this.outputs['module_results'],
-          {},
-          {},
-          this.paginator.pageIndex,
-          this.paginator.pageSize
-          );
-      }
-    );
-  }
-
-  showQC(){
-    const dialogRef = this.qcDialog.open(WGCNAQcPlotComponent, {
-      data: {
-        abc: 'abc'
-      }
-    });
-    dialogRef.afterClosed().subscribe();
-  }
-
-  createFeatureSet(row){
-
-    const features = row.module_genes.map(elem => ({
-      id: elem
-    }));
-    const dialogRef = this.fsDialog.open(AddSampleSetComponent, {
-      data: { type: CustomSetType.FeatureSet }
-    });
-
-    dialogRef.afterClosed().subscribe(customSetData => {
-      if (customSetData) {
-        const customSet = {
-          name: customSetData.name,
-          color: customSetData.color,
-          type: CustomSetType.FeatureSet,
-          elements: features,
-          multiple: true
-        };
-
-        this.metadataService.addCustomSet(customSet);
-      }
-    });
-  } 
-}
-
-
-export class WGCNADataSource implements DataSource<WGCNAModule> {
-  public modulesSubject = new BehaviorSubject<WGCNAModule[]>([]);
-  public modulesCount = 0;
-  private loadingSubject = new BehaviorSubject<boolean>(false);
-  public loading$ = this.loadingSubject.asObservable();
-
-  constructor(private analysesService: AnalysesService) {}
-
-  loadData(
-    resourceId: string,
-    filterValues: object,
-    sorting: object,
-    pageIndex: number,
-    pageSize: number
-  ) {
-    this.loadingSubject.next(true);
-
-    this.analysesService
-      .getResourceContent(
-        resourceId,
-        pageIndex + 1,
-        pageSize,
-        filterValues,
-        sorting
-      )
-      .pipe(finalize(() => this.loadingSubject.next(false)))
-      .subscribe(response => {
-        this.modulesCount = response.count;
-        let reformattedData = response.results.map(
-          r => {
-            let n = r.genes.length;
-            return {
-              module_name: r.module,
-              module_genes: r.genes,
-              module_size: n
-            }
-          }
-        );
-        return this.modulesSubject.next(reformattedData);
-      });
-  }
-
-  connect(): Observable<WGCNAModule[]> {
-    return this.modulesSubject.asObservable();
-  }
-
-  disconnect(): void {
-    this.modulesSubject.complete();
-    this.loadingSubject.complete();
-  }
 }

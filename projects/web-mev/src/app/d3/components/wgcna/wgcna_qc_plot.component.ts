@@ -1,7 +1,8 @@
-import { Component, ViewChild, Inject, ElementRef } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { Component, ViewChild, Inject, ElementRef, Input } from '@angular/core';
+import { AnalysesService } from '@app/features/analysis/services/analysis.service';
+
 import * as d3 from 'd3';
+import d3Tip from 'd3-tip';
 
 @Component({
   selector: 'wgcna-qc',
@@ -10,44 +11,39 @@ import * as d3 from 'd3';
 })
 export class WGCNAQcPlotComponent {
 
+  @Input() resourceId;
   @ViewChild('wgcnaPlot') svgElement: ElementRef;
   containerId = '#wgcnaPlot'
-  outerWidth = 300;
-  outerHeight = 200;
+  outerWidth = 700;
+  outerHeight = 500;
   margin = {
       left: 70,
       top: 40,
       bottom: 40,
       right: 20
   };
-  xScale; 
+  xMax;
+  yMax;
+  xScale;
   yScale;
 
-  constructor(
-    private formBuilder: FormBuilder,
-    public dialogRef: MatDialogRef<WGCNAQcPlotComponent>,
-    @Inject(MAT_DIALOG_DATA) public data
+  constructor(private analysesService: AnalysesService
   ) {}
 
   ngOnInit(): void {
-    console.log(this.data);
-    this.makePlot();
+    this.analysesService
+    .getResourceContent(
+      this.resourceId
+    ).subscribe(response => {
+      this.makePlot(response);
+    });
   }
 
-  makePlot(): void {
 
-    const xData: number[] = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30];
-    const yData = [-0.395209276564604,0.000181464794426609,0.319297262771095,0.601067168394457,0.7695023948817,0.876964416299025,0.88701899855348,0.906664050360751,0.902306458185746,0.905494944436844,0.897228524058429,0.863385570441117,0.339675408249748,0.342288977524127,0.345117515314592,0.908110276016868,0.910241957941012,0.914723879531402,0.913025842750759,0.897654002402207,0.900894108035066,0.905244339078664,0.908473377611907,0.939843040492537,0.938145815134975,0.921153063077473,0.926065094240271,0.958738511022182,0.96491898558337,0.967627246072219];
-    let finalData = [];
-    for (let i=0; i<xData.length; i++){
-        finalData.push(
-            {
-                x: xData[i],
-                y: yData[i]
-            }
-        );
-    }
-    const beta = 5;
+  makePlot(data: any): void {
+
+    // data is formatted as:
+    // {x: number[], y: number[], beta: number}
 
     const group = d3
         .select(this.containerId)
@@ -64,21 +60,54 @@ export class WGCNAQcPlotComponent {
     const width = this.outerWidth - this.margin.left - this.margin.right;
     const height = this.outerHeight - this.margin.top - this.margin.bottom;
 
-    const xMax = d3.max(xData);
-    const yMax = d3.max(yData);
+    this.xMax = d3.max(data['x']);
+    this.yMax = d3.max(data['y']);
+
+    let reformattedData: any = [];
+    for(let idx=0; idx<data['x'].length; idx++){
+        let x = data['x'][idx];
+        let y = data['y'][idx];
+        reformattedData.push({
+            x: x,
+            y: y
+        })
+    }
+
+    // Tooltip for the discrete points
+    const ptTip = d3Tip()
+        .attr('class', 'd3-tip')
+        .offset([-10, 0])
+        .html((event, d) => {
+            return (
+                '(' + d.x + ', ' + d.y.toFixed(3)+ ')'
+            );
+        });
+    group.call(ptTip);
+
+    // tooltip for the 'beta' line
+    const betaTip = d3Tip()
+        .attr('class', 'd3-tip')
+        .direction('e')
+        .offset([0,20])
+        .html((event, d) => {
+            return (
+                "Beta*: " + data['beta']
+            );
+        });
+    group.call(betaTip);
 
     /* Setting up X-axis and Y-axis*/
     this.xScale = d3
       .scaleLinear()
       .rangeRound([0, width])
       .nice()
-      .domain([0, xMax]);
+      .domain([0, this.xMax]);
 
     this.yScale = d3
       .scaleLinear()
       .rangeRound([height, 0])
       .nice()
-      .domain([0, yMax]);
+      .domain([0, this.yMax]);
 
     let xAxis = d3.axisBottom(this.xScale);
     let yAxis = d3.axisLeft(this.yScale);
@@ -88,13 +117,14 @@ export class WGCNAQcPlotComponent {
       .classed('x axis', true)
       .attr('transform', 'translate(0,' + height + ')')
       .call(xAxis);
-
     gX
       .append('text')
-      .classed('label', true)
       .attr('x', width/2)
-      .attr('y', this.margin.bottom)
-      //.style('text-anchor', 'end')
+      .attr('y', (this.margin.bottom - 10))
+      .style('text-anchor', 'middle')
+      .style('font-size', '2em')
+      .attr('dy', '0.5em')
+      .style('fill', 'black')
       .text('Beta');
 
 
@@ -102,21 +132,62 @@ export class WGCNAQcPlotComponent {
       .append('g')
       .classed('y axis', true)
       .call(yAxis);
-
     gY
       .append('text')
       .classed('label', true)
       .attr('transform', 'rotate(-90)')
-      .attr('y', -(this.margin.left - 20))
-      .attr('x', height)
-      .attr('dy', '.71em')
-      .style('text-anchor', 'end')
+      .attr('y', -(this.margin.left - 30))
+      .attr('x', -(height/2))
+      .attr('dy', '.5em')
+      .style('font-size', '2em')
+      .style('text-anchor', 'middle')
+      .style('fill', 'black')
       .text('Y');
+
+      // vertical line marking the "beta" that was used
+      // Note that we put this before the actual data points
+      // so the z-ordering is sensible (e.g. the vertical line
+      // doesn't obscure the actual plot points)
+      group.append("line")
+        .attr("x1", this.xScale(data['beta'])) 
+        .attr("y1", this.yScale(0))
+        .attr("x2", this.xScale(data['beta']))
+        .attr("y2", this.yScale(1))
+        .style("stroke-width", 2)
+        .style("stroke", "grey")
+        .attr("stroke-dasharray", "10,10")
+        .style("fill", "none")
+      // this invisible line provides a fatter hover
+      // target which makes it easier for the mouse to
+      // hit
+      group.append("line")
+        .attr("x1", this.xScale(data['beta'])) 
+        .attr("y1", this.yScale(0))
+        .attr("x2", this.xScale(data['beta']))
+        .attr("y2", this.yScale(1))
+        .attr('pointer-events', 'all')
+        .style("stroke-width", 15)
+        .style("visibility", "hidden")
+        .style("fill", "none")
+        .on('mouseover', betaTip.show)
+        .on('mouseout', betaTip.hide);
+
+    let lineGroup = group.append('g');
+    lineGroup
+        .append("path")
+        .datum(reformattedData)
+        .attr("fill", "none")
+        .attr("stroke", "#69b3a2")
+        .attr("stroke-width", 1.5)
+        .attr("d", d3.line()
+        .x( d=> this.xScale(d['x']))
+        .y( d=> this.yScale(d['y']))
+        )
 
     let ptsGroup = group.append('g');
     ptsGroup
       .selectAll('.dot')
-      .data(finalData)
+      .data(reformattedData)
       .enter()
       .append('circle')
       .classed('dot', true)
@@ -125,20 +196,14 @@ export class WGCNAQcPlotComponent {
         'transform',
         d =>
           'translate(' +
-          this.xScale(d.x) +
+          this.xScale(d['x']) +
           ',' +
-          this.yScale(d.y) +
+          this.yScale(d['y']) +
           ')'
       )
-      .style('fill', 'grey');
-      console.log('here...');
+      .style('fill', 'grey')
+      .on('mouseover', ptTip.show)
+      .on('mouseout', ptTip.hide);
   }
 
-  submit() {
-    // empty stuff
-  }
-
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
 }

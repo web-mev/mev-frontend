@@ -28,6 +28,8 @@ import { SctkCxdsDoubletDetectionComponent } from './components/sctk-cxds-double
 import { SctkCellDoubletDetectionComponent } from '@app/d3/components/sctk-cell-doublet-detection/sctk-cell-doublet-detection.component';
 import { CombatseqComponent } from './components/combatseq/combatseq.component';
 import { WgcnaComponent } from './components/wgcna/wgcna.component';
+import { WgcnaTableComponent } from './components/wgcna/wgcna_table.component';
+import {WGCNAQcPlotComponent} from './components/wgcna/wgcna_qc_plot.component';
 
 
 @NgModule({
@@ -57,7 +59,9 @@ import { WgcnaComponent } from './components/wgcna/wgcna.component';
     SctkCxdsDoubletDetectionComponent,
     SctkCellDoubletDetectionComponent,
     CombatseqComponent,
-    WgcnaComponent
+    WgcnaComponent,
+    WgcnaTableComponent,
+    WGCNAQcPlotComponent
   ],
   imports: [CommonModule, SharedModule, DragDropModule],
   exports: [

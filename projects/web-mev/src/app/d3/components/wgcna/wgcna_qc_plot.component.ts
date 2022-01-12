@@ -1,5 +1,14 @@
-import { Component, ViewChild, Inject, ElementRef, Input } from '@angular/core';
+import { 
+  Component, 
+  ViewChild,  
+  ElementRef, 
+  Input, 
+  OnInit, 
+  OnChanges
+} from '@angular/core';
 import { AnalysesService } from '@app/features/analysis/services/analysis.service';
+import { MatDialog } from '@angular/material/dialog';
+import { WgcnaElbowDialogComponent } from './wgcna_elbow_example.component';
 
 import * as d3 from 'd3';
 import d3Tip from 'd3-tip';
@@ -9,7 +18,7 @@ import d3Tip from 'd3-tip';
   templateUrl: './wgcna_qc_plot.component.html',
   styleUrls: ['./wgcna_qc_plot.component.scss']
 })
-export class WGCNAQcPlotComponent {
+export class WGCNAQcPlotComponent implements OnInit, OnChanges{
 
   @Input() resourceId;
   @ViewChild('wgcnaPlot') svgElement: ElementRef;
@@ -23,14 +32,24 @@ export class WGCNAQcPlotComponent {
       right: 20
   };
   xMax;
+  yMin;
   yMax;
   xScale;
   yScale;
 
-  constructor(private analysesService: AnalysesService
+  constructor(private analysesService: AnalysesService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
+    this.getDataAndPlot();
+  }
+
+  ngOnChanges(){
+    this.getDataAndPlot();
+  }
+
+  getDataAndPlot(){
     this.analysesService
     .getResourceContent(
       this.resourceId
@@ -39,11 +58,20 @@ export class WGCNAQcPlotComponent {
     });
   }
 
+  openExampleDialog(){
+    let dialogRef = this.dialog.open(WgcnaElbowDialogComponent);
+    dialogRef.afterClosed().subscribe();
+  }
 
   makePlot(data: any): void {
 
     // data is formatted as:
     // {x: number[], y: number[], beta: number}
+
+    // clear any existing plot
+    d3.select(this.containerId)
+      .selectAll('svg')
+      .remove();
 
     const group = d3
         .select(this.containerId)
@@ -62,6 +90,7 @@ export class WGCNAQcPlotComponent {
 
     this.xMax = d3.max(data['x']);
     this.yMax = d3.max(data['y']);
+    this.yMin = d3.min(data['y']);
 
     let reformattedData: any = [];
     for(let idx=0; idx<data['x'].length; idx++){
@@ -107,7 +136,7 @@ export class WGCNAQcPlotComponent {
       .scaleLinear()
       .rangeRound([height, 0])
       .nice()
-      .domain([0, this.yMax]);
+      .domain([this.yMin, this.yMax]);
 
     let xAxis = d3.axisBottom(this.xScale);
     let yAxis = d3.axisLeft(this.yScale);
@@ -150,9 +179,9 @@ export class WGCNAQcPlotComponent {
       // doesn't obscure the actual plot points)
       group.append("line")
         .attr("x1", this.xScale(data['beta'])) 
-        .attr("y1", this.yScale(0))
+        .attr("y1", this.yScale(this.yMin))
         .attr("x2", this.xScale(data['beta']))
-        .attr("y2", this.yScale(1))
+        .attr("y2", this.yScale(this.yMax))
         .style("stroke-width", 2)
         .style("stroke", "grey")
         .attr("stroke-dasharray", "10,10")
@@ -162,9 +191,9 @@ export class WGCNAQcPlotComponent {
       // hit
       group.append("line")
         .attr("x1", this.xScale(data['beta'])) 
-        .attr("y1", this.yScale(0))
+        .attr("y1", this.yScale(this.yMin))
         .attr("x2", this.xScale(data['beta']))
-        .attr("y2", this.yScale(1))
+        .attr("y2", this.yScale(this.yMax))
         .attr('pointer-events', 'all')
         .style("stroke-width", 15)
         .style("visibility", "hidden")

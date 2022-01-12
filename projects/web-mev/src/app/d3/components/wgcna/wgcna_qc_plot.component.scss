@@ -2,6 +2,10 @@
     margin-top: 20px;
 }
 
+a {
+    cursor: pointer;
+}
+
 ::ng-deep {
     .d3-tip {
         line-height: 1;

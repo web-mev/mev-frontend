@@ -9,7 +9,7 @@
          create feature sets from these genes, which can then be used as inputs to gene set (e.g. 
          fGSEA) or GO-term enrichment analyses.
       </p> 
-      <mat-tab-group>
+      <mat-tab-group [(selectedIndex)]="currentTabIdx">
         <mat-tab label="Results table">
           <ng-template matTabContent>
             <wgcna-table [resourceId]="modulesResourceId"></wgcna-table>

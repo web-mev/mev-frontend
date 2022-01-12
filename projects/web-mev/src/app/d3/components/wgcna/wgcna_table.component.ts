@@ -4,8 +4,7 @@ import {
     OnInit,
     ViewChild,
     AfterViewInit,
-    OnDestroy
-    
+    OnChanges,    
   } from '@angular/core';
   import { BehaviorSubject, Observable, merge } from 'rxjs';
   import { finalize, tap } from 'rxjs/operators';
@@ -32,7 +31,7 @@ import {
     templateUrl: './wgcna_table.component.html',
     styleUrls: ['./wgcna_table.component.scss']
   })
-  export class WgcnaTableComponent implements OnInit, AfterViewInit{
+  export class WgcnaTableComponent implements OnInit, AfterViewInit, OnChanges{
     @Input() resourceId;
     @ViewChild(MatPaginator) paginator: MatPaginator;
   
@@ -51,6 +50,10 @@ import {
     }
   
     ngOnInit() {
+      this.fetchData();
+    }
+
+    ngOnChanges(){
       this.fetchData();
     }
   
@@ -79,7 +82,6 @@ import {
     }
   
     createFeatureSet(row){
-  
       const features = row.module_genes.map(elem => ({
         id: elem
       }));

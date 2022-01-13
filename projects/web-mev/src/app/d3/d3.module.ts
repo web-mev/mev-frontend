@@ -30,6 +30,7 @@ import { CombatseqComponent } from './components/combatseq/combatseq.component';
 import { WgcnaComponent } from './components/wgcna/wgcna.component';
 import { WgcnaTableComponent } from './components/wgcna/wgcna_table.component';
 import {WGCNAQcPlotComponent} from './components/wgcna/wgcna_qc_plot.component';
+import { WgcnaElbowDialogComponent } from './components/wgcna/wgcna_elbow_example.component';
 
 
 @NgModule({
@@ -61,7 +62,8 @@ import {WGCNAQcPlotComponent} from './components/wgcna/wgcna_qc_plot.component';
     CombatseqComponent,
     WgcnaComponent,
     WgcnaTableComponent,
-    WGCNAQcPlotComponent
+    WGCNAQcPlotComponent,
+    WgcnaElbowDialogComponent
   ],
   imports: [CommonModule, SharedModule, DragDropModule],
   exports: [

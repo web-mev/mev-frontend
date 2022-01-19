@@ -16,6 +16,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { MetadataService } from '@app/core/metadata/metadata.service';
 import { AddSampleSetComponent } from '../dialogs/add-sample-set/add-sample-set.component';
 import { CustomSetType } from '@app/_models/metadata';
+import { AmigoService } from './topgo.service';
 
 /**
  * Used for TopGO analysis outputs- showing the top terms, allowing selection of feature sets
@@ -77,7 +78,8 @@ export class TopgoComponent implements OnInit {
   constructor(
     private analysesService: AnalysesService,
     public dialog: MatDialog,
-    private metadataService: MetadataService
+    private metadataService: MetadataService,
+    private amigoService: AmigoService
   ) {
     this.dataSource = new GODataSource(this.analysesService);
 
@@ -153,6 +155,12 @@ export class TopgoComponent implements OnInit {
     console.log('in createFS, row=');
     console.log(row);
     console.log('---------');
+
+    this.amigoService.get_amigo_genes(row.go_id).subscribe(
+      results => {
+        console.log(results);
+      }
+    );
     // const features = row.leadingEdge.map(elem => ({
     //   id: elem
     // }));

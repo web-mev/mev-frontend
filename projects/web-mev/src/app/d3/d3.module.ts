@@ -31,6 +31,7 @@ import { WgcnaComponent } from './components/wgcna/wgcna.component';
 import { WgcnaTableComponent } from './components/wgcna/wgcna_table.component';
 import {WGCNAQcPlotComponent} from './components/wgcna/wgcna_qc_plot.component';
 import { WgcnaElbowDialogComponent } from './components/wgcna/wgcna_elbow_example.component';
+import { TopgoComponent } from './components/topgo/topgo.component';
 
 
 @NgModule({
@@ -63,7 +64,8 @@ import { WgcnaElbowDialogComponent } from './components/wgcna/wgcna_elbow_exampl
     WgcnaComponent,
     WgcnaTableComponent,
     WGCNAQcPlotComponent,
-    WgcnaElbowDialogComponent
+    WgcnaElbowDialogComponent,
+    TopgoComponent
   ],
   imports: [CommonModule, SharedModule, DragDropModule],
   exports: [
@@ -86,7 +88,8 @@ import { WgcnaElbowDialogComponent } from './components/wgcna/wgcna_elbow_exampl
     SctkCxdsDoubletDetectionComponent,
     SctkCellDoubletDetectionComponent,
     CombatseqComponent,
-    WgcnaComponent
+    WgcnaComponent,
+    TopgoComponent
   ]
 })
 export class D3Module {}

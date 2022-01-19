@@ -63,6 +63,10 @@
         <mev-wgcna [outputs]="outputs"></mev-wgcna>
     </ng-container>
 
+    <ng-container *ngIf="operationName === 'topGO'">
+        <mev-topgo [outputs]="outputs"></mev-topgo>
+    </ng-container>
+
 </div>
 
 <ng-template #error>

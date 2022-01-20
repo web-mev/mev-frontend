@@ -31,6 +31,7 @@ export class TopgoComponent implements OnInit {
   @Input() outputs;
   dataSource: GODataSource; // datasource for MatTable
   resourceId;
+  selectedOrganism;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -119,10 +120,10 @@ export class TopgoComponent implements OnInit {
       )
       .subscribe();
   }
-  //https://api-dev.tm4.org/api/resources/add94842-bcb4-40ec-9840-bfc8357b3f63/contents/?page=1&page_size=10&sort_vals=[asc]:p-value (Elim method
 
   ngOnChanges(): void {
     this.initializeResource();
+    this.selectedOrganism = this.outputs.organism;
   }
 
   initializeResource(): void {
@@ -148,40 +149,47 @@ export class TopgoComponent implements OnInit {
     this.loadGOTermsPage();
   }
 
+  openSetDialog(fs_name:string, features: any[]){
+    const dialogRef = this.dialog.open(AddSampleSetComponent, {
+      data: { type: CustomSetType.FeatureSet, name: fs_name }
+    });
+
+    dialogRef.afterClosed().subscribe(customSetData => {
+      if (customSetData) {
+        const customSet = {
+          name: customSetData.name,
+          color: customSetData.color,
+          type: CustomSetType.FeatureSet,
+          elements: features,
+          multiple: true
+        };
+
+        this.metadataService.addCustomSet(customSet);
+      }
+    });
+  }
+
   /**
    * Function that is triggered when the user clicks the "Create a custom sample" button
    */
   onCreateFeatureSet(row) {
-    console.log('in createFS, row=');
-    console.log(row);
-    console.log('---------');
 
-    this.amigoService.get_amigo_genes(row.go_id).subscribe(
-      results => {
-        console.log(results);
+    const features = row.genelist.map(elem => ({
+      id: elem
+    }));
+
+    this.openSetDialog(row.go_id, features);
+  }
+
+  createAmigoFeatureSet(row){
+    this.amigoService.get_amigo_genes(row.go_id, this.selectedOrganism).subscribe(
+      response => {
+        let results = response['response']['docs'];
+        let geneSet = results.map(x => ({id: x['bioentity_label']}));
+        let defaultSetName = `amigo_${row.go_id}`
+        this.openSetDialog(defaultSetName, geneSet);
       }
     );
-    // const features = row.leadingEdge.map(elem => ({
-    //   id: elem
-    // }));
-
-    // const dialogRef = this.dialog.open(AddSampleSetComponent, {
-    //   data: { type: CustomSetType.FeatureSet, name: row.pathway }
-    // });
-
-    // dialogRef.afterClosed().subscribe(customSetData => {
-    //   if (customSetData) {
-    //     const customSet = {
-    //       name: customSetData.name,
-    //       color: customSetData.color,
-    //       type: CustomSetType.FeatureSet,
-    //       elements: features,
-    //       multiple: true
-    //     };
-
-    //     this.metadataService.addCustomSet(customSet);
-    //   }
-    // });
   }
 
   /**

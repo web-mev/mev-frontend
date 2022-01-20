@@ -29,9 +29,12 @@ export class AmigoService {
       this.httpClient = new HttpClient(handler);
   }
 
-  get_amigo_genes(goId: string): Observable<any> {
-    //http://golr-aux.geneontology.io/solr/select?q=*:*&start=0&rows=100000&wt=json&fl=bioentity_label
-    //&fq=regulates_closure:"GO:0099537"&fq=document_category:"bioentity"&fq=taxon_subset_closure_label:"Homo sapiens"
+  get_amigo_genes(goId: string, organism: string): Observable<any> {
+    let orgMapping = {
+        'Human': 'Homo sapiens',
+        'Mouse': 'Mus musculus'
+    }
+    let orgString = orgMapping[organism];
     let params = new HttpParams();
     params = params.append('q', '*:*');
     params = params.append('start', '0');
@@ -39,7 +42,7 @@ export class AmigoService {
     params = params.append('wt', 'json');
     params = params.append('fl', 'bioentity_label');
     params = params.append('fq', 'document_category:"bioentity"');
-    params = params.append('fq', 'taxon_subset_closure_label:"Homo sapiens"');
+    params = params.append('fq', `taxon_subset_closure_label:"${orgString}"`);
     params = params.append('fq', 'regulates_closure:"' + goId + '"');
     return this.httpClient.get(
         this.baseUrl,

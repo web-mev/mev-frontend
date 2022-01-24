@@ -3,19 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { WorkspaceDetailComponent } from './components/workspace-detail/workspace-detail.component';
 
 const routes: Routes = [
-  // {
-  //   path: ':resourceId/metadata',
-  //   component: MetadataComponent
-  // },
-  // {
-  //   path: 'analyses',
-  //   component: AnalysesComponent
-  // },
 
-  // {
-  //   path: 'executedOperation/:executedOperationId',
-  //   component: ExecutedOperationComponent
-  // },
   {
     path: '',
     component: WorkspaceDetailComponent,

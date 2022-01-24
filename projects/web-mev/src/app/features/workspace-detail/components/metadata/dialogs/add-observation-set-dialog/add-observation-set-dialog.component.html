@@ -15,17 +15,15 @@
                 <mat-label>Select your color for the observation set:</mat-label>
                 <input type="color" class="color-picker-input" matInput formControlName=observationSetColor name=observationSetColor>
             </mat-form-field>
-            
-            Select samples: 
-            <div class="mat-elevation-z8">
+            <div class="filter-panel">
+                <mat-form-field class="form-control">
+                  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                </mat-form-field>
+            </div>
+            <p class="table-desc">Select samples:</p> 
+            <div class="mat-elevation-z8 expand-table">
 
-                <div class="filter-panel">
-                    <mat-form-field class="form-control">
-                      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
-                    </mat-form-field>
-                </div>
-
-                <table mat-table [dataSource]="allObservationSetsDS">
+                <table id="observationsTable" mat-table [dataSource]="allObservationSetsDS">
 
                     <ng-container matColumnDef="select">
                         <th mat-header-cell *matHeaderCellDef>
@@ -56,15 +54,12 @@
                     <tr mat-row *matRowDef="let row; columns: observationSetsDisplayedColumns;"
                         (click)="selection.toggle(row)">
                     </tr>
+
                 </table>
                 <mat-paginator [pageSizeOptions]="[5, 10, 25]">
                 </mat-paginator>  
             </div>
             
-
-            
-
-          
 
         </div>
 

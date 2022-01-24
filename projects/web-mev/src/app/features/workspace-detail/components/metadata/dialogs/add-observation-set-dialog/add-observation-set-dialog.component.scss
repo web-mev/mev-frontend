@@ -11,7 +11,7 @@
 }
 
 .filter-panel {
-  padding: 0 10px;
+  max-width: 500px;
 }
 
 table {
@@ -28,3 +28,21 @@ table {
 .button-panel {
   margin-top: 25px;
 }
+
+.expand-table {
+  display: table;
+}
+
+mat-paginator {
+  display: flex;
+  align-items: flex-start;
+}
+
+#observationsTable th{
+  padding: 2px 10px;
+}
+
+#observationsTable td{
+  padding: 2px 10px;
+}
+

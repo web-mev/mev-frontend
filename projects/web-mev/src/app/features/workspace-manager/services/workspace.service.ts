@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Workspace, WorkspaceAdapter } from '../models/workspace';
 import { environment } from '@environments/environment';
@@ -41,10 +41,8 @@ export class WorkspaceService {
   }
 
   // ADD, POST METHOD
-  addWorkspace(workspace: Workspace): void {
-    this.httpClient.post(`${this.API_URL}/`, workspace).subscribe(data => {
-      this.dialogData = workspace;
-    });
+  addWorkspace(workspace: Workspace): Observable<any> {
+    return this.httpClient.post(`${this.API_URL}/`, workspace);
   }
 
   // UPDATE, PUT METHOD

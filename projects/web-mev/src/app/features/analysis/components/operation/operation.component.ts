@@ -14,6 +14,7 @@ import { Operation } from '../../models/operation';
 import { MetadataService } from '@app/core/metadata/metadata.service';
 import { AnalysisPlottingResultComponent } from '../analysis-plotting-result/analysis-plotting-result.component';
 import { MatDialog } from '@angular/material/dialog';
+import { NotificationService } from '@core/notifications/notification.service';
 
 /**
  * Operation Component
@@ -53,7 +54,8 @@ export class OperationComponent implements OnChanges {
     private formBuilder: FormBuilder,
     private apiService: AnalysesService,
     private metadataService: MetadataService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private readonly notificationService: NotificationService
   ) {
     this.multipleResourcesDropdownSettings = {
       text: '',
@@ -357,6 +359,24 @@ export class OperationComponent implements OnChanges {
       .executeOperation(this.operation.id, this.workspaceId, inputs)
       .subscribe(data => {
         this.executedOperationId.emit(data.executed_operation_id);
+      },
+      error =>{
+        // One of the inputs was invalid-- parse the error and combine
+        // with the input information to give a reasonable description of the error
+
+        // This lets us tie the particular error to a "human-readable" input field.
+        // Otherwise the error text would be a bit cryptic for the end user.
+        let op_inputs = this.operation.inputs;
+        let err_obj = error.error;
+        let input_errors = err_obj.inputs;
+        let err_msg = '';
+        for(let input_key of Object.keys(input_errors)){
+          let s = input_errors[input_key];
+          let field_name = op_inputs[input_key].name;
+          err_msg += `${field_name} ${s}`;
+          err_msg += '\n'
+        }
+        this.notificationService.error(err_msg);
       });
   }
 

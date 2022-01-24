@@ -17,6 +17,7 @@ import { EditDialogComponent } from '../dialogs/edit-dialog/edit-dialog/edit-dia
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { NotificationService } from '@core/notifications/notification.service';
 
 /**
  * Workspace Detail Component
@@ -53,7 +54,8 @@ export class WorkspaceDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private service: WorkspaceDetailService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -62,13 +64,21 @@ export class WorkspaceDetailComponent implements OnInit {
 
   public loadData() {
     this.workspaceId = this.route.snapshot.paramMap.get('workspaceId');
-    this.service.getConnectedResources(this.workspaceId).subscribe(data => {
-      this.workspaceResources = data;
+    this.service.getConnectedResources(this.workspaceId).subscribe(
+      data => {
+        this.workspaceResources = data;
 
-      this.workspaceResourcesDS = new MatTableDataSource(data);
-      this.workspaceResourcesDS.paginator = this.paginator;
-      this.workspaceResourcesDS.sort = this.sort;
-    });
+        this.workspaceResourcesDS = new MatTableDataSource(data);
+        this.workspaceResourcesDS.paginator = this.paginator;
+        this.workspaceResourcesDS.sort = this.sort;
+      },
+      error => {
+        if(error.status === 404){
+          this.notificationService.warn(`There was no workspace (${this.workspaceId}) found.`);
+        }
+      }
+    
+    );
     this.workspace$ = this.service.getWorkspaceDetail(this.workspaceId);
   }
 

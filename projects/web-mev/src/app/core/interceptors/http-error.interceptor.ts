@@ -55,11 +55,19 @@ export class HttpErrorInterceptor implements HttpInterceptor {
           }
           errorMessage = `Error: ${detail}`; // Message: ${error.message}
         }
-        this.notificationService.error(errorMessage);
+        // Enabling this line below will print the error to the console directly.
+        // HOWEVER, that can lead to some poorly formatted messages since the
+        // structure of the error responses can vary depending on the endpoint.  
+        //this.notificationService.error(errorMessage);
         if(error.status === 500){
           return throwError(errorMessage);
         } else {
-          return next.handle(request);
+          // If the next.handle(request) is uncommented, then 
+          // calling functions cannot act on any 400 or 404 error codes
+          // By instead throwing the error, we can act on it and issue
+          // an appropriate messageß
+          //return next.handle(request);
+          return throwError(error);
         }
       })
     );

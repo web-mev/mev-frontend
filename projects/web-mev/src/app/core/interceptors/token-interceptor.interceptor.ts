@@ -35,19 +35,12 @@ export class TokenInterceptor implements HttpInterceptor {
           return this.handle401Error(request, next);
         } else {
           //if the error was something OTHER than a 401...
-          if(error.status === 500){
-            // The API had an error. throw it so it will be logged and trigger the 
-            // error popup
-            return throwError(error);
-          } else {
-            // for a 400 or 404, we don't want to always show the "something went wrong"
-            // popup by sentry. A 400 would be raised, for instance, if someone tried to
-            // name a workspace with a name that has alreaday been used. That's not an application
-            // error.
-            // We need to return an observable from HttpInterceptors
-            return of();
-          }
-        }
+          // The calling function (e.g. in a service class) 
+          // can catch the thrown error in the subscribe method.
+          // If it's not caught, then error tracking (e.g. Sentry) 
+          // will handle it
+          return throwError(error);
+        } 
       })
     );
   }

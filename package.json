@@ -21,7 +21,8 @@
     "server": "json-server --watch ./projects/server/database.json --routes ./projects/server/routes.json --no-cors=true",
     "compodoc": "compodoc",
     "generate-docs": "compodoc -p ./tsconfig.json",
-    "serve-docs": "compodoc -s ./tsconfig.json"  },
+    "serve-docs": "compodoc -s ./tsconfig.json"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/web-mev/mev-frontend.git"
@@ -65,9 +66,10 @@
     "save-svg-as-png": "~1.4.17",
     "tslib": "~2.3.1"
   },
-  "devDependencies" : {
+  "devDependencies": {
     "@angular-devkit/build-angular": "~12.2.15",
     "@angular/cli": "~12.2.15",
+    "codelyzer": "~6.0.2",
     "jasmine-core": "~4.0.0",
     "karma": "~6.3.12",
     "typescript": "~4.3.4"

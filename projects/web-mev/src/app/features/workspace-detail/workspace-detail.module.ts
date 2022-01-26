@@ -22,7 +22,6 @@ import { AddObservationSetDialogComponent } from './components/metadata/dialogs/
 import { AddFeatureSetDialogComponent } from './components/metadata/dialogs/add-feature-set-dialog/add-feature-set-dialog.component';
 import { DeleteSetDialogComponent } from './components/metadata/dialogs/delete-set-dialog/delete-set-dialog.component';
 import { ViewSetDialogComponent } from './components/metadata/dialogs/view-set-dialog/view-set-dialog.component';
-import { SatPopoverModule } from '@ncstate/sat-popover';
 import { AnalysisModule } from '../analysis/analysis.module';
 import { EditSetDialogComponent } from './components/metadata/dialogs/edit-set-dialog/edit-set-dialog.component';
 import { EditDialogComponent } from './components/dialogs/edit-dialog/edit-dialog/edit-dialog.component';
@@ -59,7 +58,6 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
-    SatPopoverModule,
     RouterModule,
     AngularMultiSelectModule,
     AnalysisModule,

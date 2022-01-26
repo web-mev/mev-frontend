@@ -36,7 +36,7 @@ export class AppComponent implements OnInit {
   envName = env.envName;
   version = env.versions.app;
   year = new Date().getFullYear();
-  logo = require('../../assets/logo.png').default;
+  logo= new URL('../../assets/logo.png', import.meta.url)
   languages = ['en'];
   sessionTimeout = 60 * 15; // 15 minutes
   navigation = [

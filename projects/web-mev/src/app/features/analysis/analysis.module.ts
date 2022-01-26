@@ -8,7 +8,6 @@ import { ExecutedOperationComponent } from './components/executed-operation/exec
 import { AnalysesComponent } from './components/analysis-list/analyses.component';
 import { AnalysisResultComponent } from './components/analysis-result/analysis-result.component';
 import { D3Module } from '@app/d3/d3.module';
-import { NgxCsvParserModule } from 'ngx-csv-parser';
 import { AnalysisFlowComponent } from './components/analysis-flow/analysis-flow.component';
 import { AnalysisPlottingResultComponent } from './components/analysis-plotting-result/analysis-plotting-result.component';
 import { PlottingMenuComponent } from './components/plotting-menu/plotting-menu.component';
@@ -34,7 +33,6 @@ import { PlottingMenuComponent } from './components/plotting-menu/plotting-menu.
     SharedModule,
     AngularMultiSelectModule,
     D3Module,
-    NgxCsvParserModule,
     AnalysisRoutingModule
   ]
 })

@@ -12,7 +12,6 @@ set -o allexport
 source /vagrant/$1
 set +o allexport
 
-
 /usr/bin/curl -fsSL https://deb.nodesource.com/setup_16.x | /usr/bin/bash -
 /usr/bin/apt-get install -y apache2 nodejs
 

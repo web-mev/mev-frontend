@@ -1,21 +1,34 @@
 {
-  "name": "vagrant",
-  "version": "1.0.0",
-  "description": "- [General information](#GeneralInformation) - [Running locally](#vagrant) - [Deployment](#Deployment) - [Documentation](#Documentation) - [Settings](#Settings) - [Features and bugs ](#Features) - [Modules and components info](#Modules) - [How to add a new visualization component](#AddNewComponent)",
+  "name": "web-mev",
+  "version": "2.0.0",
+  "description": "Frontend application for WebMeV",
   "main": ".all-contributors-html.js",
-  "directories": {
-    "doc": "docs"
-  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+    "ng": "ng",
+    "start": "ng serve --open",
+    "start:prod": "npm run build:prod && npm run server",
+    "build": "ng build",
+    "build:prod": "ng build --prod --output-hashing=none --base-href=./web-mev/",
+    "lint": "ng lint",
+    "test": "ng lint && ng test --configuration=test",
+    "watch": "ng test --configuration=test --browsers ChromeHeadless --watch --reporters dots",
+    "e2e": "ng e2e",
+    "ci": "npm run format:test && ng lint && ng test --configuration=test --browsers ChromeTravisCi --code-coverage && npm run e2e && npm run build:prod -- --deploy-url /new-mev/ --base-href /new-mev",
+    "format:write": "prettier projects/**/*.{ts,json,md,scss} --write",
+    "format:test": "prettier projects/**/*.{ts,json,md,scss} --list-different",
+    "release": "standard-version && git push --follow-tags origin master",
+    "analyze": "npm run build:prod -- --stats-json && webpack-bundle-analyzer ./dist/angular-ngrx-material-starter/stats-es2015.json",
+    "server": "json-server --watch ./projects/server/database.json --routes ./projects/server/routes.json --no-cors=true",
+    "compodoc": "compodoc",
+    "generate-docs": "compodoc -p ./tsconfig.json",
+    "serve-docs": "compodoc -s ./tsconfig.json"  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/web-mev/mev-frontend.git"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/web-mev/mev-frontend/issues"
   },

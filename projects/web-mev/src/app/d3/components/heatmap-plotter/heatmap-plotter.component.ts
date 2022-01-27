@@ -5,7 +5,6 @@ import {
   ChangeDetectionStrategy,
   ElementRef,
   ViewChild,
-  ɵSWITCH_IVY_ENABLED__POST_R3__
 } from '@angular/core';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import { FormGroup, Validators, FormBuilder, FormArray, FormControl } from '@angular/forms';

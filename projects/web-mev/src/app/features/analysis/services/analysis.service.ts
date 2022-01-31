@@ -203,4 +203,16 @@ export class AnalysesService {
       )
     );
   }
+
+    /**
+   * Get the metadata about the requested resource. Used for situations where 
+   * we want to see the name of the file, etc.
+   */
+     getResourcesMetadata(resourceId: string): Observable<File> {
+      return <Observable<File>>(
+        this.httpClient.get<File>(`${this.API_URL}/resources/${resourceId}`).pipe(
+          map( item => this.fileAdapter.adapt(item))
+        )
+      );
+    }
 }

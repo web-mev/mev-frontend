@@ -1,0 +1,24 @@
+<mat-card class="analysis-card">
+    <mat-card-header>
+      <div mat-card-avatar class="analysis-card__img"></div>
+      <mat-card-title>{{analysisName}}: {{ outputs?.job_name }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="analysis-card__main">
+      <div class="analysis-card__content">
+        <p>
+          This operation created a new file, <em>{{outputFilename}}</em>, which can be used in further analyses.
+        </p>
+          <p *ngIf="reportSelections">
+          About your selections:
+          </p>
+          <p *ngIf="!reportSelections">
+            Since you did not declare any row or column selections, the output matrix is unchanged from the input.
+            </p>
+          <ul>
+            <li *ngFor="let x of infoArray">{{x}}</li>
+          </ul>
+      </div>
+  
+    </mat-card-content>
+  
+  </mat-card>

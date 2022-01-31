@@ -2,7 +2,8 @@ import {
   Component,
   OnInit,
   ChangeDetectionStrategy,
-  Input
+  Input,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AnalysesService } from '../../services/analysis.service';
@@ -68,6 +69,7 @@ export class ExecutedOperationComponent implements OnInit {
   operationExecutionState: operationExecution;
   categories = new Set();
   subcategories = [];
+  resultPaneVisible: boolean = true;
 
   isTreePanelCollapsed = false;
   activeNode: Operation;
@@ -97,7 +99,8 @@ export class ExecutedOperationComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private apiService: AnalysesService
+    private apiService: AnalysesService,
+    public cdRef: ChangeDetectorRef
   ) {}
 
   /**
@@ -221,6 +224,18 @@ export class ExecutedOperationComponent implements OnInit {
    * Function is triggered when the user selects an operation in the tree
    */
   onSelectExecOperation(execOperation) {
+
+    // These next two lines force the change detection cycle to 're-initiate' 
+    // the component that displays the results. If this is not done, then clicking
+    // between two result pages of the same type (e.g. looking at the results of
+    // two subsetting operations) will not change the underlying component instance, which prevents us from 
+    // performing logic/setup in the ngOnInit, etc. methods as we might expect. As a result, some
+    // result page elements could be stale (e.g. show page components that correspond
+    // with the other analysis operation). By changing this variable (and requesting a change
+    // detection), the HTML page will re-render the whole hierarchy inside of 
+    // the <mev-analysis-result> component
+    this.resultPaneVisible = false;
+    this.cdRef.detectChanges();
     this.activeNode = execOperation;
     this.operationExecutionState = operationExecution.InProcess;
 
@@ -253,6 +268,7 @@ export class ExecutedOperationComponent implements OnInit {
           this.updateOperationExecutionState(response.status);
         });
     }
+    this.resultPaneVisible = true;
   }
 
   /**

@@ -58,7 +58,7 @@
       <div *ngIf="operationExecutionState === operationExecutionStateType.InProcess" class="operation-status">
         Please wait...
       </div>
-      <mev-analysis-result *ngIf="operationExecutionState === operationExecutionStateType.Finished" [outputs]="outputs"></mev-analysis-result>
+      <mev-analysis-result *ngIf="(operationExecutionState === operationExecutionStateType.Finished) && resultPaneVisible" [outputs]="outputs"></mev-analysis-result>
     </div>
   </div>
 

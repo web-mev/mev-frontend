@@ -32,6 +32,7 @@ import { WgcnaTableComponent } from './components/wgcna/wgcna_table.component';
 import {WGCNAQcPlotComponent} from './components/wgcna/wgcna_qc_plot.component';
 import { WgcnaElbowDialogComponent } from './components/wgcna/wgcna_elbow_example.component';
 import { TopgoComponent } from './components/topgo/topgo.component';
+import { MatrixSubsetComponent } from './components/matrix_subset/matrix_subset.component';
 
 
 @NgModule({
@@ -65,7 +66,8 @@ import { TopgoComponent } from './components/topgo/topgo.component';
     WgcnaTableComponent,
     WGCNAQcPlotComponent,
     WgcnaElbowDialogComponent,
-    TopgoComponent
+    TopgoComponent,
+    MatrixSubsetComponent
   ],
   imports: [CommonModule, SharedModule, DragDropModule],
   exports: [
@@ -89,7 +91,8 @@ import { TopgoComponent } from './components/topgo/topgo.component';
     SctkCellDoubletDetectionComponent,
     CombatseqComponent,
     WgcnaComponent,
-    TopgoComponent
+    TopgoComponent,
+    MatrixSubsetComponent
   ]
 })
 export class D3Module {}

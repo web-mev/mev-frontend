@@ -11,16 +11,16 @@
 
 ## <a name="GeneralInformation">**General information**</a>
 
-The front end Angular 9 application for the MEV web application.
+The front end Angular 12 application for the MEV web application.
 
 Compodoc documentation: [click here](https://web-mev.github.io/mev-frontend/documentation/overview.html)
 
 Respository: https://github.com/web-mev/mev-frontend
 
-Sentry error tracking and monitoring: http://35.199.2.238:9000/organizations/sentry/issues/
-
-The application is based on a Angular Material Starter project:
+The application was initially based on a Angular Material Starter project:
 https://github.com/tomastrajan/angular-ngrx-material-starter
+However, certain dependencies from that project were not maintained and packages
+were removed for ease.
 
 
 ## <a name="vagrant">Running locally using Vagrant</a>
@@ -28,11 +28,15 @@ https://github.com/tomastrajan/angular-ngrx-material-starter
 1. Install [Git](https://git-scm.com/), [VirtualBox](https://www.virtualbox.org/), and [Vagrant](https://www.vagrantup.com/)
 1. Clone the repository: `git clone https://github.com/web-mev/mev-frontend.git`
 1. `cp vagrant/env.tmpl vagrant/env.txt` and fill the variables with appropriate values.
-1. Start and provision the VM with `vagrant up`
-1. Open http://localhost:8080 in a web browser
+    1. The `MEV_GOOGLE_OAUTH_CLIENT_ID` can be left blank (emptry string) if you do not wish to use Google-based login in local development.
+    1. The `MEV_SENTRY_DSN` can also be left blank (empty string) for local dev. Errors will not be sent to the Sentry service.
+    1. The `MEV_DROPBOX_KEY` can also be left blank (empty string) if you are not using/testing Dropbox in your local development.   
+3. Start and provision the VM with `vagrant up`
+4. Open http://localhost:8001 in a web browser. Note that the application served on this port is already built and any development changes will not be reflected unless you build again.
 
 For development:
 1. SSH in with `vagrant ssh`
+1. Change to the shared directory (shared between your host machine and VM): `cd /vagrant` (note: not `/home/vagrant`) 
 1. To serve the app using Angular web server:
 ```sh
 /vagrant/node_modules/@angular/cli/bin/ng serve --host 0.0.0.0 --disable-host-check
@@ -47,7 +51,7 @@ If you are editing/saving files locally (on your host machine, NOT the VM), Node
 ```
 where the argument value (e.g. `2000` above) is the polling period in milliseconds.
 
-The application will be available on your host machine at localhost:4200
+The application will be available on your host machine at http://localhost:4200
 
 If you wish to use Google-based authentication on the development machine (instead of username/password authentication), you will need a proper host pointing to localhost, because Google’s OAuth requires redirect URLs that cannot be localhost. You can add an entry in the hosts file of your machine (e.g. `/etc/hosts`) to associate mydomain.com to 127.0.0.1 and use the following command:
 
@@ -55,6 +59,7 @@ If you wish to use Google-based authentication on the development machine (inste
 /vagrant/node_modules/@angular/cli/bin/ng serve --host mydomain.com --disable-host-check --poll 2000
 ```
 
+**Also:** Note that due to high I/O during the provisioning of the VM, we perform a mount (see `vagrant/provision.sh` for details). If you halt or other stop the VM and do not force re-provisioning, you may find that the `/vagrant/node_modules` directory is empty and your project will not serve/build/etc. In that case, run the mount command `/usr/bin/mount --bind /home/vagrant/node_modules /vagrant/node_modules` again (after you SSH into the VM). The `/vagrant/node_modules` directory should contain a lot of files and subdirectories.
 
 ## <a name="Deployment">**Deployment on GCP**</a>
 

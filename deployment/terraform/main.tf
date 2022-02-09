@@ -73,6 +73,7 @@ resource "google_compute_instance" "mev_frontend" {
   boot_disk {
     initialize_params {
       image = "ubuntu-os-cloud/ubuntu-2004-lts"
+      size = 20
     }
   }
 

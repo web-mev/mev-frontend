@@ -12,6 +12,7 @@ import { File, FileAdapter } from '@app/shared/models/file';
 import { environment } from '@environments/environment';
 import { FileType } from '@app/shared/models/file-type';
 import { AnalysesService } from '@app/features/analysis/services/analysis.service';
+import { NotificationService } from '@app/core/core.module';
 
 /**
  * File service
@@ -41,7 +42,8 @@ export class FileService {
   constructor(
     private httpClient: HttpClient,
     private adapter: FileAdapter,
-    private analysesService: AnalysesService
+    private analysesService: AnalysesService,
+    private notificationService: NotificationService
   ) {}
 
   get data(): File[] {
@@ -182,7 +184,23 @@ export class FileService {
    *
    */
   deleteFile(id: number | string): void {
-    this.httpClient.delete(`${this.API_URL}/resources/${id}/`).subscribe();
+    this.httpClient.delete(`${this.API_URL}/resources/${id}/`).subscribe(
+      x=>{},
+      err => {
+        // if the backend returns a 403, then it means the file couldn't be deleted because it was "used"
+        // by an analysis or used in a workspace
+        // Requests for deleting another user's files (unlikely since they don't SEE those) or other
+        // problems with a deletion requests return a 400 error
+        if (err.status === 403){
+          this.notificationService.warn('You cannot delete this file since it has been used in an analysis or \
+            is currently associated with one or more of your workspaces. We do this to preserve the integrity \
+             of analysis workflows in WebMeV.');
+        } else {
+          this.notificationService.warn('File deletion failed.');
+        }
+
+      }
+    );
   }
 
   /**

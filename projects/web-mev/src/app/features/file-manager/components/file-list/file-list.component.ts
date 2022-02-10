@@ -114,7 +114,6 @@ export class FileListComponent implements OnInit {
 
         // refresh table if all files are uploaded
         if(uploadCompletionArray.every((element) => element)){
-          console.log('completed upload. now refresh')
           this.refresh();
           this.uploadInProgressMsg = '';
           this.ref.markForCheck();
@@ -365,17 +364,19 @@ export class FileListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === 1) {
-        this.refresh();
+        // add a delay to the refresh. Otherwise the record deletion and request for
+        // updated files ends up as a race condition and often the refresh still shows
+        // the deleted file. This is not a 100% fix, but the delete/commit should complete
+        // with sufficient time before the refresh request is triggered.
+        setTimeout(() => this.refresh(), 2000);
       }
     });
   }
 
   public loadData() {
     if(this.dataSource){
-      console.log('was existing datasource. call connect.')
       this.dataSource.connect();
     } else {
-      console.log('create a new datasource')
       this.dataSource = new ExampleDataSource(
         this.fileService,
         this.paginator,

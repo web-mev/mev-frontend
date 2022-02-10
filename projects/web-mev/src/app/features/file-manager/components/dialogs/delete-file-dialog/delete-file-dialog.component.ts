@@ -33,6 +33,7 @@ export class DeleteFileDialogComponent {
    *
    */
   confirmDelete(): void {
+    console.log('about to call service for deletion');
     this.fileService.deleteFile(this.data.id);
   }
 }

@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { WorkspaceDetailService } from '@app/features/workspace-detail/services/workspace-detail.service';
 import { WorkspaceResource } from '@app/features/workspace-detail/models/workspace-resource';
-
+import { NotificationService } from '@app/core/core.module';
 /**
  * Delete Workspace Resource Dialog Component
  *
@@ -20,7 +20,8 @@ export class DeleteDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<DeleteDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    public service: WorkspaceDetailService
+    public service: WorkspaceDetailService,
+    private notificationService: NotificationService
   ) {
     this.resource = this.data.resource;
   }
@@ -45,7 +46,12 @@ export class DeleteDialogComponent {
           this.dialogRef.close();
         },
         error => {
-          console.error(error);
+          let msg = error.error.message;
+          if (msg){
+            this.notificationService.warn(msg);
+          } else {
+            this.notificationService.warn('Failed to remove this file from your workspace.');
+          }
         }
       );
   }

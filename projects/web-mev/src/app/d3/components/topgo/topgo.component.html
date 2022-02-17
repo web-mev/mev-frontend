@@ -11,32 +11,32 @@
     <p>
       In the table, you will see two p-values: "elim" and "classic". The so-called "elim" method is an adjustment
       that attempts to account for redundancy due to the hierarchical structure
-      of GO terms. Consider GO:0019886 (<em>antigen processing and presentation of exogenous peptide 
-      antigen via MHC class II</em>)
+      of GO terms. Consider GO:0019886 (<em>antigen processing and presentation of exogenous peptide
+        antigen via MHC class II</em>)
       and GO:0019882 (<em>antigen processing and presentation</em>); the first is clearly a more specific version
-      of the latter and the GO hierarchy reflects this. In a given experiment, if many of the same 
+      of the latter and the GO hierarchy reflects this. In a given experiment, if many of the same
       differentially expressed genes
-      are shared by both of these terms, one would generally be interested in the more specific 
+      are shared by both of these terms, one would generally be interested in the more specific
       one. The "elim" method attempts to capture this notion. For more details, please see
       <a href="https://academic.oup.com/bioinformatics/article/22/13/1600/193669" target="_blank">
         https://academic.oup.com/bioinformatics/article/22/13/1600/193669
-      </a> 
+      </a>
     </p>
     <p class="analysis-card__instruction">
       You can create custom gene sets based on the annotated genes of each GO term.
       Note that due to differences in gene symbols and GO databases, there are often
       discrepancies between the "annotated" genes for a particular GO term and those
-      that will be exported as part of any feature sets. You may see gene sets that 
+      that will be exported as part of any feature sets. You may see gene sets that
       report zero genes.
     </p>
 
-    <p>Accordingly, we also provide an external query to the 
+    <p>Accordingly, we also provide an external query to the
       <a href="http://amigo.geneontology.org/" target="_blank">AmiGO</a> database which will retrieve gene symbols
-        corresponding to a particular GO term. Note that the gene symbols which are returned may or 
-        may not properly align with the gene identifiers in your file(s).
-        For example, if you are using Ensembl ENSG IDs, you will need to map the symbols to the ENSG IDs
-        if you wish to do any further analysis (e.g. plot an expression heatmap for the genes associated
-        with a particular GO term).
+      corresponding to a particular GO term. Note that the gene symbols which are returned may or
+      may not properly align with the gene identifiers in your file(s).
+      For example, if you are using Ensembl ENSG IDs, you will need to map the symbols to the ENSG IDs
+      if you wish to do any further analysis (e.g. plot an expression heatmap for the genes associated
+      with a particular GO term).
     </p>
     <mat-divider [inset]="true"></mat-divider>
     <div class="analysis-card__content">
@@ -109,7 +109,7 @@
             <th mat-header-cell *matHeaderCellDef># Expected</th>
             <td mat-cell class="description-cell" *matCellDef="let row">{{row.expected}}</td>
           </ng-container>
-          
+
           <ng-container matColumnDef="elim_pval">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>P-val (Elim)</th>
             <td mat-cell class="description-cell" *matCellDef="let row">{{row.elim_pval}}</td>
@@ -125,12 +125,12 @@
             <th mat-header-cell *matHeaderCellDef></th>
 
             <td class="action-cell" mat-cell *matCellDef="let row; let i=index;">
-              <button class="action-btn" mat-raised-button color="accent" title="Create feature set of {{row.genelist.length}}" 
-                (click)="onCreateFeatureSet(row)"
+              <button class="action-btn" mat-raised-button color="accent"
+                title="Create feature set of {{row.genelist.length}}" (click)="onCreateFeatureSet(row)"
                 [disabled]="row.genelist.length===0">
                 Create feature set ({{row.genelist.length}} genes)
               </button>
-              <button class="action-btn" mat-raised-button color="accent" title="Query AmiGO for genes" 
+              <button class="action-btn" mat-raised-button color="accent" title="Query AmiGO for genes"
                 (click)="createAmigoFeatureSet(row)">
                 Query AmiGO
               </button>
@@ -146,5 +146,8 @@
     </div>
 
   </mat-card-content>
+  <div >
+    <mev-bubble-plot [data]="dataSource.goTermsSubject.value"></mev-bubble-plot>
+  </div>
 
 </mat-card>

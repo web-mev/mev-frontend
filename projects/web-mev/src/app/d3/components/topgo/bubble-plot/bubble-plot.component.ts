@@ -14,64 +14,62 @@ export class TopGoBubblePlotComponent implements OnChanges {
   dataInput = [];
 
   margin = {
-    top: 50,
+    top: 40,
     right: 300,
     bottom: 50,
     left: 250
   }
-  containerId = '#bubblePlot';
-  outerHeight = 500;
-  outerWidth = window.innerWidth
+  containerId: string = '#bubblePlot';
+  outerHeight: number = 600;
+  outerWidth: number = window.innerWidth
   xAxis: any;
   yAxis: any;
   xScale: any;
   yScale: any;
   radiusScale: any;
-  xCat: any;
-  yCat: any;
+  // xCat: any;
+  // yCat: any;
   gX: any;
   gY: any;
-  xVariance: any;
-  yVariance: any;
-  precision = 2;
-  maxAnnotated: any = 1300;
-  minAnnotated: any = 0;
+  // xVariance: any;
+  // yVariance: any;
+  // precision = 2;
+  maxAnnotated: number = 1300;
+  minAnnotated: number = 0;
   maxRadius: any;
   minRadius: any;
-  pointCat: any;
+  // pointCat: any;
   colorMin: string = '#1DA1F2';
   colorMax: string = '#DF1F2D';
   sampleSetColors = [];
-
-  colors = d3.scaleLinear<string>()
-    .domain([this.minAnnotated, this.maxAnnotated])
-    .range([this.colorMin, this.colorMax])
+  minLogAnnotated: number;
+  maxLogAnnotated: number;
+  colors: any;
 
   ngOnChanges(): void {
     this.dataInput = this.data;
-    this.updateColorRange()
+    this.setMinMaxVariables()
   }
 
-  //might not need this??
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    outerWidth = window.innerWidth;
-    this.createChart()
-  }
-
-  private updateColorRange(): void {
+  private setMinMaxVariables(): void {
     this.minAnnotated = d3.min(this.data, d => d.annotated);
     this.maxAnnotated = d3.max(this.data, d => d.annotated);
+    this.minLogAnnotated = Math.log(this.minAnnotated);
+    this.maxLogAnnotated = Math.log(this.maxAnnotated);
     this.maxRadius = d3.max(this.data, d => (d.significant / d.annotated));
     this.minRadius = d3.min(this.data, d => (d.significant / d.annotated));
     this.createChart()
   }
 
   private createChart(): void {
-    const outerWidth = this.outerWidth;
-    const outerHeight = this.outerHeight;
-    const width = outerWidth - this.margin.left - this.margin.right;
-    const height = outerHeight - this.margin.top - this.margin.bottom;
+    this.colors = d3.scaleLinear<string>()
+      .domain([this.minLogAnnotated, this.maxLogAnnotated])
+      .range([this.colorMin, this.colorMax])
+
+    // const outerWidth = this.outerWidth;
+    // const outerHeight = this.outerHeight;
+    const width = this.outerWidth - this.margin.left - this.margin.right;
+    const height = this.outerHeight - this.margin.top - this.margin.bottom;
     const data = this.dataInput;
 
     d3.select(this.containerId)
@@ -81,13 +79,13 @@ export class TopGoBubblePlotComponent implements OnChanges {
     this.xScale = d3
       .scaleLinear()
       .domain([Math.log(this.minAnnotated), Math.log(this.maxAnnotated)])
-      .rangeRound([0, width]) //vs rangeRound()
+      .rangeRound([0, width])
       .nice();
 
     this.yScale = d3
       .scaleBand()
       .domain(data.map(d => d.term))
-      .rangeRound([0, height]);
+      .range([0, height]);
 
     this.radiusScale = d3
       .scaleSqrt()
@@ -107,13 +105,10 @@ export class TopGoBubblePlotComponent implements OnChanges {
       .style("font-size", "16px")
       .text("TopGo Bubble Plot")
       .append('svg')
-      .attr('width', outerWidth)
-      .attr('height', outerHeight)
+      .attr('width', this.outerWidth)
+      .attr('height', this.outerHeight)
       .append('g')
-      .attr(
-        'transform',
-        'translate(' + this.margin.left + ',' + this.margin.top + ')'
-      )
+      .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`)
       .style('fill', 'none')
 
     group
@@ -138,7 +133,7 @@ export class TopGoBubblePlotComponent implements OnChanges {
     this.gY = group
       .append('g')
       .classed('y axis', true)
-      .call(this.yAxis);
+      .call(this.yAxis)
 
     this.gY
       .append('text')
@@ -180,7 +175,7 @@ export class TopGoBubblePlotComponent implements OnChanges {
       .attr('cx', d => this.xScale(-Math.log(d.elim_pval)))
       .attr('r', d => this.radiusScale(d.significant / d.annotated))
       .style('fill', d => {
-        return this.colors(d.annotated);
+        return this.colors(Math.log(d.annotated));
       })
       .attr('pointer-events', 'all')
       .on('mouseover', tip.show)
@@ -189,9 +184,9 @@ export class TopGoBubblePlotComponent implements OnChanges {
     // Legend
     const legendColors = [
       { name: this.maxAnnotated, color: this.colorMax },
-      { name: '', color: this.colors((this.maxAnnotated - this.minAnnotated) * .75) },
-      { name: '', color: this.colors((this.maxAnnotated - this.minAnnotated) * .5) },
-      { name: '', color: this.colors((this.maxAnnotated - this.minAnnotated) * .25) },
+      { name: '', color: '#b73a56' },
+      { name: '', color: '#805f8e' },
+      { name: '', color: '#4984c6' },
       { name: this.minAnnotated, color: this.colorMin }
     ];
 
@@ -202,7 +197,7 @@ export class TopGoBubblePlotComponent implements OnChanges {
       .append('g')
       .classed('legend', true)
       .attr('transform', function (d, i) {
-        return 'translate(0,' + i * 10 + ')';
+        return `translate(0,${i * 10})`;
       });
 
     legend
@@ -223,15 +218,23 @@ export class TopGoBubblePlotComponent implements OnChanges {
       .attr('class', 'legend-label')
       .text(d => d.name);
 
+    const legendTitle = group
+      .append('text')
+      .attr('x', width + 18)
+      .attr('y', 40)
+      .style('fill', '#000')
+      .style('font-size', "14px")
+      .attr('class', 'legend-title')
+      .text('Annotated')
+
     const minRad = this.radiusScale(this.minRadius);
     const maxRad = this.radiusScale(this.maxRadius);
     const radDiff = maxRad - minRad;
 
     const legendCircleContent = [
       { name: this.minRadius, radius: minRad },
-      { name: (this.maxRadius - this.minRadius)*.25 + this.minRadius, radius: minRad + radDiff * .25 },
-      { name: (this.maxRadius - this.minRadius)*.5 + this.minRadius, radius: minRad + radDiff * .5 },
-      { name: (this.maxRadius - this.minRadius)*.75 + this.minRadius, radius: minRad + radDiff * .75 },
+      { name: (this.maxRadius - this.minRadius) * .25 + this.minRadius, radius: minRad + radDiff * .25 },
+      { name: (this.maxRadius - this.minRadius) * .5 + this.minRadius, radius: minRad + radDiff * .5 },
       { name: this.maxRadius, radius: maxRad },
     ];
 
@@ -242,7 +245,7 @@ export class TopGoBubblePlotComponent implements OnChanges {
       .append('g')
       .classed('legendCircle', true)
       .attr('transform', function (d, i) {
-        return 'translate(0,' + i *30 + ')';
+        return `translate(0,${i * 35})`;
       });
 
     legendCircle
@@ -262,5 +265,13 @@ export class TopGoBubblePlotComponent implements OnChanges {
       .attr('class', 'legend-label')
       .text(d => d.name.toFixed(2));
 
+    const legendTitleCicle = group
+      .append('text')
+      .attr('x', width + 18)
+      .attr('y', 180)
+      .style('fill', '#000')
+      .style('font-size', "14px")
+      .attr('class', 'legend-title')
+      .text('Significant/Annotated')
   }
 }

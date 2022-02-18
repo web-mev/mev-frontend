@@ -1,4 +1,4 @@
-import { Component, Input, HostListener, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import * as d3 from 'd3'; 
 import d3Tip from 'd3-tip';
 
@@ -9,7 +9,7 @@ import d3Tip from 'd3-tip';
 })
 
 export class TopGoBubblePlotComponent implements OnChanges {
-  @Input() data
+  @Input() data: any
 
   dataInput = [];
 

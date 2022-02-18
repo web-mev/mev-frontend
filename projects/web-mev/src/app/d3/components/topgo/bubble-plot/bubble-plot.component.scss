@@ -18,6 +18,9 @@
   text-align: center;
 }
 
+
+
+
 ::ng-deep {
   .axis path,
   .axis line {
@@ -45,5 +48,18 @@
     border-radius: 4px;
     z-index: 1;
   }
+  .d3-text {
+    color: yellow;
+  }
+
+  .legend-title{
+    font-weight: bolder;
+  }
+
+  .chart-title{
+    font-weight: bolder;
+    font-size: 24px;
+  }
+  
 }
 

@@ -145,6 +145,42 @@ export class OperationComponent implements OnChanges {
             const resourceField = {
               key: key,
               name: input.name,
+              resource_type: input.spec.resource_type,
+              desc: input.description,
+              required: input.required,
+              files: [],
+              selectedFiles: []
+            };
+
+            this.apiService
+              .getAvailableResourcesByParam(
+                // the first arg requires a list of potential 
+                // resource types. Since a DataResource has its 
+                // input fixed to a particular type, then we 
+                // put it inside a list here.
+                [input.spec.resource_type],
+                this.workspaceId
+              )
+              .subscribe(data => {
+                resourceField.files = data;
+                if (input.spec.many === false) {
+                  this.resourceFields.push(resourceField);
+                } else {
+                  this.multipleResourceFields.push(resourceField);
+                }
+              });
+
+            const configResourceField = [
+              '',
+              [...(input.required ? [Validators.required] : [])]
+            ];
+            controlsConfig[key] = configResourceField;
+            break;
+          }
+          case 'VariableDataResource': {
+            const resourceField = {
+              key: key,
+              name: input.name,
               resource_types: input.spec.resource_types,
               desc: input.description,
               required: input.required,

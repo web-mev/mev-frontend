@@ -15,6 +15,7 @@ export class InputSpec {
   constructor(
     public attribute_type: string,
     public resource_types?: string[],
+    public resource_type?: string[],
     public many?: boolean,
     public min?: number,
     public max?: number,
@@ -61,6 +62,7 @@ export class OperationInputAdapter {
     const spec = new InputSpec(
       item.spec.attribute_type,
       item.spec.resource_types,
+      item.spec.resource_type,
       item.spec.many,
       item.spec.min,
       item.spec.max,

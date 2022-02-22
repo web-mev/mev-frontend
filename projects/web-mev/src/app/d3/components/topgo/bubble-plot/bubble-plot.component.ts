@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import * as d3 from 'd3'; 
+import * as d3 from 'd3';
 import d3Tip from 'd3-tip';
 
 @Component({
@@ -20,7 +20,8 @@ export class TopGoBubblePlotComponent implements OnChanges {
     left: 250
   }
   containerId: string = '#bubblePlot';
-  outerHeight: number = 600;
+  imageName = 'bubble_plot';
+  outerHeight: number = 650;
   outerWidth: number = window.innerWidth
   xAxis: any;
   yAxis: any;
@@ -38,18 +39,33 @@ export class TopGoBubblePlotComponent implements OnChanges {
   minLogAnnotated: number;
   maxLogAnnotated: number;
   colors: any;
+  width: number = this.outerWidth - this.margin.left - this.margin.right;
+  height: number = this.outerHeight - this.margin.top - this.margin.bottom;
+  radiusSize: number = this.height / 30
 
   ngOnChanges(): void {
     this.dataInput = this.data;
+    this.setRadiusSize(this.dataInput.length);
     this.setMinMaxVariables()
   }
 
-//Set min and max variables to set axis values 
+  //Sets the size of bubble radiius depending on the size of data on y-axis
+  setRadiusSize(inputSize: number): void {
+    if (inputSize === 50) {
+      this.radiusSize = this.height / (this.dataInput.length + 60)
+    } else if (inputSize === 25) {
+      this.radiusSize = this.height / (this.dataInput.length + 30)
+    } else {
+      this.radiusSize = this.height / (this.dataInput.length + 20)
+    }
+  }
+
+  //Set min and max variables to set axis values 
   private setMinMaxVariables(): void {
     this.minAnnotated = d3.min(this.data, d => d.annotated);
     this.maxAnnotated = d3.max(this.data, d => d.annotated);
-    this.minLogAnnotated = Math.log(this.minAnnotated);
-    this.maxLogAnnotated = Math.log(this.maxAnnotated);
+    this.minLogAnnotated = Math.log10(this.minAnnotated);
+    this.maxLogAnnotated = Math.log10(this.maxAnnotated);
     this.maxRadius = d3.max(this.data, d => (d.significant / d.annotated));
     this.minRadius = d3.min(this.data, d => (d.significant / d.annotated));
     this.createChart()
@@ -60,41 +76,31 @@ export class TopGoBubblePlotComponent implements OnChanges {
       .domain([this.minLogAnnotated, this.maxLogAnnotated])
       .range([this.colorMin, this.colorMax])
 
-    const width = this.outerWidth - this.margin.left - this.margin.right;
-    const height = this.outerHeight - this.margin.top - this.margin.bottom;
-    const data = this.dataInput;
-
     d3.select(this.containerId)
-      .selectAll('text')
+      .selectAll('svg')
       .remove();
 
     this.xScale = d3
       .scaleLinear()
-      .domain([Math.log(this.minAnnotated), Math.log(this.maxAnnotated)])
-      .rangeRound([0, width])
+      .domain([Math.log10(this.minAnnotated), Math.log10(this.maxAnnotated) * 1.05])
+      .rangeRound([0, this.width])
       .nice();
 
     this.yScale = d3
       .scaleBand()
-      .domain(data.map(d => d.term))
-      .range([0, height]);
+      .domain(this.dataInput.map(d => d.term))
+      .range([0, this.height]);
 
     this.radiusScale = d3
       .scaleSqrt()
       .domain([this.minRadius, this.maxRadius])
-      .range([3, height / (this.dataInput.length + 20)]);
+      .range([3, this.radiusSize]);
 
-    this.xAxis = d3.axisBottom(this.xScale).tickSize(-height);
-    this.yAxis = d3.axisLeft(this.yScale).tickSize(-width);
+    this.xAxis = d3.axisBottom(this.xScale).tickSize(-this.height);
+    this.yAxis = d3.axisLeft(this.yScale).tickSize(-this.width);
 
     const group = d3
       .select(this.containerId)
-      .append("text")
-      .attr("x", (width / 2))
-      .attr("y", 0 - (this.margin.top / 2))
-      .attr("text-anchor", "middle")
-      .classed('chart-title', true)
-      .text("TopGo Bubble Plot")
       .append('svg')
       .attr('width', this.outerWidth)
       .attr('height', this.outerHeight)
@@ -104,23 +110,32 @@ export class TopGoBubblePlotComponent implements OnChanges {
 
     group
       .append('rect')
-      .attr('width', width)
-      .attr('height', height)
+      .attr('width', this.width)
+      .attr('height', this.height)
+
+    group
+      .append('text')
+      .attr("x", (this.width / 2))
+      .attr("y", 0 - (this.margin.top / 2))
+      .attr("text-anchor", "middle")
+      .classed('chart-title', true)
+      .style('fill', 'rgba(0, 0, 0, .7)')
+      .text("TopGo Bubble Plot")
 
     //Sets X-Axis
     this.gX = group
       .append('g')
       .classed('x axis', true)
-      .attr('transform', 'translate(0,' + height + ')')
+      .attr('transform', 'translate(0,' + this.height + ')')
       .call(this.xAxis);
 
     this.gX
       .append('text')
       .classed('label', true)
-      .attr('x', width / 2)
+      .attr('x', this.width / 2)
       .attr('y', this.margin.bottom - 10)
       .style('text-anchor', 'end')
-      .text("-Log(P Value)");
+      .text("-Log10(P Value)");
 
     //Sets Y-Axis
     this.gY = group
@@ -133,7 +148,7 @@ export class TopGoBubblePlotComponent implements OnChanges {
       .classed('label', true)
       .attr('transform', 'rotate(-90)')
       .attr('y', -this.margin.left + 10)
-      .attr('x', -height / 2)
+      .attr('x', -this.height / 2)
       .attr('dy', '.71em')
       .style('text-anchor', 'middle')
       .text("GO Terms");
@@ -157,20 +172,20 @@ export class TopGoBubblePlotComponent implements OnChanges {
     const objects = group
       .append('svg')
       .classed('objects', true)
-      .attr('width', width)
-      .attr('height', height);
+      .attr('width', this.width)
+      .attr('height', this.height);
 
     objects
       .selectAll('.dot')
-      .data(data)
+      .data(this.dataInput)
       .enter()
       .append('circle')
       .classed('dot', true)
       .attr('cy', d => this.yScale(d.term) + this.yScale.bandwidth() / 2)
-      .attr('cx', d => this.xScale(-Math.log(d.elim_pval)))
+      .attr('cx', d => this.xScale(-Math.log10(d.elim_pval)))
       .attr('r', d => this.radiusScale(d.significant / d.annotated))
       .style('fill', d => {
-        return this.colors(Math.log(d.annotated));
+        return this.colors(Math.log10(d.annotated));
       })
       .attr('pointer-events', 'all')
       .on('mouseover', tip.show)
@@ -199,13 +214,13 @@ export class TopGoBubblePlotComponent implements OnChanges {
       .append('rect')
       .attr('width', 50)
       .attr('height', 10)
-      .attr('x', width + 20)
+      .attr('x', this.width + 20)
       .attr('y', 50)
       .attr('fill', d => d.color)
 
     legend
       .append('text')
-      .attr('x', width + 75)
+      .attr('x', this.width + 75)
       .attr('y', 50)
       .attr('dy', 10)
       .style('fill', '#000')
@@ -215,7 +230,7 @@ export class TopGoBubblePlotComponent implements OnChanges {
 
     const legendTitle = group
       .append('text')
-      .attr('x', width + 18)
+      .attr('x', this.width + 18)
       .attr('y', 40)
       .style('fill', '#000')
       .style('font-size', "14px")
@@ -248,7 +263,7 @@ export class TopGoBubblePlotComponent implements OnChanges {
     legendCircle
       .append('circle')
       .attr('r', d => d.radius)
-      .attr('cx', width + 40)
+      .attr('cx', this.width + 40)
       .attr('cy', 200)
       .attr('fill', "rgba(0,0,0,.7")
 
@@ -257,7 +272,7 @@ export class TopGoBubblePlotComponent implements OnChanges {
       .append('rect')
       .attr('width', 40)
       .attr('height', 40)
-      .attr('x', width + 20)
+      .attr('x', this.width + 20)
       .attr('y', 180)
       .style("fill", "transparent")
       .style("stroke", "rgba(0,0,0,.7")
@@ -265,7 +280,7 @@ export class TopGoBubblePlotComponent implements OnChanges {
 
     legendCircle
       .append('text')
-      .attr('x', width + 75)
+      .attr('x', this.width + 75)
       .attr('y', 200)
       .attr('dy', ".32em")
       .style('fill', '#000')
@@ -275,7 +290,7 @@ export class TopGoBubblePlotComponent implements OnChanges {
 
     const legendTitleCicle = group
       .append('text')
-      .attr('x', width + 18)
+      .attr('x', this.width + 18)
       .attr('y', 170)
       .style('fill', '#000')
       .style('font-size', "14px")

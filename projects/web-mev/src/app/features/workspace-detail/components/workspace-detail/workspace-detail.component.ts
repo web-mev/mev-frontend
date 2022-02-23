@@ -7,7 +7,7 @@ import {
 import { WorkspaceResource } from '@features/workspace-detail/models/workspace-resource';
 import { Workspace, WorkspaceAdapter } from '@workspace-manager/models/workspace';
 import { Observable } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { WorkspaceDetailService } from '@features/workspace-detail/services/workspace-detail.service';
 import { AddDialogComponent } from '../dialogs/add-dialog/add-dialog.component';
@@ -56,7 +56,8 @@ export class WorkspaceDetailComponent implements OnInit {
     private service: WorkspaceDetailService,
     public dialog: MatDialog,
     private notificationService: NotificationService,
-    private workspaceAdapter: WorkspaceAdapter
+    private workspaceAdapter: WorkspaceAdapter,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -87,6 +88,7 @@ export class WorkspaceDetailComponent implements OnInit {
       error => {
         if(error.status === 404){
           this.notificationService.warn(`There was no workspace (${this.workspaceId}) found.`);
+          this.router.navigate(["workarea"])
         }
       }
     

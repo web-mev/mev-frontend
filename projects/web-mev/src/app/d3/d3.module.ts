@@ -33,7 +33,7 @@ import {WGCNAQcPlotComponent} from './components/wgcna/wgcna_qc_plot.component';
 import { WgcnaElbowDialogComponent } from './components/wgcna/wgcna_elbow_example.component';
 import { TopgoComponent } from './components/topgo/topgo.component';
 import { MatrixSubsetComponent } from './components/matrix_subset/matrix_subset.component';
-
+import { TopGoBubblePlotComponent } from './components/topgo/bubble-plot/bubble-plot.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +67,8 @@ import { MatrixSubsetComponent } from './components/matrix_subset/matrix_subset.
     WGCNAQcPlotComponent,
     WgcnaElbowDialogComponent,
     TopgoComponent,
-    MatrixSubsetComponent
+    MatrixSubsetComponent,
+    TopGoBubblePlotComponent,
   ],
   imports: [CommonModule, SharedModule, DragDropModule],
   exports: [
@@ -92,7 +93,8 @@ import { MatrixSubsetComponent } from './components/matrix_subset/matrix_subset.
     CombatseqComponent,
     WgcnaComponent,
     TopgoComponent,
-    MatrixSubsetComponent
+    MatrixSubsetComponent,
+    TopGoBubblePlotComponent,
   ]
 })
 export class D3Module {}

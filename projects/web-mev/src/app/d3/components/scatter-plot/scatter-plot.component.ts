@@ -68,7 +68,7 @@ export class ScatterPlotComponent implements OnChanges {
     public dialog: MatDialog,
     private apiService: AnalysesService,
     private metadataService: MetadataService
-  ) {}
+  ) { }
 
   ngOnChanges(): void {
     this.customObservationSets = this.metadataService.getCustomObservationSets();
@@ -286,9 +286,9 @@ export class ScatterPlotComponent implements OnChanges {
       .style('text-anchor', 'end')
       .text(
         this.xCat.toUpperCase() +
-          ' (Explained variance: ' +
-          (100*this.xVariance).toFixed(this.precision) +
-          '%)'
+        ' (Explained variance: ' +
+        (100 * this.xVariance).toFixed(this.precision) +
+        '%)'
       );
 
     this.gY = group
@@ -305,9 +305,9 @@ export class ScatterPlotComponent implements OnChanges {
       .style('text-anchor', 'end')
       .text(
         this.yCat.toUpperCase() +
-          ' (Explained variance: ' +
-          (100*this.yVariance).toFixed(this.precision) +
-          '%)'
+        ' (Explained variance: ' +
+        (100 * this.yVariance).toFixed(this.precision) +
+        '%)'
       );
 
     const objects = group
@@ -361,7 +361,7 @@ export class ScatterPlotComponent implements OnChanges {
       .enter()
       .append('g')
       .classed('legend', true)
-      .attr('transform', function(d, i) {
+      .attr('transform', function (d, i) {
         return 'translate(0,' + i * 20 + ')';
       });
 
@@ -380,13 +380,13 @@ export class ScatterPlotComponent implements OnChanges {
       .attr('class', 'legend-label')
       .text(d => d.name);
 
-      // this may seem trivial here, but it keeps the plot mode (zoom/pan vs. select)
-      // consistent. Otherwise it gets reset to be zoom each time this function is called.
-      this.onChartViewChange(this.chartViewMode);
+    // this may seem trivial here, but it keeps the plot mode (zoom/pan vs. select)
+    // consistent. Otherwise it gets reset to be zoom each time this function is called.
+    this.onChartViewChange(this.chartViewMode);
 
-      // resets since otherwise you will see "selected samples" when the plot does not show any
-      // as being brushed.
-      this.selectedSamples = [];
+    // resets since otherwise you will see "selected samples" when the plot does not show any
+    // as being brushed.
+    this.selectedSamples = [];
 
 
   }

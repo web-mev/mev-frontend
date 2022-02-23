@@ -172,15 +172,6 @@ export class TopGoBubblePlotComponent implements OnChanges {
           "<strong class='d3tipBold'>Classic P-Val</strong>: <span class='d3-text'>" + d.classic_pval + "</span> <br>" +
           "<strong class='d3tipBold'>Elim Method P-Val</strong>: <span class='d3-text'>" + d.elim_pval + "</span> <br>" +
           (d.elim_pval !== 0 ? "" : "<strong class='warning_note'>Note: </strong>: <span class='d3-text'>One or more of your values were below 1e-30</span> <br>")
-          // :
-          // "<strong class='d3tipBold'>GO ID</strong>: <span class='d3-text'>" + d.go_id + "</span> <br>" +
-          // "<strong class='d3tipBold'>Term</strong>: <span class='d3-text'>" + d.term + "</span><br>" +
-          // "<strong class='d3tipBold'>GO ID</strong>: <span class='d3-text'>" + d.go_id + "</span> <br>" +
-          // "<strong class='d3tipBold'>Annotated</strong>: <span class='d3-text'>" + d.annotated + "</span><br>" +
-          // "<strong class='d3tipBold'>Significant</strong>: <span class='d3-text'>" + d.significant / d.annotated + "</span> <br>" +
-          // "<strong class='d3tipBold'>Classic P-Val</strong>: <span class='d3-text'>" + d.classic_pval + "</span> <br>" +
-          // "<strong class='d3tipBold'>Elim Method P-Val</strong>: <span class='d3-text'>" + d.elim_pval + "</span> <br>" +
-          // "<strong class='warning_note'>Note: </strong>: <span class='d3-text'>One or more of your values were below 1e-30</span> <br>"
       });
     group.call(tip);
 

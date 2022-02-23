@@ -45,6 +45,24 @@
     border-radius: 4px;
     z-index: 1;
   }
+  
+//Adds triangle extender to tooltips
+  .d3-tip:after, .d3-tip2:after, .d3-tip3:after{
+    box-sizing: border-box;
+    display: inline;
+    font-size: 10px;
+    width: 100%;
+    line-height: 1.2;
+    color: rgba(0, 0, 0, 0.8);
+    position: absolute;
+    pointer-events: none;
+    content: "\25BC";
+    margin: -4px 0 0 0;
+    top: 100%;
+    left: 0;
+    text-align: center;
+  }
+
   .d3-text {
     color: yellow;
   }

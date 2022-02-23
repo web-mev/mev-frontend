@@ -231,9 +231,9 @@ export class TopGoBubblePlotComponent implements OnChanges {
     //Sets Tool Tips
     const tip2 = d3Tip()
       .attr('class', 'd3-tip2')
-      // .offset([-10, 0])
+      .offset([-10, 0])
       .html((event, d) => {
-        return "<p>The number of annotated genes refers to the total number of genes associated with a particular GO term. Note that the colors are log-scaled for improved dynamic range.</p>"
+        return "<div>The number of annotated genes refers to the total number of genes associated with a particular GO term. Note that the colors are log-scaled for improved dynamic range.</div>"
       });
     group.call(tip2);
 
@@ -245,15 +245,19 @@ export class TopGoBubblePlotComponent implements OnChanges {
       .style('font-size', "14px")
       .attr('class', 'legend-title')
       .text("Annotated")
+
+
+    const legendTitleInfo = group
+      .append('text')
+      .attr('x', this.width + 90)
+      .attr('y', 40)
+      .attr("width", 200)
+      .attr("height", 200)
+      .attr("fill", "royalblue")
+      .attr('font-weight', 900)
+      .html("&#9432")
       .on('mouseover', tip2.show)
       .on('mouseout', tip2.hide);
-
-    // const legendTitleInfo = group
-    //   .append('text')
-    //   .attr('x', this.width + 100)
-    //   .attr('y', 40)
-    //   .attr('class', 'infoIcon')
-    //   .text('icon')
 
     //Circle Legend
     const minRad = this.radiusScale(this.minRadius);
@@ -307,9 +311,9 @@ export class TopGoBubblePlotComponent implements OnChanges {
 
     const tip3 = d3Tip()
       .attr('class', 'd3-tip2')
-      // .offset([-10, 0])
+      .offset([-10, 0])
       .html((event, d) => {
-        return "<p>This provides the fraction of annotated genes which are deemed significant by the selected threshold for differential expression.</p>"
+        return "<div>This provides the fraction of annotated genes which are deemed significant by the selected threshold for differential expression.</div>"
       });
     group.call(tip3);
 
@@ -321,6 +325,16 @@ export class TopGoBubblePlotComponent implements OnChanges {
       .style('font-size', "14px")
       .attr('class', 'legend-title')
       .text('Significant/Annotated')
+
+    const legendTitleCircleInfo = group
+      .append('text')
+      .attr('x', this.width + 166)
+      .attr('y', 170)
+      .attr("width", 200)
+      .attr("height", 200)
+      .attr("fill", "royalblue")
+      .attr('font-weight', 900)
+      .html("&#9432")
       .on('mouseover', tip3.show)
       .on('mouseout', tip3.hide);
   }

@@ -161,7 +161,7 @@ export class TopGoBubblePlotComponent implements OnChanges {
         return "<strong>GO ID</strong>: <span class='d3-text'>" + d.go_id + "</span> <br>" +
           "<strong>Term</strong>: <span class='d3-text'>" + d.term + "</span><br>" +
           "<strong>GO ID</strong>: <span class='d3-text'>" + d.go_id + "</span> <br>" +
-          "<strong>Annotated</strong>: <span class='d3-text'>" + d.annotated + "</span> <br>" +
+          "<strong>Annotated</strong>: <span class='d3-text'>" + d.annotated + "</span><br>" +
           "<strong>Significant</strong>: <span class='d3-text'>" + d.significant / d.annotated + "</span> <br>" +
           "<strong>Classic P-Val</strong>: <span class='d3-text'>" + d.classic_pval + "</span> <br>" +
           "<strong>Elim Method P-Val</strong>: <span class='d3-text'>" + d.elim_pval + "</span> <br>"
@@ -228,6 +228,15 @@ export class TopGoBubblePlotComponent implements OnChanges {
       .attr('class', 'legend-label')
       .text(d => d.name);
 
+    //Sets Tool Tips
+    const tip2 = d3Tip()
+      .attr('class', 'd3-tip2')
+      // .offset([-10, 0])
+      .html((event, d) => {
+        return "<p>The number of annotated genes refers to the total number of genes associated with a particular GO term. Note that the colors are log-scaled for improved dynamic range.</p>"
+      });
+    group.call(tip2);
+
     const legendTitle = group
       .append('text')
       .attr('x', this.width + 18)
@@ -235,8 +244,16 @@ export class TopGoBubblePlotComponent implements OnChanges {
       .style('fill', '#000')
       .style('font-size', "14px")
       .attr('class', 'legend-title')
-      .text('Annotated')
+      .text("Annotated")
+      .on('mouseover', tip2.show)
+      .on('mouseout', tip2.hide);
 
+    // const legendTitleInfo = group
+    //   .append('text')
+    //   .attr('x', this.width + 100)
+    //   .attr('y', 40)
+    //   .attr('class', 'infoIcon')
+    //   .text('icon')
 
     //Circle Legend
     const minRad = this.radiusScale(this.minRadius);
@@ -288,6 +305,14 @@ export class TopGoBubblePlotComponent implements OnChanges {
       .attr('class', 'legend-label')
       .text(d => d.name.toFixed(2));
 
+    const tip3 = d3Tip()
+      .attr('class', 'd3-tip2')
+      // .offset([-10, 0])
+      .html((event, d) => {
+        return "<p>This provides the fraction of annotated genes which are deemed significant by the selected threshold for differential expression.</p>"
+      });
+    group.call(tip3);
+
     const legendTitleCicle = group
       .append('text')
       .attr('x', this.width + 18)
@@ -296,5 +321,7 @@ export class TopGoBubblePlotComponent implements OnChanges {
       .style('font-size', "14px")
       .attr('class', 'legend-title')
       .text('Significant/Annotated')
+      .on('mouseover', tip3.show)
+      .on('mouseout', tip3.hide);
   }
 }

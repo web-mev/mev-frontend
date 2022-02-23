@@ -67,11 +67,7 @@
         <mev-topgo [outputs]="outputs"></mev-topgo>
     </ng-container>
 
-    <ng-container *ngIf="operationName === 'Expression matrix subset (non-integer)'">
-        <mev-exp-subset [outputs]="outputs"></mev-exp-subset>
-    </ng-container>
-
-    <ng-container *ngIf="operationName === 'Expression matrix subset (integer-based)'">
+    <ng-container *ngIf="operationName === 'Expression matrix subset'">
         <mev-exp-subset [outputs]="outputs"></mev-exp-subset>
     </ng-container>
 </div>

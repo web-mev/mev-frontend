@@ -45,7 +45,7 @@
     border-radius: 4px;
     z-index: 1;
   }
-  
+
 //Adds triangle extender to tooltips
   .d3-tip:after, .d3-tip2:after, .d3-tip3:after{
     box-sizing: border-box;
@@ -62,11 +62,15 @@
     left: 0;
     text-align: center;
   }
-
-  .d3-text {
-    color: yellow;
+  
+  .d3tipBold{
+    color: #fbec5d;
   }
 
+  .d3-text {
+    color: whitesmoke;
+  }
+  
   .d3-tip2 {
     line-height: 1.2;
     width: 200px;
@@ -77,6 +81,9 @@
     border-radius: 4px;
     border: gray 2px solid;
     z-index: 1;
+  }
+  .warning_note{
+    color: tomato;
   }
 
   .legend-title{

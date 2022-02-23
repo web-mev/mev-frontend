@@ -41,10 +41,14 @@ export class TopGoBubblePlotComponent implements OnChanges {
   colors: any;
   width: number = this.outerWidth - this.margin.left - this.margin.right;
   height: number = this.outerHeight - this.margin.top - this.margin.bottom;
-  radiusSize: number = this.height / 30
+  radiusSize: number = this.height / 30;
+  zeroPVal; //Used as a check if any of the P Values are equal to zero
+  minElim: number;
+  maxElim: number;
 
   ngOnChanges(): void {
     this.dataInput = this.data;
+    this.zeroPVal = this.data.find(d => d.elim_pval === 0);
     this.setRadiusSize(this.dataInput.length);
     this.setMinMaxVariables()
   }
@@ -64,11 +68,13 @@ export class TopGoBubblePlotComponent implements OnChanges {
   private setMinMaxVariables(): void {
     this.minAnnotated = d3.min(this.data, d => d.annotated);
     this.maxAnnotated = d3.max(this.data, d => d.annotated);
+    this.maxElim = d3.min(this.data, d => d.elim_pval);
+    this.minElim = d3.max(this.data, d => d.elim_pval);
     this.minLogAnnotated = Math.log10(this.minAnnotated);
     this.maxLogAnnotated = Math.log10(this.maxAnnotated);
     this.maxRadius = d3.max(this.data, d => (d.significant / d.annotated));
     this.minRadius = d3.min(this.data, d => (d.significant / d.annotated));
-    this.createChart()
+    this.createChart();
   }
 
   private createChart(): void {
@@ -82,7 +88,7 @@ export class TopGoBubblePlotComponent implements OnChanges {
 
     this.xScale = d3
       .scaleLinear()
-      .domain([Math.log10(this.minAnnotated), Math.log10(this.maxAnnotated) * 1.05])
+      .domain([-Math.log10(this.minElim) * .9, this.zeroPVal === undefined ? -Math.log10(this.maxElim) * 1.1 : 32])
       .rangeRound([0, this.width])
       .nice();
 
@@ -158,13 +164,23 @@ export class TopGoBubblePlotComponent implements OnChanges {
       .attr('class', 'd3-tip')
       .offset([-10, 0])
       .html((event, d) => {
-        return "<strong>GO ID</strong>: <span class='d3-text'>" + d.go_id + "</span> <br>" +
-          "<strong>Term</strong>: <span class='d3-text'>" + d.term + "</span><br>" +
-          "<strong>GO ID</strong>: <span class='d3-text'>" + d.go_id + "</span> <br>" +
-          "<strong>Annotated</strong>: <span class='d3-text'>" + d.annotated + "</span><br>" +
-          "<strong>Significant</strong>: <span class='d3-text'>" + d.significant / d.annotated + "</span> <br>" +
-          "<strong>Classic P-Val</strong>: <span class='d3-text'>" + d.classic_pval + "</span> <br>" +
-          "<strong>Elim Method P-Val</strong>: <span class='d3-text'>" + d.elim_pval + "</span> <br>"
+        return "<strong class='d3tipBold'>GO ID</strong>: <span class='d3-text'>" + d.go_id + "</span> <br>" +
+          "<strong class='d3tipBold'>Term</strong>: <span class='d3-text'>" + d.term + "</span><br>" +
+          "<strong class='d3tipBold'>GO ID</strong>: <span class='d3-text'>" + d.go_id + "</span> <br>" +
+          "<strong class='d3tipBold'>Annotated</strong>: <span class='d3-text'>" + d.annotated + "</span><br>" +
+          "<strong class='d3tipBold'>Significant</strong>: <span class='d3-text'>" + d.significant / d.annotated + "</span> <br>" +
+          "<strong class='d3tipBold'>Classic P-Val</strong>: <span class='d3-text'>" + d.classic_pval + "</span> <br>" +
+          "<strong class='d3tipBold'>Elim Method P-Val</strong>: <span class='d3-text'>" + d.elim_pval + "</span> <br>" +
+          (d.elim_pval !== 0 ? "" : "<strong class='warning_note'>Note: </strong>: <span class='d3-text'>One or more of your values were below 1e-30</span> <br>")
+          // :
+          // "<strong class='d3tipBold'>GO ID</strong>: <span class='d3-text'>" + d.go_id + "</span> <br>" +
+          // "<strong class='d3tipBold'>Term</strong>: <span class='d3-text'>" + d.term + "</span><br>" +
+          // "<strong class='d3tipBold'>GO ID</strong>: <span class='d3-text'>" + d.go_id + "</span> <br>" +
+          // "<strong class='d3tipBold'>Annotated</strong>: <span class='d3-text'>" + d.annotated + "</span><br>" +
+          // "<strong class='d3tipBold'>Significant</strong>: <span class='d3-text'>" + d.significant / d.annotated + "</span> <br>" +
+          // "<strong class='d3tipBold'>Classic P-Val</strong>: <span class='d3-text'>" + d.classic_pval + "</span> <br>" +
+          // "<strong class='d3tipBold'>Elim Method P-Val</strong>: <span class='d3-text'>" + d.elim_pval + "</span> <br>" +
+          // "<strong class='warning_note'>Note: </strong>: <span class='d3-text'>One or more of your values were below 1e-30</span> <br>"
       });
     group.call(tip);
 
@@ -182,7 +198,7 @@ export class TopGoBubblePlotComponent implements OnChanges {
       .append('circle')
       .classed('dot', true)
       .attr('cy', d => this.yScale(d.term) + this.yScale.bandwidth() / 2)
-      .attr('cx', d => this.xScale(-Math.log10(d.elim_pval)))
+      .attr('cx', d => this.xScale(d.elim_pval === 0 ? 30 : -Math.log10(d.elim_pval)))
       .attr('r', d => this.radiusScale(d.significant / d.annotated))
       .style('fill', d => {
         return this.colors(Math.log10(d.annotated));

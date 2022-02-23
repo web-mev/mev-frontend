@@ -5,7 +5,8 @@ export class Workspace {
     public id: string,
     public workspace_name: string,
     public created: Date,
-    public url: string
+    public url: string,
+    public owner_email: string
   ) {}
 }
 
@@ -14,13 +15,12 @@ export class Workspace {
 })
 export class WorkspaceAdapter {
   adapt(item: any): Workspace {
-    const re = /[()]/g;
-    const created_formatted = item.created.replace(re, '');
     return new Workspace(
       item.id, 
       item.workspace_name, 
-      new Date(created_formatted), 
-      item.url
-      );
+      new Date(item.created), 
+      item.url,
+      item.owner_email
+    );
   }
 }

@@ -5,7 +5,7 @@
     <mat-icon class="nav__icon" aria-label="Next step">reply</mat-icon>
     <span class="nav__text">Back to File & Workspace list</span>
   </a>
-  <span class="workspace-header__title" *ngIf="workspace$ | async as workspace">
+  <span class="workspace-header__title">
     Workspace
     <b> {{ workspace.workspace_name }} </b>
     <mat-icon class="workspace-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined" matTooltip="Workspace: {{ workspace.workspace_name }} &#13;

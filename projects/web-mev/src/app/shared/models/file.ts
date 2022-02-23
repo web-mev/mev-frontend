@@ -33,8 +33,6 @@ export class File {
 })
 export class FileAdapter {
   adapt(item: any): File {
-    const re = /[()]/g;
-    const created_formatted = item.created.replace(re, '');
 
     const workspace_names = item.workspaces
       .map(ws => ws.workspace_name)
@@ -52,7 +50,7 @@ export class FileAdapter {
       item.status,
       item.workspaces,
       workspace_names,
-      new Date(created_formatted),
+      new Date(item.created),
       item.size
     );
   }

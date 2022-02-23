@@ -84,7 +84,7 @@ const routes: Routes = [
 
   {
     path: '**',
-    redirectTo: 'feature-list'
+    redirectTo: 'about'
   }
 ];
 

@@ -5,7 +5,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { WorkspaceResource } from '@features/workspace-detail/models/workspace-resource';
-import { Workspace } from '@workspace-manager/models/workspace';
+import { Workspace, WorkspaceAdapter } from '@workspace-manager/models/workspace';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -34,7 +34,7 @@ import { NotificationService } from '@core/notifications/notification.service';
 export class WorkspaceDetailComponent implements OnInit {
   workspaceResources: WorkspaceResource[];
   workspaceId: string;
-  workspace$: Observable<Workspace>;
+  workspace: Workspace;
   searchText;
   selectedTabIndex;
   execOperationId: string;
@@ -55,10 +55,22 @@ export class WorkspaceDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private service: WorkspaceDetailService,
     public dialog: MatDialog,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private workspaceAdapter: WorkspaceAdapter
   ) {}
 
   ngOnInit(): void {
+    // populate some dummy workspace data. Otherwise it complains that 
+    // this.workspace is undefined. The real data (if the workspace is found)
+    // will then repopulate in loadData
+    let data = {
+      id: null,
+      workspace_name: 'N/A',
+      created: 'N/A',
+      url: null,
+      owner_email: 'N/A'
+    }
+    this.workspace = this.workspaceAdapter.adapt(data);
     this.loadData();
   }
 
@@ -79,7 +91,14 @@ export class WorkspaceDetailComponent implements OnInit {
       }
     
     );
-    this.workspace$ = this.service.getWorkspaceDetail(this.workspaceId);
+    this.service.getWorkspaceDetail(this.workspaceId).subscribe(
+      data => {
+        this.workspace = this.workspaceAdapter.adapt(data);
+      },
+      error => {
+        console.log('Workspace not found.');
+      }
+    );
   }
 
   refresh() {

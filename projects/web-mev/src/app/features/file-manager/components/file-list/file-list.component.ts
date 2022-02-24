@@ -183,9 +183,6 @@ export class FileListComponent implements OnInit {
   }
 
   getResourceTypeVal(row) {
-    console.log("row: ", row)
-    console.log("avail res: ", this.availableResourceTypes)
-    console.log("validating: ", this.validatingInfo)
     if (row.resource_type) {
       // if the resource was already validated for another type, but we are attempting to
       // change it, this keeps the dropdown on this "new" selected value. Otherwise, the refresh of the table

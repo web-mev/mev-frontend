@@ -2,19 +2,20 @@
 
 <div class="instruction">
   <p>
-  Upload and manage your files here.
-</p> 
-<p>
-The table below shows all files associated with your
-  account. After your files have been uploaded and validated, you can add them to
-  workspaces to conduct your analysis.
-</p>
-<p>
-  Note that we need to know what type of file we are working with. Hence, after upload, we
-  ask that you specify a file type. To learn more about the available file types and their
-  formats, <a (click)="viewFileTypes()">click here</a>. If applicable, you can preview the file to check that we have parsed it correctly. If
-  something does not appear to be correct, you may have to edit your file offline and
-  upload again.
+    Upload and manage your files here.
+  </p>
+  <p>
+    The table below shows all files associated with your
+    account. After your files have been uploaded and validated, you can add them to
+    workspaces to conduct your analysis.
+  </p>
+  <p>
+    Note that we need to know what type of file we are working with. Hence, after upload, we
+    ask that you specify a file type. To learn more about the available file types and their
+    formats, <a (click)="viewFileTypes()">click here</a>. If applicable, you can preview the file to check that we have
+    parsed it correctly. If
+    something does not appear to be correct, you may have to edit your file offline and
+    upload again.
   </p>
 </div>
 <div class="file-btn-group">
@@ -61,7 +62,7 @@ The table below shows all files associated with your
       <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">File type</mat-header-cell>
       <mat-cell *matCellDef="let row">
         <mat-select (selectionChange)="setResourceType($event, row)" [value]="getResourceTypeVal(row)">
-          <mat-option value="---" disabled>Please specify file type</mat-option>
+          <mat-option value ="---" disabled>Please specify file type</mat-option>
           <mat-option *ngFor="let type of availableResourceTypes | keyvalue" [value]="type.key">
             {{ type.value.title }}
           </mat-option>
@@ -120,13 +121,10 @@ The table below shows all files associated with your
           <mat-icon aria-label="Delete">delete</mat-icon>
         </button>
 
-        <a fileDownload
-        [resourceId]="row.id">
-        <button mat-icon-button color="accent" title="Download"
-          [disabled]="!row.is_active"
-          >
-          <mat-icon aria-label="Download">get_app</mat-icon>
-        </button>
+        <a fileDownload [resourceId]="row.id">
+          <button mat-icon-button color="accent" title="Download" [disabled]="!row.is_active">
+            <mat-icon aria-label="Download">get_app</mat-icon>
+          </button>
         </a>
         <button mat-icon-button color="accent" title="Download to DropBox" disabled>
           <mat-icon aria-label="Download">cloud_download</mat-icon>

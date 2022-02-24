@@ -178,11 +178,14 @@ export class FileListComponent implements OnInit {
       this.currentlyValidatingBS.next(filesBeingValidated);
 
       this.refresh();
-      this.startPollingRefresh(120);
+      this.startPollingRefresh(1200);
     });
   }
 
   getResourceTypeVal(row) {
+    console.log("row: ", row)
+    console.log("avail res: ", this.availableResourceTypes)
+    console.log("validating: ", this.validatingInfo)
     if (row.resource_type) {
       // if the resource was already validated for another type, but we are attempting to
       // change it, this keeps the dropdown on this "new" selected value. Otherwise, the refresh of the table
@@ -221,7 +224,7 @@ export class FileListComponent implements OnInit {
       // the resource type may be null, but we may be in the process of 
       // validating it. Return the value that the user just set, which is 
       // stored in the validatingInfo object
-      if (Object.keys(this.validatingInfo).includes(row.id)){
+      if (Object.keys(this.validatingInfo).includes(row.id) && row.status === "Validating..."){
         return this.validatingInfo[row.id];
       }
       return '---';

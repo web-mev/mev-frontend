@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpBackend } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { catchError } from "rxjs/operators"
 
 /**
  * Used for querying the solr server exposed by Amigo (ontology DB)
@@ -26,13 +27,13 @@ export class AmigoService {
   constructor(
     handler: HttpBackend
   ) {
-      this.httpClient = new HttpClient(handler);
+    this.httpClient = new HttpClient(handler);
   }
 
   get_amigo_genes(goId: string, organism: string): Observable<any> {
     let orgMapping = {
-        'Human': 'Homo sapiens',
-        'Mouse': 'Mus musculus'
+      'Human': 'Homo sapiens',
+      'Mouse': 'Mus musculus'
     }
     let orgString = orgMapping[organism];
     let params = new HttpParams();
@@ -45,10 +46,13 @@ export class AmigoService {
     params = params.append('fq', `taxon_subset_closure_label:"${orgString}"`);
     params = params.append('fq', 'regulates_closure:"' + goId + '"');
     return this.httpClient.get(
-        this.baseUrl,
-        {params: params}
-    );
-
+      this.baseUrl,
+      { params: params }
+    )
+      .pipe(
+        catchError(error => {
+          console.log("Error: ", error);
+          throw error;
+        }))
   }
-
 }

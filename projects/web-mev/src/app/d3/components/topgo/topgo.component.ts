@@ -17,6 +17,7 @@ import { MetadataService } from '@app/core/metadata/metadata.service';
 import { AddSampleSetComponent } from '../dialogs/add-sample-set/add-sample-set.component';
 import { CustomSetType } from '@app/_models/metadata';
 import { AmigoService } from './topgo.service';
+import { NotificationService } from '@app/core/core.module';
 
 /**
  * Used for TopGO analysis outputs- showing the top terms, allowing selection of feature sets
@@ -80,7 +81,8 @@ export class TopgoComponent implements OnInit {
     private analysesService: AnalysesService,
     public dialog: MatDialog,
     private metadataService: MetadataService,
-    private amigoService: AmigoService
+    private amigoService: AmigoService,
+    private notificationService: NotificationService
   ) {
     this.dataSource = new GODataSource(this.analysesService);
 
@@ -182,12 +184,20 @@ export class TopgoComponent implements OnInit {
   }
 
   createAmigoFeatureSet(row){
-    this.amigoService.get_amigo_genes(row.go_id, this.selectedOrganism).subscribe(
+    this.amigoService.get_amigo_genes(row.go_id + 'x', this.selectedOrganism).subscribe(
       response => {
         let results = response['response']['docs'];
         let geneSet = results.map(x => ({id: x['bioentity_label']}));
-        let defaultSetName = `amigo_${row.go_id}`
-        this.openSetDialog(defaultSetName, geneSet);
+        if(geneSet.length > 0){
+          let defaultSetName = `amigo_${row.go_id}`
+          this.openSetDialog(defaultSetName, geneSet);
+        } else {
+          this.notificationService.warn(`The AmiGO query for ${row.go_id} returned zero genes.`);
+        }
+      },
+      err => {
+        this.notificationService.warn('A problem was encountered when querying the AmiGO server. \
+        Usually this is a temporary issue, but if it persists please let us know!');
       }
     );
   }

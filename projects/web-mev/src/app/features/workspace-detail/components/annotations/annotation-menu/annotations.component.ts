@@ -145,8 +145,8 @@ ngOnInit(): void {
     for(let item of this.annotationFileContent){
       selectedData.push(
         {
-          id: item.rowname,
-          val: item.values[this.selectedAttribute]
+          id: item.rowname !== null ? item.rowname : '(none)',
+          val: item.values[this.selectedAttribute] !== null ? item.values[this.selectedAttribute] : '(none)'
         }
       );
     }

@@ -74,7 +74,6 @@ export class FactorDisplayComponent implements OnInit {
         } else {
             this.createObsSetBtnDisabled = true;
         }
-
     }
 
     countBins() {

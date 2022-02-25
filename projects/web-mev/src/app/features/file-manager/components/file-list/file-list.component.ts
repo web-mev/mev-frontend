@@ -178,7 +178,7 @@ export class FileListComponent implements OnInit {
       this.currentlyValidatingBS.next(filesBeingValidated);
 
       this.refresh();
-      this.startPollingRefresh(120);
+      this.startPollingRefresh(1200);
     });
   }
 
@@ -221,7 +221,7 @@ export class FileListComponent implements OnInit {
       // the resource type may be null, but we may be in the process of 
       // validating it. Return the value that the user just set, which is 
       // stored in the validatingInfo object
-      if (Object.keys(this.validatingInfo).includes(row.id)){
+      if (Object.keys(this.validatingInfo).includes(row.id) && row.status === "Validating..."){
         return this.validatingInfo[row.id];
       }
       return '---';

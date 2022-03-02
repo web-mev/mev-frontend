@@ -45,7 +45,7 @@ export class HclComponent implements OnChanges {
     private apiService: AnalysesService,
     private metadataService: MetadataService,
     public dialog: MatDialog
-  ) {}
+  ) { }
 
   ngOnChanges(): void {
     this.generateHCL();
@@ -174,7 +174,7 @@ export class HclComponent implements OnChanges {
       .attr('dy', 3)
       .attr('class', 'textLabel')
       .text(d => truncate(d.data.name))
-      .on('mouseover', function(mouseEvent: any, d) {
+      .on('mouseover', function (mouseEvent: any, d) {
         tip.show(mouseEvent, d, this);
         tip.style('left', mouseEvent.x + tooltipOffsetX + 'px');
       })
@@ -205,7 +205,7 @@ export class HclComponent implements OnChanges {
         .enter()
         .append('g')
         .classed('legend', true)
-        .attr('transform', function(d, i) {
+        .attr('transform', function (d, i) {
           return 'translate(0,' + i * 20 + ')';
         });
 

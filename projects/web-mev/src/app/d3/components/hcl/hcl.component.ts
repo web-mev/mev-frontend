@@ -59,7 +59,7 @@ export class HclComponent implements OnChanges {
    * Function to retrieve data for Observation HCL plot
    */
   generateHCL() {
-    const obsResourceId = this.outputs.observations_hcl;
+    const obsResourceId = this.outputs['HierarchicalCluster.observation_clusters'];
     this.customObservationSets = this.metadataService.getCustomObservationSets();
     this.apiService.getResourceContent(obsResourceId).subscribe(response => {
       this.hierObsData = response;

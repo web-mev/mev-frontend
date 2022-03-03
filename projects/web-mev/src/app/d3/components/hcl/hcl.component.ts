@@ -60,12 +60,18 @@ export class HclComponent implements OnChanges {
    */
   generateHCL() {
     const obsResourceId = this.outputs['HierarchicalCluster.observation_clusters'];
+    // const obsResourceId = this.outputs['HierarchicalCluster.feature_clusters'];
     this.customObservationSets = this.metadataService.getCustomObservationSets();
     this.apiService.getResourceContent(obsResourceId).subscribe(response => {
       this.hierObsData = response;
+      this.root = d3.hierarchy(response);
       this.createChart(this.hierObsData, this.obsTreeContainerId);
     });
   }
+  update(data) {
+    this.createChart(data, this.obsTreeContainerId);
+  }
+  root;
 
   /**
    * Function to create dendrogram
@@ -82,9 +88,15 @@ export class HclComponent implements OnChanges {
       .selectAll('svg')
       .remove();
 
-    const root = d3.hierarchy(hierData);
     let ifCustomObservationSetExists = false;
-    root.leaves().map(leaf => {
+
+    this.root.descendants().forEach((d, i) => {
+      d.id = i;
+      if (d._children === undefined) d._children = d.children;
+    });
+    console.log("root: ", this.root);
+    console.log("outputs: ", this.outputs)
+    this.root.leaves().map(leaf => {
       const sample = leaf.data.name;
       leaf.data.isLeaf = true;
       leaf.data.colors = [];
@@ -95,12 +107,12 @@ export class HclComponent implements OnChanges {
         }
       });
     });
-    const leafNodeNumber = root.leaves().length; // calculate the number of nodes
+    const leafNodeNumber = this.root.leaves().length; // calculate the number of nodes
     // add extra px for every node above 20 to the set height
     const addHeight = leafNodeNumber > 20 ? (leafNodeNumber - 20) * 30 : 0;
     const canvasHeight = height + addHeight;
     const tree = d3.cluster().size([canvasHeight, width - 200]);
-    tree(root);
+    tree(this.root);
     const svg = d3
       .select(containerId)
       .append('svg')
@@ -115,7 +127,7 @@ export class HclComponent implements OnChanges {
 
     svg
       .selectAll('path.link')
-      .data(root.descendants().slice(1))
+      .data(this.root.descendants().slice(1))
       .enter()
       .append('path')
       .attr('class', 'link')
@@ -124,19 +136,36 @@ export class HclComponent implements OnChanges {
     const that = this;
     const node = svg
       .selectAll('g.node')
-      .data(root.descendants())
+      .data(this.root.descendants())
       .enter()
       .append('g')
       .attr('class', 'node')
       .attr('transform', d => 'translate(' + d['y'] + ',' + d['x'] + ')')
-      .on('click', highlightNodes);
+      // .on('click', highlightNodes);
+      .on("click", (event, d) => {
+        let currId = d.id;
+        this.root.descendants().forEach(node => {
+          if (node.id === currId) {
+            if (node.children === null) {
+              node.children = node._children;
+            } else {
+              node.children = null;
+            }
+            // node.children = node.children ? null : node._children;
+            console.log("node after: ", node)
+          }
+        })
+        this.update(this.root);
+      });
 
     node
       .append('circle')
-      .filter(d => d.data.name.length > 0)
+      // .filter(d => d.data.name.length > 0)
       .attr('r', 4);
 
     const leafNode = node.filter(d => d.data.isLeaf === true);
+
+
 
     function highlightNodes(event, d: any) {
       d.descendants().forEach(
@@ -144,7 +173,7 @@ export class HclComponent implements OnChanges {
           (node.data.isHighlighted = node.data.isHighlighted ? false : true)
       );
 
-      that.selectedSamples = root
+      that.selectedSamples = this.root
         .leaves()
         .filter(leaf => leaf.data.isHighlighted)
         .map(leaf => leaf.data.name);

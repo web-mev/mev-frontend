@@ -13,6 +13,7 @@ import { AddSampleSetComponent } from '../dialogs/add-sample-set/add-sample-set.
 import { MatDialog } from '@angular/material/dialog';
 import { MetadataService } from '@app/core/metadata/metadata.service';
 import { CustomSetType } from '@app/_models/metadata';
+import { Search } from 'angular2-multiselect-dropdown/lib/menu-item';
 
 /**
  * HCL Component
@@ -59,11 +60,11 @@ export class HclComponent implements OnChanges {
    * Function to retrieve data for Observation HCL plot
    */
   generateHCL() {
-    const obsResourceId = this.outputs['HierarchicalCluster.observation_clusters'];
-    // const obsResourceId = this.outputs['HierarchicalCluster.feature_clusters'];
+    // const obsResourceId = this.outputs['HierarchicalCluster.observation_clusters'];
+    const obsResourceId = this.outputs['HierarchicalCluster.feature_clusters'];
     this.customObservationSets = this.metadataService.getCustomObservationSets();
     this.apiService.getResourceContent(obsResourceId).subscribe(response => {
-      this.hierObsData = response;
+      this.hierObsData = d3.hierarchy(response);
       this.root = d3.hierarchy(response);
       this.createChart(this.hierObsData, this.obsTreeContainerId);
     });
@@ -72,6 +73,7 @@ export class HclComponent implements OnChanges {
     this.createChart(data, this.obsTreeContainerId);
   }
   root;
+  initializeDepth = false;
 
   /**
    * Function to create dendrogram
@@ -90,13 +92,19 @@ export class HclComponent implements OnChanges {
 
     let ifCustomObservationSetExists = false;
 
-    this.root.descendants().forEach((d, i) => {
+    hierData.descendants().forEach((d, i) => {
       d.id = i;
+      if (this.initializeDepth === false) {
+        d.display = d.depth < 4 ? true : false;
+      }
       if (d._children === undefined) d._children = d.children;
+      if (d.data._name === undefined) d.data._name = d.data.name;
+      if (d.display === false) d.children = null;
     });
-    console.log("root: ", this.root);
-    console.log("outputs: ", this.outputs)
-    this.root.leaves().map(leaf => {
+    this.initializeDepth = true;
+    console.log("root: ", hierData)
+
+    hierData.leaves().map(leaf => {
       const sample = leaf.data.name;
       leaf.data.isLeaf = true;
       leaf.data.colors = [];
@@ -107,12 +115,13 @@ export class HclComponent implements OnChanges {
         }
       });
     });
-    const leafNodeNumber = this.root.leaves().length; // calculate the number of nodes
+    const leafNodeNumber = hierData.leaves().length; // calculate the number of nodes
     // add extra px for every node above 20 to the set height
     const addHeight = leafNodeNumber > 20 ? (leafNodeNumber - 20) * 30 : 0;
     const canvasHeight = height + addHeight;
     const tree = d3.cluster().size([canvasHeight, width - 200]);
-    tree(this.root);
+    tree(hierData);
+
     const svg = d3
       .select(containerId)
       .append('svg')
@@ -127,7 +136,7 @@ export class HclComponent implements OnChanges {
 
     svg
       .selectAll('path.link')
-      .data(this.root.descendants().slice(1))
+      .data(hierData.descendants().slice(1))
       .enter()
       .append('path')
       .attr('class', 'link')
@@ -136,7 +145,7 @@ export class HclComponent implements OnChanges {
     const that = this;
     const node = svg
       .selectAll('g.node')
-      .data(this.root.descendants())
+      .data(hierData.descendants())
       .enter()
       .append('g')
       .attr('class', 'node')
@@ -144,28 +153,28 @@ export class HclComponent implements OnChanges {
       // .on('click', highlightNodes);
       .on("click", (event, d) => {
         let currId = d.id;
-        this.root.descendants().forEach(node => {
+        hierData.descendants().forEach(node => {
           if (node.id === currId) {
             if (node.children === null) {
               node.children = node._children;
+              node.display = true;
+              node.data.name = " ";
             } else {
               node.children = null;
+              node.data.name = node.data._name;
+              node.display = false;
             }
-            // node.children = node.children ? null : node._children;
-            console.log("node after: ", node)
           }
         })
-        this.update(this.root);
+        this.update(hierData);
       });
 
     node
       .append('circle')
-      // .filter(d => d.data.name.length > 0)
+      .filter(d => d.data.name.length > 0)
       .attr('r', 4);
 
     const leafNode = node.filter(d => d.data.isLeaf === true);
-
-
 
     function highlightNodes(event, d: any) {
       d.descendants().forEach(
@@ -173,7 +182,7 @@ export class HclComponent implements OnChanges {
           (node.data.isHighlighted = node.data.isHighlighted ? false : true)
       );
 
-      that.selectedSamples = this.root
+      that.selectedSamples = hierData
         .leaves()
         .filter(leaf => leaf.data.isHighlighted)
         .map(leaf => leaf.data.name);
@@ -287,4 +296,38 @@ export class HclComponent implements OnChanges {
       }
     });
   }
+
+  onSearch(gene) {
+    this.root.descendants().forEach((d, i) => {
+      d.id = i
+    })
+
+    let searchPathIds = {}
+
+    this.root.descendants().forEach((d, i) => {
+      if (d.data.name === gene) {
+        while (d !== null) {
+          searchPathIds[d.id] = 1;
+          d = d.parent;
+        }
+        console.log("Search Path IDs: ", searchPathIds);
+      }
+    })
+
+    this.root.descendants().forEach((d, i) => {
+      if (d._children === undefined) d._children = d.children;
+      if (d.data._name === undefined) d.data._name = d.data.name;
+      if (searchPathIds[d.id] === 1) {
+        d.display = true;
+      } else {
+        d.display = false;
+        d.children = null;
+      }
+    })
+    this.initializeDepth = true;
+    this.update(this.root)
+  }
+
+
+
 }

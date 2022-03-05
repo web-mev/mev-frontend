@@ -87,7 +87,7 @@ export class HclComponent implements OnChanges {
     this.clusterType = type;
     this.initializeDepth = false;
     this.generateHCL();
-    
+
   }
 
   onClickNodeTypeChange(type) {
@@ -115,10 +115,10 @@ export class HclComponent implements OnChanges {
 
     hierData.descendants().forEach((d, i) => {
       d.id = i;
-      
+
       if (this.initializeDepth === false) {
         d.display = d.depth <= this.levelRestriction ? true : false;
-        d.count = d.copy().count().value;
+        d.count = d.count().value;
         if (d.data.children !== undefined) {
           d.data.name = d.count.toString();
         }
@@ -179,9 +179,15 @@ export class HclComponent implements OnChanges {
       // .on('click', highlightNodes);
       .on("click", (event, d) => {
         let currId = d.id;
+        console.log('currID: ', currId);
         hierData.descendants().forEach(node => {
           if (node.id === currId) {
-            if (node.children === null) {
+            //Comparison to leafs have string names
+            let isRealLeaf = parseInt(node.data.name)
+            if (isNaN(isRealLeaf)) {
+              node.children = node._children;
+              node.display = true;
+            } else if (node.children === null) {
               node.children = node._children;
               node.display = true;
               node.data.name = " ";
@@ -322,48 +328,51 @@ export class HclComponent implements OnChanges {
       }
     });
   }
-  
-  searchString: string;
+  dataSearch;
   onSearch(gene: string = this.searchValue) {
-    
-    this.initializeDepth = true;
-    if(this.searchString === gene){
-      this.generateHCL();
-      //might need to wait to get new results from this before continuing reason for errors or multiple presses.
-    }
-    
-    this.searchString = gene;
-    let rootCopy = this.root;
-    rootCopy.descendants().forEach((d, i) => {
-      d.id = i;
-    })
-    let searchPathIds = {}
 
-    //Creates a list of node ids to get to the search item
-    rootCopy.descendants().forEach((d, i) => {
-      if (d.data.name === gene) {
-        while (d !== null) {
-          searchPathIds[d.id] = 1;
-          d = d.parent;
-        }
-      }
-    })
-    console.log("rootcopy: ", rootCopy)
-    rootCopy.descendants().forEach((d, i) => {
-      if (d._children === undefined) d._children = d.children;
-      if (d.data._name === undefined) d.data._name = d.data.name;
-      if (searchPathIds[d.id] === 1) {
-        d.display = true;
-        if (d.data.children !== undefined) {
-          d.data.name = " ";
-        }
 
-      } else {
-        d.display = false;
-        d.children = null;
-      }
-    })
-    this.update(rootCopy);
+    // this.generateHCL();
+    //problem is second search needs to reset to original data set before it performs the search
+    const obsResourceId = this.outputs[this.clusterType === 'observationType' ? 'HierarchicalCluster.observation_clusters' : 'HierarchicalCluster.feature_clusters'];
+
+    this.apiService.getResourceContent(obsResourceId).subscribe(response => {
+      this.dataSearch = d3.hierarchy(response);
+      let rootCopy = this.dataSearch;
+      rootCopy.descendants().forEach((d, i) => {
+        d.id = i;
+      })
+      let searchPathIds = {}
+  
+      //Creates a list of node ids to get to the search item
+      rootCopy.descendants().forEach((d, i) => {
+        if (d.data.name === gene) {
+          while (d !== null) {
+            searchPathIds[d.id] = 1;
+            d = d.parent;
+          }
+        }
+      })
+      console.log("rootcopy: ", rootCopy)
+      rootCopy.descendants().forEach((d, i) => {
+        if (d._children === undefined) d._children = d.children;
+        if (d.data._name === undefined) d.data._name = d.data.name;
+        if (searchPathIds[d.id] === 1) {
+          d.display = true;
+          if (d.data.children !== undefined) {
+            d.data.name = " ";
+          }
+  
+        } else {
+          d.display = false;
+          d.children = null;
+        }
+      })
+      this.update(rootCopy);
+    });
+
+
+    
   }
 
 

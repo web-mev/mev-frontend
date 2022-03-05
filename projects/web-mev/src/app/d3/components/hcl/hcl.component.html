@@ -14,7 +14,34 @@
             <div class="hcl-container">
 
                 <div class="chart-section">
-                    <div class="chart-title">Observation clustering</div>                    
+                    <div class="chart-title">Observation clustering</div>
+                    <mat-form-field class="example-form-field searchField">
+                        <mat-label>Search</mat-label>
+                        <input matInput type="text" [(ngModel)]="searchValue" (keydown.enter)="onSearch()">
+                        <button matSuffix mat-icon-button (click)="onSearch()">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                    </mat-form-field>
+                    <mat-button-toggle-group class="toogleGroup" #chartMode="matButtonToggleGroup" [(ngModel)]="clusterType">
+                        <mat-button-toggle value="observationType" (change)="onClusterTypeChange($event.value)"
+                            aria-label="Text align center">
+                            Observation
+                        </mat-button-toggle>
+                        <mat-button-toggle value="featureType" (change)="onClusterTypeChange($event.value)"
+                            aria-label="Text align left">
+                            Feature
+                        </mat-button-toggle>
+                    </mat-button-toggle-group>
+                    <mat-button-toggle-group class="toogleGroup" #chartMode="matButtonToggleGroup" [(ngModel)]="onClickMode">
+                        <mat-button-toggle value="expandNode" (change)="onClickNodeTypeChange($event.value)"
+                            aria-label="Text align center">
+                            Expand Node
+                        </mat-button-toggle>
+                        <mat-button-toggle value="addToList" (change)="onClickNodeTypeChange($event.value)"
+                            aria-label="Text align left">
+                            Add to Observation List
+                        </mat-button-toggle>
+                    </mat-button-toggle-group>
                     <div class="sample-list-container">
                         <button mat-raised-button color="accent" (click)="onCreateCustomSampleSet()"
                             [disabled]="!selectedSamples.length">
@@ -27,11 +54,12 @@
                             </span>
                         </div>
                     </div>
-                    <button mat-raised-button color="primary" (click)="onSearch('EIF4G2')">
-                            Search for EIF4G2
-                        </button>
-                    <mev-download-button [containerId]="obsTreeContainerId" [imageName]="obsImageName"></mev-download-button>
-                    <div class="chart" #treePlot id="observationPlot" (window:resize)="onResize($event)"></div>
+
+
+
+                    <mev-download-button [containerId]="obsTreeContainerId" [imageName]="obsImageName">
+                    </mev-download-button>
+                    <div class="chart" #treePlot id="observationPlot" ></div>
 
                 </div>
                 <mat-divider [inset]="true"></mat-divider>

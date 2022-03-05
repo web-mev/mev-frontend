@@ -13,7 +13,7 @@ import { AddSampleSetComponent } from '../dialogs/add-sample-set/add-sample-set.
 import { MatDialog } from '@angular/material/dialog';
 import { MetadataService } from '@app/core/metadata/metadata.service';
 import { CustomSetType } from '@app/_models/metadata';
-import { Search } from 'angular2-multiselect-dropdown/lib/menu-item';
+// import { Search } from 'angular2-multiselect-dropdown/lib/menu-item';
 
 /**
  * HCL Component
@@ -29,7 +29,13 @@ import { Search } from 'angular2-multiselect-dropdown/lib/menu-item';
 export class HclComponent implements OnChanges {
   @Input() outputs;
   @ViewChild('treePlot') svgElement: ElementRef;
+  root;
   hierObsData;
+  initializeDepth: boolean = false;
+  searchValue: string = 'RN5S284';
+  clusterType: string = 'observationType';
+  onClickMode: string = 'expandNode'
+  levelRestriction: number = 4;
 
   customObservationSets = [];
   selectedSamples = [];
@@ -52,28 +58,43 @@ export class HclComponent implements OnChanges {
     this.generateHCL();
   }
 
-  onResize(event) {
-    this.createChart(this.hierObsData, this.obsTreeContainerId);
-  }
+  // onResize(event) {
+  //   this.createChart(this.root, this.obsTreeContainerId);
+  // }
 
   /**
    * Function to retrieve data for Observation HCL plot
    */
   generateHCL() {
     // const obsResourceId = this.outputs['HierarchicalCluster.observation_clusters'];
-    const obsResourceId = this.outputs['HierarchicalCluster.feature_clusters'];
+    const obsResourceId = this.outputs[this.clusterType === 'observationType' ? 'HierarchicalCluster.observation_clusters' : 'HierarchicalCluster.feature_clusters'];
+
     this.customObservationSets = this.metadataService.getCustomObservationSets();
     this.apiService.getResourceContent(obsResourceId).subscribe(response => {
       this.hierObsData = d3.hierarchy(response);
       this.root = d3.hierarchy(response);
-      this.createChart(this.hierObsData, this.obsTreeContainerId);
+      if (this.initializeDepth === false) {
+        this.createChart(this.hierObsData, this.obsTreeContainerId);
+      }
+
     });
   }
   update(data) {
     this.createChart(data, this.obsTreeContainerId);
   }
-  root;
-  initializeDepth = false;
+
+  onClusterTypeChange(type) {
+    this.clusterType = type;
+    this.initializeDepth = false;
+    this.generateHCL();
+    
+  }
+
+  onClickNodeTypeChange(type) {
+    this.onClickMode = type;
+    // this.update(this.root);
+  }
+
 
   /**
    * Function to create dendrogram
@@ -94,15 +115,20 @@ export class HclComponent implements OnChanges {
 
     hierData.descendants().forEach((d, i) => {
       d.id = i;
+      
       if (this.initializeDepth === false) {
-        d.display = d.depth < 4 ? true : false;
+        d.display = d.depth <= this.levelRestriction ? true : false;
+        d.count = d.copy().count().value;
+        if (d.data.children !== undefined) {
+          d.data.name = d.count.toString();
+        }
       }
       if (d._children === undefined) d._children = d.children;
       if (d.data._name === undefined) d.data._name = d.data.name;
       if (d.display === false) d.children = null;
+      // if(d.count === undefined) d.count = d.data._name;
     });
     this.initializeDepth = true;
-    console.log("root: ", hierData)
 
     hierData.leaves().map(leaf => {
       const sample = leaf.data.name;
@@ -159,7 +185,7 @@ export class HclComponent implements OnChanges {
               node.children = node._children;
               node.display = true;
               node.data.name = " ";
-            } else {
+            } else if (node.children.length > 0) {
               node.children = null;
               node.data.name = node.data._name;
               node.display = false;
@@ -171,7 +197,7 @@ export class HclComponent implements OnChanges {
 
     node
       .append('circle')
-      .filter(d => d.data.name.length > 0)
+      // .filter(d => d.data.name.length > 0)
       .attr('r', 4);
 
     const leafNode = node.filter(d => d.data.isLeaf === true);
@@ -296,38 +322,49 @@ export class HclComponent implements OnChanges {
       }
     });
   }
-
-  onSearch(gene) {
-    this.root.descendants().forEach((d, i) => {
-      d.id = i
+  
+  searchString: string;
+  onSearch(gene: string = this.searchValue) {
+    
+    this.initializeDepth = true;
+    if(this.searchString === gene){
+      this.generateHCL();
+      //might need to wait to get new results from this before continuing reason for errors or multiple presses.
+    }
+    
+    this.searchString = gene;
+    let rootCopy = this.root;
+    rootCopy.descendants().forEach((d, i) => {
+      d.id = i;
     })
-
     let searchPathIds = {}
 
-    this.root.descendants().forEach((d, i) => {
+    //Creates a list of node ids to get to the search item
+    rootCopy.descendants().forEach((d, i) => {
       if (d.data.name === gene) {
         while (d !== null) {
           searchPathIds[d.id] = 1;
           d = d.parent;
         }
-        console.log("Search Path IDs: ", searchPathIds);
       }
     })
-
-    this.root.descendants().forEach((d, i) => {
+    console.log("rootcopy: ", rootCopy)
+    rootCopy.descendants().forEach((d, i) => {
       if (d._children === undefined) d._children = d.children;
       if (d.data._name === undefined) d.data._name = d.data.name;
       if (searchPathIds[d.id] === 1) {
         d.display = true;
+        if (d.data.children !== undefined) {
+          d.data.name = " ";
+        }
+
       } else {
         d.display = false;
         d.children = null;
       }
     })
-    this.initializeDepth = true;
-    this.update(this.root)
+    this.update(rootCopy);
   }
-
 
 
 }

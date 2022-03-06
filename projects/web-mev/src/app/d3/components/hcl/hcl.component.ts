@@ -45,7 +45,7 @@ export class HclComponent implements OnChanges {
   obsImageName = 'Hierarchical clustering - Observations'; // file name for downloaded SVG image
   margin = { top: 50, right: 300, bottom: 50, left: 50 }; // chart margins
   outerHeight = 500;
-  maxTextLabelLength = 10;
+  maxTextLabelLength = 20;
   tooltipOffsetX = 10; // position the tooltip on the right side of the triggering element
 
   constructor(
@@ -65,6 +65,7 @@ export class HclComponent implements OnChanges {
   /**
    * Function to retrieve data for Observation HCL plot
    */
+  // initializeChart = false;
   generateHCL() {
     // const obsResourceId = this.outputs['HierarchicalCluster.observation_clusters'];
     const obsResourceId = this.outputs[this.clusterType === 'observationType' ? 'HierarchicalCluster.observation_clusters' : 'HierarchicalCluster.feature_clusters'];
@@ -72,10 +73,11 @@ export class HclComponent implements OnChanges {
     this.customObservationSets = this.metadataService.getCustomObservationSets();
     this.apiService.getResourceContent(obsResourceId).subscribe(response => {
       this.hierObsData = d3.hierarchy(response);
-      this.root = d3.hierarchy(response);
-      if (this.initializeDepth === false) {
+      console.log("initial data: ",this.hierObsData)
+      // this.root = d3.hierarchy(response);
+      // if (this.initializeChart === false) {
         this.createChart(this.hierObsData, this.obsTreeContainerId);
-      }
+      // }
 
     });
   }
@@ -85,6 +87,7 @@ export class HclComponent implements OnChanges {
 
   onClusterTypeChange(type) {
     this.clusterType = type;
+    this.levelRestriction = 4;
     this.initializeDepth = false;
     this.generateHCL();
 
@@ -115,18 +118,18 @@ export class HclComponent implements OnChanges {
 
     hierData.descendants().forEach((d, i) => {
       d.id = i;
-
+      d.display = d.depth < this.levelRestriction ? true : false;
       if (this.initializeDepth === false) {
-        d.display = d.depth <= this.levelRestriction ? true : false;
-        d.count = d.count().value;
+        d.count = d.count().value.toString();
+        // d.count = 100
         if (d.data.children !== undefined) {
-          d.data.name = d.count.toString();
+          d.data.name = d.count;
         }
       }
       if (d._children === undefined) d._children = d.children;
       if (d.data._name === undefined) d.data._name = d.data.name;
       if (d.display === false) d.children = null;
-      // if(d.count === undefined) d.count = d.data._name;
+      if(d.count === undefined) d.count = d.data._name;
     });
     this.initializeDepth = true;
 
@@ -181,6 +184,7 @@ export class HclComponent implements OnChanges {
         let currId = d.id;
         console.log('currID: ', currId);
         hierData.descendants().forEach(node => {
+          this.levelRestriction = Number.POSITIVE_INFINITY;
           if (node.id === currId) {
             //Comparison to leafs have string names
             let isRealLeaf = parseInt(node.data.name)
@@ -330,7 +334,7 @@ export class HclComponent implements OnChanges {
   }
   dataSearch;
   onSearch(gene: string = this.searchValue) {
-
+    this.levelRestriction = 20
 
     // this.generateHCL();
     //problem is second search needs to reset to original data set before it performs the search
@@ -368,6 +372,7 @@ export class HclComponent implements OnChanges {
           d.children = null;
         }
       })
+      this.initializeDepth = true;
       this.update(rootCopy);
     });
 

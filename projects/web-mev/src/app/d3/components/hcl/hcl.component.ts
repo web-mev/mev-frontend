@@ -31,7 +31,7 @@ export class HclComponent implements OnChanges {
   @ViewChild('treePlot') svgElement: ElementRef;
   root;
   hierObsData;
-  initializeDepth: boolean = false;
+  initializeCount: boolean = false;
   searchValue: string = 'RN5S284';
   clusterType: string = 'observationType';
   onClickMode: string = 'expandNode'
@@ -73,10 +73,10 @@ export class HclComponent implements OnChanges {
     this.customObservationSets = this.metadataService.getCustomObservationSets();
     this.apiService.getResourceContent(obsResourceId).subscribe(response => {
       this.hierObsData = d3.hierarchy(response);
-      console.log("initial data: ",this.hierObsData)
+      console.log("initial data: ", this.hierObsData)
       // this.root = d3.hierarchy(response);
       // if (this.initializeChart === false) {
-        this.createChart(this.hierObsData, this.obsTreeContainerId);
+      this.createChart(this.hierObsData, this.obsTreeContainerId);
       // }
 
     });
@@ -88,7 +88,7 @@ export class HclComponent implements OnChanges {
   onClusterTypeChange(type) {
     this.clusterType = type;
     this.levelRestriction = 4;
-    this.initializeDepth = false;
+    this.initializeCount = false;
     this.generateHCL();
 
   }
@@ -119,9 +119,8 @@ export class HclComponent implements OnChanges {
     hierData.descendants().forEach((d, i) => {
       d.id = i;
       d.display = d.depth < this.levelRestriction ? true : false;
-      if (this.initializeDepth === false) {
+      if (this.initializeCount === false) {
         d.count = d.count().value.toString();
-        // d.count = 100
         if (d.data.children !== undefined) {
           d.data.name = d.count;
         }
@@ -129,9 +128,9 @@ export class HclComponent implements OnChanges {
       if (d._children === undefined) d._children = d.children;
       if (d.data._name === undefined) d.data._name = d.data.name;
       if (d.display === false) d.children = null;
-      if(d.count === undefined) d.count = d.data._name;
+      if (d.count === undefined) d.count = d.data._name;
     });
-    this.initializeDepth = true;
+    this.initializeCount = true;
 
     hierData.leaves().map(leaf => {
       const sample = leaf.data.name;
@@ -182,12 +181,12 @@ export class HclComponent implements OnChanges {
       // .on('click', highlightNodes);
       .on("click", (event, d) => {
         let currId = d.id;
-        console.log('currID: ', currId);
         hierData.descendants().forEach(node => {
           this.levelRestriction = Number.POSITIVE_INFINITY;
+          // console.log('clickdata: ', d);
           if (node.id === currId) {
             //Comparison to leafs have string names
-            let isRealLeaf = parseInt(node.data.name)
+            let isRealLeaf = parseInt(node.data._name)
             if (isNaN(isRealLeaf)) {
               node.children = node._children;
               node.display = true;
@@ -334,9 +333,8 @@ export class HclComponent implements OnChanges {
   }
   dataSearch;
   onSearch(gene: string = this.searchValue) {
-    this.levelRestriction = 20
+    this.levelRestriction = Number.POSITIVE_INFINITY
 
-    // this.generateHCL();
     //problem is second search needs to reset to original data set before it performs the search
     const obsResourceId = this.outputs[this.clusterType === 'observationType' ? 'HierarchicalCluster.observation_clusters' : 'HierarchicalCluster.feature_clusters'];
 
@@ -347,9 +345,11 @@ export class HclComponent implements OnChanges {
         d.id = i;
       })
       let searchPathIds = {}
-  
+
       //Creates a list of node ids to get to the search item
       rootCopy.descendants().forEach((d, i) => {
+
+
         if (d.data.name === gene) {
           while (d !== null) {
             searchPathIds[d.id] = 1;
@@ -357,28 +357,35 @@ export class HclComponent implements OnChanges {
           }
         }
       })
-      console.log("rootcopy: ", rootCopy)
+
       rootCopy.descendants().forEach((d, i) => {
         if (d._children === undefined) d._children = d.children;
         if (d.data._name === undefined) d.data._name = d.data.name;
+
+        d.count = d.count().value;
+        d.data.name = d.count;
+        if (d.count == 1) {
+          d.data.name = d.data._name;
+        }
+
         if (searchPathIds[d.id] === 1) {
-          d.display = true;
-          if (d.data.children !== undefined) {
+          let isRealLeaf = parseInt(d.data._name)
+          if (isNaN(isRealLeaf)) {
+            d.children = d._children;
+            d.display = true;
+            d.data.name = d.data._name;
+          } else if (d.children === null) {
+            d.children = d._children;
+            d.display = true;
             d.data.name = " ";
           }
-  
         } else {
           d.display = false;
           d.children = null;
         }
       })
-      this.initializeDepth = true;
+      this.initializeCount = true;
       this.update(rootCopy);
     });
-
-
-    
   }
-
-
 }

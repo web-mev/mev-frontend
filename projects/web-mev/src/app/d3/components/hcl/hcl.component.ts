@@ -97,8 +97,9 @@ export class HclComponent implements OnChanges {
     this.onClickMode = type;
     console.log("onclickmode: ", this.onClickMode)
     // this.update(this.root);
-    this.initializeCount = false;
-    this.generateHCL();
+    // this.initializeCount = false;
+    console.log(this.hierObsData)
+    this.update(this.hierObsData);
   }
 
 

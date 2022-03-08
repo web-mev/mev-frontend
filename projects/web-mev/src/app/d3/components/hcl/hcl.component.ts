@@ -95,7 +95,10 @@ export class HclComponent implements OnChanges {
 
   onClickNodeTypeChange(type) {
     this.onClickMode = type;
+    console.log("onclickmode: ", this.onClickMode)
     // this.update(this.root);
+    this.initializeCount = false;
+    this.generateHCL();
   }
 
 
@@ -120,6 +123,7 @@ export class HclComponent implements OnChanges {
       d.id = i;
       d.display = d.depth < this.levelRestriction ? true : false;
       if (this.initializeCount === false) {
+        // console.log('leaves: ', hierData.leaves().length, d.leaves().length)
         d.count = d.count().value.toString();
         if (d.data.children !== undefined) {
           d.data.name = d.count;
@@ -179,30 +183,9 @@ export class HclComponent implements OnChanges {
       .attr('class', 'node')
       .attr('transform', d => 'translate(' + d['y'] + ',' + d['x'] + ')')
       // .on('click', highlightNodes);
-      .on("click", (event, d) => {
-        let currId = d.id;
-        hierData.descendants().forEach(node => {
-          this.levelRestriction = Number.POSITIVE_INFINITY;
-          // console.log('clickdata: ', d);
-          if (node.id === currId) {
-            //Comparison to leafs have string names
-            let isRealLeaf = parseInt(node.data._name)
-            if (isNaN(isRealLeaf)) {
-              node.children = node._children;
-              node.display = true;
-            } else if (node.children === null) {
-              node.children = node._children;
-              node.display = true;
-              node.data.name = " ";
-            } else if (node.children.length > 0) {
-              node.children = null;
-              node.data.name = node.data._name;
-              node.display = false;
-            }
-          }
-        })
-        this.update(hierData);
-      });
+      .on("click",
+        this.onClickMode === 'expandNode' ? (event, d) => this.onExpand(hierData, d) : highlightNodes
+      );
 
     node
       .append('circle')
@@ -211,16 +194,50 @@ export class HclComponent implements OnChanges {
 
     const leafNode = node.filter(d => d.data.isLeaf === true);
 
+    const savedSampleSet = [];
+
     function highlightNodes(event, d: any) {
+      const savedSamples = {}
       d.descendants().forEach(
-        node =>
-          (node.data.isHighlighted = node.data.isHighlighted ? false : true)
+        node => {
+          if (node._children && node._children.length > 0) {
+            let traverse = (gene) => {
+              if (gene._children) {
+                if (!savedSamples[gene.id]) {
+                  savedSamples[gene.id] = 1;
+                  gene.data.isHighlighted = gene.data.isHighlighted ? false : true;
+                }
+              }
+              if (gene._children === undefined || gene._children === null) {
+                if (!savedSamples[gene.data.name]) {
+                  savedSamples[gene.data.name] = 1;
+                  that.selectedSamples.push(gene.data.name)
+                  gene.data.isHighlighted = gene.data.isHighlighted ? false : true;
+                }
+                return;
+              }
+
+              for (let i = 0; i < gene._children.length; i++) {
+                traverse(gene._children[i])
+              }
+            }
+            return traverse(node);
+
+          } else {
+            node.data.isHighlighted = node.data.isHighlighted ? false : true;
+            if(node.data.isHighlighted){
+              that.selectedSamples.push(node.data.name)
+            }
+          }
+        }
+
       );
 
-      that.selectedSamples = hierData
-        .leaves()
-        .filter(leaf => leaf.data.isHighlighted)
-        .map(leaf => leaf.data.name);
+      // that.selectedSamples = d
+      // .leaves()
+      // .filter(leaf => leaf.data.isHighlighted)
+      // .map(leaf => leaf.data.name);
+
 
       d3.select(containerId)
         .selectAll('circle')
@@ -325,13 +342,15 @@ export class HclComponent implements OnChanges {
 
         // if the custom set has been successfully added, update the plot
         if (this.metadataService.addCustomSet(customSet)) {
+          this.levelRestriction = 4;
+          this.initializeCount = false;
           this.generateHCL();
           this.selectedSamples = [];
         }
       }
     });
   }
-  dataSearch;
+  // dataSearch;
   onSearch(gene: string = this.searchValue) {
     this.levelRestriction = Number.POSITIVE_INFINITY
 
@@ -339,8 +358,8 @@ export class HclComponent implements OnChanges {
     const obsResourceId = this.outputs[this.clusterType === 'observationType' ? 'HierarchicalCluster.observation_clusters' : 'HierarchicalCluster.feature_clusters'];
 
     this.apiService.getResourceContent(obsResourceId).subscribe(response => {
-      this.dataSearch = d3.hierarchy(response);
-      let rootCopy = this.dataSearch;
+      // this.dataSearch = d3.hierarchy(response);
+      let rootCopy = d3.hierarchy(response);
       rootCopy.descendants().forEach((d, i) => {
         d.id = i;
       })
@@ -348,8 +367,6 @@ export class HclComponent implements OnChanges {
 
       //Creates a list of node ids to get to the search item
       rootCopy.descendants().forEach((d, i) => {
-
-
         if (d.data.name === gene) {
           while (d !== null) {
             searchPathIds[d.id] = 1;
@@ -387,5 +404,29 @@ export class HclComponent implements OnChanges {
       this.initializeCount = true;
       this.update(rootCopy);
     });
+  }
+
+  onExpand(data, d) {
+    let currId = d.id;
+    data.descendants().forEach(node => {
+      this.levelRestriction = Number.POSITIVE_INFINITY;
+      if (node.id === currId) {
+        //Comparison to leafs have string names
+        let isRealLeaf = parseInt(node.data._name)
+        if (isNaN(isRealLeaf)) {
+          node.children = node._children;
+          node.display = true;
+        } else if (node.children === null) {
+          node.children = node._children;
+          node.display = true;
+          node.data.name = " ";
+        } else if (node.children.length > 0) {
+          node.children = null;
+          node.data.name = node.data._name;
+          node.display = false;
+        }
+      }
+    })
+    this.update(data);
   }
 }

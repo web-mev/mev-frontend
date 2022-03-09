@@ -1,7 +1,7 @@
 <mat-card class="analysis-card">
     <mat-card-header>
         <div mat-card-avatar class="analysis-card__img"></div>
-        <mat-card-title>Hierarchical clustering: {{ outputs?.job_name }}</mat-card-title>
+        <mat-card-title>Hierarchical Clustering: {{ outputs?.job_name }}</mat-card-title>
     </mat-card-header>
     <mat-card-content class="analysis-card__main">
         <p class="analysis-card__instruction">
@@ -10,19 +10,19 @@
         </p>
         <mat-divider [inset]="true"></mat-divider>
         <div class="analysis-card__content">
-
             <div class="hcl-container">
-
                 <div class="chart-section">
-                    <div class="chart-title">Observation clustering</div>
+                    <div class="chart-title">Observation Clustering</div>
                     <mat-form-field class="example-form-field searchField">
-                        <mat-label>Search</mat-label>
+                        <mat-label>Gene Search</mat-label>
                         <input matInput type="text" [(ngModel)]="searchValue" (keydown.enter)="onSearch()">
                         <button matSuffix mat-icon-button (click)="onSearch()">
                             <mat-icon>search</mat-icon>
                         </button>
                     </mat-form-field>
-                    <mat-button-toggle-group class="toogleGroup" #chartMode="matButtonToggleGroup" [(ngModel)]="clusterType">
+                    <div class="toggleHeader">Cluster Dimensions: </div>
+                    <mat-button-toggle-group class="toogleGroup" #chartMode="matButtonToggleGroup"
+                        [(ngModel)]="clusterType">
                         <mat-button-toggle value="observationType" (change)="onClusterTypeChange($event.value)"
                             aria-label="Text align center">
                             Observation
@@ -32,7 +32,9 @@
                             Feature
                         </mat-button-toggle>
                     </mat-button-toggle-group>
-                    <mat-button-toggle-group class="toogleGroup" #chartMode="matButtonToggleGroup" [(ngModel)]="onClickMode">
+                    <div class="toggleHeader">Pointer Mode: </div>
+                    <mat-button-toggle-group class="toogleGroup" #chartMode="matButtonToggleGroup"
+                        [(ngModel)]="onClickMode">
                         <mat-button-toggle value="expandNode" (change)="onClickNodeTypeChange($event.value)"
                             aria-label="Text align center">
                             Expand Node
@@ -43,24 +45,24 @@
                         </mat-button-toggle>
                     </mat-button-toggle-group>
                     <div class="sample-list-container">
-                        <button mat-raised-button color="accent" (click)="onCreateCustomSampleSet()"
+                        <button class="saveObsBtn" mat-raised-button color="accent" (click)="onCreateCustomSampleSet()"
                             [disabled]="!selectedSamples.length">
                             <mat-icon>add</mat-icon>
                             Save as a observation set
                         </button>
                         <div class="sample-list" *ngIf="selectedSamples.length"> Selected samples:
-                            <span class="sample-list__item" *ngFor="let item of selectedSamples">
-                                {{ item }}
+                            <span class="sample-list__item">
+                                <mat-chip-list aria-label="Fish selection">
+                                    <mat-chip class="sampleChips" color="primary"
+                                        *ngFor="let item of selectedSamples | slice:0:200; let i=index">{{ item }}
+                                    </mat-chip>
+                                </mat-chip-list>
                             </span>
                         </div>
                     </div>
-
-
-
                     <mev-download-button [containerId]="obsTreeContainerId" [imageName]="obsImageName">
                     </mev-download-button>
-                    <div class="chart" #treePlot id="observationPlot" ></div>
-
+                    <div class="chart" #treePlot id="observationPlot"></div>
                 </div>
                 <mat-divider [inset]="true"></mat-divider>
             </div>

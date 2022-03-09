@@ -32,7 +32,7 @@ export class HclComponent implements OnChanges {
   root;
   hierObsData;
   initializeCount: boolean = false;
-  searchValue: string = 'RN5S284';
+  searchValue: string = '';
   clusterType: string = 'observationType';
   onClickMode: string = 'expandNode'
   levelRestriction: number = 4;
@@ -67,41 +67,30 @@ export class HclComponent implements OnChanges {
    */
   // initializeChart = false;
   generateHCL() {
-    // const obsResourceId = this.outputs['HierarchicalCluster.observation_clusters'];
     const obsResourceId = this.outputs[this.clusterType === 'observationType' ? 'HierarchicalCluster.observation_clusters' : 'HierarchicalCluster.feature_clusters'];
-
     this.customObservationSets = this.metadataService.getCustomObservationSets();
     this.apiService.getResourceContent(obsResourceId).subscribe(response => {
       this.hierObsData = d3.hierarchy(response);
-      console.log("initial data: ", this.hierObsData)
-      // this.root = d3.hierarchy(response);
-      // if (this.initializeChart === false) {
       this.createChart(this.hierObsData, this.obsTreeContainerId);
-      // }
-
     });
   }
+
   update(data) {
     this.createChart(data, this.obsTreeContainerId);
   }
 
   onClusterTypeChange(type) {
     this.clusterType = type;
+    this.selectedSamples = [];
     this.levelRestriction = 4;
     this.initializeCount = false;
     this.generateHCL();
-
   }
 
   onClickNodeTypeChange(type) {
     this.onClickMode = type;
-    console.log("onclickmode: ", this.onClickMode)
-    // this.update(this.root);
-    // this.initializeCount = false;
-    console.log(this.hierObsData)
     this.update(this.hierObsData);
   }
-
 
   /**
    * Function to create dendrogram
@@ -113,18 +102,17 @@ export class HclComponent implements OnChanges {
     const outerHeight = this.outerHeight;
     const width = outerWidth - this.margin.left - this.margin.right;
     const height = outerHeight - this.margin.top - this.margin.bottom;
+    const savedSampleSet = [];
+    let ifCustomObservationSetExists = false;
 
     d3.select(containerId)
       .selectAll('svg')
       .remove();
 
-    let ifCustomObservationSetExists = false;
-
     hierData.descendants().forEach((d, i) => {
       d.id = i;
       d.display = d.depth < this.levelRestriction ? true : false;
       if (this.initializeCount === false) {
-        // console.log('leaves: ', hierData.leaves().length, d.leaves().length)
         d.count = d.count().value.toString();
         if (d.data.children !== undefined) {
           d.data.name = d.count;
@@ -183,7 +171,6 @@ export class HclComponent implements OnChanges {
       .append('g')
       .attr('class', 'node')
       .attr('transform', d => 'translate(' + d['y'] + ',' + d['x'] + ')')
-      // .on('click', highlightNodes);
       .on("click",
         this.onClickMode === 'expandNode' ? (event, d) => this.onExpand(hierData, d) : highlightNodes
       );
@@ -194,8 +181,6 @@ export class HclComponent implements OnChanges {
       .attr('r', 4);
 
     const leafNode = node.filter(d => d.data.isLeaf === true);
-
-    const savedSampleSet = [];
 
     function highlightNodes(event, d: any) {
       const savedSamples = {}
@@ -212,12 +197,13 @@ export class HclComponent implements OnChanges {
               if (gene._children === undefined || gene._children === null) {
                 if (!savedSamples[gene.data.name]) {
                   savedSamples[gene.data.name] = 1;
-                  that.selectedSamples.push(gene.data.name)
-                  gene.data.isHighlighted = gene.data.isHighlighted ? false : true;
+                  gene.isHighlighted = gene.isHighlighted ? false : true;
+                  if (gene._children === undefined) {
+                    gene.isHighlighted ? that.selectedSamples.push(gene.data.name) : that.selectedSamples = that.selectedSamples.filter(e => e !== gene.data.name);
+                  }
                 }
                 return;
               }
-
               for (let i = 0; i < gene._children.length; i++) {
                 traverse(gene._children[i])
               }
@@ -226,9 +212,7 @@ export class HclComponent implements OnChanges {
 
           } else {
             node.data.isHighlighted = node.data.isHighlighted ? false : true;
-            if(node.data.isHighlighted){
-              that.selectedSamples.push(node.data.name)
-            }
+            node.data.isHighlighted ? that.selectedSamples.push(node.data.name) : that.selectedSamples = that.selectedSamples.filter(e => e !== node.data.name);
           }
         }
 
@@ -238,7 +222,6 @@ export class HclComponent implements OnChanges {
       // .leaves()
       // .filter(leaf => leaf.data.isHighlighted)
       // .map(leaf => leaf.data.name);
-
 
       d3.select(containerId)
         .selectAll('circle')
@@ -281,10 +264,10 @@ export class HclComponent implements OnChanges {
           .data(d['data'].colors)
           .enter()
           .append('rect')
-          .attr('x', (el, i) => 100 + 30 * i)
-          .attr('y', -10)
-          .attr('height', '20')
-          .attr('width', '20')
+          .attr('x', (el, i) => 125 + 30 * i)
+          .attr('y', -7)
+          .attr('height', '10')
+          .attr('width', '10')
           .attr('fill', (d: string) => d || 'transparent');
       });
 
@@ -310,8 +293,8 @@ export class HclComponent implements OnChanges {
       legend
         .append('text')
         .attr('x', width + 70)
-        // .attr('dy', '.5em')
-        .attr('y', 8)
+        // .attr('dy', '.1em')
+        .attr('y', 10)
         .style('fill', '#000')
         .attr('class', 'legend-label')
         .text(d => d.name);
@@ -351,7 +334,7 @@ export class HclComponent implements OnChanges {
       }
     });
   }
-  // dataSearch;
+  
   onSearch(gene: string = this.searchValue) {
     this.levelRestriction = Number.POSITIVE_INFINITY
 
@@ -359,7 +342,6 @@ export class HclComponent implements OnChanges {
     const obsResourceId = this.outputs[this.clusterType === 'observationType' ? 'HierarchicalCluster.observation_clusters' : 'HierarchicalCluster.feature_clusters'];
 
     this.apiService.getResourceContent(obsResourceId).subscribe(response => {
-      // this.dataSearch = d3.hierarchy(response);
       let rootCopy = d3.hierarchy(response);
       rootCopy.descendants().forEach((d, i) => {
         d.id = i;
@@ -382,10 +364,7 @@ export class HclComponent implements OnChanges {
 
         d.count = d.count().value;
         d.data.name = d.count;
-        if (d.count == 1) {
-          d.data.name = d.data._name;
-        }
-
+        if (d.count == 1) d.data.name = d.data._name;
         if (searchPathIds[d.id] === 1) {
           let isRealLeaf = parseInt(d.data._name)
           if (isNaN(isRealLeaf)) {

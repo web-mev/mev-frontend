@@ -90,9 +90,8 @@ mat-card {
 .sample-list {
   padding: 15px 0;
 }
-
-.sample-list__item:not(:last-child):after {
-  content: ', ';
+.sampleChips {
+  font-size: 10px;
 }
 
 .status-txt {
@@ -108,5 +107,13 @@ mat-card {
 }
 
 .toogleGroup{
-  margin-left: 30px;
+  margin: 0 0 10px 0;
+}
+.toggleHeader{
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.saveObsBtn{
+  margin-top: 10px;
 }

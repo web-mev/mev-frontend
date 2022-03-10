@@ -23,11 +23,11 @@
                     <div class="toggleHeader">Cluster Dimensions: </div>
                     <mat-button-toggle-group class="toogleGroup" #chartMode="matButtonToggleGroup"
                         [(ngModel)]="clusterType">
-                        <mat-button-toggle value="observationType" (change)="onClusterTypeChange($event.value)"
+                        <mat-button-toggle *ngIf="isObservation"  value="observationType" (change)="onClusterTypeChange($event.value)"
                             aria-label="Text align center">
                             Observation
                         </mat-button-toggle>
-                        <mat-button-toggle value="featureType" (change)="onClusterTypeChange($event.value)"
+                        <mat-button-toggle *ngIf="isFeature" value="featureType" (change)="onClusterTypeChange($event.value)"
                             aria-label="Text align left">
                             Feature
                         </mat-button-toggle>
@@ -69,3 +69,4 @@
         </div>
     </mat-card-content>
 </mat-card>
+

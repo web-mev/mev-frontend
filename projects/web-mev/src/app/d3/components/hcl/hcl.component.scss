@@ -89,6 +89,7 @@ mat-card {
 
 .sample-list {
   padding: 15px 0;
+  font-weight: bold;
 }
 .sampleChips {
   font-size: 10px;
@@ -116,4 +117,35 @@ mat-card {
 
 .saveObsBtn{
   margin-top: 10px;
+}
+
+#spinnerContainer{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+}
+
+#selectedSamplesElips{
+  margin: auto 0 auto 10px;
+  font-weight: bold;
+}
+
+#selectedSamplesTitle{
+  margin-bottom: 5px;
+}
+
+.stretch-badge-small > .mat-badge-content {
+  margin: auto;
+  width: auto;
+  border-radius: 13px;
+  right: unset !important;
+  min-width: 22px;
+  min-height: 20px;
+  font-size: 8px;
+  right: -10px !important;
+  background-color: #f50057;
+}
+.mat-badge-content{
+  background-color: #f50057;
 }

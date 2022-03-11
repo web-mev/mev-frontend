@@ -5,7 +5,6 @@ import {
   OnChanges,
   ElementRef,
   ViewChild,
-  ChangeDetectorRef
 } from '@angular/core';
 import { AnalysesService } from '@app/features/analysis/services/analysis.service';
 import * as d3 from 'd3';
@@ -14,21 +13,19 @@ import { AddSampleSetComponent } from '../dialogs/add-sample-set/add-sample-set.
 import { MatDialog } from '@angular/material/dialog';
 import { MetadataService } from '@app/core/metadata/metadata.service';
 import { CustomSetType } from '@app/_models/metadata';
-// import { Search } from 'angular2-multiselect-dropdown/lib/menu-item';
 
 /**
  * HCL Component
  *
  * Used for Hierarchical Clustering (HCL) analysis
  */
+
 @Component({
   selector: 'mev-hcl',
   templateUrl: './hcl.component.html',
   styleUrls: ['./hcl.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default,
 })
-
-
 
 export class HclComponent implements OnChanges {
   @Input() outputs;
@@ -43,6 +40,7 @@ export class HclComponent implements OnChanges {
 
   customObservationSets = [];
   selectedSamples = [];
+  isLoading: boolean = false;
   isFeature: string;
   isObservation: string;
 
@@ -63,7 +61,6 @@ export class HclComponent implements OnChanges {
   ngOnChanges(): void {
     this.generateHCL();
   }
-
 
   // onResize(event) {
   //   this.createChart(this.root, this.obsTreeContainerId);
@@ -100,7 +97,6 @@ export class HclComponent implements OnChanges {
     this.onClickMode = type;
     this.update(this.hierObsData);
   }
-
 
   /**
    * Function to create dendrogram
@@ -182,7 +178,11 @@ export class HclComponent implements OnChanges {
       .attr('class', 'node')
       .attr('transform', d => 'translate(' + d['y'] + ',' + d['x'] + ')')
       .on("click",
-        this.onClickMode === 'expandNode' ? (event, d) => this.onExpand(hierData, d) : (event, d) => this.highlightNodes(d, containerId)
+        this.onClickMode === 'expandNode' ? (event, d) => this.onExpand(hierData, d) : (event, d) => {
+          this.isLoading = true;
+          this.highlightNodes(d, containerId)
+
+        }
       );
 
     node
@@ -370,42 +370,49 @@ export class HclComponent implements OnChanges {
     this.update(data);
   }
 
+  samplesToRemove = [];
 
   highlightNodes(d, containerId) {
+    this.isLoading = true;
     const savedSamples = {}
     d.descendants().forEach(
       node => {
+        //this is a node
         if (node._children && node._children.length > 0) {
           let traverse = (gene) => {
+            //this is a node
             if (gene._children) {
               if (!savedSamples[gene.id]) {
                 savedSamples[gene.id] = 1;
                 gene.data.isHighlighted = gene.data.isHighlighted ? false : true;
               }
             }
-
+            //this is a end leaf
             if (gene._children === undefined || gene._children === null) {
               if (!savedSamples[gene.data.name]) {
                 savedSamples[gene.data.name] = 1;
                 gene.isHighlighted = gene.isHighlighted ? false : true;
                 if (gene._children === undefined) {
-                  gene.isHighlighted ? this.selectedSamples.push(gene.data.name) : this.selectedSamples = this.selectedSamples.filter(e => e !== gene.data.name);
+                  gene.isHighlighted ? (this.selectedSamples.includes(gene.data.name) ? null : this.selectedSamples.push(gene.data.name)) : this.selectedSamples = this.selectedSamples.filter(e => e !== gene.data.name);
                 }
               }
               return;
             }
+            //check both children
             for (let i = 0; i < gene._children.length; i++) {
               traverse(gene._children[i])
             }
           }
           return traverse(node);
 
+          //this is a leaf
         } else {
           node.data.isHighlighted = node.data.isHighlighted ? false : true;
-          node.data.isHighlighted ? this.selectedSamples.push(node.data.name) : this.selectedSamples = this.selectedSamples.filter(e => e !== node.data.name);
+          node.data.isHighlighted ? (this.selectedSamples.includes(node.data.name) ? null : this.selectedSamples.push(node.data.name)) : this.selectedSamples = this.selectedSamples.filter(e => e !== node.data.name);
         }
-      }
-    )
+      })
+    
+    this.isLoading = false;
     d3.select(containerId)
       .selectAll('circle')
       .attr('class', (d: any) => {

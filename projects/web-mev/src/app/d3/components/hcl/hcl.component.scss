@@ -143,9 +143,17 @@ mat-card {
   min-width: 22px;
   min-height: 20px;
   font-size: 8px;
-  right: -10px !important;
+  right: -20px !important;
   background-color: #f50057;
 }
 .mat-badge-content{
   background-color: #f50057;
+  margin: auto;
+  width: auto;
+  border-radius: 13px;
+  right: unset !important;
+  min-width: 22px;
+  min-height: 20px;
+  font-size: 12px;
+  right: -20px !important;
 }

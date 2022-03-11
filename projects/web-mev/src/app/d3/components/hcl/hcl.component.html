@@ -12,7 +12,8 @@
         <div class="analysis-card__content">
             <div class="hcl-container">
                 <div class="chart-section">
-                    <div class="chart-title">Observation Clustering</div>
+                    <div *ngIf="clusterType === 'observationType'" class="chart-title">Observation Clustering</div>
+                    <div *ngIf="clusterType === 'featureType'" class="chart-title">Features Clustering</div>
                     <mat-form-field class="example-form-field searchField">
                         <mat-label>Gene Search</mat-label>
                         <input matInput type="text" [(ngModel)]="searchValue" (keydown.enter)="onSearch()">
@@ -29,44 +30,32 @@
                         </mat-button-toggle>
                         <mat-button-toggle *ngIf="isFeature" value="featureType"
                             (change)="onClusterTypeChange($event.value)" aria-label="Text align left">
-                            Feature
+                            Features
                         </mat-button-toggle>
                     </mat-button-toggle-group>
                     <div class="toggleHeader">Pointer Mode: </div>
                     <mat-button-toggle-group class="toogleGroup" #chartMode="matButtonToggleGroup"
-                        [(ngModel)]="onClickMode">
+                        [(ngModel)]="onClickMode" >
                         <mat-button-toggle value="expandNode" (change)="onClickNodeTypeChange($event.value)"
                             aria-label="Text align center">
                             Expand Node
                         </mat-button-toggle>
-                        <mat-button-toggle *ngIf="clusterType === 'observationType'" value="addToList"
+                        <mat-button-toggle value="addToList"
                             (change)="onClickNodeTypeChange($event.value)" aria-label="Text align left">
-                            Add to Observation List
-                        </mat-button-toggle>
-                        <mat-button-toggle *ngIf="clusterType === 'featureType'" value="addToList"
-                            (change)="onClickNodeTypeChange($event.value)" aria-label="Text align left">
-                            Add to Feature List
+                            {{clusterType === 'observationType' ? 'Add to Observation List': 'Add to Features List'}}
                         </mat-button-toggle>
                     </mat-button-toggle-group>
                     <div class="sample-list-container">
-                        <button *ngIf="clusterType === 'observationType'" class="saveObsBtn" mat-raised-button
+                        <button class="saveObsBtn" mat-raised-button
                             color="accent" (click)="onCreateCustomSampleSet()" [disabled]="!selectedSamples.length">
                             <mat-icon>add</mat-icon>
-                            Save as a Observation Set
-                        </button>
-                        <button *ngIf="clusterType === 'featureType'" class="saveObsBtn" mat-raised-button
-                            color="accent" (click)="onCreateCustomSampleSet()" [disabled]="!selectedSamples.length">
-                            <mat-icon>add</mat-icon>
-                            Save as a Feature Set
+                            {{clusterType === 'observationType' ? 'Save as a Observation Set': 'Save as a Features Set'}}
                         </button>
 
                         <div class="sample-list" *ngIf="selectedSamples.length">
                             <div id="selectedSamplesTitle">
                                 <p>
-                                    <span *ngIf="selectedSamples.length < 1000" matBadge={{selectedSamples.length}}>
-                                        Selected Samples:
-                                    </span>
-                                    <span *ngIf="selectedSamples.length >= 1000" class="stretch-badge-small" matBadge={{selectedSamples.length}}>
+                                    <span>
                                         Selected Samples:
                                     </span>
                                 </p>
@@ -76,7 +65,15 @@
                                     <mat-chip class="sampleChips" color="amber"
                                         *ngFor="let item of selectedSamples | slice:0:50; let i=index">{{ item }}
                                     </mat-chip>
-                                    <p *ngIf="selectedSamples.length > 50" id="selectedSamplesElips"> ...</p>
+                                    <p *ngIf="selectedSamples.length > 50" id="selectedSamplesElips">
+                                        <span *ngIf="selectedSamples.length < 1000" matBadge={{selectedSamples.length}}>
+                                            ...
+                                        </span>
+                                        <span *ngIf="selectedSamples.length >= 1000" class="stretch-badge-small"
+                                            matBadge={{selectedSamples.length}}>
+                                            ...
+                                        </span>
+                                    </p>
                                 </mat-chip-list>
                             </span>
                         </div>

@@ -34,19 +34,18 @@ export class HclComponent implements OnChanges {
   hierObsData;
   initializeCount: boolean = false;
   searchValue: string = '';
-  clusterType: string = 'observationType';
+  clusterType: string = ''
   onClickMode: string = 'expandNode'
   levelRestriction: number = 4;
 
   customObservationSets = [];
   selectedSamples = [];
-  isLoading: boolean = false;
   isFeature: string;
   isObservation: string;
 
   /* Chart settings */
   obsTreeContainerId = '#observationPlot'; // chart container id
-  obsImageName = 'Hierarchical clustering - Observations'; // file name for downloaded SVG image
+  obsImageName: string // file name for downloaded SVG image
   margin = { top: 50, right: 300, bottom: 50, left: 50 }; // chart margins
   outerHeight = 500;
   maxTextLabelLength = 20;
@@ -55,10 +54,13 @@ export class HclComponent implements OnChanges {
   constructor(
     private apiService: AnalysesService,
     private metadataService: MetadataService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+
   ) { }
 
   ngOnChanges(): void {
+    this.clusterType = this.outputs['HierarchicalCluster.clustering_dimension'] === 'features' ? 'featureType' : 'observationType';
+    this.obsImageName = this.clusterType === 'observationType' ? 'Hierarchical Clustering - Observations': 'Hierarchical Clustering - Features' ;
     this.generateHCL();
   }
 
@@ -69,7 +71,7 @@ export class HclComponent implements OnChanges {
   /**
    * Function to retrieve data for Observation HCL plot
    */
-  // initializeChart = false;
+
   generateHCL() {
     const obsResourceId = this.outputs[this.clusterType === 'observationType' ? 'HierarchicalCluster.observation_clusters' : 'HierarchicalCluster.feature_clusters'];
     this.isObservation = this.outputs['HierarchicalCluster.observation_clusters'];
@@ -77,23 +79,29 @@ export class HclComponent implements OnChanges {
     this.customObservationSets = this.clusterType === 'observationType' ? this.metadataService.getCustomObservationSets() : this.metadataService.getCustomFeatureSets();
     this.apiService.getResourceContent(obsResourceId).subscribe(response => {
       this.hierObsData = d3.hierarchy(response);
+      console.log("hier: ", this.hierObsData);
       this.createChart(this.hierObsData, this.obsTreeContainerId);
     });
   }
 
+  //Updates the chart without fetching the data again
   update(data) {
     this.createChart(data, this.obsTreeContainerId);
   }
-
+//cluster dim
   onClusterTypeChange(type) {
     this.clusterType = type;
     this.selectedSamples = [];
     this.levelRestriction = 4;
     this.initializeCount = false;
+    
+    
     this.generateHCL();
+    
   }
-
+//pointer mode
   onClickNodeTypeChange(type) {
+    console.log('onclick mode: ', type)
     this.onClickMode = type;
     this.update(this.hierObsData);
   }
@@ -108,7 +116,7 @@ export class HclComponent implements OnChanges {
     const outerHeight = this.outerHeight;
     const width = outerWidth - this.margin.left - this.margin.right;
     const height = outerHeight - this.margin.top - this.margin.bottom;
-    const savedSampleSet = [];
+    // const savedSampleSet = [];
     let ifCustomObservationSetExists = false;
 
     d3.select(containerId)
@@ -118,12 +126,14 @@ export class HclComponent implements OnChanges {
     hierData.descendants().forEach((d, i) => {
       d.id = i;
       d.display = d.depth < this.levelRestriction ? true : false;
+      //Keeps track of how many descendants each node has
       if (this.initializeCount === false) {
         d.count = d.count().value.toString();
         if (d.data.children !== undefined) {
           d.data.name = d.count;
         }
       }
+      //Stores extra copy of data in d._*** when not being displayed
       if (d._children === undefined) d._children = d.children;
       if (d.data._name === undefined) d.data._name = d.data.name;
       if (d.display === false) d.children = null;
@@ -169,7 +179,7 @@ export class HclComponent implements OnChanges {
       .attr('class', 'link')
       .attr('d', elbow);
 
-    const that = this;
+    // const that = this;
     const node = svg
       .selectAll('g.node')
       .data(hierData.descendants())
@@ -178,11 +188,7 @@ export class HclComponent implements OnChanges {
       .attr('class', 'node')
       .attr('transform', d => 'translate(' + d['y'] + ',' + d['x'] + ')')
       .on("click",
-        this.onClickMode === 'expandNode' ? (event, d) => this.onExpand(hierData, d) : (event, d) => {
-          this.isLoading = true;
-          this.highlightNodes(d, containerId)
-
-        }
+        this.onClickMode === 'expandNode' ? (event, d) => this.onExpand(hierData, d) : (event, d) => this.highlightNodes(d, containerId)
       );
 
     node
@@ -370,27 +376,22 @@ export class HclComponent implements OnChanges {
     this.update(data);
   }
 
-  samplesToRemove = [];
-
   highlightNodes(d, containerId) {
-    this.isLoading = true;
-    const savedSamples = {}
+    const currSampleSetHash = {}
+    //Iterates through tree and marks each as highlighted or not. 
     d.descendants().forEach(
       node => {
-        //this is a node
         if (node._children && node._children.length > 0) {
           let traverse = (gene) => {
-            //this is a node
             if (gene._children) {
-              if (!savedSamples[gene.id]) {
-                savedSamples[gene.id] = 1;
+              if (!currSampleSetHash[gene.id]) {
+                currSampleSetHash[gene.id] = 1;
                 gene.data.isHighlighted = gene.data.isHighlighted ? false : true;
               }
             }
-            //this is a end leaf
             if (gene._children === undefined || gene._children === null) {
-              if (!savedSamples[gene.data.name]) {
-                savedSamples[gene.data.name] = 1;
+              if (!currSampleSetHash[gene.data.name]) {
+                currSampleSetHash[gene.data.name] = 1;
                 gene.isHighlighted = gene.isHighlighted ? false : true;
                 if (gene._children === undefined) {
                   gene.isHighlighted ? (this.selectedSamples.includes(gene.data.name) ? null : this.selectedSamples.push(gene.data.name)) : this.selectedSamples = this.selectedSamples.filter(e => e !== gene.data.name);
@@ -398,21 +399,18 @@ export class HclComponent implements OnChanges {
               }
               return;
             }
-            //check both children
             for (let i = 0; i < gene._children.length; i++) {
               traverse(gene._children[i])
             }
           }
           return traverse(node);
 
-          //this is a leaf
         } else {
           node.data.isHighlighted = node.data.isHighlighted ? false : true;
           node.data.isHighlighted ? (this.selectedSamples.includes(node.data.name) ? null : this.selectedSamples.push(node.data.name)) : this.selectedSamples = this.selectedSamples.filter(e => e !== node.data.name);
         }
       })
-    
-    this.isLoading = false;
+
     d3.select(containerId)
       .selectAll('circle')
       .attr('class', (d: any) => {

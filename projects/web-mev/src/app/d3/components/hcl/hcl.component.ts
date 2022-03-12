@@ -60,7 +60,7 @@ export class HclComponent implements OnChanges {
 
   ngOnChanges(): void {
     this.clusterType = this.outputs['HierarchicalCluster.clustering_dimension'] === 'features' ? 'featureType' : 'observationType';
-    this.obsImageName = this.clusterType === 'observationType' ? 'Hierarchical Clustering - Observations': 'Hierarchical Clustering - Features' ;
+    this.obsImageName = this.clusterType === 'observationType' ? 'Hierarchical Clustering - Observations' : 'Hierarchical Clustering - Features';
     this.generateHCL();
   }
 
@@ -88,18 +88,18 @@ export class HclComponent implements OnChanges {
   update(data) {
     this.createChart(data, this.obsTreeContainerId);
   }
-//cluster dim
+  //cluster dim
   onClusterTypeChange(type) {
     this.clusterType = type;
     this.selectedSamples = [];
     this.levelRestriction = 4;
     this.initializeCount = false;
-    
-    
+
+
     this.generateHCL();
-    
+
   }
-//pointer mode
+  //pointer mode
   onClickNodeTypeChange(type) {
     console.log('onclick mode: ', type)
     this.onClickMode = type;
@@ -382,7 +382,7 @@ export class HclComponent implements OnChanges {
     d.descendants().forEach(
       node => {
         if (node._children && node._children.length > 0) {
-          let traverse = (gene) => {
+          let traverseTree = (gene) => {
             if (gene._children) {
               if (!currSampleSetHash[gene.id]) {
                 currSampleSetHash[gene.id] = 1;
@@ -394,20 +394,24 @@ export class HclComponent implements OnChanges {
                 currSampleSetHash[gene.data.name] = 1;
                 gene.isHighlighted = gene.isHighlighted ? false : true;
                 if (gene._children === undefined) {
-                  gene.isHighlighted ? (this.selectedSamples.includes(gene.data.name) ? null : this.selectedSamples.push(gene.data.name)) : this.selectedSamples = this.selectedSamples.filter(e => e !== gene.data.name);
+                  gene.isHighlighted ?
+                    (this.selectedSamples.includes(gene.data.name) ? null : this.selectedSamples.push(gene.data.name))
+                    : this.selectedSamples = this.selectedSamples.filter(e => e !== gene.data.name);
                 }
               }
               return;
             }
             for (let i = 0; i < gene._children.length; i++) {
-              traverse(gene._children[i])
+              traverseTree(gene._children[i])
             }
           }
-          return traverse(node);
+          return traverseTree(node);
 
         } else {
           node.data.isHighlighted = node.data.isHighlighted ? false : true;
-          node.data.isHighlighted ? (this.selectedSamples.includes(node.data.name) ? null : this.selectedSamples.push(node.data.name)) : this.selectedSamples = this.selectedSamples.filter(e => e !== node.data.name);
+          node.data.isHighlighted ?
+            (this.selectedSamples.includes(node.data.name) ? null : this.selectedSamples.push(node.data.name))
+            : this.selectedSamples = this.selectedSamples.filter(e => e !== node.data.name);
         }
       })
 

@@ -37,7 +37,6 @@ export class HclComponent implements OnChanges {
   clusterType: string = ''
   onClickMode: string = 'expandNode'
   levelRestriction: number = 5;
-
   customObservationSets = [];
   selectedSamples = [];
   isFeature: string;
@@ -88,18 +87,15 @@ export class HclComponent implements OnChanges {
   update(data) {
     this.createChart(data, this.obsTreeContainerId);
   }
-  //cluster dim
+  //Cluster Dimension type
   onClusterTypeChange(type) {
     this.clusterType = type;
     this.selectedSamples = [];
     this.levelRestriction = 5;
     this.initializeCount = false;
-
-
     this.generateHCL();
-
   }
-  //pointer mode
+  //Pointer mode
   onClickNodeTypeChange(type) {
     console.log('onclick mode: ', type)
     this.onClickMode = type;
@@ -116,7 +112,6 @@ export class HclComponent implements OnChanges {
     const outerHeight = this.outerHeight;
     const width = outerWidth - this.margin.left - this.margin.right;
     const height = outerHeight - this.margin.top - this.margin.bottom;
-    // const savedSampleSet = [];
     let ifCustomObservationSetExists = false;
 
     d3.select(containerId)
@@ -179,7 +174,6 @@ export class HclComponent implements OnChanges {
       .attr('class', 'link')
       .attr('d', elbow);
 
-    // const that = this;
     const node = svg
       .selectAll('g.node')
       .data(hierData.descendants())
@@ -193,7 +187,6 @@ export class HclComponent implements OnChanges {
 
     node
       .append('circle')
-      // .filter(d => d.data.name.length > 0)
       .attr('r', 4);
 
     const leafNode = node.filter(d => d.data.isLeaf === true)
@@ -261,7 +254,6 @@ export class HclComponent implements OnChanges {
       legend
         .append('text')
         .attr('x', width + 70)
-        // .attr('dy', '.1em')
         .attr('y', 10)
         .style('fill', '#000')
         .attr('class', 'legend-label')
@@ -382,7 +374,6 @@ export class HclComponent implements OnChanges {
     //Iterates through tree and marks each as highlighted or not. 
     d.descendants().forEach(
       node => {
-        //These are the nodes with hidden children
         if (node._children && node._children.length > 0) {
           let traverseTree = (gene) => {
             if (gene._children) {
@@ -407,12 +398,10 @@ export class HclComponent implements OnChanges {
               traverseTree(gene._children[i])
             }
           }
-
-          let temp = traverseTree(node);
+          let currentTree = traverseTree(node);
           this.selectedSamples = this.selectedSamples.filter(e => !itemToRemoveArr.includes(e));
-          return temp
+          return currentTree
         } else {
-          //These are the Leaf nodes
           node.data.isHighlighted = node.data.isHighlighted ? false : true;
           node.data.isHighlighted ?
             (this.selectedSamples.includes(node.data.name) ? null : this.selectedSamples.push(node.data.name))
@@ -426,5 +415,4 @@ export class HclComponent implements OnChanges {
         if (d.data.isHighlighted) return 'highlighted';
       });
   }
-
 }

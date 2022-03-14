@@ -36,7 +36,7 @@ export class HclComponent implements OnChanges {
   searchValue: string = '';
   clusterType: string = ''
   onClickMode: string = 'expandNode'
-  levelRestriction: number = 4;
+  levelRestriction: number = 5;
 
   customObservationSets = [];
   selectedSamples = [];
@@ -92,7 +92,7 @@ export class HclComponent implements OnChanges {
   onClusterTypeChange(type) {
     this.clusterType = type;
     this.selectedSamples = [];
-    this.levelRestriction = 4;
+    this.levelRestriction = 5;
     this.initializeCount = false;
 
 
@@ -294,7 +294,7 @@ export class HclComponent implements OnChanges {
 
         // if the custom set has been successfully added, update the plot
         if (this.metadataService.addCustomSet(customSet)) {
-          this.levelRestriction = 4;
+          this.levelRestriction = 5;
           this.initializeCount = false;
           this.generateHCL();
           this.selectedSamples = [];
@@ -377,10 +377,12 @@ export class HclComponent implements OnChanges {
   }
 
   highlightNodes(d, containerId) {
+    let itemToRemoveArr = [];
     const currSampleSetHash = {}
     //Iterates through tree and marks each as highlighted or not. 
     d.descendants().forEach(
       node => {
+        //These are the nodes with hidden children
         if (node._children && node._children.length > 0) {
           let traverseTree = (gene) => {
             if (gene._children) {
@@ -396,7 +398,7 @@ export class HclComponent implements OnChanges {
                 if (gene._children === undefined) {
                   gene.isHighlighted ?
                     (this.selectedSamples.includes(gene.data.name) ? null : this.selectedSamples.push(gene.data.name))
-                    : this.selectedSamples = this.selectedSamples.filter(e => e !== gene.data.name);
+                    : itemToRemoveArr.push(gene.data.name)
                 }
               }
               return;
@@ -405,9 +407,12 @@ export class HclComponent implements OnChanges {
               traverseTree(gene._children[i])
             }
           }
-          return traverseTree(node);
 
+          let temp = traverseTree(node);
+          this.selectedSamples = this.selectedSamples.filter(e => !itemToRemoveArr.includes(e));
+          return temp
         } else {
+          //These are the Leaf nodes
           node.data.isHighlighted = node.data.isHighlighted ? false : true;
           node.data.isHighlighted ?
             (this.selectedSamples.includes(node.data.name) ? null : this.selectedSamples.push(node.data.name))
@@ -421,4 +426,5 @@ export class HclComponent implements OnChanges {
         if (d.data.isHighlighted) return 'highlighted';
       });
   }
+
 }

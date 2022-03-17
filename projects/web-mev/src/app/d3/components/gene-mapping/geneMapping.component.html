@@ -1,1 +1,69 @@
-<p>gene mapping</p>
+<mat-card class="analysis-card">
+    <mat-card-header>
+        <div mat-card-avatar class="analysis-card__img"></div>
+        <mat-card-title>Gene ID Mapping: {{ outputs?.job_name }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="analysis-card__main">
+        <p class="analysis-card__instruction">
+            The results of your gene mapping from <strong>{{outputs.initial_id}}</strong> to
+            <strong>{{outputs.final_id}}</strong> for
+            <strong>{{outputs.organism}}</strong> are now available in <strong>{{outputs.remapped_file}}</strong>.
+        </p>
+        <p class="analysis-card__instruction">
+            Note that there is often not a perfect one-to-one mapping between gene identifier systems. This is why we
+            typically advise that users avoid switching between identifiers systems unless absolutely necessary.
+            Examples where such operations might be necessary include gene pathway analyses where curated pathways may
+            only be annotated in a single identifier system.
+        </p>
+        <p class="analysis-card__instruction">
+            In the case where this re-mapping results in multiple "targets", we select the gene that has the largest
+            median absolute deviation (MAD) with the assumption that variable expression profiles are likely to be more
+            biologically "interesting" (e.g. in a differential expression context).
+        </p>
+        <p class="analysis-card__instruction">
+            As a toy example, consider the following where we look to map the "ENSG" identifiers to gene symbols (gA,
+            gB, ...)
+        </p>
+        <img id="geneSvg" src="assets/images/gene_mapping_example.svg" alt="gene_mapping_image">
+
+        <p class="analysis-card__instruction">
+            We make a couple of notes about the figure above:
+        </p>
+        <ul>
+            <li class="analysis-card__instruction">
+                ENSG3 maps to both gA and gD. Thus, the remapped results have rows for gA and gD with the same contents
+                (row
+                r3). In the case of an actual mapping from Ensembl ENSG to gene symbols, this is not a common situation,
+                but
+                we show it here for completeness
+            </li>
+            <li class="analysis-card__instruction">
+                ENSG5 and ENSG6 both map to gE. In this instance, we choose the row with the largest MAD value. Here,
+                that
+                would be row r6, which corresponds to the original ENSG6. This situation is much more common in mapping
+                Ensembl IDs to gene symbols.
+            </li>
+        </ul>
+
+        <p class="analysis-card__instruction">
+            For this reason, we provide the full record of mapping between <strong>{{outputs.initial_id}}</strong> and
+            <strong>{{outputs.final_id}}</strong> in the <strong>{{outputs.mapping}}</strong> file so that you can audit
+            this mapping and manually edit files to your needs.
+        </p>
+        <p class="analysis-card__instruction">
+        </p>
+        <mat-divider [inset]="true"></mat-divider>
+        <div class="analysis-card__content">
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </mat-card-content>
+</mat-card>

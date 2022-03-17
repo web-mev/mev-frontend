@@ -5,7 +5,6 @@ import {
     Input
 } from '@angular/core';
 
-
 @Component({
     selector: 'mev-gene-mapping',
     templateUrl: './geneMapping.component.html',
@@ -14,16 +13,7 @@ import {
 })
 export class GeneMappingComponent implements OnChanges {
     @Input() outputs;
-    // @ViewChild('treePlot') svgElement: ElementRef;
-
-    constructor(
-
-    ) { }
 
     ngOnChanges(): void {
     }
-
-    onResize(event) {
-    }
-
 }

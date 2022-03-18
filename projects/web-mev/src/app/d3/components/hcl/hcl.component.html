@@ -1,7 +1,7 @@
 <mat-card class="analysis-card">
     <mat-card-header>
         <div mat-card-avatar class="analysis-card__img"></div>
-        <mat-card-title>Hierarchical clustering: {{ outputs?.job_name }}</mat-card-title>
+        <mat-card-title>Hierarchical Clustering: {{ outputs?.job_name }}</mat-card-title>
     </mat-card-header>
     <mat-card-content class="analysis-card__main">
         <p class="analysis-card__instruction">
@@ -10,26 +10,77 @@
         </p>
         <mat-divider [inset]="true"></mat-divider>
         <div class="analysis-card__content">
-
             <div class="hcl-container">
-
                 <div class="chart-section">
-                    <div class="chart-title">Observation clustering</div>                    
-                    <div class="sample-list-container">
-                        <button mat-raised-button color="accent" (click)="onCreateCustomSampleSet()"
-                            [disabled]="!selectedSamples.length">
-                            <mat-icon>add</mat-icon>
-                            Save as a observation set
+                    <div *ngIf="clusterType === 'observationType'" class="chart-title">Observation Clustering</div>
+                    <div *ngIf="clusterType === 'featureType'" class="chart-title">Features Clustering</div>
+                    <mat-form-field class="example-form-field searchField">
+                        <mat-label>Gene Search</mat-label>
+                        <input matInput type="text" [(ngModel)]="searchValue" (keydown.enter)="onSearch()">
+                        <button matSuffix mat-icon-button (click)="onSearch()">
+                            <mat-icon>search</mat-icon>
                         </button>
-                        <div class="sample-list" *ngIf="selectedSamples.length"> Selected samples:
-                            <span class="sample-list__item" *ngFor="let item of selectedSamples">
-                                {{ item }}
+                    </mat-form-field>
+                    <div class="toggleHeader">Cluster Dimensions: </div>
+                    <mat-button-toggle-group class="toogleGroup" #chartMode="matButtonToggleGroup"
+                        [(ngModel)]="clusterType">
+                        <mat-button-toggle *ngIf="isObservation" value="observationType"
+                            (change)="onClusterTypeChange($event.value)" aria-label="Text align center">
+                            Observation
+                        </mat-button-toggle>
+                        <mat-button-toggle *ngIf="isFeature" value="featureType"
+                            (change)="onClusterTypeChange($event.value)" aria-label="Text align left">
+                            Features
+                        </mat-button-toggle>
+                    </mat-button-toggle-group>
+                    <div class="toggleHeader">Pointer Mode: </div>
+                    <mat-button-toggle-group class="toogleGroup" #chartMode="matButtonToggleGroup"
+                        [(ngModel)]="onClickMode" >
+                        <mat-button-toggle value="expandNode" (change)="onClickNodeTypeChange($event.value)"
+                            aria-label="Text align center">
+                            Expand Node
+                        </mat-button-toggle>
+                        <mat-button-toggle value="addToList"
+                            (change)="onClickNodeTypeChange($event.value)" aria-label="Text align left">
+                            {{clusterType === 'observationType' ? 'Add to Observation List': 'Add to Features List'}}
+                        </mat-button-toggle>
+                    </mat-button-toggle-group>
+                    <div class="sample-list-container">
+                        <button class="saveObsBtn" mat-raised-button
+                            color="accent" (click)="onCreateCustomSampleSet()" [disabled]="!selectedSamples.length">
+                            <mat-icon>add</mat-icon>
+                            {{clusterType === 'observationType' ? 'Save as a Observation Set': 'Save as a Features Set'}}
+                        </button>
+
+                        <div class="sample-list" *ngIf="selectedSamples.length">
+                            <div id="selectedSamplesTitle">
+                                <p>
+                                    <span>
+                                        Selected Samples:
+                                    </span>
+                                </p>
+                            </div>
+                            <span class="sample-list__item">
+                                <mat-chip-list>
+                                    <mat-chip class="sampleChips" color="amber"
+                                        *ngFor="let item of selectedSamples | slice:0:50; let i=index">{{ item }}
+                                    </mat-chip>
+                                    <p *ngIf="selectedSamples.length > 50" id="selectedSamplesElips">
+                                        <span *ngIf="selectedSamples.length < 1000" matBadge={{selectedSamples.length}}>
+                                            ...
+                                        </span>
+                                        <span *ngIf="selectedSamples.length >= 1000" class="stretch-badge-small"
+                                            matBadge={{selectedSamples.length}}>
+                                            ...
+                                        </span>
+                                    </p>
+                                </mat-chip-list>
                             </span>
                         </div>
                     </div>
-                    <mev-download-button [containerId]="obsTreeContainerId" [imageName]="obsImageName"></mev-download-button>
-                    <div class="chart" #treePlot id="observationPlot" (window:resize)="onResize($event)"></div>
-
+                    <mev-download-button [containerId]="obsTreeContainerId" [imageName]="obsImageName">
+                    </mev-download-button>
+                    <div class="chart" #treePlot id="observationPlot"></div>
                 </div>
                 <mat-divider [inset]="true"></mat-divider>
             </div>

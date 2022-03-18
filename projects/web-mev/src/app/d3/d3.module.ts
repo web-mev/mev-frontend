@@ -34,6 +34,7 @@ import { WgcnaElbowDialogComponent } from './components/wgcna/wgcna_elbow_exampl
 import { TopgoComponent } from './components/topgo/topgo.component';
 import { MatrixSubsetComponent } from './components/matrix_subset/matrix_subset.component';
 import { TopGoBubblePlotComponent } from './components/topgo/bubble-plot/bubble-plot.component';
+import {MatBadgeModule} from '@angular/material/badge';
 
 @NgModule({
   declarations: [
@@ -70,7 +71,7 @@ import { TopGoBubblePlotComponent } from './components/topgo/bubble-plot/bubble-
     MatrixSubsetComponent,
     TopGoBubblePlotComponent,
   ],
-  imports: [CommonModule, SharedModule, DragDropModule],
+  imports: [CommonModule, SharedModule, DragDropModule, MatBadgeModule],
   exports: [
     ScatterPlotComponent,
     Deseq2Component,

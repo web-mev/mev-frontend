@@ -62,6 +62,7 @@
     "browser-detect": "~0.2.28",
     "cytoscape": "^3.21.0",
     "cytoscape-fcose": "^2.1.0",
+    "cytoscape-layout-utilities": "^1.1.1",
     "d3": "~7.3.0",
     "d3-dag": "~0.9.1",
     "d3-tip": "~0.9.1",

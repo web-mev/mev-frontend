@@ -2,6 +2,11 @@ import { Component, ChangeDetectionStrategy, OnChanges, Input } from '@angular/c
 import { HttpClient } from '@angular/common/http';
 import { catchError } from "rxjs/operators";
 import * as cytoscape from 'cytoscape';
+import fcose from 'cytoscape-fcose';
+
+cytoscape.use(fcose);
+import layoutUtilities from 'cytoscape-layout-utilities';
+cytoscape.use(layoutUtilities);
 
 @Component({
     selector: 'mev-panda',
@@ -12,11 +17,46 @@ import * as cytoscape from 'cytoscape';
 export class PandaComponent implements OnChanges {
     @Input() outputs;
     cy: any;
+    nodesArr: string[] = [];
+    edgeArr: string[] = [];
+    elementsArr: string[] = [];
 
     constructor(private httpClient: HttpClient) { }
 
     ngOnChanges(): void {
-        this.getData().subscribe(res => console.log(res))
+        this.getData().subscribe(res => {
+            // console.log(res);
+            for (let node of res['nodes']) {
+                console.log("node: ", node)
+                // for( let nodeId in node){
+                // console.log("nodeAxis: ", node[nodeId].axis)
+
+                //check that it doesn't exist in nodeArr by id
+                let nodeId = Object.keys(node)[0]
+                let newNode = {
+                    "id": nodeId,
+                    "interaction": node[nodeId].axis
+                }
+                console.log("new node: ", newNode)
+                for (let child of node[nodeId].children) {
+                    console.log("child: ", child);
+                    let childId = Object.keys(child)[0]
+                    let newEdge = {
+                        "id": nodeId + "_" + childId,
+                        "source": nodeId,
+                        "target": childId,
+                        "interaction": node[nodeId].axis,
+                        "edge_weight": child[childId]
+                    }
+                    console.log("newEdge: ", newEdge);
+                }
+
+                // }
+
+
+            }
+        })
+        this.render()
     }
 
     getData() {
@@ -31,7 +71,7 @@ export class PandaComponent implements OnChanges {
                 }))
     }
 
-    createPanda() {
+    render() {
         this.cy = cytoscape({
 
             container: document.getElementById('cy'), // container to render in
@@ -40,11 +80,9 @@ export class PandaComponent implements OnChanges {
                 nodes: [
                     {
                         data: { id: 'FOXP1', interaction: "dp" },
-                        position: { x: 123, y: 234 }
                     },
                     {
                         data: { id: 'FOXP4', interaction: "dp" },
-                        renderedPosition: { x: 200, y: 200 }
                     },
                     {
                         data: { id: 'ARID3A', interaction: "dp" }
@@ -240,7 +278,7 @@ export class PandaComponent implements OnChanges {
             ],
             layout:
             {
-                name: 'cose',
+                name: 'fcose',
             }
         });
     }

@@ -27,5 +27,10 @@ export class GeneMappingComponent implements OnChanges {
     getData(uuid) {
         let endPoint = `${this.API_URL}/resources/${uuid}`;
         return this.httpClient.get(endPoint)
+            .pipe(
+                catchError(error => {
+                    console.log("Error: ", error);
+                    throw error;
+                }))
     }
 }

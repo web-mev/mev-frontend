@@ -1,5 +1,16 @@
-#cy{
+#cy {
     width: 1000px;
     height: 600px;
     background-color: transparent;
+}
+
+.analysis-card__img {
+    background-image: url('./panda.svg');
+    background-size: 30px;
+    background-position: top right;
+    background-repeat: no-repeat;
+}
+
+.analysis-card__content {
+    padding-top: 1rem;
 }

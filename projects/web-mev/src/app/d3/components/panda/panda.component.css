@@ -1,5 +1,5 @@
 #cy {
-    width: 1000px;
+    /* width: 10px; */
     height: 600px;
     background-color: transparent;
 }
@@ -13,4 +13,12 @@
 
 .analysis-card__content {
     padding-top: 1rem;
+}
+
+.mat-radio-button~.mat-radio-button {
+    margin-left: 16px;
+}
+
+#radio-group-axis{
+    display: block;
 }

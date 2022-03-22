@@ -1,7 +1,7 @@
 <mat-card class="analysis-card">
     <mat-card-header>
         <div mat-card-avatar class="analysis-card__img"></div>
-        
+
         <mat-card-title>PANDA: {{ outputs?.job_name }}</mat-card-title>
     </mat-card-header>
     <mat-card-content class="analysis-card__main">
@@ -15,12 +15,37 @@
             Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
             laborum.
         </p>
+
+        <label id="radio-group-axis">Select an Axis: </label>
+        <mat-radio-group aria-label="Select an Axis" [(ngModel)]="apiAxis">
+            <mat-radio-button *ngFor="let options of radioButtonList" [value]="options"
+                (change)="onRadioChange($event.value)">{{ options }}</mat-radio-button>
+        </mat-radio-group>
+        <br>
+        <br>
+        <mat-form-field appearance="outline">
+            <mat-label>Number of Layers</mat-label>
+            <mat-select [(value)]="selectedLayers" (selectionChange)="onDropDownChange($event.value, 'layers')">
+                <mat-option [value]="option" *ngFor="let option of layersList">{{ option }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <br>
+        <mat-form-field appearance="outline">
+            <mat-label>Number of Children</mat-label>
+            <mat-select [(value)]="selectedChildren" (selectionChange)="onDropDownChange($event.value, 'children')">
+                <mat-option [value]="option" *ngFor="let option of childrenList">{{ option }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <br>
+        <button mat-raised-button color="accent" (click)="requestData()">Submit</button>
+        <br>
+        <br>
+
         <mat-divider [inset]="true"></mat-divider>
         <div class="analysis-card__content">
             <p *ngIf="isLoading === true">Please wait... </p>
-            <mev-download-button [containerId]="containerId" [imageName]="imageName"></mev-download-button>
+            <mev-download-button [containerId]="containerId" [imageName]="imageName" width="windowWidth"></mev-download-button>
             <div id="cy"></div>
-
         </div>
     </mat-card-content>
 </mat-card>

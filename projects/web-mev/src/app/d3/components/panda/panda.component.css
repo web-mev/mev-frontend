@@ -22,3 +22,7 @@
 #radio-group-axis{
     display: block;
 }
+
+mat-slider {
+    width: 400px;
+  }

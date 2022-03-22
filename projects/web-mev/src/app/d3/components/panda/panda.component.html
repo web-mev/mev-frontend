@@ -40,11 +40,21 @@
         <button mat-raised-button color="accent" (click)="requestData()">Submit</button>
         <br>
         <br>
+        <div *ngIf="!hideFilter">
+            <label id="radio-group-axis">Minimum Edge Weight: </label>
+            <mat-slider thumbLabel tickInterval="2" step="1" min="0" max="20" aria-label="units" (change)="updateSlider($event)">
+            </mat-slider>
+            <button mat-raised-button color="accent" (click)="filterEdges()">Filter</button>
+        </div>
+        <h1>Number of Nodes: {{nodesArr.length}}</h1>
+        <br>
+        <br>
 
         <mat-divider [inset]="true"></mat-divider>
         <div class="analysis-card__content">
             <p *ngIf="isLoading === true">Please wait... </p>
-            <mev-download-button [containerId]="containerId" [imageName]="imageName" width="windowWidth"></mev-download-button>
+            <mev-download-button [containerId]="containerId" [imageName]="imageName" width="windowWidth">
+            </mev-download-button>
             <div id="cy"></div>
         </div>
     </mat-card-content>

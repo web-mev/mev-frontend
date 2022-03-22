@@ -30,10 +30,14 @@ export class PandaComponent implements OnChanges {
     selectedLayers: number = 2;
     selectedChildren: number = 3;
     radioButtonList = [0, 1];
-    layersList = [2,3,4,5,6,7];
-    childrenList = [3,4,5,6,7,8,9,10,11,12,13,14,15]
+    layersList: number[] = [2, 3, 4, 5, 6, 7];
+    childrenList: number[] = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
     apiAxis: number = this.radioButtonList[0];
     windowWidth: any;
+    sliderValue: any = 0;
+    copyNodesArr = [];
+    copyEdgeArr = [];
+    hideFilter: boolean = true;
 
     constructor(private httpClient: HttpClient) { }
 
@@ -41,37 +45,43 @@ export class PandaComponent implements OnChanges {
         this.windowWidth = window.innerWidth;
     }
 
-    requestData(){
+    requestData() {
+        this.hideFilter = true;
         this.edgeArr = [];
         this.nodesArr = [];
         this.isLoading = true;
-        console.log("apiAxis: ", this.apiAxis);
-        let pandaExprsMatrixId = this.outputs['MevPanda.exprs_file']
-        let pandaMatrixId = this.outputs['MevPanda.panda_output_matrix']
+        let pandaExprsMatrixId = this.outputs['MevPanda.exprs_file'];
+        let pandaMatrixId = this.outputs['MevPanda.panda_output_matrix'];
+        let existingNode = {}
         this.getData(pandaMatrixId).subscribe(res => {
-            console.log("res: ", res)
             for (let node of res['nodes']) {
                 let nodeId = Object.keys(node)[0];
-                let newNode = {
-                    "data": {
-                        "id": nodeId,
-                        "interaction": node[nodeId].axis === 0 ? "pd" : "dp",
-                        "truncatedId": nodeId.length > 5 ? nodeId.slice(0, 6) + " \n " + nodeId.slice(7) : nodeId
-                    }
-                }
-                this.nodesArr.push(newNode);
-
-                for (let child of node[nodeId].children) {
-                    let childId = Object.keys(child)[0];
+                if (!existingNode[nodeId]) {
                     let newNode = {
                         "data": {
-                            "id": childId,
-                            //Set to be opposite of its parent
-                            "interaction": node[nodeId].axis === 1 ? "pd" : "dp",
-                            "truncatedId": childId.length > 8 ? childId.slice(0, 6) + " \n " + childId.slice(7) : childId
+                            "id": nodeId,
+                            "interaction": node[nodeId].axis === 0 ? "pd" : "dp",
+                            "truncatedId": nodeId.length > 5 ? nodeId.slice(0, 7) + "\n" + nodeId.slice(7) : nodeId
                         }
                     }
                     this.nodesArr.push(newNode);
+                    existingNode[nodeId] = 1;
+                }
+
+                for (let child of node[nodeId].children) {
+                    let childId = Object.keys(child)[0];
+                    if (!existingNode[childId]) {
+                        let newNode = {
+                            "data": {
+                                "id": childId,
+                                //Set to be opposite of its parent
+                                "interaction": node[nodeId].axis === 1 ? "pd" : "dp",
+                                "truncatedId": childId.length > 8 ? childId.slice(0, 7) + "\n" + childId.slice(7) : childId
+                            }
+                        }
+                        this.nodesArr.push(newNode);
+                        existingNode[childId] = 1;
+                    }
 
                     let currEdgeWeight = child[childId];
                     this.maxEdgeWeight = Math.max(this.maxEdgeWeight, currEdgeWeight);
@@ -89,15 +99,18 @@ export class PandaComponent implements OnChanges {
                     this.edgeArr.push(newEdge)
                 }
             }
-            console.log("edge: ", this.edgeArr)
+
+            this.copyNodesArr = this.nodesArr;
+            this.copyEdgeArr = this.edgeArr;
+
             this.isLoading = false;
+            this.hideFilter = false;
             this.render();
         })
     }
 
     getData(uuid) {
         let endPoint = `${this.API_URL}/resources/${uuid}/contents/transform/?transform-name=pandasubset&maxdepth=${this.selectedLayers}&children=${this.selectedChildren}&axis=${this.apiAxis}`;
-        console.log("endpoint: ", endPoint)
         return this.httpClient.get(endPoint)
             .pipe(
                 catchError(error => {
@@ -108,18 +121,41 @@ export class PandaComponent implements OnChanges {
 
     onRadioChange(axis) {
         this.apiAxis = axis;
-        console.log('axis: ', this.apiAxis)
     }
 
-    onDropDownChange(value, dropdown){
-        if(dropdown === 'layers') this.selectedLayers = value;
-        if(dropdown === 'children') this.selectedChildren = value;
-        console.log(this.selectedChildren, this.selectedLayers);
+    onDropDownChange(value, dropdown) {
+        if (dropdown === 'layers') this.selectedLayers = value;
+        if (dropdown === 'children') this.selectedChildren = value;
+    }
+
+    updateSlider(input) {
+        this.sliderValue = input.value;
+    }
+
+    filterEdges() {
+        this.edgeArr = this.copyEdgeArr;
+        this.nodesArr = this.copyNodesArr;
+
+        let nodesToKeep = {};
+        this.edgeArr = this.edgeArr.filter(e => {
+            if (e.data.edge_weight > this.sliderValue) {
+                nodesToKeep[e.data.target] = 1;
+                nodesToKeep[e.data.source] = 1;
+            }
+            return e.data.edge_weight > this.sliderValue
+        });
+        let filteredNodesArr = [];
+        for (let node of this.nodesArr) {
+            if (nodesToKeep[node.data.id]) {
+                filteredNodesArr.push(node)
+            }
+        }
+        this.nodesArr = filteredNodesArr;
+        this.render();
     }
 
     render() {
         this.cy = cytoscape({
-
             container: document.getElementById('cy'),
 
             elements: {
@@ -129,19 +165,36 @@ export class PandaComponent implements OnChanges {
 
             style: [
                 {
-                    selector: 'node',
+                    selector: 'node[interaction="dp"]',
                     style: {
-                        'background-color': (ele) => {
-                            return ele.data("interaction") === "dp" ? "#1DA1F2" : "#D94A4A";
-                        },
+                        'background-color': "#1DA1F2",
                         'label': 'data(truncatedId)',
                         'shape': 'diamond',
                         'text-wrap': 'wrap',
                         'text-max-width': '1000px',
                         'text-halign': 'center',
                         'text-valign': 'center',
-                        'height': 120,
-                        'width': 120,
+                        'height': 100,
+                        'width': 100,
+                        'border-color': '#000',
+                        'border-width': 3,
+                        'border-opacity': 0.8,
+                        'color': 'white',
+                        'font-weight': 'bold',
+                    }
+                },
+                {
+                    selector: 'node[interaction="pd"]',
+                    style: {
+                        'background-color': "#D94A4A",
+                        'label': 'data(truncatedId)',
+                        'shape': 'round-rectangle',
+                        'text-wrap': 'wrap',
+                        'text-max-width': '1000px',
+                        'text-halign': 'center',
+                        'text-valign': 'center',
+                        'height': 100,
+                        'width': 100,
                         'border-color': '#000',
                         'border-width': 3,
                         'border-opacity': 0.8,
@@ -155,7 +208,6 @@ export class PandaComponent implements OnChanges {
                         'width': `mapData(edge_weight, ${this.minEdgeWeight}, ${this.maxEdgeWeight}, 2, 8)`,
                         'line-color': "black",
                         'line-opacity': 0.5,
-                        // 'curve-style': 'bezier'
                     }
                 },
             ],

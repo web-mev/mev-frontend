@@ -18,8 +18,8 @@
 
         <label id="radio-group-axis">Select an Axis: </label>
         <mat-radio-group aria-label="Select an Axis" [(ngModel)]="apiAxis">
-            <mat-radio-button *ngFor="let options of radioButtonList" [value]="options"
-                (change)="onRadioChange($event.value)">{{ options }}</mat-radio-button>
+            <mat-radio-button *ngFor="let options of radioButtonList" [value]="options.axis"
+                (change)="onRadioChange($event.value)">{{ options.name }}</mat-radio-button>
         </mat-radio-group>
         <br>
         <br>
@@ -53,8 +53,7 @@
         <mat-divider [inset]="true"></mat-divider>
         <div class="analysis-card__content">
             <p *ngIf="isLoading === true">Please wait... </p>
-            <mev-download-button [containerId]="containerId" [imageName]="imageName" width="windowWidth">
-            </mev-download-button>
+            <!-- <mev-download-button [containerId]="containerId" [imageName]="imageName" width="windowWidth"></mev-download-button> -->
             <div id="cy"></div>
         </div>
     </mat-card-content>

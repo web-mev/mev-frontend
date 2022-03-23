@@ -24,15 +24,24 @@ export class PandaComponent implements OnChanges {
     elementsArr = [];
     minEdgeWeight: number = 100;
     maxEdgeWeight: number = 0;
-    isLoading = false;
+    isLoading: boolean = false;
     containerId = '#panda';
     imageName = 'PANDA'; // file name for downloaded SVG image
     selectedLayers: number = 2;
     selectedChildren: number = 3;
-    radioButtonList = [0, 1];
+    radioButtonList = [
+        {
+            name: "Genes",
+            axis: 0
+        },
+        {
+            name: "Transcription Factor",
+            axis: 1
+        }
+    ];
     layersList: number[] = [2, 3, 4, 5, 6, 7];
     childrenList: number[] = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-    apiAxis: number = this.radioButtonList[0];
+    apiAxis = this.radioButtonList[0].axis;
     windowWidth: any;
     sliderValue: any = 0;
     copyNodesArr = [];
@@ -61,7 +70,8 @@ export class PandaComponent implements OnChanges {
                         "data": {
                             "id": nodeId,
                             "interaction": node[nodeId].axis === 0 ? "pd" : "dp",
-                            "truncatedId": nodeId.length > 5 ? nodeId.slice(0, 7) + "\n" + nodeId.slice(7) : nodeId
+                            // "truncatedId": nodeId.length > 5 ? nodeId.slice(0, 7) + "\n" + nodeId.slice(7) : nodeId
+                            "truncatedId": nodeId.length > 6 ? nodeId.slice(0, 5) + "\n" + nodeId.slice(5, 10) + "\n" + nodeId.slice(10) : nodeId
                         }
                     }
                     this.nodesArr.push(newNode);
@@ -76,7 +86,8 @@ export class PandaComponent implements OnChanges {
                                 "id": childId,
                                 //Set to be opposite of its parent
                                 "interaction": node[nodeId].axis === 1 ? "pd" : "dp",
-                                "truncatedId": childId.length > 8 ? childId.slice(0, 7) + "\n" + childId.slice(7) : childId
+                                // "truncatedId": childId.length > 8 ? childId.slice(0, 7) + "\n" + childId.slice(7) : childId
+                                "truncatedId": childId.length > 6 ? childId.slice(0, 5) + "\n" + childId.slice(5, 10) + "\n" + childId.slice(10) : childId
                             }
                         }
                         this.nodesArr.push(newNode);
@@ -168,52 +179,57 @@ export class PandaComponent implements OnChanges {
                     selector: 'node[interaction="dp"]',
                     style: {
                         'background-color': "#1DA1F2",
+                        'opacity': 0.95,
                         'label': 'data(truncatedId)',
                         'shape': 'diamond',
                         'text-wrap': 'wrap',
                         'text-max-width': '1000px',
                         'text-halign': 'center',
                         'text-valign': 'center',
-                        'height': 100,
-                        'width': 100,
                         'border-color': '#000',
-                        'border-width': 3,
                         'border-opacity': 0.8,
                         'color': 'white',
                         'font-weight': 'bold',
+                        'height': this.nodesArr.length > 100 ? 30 : 60,
+                        'width': this.nodesArr.length > 100 ? 30 : 60,
+                        'font-size': this.nodesArr.length > 100 ? 4 : 10,
+                        'border-width': this.nodesArr.length > 100 ? 1 : 2,
                     }
                 },
                 {
                     selector: 'node[interaction="pd"]',
                     style: {
                         'background-color': "#D94A4A",
+                        'opacity': 0.95,
                         'label': 'data(truncatedId)',
                         'shape': 'round-rectangle',
                         'text-wrap': 'wrap',
                         'text-max-width': '1000px',
                         'text-halign': 'center',
                         'text-valign': 'center',
-                        'height': 100,
-                        'width': 100,
                         'border-color': '#000',
-                        'border-width': 3,
                         'border-opacity': 0.8,
                         'color': 'white',
                         'font-weight': 'bold',
+                        'height': this.nodesArr.length > 100 ? 25 : 50,
+                        'width': this.nodesArr.length > 100 ? 25 : 50,
+                        'font-size': this.nodesArr.length > 100 ? 4 : 10,
+                        'border-width': this.nodesArr.length > 100 ? 1 : 2,
                     }
                 },
                 {
                     selector: 'edge',
                     style: {
-                        'width': `mapData(edge_weight, ${this.minEdgeWeight}, ${this.maxEdgeWeight}, 2, 8)`,
-                        'line-color': "black",
-                        'line-opacity': 0.5,
+                        'width': this.nodesArr.length > 100 ? `mapData(edge_weight, ${this.minEdgeWeight}, ${this.maxEdgeWeight}, 1, 5)` : `mapData(edge_weight, ${this.minEdgeWeight}, ${this.maxEdgeWeight}, 3, 8)`,
+                        'line-color': "#848484",
+                        'line-opacity': 0.8,
                     }
                 },
             ],
             layout:
             {
                 name: 'fcose',
+
             }
         });
     }

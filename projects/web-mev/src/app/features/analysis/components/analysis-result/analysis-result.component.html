@@ -4,15 +4,15 @@
     </ng-container>
 
     <ng-container *ngIf="operationName === 'SCTK Doublet Finder'">
-      <mev-sctk-doubletfinder [outputs]="outputs"></mev-sctk-doubletfinder>
+        <mev-sctk-doubletfinder [outputs]="outputs"></mev-sctk-doubletfinder>
     </ng-container>
 
     <ng-container *ngIf="operationName === 'SCTK Cxds Doublet Finder'">
-      <mev-sctk-cxds [outputs]="outputs"></mev-sctk-cxds>
+        <mev-sctk-cxds [outputs]="outputs"></mev-sctk-cxds>
     </ng-container>
 
     <ng-container *ngIf="operationName === 'SCTK Doublet Cells'">
-      <mev-sctk-cell [outputs]="outputs"></mev-sctk-cell>
+        <mev-sctk-cell [outputs]="outputs"></mev-sctk-cell>
     </ng-container>
 
     <ng-container *ngIf="operationName === 'DESeq2'">
@@ -73,6 +73,10 @@
 
     <ng-container *ngIf="operationName === 'PANDA (Regulatory Networks)'">
         <mev-panda [outputs]="outputs"></mev-panda>
+    </ng-container>
+    
+    <ng-container *ngIf="operationName === 'Gene ID Mapping'">
+        <mev-gene-mapping [outputs]="outputs"></mev-gene-mapping>
     </ng-container>
 </div>
 

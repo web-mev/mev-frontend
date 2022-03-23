@@ -35,6 +35,8 @@ import { TopgoComponent } from './components/topgo/topgo.component';
 import { MatrixSubsetComponent } from './components/matrix_subset/matrix_subset.component';
 import { TopGoBubblePlotComponent } from './components/topgo/bubble-plot/bubble-plot.component';
 import { PandaComponent } from './components/panda/panda.component';
+import {MatBadgeModule} from '@angular/material/badge';
+import { GeneMappingComponent } from './components/gene-mapping/geneMapping.component';
 
 @NgModule({
   declarations: [
@@ -70,9 +72,10 @@ import { PandaComponent } from './components/panda/panda.component';
     TopgoComponent,
     MatrixSubsetComponent,
     TopGoBubblePlotComponent,
-    PandaComponent
+    PandaComponent,
+    GeneMappingComponent
   ],
-  imports: [CommonModule, SharedModule, DragDropModule],
+  imports: [CommonModule, SharedModule, DragDropModule, MatBadgeModule],
   exports: [
     ScatterPlotComponent,
     Deseq2Component,
@@ -97,7 +100,8 @@ import { PandaComponent } from './components/panda/panda.component';
     TopgoComponent,
     MatrixSubsetComponent,
     TopGoBubblePlotComponent,
-    PandaComponent
+    PandaComponent,
+    GeneMappingComponent
   ]
 })
 export class D3Module {}

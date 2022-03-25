@@ -15,11 +15,18 @@
             Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
             laborum.
         </p>
+        <label id="radio-group-axis">Select Layout: </label>
+        <mat-radio-group aria-label="Select an Axis" [(ngModel)]="currLayout">
+            <mat-radio-button *ngFor="let options of layoutList" [value]="options"
+                (change)="onRadioChangeLayout($event.value)">{{ options }}</mat-radio-button>
+        </mat-radio-group>
+        <br>
+        <br>
 
         <label id="radio-group-axis">Select an Axis: </label>
         <mat-radio-group aria-label="Select an Axis" [(ngModel)]="apiAxis">
             <mat-radio-button *ngFor="let options of radioButtonList" [value]="options.axis"
-                (change)="onRadioChange($event.value)">{{ options.name }}</mat-radio-button>
+                (change)="onRadioChangeAxis($event.value)">{{ options.name }}</mat-radio-button>
         </mat-radio-group>
         <br>
         <br>
@@ -42,19 +49,20 @@
         <br>
         <div *ngIf="!hideFilter">
             <label id="radio-group-axis">Minimum Edge Weight: </label>
-            <mat-slider thumbLabel tickInterval="2" step="1" min="0" max="20" aria-label="units" (change)="updateSlider($event)">
+            <mat-slider thumbLabel tickInterval="2" step="1" min="0" max="20" aria-label="units"
+                (change)="updateSlider($event)">
             </mat-slider>
             <button mat-raised-button color="accent" (click)="filterEdges()">Filter</button>
         </div>
-        <!-- <h1>Number of Nodes: {{nodesArr.length}}</h1>
+        <h1>Number of Nodes: {{nodesArr.length}}</h1>
         <br>
-        <br> -->
+        <br>
 
         <mat-divider [inset]="true"></mat-divider>
         <div class="analysis-card__content">
             <p *ngIf="isLoading === true">Please wait... </p>
             <!-- <mev-download-button [containerId]="containerId" [imageName]="imageName" width="windowWidth"></mev-download-button> -->
-            <div id="cy"></div>
+            <div *ngIf="displayGraph" id="cy"></div>
         </div>
     </mat-card-content>
 </mat-card>

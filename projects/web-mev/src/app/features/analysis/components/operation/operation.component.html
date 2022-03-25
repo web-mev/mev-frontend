@@ -1,5 +1,5 @@
 <h3>{{ operation.name }}</h3>
-<p>{{ operation.description }} </p>
+<p [innerHTML]='operation.description'></p>
 
 <form *ngIf="analysesForm" [formGroup]="analysesForm" (ngSubmit)="onSubmit()">
 

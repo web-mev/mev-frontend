@@ -2,11 +2,18 @@ import { Component, ChangeDetectionStrategy, OnChanges, Input } from '@angular/c
 import { HttpClient } from '@angular/common/http';
 import { catchError } from "rxjs/operators";
 import { environment } from '@environments/environment';
+import { NotificationService } from '@core/notifications/notification.service';
 import * as cytoscape from 'cytoscape';
 import fcose from 'cytoscape-fcose';
+import cola from 'cytoscape-cola';
+import coseBilkent from 'cytoscape-cose-bilkent';
+import cise from 'cytoscape-cise';
 import layoutUtilities from 'cytoscape-layout-utilities';
 
 cytoscape.use(fcose);
+cytoscape.use(cola);
+cytoscape.use(coseBilkent);
+cytoscape.use(cise);
 cytoscape.use(layoutUtilities);
 
 @Component({
@@ -39,19 +46,53 @@ export class PandaComponent implements OnChanges {
             axis: 1
         }
     ];
-    layersList: number[] = [2, 3, 4, 5, 6, 7];
-    childrenList: number[] = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+    layersList: number[] = [2, 3, 4, 5];
+    childrenList: number[] = [3, 4, 5, 6, 7, 8, 9, 10];
+    layoutList: string[] = ["Cose", "Cose-Bilkent", "FCose", "Cise", "Cola"];
+    currLayout: string = this.layoutList[0];
+    layoutName: string = "cose";
     apiAxis = this.radioButtonList[0].axis;
     windowWidth: any;
     sliderValue: any = 0;
     copyNodesArr = [];
     copyEdgeArr = [];
     hideFilter: boolean = true;
+    // useSmallNodes: boolean = false;
+    size: string = 'large';
+    isError: boolean = false;
+    displayGraph: boolean = true;
+    nodeSize = {
+        small: {
+            height: 10,
+            width: 10,
+            fontSize: 2,
+            borderWidth: 0,
+            edgeWidth: [1, 2]
+        },
+        medium: {
+            height: 20,
+            width: 20,
+            fontSize: 4,
+            borderWidth: 1,
+            edgeWidth: [1, 5]
+        },
+        large: {
+            height: 60,
+            width: 60,
+            fontSize: 10,
+            borderWidth: 2,
+            edgeWidth: [3, 8]
+        }
+    }
 
-    constructor(private httpClient: HttpClient) { }
+    constructor(
+        private httpClient: HttpClient,
+        private readonly notificationService: NotificationService
+    ) { }
 
     ngOnChanges(): void {
         this.windowWidth = window.innerWidth;
+        this.requestData();
     }
 
     requestData() {
@@ -70,7 +111,6 @@ export class PandaComponent implements OnChanges {
                         "data": {
                             "id": nodeId,
                             "interaction": node[nodeId].axis === 0 ? "pd" : "dp",
-                            // "truncatedId": nodeId.length > 5 ? nodeId.slice(0, 7) + "\n" + nodeId.slice(7) : nodeId
                             "truncatedId": nodeId.length > 6 ? nodeId.slice(0, 5) + "\n" + nodeId.slice(5, 10) + "\n" + nodeId.slice(10) : nodeId
                         }
                     }
@@ -86,7 +126,6 @@ export class PandaComponent implements OnChanges {
                                 "id": childId,
                                 //Set to be opposite of its parent
                                 "interaction": node[nodeId].axis === 1 ? "pd" : "dp",
-                                // "truncatedId": childId.length > 8 ? childId.slice(0, 7) + "\n" + childId.slice(7) : childId
                                 "truncatedId": childId.length > 6 ? childId.slice(0, 5) + "\n" + childId.slice(5, 10) + "\n" + childId.slice(10) : childId
                             }
                         }
@@ -116,11 +155,21 @@ export class PandaComponent implements OnChanges {
 
             this.isLoading = false;
             this.hideFilter = false;
-            this.render();
+            if (this.nodesArr.length < 150) {
+                this.size = "large";
+            } else if (this.nodesArr.length < 400) {
+                this.size = "medium";
+            } else {
+                this.size = "small";
+            }
+            let errorMessage = "The current number of genes is more than Cytoscape can handle. Please lower the number of Layers or Children and try again."
+            this.nodesArr.length > 1000 ? this.tooManyNodes(errorMessage) : this.render();
         })
     }
 
     getData(uuid) {
+        this.isError = false;
+        this.displayGraph = true;
         let endPoint = `${this.API_URL}/resources/${uuid}/contents/transform/?transform-name=pandasubset&maxdepth=${this.selectedLayers}&children=${this.selectedChildren}&axis=${this.apiAxis}`;
         return this.httpClient.get(endPoint)
             .pipe(
@@ -130,8 +179,13 @@ export class PandaComponent implements OnChanges {
                 }))
     }
 
-    onRadioChange(axis) {
+    onRadioChangeAxis(axis) {
         this.apiAxis = axis;
+    }
+
+    onRadioChangeLayout(layout) {
+        this.currLayout = layout;
+        this.layoutName = layout.toLowerCase();
     }
 
     onDropDownChange(value, dropdown) {
@@ -165,15 +219,18 @@ export class PandaComponent implements OnChanges {
         this.render();
     }
 
+    tooManyNodes(message) {
+        this.notificationService.warn(message);
+        this.displayGraph = false;
+    }
+
     render() {
         this.cy = cytoscape({
             container: document.getElementById('cy'),
-
             elements: {
                 nodes: this.nodesArr,
                 edges: this.edgeArr,
             },
-
             style: [
                 {
                     selector: 'node[interaction="dp"]',
@@ -190,10 +247,10 @@ export class PandaComponent implements OnChanges {
                         'border-opacity': 0.8,
                         'color': 'white',
                         'font-weight': 'bold',
-                        'height': this.nodesArr.length > 100 ? 30 : 60,
-                        'width': this.nodesArr.length > 100 ? 30 : 60,
-                        'font-size': this.nodesArr.length > 100 ? 4 : 10,
-                        'border-width': this.nodesArr.length > 100 ? 1 : 2,
+                        'height': this.nodeSize[this.size].height,
+                        'width': this.nodeSize[this.size].width,
+                        'font-size': this.nodeSize[this.size].fontSize,
+                        'border-width': this.nodeSize[this.size].borderWidth,
                     }
                 },
                 {
@@ -211,26 +268,34 @@ export class PandaComponent implements OnChanges {
                         'border-opacity': 0.8,
                         'color': 'white',
                         'font-weight': 'bold',
-                        'height': this.nodesArr.length > 100 ? 25 : 50,
-                        'width': this.nodesArr.length > 100 ? 25 : 50,
-                        'font-size': this.nodesArr.length > 100 ? 4 : 10,
-                        'border-width': this.nodesArr.length > 100 ? 1 : 2,
+                        'height': this.nodeSize[this.size].height * 0.9,
+                        'width': this.nodeSize[this.size].width * 0.9,
+                        'font-size': this.nodeSize[this.size].fontSize,
+                        'border-width': this.nodeSize[this.size].borderWidth,
                     }
                 },
                 {
                     selector: 'edge',
                     style: {
-                        'width': this.nodesArr.length > 100 ? `mapData(edge_weight, ${this.minEdgeWeight}, ${this.maxEdgeWeight}, 1, 5)` : `mapData(edge_weight, ${this.minEdgeWeight}, ${this.maxEdgeWeight}, 3, 8)`,
+                        'width': `mapData(edge_weight, ${this.minEdgeWeight}, ${this.maxEdgeWeight}, ${this.nodeSize[this.size].edgeWidth[0]}, ${this.nodeSize[this.size].edgeWidth[1]})`,
                         'line-color': "#848484",
                         'line-opacity': 0.8,
-                    }
+                    },
                 },
             ],
             layout:
             {
-                name: 'fcose',
-
-            }
+                name: this.layoutName,
+                // edgeElasticity: (edge) => {
+                //     // console.log("edge: ", edge.data().edge_weight)
+                //     return edge.data().edge_weight * 40
+                // },
+                // idealEdgeLength: function (edge) {
+                //     // Default is: 10
+                //     // Instead, base it on "weight"
+                //     return edge.data().edge_weight * 50
+                // },
+            },
         });
     }
 

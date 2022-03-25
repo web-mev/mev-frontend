@@ -70,6 +70,11 @@
     <ng-container *ngIf="operationName === 'Expression matrix subset'">
         <mev-exp-subset [outputs]="outputs"></mev-exp-subset>
     </ng-container>
+
+    <ng-container *ngIf="operationName === 'PANDA (Regulatory Networks)'">
+        <mev-panda [outputs]="outputs"></mev-panda>
+    </ng-container>
+    
     <ng-container *ngIf="operationName === 'Gene ID Mapping'">
         <mev-gene-mapping [outputs]="outputs"></mev-gene-mapping>
     </ng-container>

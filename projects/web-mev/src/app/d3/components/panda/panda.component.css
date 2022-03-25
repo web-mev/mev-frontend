@@ -1,0 +1,28 @@
+#cy {
+    /* width: 10px; */
+    height: 800px;
+    background-color: transparent;
+}
+
+.analysis-card__img {
+    background-image: url('./panda.svg');
+    background-size: 30px;
+    background-position: top right;
+    background-repeat: no-repeat;
+}
+
+.analysis-card__content {
+    padding-top: 1rem;
+}
+
+.mat-radio-button~.mat-radio-button {
+    margin-left: 16px;
+}
+
+#radio-group-axis{
+    display: block;
+}
+
+mat-slider {
+    width: 400px;
+  }

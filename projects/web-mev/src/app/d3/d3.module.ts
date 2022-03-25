@@ -34,6 +34,7 @@ import { WgcnaElbowDialogComponent } from './components/wgcna/wgcna_elbow_exampl
 import { TopgoComponent } from './components/topgo/topgo.component';
 import { MatrixSubsetComponent } from './components/matrix_subset/matrix_subset.component';
 import { TopGoBubblePlotComponent } from './components/topgo/bubble-plot/bubble-plot.component';
+import { PandaComponent } from './components/panda/panda.component';
 import {MatBadgeModule} from '@angular/material/badge';
 import { GeneMappingComponent } from './components/gene-mapping/geneMapping.component';
 
@@ -71,6 +72,7 @@ import { GeneMappingComponent } from './components/gene-mapping/geneMapping.comp
     TopgoComponent,
     MatrixSubsetComponent,
     TopGoBubblePlotComponent,
+    PandaComponent,
     GeneMappingComponent
   ],
   imports: [CommonModule, SharedModule, DragDropModule, MatBadgeModule],
@@ -98,6 +100,7 @@ import { GeneMappingComponent } from './components/gene-mapping/geneMapping.comp
     TopgoComponent,
     MatrixSubsetComponent,
     TopGoBubblePlotComponent,
+    PandaComponent,
     GeneMappingComponent
   ]
 })

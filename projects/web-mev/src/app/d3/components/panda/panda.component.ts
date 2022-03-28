@@ -297,6 +297,6 @@ export class PandaComponent implements OnChanges {
                 //     return edge.data().edge_weight * 50
                 // },
             },
-        }).fit(this.cy.elements(), 1000).center()
+        })
     }
 }

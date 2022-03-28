@@ -1,6 +1,6 @@
 #cy {
-    /* width: 10px; */
-    height: 800px;
+    /* width: 1800px; */
+    height: 1800px;
     background-color: transparent;
 }
 
@@ -25,4 +25,4 @@
 
 mat-slider {
     width: 400px;
-  }
+}

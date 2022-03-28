@@ -163,7 +163,7 @@ export class PandaComponent implements OnChanges {
                 this.size = "small";
             }
             let errorMessage = "The current number of genes is more than Cytoscape can handle. Please lower the number of Layers or Children and try again."
-            this.nodesArr.length > 1000 ? this.tooManyNodes(errorMessage) : this.render();
+            this.nodesArr.length > 1000 ? this.tooManyNodes(errorMessage) : (this.nodesArr.length > 0 && this.render());
         })
     }
 

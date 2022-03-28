@@ -49,15 +49,14 @@ export class PandaComponent implements OnChanges {
     layersList: number[] = [2, 3, 4, 5];
     childrenList: number[] = [3, 4, 5, 6, 7, 8, 9, 10];
     layoutList: string[] = ["Cose", "Cose-Bilkent", "FCose", "Cise", "Cola"];
-    currLayout: string = this.layoutList[0];
-    layoutName: string = "cose";
+    currLayout: string = this.layoutList[1];
+    layoutName: string = "cose-bilkent";
     apiAxis = this.radioButtonList[0].axis;
     windowWidth: any;
     sliderValue: any = 0;
     copyNodesArr = [];
     copyEdgeArr = [];
     hideFilter: boolean = true;
-    // useSmallNodes: boolean = false;
     size: string = 'large';
     isError: boolean = false;
     displayGraph: boolean = true;
@@ -91,7 +90,8 @@ export class PandaComponent implements OnChanges {
     ) { }
 
     ngOnChanges(): void {
-        this.windowWidth = window.innerWidth;
+        // this.windowWidth = window.innerWidth
+        this.windowWidth = 4000
         this.requestData();
     }
 
@@ -155,9 +155,9 @@ export class PandaComponent implements OnChanges {
 
             this.isLoading = false;
             this.hideFilter = false;
-            if (this.nodesArr.length < 150) {
+            if (this.nodesArr.length < 100) {
                 this.size = "large";
-            } else if (this.nodesArr.length < 400) {
+            } else if (this.nodesArr.length < 200) {
                 this.size = "medium";
             } else {
                 this.size = "small";
@@ -286,6 +286,7 @@ export class PandaComponent implements OnChanges {
             layout:
             {
                 name: this.layoutName,
+                
                 // edgeElasticity: (edge) => {
                 //     // console.log("edge: ", edge.data().edge_weight)
                 //     return edge.data().edge_weight * 40
@@ -296,7 +297,6 @@ export class PandaComponent implements OnChanges {
                 //     return edge.data().edge_weight * 50
                 // },
             },
-        });
+        }).fit(this.cy.elements(), 1000).center()
     }
-
 }

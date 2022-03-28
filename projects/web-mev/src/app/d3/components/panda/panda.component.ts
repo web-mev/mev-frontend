@@ -76,9 +76,9 @@ export class PandaComponent implements OnChanges {
             edgeWidth: [1, 5]
         },
         large: {
-            height: 60,
-            width: 60,
-            fontSize: 10,
+            height: 40,
+            width: 40,
+            fontSize: 8,
             borderWidth: 2,
             edgeWidth: [3, 8]
         }

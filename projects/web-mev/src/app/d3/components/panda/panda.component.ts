@@ -28,7 +28,7 @@ export class PandaComponent implements OnChanges {
     cy: any;
     nodesArr = [];
     edgeArr = [];
-    elementsArr = [];
+    // elementsArr = [];
     minEdgeWeight: number = 100;
     maxEdgeWeight: number = 0;
     isLoading: boolean = false;
@@ -91,8 +91,8 @@ export class PandaComponent implements OnChanges {
 
     ngOnChanges(): void {
         // this.windowWidth = window.innerWidth
-        this.windowWidth = 4000
-        this.requestData();
+        // this.windowWidth = 4000
+        // this.requestData();
     }
 
     requestData() {
@@ -162,6 +162,7 @@ export class PandaComponent implements OnChanges {
             } else {
                 this.size = "small";
             }
+            
             let errorMessage = "The current number of genes is more than Cytoscape can handle. Please lower the number of Layers or Children and try again."
             this.nodesArr.length > 1000 ? this.tooManyNodes(errorMessage) : (this.nodesArr.length > 0 && this.render());
         })

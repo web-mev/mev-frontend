@@ -187,6 +187,9 @@ export class PandaComponent implements OnChanges {
     onRadioChangeLayout(layout) {
         this.currLayout = layout;
         this.layoutName = layout.toLowerCase();
+        if(this.nodesArr.length > 0){
+            this.render();
+        }
     }
 
     onDropDownChange(value, dropdown) {

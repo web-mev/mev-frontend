@@ -65,7 +65,7 @@ export class PandaComponent implements OnChanges {
             height: 10,
             width: 10,
             fontSize: 2,
-            borderWidth: 0,
+            borderWidth: 1,
             edgeWidth: [1, 2]
         },
         medium: {
@@ -187,6 +187,7 @@ export class PandaComponent implements OnChanges {
     onRadioChangeLayout(layout) {
         this.currLayout = layout;
         this.layoutName = layout.toLowerCase();
+        if(this.nodesArr.length > 0) this.render();
     }
 
     onDropDownChange(value, dropdown) {
@@ -287,7 +288,6 @@ export class PandaComponent implements OnChanges {
             layout:
             {
                 name: this.layoutName,
-                
                 // edgeElasticity: (edge) => {
                 //     // console.log("edge: ", edge.data().edge_weight)
                 //     return edge.data().edge_weight * 40

@@ -6,7 +6,7 @@
   <!-- OPERATION NAME -->
   <ng-container *ngIf="operation.mode !== 'client'">
     <div class="label">
-      Operation name: *
+      Operation name: <span class="redAsterisk">* </span>
       <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
         matTooltip="Type operation name" aria-label="Info tooltip about the field">info
       </mat-icon>
@@ -20,7 +20,7 @@
   <div *ngFor="let resourceField of resourceFields">
     <div *ngIf="resourceField.required">
       <div class="label">
-        {{ resourceField.name }} <span>* </span>
+        {{ resourceField.name }} <span class="redAsterisk">* </span>
         <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
           matTooltip="{{ resourceField.desc}}" aria-label="Info tooltip about the field">info
         </mat-icon>
@@ -45,7 +45,7 @@
     <div *ngIf="multipleResourceField.required">
       <div class="form-control form-control--multiselect">
         <div class="label">
-          {{ multipleResourceField.name }} <span>* </span>
+          {{ multipleResourceField.name }} <span class="redAsterisk">* </span>
           <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
             matTooltip="{{ multipleResourceField.desc}}" aria-label="Info tooltip about the field">info
           </mat-icon>
@@ -94,7 +94,7 @@
   <div *ngFor="let intField of intFields">
     <div *ngIf="intField.required">
       <div class="label">
-        {{ intField.name }} <span>* </span>
+        {{ intField.name }} <span class="redAsterisk">* </span>
         <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
           matTooltip="{{ intField.desc}}" aria-label="Info tooltip about the field">info
         </mat-icon>
@@ -123,7 +123,7 @@
   <div *ngFor="let textField of textFields">
     <div *ngIf="textField.required">
       <div class="label">
-        {{ textField.name }} <span>* </span>
+        {{ textField.name }} <span class="redAsterisk">* </span>
         <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
           matTooltip="{{ textField.desc}}" aria-label="Info tooltip about the field">info
         </mat-icon>
@@ -143,7 +143,7 @@
   <div *ngFor="let observationField of observationFields">
     <div *ngIf="observationField.required">
       <div class="label">
-        {{ observationField.name }} <span>* </span>
+        {{ observationField.name }} <span class="redAsterisk">* </span>
         <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
           matTooltip="{{ observationField.desc}}" aria-label="Info tooltip about the field">info
         </mat-icon>
@@ -167,7 +167,7 @@
   <div *ngFor="let featureField of featureFields">
     <div *ngIf="featureField.required">
       <div class="label">
-        {{ featureField.name }} <span>* </span>
+        {{ featureField.name }} <span class="redAsterisk">* </span>
         <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
           matTooltip="{{ featureField.desc}}" aria-label="Info tooltip about the field">info
         </mat-icon>
@@ -187,12 +187,11 @@
     </div>
   </div>
 
-
   <!-- SINGLE SELECT LISTS FOR OPERATION OPTIONS REQUIRED-->
   <div *ngFor="let optionField of optionFields">
     <div *ngIf="optionField.required">
       <div class="label">
-        {{ optionField.name }} <span>* </span>
+        {{ optionField.name }} <span class="redAsterisk">* </span>
         <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
           matTooltip="{{ optionField.desc}}" aria-label="Info tooltip about the field">info
         </mat-icon>
@@ -212,7 +211,6 @@
     </div>
   </div>
 
-
   <!-- CHECKBOXES FOR BOOLEAN FIELDS REQUIRED-->
   <ng-container *ngFor="let booleanField of booleanFields">
     <div *ngIf="booleanField.required">
@@ -220,7 +218,7 @@
         <mat-checkbox [formControlName]="booleanField.key" [checked]="booleanField.checked">
         </mat-checkbox>
         <span class="label">
-          {{ booleanField.name }} <span>* </span>
+          {{ booleanField.name }} <span class="redAsterisk">* </span>
           <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
             matTooltip="{{ booleanField.desc}}" aria-label="Info tooltip about the field">info
           </mat-icon>

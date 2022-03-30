@@ -37,6 +37,8 @@ import { PasswordChangeComponent } from './features/user/password-change/passwor
 import { SentryErrorHandler } from './sentry-error-handler';
 
 import {environment} from '../../src/environments/environment';
+import { MatDialogModule } from '@angular/material/dialog';
+import { ContactComponent } from './features/contact-dialog/contact.component';
 
 @NgModule({
   imports: [
@@ -70,7 +72,8 @@ import {environment} from '../../src/environments/environment';
     FileManagerModule,
     WorkspaceManagerModule,
     PublicDatasetsManagerModule,
-    AppRoutingModule
+    AppRoutingModule,
+    MatDialogModule,
   ],
   declarations: [
     AppComponent,
@@ -79,7 +82,8 @@ import {environment} from '../../src/environments/environment';
     TutorialComponent,
     RequestPasswordResetComponent,
     ResponsePasswordResetComponent,
-    PasswordChangeComponent
+    PasswordChangeComponent,
+    ContactComponent
   ],
   providers: [
     BnNgIdleService,

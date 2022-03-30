@@ -38,6 +38,7 @@
                     routerLinkActive="active">
               {{item.label | translate}}
             </button>
+            <button mat-button (click)="openDialog()">Contact Us</button>
           </span>
 
           <!--button mat-button mat-stroked-button color="accent" *ngIf="!(isAuthenticated$ | async)" (click)="onLoginClick()">

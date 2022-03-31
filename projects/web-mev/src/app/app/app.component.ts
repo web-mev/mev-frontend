@@ -118,10 +118,11 @@ export class AppComponent implements OnInit {
   }
 
   openDialog() {
-    const dialogRef = this.dialog.open(ContactComponent, { width: '600px', autoFocus: false });
+    const dialogRef = this.dialog.open(ContactComponent, { width: '500px', autoFocus: false });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-    });
+    // dialogRef.afterClosed().subscribe(result => {
+    //   console.log(`Dialog result: ${result}`);
+    // });
   }
+
 }

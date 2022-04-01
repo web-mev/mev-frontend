@@ -1,5 +1,5 @@
 <span class="headerSpan">
-  <div class="dialogTitle">Send us your feedback! </div>
+  <div class="dialogTitle">Contact Us</div>
   <div class="closeDialogButton" mat-dialog-close>
     <button mat-icon-button>
       <mat-icon>close</mat-icon>
@@ -7,12 +7,15 @@
   </div>
 </span>
 
+<div class="dialogContent">Please let us know about any comments or issues you have to improve WebMeV. If you have
+  specific analyses you would like to see, let us know that too!</div>
+
 <form (ngSubmit)="onSubmit($event)">
   <mat-form-field class="inputField" appearance="outline">
-    <mat-label>How can we improve?</mat-label>
-    <textarea name="comments" matInput rows="7"></textarea>
+    <mat-label>Message</mat-label>
+    <textarea name="comments" matInput rows="7" value=" "></textarea>
   </mat-form-field>
   <div class="submitBtnContainer">
-    <button type="submit" [mat-dialog-close]="true" mat-raised-button color="accent">Submit</button>
+    <button type="submit" [mat-dialog-close]="true" mat-raised-button color="accent">Send</button>
   </div>
 </form>

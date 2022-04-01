@@ -34,6 +34,7 @@ import { MatTreeModule } from '@angular/material/tree';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatRadioModule } from '@angular/material/radio';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 import {
   FontAwesomeModule,
@@ -97,7 +98,8 @@ const MatModules = [
   MatButtonToggleModule,
   MatTreeModule,
   MatSidenavModule,
-  MatRadioModule
+  MatRadioModule,
+  MatFormFieldModule,
 ];
 
 @NgModule({

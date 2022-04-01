@@ -9,6 +9,7 @@ import cola from 'cytoscape-cola';
 import coseBilkent from 'cytoscape-cose-bilkent';
 import cise from 'cytoscape-cise';
 import layoutUtilities from 'cytoscape-layout-utilities';
+import { saveAs } from "file-saver";
 
 cytoscape.use(fcose);
 cytoscape.use(cola);
@@ -28,7 +29,6 @@ export class PandaComponent implements OnChanges {
     cy: any;
     nodesArr = [];
     edgeArr = [];
-    // elementsArr = [];
     minEdgeWeight: number = 100;
     maxEdgeWeight: number = 0;
     isLoading: boolean = false;
@@ -90,8 +90,6 @@ export class PandaComponent implements OnChanges {
     ) { }
 
     ngOnChanges(): void {
-        // this.windowWidth = window.innerWidth
-        // this.windowWidth = 4000
         this.requestData();
     }
 
@@ -162,7 +160,7 @@ export class PandaComponent implements OnChanges {
             } else {
                 this.size = "small";
             }
-            
+
             let errorMessage = "The current number of genes is more than Cytoscape can handle. Please lower the number of Layers or Children and try again."
             this.nodesArr.length > 1000 ? this.tooManyNodes(errorMessage) : this.render();
         })
@@ -187,7 +185,7 @@ export class PandaComponent implements OnChanges {
     onRadioChangeLayout(layout) {
         this.currLayout = layout;
         this.layoutName = layout.toLowerCase();
-        if(this.nodesArr.length > 0) this.render();
+        if (this.nodesArr.length > 0) this.render();
     }
 
     onDropDownChange(value, dropdown) {
@@ -224,6 +222,28 @@ export class PandaComponent implements OnChanges {
     tooManyNodes(message) {
         this.notificationService.warn(message);
         this.displayGraph = false;
+    }
+
+    onSaveImagePNG() {
+        let b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
+            const byteCharacters = atob(b64Data);
+            const byteArrays = [];
+            for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                const slice = byteCharacters.slice(offset, offset + sliceSize);
+                const byteNumbers = new Array(slice.length);
+                for (let i = 0; i < slice.length; i++) {
+                    byteNumbers[i] = slice.charCodeAt(i);
+                }
+                const byteArray = new Uint8Array(byteNumbers);
+                byteArrays.push(byteArray);
+            }
+            const blob = new Blob(byteArrays, { type: contentType });
+            return blob;
+        }
+        let b64key = 'base64,';
+        let b64 = this.cy.png().substring(this.cy.png().indexOf(b64key) + b64key.length);
+        let imgBlob = b64toBlob(b64, 'image/png');
+        saveAs(imgBlob, 'cytoscape.png');
     }
 
     render() {
@@ -288,15 +308,6 @@ export class PandaComponent implements OnChanges {
             layout:
             {
                 name: this.layoutName,
-                // edgeElasticity: (edge) => {
-                //     // console.log("edge: ", edge.data().edge_weight)
-                //     return edge.data().edge_weight * 40
-                // },
-                // idealEdgeLength: function (edge) {
-                //     // Default is: 10
-                //     // Instead, base it on "weight"
-                //     return edge.data().edge_weight * 50
-                // },
             },
         })
     }

@@ -6,7 +6,8 @@ import { Router } from '@angular/router';
 import { BnNgIdleService } from 'bn-ng-idle';
 import { AuthenticationService } from '@app/core/authentication/authentication.service';
 import { User } from '@app/_models/user';
-
+import { MatDialog } from '@angular/material/dialog';
+import { ContactComponent } from '@app/features/contact-dialog/contact.component';
 import { environment as env } from '../../environments/environment';
 
 import {
@@ -36,7 +37,7 @@ export class AppComponent implements OnInit {
   envName = env.envName;
   version = env.versions.app;
   year = new Date().getFullYear();
-  logo= new URL('../../assets/logo.png', import.meta.url)
+  logo = new URL('../../assets/logo.png', import.meta.url)
   languages = ['en'];
   sessionTimeout = 60 * 15; // 15 minutes
   navigation = [
@@ -60,7 +61,8 @@ export class AppComponent implements OnInit {
     private storageService: LocalStorageService,
     private router: Router,
     private bnIdle: BnNgIdleService,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    public dialog: MatDialog
   ) {
     this.authenticationService.currentUser.subscribe(x => {
       this.isAuthenticated = x !== null;
@@ -113,4 +115,9 @@ export class AppComponent implements OnInit {
   onLanguageSelect({ value: language }) {
     this.store.dispatch(actionSettingsChangeLanguage({ language }));
   }
+
+  openDialog() {
+    const dialogRef = this.dialog.open(ContactComponent, { width: '500px', autoFocus: false });
+  }
+
 }

@@ -80,7 +80,6 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("nav side menu: ", this.navigationSideMenu)
     this.socialUser = JSON.parse(localStorage.getItem('socialUser'));
 
     // listen for the user’s idleness
@@ -119,10 +118,6 @@ export class AppComponent implements OnInit {
 
   openDialog() {
     const dialogRef = this.dialog.open(ContactComponent, { width: '500px', autoFocus: false });
-
-    // dialogRef.afterClosed().subscribe(result => {
-    //   console.log(`Dialog result: ${result}`);
-    // });
   }
 
 }

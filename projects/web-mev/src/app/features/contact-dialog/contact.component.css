@@ -24,7 +24,6 @@
 .closeDialogButton {
     margin: 10px 10px 0 0;
     color: white;
-    background-color: #1DA1F2 !important;
 }
 .closeDialogButton:hover{
     opacity: .75;

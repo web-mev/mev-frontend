@@ -22,9 +22,6 @@
 }
 
 .closeDialogButton {
-    display: flex;
-    justify-content: flex-end;
-    width: 15%;
     margin: 10px 10px 0 0;
     color: white;
 }

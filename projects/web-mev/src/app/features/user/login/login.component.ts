@@ -129,8 +129,8 @@ export class LoginComponent implements OnInit {
     }
     const socialPlatformProvider = GoogleLoginProvider.PROVIDER_ID;
     this.loading = true;
+    localStorage.removeItem('hasCodeRunBefore');
     this.socialAuthService.initState.subscribe(value => {
-      localStorage.removeItem('hasCodeRunBefore');
       this.socialAuthService.signIn(socialPlatformProvider).then(userData => {
         // Google returns user data. Send user token to the server
         localStorage.setItem('socialUser', JSON.stringify(userData));

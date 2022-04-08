@@ -79,6 +79,12 @@ export class LoginComponent implements OnInit {
 
     // get return url from route parameters or default to '/'
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+
+    // Temporary fix for Google login error. Reloads the page on the first visit to have Google api ready.
+    if (!('hasCodeRunBefore' in localStorage)) {
+      window.location.reload();
+      localStorage.hasCodeRunBefore = true;
+    }
   }
 
   /**
@@ -123,12 +129,13 @@ export class LoginComponent implements OnInit {
         .googleSignInExternal(userData.authToken)
         .pipe(finalize(() => (this.loading = false)))
         .subscribe(result => {
+          localStorage.removeItem('hasCodeRunBefore');
           this.router.navigate(['/workarea']);
         });
     }, err => {
       this.loading = false;
       let error_msg = err['error'];
-      if(error_msg !== 'popup_closed_by_user'){
+      if (error_msg !== 'popup_closed_by_user') {
         this.notificationService.error('Experienced an error with Google login. If this persists, please contact the WebMeV team.');
       }
     });

@@ -129,7 +129,7 @@ export class LoginComponent implements OnInit {
         .googleSignInExternal(userData.authToken)
         .pipe(finalize(() => (this.loading = false)))
         .subscribe(result => {
-          localStorage.removeItem('hasCodeRunBefore');
+          // localStorage.removeItem('hasCodeRunBefore');
           this.router.navigate(['/workarea']);
         });
     }, err => {

@@ -120,17 +120,17 @@ export class LoginComponent implements OnInit {
    * Method to sign out with Google
    */
   signInWithGoogle(): void {
+    //This reload is needed because Sentry interupts the initial one. Google login error. Can be removed later.
     if (!('hasCodeRunBefore' in localStorage)) {
-      console.log("window has been reloaded")
+      console.log("Login window has been reloaded")
       window.location.reload();
       localStorage.hasCodeRunBefore = true;
       this.signInWithGoogle();
     }
-
     const socialPlatformProvider = GoogleLoginProvider.PROVIDER_ID;
     this.loading = true;
     this.socialAuthService.initState.subscribe(value => {
-      console.log('passes the init state.')
+      localStorage.removeItem('hasCodeRunBefore');
       this.socialAuthService.signIn(socialPlatformProvider).then(userData => {
         // Google returns user data. Send user token to the server
         localStorage.setItem('socialUser', JSON.stringify(userData));
@@ -138,15 +138,14 @@ export class LoginComponent implements OnInit {
           .googleSignInExternal(userData.authToken)
           .pipe(finalize(() => (this.loading = false)))
           .subscribe(result => {
-            localStorage.removeItem('hasCodeRunBefore');
             this.router.navigate(['/workarea']);
           });
       }, err => {
-        localStorage.removeItem('hasCodeRunBefore');
         this.loading = false;
         let error_msg = err['error'];
         if (error_msg !== 'popup_closed_by_user') {
-          this.notificationService.error('Experienced an error with Google login. If this persists, please contact the WebMeV team.');
+          // this.notificationService.error('Experienced an error with Google login. If this persists, please contact the WebMeV team.');
+          this.notificationService.error('Experienced an error with Google login. Refresh the Login page and try again. If this persists, please contact the WebMeV team.');
         }
       });
     })

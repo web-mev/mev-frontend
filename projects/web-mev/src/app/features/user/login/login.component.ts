@@ -129,13 +129,14 @@ export class LoginComponent implements OnInit {
         .googleSignInExternal(userData.authToken)
         .pipe(finalize(() => (this.loading = false)))
         .subscribe(result => {
-          // localStorage.removeItem('hasCodeRunBefore');
+          localStorage.removeItem('hasCodeRunBefore');
           this.router.navigate(['/workarea']);
         });
     }, err => {
       this.loading = false;
       let error_msg = err['error'];
       if (error_msg !== 'popup_closed_by_user') {
+        localStorage.removeItem('hasCodeRunBefore');
         this.notificationService.error('Experienced an error with Google login. If this persists, please contact the WebMeV team.');
       }
     });

@@ -120,6 +120,13 @@ export class LoginComponent implements OnInit {
    * Method to sign out with Google
    */
   signInWithGoogle(): void {
+    if (!('hasCodeRunBefore' in localStorage)) {
+      console.log("window has been reloaded")
+      window.location.reload();
+      localStorage.hasCodeRunBefore = true;
+      this.signInWithGoogle();
+    }
+
     const socialPlatformProvider = GoogleLoginProvider.PROVIDER_ID;
     this.loading = true;
     this.socialAuthService.initState.subscribe(value => {

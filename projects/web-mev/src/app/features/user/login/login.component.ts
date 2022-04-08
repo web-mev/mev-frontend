@@ -122,24 +122,28 @@ export class LoginComponent implements OnInit {
   signInWithGoogle(): void {
     const socialPlatformProvider = GoogleLoginProvider.PROVIDER_ID;
     this.loading = true;
-    this.socialAuthService.signIn(socialPlatformProvider).then(userData => {
-      // Google returns user data. Send user token to the server
-      localStorage.setItem('socialUser', JSON.stringify(userData));
-      this.authenticationService
-        .googleSignInExternal(userData.authToken)
-        .pipe(finalize(() => (this.loading = false)))
-        .subscribe(result => {
-          localStorage.removeItem('hasCodeRunBefore');
-          this.router.navigate(['/workarea']);
-        });
-    }, err => {
-      this.loading = false;
-      let error_msg = err['error'];
-      if (error_msg !== 'popup_closed_by_user') {
+    this.socialAuthService.initState.subscribe(value => {
+      console.log('passes the init state.')
+      this.socialAuthService.signIn(socialPlatformProvider).then(userData => {
+        // Google returns user data. Send user token to the server
+        localStorage.setItem('socialUser', JSON.stringify(userData));
+        this.authenticationService
+          .googleSignInExternal(userData.authToken)
+          .pipe(finalize(() => (this.loading = false)))
+          .subscribe(result => {
+            localStorage.removeItem('hasCodeRunBefore');
+            this.router.navigate(['/workarea']);
+          });
+      }, err => {
         localStorage.removeItem('hasCodeRunBefore');
-        this.notificationService.error('Experienced an error with Google login. If this persists, please contact the WebMeV team.');
-      }
-    });
+        this.loading = false;
+        let error_msg = err['error'];
+        if (error_msg !== 'popup_closed_by_user') {
+          this.notificationService.error('Experienced an error with Google login. If this persists, please contact the WebMeV team.');
+        }
+      });
+    })
+
   }
 
   /**

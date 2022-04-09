@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { AuthenticationService } from '@app/core/authentication/authentication.service';
 import { UserService } from '@app/core/user/user.service';
 import { NotificationService } from '@core/core.module';
@@ -81,9 +81,11 @@ export class LoginComponent implements OnInit {
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
 
     // Temporary fix for Google login error. Reloads the page on the first visit to have Google api ready.
-    if (!('hasCodeRunBefore' in localStorage)) {
+    let currTime = new Date().getMinutes();
+    if (localStorage['hasCodeRunBefore'] != currTime) {
       window.location.reload();
-      localStorage.hasCodeRunBefore = true;
+      let time = new Date().getMinutes();
+      localStorage.hasCodeRunBefore = time;
     }
   }
 
@@ -120,11 +122,13 @@ export class LoginComponent implements OnInit {
    * Method to sign out with Google
    */
   signInWithGoogle(): void {
-    //This reload is needed because Sentry interupts the initial one. Google login error. Can be removed later.
-    if (!('hasCodeRunBefore' in localStorage)) {
+    //This reload is needed because Sentry interupts the initial one. Google login error. Can be removed later
+    let currTime = new Date().getMinutes()
+    if (localStorage['hasCodeRunBefore'] != currTime) {
       console.log("Login window has been reloaded")
       window.location.reload();
-      localStorage.hasCodeRunBefore = true;
+      let time = new Date().getMinutes();
+      localStorage.hasCodeRunBefore = time;
       this.signInWithGoogle();
     }
     const socialPlatformProvider = GoogleLoginProvider.PROVIDER_ID;

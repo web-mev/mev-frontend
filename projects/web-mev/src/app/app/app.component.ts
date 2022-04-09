@@ -74,7 +74,9 @@ export class AppComponent implements OnInit {
 
   onLogoutClick() {
     this.authenticationService.logout();
-    this.router.navigate(['/login']);
+    // this.router.navigate(['/login']);
+    //test fix for google login error
+    this.router.navigate(['/about']);
   }
 
   ngOnInit(): void {

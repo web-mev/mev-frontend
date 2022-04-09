@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 import { ROUTE_ANIMATIONS_ELEMENTS } from '../../../core/core.module';
-import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 
 import { SocialAuthService } from 'angularx-social-login';
 
@@ -19,11 +19,10 @@ export class AboutComponent implements OnInit {
   routeAnimationsElements = ROUTE_ANIMATIONS_ELEMENTS;
   private twitter: any;
 
-  // constructor(private _router: Router) {}
   constructor(
     private _router: Router,
     private socialAuthService: SocialAuthService,
-  ) {}
+  ) { }
 
   /**
    * Initialize twitter widget
@@ -38,7 +37,7 @@ export class AboutComponent implements OnInit {
   initTwitterWidget() {
     this.twitter = this._router.events.subscribe(val => {
       if (val instanceof NavigationEnd) {
-        (<any>window).twttr = (function(d, s, id) {
+        (<any>window).twttr = (function (d, s, id) {
           let js: any,
             fjs = d.getElementsByTagName(s)[0],
             t = (<any>window).twttr || {};
@@ -49,7 +48,7 @@ export class AboutComponent implements OnInit {
           fjs.parentNode.insertBefore(js, fjs);
 
           t._e = [];
-          t.ready = function(f: any) {
+          t.ready = function (f: any) {
             t._e.push(f);
           };
 

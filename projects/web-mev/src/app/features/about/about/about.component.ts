@@ -1,7 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 import { ROUTE_ANIMATIONS_ELEMENTS } from '../../../core/core.module';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+
+import { SocialAuthService } from 'angularx-social-login';
 
 /**
  * About component
@@ -17,7 +19,11 @@ export class AboutComponent implements OnInit {
   routeAnimationsElements = ROUTE_ANIMATIONS_ELEMENTS;
   private twitter: any;
 
-  constructor(private _router: Router) {}
+  // constructor(private _router: Router) {}
+  constructor(
+    private _router: Router,
+    private socialAuthService: SocialAuthService,
+  ) {}
 
   /**
    * Initialize twitter widget

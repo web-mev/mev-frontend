@@ -83,9 +83,9 @@ export class LoginComponent implements OnInit {
     // Temporary fix for Google login error. Reloads the page on the first visit to have Google api ready.
     let currTime = new Date().getMinutes();
     if (localStorage['hasCodeRunBefore'] != currTime) {
-      window.location.reload();
       let time = new Date().getMinutes();
       localStorage.hasCodeRunBefore = time;
+      window.location.reload();
     }
   }
 
@@ -125,12 +125,12 @@ export class LoginComponent implements OnInit {
     //This reload is needed because Sentry interupts the initial one. Google login error. Can be removed later
     let currTime = new Date().getMinutes()
     if (localStorage['hasCodeRunBefore'] != currTime) {
-      console.log("Login window has been reloaded")
-      window.location.reload();
       let time = new Date().getMinutes();
       localStorage.hasCodeRunBefore = time;
+      window.location.reload();
       this.signInWithGoogle();
     }
+    
     const socialPlatformProvider = GoogleLoginProvider.PROVIDER_ID;
     this.loading = true;
     localStorage.removeItem('hasCodeRunBefore');

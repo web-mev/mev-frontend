@@ -162,7 +162,6 @@ export class LoginComponent implements OnInit {
   signOut(): void {
     this.socialAuthService.signOut().then(data => {
       // debugger;
-      // change to about page to fix login error
       this.router.navigate([`/login`]);
     });
   }

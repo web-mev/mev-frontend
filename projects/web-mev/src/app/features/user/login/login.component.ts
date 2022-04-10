@@ -117,7 +117,6 @@ export class LoginComponent implements OnInit {
   signInWithGoogle(): void {
     const socialPlatformProvider = GoogleLoginProvider.PROVIDER_ID;
     this.loading = true;
-    localStorage.removeItem('hasCodeRunBefore');
     this.socialAuthService.signIn(socialPlatformProvider).then(userData => {
       // Google returns user data. Send user token to the server
       localStorage.setItem('socialUser', JSON.stringify(userData));
@@ -134,7 +133,6 @@ export class LoginComponent implements OnInit {
         this.notificationService.error('Experienced an error with Google login. If this persists, please contact the WebMeV team.');
       }
     });
-
   }
 
   /**

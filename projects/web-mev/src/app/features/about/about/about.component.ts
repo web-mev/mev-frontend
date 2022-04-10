@@ -3,6 +3,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ROUTE_ANIMATIONS_ELEMENTS } from '../../../core/core.module';
 import { Router, NavigationEnd } from '@angular/router';
 
+//Used to load Google Client Library
 import { SocialAuthService } from 'angularx-social-login';
 
 /**

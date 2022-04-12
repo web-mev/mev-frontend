@@ -8,7 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 @Component({
   selector: 'gtex-rnaseq-explorer',
   templateUrl: './gtex-rnaseq.component.html',
-  styleUrls: ['../gdc_base/gdc-base.component.scss', './gtex-rnaseq.component.scss'],
+  styleUrls: ['./gtex-rnaseq.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GtexRnaseqComponent extends GtexComponent implements OnInit {

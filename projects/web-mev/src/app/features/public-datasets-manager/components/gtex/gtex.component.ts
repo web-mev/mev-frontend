@@ -17,7 +17,6 @@ import { forkJoin } from 'rxjs';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GtexComponent {
-
     types_list = [];
     type_count_dict = {};
     tissue_list = [];
@@ -37,7 +36,6 @@ export class GtexComponent {
 
 
     fetchData(datasetTag: string, name_map_key: string): void {
-        console.log("fetching from gtex component")
         this.viewMode = "byTissue";
         let $observable_dict = {};
         let types_url = datasetTag + '/?q=*:*&facet=on&facet.field=tissue&rows=0'
@@ -138,7 +136,6 @@ export class GtexComponent {
         // and hence the request for dataset creation will be incomplete/invalid.
         forkJoin($observable_dict).subscribe(
             results => {
-
                 let datasetName = results['output_name'];
                 delete results['output_name'];
 
@@ -176,7 +173,6 @@ export class GtexComponent {
                     'filters': filter_payload,
                     'output_name': datasetName
                 };
-                console.log("final payload: ", final_payload)
                 this.isWaiting = true;
                 this.cdRef.markForCheck();
                 this.pdService.createDataset(datasetTag, final_payload).subscribe(

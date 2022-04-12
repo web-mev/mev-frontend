@@ -13,7 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
   @Component({
     selector: 'tcga-rnaseq-explorer',
     templateUrl: './tcga-rnaseq.component.html',
-    styleUrls: ['../gdc_base/gdc-base.component.scss', './tcga-rnaseq.component.scss'],
+    styleUrls: ['./tcga-rnaseq.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
   })
   export class TcgaRnaseqComponent extends GdcRnaseqComponent implements OnInit{
@@ -30,7 +30,6 @@ import { MatDialog } from '@angular/material/dialog';
       ) {
         super(cdRef, pdService, notificationService, fileService, dialog);
       }
-
 
     ngOnInit(): void {
         this.fetchData(this.datasetTag, this.name_map_key);

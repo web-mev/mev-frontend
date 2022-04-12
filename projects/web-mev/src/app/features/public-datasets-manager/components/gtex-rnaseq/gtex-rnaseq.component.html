@@ -35,7 +35,7 @@
             <div class="italicized">{{t.readable_name}}</div>
             <div>Number of samples: {{t.count}}</div>
         </mat-card-content>
-        <mat-card-footer>
+        <mat-card-footer class="checkBoxContainer">
             <mat-checkbox (change)="checkboxSelection($event, t.name)"></mat-checkbox>
         </mat-card-footer>
     </mat-card>

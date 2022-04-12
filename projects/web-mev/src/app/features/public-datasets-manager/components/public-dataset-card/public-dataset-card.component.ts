@@ -7,7 +7,6 @@ import { PublicDataset } from '../../models/public-dataset';
   styleUrls: ['./public-dataset-card.component.scss']
 })
 export class PublicDatasetCardComponent implements OnInit {
-
   @Input() pd?: PublicDataset;
   @Output() chooseDatasetEvent = new EventEmitter<string>();
 
@@ -17,8 +16,6 @@ export class PublicDatasetCardComponent implements OnInit {
   }
 
   viewDataset(datasetTag: string){
-    console.log('view ' + datasetTag);
     this.chooseDatasetEvent.emit(datasetTag);
   }
-
 }

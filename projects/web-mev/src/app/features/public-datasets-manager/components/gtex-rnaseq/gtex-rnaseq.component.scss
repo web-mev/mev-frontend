@@ -2,3 +2,84 @@
     color: rgba(0,0,0,.87);
     background: #fff;
 }
+
+.checkBoxContainer{
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+.header {
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.explain {
+  margin-top:20px;
+}
+
+.mat-header-cell {
+    background: #eeeeee;
+  }
+  
+  .mat-cell a {
+    color: #03a9f4;
+    text-decoration: underline;
+  }
+  
+  .no-results {
+    font-family: Roboto, 'Helvetica Neue', sans-serif;
+    font-size: 12px;
+  }
+  
+  .cardList {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+  
+  .pd-card .italicized{
+    font-style: italic;
+  }
+
+  .cardList > * {
+    box-sizing: border-box;
+  }
+  
+  .cardList__item {
+    margin: 15px;
+    flex: 0 1 calc(20.0% - 32px);
+  }
+
+  .mat-card-footer {
+    padding: 7px;
+    text-align: right;
+  
+    .mat-icon {
+      margin-right: 10px;
+      cursor: pointer;
+  
+      &:hover {
+        color: #666;
+      }
+    }
+  }
+  
+  @media screen and (max-width: 959px) {
+    .cardList__item {
+      flex: 0 1 calc(50% - 32px);
+    }
+  }
+  
+  @media screen and (max-width: 599px) {
+    .cardList {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+  }
+
+  .btn-panel {
+      margin:20px 0 20px 0;
+  }

@@ -7,6 +7,8 @@ import { PublicDatasetCardComponent } from './components/public-dataset-card/pub
 import { TcgaRnaseqComponent } from './components/tcga-rnaseq/tcga-rnaseq.component';
 import { TargetRnaseqComponent } from './components/target-rnaseq/target-rnaseq.component';
 import { GtexRnaseqComponent } from './components/gtex-rnaseq/gtex-rnaseq.component';
+import { GtexComponent } from './components/gtex/gtex.component'
+
 import { SharedModule } from '@app/shared/shared.module';
 import { PublicDatasetsComponent } from './components/public-datasets-container/public-datasets.component'
 import { PublicDatasetExportNameDialogComponent } from './components/export-name-dialog/export-name-dialog.component';
@@ -19,6 +21,7 @@ import { PublicDatasetExportNameDialogComponent } from './components/export-name
     TcgaRnaseqComponent,
     TargetRnaseqComponent,
     GtexRnaseqComponent,
+    GtexComponent,
     PublicDatasetExportNameDialogComponent
   ],
   exports: [
@@ -26,4 +29,4 @@ import { PublicDatasetExportNameDialogComponent } from './components/export-name
   ],
   imports: [CommonModule, PublicDatasetsManagerRoutingModule, SharedModule]
 })
-export class PublicDatasetsManagerModule {}
+export class PublicDatasetsManagerModule { }

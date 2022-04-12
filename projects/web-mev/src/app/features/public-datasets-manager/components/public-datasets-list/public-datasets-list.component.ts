@@ -38,7 +38,6 @@ export class PublicDatasetsListComponent implements OnInit {
   }
 
   chooseDataset(datasetTag: string) {
-    console.log('emit from pd list component: '+ datasetTag);
     this.datasetSelectedEvent.emit(datasetTag);
   }
 

@@ -13,13 +13,8 @@
 </p>
 
 <div class="btn-panel">
-    <mat-button-toggle-group #viewMode="matButtonToggleGroup" value="byTissue" (change)="onTypeToggle(viewMode.value)">
-        <!-- <mat-button-toggle value="byType" aria-label="View by GTEX type">
-        GTEX types
-        </mat-button-toggle> -->
-        <mat-button-toggle value="byTissue" aria-label="View by tissue">
-            Tissues
-        </mat-button-toggle>
+    <mat-button-toggle-group #viewMode="matButtonToggleGroup" value="byTissue">
+        <mat-button-toggle id="tissueButton" value="byTissue" aria-label="View by tissue">Tissues</mat-button-toggle>
     </mat-button-toggle-group>
 </div>
 

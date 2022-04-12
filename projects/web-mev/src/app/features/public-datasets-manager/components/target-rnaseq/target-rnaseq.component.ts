@@ -13,7 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
   @Component({
     selector: 'target-rnaseq-explorer',
     templateUrl: './target-rnaseq.component.html',
-    styleUrls: ['../gdc_base/gdc-base.component.scss','./target-rnaseq.component.scss'],
+    styleUrls: ['./target-rnaseq.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
   })
   export class TargetRnaseqComponent extends GdcRnaseqComponent implements OnInit{
@@ -29,7 +29,6 @@ import { MatDialog } from '@angular/material/dialog';
       ) {
         super(cdRef, pdService, notificationService, fileService, dialog);
       }
-
 
     ngOnInit(): void {
         this.fetchData(this.datasetTag, this.name_map_key);

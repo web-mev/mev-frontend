@@ -1,10 +1,10 @@
 <div class="header">
-    Browse and create TCGA RNA-seq data
+    Browse and create GTEX RNA-seq data
 </div>
 <mev-spinner-overlay *ngIf="isWaiting"></mev-spinner-overlay>
 
 <p class="explain">
-    Select based on either the TCGA project or by tissue type.
+    Select based on either the GTEX project or by tissue type.
 </p>
 
 <p>After selecting one or more
@@ -13,13 +13,8 @@
 </p>
 
 <div class="btn-panel">
-    <mat-button-toggle-group #viewMode="matButtonToggleGroup" value="byType" (change)="onTypeToggle(viewMode.value)">
-        <mat-button-toggle value="byType" aria-label="View by TCGA type">
-            TCGA types
-        </mat-button-toggle>
-        <mat-button-toggle value="byTissue" aria-label="View by tissue">
-            Tissues
-        </mat-button-toggle>
+    <mat-button-toggle-group #viewMode="matButtonToggleGroup" value="byTissue">
+        <mat-button-toggle id="tissueButton" value="byTissue" aria-label="View by tissue">Tissues</mat-button-toggle>
     </mat-button-toggle-group>
 </div>
 
@@ -30,20 +25,6 @@
         <span *ngIf="totalSelectedSamples === 0">Create dataset</span>
         <span *ngIf="totalSelectedSamples > 0">Create dataset with {{totalSelectedSamples}} samples</span>
     </button>
-</div>
-
-<div *ngIf="viewMode.value === 'byType'" class="cardList">
-    <mat-card *ngFor="let t of types_list" class="cardList__item card pd-card" matRipple
-        matRippleColor="rgba(158, 158, 158, 0.22)">
-        <mat-card-title class="card-title">{{t.name}}</mat-card-title>
-        <mat-card-content>
-            <div class="italicized">{{t.readable_name}}</div>
-            <div>Number of samples: {{t.count}}</div>
-        </mat-card-content>
-        <mat-card-footer class="checkBoxContainer">
-            <mat-checkbox (change)="checkboxSelection($event, t.name)"></mat-checkbox>
-        </mat-card-footer>
-    </mat-card>
 </div>
 
 <div *ngIf="viewMode.value === 'byTissue'" class="cardList">

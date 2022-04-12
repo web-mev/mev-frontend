@@ -1,0 +1,47 @@
+<div class="header">
+    Browse and create GTEX RNA-seq data
+</div>
+<mev-spinner-overlay *ngIf="isWaiting"></mev-spinner-overlay>
+
+<p class="explain">
+    Select based on either the GTEX project or by tissue type.
+</p>
+
+<p>After selecting one or more
+    groups, click the "Create dataset" button to create a new count matrix and annotation
+    file.
+</p>
+
+<div class="btn-panel">
+    <mat-button-toggle-group #viewMode="matButtonToggleGroup" value="byTissue" (change)="onTypeToggle(viewMode.value)">
+        <!-- <mat-button-toggle value="byType" aria-label="View by GTEX type">
+        GTEX types
+        </mat-button-toggle> -->
+        <mat-button-toggle value="byTissue" aria-label="View by tissue">
+            Tissues
+        </mat-button-toggle>
+    </mat-button-toggle-group>
+</div>
+
+<div class="btn-panel">
+    <button mat-raised-button color="accent" [disabled]="selectedNames.length === 0"
+        (click)="createDataset(viewMode.value)">
+        <mat-icon aria-label="Create dataset">add</mat-icon>
+        <span *ngIf="totalSelectedSamples === 0">Create dataset</span>
+        <span *ngIf="totalSelectedSamples > 0">Create dataset with {{totalSelectedSamples}} samples</span>
+    </button>
+</div>
+
+<div *ngIf="viewMode.value === 'byTissue'" class="cardList">
+    <mat-card *ngFor="let t of tissue_list" class="cardList__item card pd-card" matRipple
+        matRippleColor="rgba(158, 158, 158, 0.22)">
+        <mat-card-title class="card-title">{{t.name}}</mat-card-title>
+        <mat-card-content>
+            <div class="italicized">{{t.readable_name}}</div>
+            <div>Number of samples: {{t.count}}</div>
+        </mat-card-content>
+        <mat-card-footer>
+            <mat-checkbox (change)="checkboxSelection($event, t.name)"></mat-checkbox>
+        </mat-card-footer>
+    </mat-card>
+</div>

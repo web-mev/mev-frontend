@@ -30,3 +30,7 @@ mat-slider {
     float: right;
     z-index: 99;
 }
+
+.searchField{
+    width: 50%;
+}

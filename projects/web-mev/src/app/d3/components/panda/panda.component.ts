@@ -11,6 +11,9 @@ import cise from 'cytoscape-cise';
 import layoutUtilities from 'cytoscape-layout-utilities';
 import { saveAs } from "file-saver";
 
+import { COMMA, ENTER, SPACE } from '@angular/cdk/keycodes';
+import { MatChipInputEvent } from '@angular/material/chips';
+
 cytoscape.use(fcose);
 cytoscape.use(cola);
 cytoscape.use(coseBilkent);
@@ -248,12 +251,35 @@ export class PandaComponent implements OnChanges {
         saveAs(imgBlob, 'cytoscape.png');
     }
 
-    onSearch(){
-        console.log("lets start searching.. ", this.searchValue)
-        this.selectedLayers = 2;
-        this.selectedChildren = 3;
-        this.apiAxis = 0; //by genes
-        this.requestData()
+    // onSearch(){
+    //     console.log("lets start searching.. ", this.searchValue)
+    //     this.selectedLayers = 2;
+    //     this.selectedChildren = 3;
+    //     this.apiAxis = 0; //by genes
+    //     this.requestData()
+    // }
+
+    addOnBlur = true;
+    readonly separatorKeysCodes = [ENTER, COMMA, SPACE] as const;
+    searchTerms = [];
+
+    addSearchItem(event: MatChipInputEvent): void {
+        const value = (event.value || '').trim();
+
+        let index = this.searchTerms.indexOf(value);
+        if (value && index === -1) {
+            this.searchTerms.push(value);
+        }
+
+        event.chipInput!.clear();
+    }
+
+    removeSearchItem(term): void {
+        const index = this.searchTerms.indexOf(term);
+
+        if (index >= 0) {
+            this.searchTerms.splice(index, 1);
+        }
     }
 
     render() {

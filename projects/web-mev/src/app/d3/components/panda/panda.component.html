@@ -100,16 +100,22 @@
                 est
                 laborum.
             </p>
-            <mat-form-field class="example-form-field searchField" appearance="outline">
-                <mat-label>Gene Search</mat-label>
-                <input matInput type="text" [(ngModel)]="searchValue" (keydown.enter)="onSearch()">
-                <button matSuffix mat-icon-button (click)="onSearch()">
-                    <mat-icon>search</mat-icon>
-                </button>
+
+            <mat-form-field class="example-chip-list searchField" appearance="outline">
+                <mat-label>Search Terms</mat-label>
+                <mat-chip-list #chipList aria-label="Fruit selection">
+                    <mat-chip *ngFor="let gene of searchTerms" (removed)="removeSearchItem(gene)">
+                        {{gene}}
+                        <button matChipRemove>
+                            <mat-icon>cancel</mat-icon>
+                        </button>
+                    </mat-chip>
+                    <input placeholder="New gene..." [matChipInputFor]="chipList"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+                        (matChipInputTokenEnd)="addSearchItem($event)">
+                </mat-chip-list>
             </mat-form-field>
-            <button id="downloadButton" mat-button (click)="onSaveImagePNG()">
-                <mat-icon>save_alt</mat-icon>
-            </button>
+
 
             <label id="radio-group-axis">Select an Axis: </label>
             <mat-radio-group aria-label="Select an Axis" [(ngModel)]="apiAxis">
@@ -138,6 +144,10 @@
 
             <mat-divider [inset]="true"></mat-divider>
 
+            <button id="downloadButton" mat-button (click)="onSaveImagePNG()">
+                <mat-icon>save_alt</mat-icon>
+            </button>
+            
             <div class="analysis-card__content">
                 <p *ngIf="isLoading === true">Please wait... </p>
                 <div *ngIf="displayGraph" id="cy"></div>

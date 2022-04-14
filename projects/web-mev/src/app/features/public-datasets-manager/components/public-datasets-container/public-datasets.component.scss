@@ -1,10 +1,19 @@
-#go-back{
+#go-back {
     margin-top: 10px;
     margin-bottom: 20px;
     cursor: pointer;
-    color: #03a9f4
+    color: #03a9f4;
 }
 
 .nav__icon {
     vertical-align: bottom;
-  }
+}
+
+.filter-sidenav{
+    width: 300px;
+    background-color: transparent;
+}
+
+.filter-sidenav-content{
+    margin-left: 20px;
+}

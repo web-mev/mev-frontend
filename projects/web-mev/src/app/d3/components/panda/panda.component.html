@@ -4,73 +4,147 @@
 
         <mat-card-title>PANDA: {{ outputs?.job_name }}</mat-card-title>
     </mat-card-header>
-    <mat-card-content class="analysis-card__main">
-        <p class="analysis-card__instruction">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-            ea commodo consequat.
-        </p>
-        <p class="analysis-card__instruction">
-            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
-            laborum.
-        </p>
 
-        <label id="radio-group-axis">Select an Axis: </label>
-        <mat-radio-group aria-label="Select an Axis" [(ngModel)]="apiAxis">
-            <mat-radio-button *ngFor="let options of radioButtonList" [value]="options.axis"
-                (change)="onRadioChangeAxis($event.value)">{{ options.name }}</mat-radio-button>
-        </mat-radio-group>
-        <br>
-        <br>
-        <mat-form-field appearance="outline">
-            <mat-label>Number of Layers</mat-label>
-            <mat-select [(value)]="selectedLayers" (selectionChange)="onDropDownChange($event.value, 'layers')">
-                <mat-option [value]="option" *ngFor="let option of layersList">{{ option }}</mat-option>
-            </mat-select>
-        </mat-form-field>
-        <br>
-        <mat-form-field appearance="outline">
-            <mat-label>Number of Children</mat-label>
-            <mat-select [(value)]="selectedChildren" (selectionChange)="onDropDownChange($event.value, 'children')">
-                <mat-option [value]="option" *ngFor="let option of childrenList">{{ option }}</mat-option>
-            </mat-select>
-        </mat-form-field>
-        <br>
-        <button mat-raised-button color="accent" (click)="requestData()">Submit</button>
-        <br>
-        <br>
-        <mat-divider [inset]="true"></mat-divider>
+    <mat-tab-group dynamicHeight>
+        <mat-tab>
+            <ng-template mat-tab-label>Top Genes</ng-template>
+            <mat-card-content class="analysis-card__main">
+                <p class="analysis-card__instruction">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+                    et
+                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                    aliquip ex
+                    ea commodo consequat.
+                </p>
+                <p class="analysis-card__instruction">
+                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                    pariatur.
+                    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+                    est
+                    laborum.
+                </p>
 
-        <br>
-        <label id="radio-group-axis">Select Layout: </label>
-        <mat-radio-group aria-label="Select an Axis" [(ngModel)]="currLayout">
-            <mat-radio-button *ngFor="let options of layoutList" [value]="options"
-                (change)="onRadioChangeLayout($event.value)">{{ options }}</mat-radio-button>
-        </mat-radio-group>
-        <br>
-        <br>
-        <div *ngIf="!hideFilter">
-            <label id="radio-group-axis">Minimum Edge Weight: </label>
-            <mat-slider thumbLabel tickInterval="2" step="1" min="0" max="20" aria-label="units"
-                (change)="updateSlider($event)">
-            </mat-slider>
-            <button mat-raised-button color="accent" (click)="filterEdges()">Filter</button>
-        </div>
+                <label id="radio-group-axis">Select an Axis: </label>
+                <mat-radio-group aria-label="Select an Axis" [(ngModel)]="apiAxis">
+                    <mat-radio-button *ngFor="let options of radioButtonList" [value]="options.axis"
+                        (change)="onRadioChangeAxis($event.value)">{{ options.name }}</mat-radio-button>
+                </mat-radio-group>
+                <br>
+                <br>
+                <mat-form-field appearance="outline">
+                    <mat-label>Number of Layers</mat-label>
+                    <mat-select [(value)]="selectedLayers" (selectionChange)="onDropDownChange($event.value, 'layers')">
+                        <mat-option [value]="option" *ngFor="let option of layersList">{{ option }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <br>
+                <mat-form-field appearance="outline">
+                    <mat-label>Number of Children</mat-label>
+                    <mat-select [(value)]="selectedChildren"
+                        (selectionChange)="onDropDownChange($event.value, 'children')">
+                        <mat-option [value]="option" *ngFor="let option of childrenList">{{ option }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <br>
+                <button mat-raised-button color="accent" (click)="requestData()">Submit</button>
+                <br>
+                <br>
+                <mat-divider [inset]="true"></mat-divider>
 
-        <!-- <h1>Nodes: {{nodesArr.length}}</h1> -->
-        <br>
-        <br>
+                <br>
+                <label id="radio-group-axis">Select Layout: </label>
+                <mat-radio-group aria-label="Select an Axis" [(ngModel)]="currLayout">
+                    <mat-radio-button *ngFor="let options of layoutList" [value]="options"
+                        (change)="onRadioChangeLayout($event.value)">{{ options }}</mat-radio-button>
+                </mat-radio-group>
+                <br>
+                <br>
+                <div *ngIf="!hideFilter">
+                    <label id="radio-group-axis">Minimum Edge Weight: </label>
+                    <mat-slider thumbLabel tickInterval="2" step="1" min="0" max="20" aria-label="units"
+                        (change)="updateSlider($event)">
+                    </mat-slider>
+                    <button mat-raised-button color="accent" (click)="filterEdges()">Filter</button>
+                </div>
 
-        <button id="downloadButton" mat-button (click)="onSaveImagePNG()">
-            <mat-icon>save_alt</mat-icon>
-        </button>
+                <!-- <h1>Nodes: {{nodesArr.length}}</h1> -->
+                <br>
+                <br>
 
-        <mat-divider [inset]="true"></mat-divider>
+                <button id="downloadButton" mat-button (click)="onSaveImagePNG()">
+                    <mat-icon>save_alt</mat-icon>
+                </button>
 
-        <div class="analysis-card__content">
-            <p *ngIf="isLoading === true">Please wait... </p>
-            <div *ngIf="displayGraph" id="cy"></div>
-        </div>
-    </mat-card-content>
+                <mat-divider [inset]="true"></mat-divider>
+
+                <div class="analysis-card__content">
+                    <p *ngIf="isLoading === true">Please wait... </p>
+                    <div *ngIf="displayGraph" id="cy"></div>
+                </div>
+            </mat-card-content>
+        </mat-tab>
+        <mat-tab>
+            <ng-template mat-tab-label>By Genes</ng-template>
+            <br>
+            <p class="analysis-card__instruction">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+                et
+                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                aliquip ex
+                ea commodo consequat.
+            </p>
+            <p class="analysis-card__instruction">
+                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                pariatur.
+                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+                est
+                laborum.
+            </p>
+            <mat-form-field class="example-form-field searchField" appearance="outline">
+                <mat-label>Gene Search</mat-label>
+                <input matInput type="text" [(ngModel)]="searchValue" (keydown.enter)="onSearch()">
+                <button matSuffix mat-icon-button (click)="onSearch()">
+                    <mat-icon>search</mat-icon>
+                </button>
+            </mat-form-field>
+            <button id="downloadButton" mat-button (click)="onSaveImagePNG()">
+                <mat-icon>save_alt</mat-icon>
+            </button>
+
+            <label id="radio-group-axis">Select an Axis: </label>
+            <mat-radio-group aria-label="Select an Axis" [(ngModel)]="apiAxis">
+                <mat-radio-button *ngFor="let options of radioButtonList" [value]="options.axis"
+                    (change)="onRadioChangeAxis($event.value)">{{ options.name }}</mat-radio-button>
+            </mat-radio-group>
+            <br>
+            <br>
+            <mat-form-field appearance="outline">
+                <mat-label>Number of Layers</mat-label>
+                <mat-select [(value)]="selectedLayers" (selectionChange)="onDropDownChange($event.value, 'layers')">
+                    <mat-option [value]="option" *ngFor="let option of layersList">{{ option }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <br>
+            <mat-form-field appearance="outline">
+                <mat-label>Number of Children</mat-label>
+                <mat-select [(value)]="selectedChildren" (selectionChange)="onDropDownChange($event.value, 'children')">
+                    <mat-option [value]="option" *ngFor="let option of childrenList">{{ option }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <br>
+            <button mat-raised-button color="accent" (click)="requestData()">Submit</button>
+            <br>
+            <br>
+
+            <mat-divider [inset]="true"></mat-divider>
+
+            <div class="analysis-card__content">
+                <p *ngIf="isLoading === true">Please wait... </p>
+                <div *ngIf="displayGraph" id="cy"></div>
+            </div>
+
+        </mat-tab>
+    </mat-tab-group>
+
+
 </mat-card>

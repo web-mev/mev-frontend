@@ -1,9 +1,21 @@
 <mat-drawer-container class="filter-container" autosize>
     <mat-drawer #drawer class="filter-sidenav" mode="side" [opened]="chosenDataset.length>0">
-        <p>Auto-resizing sidenav</p>
-        <button type="button" mat-button (click)="drawer.toggle()">
-            Toggle sidenav
-        </button>
+        <button type="button" mat-button (click)="drawer.toggle()">Toggle sidenav</button>
+        <div class="sideContainer">
+            <span>
+                <section class="example-section">
+                    
+                    <ul>
+                        <li><h4>Alcohol History:</h4></li>
+                        <li><mat-checkbox formControlName="pepperoni">Yes</mat-checkbox></li>
+                        <li><mat-checkbox formControlName="extracheese">No</mat-checkbox></li>
+                        <li><mat-checkbox formControlName="mushroom">Not Reported</mat-checkbox></li>
+                    </ul>
+                    
+                  </section>
+            </span>
+        </div>
+
     </mat-drawer>
 
     <div class="filter-sidenav-content">

@@ -9,20 +9,21 @@ import { Component, OnInit } from '@angular/core';
 export class PublicDatasetsComponent implements OnInit {
 
   chosenDataset = '';
+  projectID = 'some test';
 
   constructor(
-  ) {}
+  ) { }
 
   ngOnInit() {
   }
 
-  setDataset(datasetTag: string){
+  setDataset(datasetTag: string) {
     console.log('Set dataset to ' + datasetTag);
     this.chosenDataset = datasetTag;
   }
 
   backToBrowse() {
-      this.chosenDataset = '';
+    this.chosenDataset = '';
   }
 
 }

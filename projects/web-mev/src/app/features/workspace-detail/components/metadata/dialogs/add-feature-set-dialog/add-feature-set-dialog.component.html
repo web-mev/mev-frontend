@@ -23,20 +23,22 @@
                 <mat-label>Add features/genes</mat-label>
                 <mat-chip-list #chipList aria-label="Feature/gene selection">
                   <mat-chip
-                  class="foo"
+                  class=""
                     *ngFor="let feature of featureSet"
                     [selectable]="selectable"
                     [removable]="removable"
                     (removed)="remove(feature)">
                     {{feature}}
-                        <mat-icon class="rm-icon" (click)="remove(feature)" aria-label="remove feature">cancel</mat-icon>
+                        <mat-icon class="rm-icon" (click)="remove(feature)" aria-label="remove feature" matChipRemove>cancel</mat-icon>
                   </mat-chip>
                   <input
                     placeholder="Type name and hit Enter"
-                    matInput
+                    
                     formControlName=individualFeatureName
                     name=individualFeatureName
                     [matChipInputFor]="chipList"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    [matChipInputAddOnBlur]=true
                     (matChipInputTokenEnd)="onAddFeature($event)">
                 </mat-chip-list>
               </mat-form-field>

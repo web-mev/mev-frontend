@@ -11,6 +11,9 @@ import cise from 'cytoscape-cise';
 import layoutUtilities from 'cytoscape-layout-utilities';
 import { saveAs } from "file-saver";
 
+import { COMMA, ENTER, SPACE } from '@angular/cdk/keycodes';
+import { MatChipInputEvent } from '@angular/material/chips';
+
 cytoscape.use(fcose);
 cytoscape.use(cola);
 cytoscape.use(coseBilkent);
@@ -82,7 +85,8 @@ export class PandaComponent implements OnChanges {
             borderWidth: 2,
             edgeWidth: [3, 8]
         }
-    }
+    };
+    searchValue: string = '';
 
     constructor(
         private httpClient: HttpClient,
@@ -163,6 +167,7 @@ export class PandaComponent implements OnChanges {
 
             let errorMessage = "The current number of genes is more than Cytoscape can handle. Please lower the number of Layers or Children and try again."
             this.nodesArr.length > 1000 ? this.tooManyNodes(errorMessage) : this.render();
+            console.log("nodesArr: ", this.nodesArr);
         })
     }
 
@@ -244,6 +249,37 @@ export class PandaComponent implements OnChanges {
         let b64 = this.cy.png().substring(this.cy.png().indexOf(b64key) + b64key.length);
         let imgBlob = b64toBlob(b64, 'image/png');
         saveAs(imgBlob, 'cytoscape.png');
+    }
+
+    // onSearch(){
+    //     console.log("lets start searching.. ", this.searchValue)
+    //     this.selectedLayers = 2;
+    //     this.selectedChildren = 3;
+    //     this.apiAxis = 0; //by genes
+    //     this.requestData()
+    // }
+
+    addOnBlur = true;
+    readonly separatorKeysCodes = [ENTER, COMMA, SPACE] as const;
+    searchTerms = [];
+
+    addSearchItem(event: MatChipInputEvent): void {
+        const value = (event.value || '').trim();
+
+        let index = this.searchTerms.indexOf(value);
+        if (value && index === -1) {
+            this.searchTerms.push(value);
+        }
+
+        event.chipInput!.clear();
+    }
+
+    removeSearchItem(term): void {
+        const index = this.searchTerms.indexOf(term);
+
+        if (index >= 0) {
+            this.searchTerms.splice(index, 1);
+        }
     }
 
     render() {

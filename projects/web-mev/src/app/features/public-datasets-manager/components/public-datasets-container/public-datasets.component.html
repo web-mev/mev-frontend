@@ -1,20 +1,45 @@
-<ng-container *ngIf="chosenDataset === ''">
-    <mev-public-datasets-list (datasetSelectedEvent)="setDataset($event)"></mev-public-datasets-list>
-</ng-container>
+<mat-drawer-container class="filter-container" autosize>
+    <!-- <mat-drawer #drawer class="filter-sidenav" mode="side" [opened]="chosenDataset.length>0">
+        <button type="button" mat-button (click)="drawer.toggle()">Toggle sidenav</button>
+        <div class="sideContainer">
+            <span>
+                <section class="example-section">
+                    
+                    <ul>
+                        <li><h4>Alcohol History:</h4></li>
+                        <li><mat-checkbox formControlName="pepperoni">Yes</mat-checkbox></li>
+                        <li><mat-checkbox formControlName="extracheese">No</mat-checkbox></li>
+                        <li><mat-checkbox formControlName="mushroom">Not Reported</mat-checkbox></li>
+                    </ul>
+                    
+                  </section>
+            </span>
+        </div>
 
-    <div *ngIf="chosenDataset !== ''" id="go-back" (click)="backToBrowse()">
-        <mat-icon class="nav__icon" aria-label="Back to datasets">reply</mat-icon>
-        <span class="nav__text">Back to browsing datasets</span>
+    </mat-drawer> -->
+
+    <div class="filter-sidenav-content">
+        <ng-container *ngIf="chosenDataset === ''">
+            <mev-public-datasets-list (datasetSelectedEvent)="setDataset($event)"></mev-public-datasets-list>
+        </ng-container>
+
+        <div *ngIf="chosenDataset !== ''" id="go-back" (click)="backToBrowse()">
+            <mat-icon class="nav__icon" aria-label="Back to datasets">reply</mat-icon>
+            <span class="nav__text">Back to browsing datasets</span>
+        </div>
+
+        <ng-container *ngIf="chosenDataset === 'tcga-rnaseq'">
+            <tcga-rnaseq-explorer></tcga-rnaseq-explorer>
+        </ng-container>
+
+        <ng-container *ngIf="chosenDataset === 'target-rnaseq'">
+            <target-rnaseq-explorer></target-rnaseq-explorer>
+        </ng-container>
+
+        <ng-container *ngIf="chosenDataset === 'gtex-rnaseq'">
+            <gtex-rnaseq-explorer></gtex-rnaseq-explorer>
+        </ng-container>
+
     </div>
 
-<ng-container *ngIf="chosenDataset === 'tcga-rnaseq'">
-    <tcga-rnaseq-explorer></tcga-rnaseq-explorer>
-</ng-container>
-
-<ng-container *ngIf="chosenDataset === 'target-rnaseq'">
-    <target-rnaseq-explorer></target-rnaseq-explorer>
-</ng-container>
-
-<ng-container *ngIf="chosenDataset === 'gtex-rnaseq'">
-    <gtex-rnaseq-explorer></gtex-rnaseq-explorer>
-</ng-container>
+</mat-drawer-container>

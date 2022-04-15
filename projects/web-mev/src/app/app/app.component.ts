@@ -10,6 +10,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { ContactComponent } from '@app/features/contact-dialog/contact.component';
 import { environment as env } from '../../environments/environment';
 
+//Used to load Google Client Library
+import { SocialAuthService } from 'angularx-social-login';
+
 import {
   routeAnimations,
   LocalStorageService,
@@ -62,7 +65,8 @@ export class AppComponent implements OnInit {
     private router: Router,
     private bnIdle: BnNgIdleService,
     private authenticationService: AuthenticationService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private socialAuthService: SocialAuthService,
   ) {
     this.authenticationService.currentUser.subscribe(x => {
       this.isAuthenticated = x !== null;

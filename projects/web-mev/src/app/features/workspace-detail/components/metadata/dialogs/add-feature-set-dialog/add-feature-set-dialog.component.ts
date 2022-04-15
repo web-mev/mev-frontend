@@ -11,6 +11,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import {MatChipInputEvent} from '@angular/material/chips';
 import { MatPaginator } from '@angular/material/paginator';
 import { CustomSetType } from '@app/_models/metadata';
+import {COMMA, ENTER, SPACE} from '@angular/cdk/keycodes';
 
 /**
  * Add Feature Dialog Component
@@ -24,13 +25,13 @@ import { CustomSetType } from '@app/_models/metadata';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddFeatureSetDialogComponent implements OnInit {
-
-  
   featureSetForm: FormGroup;
   submitted = false;
   featureSet: string[] = [];
   removable = true;
   selectable = false;
+
+  readonly separatorKeysCodes = [ENTER, COMMA, SPACE] as const;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -46,14 +47,15 @@ export class AddFeatureSetDialogComponent implements OnInit {
   }
 
   onAddFeature(event: MatChipInputEvent): void {
-
     const featureName = (event.value || '').trim();
 
     let index = this.featureSet.indexOf(featureName);
-    if (index === -1) {
+    if (featureName && index === -1) {
       this.featureSet.push(featureName);
     }
 
+    // Clear the input value
+    event.chipInput!.clear();
     this.featureSetForm.controls['individualFeatureName'].setValue('');
   }
 

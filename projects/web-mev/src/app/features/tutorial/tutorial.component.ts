@@ -15,8 +15,9 @@ import { NotificationService } from '@app/core/core.module';
   styleUrls: ['./tutorial.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TutorialComponent implements OnInit {
 
+
+export class TutorialComponent implements OnInit {
   isLoggedIn: boolean = false;
 
   // An array of objects to populate a table that has data files

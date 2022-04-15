@@ -1,10 +1,31 @@
-#go-back{
+#go-back {
     margin-top: 10px;
     margin-bottom: 20px;
     cursor: pointer;
-    color: #03a9f4
+    color: #03a9f4;
 }
 
 .nav__icon {
     vertical-align: bottom;
-  }
+}
+
+.filter-sidenav{
+    width: 300px;
+    margin-top: 20px;
+    background-color: #ddebf2;
+}
+
+.filter-sidenav-content{
+    margin-left: 20px;
+    
+}
+
+.sideContainer{
+    margin: 10px;
+}
+
+ul {
+    list-style-type: none;
+    padding-left: 10px;
+}
+

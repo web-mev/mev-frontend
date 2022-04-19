@@ -94,81 +94,93 @@ export class PandaComponent implements OnChanges {
     ) { }
 
     ngOnChanges(): void {
-        this.requestData();
+        this.requestData('topGenes');
     }
 
-    requestData() {
+    requestData(type: string) {
         this.hideFilter = true;
         this.edgeArr = [];
         this.nodesArr = [];
         this.isLoading = true;
         let pandaExprsMatrixId = this.outputs['MevPanda.exprs_file'];
         let pandaMatrixId = this.outputs['MevPanda.panda_output_matrix'];
-        let existingNode = {}
-        this.getData(pandaMatrixId).subscribe(res => {
-            for (let node of res['nodes']) {
-                let nodeId = Object.keys(node)[0];
-                if (!existingNode[nodeId]) {
+        let existingNode = {};
+        if (type === 'topGenes') {
+            this.getData(pandaMatrixId).subscribe(res => {
+                this.changeToFitCytoscape(res, existingNode)
+            })
+        } else if (type === 'Search') {
+            this.onSearch(pandaMatrixId).subscribe(res => {
+                console.log('searching... ')
+                this.changeToFitCytoscape(res, existingNode)
+            })
+        }
+
+    }
+
+    changeToFitCytoscape(res, existingNode) {
+        for (let node of res['nodes']) {
+            let nodeId = Object.keys(node)[0];
+            if (!existingNode[nodeId]) {
+                let newNode = {
+                    "data": {
+                        "id": nodeId,
+                        "interaction": node[nodeId].axis === 0 ? "pd" : "dp",
+                        "truncatedId": nodeId.length > 6 ? nodeId.slice(0, 5) + "\n" + nodeId.slice(5, 10) + "\n" + nodeId.slice(10) : nodeId
+                    }
+                }
+                this.nodesArr.push(newNode);
+                existingNode[nodeId] = 1;
+            }
+
+            for (let child of node[nodeId].children) {
+                let childId = Object.keys(child)[0];
+                if (!existingNode[childId]) {
                     let newNode = {
                         "data": {
-                            "id": nodeId,
-                            "interaction": node[nodeId].axis === 0 ? "pd" : "dp",
-                            "truncatedId": nodeId.length > 6 ? nodeId.slice(0, 5) + "\n" + nodeId.slice(5, 10) + "\n" + nodeId.slice(10) : nodeId
+                            "id": childId,
+                            //Set to be opposite of its parent
+                            "interaction": node[nodeId].axis === 1 ? "pd" : "dp",
+                            "truncatedId": childId.length > 6 ? childId.slice(0, 5) + "\n" + childId.slice(5, 10) + "\n" + childId.slice(10) : childId
                         }
                     }
                     this.nodesArr.push(newNode);
-                    existingNode[nodeId] = 1;
+                    existingNode[childId] = 1;
                 }
 
-                for (let child of node[nodeId].children) {
-                    let childId = Object.keys(child)[0];
-                    if (!existingNode[childId]) {
-                        let newNode = {
-                            "data": {
-                                "id": childId,
-                                //Set to be opposite of its parent
-                                "interaction": node[nodeId].axis === 1 ? "pd" : "dp",
-                                "truncatedId": childId.length > 6 ? childId.slice(0, 5) + "\n" + childId.slice(5, 10) + "\n" + childId.slice(10) : childId
-                            }
-                        }
-                        this.nodesArr.push(newNode);
-                        existingNode[childId] = 1;
-                    }
+                let currEdgeWeight = child[childId];
+                this.maxEdgeWeight = Math.max(this.maxEdgeWeight, currEdgeWeight);
+                this.minEdgeWeight = Math.min(this.minEdgeWeight, currEdgeWeight);
 
-                    let currEdgeWeight = child[childId];
-                    this.maxEdgeWeight = Math.max(this.maxEdgeWeight, currEdgeWeight);
-                    this.minEdgeWeight = Math.min(this.minEdgeWeight, currEdgeWeight);
-
-                    let newEdge = {
-                        "data": {
-                            "id": nodeId + "_" + childId,
-                            "source": nodeId,
-                            "target": childId,
-                            "interaction": node[nodeId].axis === 0 ? "pd" : "dp",
-                            "edge_weight": child[childId]
-                        }
+                let newEdge = {
+                    "data": {
+                        "id": nodeId + "_" + childId,
+                        "source": nodeId,
+                        "target": childId,
+                        "interaction": node[nodeId].axis === 0 ? "pd" : "dp",
+                        "edge_weight": child[childId]
                     }
-                    this.edgeArr.push(newEdge)
                 }
+                this.edgeArr.push(newEdge)
             }
+        }
 
-            this.copyNodesArr = this.nodesArr;
-            this.copyEdgeArr = this.edgeArr;
+        this.copyNodesArr = this.nodesArr;
+        this.copyEdgeArr = this.edgeArr;
 
-            this.isLoading = false;
-            this.hideFilter = false;
-            if (this.nodesArr.length < 100) {
-                this.size = "large";
-            } else if (this.nodesArr.length < 200) {
-                this.size = "medium";
-            } else {
-                this.size = "small";
-            }
+        this.isLoading = false;
+        this.hideFilter = false;
+        if (this.nodesArr.length < 100) {
+            this.size = "large";
+        } else if (this.nodesArr.length < 200) {
+            this.size = "medium";
+        } else {
+            this.size = "small";
+        }
 
-            let errorMessage = "The current number of genes is more than Cytoscape can handle. Please lower the number of Layers or Children and try again."
-            this.nodesArr.length > 1000 ? this.tooManyNodes(errorMessage) : this.render();
-            console.log("nodesArr: ", this.nodesArr);
-        })
+        let errorMessage = "The current number of genes is more than Cytoscape can handle. Please lower the number of Layers or Children and try again."
+        this.nodesArr.length > 1000 ? this.tooManyNodes(errorMessage) : this.render();
+        console.log("nodesArr: ", this.nodesArr);
     }
 
     getData(uuid) {
@@ -251,13 +263,17 @@ export class PandaComponent implements OnChanges {
         saveAs(imgBlob, 'cytoscape.png');
     }
 
-    // onSearch(){
-    //     console.log("lets start searching.. ", this.searchValue)
-    //     this.selectedLayers = 2;
-    //     this.selectedChildren = 3;
-    //     this.apiAxis = 0; //by genes
-    //     this.requestData()
-    // }
+    onSearch(uuid) {
+        console.log("search terms inputs: ", this.searchTerms)
+        let genes = this.searchTerms.join(",")
+        let endPoint = `${this.API_URL}/resources/${uuid}/contents/transform/?transform-name=pandasubset&maxdepth=${this.selectedLayers}&children=${this.selectedChildren}&axis=${this.apiAxis}&initial_nodes=${genes}`;
+        return this.httpClient.get(endPoint)
+            .pipe(
+                catchError(error => {
+                    console.log("Error: ", error);
+                    throw error;
+                }))
+    }
 
     addOnBlur = true;
     readonly separatorKeysCodes = [ENTER, COMMA, SPACE] as const;
@@ -280,6 +296,10 @@ export class PandaComponent implements OnChanges {
         if (index >= 0) {
             this.searchTerms.splice(index, 1);
         }
+    }
+
+    tabChange(){
+        this.hideFilter=true;
     }
 
     render() {

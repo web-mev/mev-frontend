@@ -5,7 +5,7 @@
         <mat-card-title>PANDA: {{ outputs?.job_name }}</mat-card-title>
     </mat-card-header>
 
-    <mat-tab-group dynamicHeight>
+    <mat-tab-group dynamicHeight (selectedTabChange)="tabChange()">
         <mat-tab>
             <ng-template mat-tab-label>Top Genes</ng-template>
             <mat-card-content class="analysis-card__main">
@@ -46,7 +46,7 @@
                     </mat-select>
                 </mat-form-field>
                 <br>
-                <button mat-raised-button color="accent" (click)="requestData()">Submit</button>
+                <button mat-raised-button color="accent" (click)="requestData('topGenes')">Submit</button>
                 <br>
                 <br>
                 <mat-divider [inset]="true"></mat-divider>
@@ -59,15 +59,17 @@
                 </mat-radio-group>
                 <br>
                 <br>
-                <div *ngIf="!hideFilter">
+                <div>
                     <label id="radio-group-axis">Minimum Edge Weight: </label>
+                    {{0}}
                     <mat-slider thumbLabel tickInterval="2" step="1" min="0" max="20" aria-label="units"
                         (change)="updateSlider($event)">
                     </mat-slider>
-                    <button mat-raised-button color="accent" (click)="filterEdges()">Filter</button>
+                    {{20}}
+                    <button mat-raised-button color="accent" (click)="filterEdges()" [disabled]="hideFilter"
+                        class="filterButton">Filter</button>
                 </div>
 
-                <!-- <h1>Nodes: {{nodesArr.length}}</h1> -->
                 <br>
                 <br>
 
@@ -138,16 +140,37 @@
                 </mat-select>
             </mat-form-field>
             <br>
-            <button mat-raised-button color="accent" (click)="requestData()">Submit</button>
+            <button mat-raised-button color="accent" (click)="requestData('Search')">Submit</button>
             <br>
             <br>
 
             <mat-divider [inset]="true"></mat-divider>
 
+            <br>
+            <label id="radio-group-axis">Select Layout: </label>
+            <mat-radio-group aria-label="Select an Axis" [(ngModel)]="currLayout">
+                <mat-radio-button *ngFor="let options of layoutList" [value]="options"
+                    (change)="onRadioChangeLayout($event.value)">{{ options }}</mat-radio-button>
+            </mat-radio-group>
+            <br>
+            <br>
+            <div>
+                <label id="radio-group-axis">Minimum Edge Weight: </label>
+                {{0}}
+                <mat-slider thumbLabel tickInterval="2" step="1" min="0" max="20" aria-label="units"
+                    (change)="updateSlider($event)">
+                </mat-slider>
+                {{20}}
+                <button mat-raised-button color="accent" class="filterButton" (click)="filterEdges()" [disabled]="hideFilter">Filter</button>
+            </div>
+
+            <br>
+            <mat-divider [inset]="true"></mat-divider>
+
             <button id="downloadButton" mat-button (click)="onSaveImagePNG()">
                 <mat-icon>save_alt</mat-icon>
             </button>
-            
+
             <div class="analysis-card__content">
                 <p *ngIf="isLoading === true">Please wait... </p>
                 <div *ngIf="displayGraph" id="cy"></div>

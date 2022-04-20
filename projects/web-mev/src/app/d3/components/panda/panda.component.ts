@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnChanges, Input } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError } from "rxjs/operators";
+import { throwError } from 'rxjs';
 import { environment } from '@environments/environment';
 import { NotificationService } from '@core/notifications/notification.service';
 import * as cytoscape from 'cytoscape';
@@ -272,25 +273,28 @@ export class PandaComponent implements OnChanges {
     }
 
     onSearch(uuid) {
-        let genes = this.searchTerms.join(",")
-        let endPoint = `${this.API_URL}/resources/${uuid}/contents/transform/?transform-name=pandasubset&maxdepth=${this.selectedLayers}&children=${this.selectedChildren}&axis=${this.apiAxis}&initial_nodes=${genes}`;
-        return this.httpClient.get(endPoint)
-            .pipe(
-                catchError(error => {
-                    let message = (this.searchTerms.length === 0) ?
-                        "Error: Please enter a search term and try again." :
-                        "Error: One or more of your search terms are invalid. Please try again.";
-                    this.notificationService.warn(message)
-                    console.log("Error: ", error);
-                    this.isLoading = false;
-                    throw error;
-                }))
+        if (this.searchTerms.length === 0) {
+            let message = "Error: Please enter a search term and try again.";
+            this.notificationService.warn(message)
+        } else {
+            let genes = this.searchTerms.join(",")
+            let endPoint = `${this.API_URL}/resources/${uuid}/contents/transform/?transform-name=pandasubset&maxdepth=${this.selectedLayers}&children=${this.selectedChildren}&axis=${this.apiAxis}&initial_nodes=${genes}`;
+            return this.httpClient.get(endPoint)
+                .pipe(
+                    catchError(error => {
+                        let message = "Error: One or more of your search terms are invalid. Please try again.";
+                        this.notificationService.warn(message)
+                        console.log("Error: ", error);
+                        this.isLoading = false;
+                        return throwError(() => new Error(error.message))
+                    }))
+        }
     }
 
     addSearchItem(event: MatChipInputEvent): void {
         const value = (event.value || '').trim().toUpperCase();
         let index = this.searchTerms.indexOf(value);
-        if(index !== -1){
+        if (index !== -1) {
             this.notificationService.warn(`"${value}" has already been added`);
         }
         if (value && index === -1) {

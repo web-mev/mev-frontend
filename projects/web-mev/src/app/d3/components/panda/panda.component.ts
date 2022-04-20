@@ -87,6 +87,10 @@ export class PandaComponent implements OnChanges {
         }
     };
     searchValue: string = '';
+    currTab: string = 'topGenes';
+    addOnBlur: boolean = true;
+    readonly separatorKeysCodes = [ENTER, COMMA, SPACE] as const;
+    searchTerms: string[] = [];
 
     constructor(
         private httpClient: HttpClient,
@@ -94,81 +98,97 @@ export class PandaComponent implements OnChanges {
     ) { }
 
     ngOnChanges(): void {
-        this.requestData();
+        if (this.currTab === 'topGenes') {
+            this.displayGraph = true;
+            this.requestData('topGenes');
+        } else {
+            this.displayGraph = false;
+        }
     }
 
-    requestData() {
+    requestData(type: string) {
         this.hideFilter = true;
+        this.displayGraph = true;
         this.edgeArr = [];
         this.nodesArr = [];
         this.isLoading = true;
-        let pandaExprsMatrixId = this.outputs['MevPanda.exprs_file'];
+        this.sliderValue = 0;
+        // let pandaExprsMatrixId = this.outputs['MevPanda.exprs_file'];
         let pandaMatrixId = this.outputs['MevPanda.panda_output_matrix'];
-        let existingNode = {}
-        this.getData(pandaMatrixId).subscribe(res => {
-            for (let node of res['nodes']) {
-                let nodeId = Object.keys(node)[0];
-                if (!existingNode[nodeId]) {
+        let existingNode = {};
+        if (type === 'topGenes') {
+            this.getData(pandaMatrixId).subscribe(res => {
+                this.changeToFitCytoscape(res, existingNode)
+            })
+        } else if (type === 'Search') {
+            this.onSearch(pandaMatrixId).subscribe(res => {
+                this.changeToFitCytoscape(res, existingNode)
+            })
+        }
+    }
+
+    changeToFitCytoscape(res, existingNode) {
+        for (let node of res['nodes']) {
+            let nodeId = Object.keys(node)[0];
+            if (!existingNode[nodeId]) {
+                let newNode = {
+                    "data": {
+                        "id": nodeId,
+                        "interaction": node[nodeId].axis === 0 ? "pd" : "dp",
+                        "truncatedId": nodeId.length > 6 ? nodeId.slice(0, 5) + "\n" + nodeId.slice(5, 10) + "\n" + nodeId.slice(10) : nodeId
+                    }
+                }
+                this.nodesArr.push(newNode);
+                existingNode[nodeId] = 1;
+            }
+
+            for (let child of node[nodeId].children) {
+                let childId = Object.keys(child)[0];
+                if (!existingNode[childId]) {
                     let newNode = {
                         "data": {
-                            "id": nodeId,
-                            "interaction": node[nodeId].axis === 0 ? "pd" : "dp",
-                            "truncatedId": nodeId.length > 6 ? nodeId.slice(0, 5) + "\n" + nodeId.slice(5, 10) + "\n" + nodeId.slice(10) : nodeId
+                            "id": childId,
+                            //Set to be opposite of its parent
+                            "interaction": node[nodeId].axis === 1 ? "pd" : "dp",
+                            "truncatedId": childId.length > 6 ? childId.slice(0, 5) + "\n" + childId.slice(5, 10) + "\n" + childId.slice(10) : childId
                         }
                     }
                     this.nodesArr.push(newNode);
-                    existingNode[nodeId] = 1;
+                    existingNode[childId] = 1;
                 }
 
-                for (let child of node[nodeId].children) {
-                    let childId = Object.keys(child)[0];
-                    if (!existingNode[childId]) {
-                        let newNode = {
-                            "data": {
-                                "id": childId,
-                                //Set to be opposite of its parent
-                                "interaction": node[nodeId].axis === 1 ? "pd" : "dp",
-                                "truncatedId": childId.length > 6 ? childId.slice(0, 5) + "\n" + childId.slice(5, 10) + "\n" + childId.slice(10) : childId
-                            }
-                        }
-                        this.nodesArr.push(newNode);
-                        existingNode[childId] = 1;
-                    }
+                let currEdgeWeight = child[childId];
+                this.maxEdgeWeight = Math.max(this.maxEdgeWeight, currEdgeWeight);
+                this.minEdgeWeight = Math.min(this.minEdgeWeight, currEdgeWeight);
 
-                    let currEdgeWeight = child[childId];
-                    this.maxEdgeWeight = Math.max(this.maxEdgeWeight, currEdgeWeight);
-                    this.minEdgeWeight = Math.min(this.minEdgeWeight, currEdgeWeight);
-
-                    let newEdge = {
-                        "data": {
-                            "id": nodeId + "_" + childId,
-                            "source": nodeId,
-                            "target": childId,
-                            "interaction": node[nodeId].axis === 0 ? "pd" : "dp",
-                            "edge_weight": child[childId]
-                        }
+                let newEdge = {
+                    "data": {
+                        "id": nodeId + "_" + childId,
+                        "source": nodeId,
+                        "target": childId,
+                        "interaction": node[nodeId].axis === 0 ? "pd" : "dp",
+                        "edge_weight": child[childId]
                     }
-                    this.edgeArr.push(newEdge)
                 }
+                this.edgeArr.push(newEdge)
             }
+        }
 
-            this.copyNodesArr = this.nodesArr;
-            this.copyEdgeArr = this.edgeArr;
+        this.copyNodesArr = this.nodesArr;
+        this.copyEdgeArr = this.edgeArr;
 
-            this.isLoading = false;
-            this.hideFilter = false;
-            if (this.nodesArr.length < 100) {
-                this.size = "large";
-            } else if (this.nodesArr.length < 200) {
-                this.size = "medium";
-            } else {
-                this.size = "small";
-            }
+        this.isLoading = false;
+        this.hideFilter = false;
+        if (this.nodesArr.length < 100) {
+            this.size = "large";
+        } else if (this.nodesArr.length < 200) {
+            this.size = "medium";
+        } else {
+            this.size = "small";
+        }
 
-            let errorMessage = "The current number of genes is more than Cytoscape can handle. Please lower the number of Layers or Children and try again."
-            this.nodesArr.length > 1000 ? this.tooManyNodes(errorMessage) : this.render();
-            console.log("nodesArr: ", this.nodesArr);
-        })
+        let errorMessage = "The current number of genes is more than Cytoscape can handle. Please lower the number of Layers or Children and try again."
+        this.nodesArr.length > 1000 ? this.tooManyNodes(errorMessage) : this.render();
     }
 
     getData(uuid) {
@@ -251,34 +271,58 @@ export class PandaComponent implements OnChanges {
         saveAs(imgBlob, 'cytoscape.png');
     }
 
-    // onSearch(){
-    //     console.log("lets start searching.. ", this.searchValue)
-    //     this.selectedLayers = 2;
-    //     this.selectedChildren = 3;
-    //     this.apiAxis = 0; //by genes
-    //     this.requestData()
-    // }
-
-    addOnBlur = true;
-    readonly separatorKeysCodes = [ENTER, COMMA, SPACE] as const;
-    searchTerms = [];
+    onSearch(uuid) {
+        let genes = this.searchTerms.join(",")
+        let endPoint = `${this.API_URL}/resources/${uuid}/contents/transform/?transform-name=pandasubset&maxdepth=${this.selectedLayers}&children=${this.selectedChildren}&axis=${this.apiAxis}&initial_nodes=${genes}`;
+        return this.httpClient.get(endPoint)
+            .pipe(
+                catchError(error => {
+                    let message = (this.searchTerms.length === 0) ?
+                        "Error: Please enter a search term and try again." :
+                        "Error: One or more of your search terms are invalid. Please try again.";
+                    this.notificationService.warn(message)
+                    console.log("Error: ", error);
+                    this.isLoading = false;
+                    throw error;
+                }))
+    }
 
     addSearchItem(event: MatChipInputEvent): void {
-        const value = (event.value || '').trim();
-
+        const value = (event.value || '').trim().toUpperCase();
         let index = this.searchTerms.indexOf(value);
+        if(index !== -1){
+            this.notificationService.warn(`"${value}" has already been added`);
+        }
         if (value && index === -1) {
             this.searchTerms.push(value);
         }
-
         event.chipInput!.clear();
     }
 
     removeSearchItem(term): void {
         const index = this.searchTerms.indexOf(term);
-
         if (index >= 0) {
             this.searchTerms.splice(index, 1);
+        }
+    }
+
+    tabChange() {
+        //resets options on each tab change
+        this.hideFilter = true;
+        this.searchTerms = [];
+        this.selectedLayers = 2;
+        this.selectedChildren = 3;
+        this.currLayout = this.layoutList[1];
+        this.layoutName = "cose-bilkent";
+        this.apiAxis = this.radioButtonList[0].axis;
+        this.sliderValue = 0;
+
+        this.currTab = (this.currTab === 'topGenes') ? 'searchGenes' : 'topGenes';
+        if (this.currTab === 'searchGenes') {
+            this.nodesArr = [];
+            this.displayGraph = false;
+        } else if (this.currTab === 'topGenes') {
+            this.requestData('topGenes');
         }
     }
 

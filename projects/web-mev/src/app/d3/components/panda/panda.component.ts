@@ -87,6 +87,10 @@ export class PandaComponent implements OnChanges {
         }
     };
     searchValue: string = '';
+    currTab: string = 'topGenes';
+    addOnBlur: boolean = true;
+    readonly separatorKeysCodes = [ENTER, COMMA, SPACE] as const;
+    searchTerms: string[] = [];
 
     constructor(
         private httpClient: HttpClient,
@@ -94,15 +98,22 @@ export class PandaComponent implements OnChanges {
     ) { }
 
     ngOnChanges(): void {
-        this.requestData('topGenes');
+        if (this.currTab === 'topGenes') {
+            this.displayGraph = true;
+            this.requestData('topGenes');
+        } else {
+            this.displayGraph = false;
+        }
     }
 
     requestData(type: string) {
         this.hideFilter = true;
+        this.displayGraph = true;
         this.edgeArr = [];
         this.nodesArr = [];
         this.isLoading = true;
-        let pandaExprsMatrixId = this.outputs['MevPanda.exprs_file'];
+        this.sliderValue = 0;
+        // let pandaExprsMatrixId = this.outputs['MevPanda.exprs_file'];
         let pandaMatrixId = this.outputs['MevPanda.panda_output_matrix'];
         let existingNode = {};
         if (type === 'topGenes') {
@@ -111,11 +122,9 @@ export class PandaComponent implements OnChanges {
             })
         } else if (type === 'Search') {
             this.onSearch(pandaMatrixId).subscribe(res => {
-                console.log('searching... ')
                 this.changeToFitCytoscape(res, existingNode)
             })
         }
-
     }
 
     changeToFitCytoscape(res, existingNode) {
@@ -180,7 +189,6 @@ export class PandaComponent implements OnChanges {
 
         let errorMessage = "The current number of genes is more than Cytoscape can handle. Please lower the number of Layers or Children and try again."
         this.nodesArr.length > 1000 ? this.tooManyNodes(errorMessage) : this.render();
-        console.log("nodesArr: ", this.nodesArr);
     }
 
     getData(uuid) {
@@ -264,42 +272,58 @@ export class PandaComponent implements OnChanges {
     }
 
     onSearch(uuid) {
-        console.log("search terms inputs: ", this.searchTerms)
         let genes = this.searchTerms.join(",")
         let endPoint = `${this.API_URL}/resources/${uuid}/contents/transform/?transform-name=pandasubset&maxdepth=${this.selectedLayers}&children=${this.selectedChildren}&axis=${this.apiAxis}&initial_nodes=${genes}`;
         return this.httpClient.get(endPoint)
             .pipe(
                 catchError(error => {
+                    let message = (this.searchTerms.length === 0) ?
+                        "Error: Please enter a search term and try again." :
+                        "Error: One or more of your search terms are invalid. Please try again.";
+                    this.notificationService.warn(message)
                     console.log("Error: ", error);
+                    this.isLoading = false;
                     throw error;
                 }))
     }
 
-    addOnBlur = true;
-    readonly separatorKeysCodes = [ENTER, COMMA, SPACE] as const;
-    searchTerms = [];
-
     addSearchItem(event: MatChipInputEvent): void {
-        const value = (event.value || '').trim();
-
+        const value = (event.value || '').trim().toUpperCase();
         let index = this.searchTerms.indexOf(value);
+        if(index !== -1){
+            this.notificationService.warn(`"${value}" has already been added`);
+        }
         if (value && index === -1) {
             this.searchTerms.push(value);
         }
-
         event.chipInput!.clear();
     }
 
     removeSearchItem(term): void {
         const index = this.searchTerms.indexOf(term);
-
         if (index >= 0) {
             this.searchTerms.splice(index, 1);
         }
     }
 
-    tabChange(){
-        this.hideFilter=true;
+    tabChange() {
+        //resets options on each tab change
+        this.hideFilter = true;
+        this.searchTerms = [];
+        this.selectedLayers = 2;
+        this.selectedChildren = 3;
+        this.currLayout = this.layoutList[1];
+        this.layoutName = "cose-bilkent";
+        this.apiAxis = this.radioButtonList[0].axis;
+        this.sliderValue = 0;
+
+        this.currTab = (this.currTab === 'topGenes') ? 'searchGenes' : 'topGenes';
+        if (this.currTab === 'searchGenes') {
+            this.nodesArr = [];
+            this.displayGraph = false;
+        } else if (this.currTab === 'topGenes') {
+            this.requestData('topGenes');
+        }
     }
 
     render() {

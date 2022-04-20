@@ -5,9 +5,10 @@
         <mat-card-title>PANDA: {{ outputs?.job_name }}</mat-card-title>
     </mat-card-header>
 
-    <mat-tab-group dynamicHeight (selectedTabChange)="tabChange()">
+    <mat-tab-group dynamicHeight (selectedTabChange)="tabChange()" animationDuration="0ms">
         <mat-tab>
             <ng-template mat-tab-label>Top Genes</ng-template>
+            <br>
             <mat-card-content class="analysis-card__main">
                 <p class="analysis-card__instruction">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
@@ -63,7 +64,7 @@
                     <label id="radio-group-axis">Minimum Edge Weight: </label>
                     {{0}}
                     <mat-slider thumbLabel tickInterval="2" step="1" min="0" max="20" aria-label="units"
-                        (change)="updateSlider($event)">
+                        (change)="updateSlider($event)" [(ngModel)]="sliderValue">
                     </mat-slider>
                     {{20}}
                     <button mat-raised-button color="accent" (click)="filterEdges()" [disabled]="hideFilter"
@@ -73,7 +74,7 @@
                 <br>
                 <br>
 
-                <button id="downloadButton" mat-button (click)="onSaveImagePNG()">
+                <button *ngIf="displayGraph" id="downloadButton" mat-button (click)="onSaveImagePNG()">
                     <mat-icon>save_alt</mat-icon>
                 </button>
 
@@ -112,7 +113,7 @@
                             <mat-icon>cancel</mat-icon>
                         </button>
                     </mat-chip>
-                    <input placeholder="New gene..." [matChipInputFor]="chipList"
+                    <input [placeholder]="apiAxis === 0 ? 'Add genes...' : 'Add transcription factors...'" [matChipInputFor]="chipList"
                         [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
                         (matChipInputTokenEnd)="addSearchItem($event)">
                 </mat-chip-list>
@@ -158,7 +159,7 @@
                 <label id="radio-group-axis">Minimum Edge Weight: </label>
                 {{0}}
                 <mat-slider thumbLabel tickInterval="2" step="1" min="0" max="20" aria-label="units"
-                    (change)="updateSlider($event)">
+                    (change)="updateSlider($event)" [(ngModel)]="sliderValue">
                 </mat-slider>
                 {{20}}
                 <button mat-raised-button color="accent" class="filterButton" (click)="filterEdges()" [disabled]="hideFilter">Filter</button>
@@ -167,7 +168,7 @@
             <br>
             <mat-divider [inset]="true"></mat-divider>
 
-            <button id="downloadButton" mat-button (click)="onSaveImagePNG()">
+            <button *ngIf="displayGraph" id="downloadButton" mat-button (click)="onSaveImagePNG()">
                 <mat-icon>save_alt</mat-icon>
             </button>
 

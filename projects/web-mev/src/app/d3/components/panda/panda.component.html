@@ -24,7 +24,6 @@
                     est
                     laborum.
                 </p>
-
                 <label id="radio-group-axis">Select an Axis: </label>
                 <mat-radio-group aria-label="Select an Axis" [(ngModel)]="apiAxis">
                     <mat-radio-button *ngFor="let options of radioButtonList" [value]="options.axis"
@@ -51,7 +50,6 @@
                 <br>
                 <br>
                 <mat-divider [inset]="true"></mat-divider>
-
                 <br>
                 <label id="radio-group-axis">Select Layout: </label>
                 <mat-radio-group aria-label="Select an Axis" [(ngModel)]="currLayout">
@@ -67,25 +65,22 @@
                         (change)="updateSlider($event)" [(ngModel)]="sliderValue">
                     </mat-slider>
                     {{20}}
-                    <button mat-raised-button color="accent" (click)="filterEdges()" [disabled]="hideFilter"
+                    <button mat-raised-button color="accent" (click)="filterEdges()" [disabled]="disableFilter"
                         class="filterButton">Filter</button>
                 </div>
-
                 <br>
                 <br>
-
                 <button *ngIf="displayGraph" id="downloadButton" mat-button (click)="onSaveImagePNG()">
                     <mat-icon>save_alt</mat-icon>
                 </button>
-
                 <mat-divider [inset]="true"></mat-divider>
-
                 <div class="analysis-card__content">
                     <p *ngIf="isLoading === true">Please wait... </p>
                     <div *ngIf="displayGraph" id="cy"></div>
                 </div>
             </mat-card-content>
         </mat-tab>
+
         <mat-tab>
             <ng-template mat-tab-label>By Genes</ng-template>
             <br>
@@ -103,7 +98,6 @@
                 est
                 laborum.
             </p>
-
             <mat-form-field class="example-chip-list searchField" appearance="outline">
                 <mat-label>Search Terms</mat-label>
                 <mat-chip-list #chipList aria-label="Fruit selection">
@@ -113,13 +107,11 @@
                             <mat-icon>cancel</mat-icon>
                         </button>
                     </mat-chip>
-                    <input [placeholder]="apiAxis === 0 ? 'Add genes...' : 'Add transcription factors...'" [matChipInputFor]="chipList"
-                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
-                        (matChipInputTokenEnd)="addSearchItem($event)">
+                    <input [placeholder]="apiAxis === 0 ? 'Add genes...' : 'Add transcription factors...'"
+                        [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                        [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="addSearchItem($event)">
                 </mat-chip-list>
             </mat-form-field>
-
-
             <label id="radio-group-axis">Select an Axis: </label>
             <mat-radio-group aria-label="Select an Axis" [(ngModel)]="apiAxis">
                 <mat-radio-button *ngFor="let options of radioButtonList" [value]="options.axis"
@@ -144,9 +136,7 @@
             <button mat-raised-button color="accent" (click)="requestData('Search')">Submit</button>
             <br>
             <br>
-
             <mat-divider [inset]="true"></mat-divider>
-
             <br>
             <label id="radio-group-axis">Select Layout: </label>
             <mat-radio-group aria-label="Select an Axis" [(ngModel)]="currLayout">
@@ -162,23 +152,18 @@
                     (change)="updateSlider($event)" [(ngModel)]="sliderValue">
                 </mat-slider>
                 {{20}}
-                <button mat-raised-button color="accent" class="filterButton" (click)="filterEdges()" [disabled]="hideFilter">Filter</button>
+                <button mat-raised-button color="accent" class="filterButton" (click)="filterEdges()"
+                    [disabled]="disableFilter">Filter</button>
             </div>
-
             <br>
             <mat-divider [inset]="true"></mat-divider>
-
             <button id="downloadButton" mat-button (click)="onSaveImagePNG()">
                 <mat-icon>save_alt</mat-icon>
             </button>
-
             <div class="analysis-card__content">
                 <p *ngIf="isLoading === true">Please wait... </p>
                 <div id="cy"></div>
             </div>
-
         </mat-tab>
     </mat-tab-group>
-
-
 </mat-card>

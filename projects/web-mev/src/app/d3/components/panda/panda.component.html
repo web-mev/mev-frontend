@@ -168,13 +168,13 @@
             <br>
             <mat-divider [inset]="true"></mat-divider>
 
-            <!-- <button *ngIf="displayGraph" id="downloadButton" mat-button (click)="onSaveImagePNG()">
+            <button id="downloadButton" mat-button (click)="onSaveImagePNG()">
                 <mat-icon>save_alt</mat-icon>
-            </button> -->
+            </button>
 
             <div class="analysis-card__content">
                 <p *ngIf="isLoading === true">Please wait... </p>
-                <div *ngIf="displayGraph" id="cy"></div>
+                <div id="cy"></div>
             </div>
 
         </mat-tab>

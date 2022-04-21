@@ -92,6 +92,7 @@ export class PandaComponent implements OnChanges {
     addOnBlur: boolean = true;
     readonly separatorKeysCodes = [ENTER, COMMA, SPACE] as const;
     searchTerms: string[] = [];
+    displayDownloadButton = false;
 
     constructor(
         private httpClient: HttpClient,
@@ -117,7 +118,11 @@ export class PandaComponent implements OnChanges {
         // let pandaExprsMatrixId = this.outputs['MevPanda.exprs_file'];
         let pandaMatrixId = this.outputs['MevPanda.panda_output_matrix'];
         let existingNode = {};
-        if (type === 'topGenes') {
+        if (this.searchTerms.length === 0 && type === 'Search') {
+            let message = "Error: Please enter a search term and try again.";
+            this.notificationService.warn(message);
+            this.isLoading = false;
+        } else if (type === 'topGenes') {
             this.getData(pandaMatrixId).subscribe(res => {
                 this.changeToFitCytoscape(res, existingNode)
             })
@@ -273,22 +278,19 @@ export class PandaComponent implements OnChanges {
     }
 
     onSearch(uuid) {
-        if (this.searchTerms.length === 0) {
-            let message = "Error: Please enter a search term and try again.";
-            this.notificationService.warn(message)
-        } else {
-            let genes = this.searchTerms.join(",")
-            let endPoint = `${this.API_URL}/resources/${uuid}/contents/transform/?transform-name=pandasubset&maxdepth=${this.selectedLayers}&children=${this.selectedChildren}&axis=${this.apiAxis}&initial_nodes=${genes}`;
-            return this.httpClient.get(endPoint)
-                .pipe(
-                    catchError(error => {
-                        let message = "Error: One or more of your search terms are invalid. Please try again.";
-                        this.notificationService.warn(message)
-                        console.log("Error: ", error);
-                        this.isLoading = false;
-                        return throwError(() => new Error(error.message))
-                    }))
-        }
+        let genes = this.searchTerms.join(",")
+        let endPoint = `${this.API_URL}/resources/${uuid}/contents/transform/?transform-name=pandasubset&maxdepth=${this.selectedLayers}&children=${this.selectedChildren}&axis=${this.apiAxis}&initial_nodes=${genes}`;
+        return this.httpClient.get(endPoint)
+            .pipe(
+                catchError(error => {
+                    let message = "Error: One or more of your search terms are invalid. Please try again.";
+                    this.notificationService.warn(message)
+                    console.log("Error: ", error);
+                    this.isLoading = false;
+                    // return throwError(() => new Error(error.message))
+                    return throwError(error)
+                }))
+
     }
 
     addSearchItem(event: MatChipInputEvent): void {
@@ -325,6 +327,7 @@ export class PandaComponent implements OnChanges {
         if (this.currTab === 'searchGenes') {
             this.nodesArr = [];
             this.displayGraph = false;
+            this.requestData('searchGenes');
         } else if (this.currTab === 'topGenes') {
             this.requestData('topGenes');
         }

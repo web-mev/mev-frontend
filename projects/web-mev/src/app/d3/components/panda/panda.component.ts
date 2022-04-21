@@ -92,7 +92,6 @@ export class PandaComponent implements OnChanges {
     addOnBlur: boolean = true;
     readonly separatorKeysCodes = [ENTER, COMMA, SPACE] as const;
     searchTerms: string[] = [];
-    displayDownloadButton = false;
 
     constructor(
         private httpClient: HttpClient,
@@ -105,6 +104,7 @@ export class PandaComponent implements OnChanges {
             this.requestData('topGenes');
         } else {
             this.displayGraph = false;
+            this.isLoading = false;
         }
     }
 
@@ -115,7 +115,6 @@ export class PandaComponent implements OnChanges {
         this.nodesArr = [];
         this.isLoading = true;
         this.sliderValue = 0;
-        // let pandaExprsMatrixId = this.outputs['MevPanda.exprs_file'];
         let pandaMatrixId = this.outputs['MevPanda.panda_output_matrix'];
         let existingNode = {};
         if (this.searchTerms.length === 0 && type === 'Search') {
@@ -129,6 +128,7 @@ export class PandaComponent implements OnChanges {
         } else if (type === 'Search') {
             this.onSearch(pandaMatrixId).subscribe(res => {
                 this.changeToFitCytoscape(res, existingNode)
+                this.isLoading = false;
             }, error => {
                 console.log("Error: ", error)
                 let message = "Error: One or more of your search terms are invalid. Please try again.";
@@ -204,7 +204,6 @@ export class PandaComponent implements OnChanges {
 
     getData(uuid) {
         this.isError = false;
-        this.displayGraph = true;
         let endPoint = `${this.API_URL}/resources/${uuid}/contents/transform/?transform-name=pandasubset&maxdepth=${this.selectedLayers}&children=${this.selectedChildren}&axis=${this.apiAxis}`;
         return this.httpClient.get(endPoint)
             .pipe(
@@ -322,7 +321,9 @@ export class PandaComponent implements OnChanges {
         if (this.currTab === 'searchGenes') {
             this.nodesArr = [];
             this.displayGraph = false;
-            this.requestData('searchGenes');
+            this.isLoading = false;
+            // this.requestData('searchGenes');
+            this.render()
         } else if (this.currTab === 'topGenes') {
             this.requestData('topGenes');
         }
@@ -332,8 +333,8 @@ export class PandaComponent implements OnChanges {
         this.cy = cytoscape({
             container: document.getElementById('cy'),
             elements: {
-                nodes: this.nodesArr,
-                edges: this.edgeArr,
+                nodes: this.displayGraph ? this.nodesArr : [],
+                edges: this.displayGraph ? this.edgeArr : [],
             },
             style: [
                 {

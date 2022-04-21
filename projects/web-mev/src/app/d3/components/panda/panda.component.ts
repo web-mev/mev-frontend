@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnChanges, Input } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError } from "rxjs/operators";
-import { throwError } from 'rxjs';
 import { environment } from '@environments/environment';
 import { NotificationService } from '@core/notifications/notification.service';
 import * as cytoscape from 'cytoscape';
@@ -11,7 +10,6 @@ import coseBilkent from 'cytoscape-cose-bilkent';
 import cise from 'cytoscape-cise';
 import layoutUtilities from 'cytoscape-layout-utilities';
 import { saveAs } from "file-saver";
-
 import { COMMA, ENTER, SPACE } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 
@@ -60,9 +58,9 @@ export class PandaComponent implements OnChanges {
     sliderValue: any = 0;
     copyNodesArr = [];
     copyEdgeArr = [];
-    hideFilter: boolean = true;
+    disableFilter: boolean = true;
     size: string = 'large';
-    isError: boolean = false;
+    // isError: boolean = false;
     displayGraph: boolean = true;
     nodeSize = {
         small: {
@@ -87,7 +85,7 @@ export class PandaComponent implements OnChanges {
             edgeWidth: [3, 8]
         }
     };
-    searchValue: string = '';
+    // searchValue: string = '';
     currTab: string = 'topGenes';
     addOnBlur: boolean = true;
     readonly separatorKeysCodes = [ENTER, COMMA, SPACE] as const;
@@ -102,14 +100,15 @@ export class PandaComponent implements OnChanges {
         if (this.currTab === 'topGenes') {
             this.displayGraph = true;
             this.requestData('topGenes');
-        } else {
-            this.displayGraph = false;
-            this.isLoading = false;
-        }
+        } 
+        // else {
+        //     this.displayGraph = false;
+        //     this.isLoading = false;
+        // }
     }
 
     requestData(type: string) {
-        this.hideFilter = true;
+        this.disableFilter = true;
         this.displayGraph = true;
         this.edgeArr = [];
         this.nodesArr = [];
@@ -189,7 +188,7 @@ export class PandaComponent implements OnChanges {
         this.copyEdgeArr = this.edgeArr;
 
         this.isLoading = false;
-        this.hideFilter = false;
+        this.disableFilter = false;
         if (this.nodesArr.length < 100) {
             this.size = "large";
         } else if (this.nodesArr.length < 200) {
@@ -203,7 +202,7 @@ export class PandaComponent implements OnChanges {
     }
 
     getData(uuid) {
-        this.isError = false;
+        // this.isError = false;
         let endPoint = `${this.API_URL}/resources/${uuid}/contents/transform/?transform-name=pandasubset&maxdepth=${this.selectedLayers}&children=${this.selectedChildren}&axis=${this.apiAxis}`;
         return this.httpClient.get(endPoint)
             .pipe(
@@ -308,7 +307,7 @@ export class PandaComponent implements OnChanges {
 
     tabChange() {
         //resets options on each tab change
-        this.hideFilter = true;
+        this.disableFilter = true;
         this.searchTerms = [];
         this.selectedLayers = 2;
         this.selectedChildren = 3;
@@ -322,7 +321,6 @@ export class PandaComponent implements OnChanges {
             this.nodesArr = [];
             this.displayGraph = false;
             this.isLoading = false;
-            // this.requestData('searchGenes');
             this.render()
         } else if (this.currTab === 'topGenes') {
             this.requestData('topGenes');

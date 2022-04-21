@@ -128,8 +128,12 @@ export class PandaComponent implements OnChanges {
             })
         } else if (type === 'Search') {
             this.onSearch(pandaMatrixId).subscribe(res => {
-                console.log("res from search: ", res);
                 this.changeToFitCytoscape(res, existingNode)
+            }, error => {
+                console.log("Error: ", error)
+                let message = "Error: One or more of your search terms are invalid. Please try again.";
+                this.notificationService.warn(message)
+                this.isLoading = false;
             })
         }
     }
@@ -282,17 +286,6 @@ export class PandaComponent implements OnChanges {
         let genes = this.searchTerms.join(",")
         let endPoint = `${this.API_URL}/resources/${uuid}/contents/transform/?transform-name=pandasubset&maxdepth=${this.selectedLayers}&children=${this.selectedChildren}&axis=${this.apiAxis}&initial_nodes=${genes}`;
         return this.httpClient.get(endPoint)
-            .pipe(
-                catchError(error => {
-                    let message = "Error: One or more of your search terms are invalid. Please try again.";
-                    this.notificationService.warn(message)
-                    console.log("Error: ", error.message);
-                    this.isLoading = false;
-                    return throwError(() => new Error(error.message))
-                    // return throwError(error)
-                    // throw error
-                }))
-
     }
 
     addSearchItem(event: MatChipInputEvent): void {

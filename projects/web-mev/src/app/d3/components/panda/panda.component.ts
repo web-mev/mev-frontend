@@ -60,7 +60,6 @@ export class PandaComponent implements OnChanges {
     copyEdgeArr = [];
     disableFilter: boolean = true;
     size: string = 'large';
-    // isError: boolean = false;
     displayGraph: boolean = true;
     nodeSize = {
         small: {
@@ -85,7 +84,6 @@ export class PandaComponent implements OnChanges {
             edgeWidth: [3, 8]
         }
     };
-    // searchValue: string = '';
     currTab: string = 'topGenes';
     addOnBlur: boolean = true;
     readonly separatorKeysCodes = [ENTER, COMMA, SPACE] as const;
@@ -101,10 +99,6 @@ export class PandaComponent implements OnChanges {
             this.displayGraph = true;
             this.requestData('topGenes');
         } 
-        // else {
-        //     this.displayGraph = false;
-        //     this.isLoading = false;
-        // }
     }
 
     requestData(type: string) {
@@ -202,7 +196,6 @@ export class PandaComponent implements OnChanges {
     }
 
     getData(uuid) {
-        // this.isError = false;
         let endPoint = `${this.API_URL}/resources/${uuid}/contents/transform/?transform-name=pandasubset&maxdepth=${this.selectedLayers}&children=${this.selectedChildren}&axis=${this.apiAxis}`;
         return this.httpClient.get(endPoint)
             .pipe(

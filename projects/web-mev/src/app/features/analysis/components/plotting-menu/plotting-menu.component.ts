@@ -17,11 +17,15 @@ interface SimpleNode {
 const TREE_DATA: SimpleNode[] = [
   {
     id: 'boxplot',
-    name: 'Expression boxplot'
+    name: 'Expression Boxplot'
   },
   {
     id: 'heatmap',
-    name: 'Expression heatmap'
+    name: 'Expression Heatmap'
+  },
+  {
+    id: 'panda',
+    name: 'Subnet Visualization'
   }
 ];
 
@@ -70,6 +74,7 @@ export class PlottingMenuComponent implements OnInit {
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
   workspaceId;
+  outputs;
 
   constructor(private route: ActivatedRoute) { 
     this.dataSource.data = TREE_DATA;

@@ -1,5 +1,5 @@
 <mat-card class="analysis-card">
-    <mat-card-header>
+    <mat-card-header *ngIf="useHeader === true">
         <div mat-card-avatar class="analysis-card__img"></div>
 
         <mat-card-title>PANDA: {{ outputs?.job_name }}</mat-card-title>

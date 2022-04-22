@@ -27,7 +27,9 @@ cytoscape.use(layoutUtilities);
 })
 export class PandaComponent implements OnChanges {
     @Input() outputs;
+    @Input() useHeader: boolean;
     private readonly API_URL = environment.apiUrl;
+
     cy: any;
     nodesArr = [];
     edgeArr = [];
@@ -98,7 +100,7 @@ export class PandaComponent implements OnChanges {
         if (this.currTab === 'topGenes') {
             this.displayGraph = true;
             this.requestData('topGenes');
-        } 
+        }
     }
 
     requestData(type: string) {

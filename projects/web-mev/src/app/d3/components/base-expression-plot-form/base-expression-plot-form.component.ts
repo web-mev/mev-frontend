@@ -26,6 +26,7 @@ export class MevBaseExpressionPlotFormComponent implements OnInit {
   submitted = false;
   isWaiting = false;
   inputForm: FormGroup;
+  inputSubnetForm: FormGroup;
   all_featuresets = [];
   exp_files = [];
   plotData = [];
@@ -48,6 +49,10 @@ export class MevBaseExpressionPlotFormComponent implements OnInit {
     this.inputForm = this.formBuilder.group({
       'expMtx': ['', Validators.required],
       'featureSet': ['', Validators.required],
+    })
+    this.inputSubnetForm = this.formBuilder.group({
+      'expMtx': ['', Validators.required],
+      // 'featureSet': ['', Validators.required],
     })
     this.all_featuresets = this.metadataService.getCustomFeatureSets();
     this.apiService

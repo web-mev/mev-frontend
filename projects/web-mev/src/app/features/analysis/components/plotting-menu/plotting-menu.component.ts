@@ -25,7 +25,7 @@ const TREE_DATA: SimpleNode[] = [
   },
   {
     id: 'panda',
-    name: 'Subnet Visualization'
+    name: 'Network Subsetting'
   }
 ];
 

@@ -28,6 +28,8 @@ cytoscape.use(layoutUtilities);
 export class PandaComponent implements OnChanges {
     @Input() outputs;
     @Input() useHeader: boolean;
+    @Input() startLoading: boolean;
+    @Input() onClick: boolean;
     private readonly API_URL = environment.apiUrl;
 
     cy: any;
@@ -97,7 +99,17 @@ export class PandaComponent implements OnChanges {
     ) { }
 
     ngOnChanges(): void {
-        if (this.currTab === 'topGenes') {
+        if (this.useHeader === false) {
+            this.isLoading = this.onClick;
+        }
+        
+        if(this.startLoading === true && this.useHeader === false ){
+            console.log("start loading now please")
+            this.displayGraph = true;
+            this.requestData('topGenes');
+        }
+        if (this.currTab === 'topGenes' && this.useHeader !== false) {
+            console.log("you are in the Analysis Results ")
             this.displayGraph = true;
             this.requestData('topGenes');
         }
@@ -110,8 +122,14 @@ export class PandaComponent implements OnChanges {
         this.nodesArr = [];
         this.isLoading = true;
         this.sliderValue = 0;
-        let pandaMatrixId = this.outputs['MevPanda.panda_output_matrix'];
+        let pandaMatrixId = (this.useHeader === false) ? this.outputs : this.outputs['MevPanda.panda_output_matrix'];
         let existingNode = {};
+        // if (type === 'plotting') {
+        //     let resourceId = this.outputs
+        //     this.getData(resourceId).subscribe(res => {
+        //         this.changeToFitCytoscape(res, existingNode)
+        //     })
+        // }
         if (this.searchTerms.length === 0 && type === 'Search') {
             let message = "Error: Please enter a search term and try again.";
             this.notificationService.warn(message);

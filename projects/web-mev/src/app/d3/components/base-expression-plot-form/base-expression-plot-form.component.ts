@@ -1,6 +1,6 @@
-import { 
-  Component, 
-  OnInit, 
+import {
+  Component,
+  OnInit,
   ChangeDetectionStrategy,
   Input
 } from '@angular/core';
@@ -22,6 +22,7 @@ import { AnalysesService } from '@app/features/analysis/services/analysis.servic
 export class MevBaseExpressionPlotFormComponent implements OnInit {
 
   @Input() workspaceId: string;
+  @Input() plotType: string
 
   submitted = false;
   isWaiting = false;
@@ -31,13 +32,17 @@ export class MevBaseExpressionPlotFormComponent implements OnInit {
   exp_files = [];
   plotData = [];
   isLoaded = false;
+  onPlot = false;
+  onClick = false;
 
   acceptable_resource_types = [
     'MTX',
     'I_MTX',
     'EXP_MTX',
-    'RNASEQ_COUNT_MTX'
+    'RNASEQ_COUNT_MTX',
   ];
+
+  feature_table_only = ['FT'];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -52,18 +57,19 @@ export class MevBaseExpressionPlotFormComponent implements OnInit {
     })
     this.inputSubnetForm = this.formBuilder.group({
       'expMtx': ['', Validators.required],
-      // 'featureSet': ['', Validators.required],
     })
     this.all_featuresets = this.metadataService.getCustomFeatureSets();
     this.apiService
       .getAvailableResourcesByParam(
-      this.acceptable_resource_types,
-      this.workspaceId
-    )
-    .subscribe(data => {
-      this.exp_files = data;
-      this.isLoaded = true;
-    });
+        (this.plotType === 'panda') ? this.feature_table_only : this.acceptable_resource_types,
+        // this.acceptable_resource_types,
+        this.workspaceId
+      )
+      .subscribe(data => {
+        this.exp_files = data;
+        this.isLoaded = true;
+        console.log("exp_files: ", this.exp_files)
+      });
   }
 
   onSubmit() {
@@ -73,9 +79,10 @@ export class MevBaseExpressionPlotFormComponent implements OnInit {
 
   createPlot() {
     const resourceId = this.inputForm.value['expMtx'];
+    console.log("resourceId: ", resourceId)
     const selectedFeatureSet = this.inputForm.value['featureSet'];
     const elements = selectedFeatureSet['elements'].map(obj => obj.id);
-    const filters = {'__rowname__': '[in]:' + elements.join(',')}
+    const filters = { '__rowname__': '[in]:' + elements.join(',') }
     this.apiService
       .getResourceContent(
         resourceId,
@@ -88,7 +95,27 @@ export class MevBaseExpressionPlotFormComponent implements OnInit {
       .subscribe(features => {
         this.plotData = features;
         this.isWaiting = false;
-        });
+      });
+  }
+
+  createPlotNetworkSubset() {
+    this.onPlot = false;
+    this.onClick = true;
+    const resourceId = this.inputSubnetForm.value['expMtx'];
+    this.apiService
+      .getResourceContent(
+        resourceId,
+        null,
+        null,
+        {},
+        {}
+      )
+      .subscribe(features => {
+        this.plotData = resourceId;
+        this.isWaiting = false;
+        this.onPlot = true;
+        this.onClick = false;
+      });
   }
 
   /**

@@ -53,8 +53,7 @@
         <mev-heatmap [workspaceId]="workspaceId"></mev-heatmap>
       </ng-container>
       <ng-container *ngIf="currentPlotType === 'panda'">
-        <mev-subnet-visualization [workspaceId]="workspaceId"></mev-subnet-visualization>
-        <mev-panda [useHeader]="false" [outputs]="outputs"></mev-panda>
+        <mev-subnet-visualization [workspaceId]="workspaceId" plotType="panda"></mev-subnet-visualization>
       </ng-container>
     </div>
   </div>

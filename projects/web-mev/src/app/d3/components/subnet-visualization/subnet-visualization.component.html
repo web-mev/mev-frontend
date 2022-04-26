@@ -41,14 +41,15 @@
 
         <div>
           <button mat-raised-button color="accent" type="submit" [disabled]="!inputSubnetForm.valid"
-            (click)="createPlot()">Plot
+            (click)="createPlotNetworkSubset()">Plot
           </button>
         </div>
       </form>
     </div>
     <mat-divider [inset]="true"></mat-divider>
 
-    <d3-heatmap [resourceData]="plotData" [isWait]="isWaiting"></d3-heatmap>
+    <!-- <d3-heatmap [resourceData]="plotData" [isWait]="isWaiting"></d3-heatmap> -->
+    <mev-panda [useHeader]="false" [outputs]="plotData" [startLoading]="onPlot" [onClick]="onClick"></mev-panda>
   </mat-card-content>
 
 </mat-card>

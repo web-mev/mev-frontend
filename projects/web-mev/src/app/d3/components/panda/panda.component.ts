@@ -98,26 +98,20 @@ export class PandaComponent implements AfterViewInit {
         private readonly notificationService: NotificationService
     ) { }
 
-    // ngOnChanges(): void {
-        // if ((this.currTab === 'topGenes' && this.showHeader !== false) || (this.startLoading === true && this.showHeader === false)) {
-        //     this.displayGraph = true;
-        //     this.requestData('topGenes');
-        // }
-    // }
-
     ngAfterViewInit(): void {
         if ((this.currTab === 'topGenes' && this.showHeader !== false) || (this.startLoading === true && this.showHeader === false)) {
             this.displayGraph = true;
             this.requestData('topGenes');
-            const element = document.getElementById('radio-group-axis') as HTMLElement;
-            element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+            this.scrollTo('radio-group-axis');
         }
+    }
 
+    scrollTo(htmlID){
+        const element = document.getElementById(htmlID) as HTMLElement;
+        element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
     }
 
     requestData(type: string) {
-        const element = document.getElementById('minimumEdgeWeight') as HTMLElement;
-        element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
         this.disableFilter = true;
         this.displayGraph = true;
         this.edgeArr = [];
@@ -130,15 +124,22 @@ export class PandaComponent implements AfterViewInit {
             let message = "Error: Please enter a search term and try again.";
             this.notificationService.warn(message);
             this.isLoading = false;
-        } else if (type === 'topGenes') {
+        } else if(this.searchTerms.length > 10){
+            let message = "Error: You have exceeded the search term limit of 10. Please remove some search terms and try again.";
+            this.notificationService.warn(message);
+            this.isLoading = false;
+        }else if (type === 'topGenes') {
             console.log("panda matrix id: ", pandaMatrixId)
             this.getData(pandaMatrixId).subscribe(res => {
                 this.changeToFitCytoscape(res, existingNode)
+                this.scrollTo('minimumEdgeWeight');
             })
+            
         } else if (type === 'Search') {
             this.onSearch(pandaMatrixId).subscribe(res => {
                 this.changeToFitCytoscape(res, existingNode)
                 this.isLoading = false;
+                this.scrollTo('minimumEdgeWeight');
             }, error => {
                 console.log("Error: ", error)
                 let message = "Error: One or more of your search terms are invalid. Please try again.";
@@ -146,8 +147,6 @@ export class PandaComponent implements AfterViewInit {
                 this.isLoading = false;
             })
         }
-        // const element = document.getElementById('minimumEdgeWeight') as HTMLElement;
-        // element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
     }
 
     changeToFitCytoscape(res, existingNode) {
@@ -302,7 +301,7 @@ export class PandaComponent implements AfterViewInit {
         const value = (event.value || '').trim().toUpperCase();
         let index = this.searchTerms.indexOf(value);
         if (index !== -1) {
-            this.notificationService.warn(`"${value}" has already been added`);
+            this.notificationService.warn(`Error: "${value}" has already been added to the search query.`);
         }
         if (value && index === -1) {
             this.searchTerms.push(value);

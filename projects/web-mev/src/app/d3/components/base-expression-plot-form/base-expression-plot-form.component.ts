@@ -1,6 +1,6 @@
-import { 
-  Component, 
-  OnInit, 
+import {
+  Component,
+  OnInit,
   ChangeDetectionStrategy,
   Input
 } from '@angular/core';
@@ -22,21 +22,27 @@ import { AnalysesService } from '@app/features/analysis/services/analysis.servic
 export class MevBaseExpressionPlotFormComponent implements OnInit {
 
   @Input() workspaceId: string;
+  @Input() plotType: string
 
   submitted = false;
   isWaiting = false;
   inputForm: FormGroup;
+  inputSubnetForm: FormGroup;
   all_featuresets = [];
   exp_files = [];
   plotData = [];
   isLoaded = false;
+  showResult = false;
+  showLoading = false;
 
   acceptable_resource_types = [
     'MTX',
     'I_MTX',
     'EXP_MTX',
-    'RNASEQ_COUNT_MTX'
+    'RNASEQ_COUNT_MTX',
   ];
+
+  feature_table_only = ['FT'];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -49,16 +55,20 @@ export class MevBaseExpressionPlotFormComponent implements OnInit {
       'expMtx': ['', Validators.required],
       'featureSet': ['', Validators.required],
     })
+    this.inputSubnetForm = this.formBuilder.group({
+      'expMtx': ['', Validators.required],
+    })
     this.all_featuresets = this.metadataService.getCustomFeatureSets();
+    let match = 'remapped_results';
     this.apiService
-      .getAvailableResourcesByParam(
-      this.acceptable_resource_types,
-      this.workspaceId
-    )
-    .subscribe(data => {
-      this.exp_files = data;
-      this.isLoaded = true;
-    });
+      .getAvailableResourcesByParamAndFileNameContains(
+        (this.plotType === 'panda') ? this.feature_table_only : this.acceptable_resource_types,
+        this.workspaceId, match
+      )
+      .subscribe(data => {
+        this.exp_files = data;
+        this.isLoaded = true;
+      });
   }
 
   onSubmit() {
@@ -70,7 +80,7 @@ export class MevBaseExpressionPlotFormComponent implements OnInit {
     const resourceId = this.inputForm.value['expMtx'];
     const selectedFeatureSet = this.inputForm.value['featureSet'];
     const elements = selectedFeatureSet['elements'].map(obj => obj.id);
-    const filters = {'__rowname__': '[in]:' + elements.join(',')}
+    const filters = { '__rowname__': '[in]:' + elements.join(',') }
     this.apiService
       .getResourceContent(
         resourceId,
@@ -83,7 +93,12 @@ export class MevBaseExpressionPlotFormComponent implements OnInit {
       .subscribe(features => {
         this.plotData = features;
         this.isWaiting = false;
-        });
+      });
+  }
+
+  createPlotNetworkSubset() {
+    this.plotData = this.inputSubnetForm.value['expMtx'];
+    this.showResult = true;
   }
 
   /**

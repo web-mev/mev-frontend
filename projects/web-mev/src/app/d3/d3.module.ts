@@ -29,14 +29,15 @@ import { SctkCellDoubletDetectionComponent } from '@app/d3/components/sctk-cell-
 import { CombatseqComponent } from './components/combatseq/combatseq.component';
 import { WgcnaComponent } from './components/wgcna/wgcna.component';
 import { WgcnaTableComponent } from './components/wgcna/wgcna_table.component';
-import {WGCNAQcPlotComponent} from './components/wgcna/wgcna_qc_plot.component';
+import { WGCNAQcPlotComponent } from './components/wgcna/wgcna_qc_plot.component';
 import { WgcnaElbowDialogComponent } from './components/wgcna/wgcna_elbow_example.component';
 import { TopgoComponent } from './components/topgo/topgo.component';
 import { MatrixSubsetComponent } from './components/matrix_subset/matrix_subset.component';
 import { TopGoBubblePlotComponent } from './components/topgo/bubble-plot/bubble-plot.component';
 import { PandaComponent } from './components/panda/panda.component';
-import {MatBadgeModule} from '@angular/material/badge';
+import { MatBadgeModule } from '@angular/material/badge';
 import { GeneMappingComponent } from './components/gene-mapping/geneMapping.component';
+import { SubnetVisualizationFormComponent } from './components/subnet-visualization/subnet-visualization.component'
 
 @NgModule({
   declarations: [
@@ -73,7 +74,8 @@ import { GeneMappingComponent } from './components/gene-mapping/geneMapping.comp
     MatrixSubsetComponent,
     TopGoBubblePlotComponent,
     PandaComponent,
-    GeneMappingComponent
+    GeneMappingComponent,
+    SubnetVisualizationFormComponent
   ],
   imports: [CommonModule, SharedModule, DragDropModule, MatBadgeModule],
   exports: [
@@ -101,7 +103,8 @@ import { GeneMappingComponent } from './components/gene-mapping/geneMapping.comp
     MatrixSubsetComponent,
     TopGoBubblePlotComponent,
     PandaComponent,
-    GeneMappingComponent
+    GeneMappingComponent,
+    SubnetVisualizationFormComponent
   ]
 })
-export class D3Module {}
+export class D3Module { }

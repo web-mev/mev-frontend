@@ -22,7 +22,7 @@ export class AnalysesService {
     private httpClient: HttpClient,
     private opAdapter: OperationAdapter,
     private fileAdapter: FileAdapter
-  ) {}
+  ) { }
 
   /**
    * Get the list of all available workspace operations.
@@ -140,7 +140,7 @@ export class AnalysesService {
    * Get the list of executed operations for a user, regardless of whether they
    * are workspace operations or not
    */
-   getAllNonWorkspaceExecOperations(): Observable<any> {
+  getAllNonWorkspaceExecOperations(): Observable<any> {
     return this.httpClient.get(
       `${this.API_URL}/non-workspace-executed-operations/`
     );
@@ -204,15 +204,38 @@ export class AnalysesService {
     );
   }
 
-    /**
-   * Get the metadata about the requested resource. Used for situations where 
-   * we want to see the name of the file, etc.
-   */
-     getResourcesMetadata(resourceId: string): Observable<File> {
-      return <Observable<File>>(
-        this.httpClient.get<File>(`${this.API_URL}/resources/${resourceId}`).pipe(
-          map( item => this.fileAdapter.adapt(item))
-        )
-      );
-    }
+  /**
+ * Get the resources/files of a workspace that can be used for analyses. Must include partial match of file name.
+ */
+  getAvailableResourcesByParamAndFileNameContains(
+    types: string[],
+    workspaceId: string,
+    stringToMatch: string
+  ): Observable<File[]> {
+    return <Observable<File[]>>(
+      this.httpClient.get<File[]>(`${this.API_URL}/resources/`).pipe(
+        map(data =>
+          data.filter(
+            item =>
+              types.includes(item.resource_type) &&
+              item.workspaces.some(workspace => workspace.id === workspaceId) &&
+              item.name.includes(stringToMatch)
+          )
+        ),
+        map((data: any[]) => data.map(item => this.fileAdapter.adapt(item)))
+      )
+    );
+  }
+
+  /**
+ * Get the metadata about the requested resource. Used for situations where 
+ * we want to see the name of the file, etc.
+ */
+  getResourcesMetadata(resourceId: string): Observable<File> {
+    return <Observable<File>>(
+      this.httpClient.get<File>(`${this.API_URL}/resources/${resourceId}`).pipe(
+        map(item => this.fileAdapter.adapt(item))
+      )
+    );
+  }
 }

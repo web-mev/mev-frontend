@@ -6,7 +6,7 @@
 }
 
 .analysis-card__img {
-    background-image: url('./panda2.png');
+    background-image: url('~assets/icons/panda.png');
     background-size: 30px;
     background-position: top right;
     background-repeat: no-repeat;

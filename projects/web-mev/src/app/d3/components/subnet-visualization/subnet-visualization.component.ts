@@ -59,11 +59,6 @@ export class SubnetVisualizationFormComponent implements OnInit {
       });
   }
 
-  onSubmit() {
-    this.submitted = true;
-    this.isWaiting = true;
-  }
-
   createPlot() {
     this.plotData = this.inputForm.value['expMtx'];
     this.showResult = true;

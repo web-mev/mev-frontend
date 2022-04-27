@@ -20,7 +20,7 @@
       </p>
       <mat-divider [inset]="true"></mat-divider>
       <div class="analysis-card__content">
-        <form *ngIf="inputSubnetForm && isLoaded" [formGroup]="inputSubnetForm" (ngSubmit)="onSubmit()">
+        <form *ngIf="inputForm && isLoaded" [formGroup]="inputForm" (ngSubmit)="onSubmit()">
           <ng-container>
             <div class="label">
               PANDA Network File: <span class="redAsterisk">* </span>
@@ -38,8 +38,8 @@
           </ng-container>
           <br>
 
-          <button mat-raised-button color="accent" type="submit" [disabled]="!inputSubnetForm.valid"
-            (click)="createPlotNetworkSubset()">Plot
+          <button mat-raised-button color="accent" type="submit" [disabled]="!inputForm.valid"
+            (click)="createPlot()">Plot
           </button>
 
         </form>

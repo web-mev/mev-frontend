@@ -22,12 +22,10 @@ import { AnalysesService } from '@app/features/analysis/services/analysis.servic
 export class MevBaseExpressionPlotFormComponent implements OnInit {
 
   @Input() workspaceId: string;
-  @Input() plotType: string
 
   submitted = false;
   isWaiting = false;
   inputForm: FormGroup;
-  inputSubnetForm: FormGroup;
   all_featuresets = [];
   exp_files = [];
   plotData = [];
@@ -42,11 +40,6 @@ export class MevBaseExpressionPlotFormComponent implements OnInit {
     'RNASEQ_COUNT_MTX',
   ];
 
-  feature_table_only = [
-    'FT',
-    'MTX',
-  ];
-
   constructor(
     private formBuilder: FormBuilder,
     private metadataService: MetadataService,
@@ -58,13 +51,10 @@ export class MevBaseExpressionPlotFormComponent implements OnInit {
       'expMtx': ['', Validators.required],
       'featureSet': ['', Validators.required],
     })
-    this.inputSubnetForm = this.formBuilder.group({
-      'expMtx': ['', Validators.required],
-    })
     this.all_featuresets = this.metadataService.getCustomFeatureSets();
     this.apiService
       .getAvailableResourcesByParam(
-        (this.plotType === 'panda') ? this.feature_table_only : this.acceptable_resource_types,
+        this.acceptable_resource_types,
         this.workspaceId
       )
       .subscribe(data => {
@@ -96,11 +86,6 @@ export class MevBaseExpressionPlotFormComponent implements OnInit {
         this.plotData = features;
         this.isWaiting = false;
       });
-  }
-
-  createPlotNetworkSubset() {
-    this.plotData = this.inputSubnetForm.value['expMtx'];
-    this.showResult = true;
   }
 
   /**

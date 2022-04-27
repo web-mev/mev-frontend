@@ -1,7 +1,8 @@
 <mev-spinner-overlay *ngIf="!isLoaded"></mev-spinner-overlay>
 
 <mat-accordion>
-  <mat-expansion-panel class="expansionPanel" [expanded]="!showResult">
+  <mat-expansion-panel class="expansionPanel" [expanded]="!showResult" (opened)="showResult = false"
+    (closed)="showResult = true">
     <mat-expansion-panel-header>
       <mat-panel-title>
         <mat-card-header>
@@ -20,7 +21,7 @@
       </p>
       <mat-divider [inset]="true"></mat-divider>
       <div class="analysis-card__content">
-        <form *ngIf="inputForm && isLoaded" [formGroup]="inputForm" (ngSubmit)="onSubmit()">
+        <form *ngIf="inputForm && isLoaded" [formGroup]="inputForm">
           <ng-container>
             <div class="label">
               PANDA Network File: <span class="redAsterisk">* </span>
@@ -49,5 +50,6 @@
 </mat-accordion>
 
 <mev-spinner-overlay *ngIf="showLoading"></mev-spinner-overlay>
-<mev-panda *ngIf="showResult" [showHeader]="false" [outputs]="plotData" [startLoading]="showResult" [onClick]="showLoading">
+<mev-panda *ngIf="showResult" [showHeader]="false" [outputs]="plotData" [startLoading]="showResult"
+  [onClick]="showLoading">
 </mev-panda>

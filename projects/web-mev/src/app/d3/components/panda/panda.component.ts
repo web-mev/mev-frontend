@@ -141,7 +141,7 @@ export class PandaComponent implements AfterViewInit {
                 this.scrollTo('minimumEdgeWeight');
             }, error => {
                 console.log("Error: ", error)
-                let message = "Error: One or more of your search terms are invalid. Please try again.";
+                let message = `Error: ${error.error.error}`
                 this.notificationService.warn(message)
                 this.isLoading = false;
             })

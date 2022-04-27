@@ -42,7 +42,10 @@ export class MevBaseExpressionPlotFormComponent implements OnInit {
     'RNASEQ_COUNT_MTX',
   ];
 
-  feature_table_only = ['FT'];
+  feature_table_only = [
+    'FT',
+    'MTX',
+  ];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -59,11 +62,10 @@ export class MevBaseExpressionPlotFormComponent implements OnInit {
       'expMtx': ['', Validators.required],
     })
     this.all_featuresets = this.metadataService.getCustomFeatureSets();
-    let match = 'remapped_results';
     this.apiService
-      .getAvailableResourcesByParamAndFileNameContains(
+      .getAvailableResourcesByParam(
         (this.plotType === 'panda') ? this.feature_table_only : this.acceptable_resource_types,
-        this.workspaceId, match
+        this.workspaceId
       )
       .subscribe(data => {
         this.exp_files = data;

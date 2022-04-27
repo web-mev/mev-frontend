@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnChanges, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnChanges, Input, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError } from "rxjs/operators";
 import { environment } from '@environments/environment';
@@ -25,9 +25,9 @@ cytoscape.use(layoutUtilities);
     styleUrls: ['./panda.component.css'],
     changeDetection: ChangeDetectionStrategy.Default
 })
-export class PandaComponent implements OnChanges {
+export class PandaComponent implements AfterViewInit {
     @Input() outputs;
-    @Input() useHeader: boolean;
+    @Input() showHeader: boolean;
     @Input() startLoading: boolean;
     @Input() onClick: boolean;
     private readonly API_URL = environment.apiUrl;
@@ -98,43 +98,40 @@ export class PandaComponent implements OnChanges {
         private readonly notificationService: NotificationService
     ) { }
 
-    ngOnChanges(): void {
-        if (this.useHeader === false) {
-            this.isLoading = this.onClick;
-        }
-        
-        if(this.startLoading === true && this.useHeader === false ){
-            console.log("start loading now please")
+    // ngOnChanges(): void {
+        // if ((this.currTab === 'topGenes' && this.showHeader !== false) || (this.startLoading === true && this.showHeader === false)) {
+        //     this.displayGraph = true;
+        //     this.requestData('topGenes');
+        // }
+    // }
+
+    ngAfterViewInit(): void {
+        if ((this.currTab === 'topGenes' && this.showHeader !== false) || (this.startLoading === true && this.showHeader === false)) {
             this.displayGraph = true;
             this.requestData('topGenes');
+            const element = document.getElementById('radio-group-axis') as HTMLElement;
+            element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
         }
-        if (this.currTab === 'topGenes' && this.useHeader !== false) {
-            console.log("you are in the Analysis Results ")
-            this.displayGraph = true;
-            this.requestData('topGenes');
-        }
+
     }
 
     requestData(type: string) {
+        const element = document.getElementById('minimumEdgeWeight') as HTMLElement;
+        element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
         this.disableFilter = true;
         this.displayGraph = true;
         this.edgeArr = [];
         this.nodesArr = [];
         this.isLoading = true;
         this.sliderValue = 0;
-        let pandaMatrixId = (this.useHeader === false) ? this.outputs : this.outputs['MevPanda.panda_output_matrix'];
+        let pandaMatrixId = (this.showHeader === false) ? this.outputs : this.outputs['MevPanda.panda_output_matrix'];
         let existingNode = {};
-        // if (type === 'plotting') {
-        //     let resourceId = this.outputs
-        //     this.getData(resourceId).subscribe(res => {
-        //         this.changeToFitCytoscape(res, existingNode)
-        //     })
-        // }
         if (this.searchTerms.length === 0 && type === 'Search') {
             let message = "Error: Please enter a search term and try again.";
             this.notificationService.warn(message);
             this.isLoading = false;
         } else if (type === 'topGenes') {
+            console.log("panda matrix id: ", pandaMatrixId)
             this.getData(pandaMatrixId).subscribe(res => {
                 this.changeToFitCytoscape(res, existingNode)
             })
@@ -149,6 +146,8 @@ export class PandaComponent implements OnChanges {
                 this.isLoading = false;
             })
         }
+        // const element = document.getElementById('minimumEdgeWeight') as HTMLElement;
+        // element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
     }
 
     changeToFitCytoscape(res, existingNode) {

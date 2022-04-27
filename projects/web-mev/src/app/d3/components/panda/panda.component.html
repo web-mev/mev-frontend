@@ -1,5 +1,6 @@
+<mev-spinner-overlay *ngIf="isLoading"></mev-spinner-overlay>
 <mat-card class="analysis-card">
-    <mat-card-header *ngIf="useHeader === true">
+    <mat-card-header *ngIf="showHeader === true">
         <div mat-card-avatar class="analysis-card__img"></div>
 
         <mat-card-title>PANDA: {{ outputs?.job_name }}</mat-card-title>
@@ -58,7 +59,7 @@
                 </mat-radio-group>
                 <br>
                 <br>
-                <div>
+                <div id="minimumEdgeWeight">
                     <label id="radio-group-axis">Minimum Edge Weight: </label>
                     {{0}}
                     <mat-slider thumbLabel tickInterval="2" step="1" min="0" max="20" aria-label="units"
@@ -145,14 +146,14 @@
             </mat-radio-group>
             <br>
             <br>
-            <div>
+            <div id="minimumEdgeWeight">
                 <label id="radio-group-axis">Minimum Edge Weight: </label>
                 {{0}}
                 <mat-slider thumbLabel tickInterval="2" step="1" min="0" max="20" aria-label="units"
                     (change)="updateSlider($event)" [(ngModel)]="sliderValue">
                 </mat-slider>
                 {{20}}
-                <button mat-raised-button color="accent" class="filterButton" (click)="filterEdges()"
+                <button id="filterBtn" mat-raised-button color="accent" class="filterButton" (click)="filterEdges()"
                     [disabled]="disableFilter">Filter</button>
             </div>
             <br>

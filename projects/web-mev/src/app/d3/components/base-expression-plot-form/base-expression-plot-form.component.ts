@@ -32,8 +32,8 @@ export class MevBaseExpressionPlotFormComponent implements OnInit {
   exp_files = [];
   plotData = [];
   isLoaded = false;
-  onPlot = false;
-  onClick = false;
+  showResult = false;
+  showLoading = false;
 
   acceptable_resource_types = [
     'MTX',
@@ -62,13 +62,11 @@ export class MevBaseExpressionPlotFormComponent implements OnInit {
     this.apiService
       .getAvailableResourcesByParam(
         (this.plotType === 'panda') ? this.feature_table_only : this.acceptable_resource_types,
-        // this.acceptable_resource_types,
         this.workspaceId
       )
       .subscribe(data => {
         this.exp_files = data;
         this.isLoaded = true;
-        console.log("exp_files: ", this.exp_files)
       });
   }
 
@@ -79,7 +77,6 @@ export class MevBaseExpressionPlotFormComponent implements OnInit {
 
   createPlot() {
     const resourceId = this.inputForm.value['expMtx'];
-    console.log("resourceId: ", resourceId)
     const selectedFeatureSet = this.inputForm.value['featureSet'];
     const elements = selectedFeatureSet['elements'].map(obj => obj.id);
     const filters = { '__rowname__': '[in]:' + elements.join(',') }
@@ -99,8 +96,8 @@ export class MevBaseExpressionPlotFormComponent implements OnInit {
   }
 
   createPlotNetworkSubset() {
-    this.onPlot = false;
-    this.onClick = true;
+    
+    this.showLoading = true;
     const resourceId = this.inputSubnetForm.value['expMtx'];
     this.apiService
       .getResourceContent(
@@ -112,9 +109,8 @@ export class MevBaseExpressionPlotFormComponent implements OnInit {
       )
       .subscribe(features => {
         this.plotData = resourceId;
-        this.isWaiting = false;
-        this.onPlot = true;
-        this.onClick = false;
+        this.showResult = true;
+        this.showLoading= false;
       });
   }
 

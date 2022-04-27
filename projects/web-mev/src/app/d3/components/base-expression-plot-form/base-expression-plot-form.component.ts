@@ -59,10 +59,11 @@ export class MevBaseExpressionPlotFormComponent implements OnInit {
       'expMtx': ['', Validators.required],
     })
     this.all_featuresets = this.metadataService.getCustomFeatureSets();
+    let match = 'remapped_results';
     this.apiService
-      .getAvailableResourcesByParam(
+      .getAvailableResourcesByParamAndFileNameContains(
         (this.plotType === 'panda') ? this.feature_table_only : this.acceptable_resource_types,
-        this.workspaceId
+        this.workspaceId, match
       )
       .subscribe(data => {
         this.exp_files = data;
@@ -96,22 +97,25 @@ export class MevBaseExpressionPlotFormComponent implements OnInit {
   }
 
   createPlotNetworkSubset() {
-    
+
     this.showLoading = true;
     const resourceId = this.inputSubnetForm.value['expMtx'];
-    this.apiService
-      .getResourceContent(
-        resourceId,
-        null,
-        null,
-        {},
-        {}
-      )
-      .subscribe(features => {
-        this.plotData = resourceId;
-        this.showResult = true;
-        this.showLoading= false;
-      });
+    this.plotData = resourceId;
+    this.showResult = true;
+    this.showLoading = false;
+    // this.apiService
+    //   .getResourceContent(
+    //     resourceId,
+    //     null,
+    //     null,
+    //     {},
+    //     {}
+    //   )
+    //   .subscribe(features => {
+    //     this.plotData = resourceId;
+    //     this.showResult = true;
+    //     this.showLoading= false;
+    //   });
   }
 
   /**

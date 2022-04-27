@@ -83,7 +83,7 @@ export class PandaComponent implements AfterViewInit {
         large: {
             height: 40,
             width: 40,
-            fontSize: 8,
+            fontSize: 7,
             borderWidth: 2,
             edgeWidth: [3, 8]
         }
@@ -129,7 +129,6 @@ export class PandaComponent implements AfterViewInit {
             this.notificationService.warn(message);
             this.isLoading = false;
         }else if (type === 'topGenes') {
-            console.log("panda matrix id: ", pandaMatrixId)
             this.getData(pandaMatrixId).subscribe(res => {
                 this.changeToFitCytoscape(res, existingNode)
                 this.scrollTo('minimumEdgeWeight');

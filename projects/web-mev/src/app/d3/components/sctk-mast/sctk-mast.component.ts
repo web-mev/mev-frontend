@@ -43,8 +43,8 @@ import {
     /* Table settings */
     displayedColumns = [
       'name',
-      'Log2_FC',
-      'Pvalue',
+      'log2FoldChange',
+      'pvalue',
       'FDR'
     ];
     operators = [
@@ -75,7 +75,7 @@ import {
         hasOperator: true,
         operatorDefaultValue: 'lte'
       },
-      Log2_FC: {
+      log2FoldChange: {
         defaultValue: '',
         hasOperator: true,
         operatorDefaultValue: 'lte'
@@ -561,8 +561,8 @@ import {
   
   export interface SingleCellDGEFeature {
     name: string;
-    Log2_FC: number;
-    Pvalue: number;
+    log2FoldChange: number;
+    pvalue: number;
     FDR: number;
   }
   

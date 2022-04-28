@@ -50,14 +50,14 @@
                 Log-Fold-Change:
               </span>
               <mat-form-field class="form-control form-control__small" color="accent">
-                <mat-select formControlName="Log2_FC_operator">
+                <mat-select formControlName="log2FoldChange_operator">
                   <mat-option *ngFor="let operator of operators" [value]="operator.id">
                     {{ operator.name }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
               <mat-form-field class="form-control">
-                <input matInput formControlName="Log2_FC" type=number step=any>
+                <input matInput formControlName="log2FoldChange" type=number step=any>
               </mat-form-field>
             </div>
   
@@ -77,9 +77,9 @@
               <mat-cell *matCellDef="let row">{{row.name}}</mat-cell>
             </ng-container>
   
-            <ng-container matColumnDef="Log2_FC">
+            <ng-container matColumnDef="log2FoldChange">
               <mat-header-cell *matHeaderCellDef mat-sort-header>Log 2 Fold Change</mat-header-cell>
-              <mat-cell class="description-cell" *matCellDef="let row">{{row.Log2_FC}}</mat-cell>
+              <mat-cell class="description-cell" *matCellDef="let row">{{row.log2FoldChange}}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="FDR">
@@ -87,9 +87,9 @@
               <mat-cell class="description-cell" *matCellDef="let row">{{row.FDR}}</mat-cell>
             </ng-container>
   
-            <ng-container matColumnDef="Pvalue">
+            <ng-container matColumnDef="pvalue">
               <mat-header-cell *matHeaderCellDef mat-sort-header>P-value</mat-header-cell>
-              <mat-cell class="description-cell" *matCellDef="let row">{{row.Pvalue}}</mat-cell>
+              <mat-cell class="description-cell" *matCellDef="let row">{{row.pvalue}}</mat-cell>
             </ng-container>
   
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

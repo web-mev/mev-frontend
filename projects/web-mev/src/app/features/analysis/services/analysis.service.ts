@@ -205,29 +205,6 @@ export class AnalysesService {
   }
 
   /**
- * Get the resources/files of a workspace that can be used for analyses. Must include partial match of file name.
- */
-  getAvailableResourcesByParamAndFileNameContains(
-    types: string[],
-    workspaceId: string,
-    stringToMatch: string
-  ): Observable<File[]> {
-    return <Observable<File[]>>(
-      this.httpClient.get<File[]>(`${this.API_URL}/resources/`).pipe(
-        map(data =>
-          data.filter(
-            item =>
-              types.includes(item.resource_type) &&
-              item.workspaces.some(workspace => workspace.id === workspaceId) &&
-              item.name.includes(stringToMatch)
-          )
-        ),
-        map((data: any[]) => data.map(item => this.fileAdapter.adapt(item)))
-      )
-    );
-  }
-
-  /**
  * Get the metadata about the requested resource. Used for situations where 
  * we want to see the name of the file, etc.
  */

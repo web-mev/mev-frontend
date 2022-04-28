@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnChanges, Input, AfterViewInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnChanges, Input, AfterViewInit, SimpleChanges } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError } from "rxjs/operators";
 import { environment } from '@environments/environment';
@@ -92,6 +92,7 @@ export class PandaComponent implements AfterViewInit {
     addOnBlur: boolean = true;
     readonly separatorKeysCodes = [ENTER, COMMA, SPACE] as const;
     searchTerms: string[] = [];
+    hasBeenInitialized = false;
 
     constructor(
         private httpClient: HttpClient,
@@ -104,9 +105,10 @@ export class PandaComponent implements AfterViewInit {
             this.requestData('topGenes');
             this.scrollTo('radio-group-axis');
         }
+        this.hasBeenInitialized = true;
     }
 
-    scrollTo(htmlID){
+    scrollTo(htmlID) {
         const element = document.getElementById(htmlID) as HTMLElement;
         element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
     }
@@ -124,16 +126,16 @@ export class PandaComponent implements AfterViewInit {
             let message = "Error: Please enter a search term and try again.";
             this.notificationService.warn(message);
             this.isLoading = false;
-        } else if(this.searchTerms.length > 10){
+        } else if (this.searchTerms.length > 10) {
             let message = "Error: You have exceeded the search term limit of 10. Please remove some search terms and try again.";
             this.notificationService.warn(message);
             this.isLoading = false;
-        }else if (type === 'topGenes') {
+        } else if (type === 'topGenes') {
             this.getData(pandaMatrixId).subscribe(res => {
                 this.changeToFitCytoscape(res, existingNode)
                 this.scrollTo('minimumEdgeWeight');
             })
-            
+
         } else if (type === 'Search') {
             this.onSearch(pandaMatrixId).subscribe(res => {
                 this.changeToFitCytoscape(res, existingNode)
@@ -141,7 +143,7 @@ export class PandaComponent implements AfterViewInit {
                 this.scrollTo('minimumEdgeWeight');
             }, error => {
                 console.log("Error: ", error)
-                let message = "Error: One or more of your search terms are invalid. Please try again.";
+                let message = `Error: ${error.error.error}`
                 this.notificationService.warn(message)
                 this.isLoading = false;
             })
@@ -218,6 +220,9 @@ export class PandaComponent implements AfterViewInit {
             .pipe(
                 catchError(error => {
                     console.log("Error: ", error);
+                    let message = `Error: ${error.error.error}`
+                    this.notificationService.warn(message)
+                    this.isLoading = false;
                     throw error;
                 }))
     }

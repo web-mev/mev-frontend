@@ -5,6 +5,7 @@
         <div class="sideContainer">
             <span>
                 <div *ngFor="let item of filterItems | keyvalue">
+                    <!-- <h1>{{item.key}}</h1> -->
                     <section class="example-section" [(formGroup)]="target">
                         <ul>
                             <li>
@@ -18,7 +19,7 @@
                 </div>
                 
             </span>
-            <button mat-raised-button color="accent" (click)="addToQuery(filterItems, currentDataset)">Search</button>
+            <button mat-raised-button color="accent" (click)="modifyQueryResults()">Search</button>
         </div>
 
     </mat-drawer>
@@ -38,7 +39,8 @@
         </ng-container>
 
         <ng-container *ngIf="currentDataset === 'target-rnaseq'">
-            <target-rnaseq-explorer></target-rnaseq-explorer>
+            <target-rnaseq-explorer [query]="searchQueryResults"></target-rnaseq-explorer>
+            <!-- <target-rnaseq-explorer ></target-rnaseq-explorer> -->
         </ng-container>
 
         <ng-container *ngIf="currentDataset === 'gtex-rnaseq'">

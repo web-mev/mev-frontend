@@ -1,5 +1,5 @@
-import { Component, OnInit, OnChanges, AfterViewInit, ChangeDetectorRef, ChangeDetectionStrategy} from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { Component, OnInit, OnChanges, AfterViewInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { environment } from '@environments/environment';
 
@@ -15,86 +15,78 @@ export class PublicDatasetsComponent implements OnInit {
   currentDataset = '';
   isLoading: boolean = false;
   target: FormGroup;
+  queryString: string;
+  filterItems = {};
+  facetField;
+  searchQueryResults: string = "pass the results along with this"
 
-  filterItems = {
-    gender: {
-      "male": 10,
-      "female": 20,
-    },
-    ethnicity: {
-      "not hispanic or latino": 0,
-      "hispanic or latino": 0,
-    },
-    race: {
-      "white": 0,
-      "black or african american": 0,
-      "asian": 0,
-      "other": 0,
-      "Unknown": 0
-    },
-    vital_status:{
-      "Dead": 0,
-      "Alive": 0
-    },
-    age_at_diagnosis:{
-      "0-10": 0,
-      "10-30": 0,
-      "30-60": 0,
-      "60+": 0
-    },
-    cog_renal_stage:{
-      "Stage I": 0,
-      "Stage II": 0,
-      "Stage III": 0,
-      "Stage IV": 0,
-      "Stage V": 0
-    },
-    days_to_last_follow_up: {
-      "0-50": 0,
-      "50-100": 0,
-      "100-200": 0,
-      "200+": 0
-    },
-    inss_stage: {
-      "Stage 1": 0,
-      "Stage 2": 0,
-      "Stage 3": 0,
-      "Stage 4": 0,
-      "Stage 5": 0
-    },
-    last_known_disease_status: {
-      "not reported": 0,
-      "Unknown tumor status": 0,
-    }
+  // filterItems = {
+  // gender: {
+  //   "male": 10,
+  //   "female": 20,
+  // },
+  // }
 
-  }
+  // targetFields = ["gender"]
+  targetFields = ["ethnicity", "gender", "race", "vital_status", "cog_renal_stage", "last_known_disease_status", "morphology", "primary_diagnosis", "progression_or_recurrence", "site_of_resection_or_biopsy", "tissue_or_organ_of_origin", "tumor_grade", "dbgap_accession_number", "disease_type", "name", "primary_site", "project_id"];
+  targetRangeFields = ["age_at_diagnosis", "days_to_last_follow_up", "year_of_diagnosis"]
 
   constructor(fb: FormBuilder, private httpClient: HttpClient, private ref: ChangeDetectorRef) {
-    this.target = fb.group({
-      "male": false,
-      "female": false,
-      "not hispanic or latino": false,
-      "hispanic or latino": false,
-      "white": false,
-      "black or african american": false,
-      "asian": false,
-      "other": false,
-      "unknown": false,
-      "Dead": false,
-      "Alive": false,
-    });
+    //this needs to be initialized for checkboxes
+    this.target = fb.group({});
   }
-
 
   ngOnInit(): void {
     this.isLoading = true;
-    this.addToQuery(this.filterItems, 'target-rnaseq');
-    console.log("on init: ", this.filterItems)
-    
+    let currDataSet = 'target-rnaseq';
+    // this.addToQuery(this.filterItems, currDataSet);
+    this.queryString = this.buildFacetFieldQueryString(this.targetFields, currDataSet);
+
+    this.buildFacetFieldQueryRangeString(this.targetRangeFields[0], currDataSet, 0, 7000, 1000)
+    this.buildFacetFieldQueryRangeString(this.targetRangeFields[1], currDataSet, 0, 4000, 500)
+    this.buildFacetFieldQueryRangeString(this.targetRangeFields[2], currDataSet, 1980, 2022, 10)
+
+    this.modifyQueryResults()
+  }
+
+  buildFacetFieldQueryString(categoryArray, dataset) {
+    let query = `${this.API_URL}/public-datasets/query/${dataset}/?q=*&facet=true`;
+    for (let i = 0; i < categoryArray.length; i++) {
+      query += "&facet.field=" + categoryArray[i];
+    }
+    return query;
+  }
+
+  buildFacetFieldQueryRangeString(category, dataset, start, end, gap) {
+    let query = `${this.API_URL}/public-datasets/query/${dataset}/?q=*&facet=true`;
+    query += `&facet.field=${category}&facet.range=${category}&facet.range.start=${start}&facet.range.end=${end}&facet.range.gap=${gap}`;
+    return query;
+  }
+
+  getQueryResults(queryString) {
+    return this.httpClient.get(queryString)
+  }
+
+
+  modifyQueryResults() {
+    this.getQueryResults(this.queryString)
+      .subscribe(res => {
+        this.facetField = res['facet_counts']['facet_fields'];
+        for (let cat in this.facetField) {
+          let arr = this.facetField[cat]
+          let obj = {}
+          for (let i = 0; i < arr.length; i += 2) {
+            obj[arr[i]] = arr[i + 1];
+            this.target.addControl(arr[i], new FormControl(false))
+          }
+          let temp = cat.toString()
+          this.filterItems[temp] = obj;
+        }
+        this.isLoading = false;
+      })
   }
 
   setDataset(datasetTag: string) {
-    console.log('Set dataset to ' + datasetTag);
     this.currentDataset = datasetTag;
   }
 
@@ -102,26 +94,26 @@ export class PublicDatasetsComponent implements OnInit {
     this.currentDataset = '';
   }
 
-  addToQuery(searchItem, dataset) {
-    for (let cat in searchItem) {
-      for (let i in searchItem[cat]) {
-        this.getResults(cat, i, dataset)
-          .subscribe(res => {
-            this.filterItems[cat][i] = res['response']['numFound'];
-          })
-      }
-      this.isLoading = false;
-    }
-    console.log("filter logs: ", this.filterItems)
-    
-    // this.ref.markForCheck();
-    
-  }
+  // addToQuery(searchItem, dataset) {
+  //   for (let cat in searchItem) {
+  //     for (let i in searchItem[cat]) {
+  //       this.getResults(cat, i, dataset)
+  //         .subscribe(res => {
+  //           // console.log("query results: ", res['response'])
+  //           this.filterItems[cat][i] = res['response']['numFound'];
+  //         })
+  //     }
+  //     this.isLoading = false;
+  //   }
+  //   // console.log("filter logs: ", this.filterItems)
+  // }
 
-  getResults(category, item, dataset) {
-    let query = `${this.API_URL}/public-datasets/query/${dataset}/?q=${category}:"${item}"`;
-    console.log("query:", query )
-    return this.httpClient.get(query)
-  }
+
+  // getResults(category, item, dataset) {
+  //   let query = `${this.API_URL}/public-datasets/query/${dataset}/?q=${category}:"${item}"`;
+  //   this.searchQuery = `${category}="${item}"`
+  //   // console.log("query:", query)
+  //   return this.httpClient.get(query)
+  // }
 
 }

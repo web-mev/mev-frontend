@@ -13,40 +13,28 @@ import { environment } from '@environments/environment';
 export class PublicDatasetsComponent implements OnInit {
   private readonly API_URL = environment.apiUrl;
   currentDataset = '';
-  isLoading: boolean = false;
-  target: FormGroup;
   queryString: string;
   filterItems = {};
   facetField;
-  searchQueryResults: string = "pass the results along with this"
+  searchQueryResults: string = "";
+  checkBoxItems = [];
 
-  // filterItems = {
-  // gender: {
-  //   "male": 10,
-  //   "female": 20,
-  // },
-  // }
 
-  // targetFields = ["gender"]
+  // targetFields = ["ethnicity", "gender"]
   targetFields = ["ethnicity", "gender", "race", "vital_status", "cog_renal_stage", "last_known_disease_status", "morphology", "primary_diagnosis", "progression_or_recurrence", "site_of_resection_or_biopsy", "tissue_or_organ_of_origin", "tumor_grade", "dbgap_accession_number", "disease_type", "name", "primary_site", "project_id"];
   targetRangeFields = ["age_at_diagnosis", "days_to_last_follow_up", "year_of_diagnosis"]
 
-  constructor(fb: FormBuilder, private httpClient: HttpClient, private ref: ChangeDetectorRef) {
-    //this needs to be initialized for checkboxes
-    this.target = fb.group({});
-  }
+  constructor(fb: FormBuilder, private httpClient: HttpClient, private ref: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    this.isLoading = true;
     let currDataSet = 'target-rnaseq';
-    // this.addToQuery(this.filterItems, currDataSet);
     this.queryString = this.buildFacetFieldQueryString(this.targetFields, currDataSet);
 
-    this.buildFacetFieldQueryRangeString(this.targetRangeFields[0], currDataSet, 0, 7000, 1000)
-    this.buildFacetFieldQueryRangeString(this.targetRangeFields[1], currDataSet, 0, 4000, 500)
-    this.buildFacetFieldQueryRangeString(this.targetRangeFields[2], currDataSet, 1980, 2022, 10)
+    // this.buildFacetFieldQueryRangeString(this.targetRangeFields[0], currDataSet, 0, 7000, 1000)
+    // this.buildFacetFieldQueryRangeString(this.targetRangeFields[1], currDataSet, 0, 4000, 500)
+    // this.buildFacetFieldQueryRangeString(this.targetRangeFields[2], currDataSet, 1980, 2022, 10)
 
-    this.modifyQueryResults()
+    this.updateFilterValues()
   }
 
   buildFacetFieldQueryString(categoryArray, dataset) {
@@ -68,7 +56,7 @@ export class PublicDatasetsComponent implements OnInit {
   }
 
 
-  modifyQueryResults() {
+  updateFilterValues() {
     this.getQueryResults(this.queryString)
       .subscribe(res => {
         this.facetField = res['facet_counts']['facet_fields'];
@@ -77,13 +65,26 @@ export class PublicDatasetsComponent implements OnInit {
           let obj = {}
           for (let i = 0; i < arr.length; i += 2) {
             obj[arr[i]] = arr[i + 1];
-            this.target.addControl(arr[i], new FormControl(false))
           }
-          let temp = cat.toString()
-          this.filterItems[temp] = obj;
+          this.filterItems[cat] = obj;
         }
-        this.isLoading = false;
       })
+  }
+
+  onChecked(currResult, cat, subcat) {
+    let newQueryItem = `${cat}:${subcat}`;
+    if (currResult === true) {
+      this.checkBoxItems.push(newQueryItem);
+    } else {
+      this.checkBoxItems = this.checkBoxItems.filter(item => item !== newQueryItem);
+    }
+    // console.log("current checked items: ", this.checkBoxItems, this.queryString)
+  }
+
+  filterData() {
+    let newQueryString = this.checkBoxItems.join(' AND ');
+    console.log("new query string: ", newQueryString);
+    this.searchQueryResults = "?q="+ newQueryString;
   }
 
   setDataset(datasetTag: string) {
@@ -93,27 +94,5 @@ export class PublicDatasetsComponent implements OnInit {
   backToBrowse() {
     this.currentDataset = '';
   }
-
-  // addToQuery(searchItem, dataset) {
-  //   for (let cat in searchItem) {
-  //     for (let i in searchItem[cat]) {
-  //       this.getResults(cat, i, dataset)
-  //         .subscribe(res => {
-  //           // console.log("query results: ", res['response'])
-  //           this.filterItems[cat][i] = res['response']['numFound'];
-  //         })
-  //     }
-  //     this.isLoading = false;
-  //   }
-  //   // console.log("filter logs: ", this.filterItems)
-  // }
-
-
-  // getResults(category, item, dataset) {
-  //   let query = `${this.API_URL}/public-datasets/query/${dataset}/?q=${category}:"${item}"`;
-  //   this.searchQuery = `${category}="${item}"`
-  //   // console.log("query:", query)
-  //   return this.httpClient.get(query)
-  // }
 
 }

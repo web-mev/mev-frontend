@@ -3,7 +3,8 @@ import {
   OnInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Input
+  Input,
+  OnChanges
 } from '@angular/core';
 import { FileService } from '@app/features/file-manager/services/file-manager.service';
 import { NotificationService } from '@core/notifications/notification.service';
@@ -18,10 +19,11 @@ import { forkJoin } from 'rxjs';
   styleUrls: ['./target-rnaseq.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TargetRnaseqComponent extends GdcRnaseqComponent implements OnInit {
+export class TargetRnaseqComponent extends GdcRnaseqComponent implements OnChanges {
   @Input() query: string = "placeholder for nowx"
   datasetTag = 'target-rnaseq';
-  name_map_key = 'target_type_to_name_map'
+  name_map_key = 'target_type_to_name_map';
+  tissue_types_url = '';
 
   constructor(
     public cdRef: ChangeDetectorRef,
@@ -33,7 +35,7 @@ export class TargetRnaseqComponent extends GdcRnaseqComponent implements OnInit 
     super(cdRef, pdService, notificationService, fileService, dialog);
   }
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
     this.fetchData2(this.datasetTag, this.name_map_key);
   }
 
@@ -53,6 +55,7 @@ export class TargetRnaseqComponent extends GdcRnaseqComponent implements OnInit 
     let $observable_dict = {};
     let facet_list = [];
     let types_url = datasetTag + '/?q=*:*&facet=on&facet.field=project_id&rows=0' + `&${this.query}`
+    // let types_url = 'target-rnaseq/?q=gender:female&vital_status:Alive&facet=on&facet.field=tissue_or_organ_of_origin'
     $observable_dict['solr_query'] = this.pdService.makeSolrQuery(types_url);
     $observable_dict['db_query'] = this.pdService.getPublicDatasetDetails(datasetTag);
     forkJoin($observable_dict).subscribe(
@@ -80,12 +83,19 @@ export class TargetRnaseqComponent extends GdcRnaseqComponent implements OnInit 
         this.cdRef.markForCheck();
       }
     );
+    let addTissueFacet = '&facet=on&facet.field=tissue_or_organ_of_origin'
+    // let tissue_types_url = datasetTag + '?q=*:*&facet=on&facet.field=tissue_or_organ_of_origin&rows=0' + `&${this.query}`;
+    // let tissue_types_url = 'target-rnaseq/?q=race:asian AND gender:female&facet=on&facet.field=tissue_or_organ_of_origin'
 
-    let tissue_types_url = datasetTag + '?q=*:*&facet=on&facet.field=tissue_or_organ_of_origin&rows=0' + `&${this.query}`
-    console.log("tissue type url: ",tissue_types_url)
-    this.pdService.makeSolrQuery(tissue_types_url).subscribe(
+    if (this.query.length === 0) {
+      this.tissue_types_url = 'target-rnaseq/?q=*:*&facet=on&facet.field=tissue_or_organ_of_origin&rows=0'
+    } else {
+      this.tissue_types_url = this.datasetTag + "/" + this.query + addTissueFacet;
+      console.log("used the filtered url: ", this.tissue_types_url)
+    }
+    // console.log("tissue type url: ", tissue_types_url)
+    this.pdService.makeSolrQuery(this.tissue_types_url).subscribe(
       data => {
-        console.log("tissue data: ", data)
         let facet_list = [];
         this.tissue_list = [];
         this.tissue_count_dict = {};

@@ -1,27 +1,19 @@
-<mev-spinner-overlay *ngIf="isLoading"></mev-spinner-overlay>
+<!-- <mev-spinner-overlay *ngIf="isLoading"></mev-spinner-overlay> -->
 <mat-drawer-container class="filter-container" autosize>
     <mat-drawer #drawer class="filter-sidenav" mode="side" [opened]="currentDataset.length>0">
         <!-- <button type="button" mat-button (click)="drawer.toggle()">Toggle sidenav</button> -->
         <div class="sideContainer">
-            <span>
-                <div *ngFor="let item of filterItems | keyvalue">
-                    <!-- <h1>{{item.key}}</h1> -->
-                    <section class="example-section" [(formGroup)]="target">
-                        <ul>
-                            <li>
-                                <div class="checkBoxTitle">{{item.key}}: </div>
-                            </li>
-                            <li *ngFor="let cat of item.value | keyvalue">
-                                <mat-checkbox formControlName={{cat.key}}>{{cat.key}} ({{cat.value}})</mat-checkbox>
-                            </li>
-                        </ul>
-                    </section>
-                </div>
-                
-            </span>
-            <button mat-raised-button color="accent" (click)="modifyQueryResults()">Search</button>
-        </div>
 
+            <div *ngFor="let item of filterItems | keyvalue">
+                <section class="example-section">
+                    <label class="example-margin checkBoxLabel">{{item.key}}: </label>
+                    <div *ngFor="let cat of item.value | keyvalue">
+                        <mat-checkbox class="example-margin" (change)="onChecked($event.checked, item.key, cat.key)">{{cat.key}} ({{cat.value}})</mat-checkbox>
+                    </div>
+                </section>
+            </div>
+            <button mat-raised-button color="accent" (click)="filterData()">Search</button>
+        </div>
     </mat-drawer>
 
     <div class="filter-sidenav-content">

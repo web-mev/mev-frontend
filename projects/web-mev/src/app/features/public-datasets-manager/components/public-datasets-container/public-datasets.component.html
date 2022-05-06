@@ -8,7 +8,8 @@
                 <section class="example-section">
                     <label class="example-margin checkBoxLabel">{{item.key}}: </label>
                     <div *ngFor="let cat of item.value | keyvalue">
-                        <mat-checkbox class="example-margin" (change)="onChecked($event.checked, item.key, cat.key)">{{cat.key}} ({{cat.value}})</mat-checkbox>
+                        <mat-checkbox class="example-margin" (change)="onChecked($event.checked, item.key, cat.key)">
+                            {{cat.key}} ({{cat.value}})</mat-checkbox>
                     </div>
                 </section>
             </div>
@@ -27,12 +28,11 @@
         </div>
 
         <ng-container *ngIf="currentDataset === 'tcga-rnaseq'">
-            <tcga-rnaseq-explorer></tcga-rnaseq-explorer>
+            <tcga-rnaseq-explorer [query]="searchQueryResults"></tcga-rnaseq-explorer>
         </ng-container>
 
         <ng-container *ngIf="currentDataset === 'target-rnaseq'">
             <target-rnaseq-explorer [query]="searchQueryResults"></target-rnaseq-explorer>
-            <!-- <target-rnaseq-explorer ></target-rnaseq-explorer> -->
         </ng-container>
 
         <ng-container *ngIf="currentDataset === 'gtex-rnaseq'">

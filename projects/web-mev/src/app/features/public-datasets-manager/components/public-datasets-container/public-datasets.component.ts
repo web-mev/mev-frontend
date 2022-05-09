@@ -53,7 +53,9 @@ export class PublicDatasetsComponent implements OnInit {
 
     if (dataset.length > 0) {
       this.queryString = this.buildFacetFieldQueryString(this.filterFields, dataset);
+      
       this.updateFilterValues();
+      console.log("filter items: ", this.filterItems)
     }
   }
 

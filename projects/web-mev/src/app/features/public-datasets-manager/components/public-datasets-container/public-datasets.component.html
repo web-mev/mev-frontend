@@ -5,14 +5,36 @@
         <div class="sideContainer">
 
             <div *ngFor="let item of filterItems | keyvalue">
-                <section class="example-section">
+                <section class="example-section" *ngIf="item.key === 'gender'">
                     <label class="example-margin checkBoxLabel">{{item.key}}: </label>
                     <div *ngFor="let cat of item.value | keyvalue">
                         <mat-checkbox class="example-margin" (change)="onChecked($event.checked, item.key, cat.key)">
                             {{cat.key}} ({{cat.value}})</mat-checkbox>
                     </div>
                 </section>
+                <section class="example-section" *ngIf="item.key === 'ethnicity'">
+                    <label class="example-margin checkBoxLabel">{{item.key}}: </label>
+                    <div *ngFor="let cat of item.value | keyvalue">
+                        <mat-checkbox class="example-margin" (change)="onChecked($event.checked, item.key, cat.key)">
+                            {{cat.key}} ({{cat.value}})</mat-checkbox>
+                    </div>
+                </section>
+                <section class="example-section" *ngIf="item.key === 'vital_status'">
+                    <label class="example-margin checkBoxLabel">{{item.key}}: </label>
+                    <div *ngFor="let cat of item.value | keyvalue">
+                        <mat-checkbox class="example-margin" (change)="onChecked($event.checked, item.key, cat.key)">
+                            {{cat.key}} ({{cat.value}})</mat-checkbox>
+                    </div>
+                </section>
+                <!-- <section class="example-section">
+                    <label class="example-margin checkBoxLabel">{{item.key}}: </label>
+                    <div *ngFor="let cat of item.value | keyvalue">
+                        <mat-checkbox class="example-margin" (change)="onChecked($event.checked, item.key, cat.key)">
+                            {{cat.key}} ({{cat.value}})</mat-checkbox>
+                    </div>
+                </section> -->
             </div>
+            <br>
             <button mat-raised-button color="accent" (click)="filterData()">Search</button>
         </div>
     </mat-drawer>

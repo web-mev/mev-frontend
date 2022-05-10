@@ -1,5 +1,5 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, OnInit, ChangeDetectionStrategy, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 /**
  * View File Types Dialog Component
@@ -21,7 +21,11 @@ export class ViewFileTypesDialogComponent implements OnInit {
     count: false,
     annotation: false
   };
-  constructor(public dialogRef: MatDialogRef<ViewFileTypesDialogComponent>) {}
+
+  constructor(
+    public dialogRef: MatDialogRef<ViewFileTypesDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+    ) {}
 
   ngOnInit(): void {}
 

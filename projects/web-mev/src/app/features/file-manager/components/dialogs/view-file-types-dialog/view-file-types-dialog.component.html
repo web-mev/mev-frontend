@@ -1,245 +1,26 @@
 <div class="dialog">
-    <header>File types</header>
-    <main class="container">
-        <h3>Table-based formats</h3>
-        <div>
-            <mat-icon>check</mat-icon><b>Numeric Table</b> is a table of where all the entries are numbers except the first
-            column (which names the rows) and the first line (which gives the column names). The cell at the first row and column may be left blank.
-            <a class="show-more-link" (click)="toggleShow('numeric')">
-                {{ isTableShown['numeric'] ? 'Hide example' : 'Show example' }}
-            </a>
-    
-            <table class="example-table" *ngIf="isTableShown['numeric']">
-                <tr>
-                    <th></th>
-                    <th>Sample A</th>
-                    <th>Sample B</th>
-                    <th>Sample C</th>
-                  </tr>
-                  <tr>
-                    <td>gene1</td>
-                    <td>1.1</td>
-                    <td>2.2</td>
-                    <td>3.3</td>
-                  </tr>
-                  <tr>
-                    <td>gene2</td>
-                    <td>11.1</td>
-                    <td>22.2</td>
-                    <td>33.3</td>
-                  </tr>
-                  <tr>
-                    <td>gene3</td>
-                    <td>111.1</td>
-                    <td>222.2</td>
-                    <td>333.3</td>
-                  </tr>
-            </table>
-            <br>
-            <mat-icon>check</mat-icon><b>An Integer Table</b> is a table of where all the entries are integers except the
-            first
-            column (which names the rows) and
-            the first line (which gives the column names). The cell at the first row and column may be left blank.
-            <a class="show-more-link" (click)="toggleShow('integer')">
-                {{ isTableShown['integer'] ? 'Hide example' : 'Show example' }}
-            </a>
-    
-            <table class="example-table" *ngIf="isTableShown['integer']">
-                <tr>
-                    <th></th>
-                    <th>Sample A</th>
-                    <th>Sample B</th>
-                    <th>Sample C</th>
-                  </tr>
-                  <tr>
-                    <td>gene1</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>3</td>
-                  </tr>
-                  <tr>
-                    <td>gene2</td>
-                    <td>11</td>
-                    <td>22</td>
-                    <td>33</td>
-                  </tr>
-                  <tr>
-                    <td>gene3</td>
-                    <td>111</td>
-                    <td>222</td>
-                    <td>333</td>
-                  </tr>
-            </table>
-            <br>
-            <mat-icon>check</mat-icon><b>RNA-seq count matrix</b> is a table of where all the entries are integers except
-            the first
-            column (which names the rows)
-            and the first line (which gives the column names). The cell at the first row and column may be left blank.
-            <a class="show-more-link" (click)="toggleShow('count')">
-                {{ isTableShown['count'] ? 'Hide example' : 'Show example' }}
-            </a>
-    
-            <table class="example-table" *ngIf="isTableShown['count']">
-                <tr>
-                    <th></th>
-                    <th>Sample A</th>
-                    <th>Sample B</th>
-                    <th>Sample C</th>
-                  </tr>
-                  <tr>
-                    <td>gene1</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>3</td>
-                  </tr>
-                  <tr>
-                    <td>gene2</td>
-                    <td>11</td>
-                    <td>22</td>
-                    <td>33</td>
-                  </tr>
-                  <tr>
-                    <td>gene3</td>
-                    <td>111</td>
-                    <td>222</td>
-                    <td>333</td>
-                  </tr>
-            </table>
-            
-            <br>
-
-            <mat-icon>check</mat-icon><b>Expression matrix</b> is a table of where all the entries are numbers except the
-            first
-            column (which names the rows) and
-            the first line (which gives the column names). The cell at the first row and column may be left blank.
-            <a class="show-more-link" (click)="toggleShow('expression')">
-                {{ isTableShown['expression'] ? 'Hide example' : 'Show example' }}
-            </a>
-    
-            <table class="example-table" *ngIf="isTableShown['expression']">
-                <tr>
-                    <th></th>
-                    <th>Sample A</th>
-                    <th>Sample B</th>
-                    <th>Sample C</th>
-                  </tr>
-                  <tr>
-                    <td>gene1</td>
-                    <td>1.1</td>
-                    <td>2.2</td>
-                    <td>3.3</td>
-                  </tr>
-                  <tr>
-                    <td>gene2</td>
-                    <td>11.1</td>
-                    <td>22.2</td>
-                    <td>33.3</td>
-                  </tr>
-                  <tr>
-                    <td>gene3</td>
-                    <td>111.1</td>
-                    <td>222.2</td>
-                    <td>333.3</td>
-                  </tr>
-            </table>
-            
-            <br>
-            <mat-icon>check</mat-icon><b>Feature table.</b> This type of file describes the "features" of your data. In the
-            genomics context, one example of a
-            feature is a gene. Therefore, you could use this table to give additional information about each gene, such as
-            alternative symbols, oncogene status, or similar. Each row contains information about a single gene. Note,
-            however,
-            that this concept is completely general and not restricted to information about genes or transcripts.
-            
-            <a class="show-more-link" (click)="toggleShow('feature')">
-                {{ isTableShown['feature'] ? 'Hide example' : 'Show example' }}
-            </a>
-    
-            <table class="example-table" *ngIf="isTableShown['feature']">
-                <tr>
-                    <th></th>
-                    <th>logFoldChange</th>
-                    <th>pvalue</th>
-                    <th>FDR</th>
-                  </tr>
-                  <tr>
-                    <td>gene1</td>
-                    <td>1.1</td>
-                    <td>0.03</td>
-                    <td>0.2</td>
-                  </tr>
-                  <tr>
-                    <td>gene2</td>
-                    <td>2.2</td>
-                    <td>0.01</td>
-                    <td>0.03</td>
-                  </tr>
-                  <tr>
-                    <td>gene3</td>
-                    <td>3.3</td>
-                    <td>3e-06</td>
-                    <td>0.001</td>
-                  </tr>
-            </table>
-
-            <br>
-            <mat-icon>check</mat-icon><b>Annotation table.</b> This type of file is used to add metadata to your samples.
-            The first
-            column has the sample name
-            and the remaining columns contain metadata about each sample (for instance, experimental group, treatment, or
-            similar.
-            
-            <a class="show-more-link" (click)="toggleShow('annotation')">
-                {{ isTableShown['annotation'] ? 'Hide example' : 'Show example' }}
-            </a>
-    
-            <table class="example-table" *ngIf="isTableShown['annotation']">
-                <tr>
-                    <th></th>
-                    <th>cell_type</th>
-                    <th>treatment</th>
-                  </tr>
-                  <tr>
-                    <td>Sample A</td>
-                    <td>CD4</td>
-                    <td>Y</td>
-                  </tr>
-                  <tr>
-                    <td>Sample B</td>
-                    <td>CD8</td>
-                    <td>Y</td>
-                  </tr>
-                  <tr>
-                    <td>Sample C</td>
-                    <td>Monocyte</td>
-                    <td>N</td>
-                  </tr>
-            </table>
-            <br>
-            <mat-icon>check</mat-icon><b>BED-format file</b> is a three-column BED-format file
-        </div>
-    
-        <h3>Sequence-based formats:</h3>
-        <div>
-            <mat-icon>check</mat-icon><b>Fasta</b> is FASTA-format sequence files.
-            <br>
-            <mat-icon>check</mat-icon><b>Fastq</b> is FASTQ-format sequence files. The most common format used for
-            sequencing experiments.
-            <br>
-            <mat-icon>check</mat-icon><b>Alignment (SAM/BAM)</b> is BAM or SAM-format aligned sequence files. Typically the
-            output of an alignment process.
-        </div>
-        <h3>JSON format:</h3>
-        <p>
-            <mat-icon>check</mat-icon><b>JSON-format file</b> is used for data that is not easily represented in a
-            table-based format
-        </p>
-        <h3>General Format:</h3>
-        <div>
-            <mat-icon>check</mat-icon><b>A general file</b> is typically used to denote an unspecified type.
-        </div>
-    </main>
-    <footer mat-dialog-actions class="btn-group">
-        <button mat-button (click)="onNoClick()" mat-raised-button color="accent">Close</button>
-    </footer>
+  <header>File Types</header>
+  <br>
+  <main class="container">
+    <div *ngFor="let fileType of data">
+      <mat-icon>check</mat-icon><b>{{fileType.resource_type_title}}: </b> {{fileType.resource_type_description}}
+      <a *ngIf="fileType.example !== null" class="show-more-link" (click)="toggleShow(fileType.resource_type_key)">
+        {{ isTableShown[fileType.resource_type_key] ? 'Hide example' : 'Show example' }}
+      </a>
+      <table *ngIf="fileType.example !== null" class="example-table" [hidden]="!isTableShown[fileType.resource_type_key]">
+        <tr>
+          <th></th>
+          <th *ngFor="let columnNames of fileType.example[0].values | keyvalue">{{columnNames.key}}</th>
+        </tr>
+        <tr *ngFor="let row of fileType.example | keyvalue">
+          <td>{{fileType.example[row.key].rowname}}</td>
+          <td *ngFor="let rowData of fileType.example[row.key].values | keyvalue">{{fileType.example[row.key].values[rowData.key]}}</td>
+        </tr>
+      </table>
+      <br>
+    </div>
+  </main>
+  <footer mat-dialog-actions class="btn-group">
+    <button mat-button (click)="onNoClick()" mat-raised-button color="accent">Close</button>
+  </footer>
 </div>

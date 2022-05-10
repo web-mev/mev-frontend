@@ -31,10 +31,12 @@ export class SubnetVisualizationFormComponent implements OnInit {
   isLoaded = false;
   showResult = false;
   showLoading = false;
+  showDescription: boolean = false;
 
   acceptable_resource_types = [
-    'FT',
-    'MTX',
+    // 'FT',
+    // 'MTX',
+    'NS'
   ];
 
   constructor(
@@ -63,6 +65,10 @@ export class SubnetVisualizationFormComponent implements OnInit {
     this.plotData = this.inputForm.value['expMtx'];
     this.showResult = true;
   }
+
+  // showDescription(){
+  //   this.hideDescription = !this.hideDescription;
+  // }
 
   /**
    * Convenience getter for easy access to form fields

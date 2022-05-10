@@ -67,6 +67,7 @@ export class FileListComponent implements OnInit {
   id: string;
   uploadProgressData: Map<string, object>;
   availableResourceTypes = {};
+  resourceTypeData;
 
   // due to the polling nature of the file browser, once a user selects a resource type in the dropdown,
   // we need to keep track of what they did. Otherwise, when the polling feature refreshes the table, the 
@@ -86,7 +87,7 @@ export class FileListComponent implements OnInit {
     public fileService: FileService,
     private readonly notificationService: NotificationService,
     private ref: ChangeDetectorRef
-  ) {}
+  ) { }
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -113,22 +114,27 @@ export class FileListComponent implements OnInit {
         this.ref.markForCheck();
 
         // refresh table if all files are uploaded
-        if(uploadCompletionArray.every((element) => element)){
+        if (uploadCompletionArray.every((element) => element)) {
           this.refresh();
           this.uploadInProgressMsg = '';
           this.ref.markForCheck();
         }
       }
     );
+    
+    //Gets data from API to fill File Types Modal
+    this.httpClient.get('https://api-dev.tm4.org/api/resource-types/').subscribe(res => {
+      this.resourceTypeData = res;
+    })
   }
 
   loadResourceTypes() {
     this.fileService.getFileTypes().subscribe((fileTypes: FileType[]) => {
       fileTypes.forEach(
         type =>
-          (this.availableResourceTypes[type.resource_type_key] = {
-            title: type.resource_type_title
-          })
+        (this.availableResourceTypes[type.resource_type_key] = {
+          title: type.resource_type_title
+        })
       );
     });
   }
@@ -144,13 +150,13 @@ export class FileListComponent implements OnInit {
   /*
   * Starts a polling routine which checks for the validation status
   */
-  startPollingRefresh(maxSecs: number){
+  startPollingRefresh(maxSecs: number) {
 
     // wait 100ms, then emit every 5s
-    const intervalSource = timer(100,5000);
+    const intervalSource = timer(100, 5000);
 
     // only continue this for the number of seconds requested
-    const timer$ = timer(maxSecs*1000);
+    const timer$ = timer(maxSecs * 1000);
     const validationListEmpty = this.currentlyValidatingBS.pipe(
       filter(id_list => id_list.length === 0)
     )
@@ -158,11 +164,11 @@ export class FileListComponent implements OnInit {
     intervalSource.pipe(
       takeUntil(mergedObservable)
     ).subscribe(
-      x=>this.refresh()
+      x => this.refresh()
     )
   }
 
-  setResourceType($event, row){
+  setResourceType($event, row) {
     this.validatingInfo[row.id] = $event.value;
     const updateData: any = {
       id: row.id,
@@ -187,8 +193,8 @@ export class FileListComponent implements OnInit {
       // if the resource was already validated for another type, but we are attempting to
       // change it, this keeps the dropdown on this "new" selected value. Otherwise, the refresh of the table
       // will appear to revert to the old type
-      if (Object.keys(this.validatingInfo).includes(row.id)){
-        if (row.is_active){
+      if (Object.keys(this.validatingInfo).includes(row.id)) {
+        if (row.is_active) {
           // if we are here, it means that the file has completed validation.
           delete this.validatingInfo[row.id];
 
@@ -200,9 +206,9 @@ export class FileListComponent implements OnInit {
 
           // if there are multiple files simultaneously being validated, we 
           // need to ensure we keep those.
-          for(const i in filesBeingValidated){
+          for (const i in filesBeingValidated) {
             const uuid = filesBeingValidated[i];
-            if (row.id !== uuid){
+            if (row.id !== uuid) {
               updatedArray.push(uuid);
             }
           }
@@ -221,7 +227,7 @@ export class FileListComponent implements OnInit {
       // the resource type may be null, but we may be in the process of 
       // validating it. Return the value that the user just set, which is 
       // stored in the validatingInfo object
-      if (Object.keys(this.validatingInfo).includes(row.id) && row.status === "Validating..."){
+      if (Object.keys(this.validatingInfo).includes(row.id) && row.status === "Validating...") {
         return this.validatingInfo[row.id];
       }
       return '---';
@@ -238,7 +244,7 @@ export class FileListComponent implements OnInit {
       data: { file: File }
     });
 
-    dialogRef.afterClosed().subscribe(() => {});
+    dialogRef.afterClosed().subscribe(() => { });
   }
 
   /**
@@ -262,7 +268,7 @@ export class FileListComponent implements OnInit {
           this.refresh();
         });
       },
-      cancel: () => {},
+      cancel: () => { },
       linkType: 'direct',
       multiselect: true,
       folderselect: false
@@ -283,8 +289,8 @@ export class FileListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result !== null) {
-        this.dataSource.renderedData[i]['is_active'] = false; 
-        this.dataSource.renderedData[i]['status'] = 'Validating...'; 
+        this.dataSource.renderedData[i]['is_active'] = false;
+        this.dataSource.renderedData[i]['status'] = 'Validating...';
         this.validatingInfo[id] = resource_type;
 
         // get the current files being validated and add this new one
@@ -302,7 +308,7 @@ export class FileListComponent implements OnInit {
    *
    */
   viewFileTypes() {
-    this.dialog.open(ViewFileTypesDialogComponent);
+    this.dialog.open(ViewFileTypesDialogComponent, { data: this.resourceTypeData });
   }
 
   /**
@@ -336,11 +342,11 @@ export class FileListComponent implements OnInit {
         }
       });
     },
-    error => {
-      // error was already reported to the user--
-      this.isWait = false;
-      this.ref.markForCheck();
-    });
+      error => {
+        // error was already reported to the user--
+        this.isWait = false;
+        this.ref.markForCheck();
+      });
   }
 
   /**
@@ -374,7 +380,7 @@ export class FileListComponent implements OnInit {
   }
 
   public loadData() {
-    if(this.dataSource){
+    if (this.dataSource) {
       this.dataSource.connect();
     } else {
       this.dataSource = new ExampleDataSource(
@@ -458,7 +464,7 @@ export class ExampleDataSource extends DataSource<File> {
     );
   }
 
-  disconnect() {}
+  disconnect() { }
 
   /**
    * Returns a sorted copy of the database data.

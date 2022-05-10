@@ -12,6 +12,10 @@
       </mat-panel-title>
     </mat-expansion-panel-header>
     <mat-card-content class="analysis-card__main">
+      <!-- <p>
+        We select either the most connected genes/TFs or the requested genes/TFs, then we progressively select the
+        highest edge weights as we traverse the network. 
+      </p> -->
       <p>
         Note that visualizing the entire network is often not feasible. Hence, we provide tools to subset the results
         and show the most strongly connected elements of the network. We do this by first finding the rows or columns
@@ -26,6 +30,7 @@
         the largest values. We subsequently repeat this process to build our network subset. The number of times we do
         this is set by the "network depth" parameter.
       </p>
+      <!-- <a class="showMore" (click) = "showDescription = !showDescription">{{ showDescription ? 'Show less details': 'Show more details' }}... </a> -->
       <mat-divider [inset]="true"></mat-divider>
       <div class="analysis-card__content">
         <form *ngIf="inputForm && isLoaded" [formGroup]="inputForm">

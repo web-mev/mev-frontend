@@ -87,7 +87,7 @@ export class TcgaRnaseqComponent extends GdcRnaseqComponent implements OnChanges
   }
 
   ngOnInit(): void {
-      this.publicDataSetComponent.afterLoaded(this.datasetTag)
+      // this.publicDataSetComponent.afterLoaded()
   }
   
 

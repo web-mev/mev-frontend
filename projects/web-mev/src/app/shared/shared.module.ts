@@ -35,6 +35,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatRadioModule } from '@angular/material/radio';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 
 import {
   FontAwesomeModule,
@@ -124,7 +125,8 @@ const MatModules = [
     RtlSupportDirective,
     ByteNamePipe,
     SpinnerOverlayComponent,
-    AddCustomSetComponent
+    AddCustomSetComponent,
+    NgxSliderModule
   ]
 })
 export class SharedModule {

@@ -9,18 +9,17 @@
     vertical-align: bottom;
 }
 
-.filter-sidenav{
+.filter-sidenav {
     width: 300px;
     margin-top: 20px;
     background-color: #ddebf2;
 }
 
-.filter-sidenav-content{
+.filter-sidenav-content {
     margin-left: 20px;
-    
 }
 
-.sideContainer{
+.sideContainer {
     margin: 10px;
 }
 
@@ -29,9 +28,40 @@ ul {
     padding-left: 10px;
 }
 
-.checkBoxLabel{
+.checkBoxLabel {
+    font-weight: bold;
+    font-size: 14px;
+    text-transform: capitalize;
+}
+.checkBoxContent {
+    font-size: 12px;
+    text-transform: capitalize;
+}
+
+.sliderGroup {
     font-weight: bold;
     font-size: 14px;
     text-transform: capitalize;
 }
 
+// ::ng-deep {
+//     .custom-slider {
+//       .ngx-slider {
+//         // .ngx-slider-selection {
+//         //   background: rgb(255, 255, 0) !important;
+//         // }
+        
+//         // .ngx-slider-model-value {
+//         //     font-size: 12px !important;
+//         // }
+//         // .ngx-slider-model-high{
+//         //     font-size: 12x !important;
+//         //     color: tomato !important;
+//         // }
+//         // .ngx-slider-pointer-min{
+//         //     height: 24px;
+//         //     width: 24px;
+//         // }
+//       }
+//     }
+//   }

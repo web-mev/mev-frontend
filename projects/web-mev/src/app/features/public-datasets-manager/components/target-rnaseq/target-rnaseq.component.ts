@@ -45,7 +45,7 @@ export class TargetRnaseqComponent extends GdcRnaseqComponent implements OnChang
   }
 
   ngOnInit(): void {
-      this.publicDataSetComponent.afterLoaded(this.datasetTag)
+      // this.publicDataSetComponent.afterLoaded()
   }
   
 
@@ -65,6 +65,7 @@ export class TargetRnaseqComponent extends GdcRnaseqComponent implements OnChang
 
     let originalTypeQueryURL = 'target-rnaseq/?q=*:*&facet=on&facet.field=project_id&rows=0';
     this.types_url = (this.query.length === 0) ? originalTypeQueryURL : `${this.datasetTag}/?q=${this.query}&facet=on&facet.field=project_id`;
+    console.log("query url: ", this.types_url)
     
     $observable_dict['solr_query'] = this.pdService.makeSolrQuery(this.types_url);
     $observable_dict['db_query'] = this.pdService.getPublicDatasetDetails(datasetTag);

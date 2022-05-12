@@ -1,38 +1,164 @@
 <!-- <mev-spinner-overlay *ngIf="isLoading"></mev-spinner-overlay> -->
-<mat-drawer-container class="filter-container" autosize>
-    <mat-drawer #drawer class="filter-sidenav" mode="side" [opened]="currentDataset.length>0">
+<mat-drawer-container class="filter-container" autosize >
+    <mat-drawer #drawer class="filter-sidenav" mode="side" [opened]="currentDataset.length>0" *ngIf="currentDataset !== '' ">
         <!-- <button type="button" mat-button (click)="drawer.toggle()">Toggle sidenav</button> -->
         <div class="sideContainer">
 
-            <div *ngFor="let item of filterItems | keyvalue">
-                <section class="example-section" *ngIf="item.key === 'gender'">
+            <div *ngFor="let item of storageDataSet[currentDataset]['checkbox'] | keyvalue">
+                <!-- <section class="example-section" *ngIf="item.key === 'gender'">
                     <label class="example-margin checkBoxLabel">{{item.key}}: </label>
                     <div *ngFor="let cat of item.value | keyvalue">
-                        <mat-checkbox class="example-margin" (change)="onChecked($event.checked, item.key, cat.key)">
+                        <mat-checkbox class="example-margin checkBoxContent" (change)="onChecked($event.checked, item.key, cat.key)">
                             {{cat.key}} ({{cat.value}})</mat-checkbox>
                     </div>
                 </section>
                 <section class="example-section" *ngIf="item.key === 'ethnicity'">
                     <label class="example-margin checkBoxLabel">{{item.key}}: </label>
                     <div *ngFor="let cat of item.value | keyvalue">
-                        <mat-checkbox class="example-margin" (change)="onChecked($event.checked, item.key, cat.key)">
+                        <mat-checkbox class="example-margin checkBoxContent" (change)="onChecked($event.checked, item.key, cat.key)">
                             {{cat.key}} ({{cat.value}})</mat-checkbox>
                     </div>
                 </section>
                 <section class="example-section" *ngIf="item.key === 'vital_status'">
                     <label class="example-margin checkBoxLabel">{{item.key}}: </label>
                     <div *ngFor="let cat of item.value | keyvalue">
-                        <mat-checkbox class="example-margin" (change)="onChecked($event.checked, item.key, cat.key)">
-                            {{cat.key}} ({{cat.value}})</mat-checkbox>
-                    </div>
-                </section>
-                <!-- <section class="example-section">
-                    <label class="example-margin checkBoxLabel">{{item.key}}: </label>
-                    <div *ngFor="let cat of item.value | keyvalue">
-                        <mat-checkbox class="example-margin" (change)="onChecked($event.checked, item.key, cat.key)">
+                        <mat-checkbox class="example-margin checkBoxContent" (change)="onChecked($event.checked, item.key, cat.key)">
                             {{cat.key}} ({{cat.value}})</mat-checkbox>
                     </div>
                 </section> -->
+                <!-- <section class="example-section" *ngIf="item.key === 'race'">
+                    <label class="example-margin checkBoxLabel">{{item.key}}: </label>
+                    <div *ngFor="let cat of item.value | keyvalue">
+                        <mat-checkbox class="example-margin checkBoxContent" (change)="onChecked($event.checked, item.key, cat.key)">
+                            {{cat.key}} ({{cat.value}})</mat-checkbox>
+                    </div>
+                </section>
+                <section class="example-section" *ngIf="item.key === 'cog_renal_stage'">
+                    <label class="example-margin checkBoxLabel">{{item.key}}: </label>
+                    <div *ngFor="let cat of item.value | keyvalue">
+                        <mat-checkbox class="example-margin checkBoxContent" (change)="onChecked($event.checked, item.key, cat.key)">
+                            {{cat.key}} ({{cat.value}})</mat-checkbox>
+                    </div>
+                </section>
+                <section class="example-section" *ngIf="item.key === 'last_known_disease_status'">
+                    <label class="example-margin checkBoxLabel">{{item.key}}: </label>
+                    <div *ngFor="let cat of item.value | keyvalue">
+                        <mat-checkbox class="example-margin checkBoxContent" (change)="onChecked($event.checked, item.key, cat.key)">
+                            {{cat.key}} ({{cat.value}})</mat-checkbox>
+                    </div>
+                </section>
+                <section class="example-section" *ngIf="item.key === 'morphology'">
+                    <label class="example-margin checkBoxLabel">{{item.key}}: </label>
+                    <div *ngFor="let cat of item.value | keyvalue">
+                        <mat-checkbox class="example-margin checkBoxContent" (change)="onChecked($event.checked, item.key, cat.key)">
+                            {{cat.key}} ({{cat.value}})</mat-checkbox>
+                    </div>
+                </section>
+                <section class="example-section" *ngIf="item.key === 'primary_diagnosis'">
+                    <label class="example-margin checkBoxLabel">{{item.key}}: </label>
+                    <div *ngFor="let cat of item.value | keyvalue">
+                        <mat-checkbox class="example-margin checkBoxContent" (change)="onChecked($event.checked, item.key, cat.key)">
+                            {{cat.key}} ({{cat.value}})</mat-checkbox>
+                    </div>
+                </section>
+                <section class="example-section" *ngIf="item.key === 'progression_or_recurrence'">
+                    <label class="example-margin checkBoxLabel">{{item.key}}: </label>
+                    <div *ngFor="let cat of item.value | keyvalue">
+                        <mat-checkbox class="example-margin checkBoxContent" (change)="onChecked($event.checked, item.key, cat.key)">
+                            {{cat.key}} ({{cat.value}})</mat-checkbox>
+                    </div>
+                </section>
+                <section class="example-section" *ngIf="item.key === 'site_of_resection_or_biopsy'">
+                    <label class="example-margin checkBoxLabel">{{item.key}}: </label>
+                    <div *ngFor="let cat of item.value | keyvalue">
+                        <mat-checkbox class="example-margin checkBoxContent" (change)="onChecked($event.checked, item.key, cat.key)">
+                            {{cat.key}} ({{cat.value}})</mat-checkbox>
+                    </div>
+                </section>
+                <section class="example-section" *ngIf="item.key === 'tissue_or_organ_of_origin'">
+                    <label class="example-margin checkBoxLabel">{{item.key}}: </label>
+                    <div *ngFor="let cat of item.value | keyvalue">
+                        <mat-checkbox class="example-margin checkBoxContent" (change)="onChecked($event.checked, item.key, cat.key)">
+                            {{cat.key}} ({{cat.value}})</mat-checkbox>
+                    </div>
+                </section>
+                <section class="example-section" *ngIf="item.key === 'tumor_grade'">
+                    <label class="example-margin checkBoxLabel">{{item.key}}: </label>
+                    <div *ngFor="let cat of item.value | keyvalue">
+                        <mat-checkbox class="example-margin checkBoxContent" (change)="onChecked($event.checked, item.key, cat.key)">
+                            {{cat.key}} ({{cat.value}})</mat-checkbox>
+                    </div>
+                </section>
+                <section class="example-section" *ngIf="item.key === 'dbgap_accession_number'">
+                    <label class="example-margin checkBoxLabel">{{item.key}}: </label>
+                    <div *ngFor="let cat of item.value | keyvalue">
+                        <mat-checkbox class="example-margin checkBoxContent" (change)="onChecked($event.checked, item.key, cat.key)">
+                            {{cat.key}} ({{cat.value}})</mat-checkbox>
+                    </div>
+                </section>
+                <section class="example-section" *ngIf="item.key === 'disease_type'">
+                    <label class="example-margin checkBoxLabel">{{item.key}}: </label>
+                    <div *ngFor="let cat of item.value | keyvalue">
+                        <mat-checkbox class="example-margin checkBoxContent" (change)="onChecked($event.checked, item.key, cat.key)">
+                            {{cat.key}} ({{cat.value}})</mat-checkbox>
+                    </div>
+                </section>
+                <section class="example-section" *ngIf="item.key === 'name'">
+                    <label class="example-margin checkBoxLabel">{{item.key}}: </label>
+                    <div *ngFor="let cat of item.value | keyvalue">
+                        <mat-checkbox class="example-margin checkBoxContent" (change)="onChecked($event.checked, item.key, cat.key)">
+                            {{cat.key}} ({{cat.value}})</mat-checkbox>
+                    </div>
+                </section>
+                <section class="example-section" *ngIf="item.key === 'primary_site'">
+                    <label class="example-margin checkBoxLabel">{{item.key}}: </label>
+                    <div *ngFor="let cat of item.value | keyvalue">
+                        <mat-checkbox class="example-margin checkBoxContent" (change)="onChecked($event.checked, item.key, cat.key)">
+                            {{cat.key}} ({{cat.value}})</mat-checkbox>
+                    </div>
+                </section>
+                <section class="example-section" *ngIf="item.key === 'project_id'">
+                    <label class="example-margin checkBoxLabel">{{item.key}}: </label>
+                    <div *ngFor="let cat of item.value | keyvalue">
+                        <mat-checkbox class="example-margin checkBoxContent" (change)="onChecked($event.checked, item.key, cat.key)">
+                            {{cat.key}} ({{cat.value}})</mat-checkbox>
+                    </div>
+                </section> -->
+
+                <section class="example-section">
+                    <label class="example-margin checkBoxLabel">{{item.key}}: </label>
+                    <div *ngFor="let cat of item.value | keyvalue">
+                        <mat-checkbox class="example-margin checkBoxContent" (change)="onChecked($event.checked, item.key, cat.key)">
+                            {{cat.key}} ({{cat.value}})</mat-checkbox>
+                    </div>
+                </section>
+            </div>
+            <br>
+            <div *ngFor="let item of storageDataSet[currentDataset]['slider'] | keyvalue">
+                <section *ngIf="item.key === 'age_at_diagnosis'" class="custom-slider">
+                    <label class="sliderGroup">Age at Diagonosis: ({{item.value}})</label>
+                    <ngx-slider [(value)]="minValue" [(highValue)]="maxValue" [options]="options"></ngx-slider>
+                </section>
+                <section *ngIf="item.key === 'days_to_last_follow_up'">
+                    <label class="sliderGroup">Days to Last Follow up: ({{item.value}})</label>
+                    <ngx-slider [(value)]="minValue" [(highValue)]="maxValue" [options]="options"></ngx-slider>
+                </section>
+                <section *ngIf="item.key === 'year_of_diagnosis'">
+                    <label class="sliderGroup">Year of Diagonosis: ({{item.value}})</label>
+                    <ngx-slider [(value)]="minValue" [(highValue)]="maxValue" [options]="options"></ngx-slider>
+                </section>
+                <section *ngIf="item.key === 'age_at_index'">
+                    <label class="sliderGroup">Age at Index: ({{item.value}})</label>
+                    <ngx-slider [(value)]="minValue" [(highValue)]="maxValue" [options]="options"></ngx-slider>
+                </section>
+                <section *ngIf="item.key === 'days_to_birth'">
+                    <label class="sliderGroup">Days to Birth: ({{item.value}})</label>
+                    <ngx-slider [(value)]="minValue" [(highValue)]="maxValue" [options]="options"></ngx-slider>
+                </section>
+                <section *ngIf="item.key === 'year_of_birth'">
+                    <label class="sliderGroup">Year of Birth: ({{item.value}})</label>
+                    <ngx-slider [(value)]="minValue" [(highValue)]="maxValue" [options]="options"></ngx-slider>
+                </section>
             </div>
             <br>
             <button mat-raised-button color="accent" (click)="filterData()">Search</button>

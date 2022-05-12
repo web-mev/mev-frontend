@@ -123,7 +123,8 @@ export class FileListComponent implements OnInit {
     );
     
     //Gets data from API to fill File Types Modal
-    this.httpClient.get('https://api-dev.tm4.org/api/resource-types/').subscribe(res => {
+    // tmp hot fix. note the loadResourceTypes function below.
+    this.fileService.getResourceTypes().subscribe(res => {
       this.resourceTypeData = res;
     })
   }

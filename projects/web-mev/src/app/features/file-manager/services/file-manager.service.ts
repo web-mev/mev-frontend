@@ -63,6 +63,14 @@ export class FileService {
   }
 
   /**
+   * 
+   * tmp hotfix
+   */
+  getResourceTypes(): Observable<any> {
+    return this.httpClient.get(`${this.API_URL}/resource-types/`);
+  }
+
+  /**
    * Get file list
    *
    */

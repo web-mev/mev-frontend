@@ -1,4 +1,4 @@
-@import '../../../../styles-variables';
+@import "../../../../styles-variables";
 
 h1 {
   text-align: center;
@@ -79,7 +79,7 @@ h2 {
       left: 0;
       bottom: 0;
       right: 0;
-      content: '';
+      content: "";
       z-index: 0;
     }
   }
@@ -103,8 +103,7 @@ h2 {
     max-width: 80%;
     margin: 20px auto 0 auto;
     border-radius: 5px;
-    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
-      0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
   }
 }
 
@@ -149,11 +148,63 @@ mat-card {
         border-radius: 50%;
         width: 100px;
         border: 5px solid;
-        box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
-          0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+        box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
       }
     }
   }
+}
+
+.mat-expansion-panel,
+.mat-expansion-panel:hover {
+  box-shadow: none !important;
+  background-color: transparent !important;
+}
+
+.mat-expansion-panel-header {
+  padding-left: 0 !important;
+}
+.mat-content{
+  flex: .7 !important;
+}
+
+.changeLogHeader {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.releaseText {
+  line-height: 1;
+  font-weight: 400;
+  font-size: 10px;
+  display: inline-block;
+  padding: 1px 4px;
+  margin-left: 2px;
+  border-radius: 2px;
+  border: 1px solid rgb(55, 180, 0);
+  color: rgb(55, 180, 0);
+}
+
+.versionDate {
+  font-size: 20px;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.updates{
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  color: rgba(0,0,0,.8);
+}
+.expandIcon{
+  background-color: tomato;
+  color: white;
+  border-radius: 36px;
+  // padding: 20px;
+  right: 20px;
+  top: 25%;
+  position: absolute;
+  z-index: 99;
 }
 
 @media (max-width: map-get($grid-breakpoints, md)) {

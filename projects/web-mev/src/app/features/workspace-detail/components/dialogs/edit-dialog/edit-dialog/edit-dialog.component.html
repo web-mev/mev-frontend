@@ -1,20 +1,25 @@
 <div class="container">
-    <h3 mat-dialog-title>Edit Resource</h3>
-  
-    <form class="mat-dialog-content" (ngSubmit)="submit" #formControl="ngForm">
-  
-      <div class="form">
-        <mat-form-field color="accent">
-          <input matInput #input class="form-control" placeholder="File name" [(ngModel)]="data.name" name="name"
-            required>
-          <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
-        </mat-form-field>
-      </div>
-  
-      <div mat-dialog-actions>
-        <button mat-button [type]="submit" [disabled]="!formControl.valid" [mat-dialog-close]="1"
-          (click)="stopEdit()" mat-raised-button color="accent">Save</button>
-        <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
-      </div>
-    </form>
-  </div>
+  <h3 mat-dialog-title>Edit Resource</h3>
+
+  <form class="mat-dialog-content" (ngSubmit)="submit" #formControl="ngForm">
+    <div class="form">
+      <mat-form-field color="accent">
+        <input matInput #input class="form-control" placeholder="File name" [(ngModel)]="data.name" name="name"
+          required>
+        <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
+      </mat-form-field>
+    </div>
+    <p class="hints">
+      Note that the choice of file extension (for example "csv" in "myfile.csv") affects how the file is parsed. The
+      acceptable file extensions depend on the resource type. If you experience an issue with validating or parsing
+      files, please ensure you have a file extension that is consistent with the formatting of your file.
+    </p>
+    <br>
+    <br>
+    <div mat-dialog-actions>
+      <button mat-button [type]="submit" [disabled]="!formControl.valid" [mat-dialog-close]="1" (click)="stopEdit()"
+        mat-raised-button color="accent">Save</button>
+      <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
+    </div>
+  </form>
+</div>

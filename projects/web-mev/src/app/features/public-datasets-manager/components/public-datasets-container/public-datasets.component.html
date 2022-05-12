@@ -5,7 +5,7 @@
         <div class="sideContainer">
 
             <div *ngFor="let item of storageDataSet[currentDataset]['checkbox'] | keyvalue">
-                <!-- <section class="example-section" *ngIf="item.key === 'gender'">
+                <section class="example-section" *ngIf="item.key === 'gender'">
                     <label class="example-margin checkBoxLabel">{{item.key}}: </label>
                     <div *ngFor="let cat of item.value | keyvalue">
                         <mat-checkbox class="example-margin checkBoxContent" (change)="onChecked($event.checked, item.key, cat.key)">
@@ -25,8 +25,8 @@
                         <mat-checkbox class="example-margin checkBoxContent" (change)="onChecked($event.checked, item.key, cat.key)">
                             {{cat.key}} ({{cat.value}})</mat-checkbox>
                     </div>
-                </section> -->
-                <!-- <section class="example-section" *ngIf="item.key === 'race'">
+                </section> 
+                <section class="example-section" *ngIf="item.key === 'race'">
                     <label class="example-margin checkBoxLabel">{{item.key}}: </label>
                     <div *ngFor="let cat of item.value | keyvalue">
                         <mat-checkbox class="example-margin checkBoxContent" (change)="onChecked($event.checked, item.key, cat.key)">
@@ -47,7 +47,7 @@
                             {{cat.key}} ({{cat.value}})</mat-checkbox>
                     </div>
                 </section>
-                <section class="example-section" *ngIf="item.key === 'morphology'">
+                <!-- <section class="example-section" *ngIf="item.key === 'morphology'">
                     <label class="example-margin checkBoxLabel">{{item.key}}: </label>
                     <div *ngFor="let cat of item.value | keyvalue">
                         <mat-checkbox class="example-margin checkBoxContent" (change)="onChecked($event.checked, item.key, cat.key)">
@@ -125,13 +125,13 @@
                     </div>
                 </section> -->
 
-                <section class="example-section">
+                <!-- <section class="example-section">
                     <label class="example-margin checkBoxLabel">{{item.key}}: </label>
                     <div *ngFor="let cat of item.value | keyvalue">
                         <mat-checkbox class="example-margin checkBoxContent" (change)="onChecked($event.checked, item.key, cat.key)">
                             {{cat.key}} ({{cat.value}})</mat-checkbox>
                     </div>
-                </section>
+                </section> -->
             </div>
             <br>
             <div *ngFor="let item of storageDataSet[currentDataset]['slider'] | keyvalue">

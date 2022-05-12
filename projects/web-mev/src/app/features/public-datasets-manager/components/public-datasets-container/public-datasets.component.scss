@@ -30,7 +30,7 @@ ul {
 
 .checkBoxLabel {
     font-weight: bold;
-    font-size: 14px;
+    font-size: 12px;
     text-transform: capitalize;
 }
 .checkBoxContent {
@@ -42,6 +42,13 @@ ul {
     font-weight: bold;
     font-size: 14px;
     text-transform: capitalize;
+}
+
+::ng-deep{
+    .mat-checkbox-inner-container{
+        width: 12px !important;
+        height: 12px !important;
+    }
 }
 
 // ::ng-deep {

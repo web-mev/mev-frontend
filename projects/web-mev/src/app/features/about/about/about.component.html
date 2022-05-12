@@ -7,10 +7,8 @@
           <mat-card>
             <mat-card-title>Tweets by @WebMeV</mat-card-title>
             <mat-card-content>
-              <a class="twitter-timeline"
-                 href="https://twitter.com/webmev"
-                 data-width="300" data-height="300" data-tweet-limit="3"
-                 data-chrome="noheader">
+              <a class="twitter-timeline" href="https://twitter.com/webmev" data-width="300" data-height="300"
+                data-tweet-limit="3" data-chrome="noheader">
               </a>
             </mat-card-content>
           </mat-card>
@@ -20,19 +18,26 @@
           <article>
             <h1 class="mat-h1">{{ 'mev.title.long' | translate }}</h1>
             <div class="mev-section">
-              <p>WebMeV (Multiple Experiment Viewer) is a cloud-based application supporting <i><b>analysis</b></i>, <i><b>visualization</b></i>,
-                and <i><b>stratification</b></i> of large genomic data, particularly for RNA-Seq and microarray data.</p>
+              <p>WebMeV (Multiple Experiment Viewer) is a cloud-based application supporting <i><b>analysis</b></i>,
+                <i><b>visualization</b></i>,
+                and <i><b>stratification</b></i> of large genomic data, particularly for RNA-Seq and microarray data.
+              </p>
 
-              <p>Past versions of WebMeV were limited to analyses with relatively small memory and computational resources. In this updated version, we
-                  incorporate a number of technologies that will allow large-scale processing of raw sequencing data, greatly expanding the capabilities
-                  of an interactive, browser-based analysis tool.
+              <p>Past versions of WebMeV were limited to analyses with relatively small memory and computational
+                resources. In this updated version, we
+                incorporate a number of technologies that will allow large-scale processing of raw sequencing data,
+                greatly expanding the capabilities
+                of an interactive, browser-based analysis tool.
               </p>
               <p class="">With WebMeV platform, you can:</p>
-              <p><span class="mev-heading">Perform integrative, reproducible NGS analysis</span>, including clustering, differential expression,
-                and functional analysis. Much of the analyses focus on using transcriptome/RNA-Seq data, but the platform is not limited to this application.
+              <p><span class="mev-heading">Perform integrative, reproducible NGS analysis</span>, including clustering,
+                differential expression,
+                and functional analysis. Much of the analyses focus on using transcriptome/RNA-Seq data, but the
+                platform is not limited to this application.
                 We continue to update and add new analyses, so check back frequently.
               </p>
-              <p><span class="mev-heading">Access to Public Domain Data (<i>coming soon</i>)</span> - Directly search and pull TCGA and GEO
+              <p><span class="mev-heading">Access to Public Domain Data (<i>coming soon</i>)</span> - Directly search
+                and pull TCGA and GEO
                 gene expression and sample attribute data in addition to private data for analysis</p>
               <p><span class="mev-heading">Stratify Cohorts using Clinical Attributes</span> - Perform complex cohort
                 stratification using familiar search and filtering capabilities.</p>
@@ -40,25 +45,62 @@
 
             <div class="mev-section">
               <p>WebMeV was built to meet the challenge of exploring large public genomic data set and
-                Next-Generation Sequencing data with intuitive graphical interface for analysis. WebMeV is a <i>free and open-source</i>
-                 cloud service platform. All analyses are version-controlled and made available through our GitHub repository. This enables
-                 transparent and reproducible analysis that can be run on any computational infrastructure, independent of the WebMeV platform. 
-                </p>
+                Next-Generation Sequencing data with intuitive graphical interface for analysis. WebMeV is a <i>free and
+                  open-source</i>
+                cloud service platform. All analyses are version-controlled and made available through our GitHub
+                repository. This enables
+                transparent and reproducible analysis that can be run on any computational infrastructure, independent
+                of the WebMeV platform.
+              </p>
             </div>
 
             <div class="mev-section">
               <p><span class="mev-heading">Where to start</span> - Our quickstart guide is available here: <a
-                href="https://web-mev.github.io/quickstart">WebMeV Quickstart</a>.
+                  href="https://web-mev.github.io/quickstart">WebMeV Quickstart</a>.
               </p>
-              <p><span class="mev-heading">Tutorials and Documentation</span> - Full documentation and an RNA-Seq case study is available at
+              <p><span class="mev-heading">Tutorials and Documentation</span> - Full documentation and an RNA-Seq case
+                study is available at
                 the <a href="https://web-mev.github.io">WebMeV User Guide</a></p>
-              <p><span class="mev-heading">Customized Analysis</span> - Complex bioinformatics and data science analysis outside the
-                scope of WebMeV functionalities can contact the Quantitative Biomedical Research Center (qBRC) at the Harvard T.H. Chan School of Public Health to
+              <p><span class="mev-heading">Customized Analysis</span> - Complex bioinformatics and data science analysis
+                outside the
+                scope of WebMeV functionalities can contact the Quantitative Biomedical Research Center (qBRC) at the
+                Harvard T.H. Chan School of Public Health to
                 inquire about consulting services.
-                <a href="https://www.hsph.harvard.edu/qbrc/">Click here for more information</a>.</p>
+                <a href="https://www.hsph.harvard.edu/qbrc/">Click here for more information</a>.
+              </p>
             </div>
 
+            <mat-accordion >
+              <mat-expansion-panel class="expansionPanel" [expanded]="!showResult" (opened)="showResult = false"
+                (closed)="showResult = true">
+                <mat-expansion-panel-header class="changeLogHeader">
+                  Change Log
+                  <mat-icon class="expandIcon">{{showResult ? 'add' : 'remove'}}</mat-icon>
+                </mat-expansion-panel-header>
+                <mat-card-content class="analysis-card__main">
+                  <div class="releaseText">
+                    Latest Release
+                  </div>
+                  <div class="versionDate">
+                    12 May 2022
+                  </div>
+                  <ul class="updates">
+                    <li>
+                      We added our first network analysis, PANDA, from the NetZoo (<a href="https://github.com/netZoo/">https://github.com/netZoo/</a>) library
+                      of tools. PANDA allows inference on regulatory networks. Note that this tool typically requires
+                      many samples. Try it out on one of our public datasets such as TCGA.
+                    </li>
+                    <li>
+                      We added RNA-seq data from the GTEx repository (<a href="https://gtexportal.org/home/">https://gtexportal.org/home/</a>).
+                    </li>
+                  </ul>
+                  <div class="analysis-card__content">
 
+                  </div>
+                </mat-card-content>
+              </mat-expansion-panel>
+            </mat-accordion>
+            <br>
             <!--div class="actions">
               <a [ngClass]="routeAnimationsElements" mat-raised-button class="actions-main" color="primary" routerLink="../feature-list">
                 {{ 'mev.menu.features' | translate }}
@@ -159,12 +201,12 @@
 
             <mat-card-content>
               See current developments and contribute to the project <a href="https://github.com/web-mev">
-              here</a>.
+                here</a>.
               <br>
               <br>
               <a href="https://github.com/web-mev/mev-backend/">Backend API</a>
-                <br>
-                <a href="https://github.com/web-mev/mev-frontend/">Frontend application</a>
+              <br>
+              <a href="https://github.com/web-mev/mev-frontend/">Frontend application</a>
             </mat-card-content>
           </mat-card>
         </div>

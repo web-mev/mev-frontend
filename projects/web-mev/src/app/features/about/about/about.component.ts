@@ -19,6 +19,7 @@ import { SocialAuthService } from 'angularx-social-login';
 export class AboutComponent implements OnInit {
   routeAnimationsElements = ROUTE_ANIMATIONS_ELEMENTS;
   private twitter: any;
+  showResult = true;
 
   constructor(
     private _router: Router,

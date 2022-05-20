@@ -1,0 +1,8 @@
+<section class="custom-slider">
+    <label class="sliderGroup">{{info.key}}: ({{info.value.count}})</label>
+    <ngx-slider [(value)]="sliderMinMax[currentDataset][info.key]['min']"
+        [(highValue)]="sliderMinMax[currentDataset][info.key]['max']" [options]="options2">
+    </ngx-slider>
+    <button mat-raised-button color="primary"
+        (click)="onSliderChange(currentDataset, info.key, sliderMinMax[currentDataset][info.key]['min'], sliderMinMax[currentDataset][info.key]['max'])">Go!</button>
+</section>

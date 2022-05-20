@@ -44,9 +44,7 @@ export class TargetRnaseqComponent extends GdcRnaseqComponent implements OnChang
     this.fetchDataTarget(this.datasetTag, this.name_map_key);
   }
 
-  ngOnInit(): void {
-      // this.publicDataSetComponent.afterLoaded()
-  }
+  ngOnInit(): void {}
   
 
   createDataset(dataType: string) {

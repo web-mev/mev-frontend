@@ -1,0 +1,28 @@
+ul {
+    list-style-type: none;
+    padding-left: 10px;
+}
+
+.checkBoxLabel {
+    font-weight: bold;
+    font-size: 12px;
+    text-transform: capitalize;
+}
+.checkBoxContent {
+    font-size: 12px;
+    text-transform: capitalize;
+}
+
+.sliderGroup {
+    font-weight: bold;
+    font-size: 14px;
+    text-transform: capitalize;
+}
+
+::ng-deep{
+    .mat-checkbox-inner-container{
+        width: 12px !important;
+        height: 12px !important;
+    }
+}
+

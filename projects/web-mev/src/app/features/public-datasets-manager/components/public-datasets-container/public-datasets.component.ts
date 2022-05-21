@@ -15,11 +15,7 @@ export class PublicDatasetsComponent implements OnInit {
   private readonly API_URL = environment.apiUrl;
   currentDataset = '';
   queryStringForFilters: string = '';
-  queryRangeString = {
-    'target-rnaseq': {},
-    'tcga-rnaseq': {},
-    'gtex-rnaseq': {},
-  };
+  queryRangeString = '';
   filterItems = {};
   filterRangeItems = {};
   facetField;
@@ -28,10 +24,10 @@ export class PublicDatasetsComponent implements OnInit {
 
   targetFields = ["ethnicity", "gender", "race", "vital_status", "cog_renal_stage", "last_known_disease_status", "morphology", "primary_diagnosis", "progression_or_recurrence", "site_of_resection_or_biopsy", "tissue_or_organ_of_origin", "tumor_grade", "dbgap_accession_number", "disease_type", "name", "primary_site", "project_id"];
   tcgaFields = ["alcohol_history", "ethnicity", "gender", "race", "vital_status", "vital_status", "ajcc_pathologic_m", "ajcc_pathologic_n", "ajcc_pathologic_stage", "ajcc_pathologic_t", "ajcc_staging_system_edition", "classification_of_tumor", "days_to_diagnosis", "icd_10_code", "last_known_disease_status", "morphology", "primary_diagnosis", "prior_malignancy", "prior_treatment", "progression_or_recurrence", "site_of_resection_or_biopsy", "synchronous_malignancy", "tissue_or_organ_of_origin", "tumor_grade", "disease_type", "name", "primary_site", "project_id"];
-  gtexFields = [];
+  // gtexFields = ["tissue", "sex", "age_range", "hardy_scale_death", "rna_rin", "nucleic_acid_isolation_batch", "expression_batch", "kit", "collection_site_code"];
   targetRangeFields = ["age_at_diagnosis", "days_to_last_follow_up", "year_of_diagnosis"];
   tcgaRangeFields = ["age_at_diagnosis", "age_at_index", "days_to_birth", "days_to_last_follow_up", "year_of_birth", "year_of_diagnosis"];
-  gtexRangeFields = []
+  // gtexRangeFields = []
   filterFields = {
     'target-rnaseq': this.targetFields,
     'tcga-rnaseq': this.tcgaFields,
@@ -45,44 +41,63 @@ export class PublicDatasetsComponent implements OnInit {
   sliderMinMax = {
     'target-rnaseq': {
       "age_at_diagnosis": {
-        "min": 3,
-        "max": 11828
+        "floor": 3,
+        "ceil": 11828,
+        "low": 3,
+        "high": 11828
       },
       "days_to_last_follow_up": {
-        "min": 0,
-        "max": 5938
+        "floor": 0,
+        "ceil": 5938,
+        "low": 0,
+        "high": 5938
       },
       "year_of_diagnosis": {
-        "min": 1900,
-        "max": 2015
+        "floor": 1900,
+        "ceil": 2015,
+        "low": 1900,
+        "high": 2015
       }
     },
     'tcga-rnaseq': {
       "age_at_diagnosis": {
-        "min": 5267,
-        "max": 32872
+        "floor": 5267,
+        "ceil": 32872,
+        "low": 5267,
+        "high": 32872
       },
       "age_at_index": {
-        "min": 14,
-        "max": 90
+        "floor": 14,
+        "ceil": 90,
+        "low": 14,
+        "high": 90
       },
       "days_to_birth": {
-        "min": -32872,
-        "max": -5267
+        "floor": -32872,
+        "ceil": -5267,
+        "low": -32872,
+        "high": -5267
       },
       "days_to_last_follow_up": {
-        "min": -64,
-        "max": 11252
+        "floor": -64,
+        "ceil": 11252,
+        "low": -64,
+        "high": 11252
       },
       "year_of_birth": {
-        "min": 1902,
-        "max": 1997
+        "floor": 1902,
+        "ceil": 1997,
+        "low": 1902,
+        "high": 1997
       },
       "year_of_diagnosis": {
-        "min": 1978,
-        "max": 2013
+        "floor": 1978,
+        "ceil": 2013,
+        "low": 1978,
+        "high": 2013
       }
-    }
+    },
+    // "gtex-rnaseq": {}
   }
 
 
@@ -94,6 +109,10 @@ export class PublicDatasetsComponent implements OnInit {
   };
   checkBoxObj = {};
   checkboxStatus = {}
+  sliderObj = {
+    'target-rnaseq': {},
+    'tcga-rnaseq': {},
+  };
   isLoading = true;
 
   constructor(fb: FormBuilder, private httpClient: HttpClient, private ref: ChangeDetectorRef) { }
@@ -101,77 +120,69 @@ export class PublicDatasetsComponent implements OnInit {
   ngOnInit(): void {
     this.isLoading = true;
   }
-
+  count = 0
   afterLoaded() {
     for (let dataset in this.filterRangeFields) {
+      this.queryRangeString = this.buildFacetFieldQueryRangeString(this.filterRangeFields[dataset], dataset);
 
-      this.queryRangeString = this.buildFacetFieldQueryRangeString(this.filterRangeFields[dataset], this.filterFields[dataset], dataset);
-      console.log("query range string: ", this.queryRangeString)
       //builds the initial query string
-      this.queryStringForFilters = this.buildFacetFieldQueryString(this.filterFields[dataset], this.filterRangeFields[dataset], dataset);
-      console.log("query string for filters: ", this.queryStringForFilters)
+      this.queryStringForFilters = this.buildFacetFieldQueryString(dataset);
 
       //gets the numbers for each category
       this.updateFilterValues(this.queryStringForFilters, 'checkbox', this.storageDataSet[dataset], dataset);
-      this.updateFilterValues(this.queryRangeString, 'rangeSlider', this.storageDataSet[dataset], dataset);
-      // for (let category in this.queryRangeString[dataset]) {
-      //   this.updateFilterValues(this.queryRangeString[dataset][category], 'rangeSlider', this.storageDataSet[dataset]['slider']);
-      // }
+      // this.updateFilterValues(this.queryRangeString, 'rangeSlider', this.storageDataSet[dataset], dataset);
     }
-    console.log("storage: ", this.storageDataSet)
   }
 
-  buildFacetFieldQueryString(categoryArray, categoryRangeArray, dataset) {
+  buildFacetFieldQueryString(dataset) {
+    let categoryArray = this.filterFields[dataset]
     let query = `${this.API_URL}/public-datasets/query/${dataset}/?q=*&facet=true`;
     for (let i = 0; i < categoryArray.length; i++) {
       query += "&facet.field=" + categoryArray[i];
     }
-
-    // for (let j = 0; j < categoryRangeArray.length; j++) {
-    //   query += "&facet.field=" + categoryRangeArray[j];
-    // }
-
+    let categoryArrayRange = this.filterRangeFields[dataset]
+    let rangeQuery = '';
+    for (let k = 0; k < categoryArrayRange.length; k++) {
+      let category = categoryArrayRange[k];
+      let low = this.sliderMinMax[dataset][category]['low'];
+      let high = this.sliderMinMax[dataset][category]['high'];
+      rangeQuery += `&facet.query={!tag=q1}${category}:[${low} TO ${high}]`
+    }
+    query += rangeQuery;
     return query;
   }
 
-  updateFacetFieldQueryString(categoryArray, dataset, filterItems) {
-    // console.log("filter items from update: ", filterItems)
+  updateFacetFieldQueryString(dataset, filterItems) {
+    let categoryArray = this.filterFields[dataset]
     let tempQuery = filterItems.length === 0 ? '*' : filterItems;
     let query = `${this.API_URL}/public-datasets/query/${dataset}/?q=${tempQuery}&facet=true`;
 
     for (let i = 0; i < categoryArray.length; i++) {
       query += "&facet.field=" + categoryArray[i];
     }
+    let categoryArrayRange = this.filterRangeFields[dataset]
+    let rangeQuery = '';
+    for (let k = 0; k < categoryArrayRange.length; k++) {
+      let category = categoryArrayRange[k];
+      let low = this.sliderMinMax[dataset][category]['low'];
+      let high = this.sliderMinMax[dataset][category]['high'];
+      rangeQuery += `&facet.query={!tag=q1}${category}:[${low} TO ${high}]`
+    }
+    query += rangeQuery;
     return query;
   }
 
-  buildFacetFieldQueryRangeString(categoryArrayRange, categoryArrayCheckbox, dataset) {
-
-    // let min, max;
-    // let minMaxQuery = `${this.API_URL}/public-datasets/query/${dataset}/?q=*&facet=true&facet.field=${category}&stats=true&stats.field={!tag=piv1,piv2%20min=true%20max=true}${category}`
-    // this.getQueryResults(minMaxQuery).subscribe(res => {
-    //   console.log("res: ", res["stats"].stats_fields[category], dataset, category)
-    //   min = res["stats"].stats_fields[category]['min'];
-    //   max = res["stats"].stats_fields[category]['max'];
-    //   console.log("min/max ", min, max, category, dataset)
-
-
-    //   // let rangeGap = end - start;
-    //   // let rangeGap = max - min;
-
-    // })
+  buildFacetFieldQueryRangeString(categoryArrayRange, dataset) {
     let query;
     let rangeQuery = '';
     for (let k = 0; k < categoryArrayRange.length; k++) {
       let category = categoryArrayRange[k];
-      let min = this.sliderMinMax[dataset][category]['min']
-      let max = this.sliderMinMax[dataset][category]['max']
-      rangeQuery += `&facet.query={!tag=q1}${category}:[${min} TO ${max}]`
-
+      let low = this.sliderMinMax[dataset][category]['low'];
+      let high = this.sliderMinMax[dataset][category]['high'];
+      rangeQuery += `&facet.query={!tag=q1}${category}:[${low} TO ${high}]`
     }
     query = `${this.API_URL}/public-datasets/query/${dataset}/?q=*&facet=true` + rangeQuery;
     return query;
-
   }
 
   getQueryResults(queryString) {
@@ -182,11 +193,9 @@ export class PublicDatasetsComponent implements OnInit {
   initial = 0;
 
   updateFilterValues(query, type, saveTo, dataset) {
-    // console.log("update filter values: ", query)
     this.isLoading = true;
     this.getQueryResults(query)
       .subscribe(res => {
-        console.log("res: ", res)
         if (type === 'checkbox') {
           this.facetField = res['facet_counts']['facet_fields'];
           for (let cat in this.facetField) {
@@ -206,23 +215,43 @@ export class PublicDatasetsComponent implements OnInit {
               this.checkboxStatus[cat] = obj2
             }
           }
-        } else if (type === 'rangeSlider') {
+          //for the range queries only
           let facet_queries = res["facet_counts"]["facet_queries"]
           for (let item in facet_queries) {
             let indexOfColon = item.indexOf(':')
             let cat = item.slice(9, indexOfColon)
-            // saveTo[cat]["count"] = res["facet_counts"]['facet_queries'][item];
-            let min = this.sliderMinMax[dataset][cat]['min']
-            let max = this.sliderMinMax[dataset][cat]['max']
-            saveTo[cat] = {
+            let min = this.sliderMinMax[dataset][cat]['low']
+            let max = this.sliderMinMax[dataset][cat]['high']
+            if (saveTo['range'] === undefined) {
+              saveTo['range'] = {};
+            }
+            if (saveTo['range'][cat] === undefined) {
+              saveTo['range'][cat] = {};
+            }
+            saveTo['range'][cat] = {
               "count": res["facet_counts"]['facet_queries'][item],
-              "min": min,
-              "max": max
+              "low": 0,
+              "high": 100
+            }
+            console.log("storage after update: ", this.storageDataSet, dataset, item, cat)
+          }
+        }
+        // maybe remove??
+        else if (type === 'rangeSlider') {
+          let facet_queries = res["facet_counts"]["facet_queries"]
+          for (let item in facet_queries) {
+            let indexOfColon = item.indexOf(':')
+            let cat = item.slice(9, indexOfColon)
+            let min = this.sliderMinMax[dataset][cat]['low']
+            let max = this.sliderMinMax[dataset][cat]['high']
+            saveTo["range"][cat] = {
+              "count": res["facet_counts"]['facet_queries'][item],
+              "low": min,
+              "high": max
             }
           }
-
         }
-        this.initial++
+        this.initial++;
       })
     this.isLoading = false;
   }
@@ -241,13 +270,16 @@ export class PublicDatasetsComponent implements OnInit {
       this.checkboxStatus[cat][subcat] = false;
     }
     this.filterData(dataset)
+    // console.log(this.checkBoxObj, this.checkboxStatus)
+    console.log("storage: ", this.storageDataSet)
   }
 
-  onSliderChange(dataset, category, low, high) {
-    // console.log("slider from storageDS: ", this.storageDataSet[dataset])
-    // this.queryRangeString[dataset][category] = this.buildFacetFieldQueryRangeString(category, dataset, low, high)
-    // console.log("query range string: ", this.queryRangeString)
-    // this.updateFilterValues(this.queryRangeString[dataset][category], 'rangeSlider', this.storageDataSet[dataset]['slider']);
+  onSliderChange(dataset, category, low, high, count) {
+    // this.sliderMinMax[dataset][category]['low'] = low;
+    // this.sliderMinMax[dataset][category]['high'] = high;
+
+    // this.queryRangeString = this.buildFacetFieldQueryRangeString(this.filterRangeFields[dataset], dataset);
+    // this.updateFilterValues(this.queryRangeString, 'rangeSlider', this.storageDataSet[dataset], dataset);
   }
 
   filterData(dataset) {
@@ -263,7 +295,7 @@ export class PublicDatasetsComponent implements OnInit {
       }
     }
     this.searchQueryResults = newQueryString;
-    let temp = this.updateFacetFieldQueryString(this.filterFields[this.currentDataset], this.currentDataset, this.searchQueryResults)
+    let temp = this.updateFacetFieldQueryString(this.currentDataset, this.searchQueryResults)
     this.updateFilterValues(temp, 'checkbox', this.storageDataSet[this.currentDataset], dataset)
   }
 

@@ -9,24 +9,25 @@ import { PublicDatasetsComponent } from '../public-datasets.component';
   styleUrls: ['./slider.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SliderPDSComponent extends PublicDatasetsComponent implements OnInit {
+export class SliderPDSComponent extends PublicDatasetsComponent implements OnInit, OnChanges {
   @Input() info;
   @Input() currentDataset;
-  @Input() targetOptions;
-  @Input() tcgaOptions;
   @Input() cat;
 
-  options2: Options;
+  options: Options;
+  // lowSelectedValue: number
+  // highSelectedValue: number
 
-  
 
   ngOnInit(): void {
-      this.options2 = {
-        floor: this.sliderMinMax[this.currentDataset][this.cat]['min'],
-        ceil: this.sliderMinMax[this.currentDataset][this.cat]['max']
-      }
+    this.options = {
+      floor: this.sliderMinMax[this.currentDataset][this.cat]['floor'],
+      ceil: this.sliderMinMax[this.currentDataset][this.cat]['ceil']
+    }
+    console.log("count: ", this.info.value.count)
+  }
 
-      
-      console.log("info from slider: ", this.info)
+  ngOnChanges(changes: SimpleChanges): void {
+      console.log("changes from slider: ", this.sliderMinMax[this.currentDataset][this.cat]['low'], this.sliderMinMax[this.currentDataset][this.cat]['high'])
   }
 }

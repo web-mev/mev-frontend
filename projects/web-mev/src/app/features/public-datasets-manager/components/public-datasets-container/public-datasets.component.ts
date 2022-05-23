@@ -2,7 +2,6 @@ import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@
 import { FormBuilder } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
-import { Options } from '@angular-slider/ngx-slider';
 
 
 @Component({
@@ -38,21 +37,24 @@ export class PublicDatasetsComponent implements OnInit {
     'tcga-rnaseq': this.tcgaRangeFields,
     // 'gtex-rnaseq': this.gtexRangeFields
   };
-  sliderMinMax = {
+  sliderStorage = {
     'target-rnaseq': {
       "age_at_diagnosis": {
+        "count": 0,
         "floor": 3,
         "ceil": 11828,
         "low": 3,
         "high": 11828
       },
       "days_to_last_follow_up": {
+        "count": 0,
         "floor": 0,
         "ceil": 5938,
         "low": 0,
         "high": 5938
       },
       "year_of_diagnosis": {
+        "count": 0,
         "floor": 1900,
         "ceil": 2015,
         "low": 1900,
@@ -61,36 +63,42 @@ export class PublicDatasetsComponent implements OnInit {
     },
     'tcga-rnaseq': {
       "age_at_diagnosis": {
+        "count": 0,
         "floor": 5267,
         "ceil": 32872,
         "low": 5267,
         "high": 32872
       },
       "age_at_index": {
+        "count": 0,
         "floor": 14,
         "ceil": 90,
         "low": 14,
         "high": 90
       },
       "days_to_birth": {
+        "count": 0,
         "floor": -32872,
         "ceil": -5267,
         "low": -32872,
         "high": -5267
       },
       "days_to_last_follow_up": {
+        "count": 0,
         "floor": -64,
         "ceil": 11252,
         "low": -64,
         "high": 11252
       },
       "year_of_birth": {
+        "count": 0,
         "floor": 1902,
         "ceil": 1997,
         "low": 1902,
         "high": 1997
       },
       "year_of_diagnosis": {
+        "count": 0,
         "floor": 1978,
         "ceil": 2013,
         "low": 1978,
@@ -120,6 +128,7 @@ export class PublicDatasetsComponent implements OnInit {
   ngOnInit(): void {
     this.isLoading = true;
   }
+
   count = 0
   afterLoaded() {
     for (let dataset in this.filterRangeFields) {
@@ -130,7 +139,6 @@ export class PublicDatasetsComponent implements OnInit {
 
       //gets the numbers for each category
       this.updateFilterValues(this.queryStringForFilters, 'checkbox', this.storageDataSet[dataset], dataset);
-      // this.updateFilterValues(this.queryRangeString, 'rangeSlider', this.storageDataSet[dataset], dataset);
     }
   }
 
@@ -144,8 +152,8 @@ export class PublicDatasetsComponent implements OnInit {
     let rangeQuery = '';
     for (let k = 0; k < categoryArrayRange.length; k++) {
       let category = categoryArrayRange[k];
-      let low = this.sliderMinMax[dataset][category]['low'];
-      let high = this.sliderMinMax[dataset][category]['high'];
+      let low = this.sliderStorage[dataset][category]['low'];
+      let high = this.sliderStorage[dataset][category]['high'];
       rangeQuery += `&facet.query={!tag=q1}${category}:[${low} TO ${high}]`
     }
     query += rangeQuery;
@@ -164,8 +172,8 @@ export class PublicDatasetsComponent implements OnInit {
     let rangeQuery = '';
     for (let k = 0; k < categoryArrayRange.length; k++) {
       let category = categoryArrayRange[k];
-      let low = this.sliderMinMax[dataset][category]['low'];
-      let high = this.sliderMinMax[dataset][category]['high'];
+      let low = this.sliderStorage[dataset][category]['low'];
+      let high = this.sliderStorage[dataset][category]['high'];
       rangeQuery += `&facet.query={!tag=q1}${category}:[${low} TO ${high}]`
     }
     query += rangeQuery;
@@ -177,8 +185,8 @@ export class PublicDatasetsComponent implements OnInit {
     let rangeQuery = '';
     for (let k = 0; k < categoryArrayRange.length; k++) {
       let category = categoryArrayRange[k];
-      let low = this.sliderMinMax[dataset][category]['low'];
-      let high = this.sliderMinMax[dataset][category]['high'];
+      let low = this.sliderStorage[dataset][category]['low'];
+      let high = this.sliderStorage[dataset][category]['high'];
       rangeQuery += `&facet.query={!tag=q1}${category}:[${low} TO ${high}]`
     }
     query = `${this.API_URL}/public-datasets/query/${dataset}/?q=*&facet=true` + rangeQuery;
@@ -197,6 +205,7 @@ export class PublicDatasetsComponent implements OnInit {
     this.getQueryResults(query)
       .subscribe(res => {
         if (type === 'checkbox') {
+          debugger
           this.facetField = res['facet_counts']['facet_fields'];
           for (let cat in this.facetField) {
             let arr = this.facetField[cat]
@@ -220,35 +229,8 @@ export class PublicDatasetsComponent implements OnInit {
           for (let item in facet_queries) {
             let indexOfColon = item.indexOf(':')
             let cat = item.slice(9, indexOfColon)
-            let min = this.sliderMinMax[dataset][cat]['low']
-            let max = this.sliderMinMax[dataset][cat]['high']
-            if (saveTo['range'] === undefined) {
-              saveTo['range'] = {};
-            }
-            if (saveTo['range'][cat] === undefined) {
-              saveTo['range'][cat] = {};
-            }
-            saveTo['range'][cat] = {
-              "count": res["facet_counts"]['facet_queries'][item],
-              "low": 0,
-              "high": 100
-            }
-            console.log("storage after update: ", this.storageDataSet, dataset, item, cat)
-          }
-        }
-        // maybe remove??
-        else if (type === 'rangeSlider') {
-          let facet_queries = res["facet_counts"]["facet_queries"]
-          for (let item in facet_queries) {
-            let indexOfColon = item.indexOf(':')
-            let cat = item.slice(9, indexOfColon)
-            let min = this.sliderMinMax[dataset][cat]['low']
-            let max = this.sliderMinMax[dataset][cat]['high']
-            saveTo["range"][cat] = {
-              "count": res["facet_counts"]['facet_queries'][item],
-              "low": min,
-              "high": max
-            }
+            let count = res["facet_counts"]['facet_queries'][item];
+            this.sliderStorage[dataset][cat]['count'] = count;
           }
         }
         this.initial++;
@@ -270,16 +252,14 @@ export class PublicDatasetsComponent implements OnInit {
       this.checkboxStatus[cat][subcat] = false;
     }
     this.filterData(dataset)
-    // console.log(this.checkBoxObj, this.checkboxStatus)
-    console.log("storage: ", this.storageDataSet)
   }
 
-  onSliderChange(dataset, category, low, high, count) {
-    // this.sliderMinMax[dataset][category]['low'] = low;
-    // this.sliderMinMax[dataset][category]['high'] = high;
-
-    // this.queryRangeString = this.buildFacetFieldQueryRangeString(this.filterRangeFields[dataset], dataset);
-    // this.updateFilterValues(this.queryRangeString, 'rangeSlider', this.storageDataSet[dataset], dataset);
+  setSliderValue(value) {
+    let dataset = value['dataset']
+    let cat = value['category']
+    this.sliderStorage[dataset][cat]['low'] = value['low'];
+    this.sliderStorage[dataset][cat]['high'] = value['high'];
+    this.filterData(dataset)
   }
 
   filterData(dataset) {
@@ -294,7 +274,20 @@ export class PublicDatasetsComponent implements OnInit {
         }
       }
     }
-    this.searchQueryResults = newQueryString;
+    //add query from range here before passing it on to updateFacet
+    let rangeQuery = '';
+    for (let cat in this.sliderStorage[dataset]) {
+      let data = this.sliderStorage[dataset][cat]
+      let temp = `${cat}:[${data["low"]} TO ${data["high"]}]`;
+      if (rangeQuery.length > 0) {
+        rangeQuery += " AND " + temp;
+      } else {
+        rangeQuery += temp;
+      }
+    }
+    rangeQuery = `(${rangeQuery})`;
+    this.searchQueryResults = (newQueryString.length > 0) ? `${newQueryString} AND ${rangeQuery}` : rangeQuery;
+
     let temp = this.updateFacetFieldQueryString(this.currentDataset, this.searchQueryResults)
     this.updateFilterValues(temp, 'checkbox', this.storageDataSet[this.currentDataset], dataset)
   }

@@ -1,5 +1,5 @@
-import { Options } from '@angular-slider/ngx-slider';
-import { Component, OnChanges, ChangeDetectionStrategy, SimpleChanges, Input, OnInit } from '@angular/core';
+import { Options, ChangeContext } from '@angular-slider/ngx-slider';
+import { Component, ChangeDetectionStrategy, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { PublicDatasetsComponent } from '../public-datasets.component';
 
 
@@ -9,25 +9,31 @@ import { PublicDatasetsComponent } from '../public-datasets.component';
   styleUrls: ['./slider.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SliderPDSComponent extends PublicDatasetsComponent implements OnInit, OnChanges {
+export class SliderPDSComponent extends PublicDatasetsComponent implements OnInit {
   @Input() info;
   @Input() currentDataset;
-  @Input() cat;
+  @Output() childEvent = new EventEmitter()
 
+  minValue;
+  maxValue;
   options: Options;
-  // lowSelectedValue: number
-  // highSelectedValue: number
-
 
   ngOnInit(): void {
+    this.minValue = this.sliderStorage[this.currentDataset][this.info.key]['low'];
+    this.maxValue = this.sliderStorage[this.currentDataset][this.info.key]['high'];
     this.options = {
-      floor: this.sliderMinMax[this.currentDataset][this.cat]['floor'],
-      ceil: this.sliderMinMax[this.currentDataset][this.cat]['ceil']
-    }
-    console.log("count: ", this.info.value.count)
+      floor: this.sliderStorage[this.currentDataset][this.info.key]['floor'],
+      ceil: this.sliderStorage[this.currentDataset][this.info.key]['ceil'],
+    };
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-      console.log("changes from slider: ", this.sliderMinMax[this.currentDataset][this.cat]['low'], this.sliderMinMax[this.currentDataset][this.cat]['high'])
+  onUserChange(changeContext: ChangeContext): void {
+    let temp = {
+      "dataset": this.currentDataset,
+      "category": this.info.key,
+      "low": this.minValue,
+      "high": this.maxValue
+    }
+    this.childEvent.emit(temp)
   }
 }

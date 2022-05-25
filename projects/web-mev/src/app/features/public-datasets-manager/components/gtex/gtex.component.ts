@@ -25,7 +25,7 @@ export class GtexComponent {
     isWaiting = false;
     totalSelectedSamples = 0;
     viewMode = 'byType';
-
+ 
     constructor(
         public cdRef: ChangeDetectorRef,
         public pdService: PublicDatasetService,

@@ -3,7 +3,6 @@ import { FormBuilder } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 
-
 @Component({
   selector: 'mev-public-datasets',
   templateUrl: './public-datasets.component.html',
@@ -23,19 +22,20 @@ export class PublicDatasetsComponent implements OnInit {
 
   targetFields = ["ethnicity", "gender", "race", "vital_status", "cog_renal_stage", "last_known_disease_status", "morphology", "primary_diagnosis", "progression_or_recurrence", "site_of_resection_or_biopsy", "tissue_or_organ_of_origin", "tumor_grade", "dbgap_accession_number", "disease_type", "name", "primary_site", "project_id"];
   tcgaFields = ["alcohol_history", "ethnicity", "gender", "race", "vital_status", "vital_status", "ajcc_pathologic_m", "ajcc_pathologic_n", "ajcc_pathologic_stage", "ajcc_pathologic_t", "ajcc_staging_system_edition", "classification_of_tumor", "days_to_diagnosis", "icd_10_code", "last_known_disease_status", "morphology", "primary_diagnosis", "prior_malignancy", "prior_treatment", "progression_or_recurrence", "site_of_resection_or_biopsy", "synchronous_malignancy", "tissue_or_organ_of_origin", "tumor_grade", "disease_type", "name", "primary_site", "project_id"];
-  // gtexFields = ["tissue", "sex", "age_range", "hardy_scale_death", "rna_rin", "nucleic_acid_isolation_batch", "expression_batch", "kit", "collection_site_code"];
+  // gtexFields = [];
+  gtexFields = ["tissue", "sex", "age_range", "hardy_scale_death", "rna_rin", "nucleic_acid_isolation_batch", "expression_batch", "kit", "collection_site_code"];
   targetRangeFields = ["age_at_diagnosis", "days_to_last_follow_up", "year_of_diagnosis"];
   tcgaRangeFields = ["age_at_diagnosis", "age_at_index", "days_to_birth", "days_to_last_follow_up", "year_of_birth", "year_of_diagnosis"];
-  // gtexRangeFields = []
+  gtexRangeFields = []
   filterFields = {
     'target-rnaseq': this.targetFields,
     'tcga-rnaseq': this.tcgaFields,
-    // 'gtex-rnaseq': this.gtexFields
+    'gtex-rnaseq': this.gtexFields
   }
   filterRangeFields = {
     'target-rnaseq': this.targetRangeFields,
     'tcga-rnaseq': this.tcgaRangeFields,
-    // 'gtex-rnaseq': this.gtexRangeFields
+    'gtex-rnaseq': this.gtexRangeFields
   };
   sliderStorage = {
     'target-rnaseq': {
@@ -105,44 +105,51 @@ export class PublicDatasetsComponent implements OnInit {
         "high": 2013
       }
     },
-    // "gtex-rnaseq": {}
-  }
+    "gtex-rnaseq": {
 
-
-  dataSetNames = ['target-rnaseq', 'tcga-rnaseq'];
-  storageDataSet = {
-    'target-rnaseq': {},
-    'tcga-rnaseq': {},
-    // 'gtex-rnaseq': {},
-  };
-  checkBoxObj = {};
-  checkboxStatus = {}
-  sliderObj = {
-    'target-rnaseq': {},
-    'tcga-rnaseq': {},
-  };
-  isLoading = true;
-
-  constructor(fb: FormBuilder, private httpClient: HttpClient, private ref: ChangeDetectorRef) { }
-
-  ngOnInit(): void {
-    this.isLoading = true;
-  }
-
-  count = 0
-  afterLoaded() {
-    for (let dataset in this.filterRangeFields) {
-      this.queryRangeString = this.buildFacetFieldQueryRangeString(this.filterRangeFields[dataset], dataset);
-
-      //builds the initial query string
-      this.queryStringForFilters = this.buildFacetFieldQueryString(dataset);
-
-      //gets the numbers for each category
-      this.updateFilterValues(this.queryStringForFilters, 'checkbox', this.storageDataSet[dataset], dataset);
     }
   }
 
-  buildFacetFieldQueryString(dataset) {
+  // dataSetNames = [
+  //   'target-rnaseq',
+  //   'tcga-rnaseq',
+  //   'gtex-rnaseq'
+  // ];
+  storageDataSet = {
+    'target-rnaseq': {},
+    'tcga-rnaseq': {},
+    'gtex-rnaseq': {},
+  };
+  //checkbox object keeps track of which items are checked
+  checkBoxObj = {
+    'target-rnaseq': {},
+    'tcga-rnaseq': {},
+    'gtex-rnaseq': {},
+  };
+  //checkbox status keeps track of every checkbox for true/false values
+  checkboxStatus = {
+    'target-rnaseq': {},
+    'tcga-rnaseq': {},
+    'gtex-rnaseq': {},
+  }
+
+  constructor(fb: FormBuilder, private httpClient: HttpClient, private ref: ChangeDetectorRef) { }
+
+  ngOnInit(): void { }
+
+  // count = 0
+  afterLoaded() {
+    for (let dataset in this.filterFields) {
+      console.log("dataset from afterload: ", dataset)
+      //builds the initial query string
+      this.queryStringForFilters = this.getFacetFieldQueryString(dataset);
+
+      //gets the numbers for each category
+      this.updateFilterValues(this.queryStringForFilters, this.storageDataSet[dataset], this.checkboxStatus[dataset], dataset);
+    }
+  }
+
+  getFacetFieldQueryString(dataset) {
     let categoryArray = this.filterFields[dataset]
     let query = `${this.API_URL}/public-datasets/query/${dataset}/?q=*&facet=true`;
     for (let i = 0; i < categoryArray.length; i++) {
@@ -160,7 +167,7 @@ export class PublicDatasetsComponent implements OnInit {
     return query;
   }
 
-  updateFacetFieldQueryString(dataset, filterItems) {
+  addQuerySearchString(dataset, filterItems) {
     let categoryArray = this.filterFields[dataset]
     let tempQuery = filterItems.length === 0 ? '*' : filterItems;
     let query = `${this.API_URL}/public-datasets/query/${dataset}/?q=${tempQuery}&facet=true`;
@@ -180,76 +187,74 @@ export class PublicDatasetsComponent implements OnInit {
     return query;
   }
 
-  buildFacetFieldQueryRangeString(categoryArrayRange, dataset) {
-    let query;
-    let rangeQuery = '';
-    for (let k = 0; k < categoryArrayRange.length; k++) {
-      let category = categoryArrayRange[k];
-      let low = this.sliderStorage[dataset][category]['low'];
-      let high = this.sliderStorage[dataset][category]['high'];
-      rangeQuery += `&facet.query={!tag=q1}${category}:[${low} TO ${high}]`
-    }
-    query = `${this.API_URL}/public-datasets/query/${dataset}/?q=*&facet=true` + rangeQuery;
-    return query;
-  }
+  // buildFacetFieldQueryRangeString(categoryArrayRange, dataset) {
+  //   let query;
+  //   let rangeQuery = '';
+  //   for (let k = 0; k < categoryArrayRange.length; k++) {
+  //     let category = categoryArrayRange[k];
+  //     let low = this.sliderStorage[dataset][category]['low'];
+  //     let high = this.sliderStorage[dataset][category]['high'];
+  //     rangeQuery += `&facet.query={!tag=q1}${category}:[${low} TO ${high}]`
+  //   }
+  //   query = `${this.API_URL}/public-datasets/query/${dataset}/?q=*&facet=true` + rangeQuery;
+  //   return query;
+  // }
 
   getQueryResults(queryString) {
     return this.httpClient.get(queryString)
   }
 
   //change this later to only run one time
-  initial = 0;
 
-  updateFilterValues(query, type, saveTo, dataset) {
-    this.isLoading = true;
+  initial = 0;
+  updateFilterValues(query, saveTo, checkboxStatus, dataset) {
+    
     this.getQueryResults(query)
       .subscribe(res => {
-        if (type === 'checkbox') {
-          debugger
-          this.facetField = res['facet_counts']['facet_fields'];
-          for (let cat in this.facetField) {
-            let arr = this.facetField[cat]
-            let obj = {};
-            let obj2 = {};
-            for (let i = 0; i < arr.length; i += 2) {
-              obj[arr[i]] = arr[i + 1];
+        this.facetField = res['facet_counts']['facet_fields'];
+        for (let cat in this.facetField) {
+          let arr = this.facetField[cat]
+          let obj = {};
+          let obj2 = {}; //this is for checkbox status
+          for (let i = 0; i < arr.length; i += 2) {
+            obj[arr[i]] = arr[i + 1];
 
-              //need to change this hard value
-              if (this.initial === 0) {
-                obj2[arr[i]] = false;
-              }
-            }
-            saveTo[cat] = obj;
+            //need to change this hard value
             if (this.initial === 0) {
-              this.checkboxStatus[cat] = obj2
+              obj2[arr[i]] = false;
             }
           }
-          //for the range queries only
-          let facet_queries = res["facet_counts"]["facet_queries"]
-          for (let item in facet_queries) {
-            let indexOfColon = item.indexOf(':')
-            let cat = item.slice(9, indexOfColon)
-            let count = res["facet_counts"]['facet_queries'][item];
-            this.sliderStorage[dataset][cat]['count'] = count;
+          saveTo[cat] = obj;
+          if (this.initial === 0) {
+            checkboxStatus[cat] = obj2;
           }
         }
+        //for the range queries only
+        let facet_queries = res["facet_counts"]["facet_queries"]
+        for (let item in facet_queries) {
+          let indexOfColon = item.indexOf(':')
+          let cat = item.slice(9, indexOfColon)
+          let count = res["facet_counts"]['facet_queries'][item];
+          this.sliderStorage[dataset][cat]['count'] = count;
+        }
+        console.log("main storage dataset: ", this.storageDataSet)
         this.initial++;
       })
-    this.isLoading = false;
+
   }
 
   onChecked(currResult, cat, subcat, dataset) {
     let newQueryItem = `${cat}:"${subcat}"`;
     if (currResult === true) {
-      if (!this.checkBoxObj[cat]) {
-        this.checkBoxObj[cat] = [];
+      if (!this.checkBoxObj[dataset][cat]) {
+        this.checkBoxObj[dataset][cat] = [];
       }
-      this.checkBoxObj[cat].push(newQueryItem);
-      this.checkboxStatus[cat][subcat] = true;
+      this.checkBoxObj[dataset][cat].push(newQueryItem);
+      this.checkboxStatus[dataset][cat][subcat] = true;
 
     } else if (currResult === false) {
-      this.checkBoxObj[cat] = this.checkBoxObj[cat].filter(item => item !== newQueryItem);
-      this.checkboxStatus[cat][subcat] = false;
+      this.checkBoxObj[dataset][cat] = this.checkBoxObj[dataset][cat].filter(item => item !== newQueryItem);
+      this.checkboxStatus[dataset][cat][subcat] = false;
     }
     this.filterData(dataset)
   }
@@ -264,9 +269,9 @@ export class PublicDatasetsComponent implements OnInit {
 
   filterData(dataset) {
     let newQueryString = '';
-    for (let cat in this.checkBoxObj) {
-      if (this.checkBoxObj[cat].length > 0) {
-        let temp = "(" + this.checkBoxObj[cat].join(' OR ') + ")"
+    for (let cat in this.checkBoxObj[dataset]) {
+      if (this.checkBoxObj[dataset][cat].length > 0) {
+        let temp = "(" + this.checkBoxObj[dataset][cat].join(' OR ') + ")"
         if (newQueryString.length > 0) {
           newQueryString += " AND " + temp;
         } else {
@@ -286,10 +291,16 @@ export class PublicDatasetsComponent implements OnInit {
       }
     }
     rangeQuery = `(${rangeQuery})`;
-    this.searchQueryResults = (newQueryString.length > 0) ? `${newQueryString} AND ${rangeQuery}` : rangeQuery;
+    //change this after add range values for gtex
+    if (dataset === 'gtex-rnaseq') {
+      this.searchQueryResults = (newQueryString.length > 0) ? newQueryString : '*';
+    } else {
+      this.searchQueryResults = (newQueryString.length > 0) ? `${newQueryString} AND ${rangeQuery}` : rangeQuery;
+    }
 
-    let temp = this.updateFacetFieldQueryString(this.currentDataset, this.searchQueryResults)
-    this.updateFilterValues(temp, 'checkbox', this.storageDataSet[this.currentDataset], dataset)
+
+    let temp = this.addQuerySearchString(this.currentDataset, this.searchQueryResults)
+    this.updateFilterValues(temp, this.storageDataSet[this.currentDataset], this.checkboxStatus[dataset], dataset)
   }
 
   setDataset(datasetTag: string) {

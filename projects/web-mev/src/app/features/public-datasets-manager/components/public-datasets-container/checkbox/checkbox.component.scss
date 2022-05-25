@@ -19,10 +19,16 @@ ul {
     text-transform: capitalize;
 }
 
-::ng-deep{
-    .mat-checkbox-inner-container{
+::ng-deep {
+    .mat-checkbox-inner-container {
         width: 12px !important;
         height: 12px !important;
     }
-}
+    // .mat-expansion-panel-header.mat-expanded, .mat-expansion-panel-header,.mat-expansion-panel-header:focus, .mat-expansion-panel:hover {
+    //     background-color: #ddebf2;
+    // }
 
+    // .mat-expansion-panel-body {
+    //     background-color: #ddebf2;
+    // }
+}

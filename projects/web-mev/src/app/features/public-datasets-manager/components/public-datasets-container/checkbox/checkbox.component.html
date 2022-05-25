@@ -1,11 +1,33 @@
 <section class="example-section">
     <label class="example-margin checkBoxLabel">{{title ? title: info.key}}: </label>
-    <div *ngFor="let cat of info.value | keyvalue">
-        <mat-checkbox 
-        class="example-margin checkBoxContent" 
-        [checked]="pds.checkboxStatus[info.key][cat.key]"
-        (change)="pds.onChecked($event.checked, info.key, cat.key, currentDataset)">
+    <div *ngFor="let cat of info.value | keyvalue ">
+        <mat-checkbox class="example-margin checkBoxContent" [checked]="pds.checkboxStatus[currentDataset][info.key][cat.key]"
+            (change)="pds.onChecked($event.checked, info.key, cat.key, currentDataset)">
             {{cat.key}} ({{cat.value}})
         </mat-checkbox>
     </div>
 </section>
+<!-- <section class="example-section checkboxAccordion">
+    <mat-accordion>
+        <mat-expansion-panel class="expansionPanel" [expanded]="!showResult" (opened)="showResult = false"
+            (closed)="showResult = true">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <mat-card-header>
+                        <mat-card-title><label class="example-margin checkBoxLabel">{{title ? title: info.key}}: </label></mat-card-title>
+                    </mat-card-header>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-card-content class="analysis-card__main">
+                <div *ngFor="let cat of info.value | keyvalue">
+                    <mat-checkbox class="example-margin checkBoxContent"
+                        [checked]="pds.checkboxStatus[info.key][cat.key]"
+                        (change)="pds.onChecked($event.checked, info.key, cat.key, currentDataset)">
+                        {{cat.key}} ({{cat.value}})
+                    </mat-checkbox>
+                </div>
+
+            </mat-card-content>
+        </mat-expansion-panel>
+    </mat-accordion>
+</section> -->

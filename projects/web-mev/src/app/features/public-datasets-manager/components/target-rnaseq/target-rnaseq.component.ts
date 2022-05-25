@@ -63,7 +63,6 @@ export class TargetRnaseqComponent extends GdcRnaseqComponent implements OnChang
 
     let originalTypeQueryURL = 'target-rnaseq/?q=*:*&facet=on&facet.field=project_id&rows=0';
     this.types_url = (this.query.length === 0) ? originalTypeQueryURL : `${this.datasetTag}/?q=${this.query}&facet=on&facet.field=project_id`;
-    // console.log("query url: ", this.types_url)
     
     $observable_dict['solr_query'] = this.pdService.makeSolrQuery(this.types_url);
     $observable_dict['db_query'] = this.pdService.getPublicDatasetDetails(datasetTag);
@@ -119,7 +118,6 @@ export class TargetRnaseqComponent extends GdcRnaseqComponent implements OnChang
   }
 
   _createDatasetTarget(dataType: string, datasetTag: string){
-    console.log("from createdataset: ", dataType, datasetTag, this.selectedNames, this.query)
     let $observable_dict = {};
 
     const dialogRef = this.dialog.open(PublicDatasetExportNameDialogComponent, {disableClose: true});
@@ -137,7 +135,6 @@ export class TargetRnaseqComponent extends GdcRnaseqComponent implements OnChang
             let type_id = this.selectedNames[i];
             let count = this.type_count_dict[type_id];
             url_suffix = datasetTag + `?q=project_id:"${type_id}"  AND ${this.query}&rows=${count}&fl=id`;
-            console.log("url suffix: ", url_suffix)
             $observable_dict[type_id] = this.pdService.makeSolrQuery(url_suffix);
         }
     } else if(dataType === 'byTissue'){
@@ -149,7 +146,6 @@ export class TargetRnaseqComponent extends GdcRnaseqComponent implements OnChang
             // "project" each of these tissues corresponds to. We get that by adding
             // to the fl=... param
             url_suffix = datasetTag + `?q=tissue_or_organ_of_origin:"${tissue_name}" AND ${this.query}&rows=${count}&fl=id,project_id`;
-            console.log("url suffix: ", url_suffix)
             $observable_dict[tissue_name] = this.pdService.makeSolrQuery(url_suffix);
         }
     }

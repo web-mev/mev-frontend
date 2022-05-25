@@ -15,5 +15,6 @@ export class CheckBoxComponent implements OnChanges {
   
   constructor(public pds: PublicDatasetsComponent) { }
 
-  ngOnChanges(changes: SimpleChanges): void {}
+  ngOnChanges(changes: SimpleChanges): void {
+  }
 }

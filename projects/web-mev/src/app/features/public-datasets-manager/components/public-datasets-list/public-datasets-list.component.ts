@@ -42,6 +42,7 @@ export class PublicDatasetsListComponent implements OnInit {
   }
 
   chooseDataset(datasetTag: string) {
+    console.log("choosing dataset: ", datasetTag)
     this.datasetSelectedEvent.emit(datasetTag);
   }
 

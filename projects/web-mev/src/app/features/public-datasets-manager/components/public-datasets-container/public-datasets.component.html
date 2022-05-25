@@ -7,15 +7,16 @@
             <h1>{{currentDataset}}</h1>
             <div *ngFor="let item of storageDataSet[currentDataset] | keyvalue">
                 <h2>{{item.key}}</h2>
-                <mev-checkbox [info]='item' title="Gender" *ngIf="item.key === 'gender'"
-                    [currentDataset]="currentDataset"></mev-checkbox>
+                <mev-checkbox *ngIf="item.key === 'gender'" [info]='item'
+                    title="Gender" [currentDataset]="currentDataset"></mev-checkbox>
                 <mev-checkbox [info]='item' title="Ethnicity" *ngIf="item.key === 'ethnicity'"
                     [currentDataset]="currentDataset"></mev-checkbox>
                 <mev-checkbox [info]='item' title="Vital Status" *ngIf="item.key === 'vital_status'"
                     [currentDataset]="currentDataset"></mev-checkbox>
                 <mev-checkbox [info]='item' title="Race" *ngIf="item.key === 'race'" [currentDataset]="currentDataset">
                 </mev-checkbox>
-                <mev-checkbox [info]='item' title="COG Renal Stage" *ngIf="item.key === 'cog_renal_stage'" [currentDataset]="currentDataset">
+                <mev-checkbox [info]='item' title="COG Renal Stage" *ngIf="item.key === 'cog_renal_stage'"
+                    [currentDataset]="currentDataset">
                 </mev-checkbox>
                 <mev-checkbox [info]='item' title="Last Known Disease Status"
                     *ngIf="item.key === 'last_known_disease_status'" [currentDataset]="currentDataset"></mev-checkbox>
@@ -64,15 +65,6 @@
                 <mev-checkbox [info]='item' title="tissue" *ngIf="item.key === 'tissue'"
                     [currentDataset]="currentDataset"></mev-checkbox>
 
-
-
-                <!-- <section class="example-section">
-                    <label class="example-margin checkBoxLabel">{{item.key}}: </label>
-                    <div *ngFor="let cat of item.value | keyvalue">
-                        <mat-checkbox class="example-margin checkBoxContent" (change)="onChecked($event.checked, item.key, cat.key)">
-                            {{cat.key}} ({{cat.value}})</mat-checkbox>
-                    </div>
-                </section> -->
             </div>
             <br>
             <div *ngFor="let item of sliderStorage[currentDataset] | keyvalue">
@@ -119,7 +111,7 @@
         </ng-container>
 
         <ng-container *ngIf="currentDataset === 'gtex-rnaseq'">
-            <gtex-rnaseq-explorer ></gtex-rnaseq-explorer>
+            <gtex-rnaseq-explorer [query]="searchQueryResults"></gtex-rnaseq-explorer>
         </ng-container>
 
     </div>

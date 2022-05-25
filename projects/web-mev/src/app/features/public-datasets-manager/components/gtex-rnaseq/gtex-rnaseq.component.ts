@@ -91,8 +91,8 @@ export class GtexRnaseqComponent extends GdcRnaseqComponent implements OnChanges
   fetchDataGtex(datasetTag: string, name_map_key: string): void {
     this.viewMode = "byTissue";
     let $observable_dict = {};
-    let originalTissueQueryURL = 'gtex-rnaseq/?q=*:*&facet=on&facet.field=tissue&rows=0';
-    this.tissue_types_url = (this.query.length === 0) ? originalTissueQueryURL : `${this.datasetTag}/?q=${this.query}&facet=on&facet.field=tissue`;
+    let originalTissueQueryURL = 'gtex-rnaseq/?q=*:*&facet=on&facet.field=tissue&rows=0&facet.age_range.sort';
+    this.tissue_types_url = (this.query.length === 0) ? originalTissueQueryURL : `${this.datasetTag}/?q=${this.query}&facet=on&facet.field=tissue&facet.age_range.sort`;
     $observable_dict['solr_query'] = this.pdService.makeSolrQuery(originalTissueQueryURL);
     $observable_dict['db_query'] = this.pdService.getPublicDatasetDetails(datasetTag);
     this.pdService.makeSolrQuery(this.tissue_types_url).subscribe(

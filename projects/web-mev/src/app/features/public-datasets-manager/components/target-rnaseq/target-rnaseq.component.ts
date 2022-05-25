@@ -61,8 +61,8 @@ export class TargetRnaseqComponent extends GdcRnaseqComponent implements OnChang
     let $observable_dict = {};
     let facet_list = [];
 
-    let originalTypeQueryURL = 'target-rnaseq/?q=*:*&facet=on&facet.field=project_id&rows=0';
-    this.types_url = (this.query.length === 0) ? originalTypeQueryURL : `${this.datasetTag}/?q=${this.query}&facet=on&facet.field=project_id`;
+    let originalTypeQueryURL = 'target-rnaseq/?q=*:*&facet=on&facet.field=project_id&rows=0&facet.gender.sort';
+    this.types_url = (this.query.length === 0) ? originalTypeQueryURL : `${this.datasetTag}/?q=${this.query}&facet=on&facet.field=project_id&facet.gender.sort`;
     
     $observable_dict['solr_query'] = this.pdService.makeSolrQuery(this.types_url);
     $observable_dict['db_query'] = this.pdService.getPublicDatasetDetails(datasetTag);
@@ -92,8 +92,8 @@ export class TargetRnaseqComponent extends GdcRnaseqComponent implements OnChang
       }
     );
     
-    let originalTissueQueryURL = 'target-rnaseq/?q=*:*&facet=on&facet.field=tissue_or_organ_of_origin&rows=0';
-    this.tissue_types_url = (this.query.length === 0) ? originalTissueQueryURL : `${this.datasetTag}/?q=${this.query}&facet=on&facet.field=tissue_or_organ_of_origin`;
+    let originalTissueQueryURL = 'target-rnaseq/?q=*:*&facet=on&facet.field=tissue_or_organ_of_origin&rows=0&facet.gender.sort';
+    this.tissue_types_url = (this.query.length === 0) ? originalTissueQueryURL : `${this.datasetTag}/?q=${this.query}&facet=on&facet.field=tissue_or_organ_of_origin&facet.gender.sort`;
 
     this.pdService.makeSolrQuery(this.tissue_types_url).subscribe(
       data => {

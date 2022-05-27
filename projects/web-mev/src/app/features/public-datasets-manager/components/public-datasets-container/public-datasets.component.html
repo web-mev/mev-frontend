@@ -1,5 +1,5 @@
 <!-- <mev-spinner-overlay *ngIf="isLoading"></mev-spinner-overlay> -->
-<mat-drawer-container class="filter-container" autosize >
+<mat-drawer-container class="filter-container" autosize>
     <mat-drawer #drawer class="filter-sidenav" mode="side" [opened]="currentDataset.length>0"
         *ngIf="currentDataset !== '' ">
         <div class="sideContainer">
@@ -15,19 +15,12 @@
                 <mev-checkbox [info]='item' title="COG Renal Stage" *ngIf="item.key === 'cog_renal_stage'"
                     [currentDataset]="currentDataset">
                 </mev-checkbox>
-                <!-- <mev-checkbox [info]='item' title="Last Known Disease Status"
-                    *ngIf="item.key === 'last_known_disease_status'" [currentDataset]="currentDataset"></mev-checkbox> -->
-                <mev-checkbox [info]='item' title="Morphology" *ngIf="item.key === 'morphology'"
+                <mev-checkbox *ngIf="item.key === 'morphology'" [info]='item' title="Morphology"
                     [currentDataset]="currentDataset"></mev-checkbox>
-                <mev-checkbox [info]='item' title="Primary Diagnosis" *ngIf="item.key === 'primary_diagnosis'"
-                    [currentDataset]="currentDataset">
-                </mev-checkbox>
-                <!-- <mev-checkbox [info]='item' title="Progression or Recurrence"
-                    *ngIf="item.key === 'progression_or_recurrence'" [currentDataset]="currentDataset"></mev-checkbox> -->
+                <mev-checkbox *ngIf="item.key === 'primary_diagnosis'" [info]='item' title="Primary Diagnosis"
+                    [currentDataset]="currentDataset"></mev-checkbox>
                 <mev-checkbox [info]='item' title="Site of Resection or Biopsy"
                     *ngIf="item.key === 'site_of_resection_or_biopsy'" [currentDataset]="currentDataset"></mev-checkbox>
-                <mev-checkbox [info]='item' title="Tissue or Organ of Origin"
-                    *ngIf="item.key === 'tissue_or_organ_of_origin'" [currentDataset]="currentDataset"></mev-checkbox>
                 <mev-checkbox [info]='item' title="Dbgap Accession Number" *ngIf="item.key === 'dbgap_accession_number'"
                     [currentDataset]="currentDataset"></mev-checkbox>
                 <mev-checkbox [info]='item' title="Disease Type" *ngIf="item.key === 'disease_type'"
@@ -36,14 +29,12 @@
                 </mev-checkbox>
                 <mev-checkbox [info]='item' title="Primary Site" *ngIf="item.key === 'primary_site'"
                     [currentDataset]="currentDataset"></mev-checkbox>
-                <mev-checkbox [info]='item' title="Project ID" *ngIf="item.key === 'project_id'"
-                    [currentDataset]="currentDataset"></mev-checkbox>
-                <!-- <mev-checkbox [info]='item' title="Tumor Grade" *ngIf="item.key === 'tumor_grade'"
-                    [currentDataset]="currentDataset"></mev-checkbox> -->
                 <mev-checkbox [info]='item' title="AJCC Pathologic M" *ngIf="item.key === 'ajcc_pathologic_m'"
                     [currentDataset]="currentDataset"></mev-checkbox>
+
                 <mev-checkbox [info]='item' title="AJCC Pathologic N" *ngIf="item.key === 'ajcc_pathologic_n'"
                     [currentDataset]="currentDataset"></mev-checkbox>
+
                 <mev-checkbox [info]='item' title="AJCC Pathologic Stage" *ngIf="item.key === 'ajcc_pathologic_stage'"
                     [currentDataset]="currentDataset"></mev-checkbox>
                 <mev-checkbox [info]='item' title="AJCC Pathologic T" *ngIf="item.key === 'ajcc_pathologic_t'"
@@ -52,10 +43,6 @@
                     *ngIf="item.key === 'ajcc_staging_system_edition'" [currentDataset]="currentDataset"></mev-checkbox>
                 <mev-checkbox [info]='item' title="Alcohol History" *ngIf="item.key === 'alcohol_history'"
                     [currentDataset]="currentDataset"></mev-checkbox>
-                <!-- <mev-checkbox [info]='item' title="classification_of_tumor"
-                    *ngIf="item.key === 'classification_of_tumor'" [currentDataset]="currentDataset"></mev-checkbox> -->
-                <!-- <mev-checkbox [info]='item' title="days_to_diagnosis" *ngIf="item.key === 'days_to_diagnosis'"
-                    [currentDataset]="currentDataset"></mev-checkbox> -->
                 <mev-checkbox [info]='item' title="ICD 10 Code" *ngIf="item.key === 'icd_10_code'"
                     [currentDataset]="currentDataset"></mev-checkbox>
                 <mev-checkbox [info]='item' title="Prior Malignancy" *ngIf="item.key === 'prior_malignancy'"
@@ -64,6 +51,24 @@
                     [currentDataset]="currentDataset"></mev-checkbox>
                 <mev-checkbox [info]='item' title="Synchronous Malignancy" *ngIf="item.key === 'synchronous_malignancy'"
                     [currentDataset]="currentDataset"></mev-checkbox>
+
+
+                <!-- <mev-checkbox [info]='item' title="classification_of_tumor"
+                    *ngIf="item.key === 'classification_of_tumor'" [currentDataset]="currentDataset"></mev-checkbox> -->
+                <!-- <mev-checkbox [info]='item' title="days_to_diagnosis" *ngIf="item.key === 'days_to_diagnosis'"
+                    [currentDataset]="currentDataset"></mev-checkbox> -->
+                <!-- <mev-checkbox [info]='item' title="Project ID" *ngIf="item.key === 'project_id'"
+                    [currentDataset]="currentDataset"></mev-checkbox> -->
+                <!-- <mev-checkbox [info]='item' title="Tumor Grade" *ngIf="item.key === 'tumor_grade'"
+                    [currentDataset]="currentDataset"></mev-checkbox> -->
+                <!-- <mev-checkbox [info]='item' title="Tissue or Organ of Origin"
+                    *ngIf="item.key === 'tissue_or_organ_of_origin'" [currentDataset]="currentDataset"></mev-checkbox> -->
+                <!-- <mev-checkbox [info]='item' title="Last Known Disease Status"
+                    *ngIf="item.key === 'last_known_disease_status'" [currentDataset]="currentDataset"></mev-checkbox> -->
+                <!-- <mev-checkbox [info]='item' title="Progression or Recurrence"
+                    *ngIf="item.key === 'progression_or_recurrence'" [currentDataset]="currentDataset"></mev-checkbox> -->
+                <!-- <mev-checkbox [info]='item' title="Kit" *ngIf="item.key === 'kit'" [currentDataset]="currentDataset">
+                </mev-checkbox> -->
 
                 <!-- checkboxes for GTEX items. will add later. -->
                 <mev-checkbox [info]='item' title="Age Range" *ngIf="item.key === 'age_range'"
@@ -80,15 +85,12 @@
                 <mev-checkbox [info]='item' title="Nucleic Acid Isolation Batch"
                     *ngIf="item.key === 'nucleic_acid_isolation_batch'" [currentDataset]="currentDataset">
                 </mev-checkbox>
-                <!-- <mev-checkbox [info]='item' title="Kit" *ngIf="item.key === 'kit'" [currentDataset]="currentDataset">
-                </mev-checkbox> -->
                 <mev-checkbox [info]='item' title="RNA Rin" *ngIf="item.key === 'rna_rin'"
                     [currentDataset]="currentDataset"></mev-checkbox>
                 <mev-checkbox [info]='item' title="Sex" *ngIf="item.key === 'sex'" [currentDataset]="currentDataset">
                 </mev-checkbox>
                 <mev-checkbox [info]='item' title="Tissue" *ngIf="item.key === 'tissue'"
                     [currentDataset]="currentDataset"></mev-checkbox>
-
             </div>
             <br>
             <div *ngFor="let item of sliderStorage[currentDataset] | keyvalue">

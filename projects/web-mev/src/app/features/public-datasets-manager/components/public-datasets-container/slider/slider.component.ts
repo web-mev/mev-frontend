@@ -19,7 +19,7 @@ export class SliderPDSComponent extends PublicDatasetsComponent implements OnIni
   maxValue;
   count;
   options: Options;
-  
+
 
   ngOnInit(): void {
     this.minValue = this.sliderStorage[this.currentDataset][this.info.key]['low'];
@@ -28,6 +28,8 @@ export class SliderPDSComponent extends PublicDatasetsComponent implements OnIni
     this.options = {
       floor: this.sliderStorage[this.currentDataset][this.info.key]['floor'],
       ceil: this.sliderStorage[this.currentDataset][this.info.key]['ceil'],
+      showTicks: true,
+      tickStep: (this.maxValue - this.minValue)/8
     };
   }
 

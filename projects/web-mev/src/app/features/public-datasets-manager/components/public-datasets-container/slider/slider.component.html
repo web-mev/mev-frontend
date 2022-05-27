@@ -1,5 +1,11 @@
-<section class="custom-slider">
-    <label class="sliderGroup">{{info.key}}: ({{info.value.count}})</label>
+<section>
+    <div class="labelContainer">
+        <label class="sliderGroup sliderLabel">{{info.key}}: ({{info.value.count}})</label>
+    </div>
+<div class="custom-slider">
     <ngx-slider [(value)]="minValue" [(highValue)]="maxValue" [options]="options" (userChange)="onUserChange($event)">
     </ngx-slider>
+</div>
+
+    
 </section>

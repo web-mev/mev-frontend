@@ -11,11 +11,11 @@ ul {
     margin: 8px 10px;
 }
 
-.sliderGroup {
-    font-weight: bold;
-    font-size: 14px;
-    text-transform: capitalize;
-}
+// .sliderGroup {
+//     font-weight: bold;
+//     font-size: 14px;
+//     text-transform: capitalize;
+// }
 
 ::ng-deep {
     .mat-checkbox-inner-container {
@@ -33,7 +33,16 @@ ul {
         font-size: 12px;
         text-transform: capitalize;
     }
-    
+
+    .mat-checkbox-layout .mat-checkbox-label {
+        white-space: normal !important;
+    }
+    .mat-checkbox-inner-container {
+        margin-top: 4px;
+    }
+    .mat-checkbox-layout .mat-checkbox-label {
+        line-height: 14px;
+    }
 }
 .checkboxSection {
     height: 40px;
@@ -43,8 +52,12 @@ ul {
     color: #03a9f4;
     text-decoration: none;
     font-size: 12px;
-    margin-left: 200px;
     margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+}
+.showMore:hover{
+    opacity: .9;
 }
 .labelContainer {
     background-color: rgba(55, 71, 79, 0.8);
@@ -53,24 +66,29 @@ ul {
     margin: -10px 0 10px -10px;
     color: white;
 }
+// .mat-checkbox-layout .mat-checkbox-label {
+//     inline-size: 150px;
+//     overflow-wrap: break-word;
+// }
 .counter {
     margin-left: auto;
-    background-color: tomato;
-    font-size: 8px;
-    color: #fff;
-    padding: 6px 10px;
-    border-radius: 20px;
+    background-color: steelblue !important;
+    font-size: 12px;
+    color: #fff !important;
     font-weight: bold;
+    margin-top: auto;
+    margin-bottom: auto;
+    padding: 2px 6px;
+    border-radius: 6px;
 }
-.checkboxContainer{
+.checkboxContainer {
     display: flex;
     flex-direction: row;
     box-sizing: border-box;
     position: relative;
     outline: none;
-    margin: 2px 0;
+    margin: 8px 0;
 }
-.mat-checkbox-layout .mat-checkbox-label{
+.mat-checkbox-layout .mat-checkbox-label {
     font-size: 14px;
 }
-

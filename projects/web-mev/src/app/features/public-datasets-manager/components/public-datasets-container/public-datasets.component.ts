@@ -140,7 +140,6 @@ export class PublicDatasetsComponent implements OnInit {
   // count = 0
   afterLoaded() {
     for (let dataset in this.filterFields) {
-      // console.log("dataset from afterload: ", dataset)
       //builds the initial query string
       this.queryStringForFilters = this.getFacetFieldQueryString(dataset);
 
@@ -220,10 +219,7 @@ export class PublicDatasetsComponent implements OnInit {
             if (initializeCheckbox === true) {
               obj2[arr[i]] = false;
             }
-            // if (saveTo[cat] === undefined) {
-            //   saveTo[cat] = [];
-            // }
-            
+
             //if it does exist, look for that id and replace, else just add it
             saveTo[cat].push(obj); //the change here saveTo[cat] = obj
             if (initializeCheckbox === true) {
@@ -231,18 +227,16 @@ export class PublicDatasetsComponent implements OnInit {
             }
           }
         }
-        // console.log("save to: ", saveTo)
         //for the range queries only
-        let facet_queries = res["facet_counts"]["facet_queries"]
+        let facet_queries = res["facet_counts"]["facet_queries"];
         for (let item in facet_queries) {
           let indexOfColon = item.indexOf(':')
           let cat = item.slice(9, indexOfColon)
           let count = res["facet_counts"]['facet_queries'][item];
           this.sliderStorage[dataset][cat]['count'] = count;
         }
-        
+
       })
-      console.log("main storage dataset: ", this.storageDataSet[dataset]);
   }
 
   onChecked(currResult, cat, subcat, dataset) {
@@ -259,8 +253,6 @@ export class PublicDatasetsComponent implements OnInit {
       this.checkboxStatus[dataset][cat][subcat] = false;
     }
     this.filterData(dataset)
-
-    console.log("checkbox status from oncheck: ", this.checkboxStatus, this.checkBoxObj)
   }
 
   setSliderValue(value) {
@@ -315,6 +307,29 @@ export class PublicDatasetsComponent implements OnInit {
   backToBrowse() {
     this.currentDataset = '';
     this.searchQueryResults = '';
-  }
 
+    //reset storage to default
+    for (let dataset in this.sliderStorage) {
+      for (let cat in this.sliderStorage[dataset]) {
+        this.sliderStorage[dataset][cat]["low"] = this.sliderStorage[dataset][cat]["floor"];
+        this.sliderStorage[dataset][cat]["high"] = this.sliderStorage[dataset][cat]["ceil"];
+      }
+    }
+    //reset checkbox values to false
+    for (let dataset in this.checkboxStatus) {
+      for (let cat in this.checkboxStatus[dataset]) {
+        for (let subcat in this.checkboxStatus[dataset][cat]) {
+          if (this.checkboxStatus[dataset][cat][subcat] === true) {
+            this.checkboxStatus[dataset][cat][subcat] === false;
+          }
+        }
+
+      }
+    }
+    this.checkBoxObj = {
+      'target-rnaseq': {},
+      'tcga-rnaseq': {},
+      'gtex-rnaseq': {},
+    };
+  }
 }

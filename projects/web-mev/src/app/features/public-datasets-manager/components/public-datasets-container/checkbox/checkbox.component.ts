@@ -21,7 +21,7 @@ export class CheckBoxComponent implements OnChanges, OnInit {
 
   ngOnChanges(changes: SimpleChanges): void {}
   ngOnInit(): void {
-    this.objectLength = Object.keys(this.info.value).length
+    this.objectLength = Object.keys(this.info.value).length;
   }
 
   showMore(){

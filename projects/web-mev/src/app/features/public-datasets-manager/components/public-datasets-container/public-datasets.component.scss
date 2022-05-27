@@ -17,6 +17,7 @@
 
 .filter-sidenav-content {
     margin-left: 20px;
+    height: 100%;
 }
 
 .sideContainer {
@@ -44,10 +45,17 @@ ul {
     text-transform: capitalize;
 }
 
-::ng-deep{
-    .mat-checkbox-inner-container{
+::ng-deep {
+    .mat-checkbox-inner-container {
         width: 12px !important;
         height: 12px !important;
+    }
+    .filter-container {
+        display: flex;
+        flex-direction: row;
+    }
+    .filter-sidenav{
+        flex: 0 0 auto;
     }
 }
 
@@ -57,7 +65,7 @@ ul {
 //         // .ngx-slider-selection {
 //         //   background: rgb(255, 255, 0) !important;
 //         // }
-        
+
 //         // .ngx-slider-model-value {
 //         //     font-size: 12px !important;
 //         // }

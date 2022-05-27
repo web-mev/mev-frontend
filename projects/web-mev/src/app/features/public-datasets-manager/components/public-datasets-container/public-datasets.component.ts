@@ -140,7 +140,7 @@ export class PublicDatasetsComponent implements OnInit {
   // count = 0
   afterLoaded() {
     for (let dataset in this.filterFields) {
-      console.log("dataset from afterload: ", dataset)
+      // console.log("dataset from afterload: ", dataset)
       //builds the initial query string
       this.queryStringForFilters = this.getFacetFieldQueryString(dataset);
 
@@ -210,20 +210,28 @@ export class PublicDatasetsComponent implements OnInit {
         this.facetField = res['facet_counts']['facet_fields'];
         for (let cat in this.facetField) {
           let arr = this.facetField[cat]
-          let obj = {};
+
           let obj2 = {}; //this is for checkbox status
+          saveTo[cat] = [];
           for (let i = 0; i < arr.length; i += 2) {
+            let obj = {};
             obj[arr[i]] = arr[i + 1];
 
             if (initializeCheckbox === true) {
               obj2[arr[i]] = false;
             }
-          }
-          saveTo[cat] = obj;
-          if (initializeCheckbox === true) {
-            checkboxStatus[cat] = obj2;
+            // if (saveTo[cat] === undefined) {
+            //   saveTo[cat] = [];
+            // }
+            
+            //if it does exist, look for that id and replace, else just add it
+            saveTo[cat].push(obj); //the change here saveTo[cat] = obj
+            if (initializeCheckbox === true) {
+              checkboxStatus[cat] = obj2;
+            }
           }
         }
+        // console.log("save to: ", saveTo)
         //for the range queries only
         let facet_queries = res["facet_counts"]["facet_queries"]
         for (let item in facet_queries) {
@@ -232,9 +240,9 @@ export class PublicDatasetsComponent implements OnInit {
           let count = res["facet_counts"]['facet_queries'][item];
           this.sliderStorage[dataset][cat]['count'] = count;
         }
-        console.log("main storage dataset: ", this.storageDataSet);
+        
       })
-
+      console.log("main storage dataset: ", this.storageDataSet[dataset]);
   }
 
   onChecked(currResult, cat, subcat, dataset) {
@@ -252,7 +260,7 @@ export class PublicDatasetsComponent implements OnInit {
     }
     this.filterData(dataset)
 
-    console.log("checkbox status from oncheck: ", this.checkboxStatus)
+    console.log("checkbox status from oncheck: ", this.checkboxStatus, this.checkBoxObj)
   }
 
   setSliderValue(value) {
@@ -296,6 +304,7 @@ export class PublicDatasetsComponent implements OnInit {
 
 
     let temp = this.addQuerySearchString(this.currentDataset, this.searchQueryResults)
+    console.log("temp: ", temp)
     this.updateFilterValues(temp, this.storageDataSet[this.currentDataset], this.checkboxStatus[dataset], dataset, false)
   }
 
@@ -305,6 +314,7 @@ export class PublicDatasetsComponent implements OnInit {
 
   backToBrowse() {
     this.currentDataset = '';
+    this.searchQueryResults = '';
   }
 
 }

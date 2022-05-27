@@ -5,12 +5,10 @@ ul {
 
 .checkBoxLabel {
     font-weight: bold;
-    font-size: 12px;
+    font-size: 16px;
     text-transform: capitalize;
-}
-.checkBoxContent {
-    font-size: 12px;
-    text-transform: capitalize;
+    height: 20px;
+    margin: 8px 10px;
 }
 
 .sliderGroup {
@@ -31,9 +29,14 @@ ul {
     // .mat-expansion-panel-body {
     //     background-color: #ddebf2;
     // }
+    .checkBoxContent {
+        font-size: 12px;
+        text-transform: capitalize;
+    }
+    
 }
 .checkboxSection {
-    height: 8px;
+    height: 40px;
 }
 .showMore {
     cursor: pointer;
@@ -41,4 +44,33 @@ ul {
     text-decoration: none;
     font-size: 12px;
     margin-left: 200px;
+    margin-top: 16px;
 }
+.labelContainer {
+    background-color: rgba(55, 71, 79, 0.8);
+    width: 120%;
+    height: 40px;
+    margin: -10px 0 10px -10px;
+    color: white;
+}
+.counter {
+    margin-left: auto;
+    background-color: tomato;
+    font-size: 8px;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+.checkboxContainer{
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+    position: relative;
+    outline: none;
+    margin: 2px 0;
+}
+.mat-checkbox-layout .mat-checkbox-label{
+    font-size: 14px;
+}
+

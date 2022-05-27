@@ -1,17 +1,21 @@
 <section class="example-section ">
-    <label class="example-margin checkBoxLabel">{{title ? title: info.key}}: </label>
+    <div class="labelContainer">
+        <label class="example-margin checkBoxLabel">{{title ? title: info.key}}: </label>
+    </div>
     <div *ngFor="let cat of info.value | keyvalue | slice:0:filterSize; i as index">
-        <mat-checkbox class="example-margin checkBoxContent"
-            [checked]="pds.checkboxStatus[currentDataset][info.key][cat.key]"
-            (change)="pds.onChecked($event.checked, info.key, cat.key, currentDataset)">
-            {{cat.key}} ({{cat.value}})
-        </mat-checkbox>
+        <div *ngFor=" let object of info.value[cat.key] | keyvalue" class="checkboxContainer">
+            <mat-checkbox *ngIf="object.key !== 'Unknown' && object.key !=='not reported'"
+                class="example-margin checkBoxContent"
+                [checked]="pds.checkboxStatus[currentDataset][info.key][object.key]"
+                (change)="pds.onChecked($event.checked, info.key, object.key, currentDataset)">
+                {{object.key}}
+            </mat-checkbox>
+            <div *ngIf="object.key !== 'Unknown' && object.key !=='not reported'" class="counter">{{info.value[cat.key][object.key]}}</div>
+        </div>
     </div>
     <div class="checkboxSection">
-        <!-- <a (click)="showMore()"> -->
         <div *ngIf="objectLength > minimum" class="showMore" (click)="showMore()">{{ showDescription ? 'Show less':
             'Show more' }}... </div>
-        <!-- </a> -->
     </div>
 
 </section>

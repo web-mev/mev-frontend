@@ -4,112 +4,110 @@
         *ngIf="currentDataset !== '' ">
         <div class="sideContainer">
             <div *ngFor="let item of storageDataSet[currentDataset] | keyvalue">
-                <mev-checkbox *ngIf="item.key === 'gender'" [info]='item' title="Gender"
+                <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="Gender" *ngIf="item.key === 'gender'" 
                     [currentDataset]="currentDataset"></mev-checkbox>
-                <mev-checkbox [info]='item' title="Ethnicity" *ngIf="item.key === 'ethnicity'"
+                <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="Ethnicity" *ngIf="item.key === 'ethnicity'"
                     [currentDataset]="currentDataset"></mev-checkbox>
-                <mev-checkbox [info]='item' title="Vital Status" *ngIf="item.key === 'vital_status'"
+                <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="Vital Status" *ngIf="item.key === 'vital_status'"
                     [currentDataset]="currentDataset"></mev-checkbox>
-                <mev-checkbox [info]='item' title="Race" *ngIf="item.key === 'race'" [currentDataset]="currentDataset">
+                <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="Race" *ngIf="item.key === 'race'" [currentDataset]="currentDataset">
                 </mev-checkbox>
-                <mev-checkbox [info]='item' title="COG Renal Stage" *ngIf="item.key === 'cog_renal_stage'"
+                <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="COG Renal Stage" *ngIf="item.key === 'cog_renal_stage'"
                     [currentDataset]="currentDataset">
                 </mev-checkbox>
-                <mev-checkbox *ngIf="item.key === 'morphology'" [info]='item' title="Morphology"
+                <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="Morphology" *ngIf="item.key === 'morphology'" 
                     [currentDataset]="currentDataset"></mev-checkbox>
-                <mev-checkbox *ngIf="item.key === 'primary_diagnosis'" [info]='item' title="Primary Diagnosis"
+                <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="Primary Diagnosis" *ngIf="item.key === 'primary_diagnosis'" 
                     [currentDataset]="currentDataset"></mev-checkbox>
-                <mev-checkbox [info]='item' title="Site of Resection or Biopsy"
-                    *ngIf="item.key === 'site_of_resection_or_biopsy'" [currentDataset]="currentDataset"></mev-checkbox>
-                <mev-checkbox [info]='item' title="Dbgap Accession Number" *ngIf="item.key === 'dbgap_accession_number'"
+                <!-- <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="Site of Resection or Biopsy"
+                    *ngIf="item.key === 'site_of_resection_or_biopsy'" [currentDataset]="currentDataset"></mev-checkbox> -->
+                <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="Dbgap Accession Number" *ngIf="item.key === 'dbgap_accession_number'"
                     [currentDataset]="currentDataset"></mev-checkbox>
-                <mev-checkbox [info]='item' title="Disease Type" *ngIf="item.key === 'disease_type'"
+                <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="Disease Type" *ngIf="item.key === 'disease_type'"
                     [currentDataset]="currentDataset"></mev-checkbox>
-                <mev-checkbox [info]='item' title="Name" *ngIf="item.key === 'name'" [currentDataset]="currentDataset">
+                <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="Name" *ngIf="item.key === 'name'" [currentDataset]="currentDataset">
                 </mev-checkbox>
-                <mev-checkbox [info]='item' title="Primary Site" *ngIf="item.key === 'primary_site'"
+                <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="Primary Site" *ngIf="item.key === 'primary_site'"
                     [currentDataset]="currentDataset"></mev-checkbox>
-                <mev-checkbox [info]='item' title="AJCC Pathologic M" *ngIf="item.key === 'ajcc_pathologic_m'"
+                <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="AJCC Pathologic M" *ngIf="item.key === 'ajcc_pathologic_m'"
                     [currentDataset]="currentDataset"></mev-checkbox>
-
-                <mev-checkbox [info]='item' title="AJCC Pathologic N" *ngIf="item.key === 'ajcc_pathologic_n'"
+                <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="AJCC Pathologic N" *ngIf="item.key === 'ajcc_pathologic_n'"
                     [currentDataset]="currentDataset"></mev-checkbox>
-
-                <mev-checkbox [info]='item' title="AJCC Pathologic Stage" *ngIf="item.key === 'ajcc_pathologic_stage'"
+                <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="AJCC Pathologic Stage" *ngIf="item.key === 'ajcc_pathologic_stage'"
                     [currentDataset]="currentDataset"></mev-checkbox>
-                <mev-checkbox [info]='item' title="AJCC Pathologic T" *ngIf="item.key === 'ajcc_pathologic_t'"
+                <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="AJCC Pathologic T" *ngIf="item.key === 'ajcc_pathologic_t'"
                     [currentDataset]="currentDataset"></mev-checkbox>
-                <mev-checkbox [info]='item' title="AJCC Pathologic System Edition"
+                <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="AJCC Pathologic System Edition"
                     *ngIf="item.key === 'ajcc_staging_system_edition'" [currentDataset]="currentDataset"></mev-checkbox>
-                <mev-checkbox [info]='item' title="Alcohol History" *ngIf="item.key === 'alcohol_history'"
+                <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="Alcohol History" *ngIf="item.key === 'alcohol_history'"
                     [currentDataset]="currentDataset"></mev-checkbox>
-                <mev-checkbox [info]='item' title="ICD 10 Code" *ngIf="item.key === 'icd_10_code'"
+                <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="ICD 10 Code" *ngIf="item.key === 'icd_10_code'"
                     [currentDataset]="currentDataset"></mev-checkbox>
-                <mev-checkbox [info]='item' title="Prior Malignancy" *ngIf="item.key === 'prior_malignancy'"
+                <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="Prior Malignancy" *ngIf="item.key === 'prior_malignancy'"
                     [currentDataset]="currentDataset"></mev-checkbox>
-                <mev-checkbox [info]='item' title="Prior Treatment" *ngIf="item.key === 'prior_treatment'"
+                <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="Prior Treatment" *ngIf="item.key === 'prior_treatment'"
                     [currentDataset]="currentDataset"></mev-checkbox>
-                <mev-checkbox [info]='item' title="Synchronous Malignancy" *ngIf="item.key === 'synchronous_malignancy'"
+                <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="Synchronous Malignancy" *ngIf="item.key === 'synchronous_malignancy'"
                     [currentDataset]="currentDataset"></mev-checkbox>
 
 
-                <!-- <mev-checkbox [info]='item' title="classification_of_tumor"
+                <!-- <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="classification_of_tumor"
                     *ngIf="item.key === 'classification_of_tumor'" [currentDataset]="currentDataset"></mev-checkbox> -->
-                <!-- <mev-checkbox [info]='item' title="days_to_diagnosis" *ngIf="item.key === 'days_to_diagnosis'"
+                <!-- <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="days_to_diagnosis" *ngIf="item.key === 'days_to_diagnosis'"
                     [currentDataset]="currentDataset"></mev-checkbox> -->
-                <!-- <mev-checkbox [info]='item' title="Project ID" *ngIf="item.key === 'project_id'"
+                <!-- <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="Project ID" *ngIf="item.key === 'project_id'"
                     [currentDataset]="currentDataset"></mev-checkbox> -->
-                <!-- <mev-checkbox [info]='item' title="Tumor Grade" *ngIf="item.key === 'tumor_grade'"
+                <!-- <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="Tumor Grade" *ngIf="item.key === 'tumor_grade'"
                     [currentDataset]="currentDataset"></mev-checkbox> -->
-                <!-- <mev-checkbox [info]='item' title="Tissue or Organ of Origin"
+                <!-- <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="Tissue or Organ of Origin"
                     *ngIf="item.key === 'tissue_or_organ_of_origin'" [currentDataset]="currentDataset"></mev-checkbox> -->
-                <!-- <mev-checkbox [info]='item' title="Last Known Disease Status"
+                <!-- <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="Last Known Disease Status"
                     *ngIf="item.key === 'last_known_disease_status'" [currentDataset]="currentDataset"></mev-checkbox> -->
-                <!-- <mev-checkbox [info]='item' title="Progression or Recurrence"
+                <!-- <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="Progression or Recurrence"
                     *ngIf="item.key === 'progression_or_recurrence'" [currentDataset]="currentDataset"></mev-checkbox> -->
-                <!-- <mev-checkbox [info]='item' title="Kit" *ngIf="item.key === 'kit'" [currentDataset]="currentDataset">
+                <!-- <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="Kit" *ngIf="item.key === 'kit'" [currentDataset]="currentDataset">
                 </mev-checkbox> -->
 
                 <!-- checkboxes for GTEX items. will add later. -->
-                <mev-checkbox [info]='item' title="Age Range" *ngIf="item.key === 'age_range'"
+                <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="Age Range" *ngIf="item.key === 'age_range'"
                     [currentDataset]="currentDataset"></mev-checkbox>
-                <mev-checkbox [info]='item' title="Collection Site Code" *ngIf="item.key === 'collection_site_code'"
+                <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="Collection Site Code" *ngIf="item.key === 'collection_site_code'"
                     [currentDataset]="currentDataset">
                 </mev-checkbox>
-                <mev-checkbox [info]='item' title="Expression Batch" *ngIf="item.key === 'expression_batch'"
+                <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="Expression Batch" *ngIf="item.key === 'expression_batch'"
                     [currentDataset]="currentDataset">
                 </mev-checkbox>
-                <mev-checkbox [info]='item' title="Hardy Scale Death" *ngIf="item.key === 'hardy_scale_death'"
+                <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="Hardy Scale Death" *ngIf="item.key === 'hardy_scale_death'"
                     [currentDataset]="currentDataset">
                 </mev-checkbox>
-                <mev-checkbox [info]='item' title="Nucleic Acid Isolation Batch"
+                <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="Nucleic Acid Isolation Batch"
                     *ngIf="item.key === 'nucleic_acid_isolation_batch'" [currentDataset]="currentDataset">
                 </mev-checkbox>
-                <mev-checkbox [info]='item' title="RNA Rin" *ngIf="item.key === 'rna_rin'"
+                <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="RNA Rin" *ngIf="item.key === 'rna_rin'"
                     [currentDataset]="currentDataset"></mev-checkbox>
-                <mev-checkbox [info]='item' title="Sex" *ngIf="item.key === 'sex'" [currentDataset]="currentDataset">
+                <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="Sex" *ngIf="item.key === 'sex'" [currentDataset]="currentDataset">
                 </mev-checkbox>
-                <mev-checkbox [info]='item' title="Tissue" *ngIf="item.key === 'tissue'"
-                    [currentDataset]="currentDataset"></mev-checkbox>
+                <!-- <mev-checkbox [info]='item' [alt]='altStorage[currentDataset]' title="Tissue" *ngIf="item.key === 'tissue'"
+                    [currentDataset]="currentDataset"></mev-checkbox> -->
             </div>
             <br>
             <div *ngFor="let item of sliderStorage[currentDataset] | keyvalue">
-                <mev-slider *ngIf="item.key === 'age_at_diagnosis'" [info]='item' [currentDataset]="currentDataset"
+                <mev-slider *ngIf="item.key === 'age_at_diagnosis'" [info]='item' title="Age At Diagnosis" [currentDataset]="currentDataset"
                     [countNum]="sliderStorage[currentDataset][item.key]['count']" (childEvent)="setSliderValue($event)">
                 </mev-slider>
-                <mev-slider *ngIf="item.key === 'year_of_birth'" [info]='item' [currentDataset]="currentDataset"
+                <mev-slider *ngIf="item.key === 'year_of_birth'" [info]='item' title="Year Of Birth" [currentDataset]="currentDataset"
                     [countNum]="sliderStorage[currentDataset][item.key]['count']" (childEvent)="setSliderValue($event)">
                 </mev-slider>
-                <mev-slider *ngIf="item.key === 'days_to_last_follow_up'" [info]='item'
+                <mev-slider *ngIf="item.key === 'days_to_last_follow_up'" [info]='item' title="Days To Last Follow Up"
                     [currentDataset]="currentDataset" [countNum]="sliderStorage[currentDataset][item.key]['count']"
                     (childEvent)="setSliderValue($event)"></mev-slider>
-                <mev-slider *ngIf="item.key === 'year_of_diagnosis'" [info]='item' [currentDataset]="currentDataset"
+                <mev-slider *ngIf="item.key === 'year_of_diagnosis'" [info]='item' title="Year Of Diagnosis" [currentDataset]="currentDataset"
                     [countNum]="sliderStorage[currentDataset][item.key]['count']" (childEvent)="setSliderValue($event)">
                 </mev-slider>
-                <mev-slider *ngIf="item.key === 'age_at_index'" [info]='item' [currentDataset]="currentDataset"
+                <mev-slider *ngIf="item.key === 'age_at_index'" [info]='item' title="Age At Index" [currentDataset]="currentDataset"
                     [countNum]="sliderStorage[currentDataset][item.key]['count']" (childEvent)="setSliderValue($event)">
                 </mev-slider>
-                <mev-slider *ngIf="item.key === 'days_to_birth'" [info]='item' [currentDataset]="currentDataset"
+                <mev-slider *ngIf="item.key === 'days_to_birth'" [info]='item' title="Days To Birth" [currentDataset]="currentDataset"
                     [countNum]="sliderStorage[currentDataset][item.key]['count']" (childEvent)="setSliderValue($event)">
                 </mev-slider>
             </div>

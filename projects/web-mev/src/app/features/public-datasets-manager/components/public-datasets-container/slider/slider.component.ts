@@ -13,6 +13,7 @@ export class SliderPDSComponent extends PublicDatasetsComponent implements OnIni
   @Input() info;
   @Input() currentDataset;
   @Input() countNum;
+  @Input() title
   @Output() childEvent = new EventEmitter()
 
   minValue;
@@ -33,7 +34,7 @@ export class SliderPDSComponent extends PublicDatasetsComponent implements OnIni
     };
   }
 
-  onUserChange(changeContext: ChangeContext): void {
+  onUserChangeEnd(changeContext: ChangeContext): void {
     let temp = {
       "dataset": this.currentDataset,
       "category": this.info.key,

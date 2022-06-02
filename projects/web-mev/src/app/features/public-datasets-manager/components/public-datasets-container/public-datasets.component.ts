@@ -110,11 +110,6 @@ export class PublicDatasetsComponent implements OnInit {
     }
   }
 
-  // dataSetNames = [
-  //   'target-rnaseq',
-  //   'tcga-rnaseq',
-  //   'gtex-rnaseq'
-  // ];
   storageDataSet = {
     'target-rnaseq': {},
     'tcga-rnaseq': {},
@@ -132,6 +127,11 @@ export class PublicDatasetsComponent implements OnInit {
     'tcga-rnaseq': {},
     'gtex-rnaseq': {},
   }
+  altStorage = {
+    'target-rnaseq': {},
+    'tcga-rnaseq': {},
+    'gtex-rnaseq': {},
+  }
 
   constructor(fb: FormBuilder, private httpClient: HttpClient, private ref: ChangeDetectorRef) { }
 
@@ -142,6 +142,8 @@ export class PublicDatasetsComponent implements OnInit {
     for (let dataset in this.filterFields) {
       //builds the initial query string
       this.queryStringForFilters = this.getFacetFieldQueryString(dataset);
+
+      this.createAltQuery(dataset)
 
       //gets the numbers for each category
       this.updateFilterValues(this.queryStringForFilters, this.storageDataSet[dataset], this.checkboxStatus[dataset], dataset, true);
@@ -167,6 +169,7 @@ export class PublicDatasetsComponent implements OnInit {
   }
 
   addQuerySearchString(dataset, filterItems) {
+    // console.log("what is filter items: ", filterItems)
     let categoryArray = this.filterFields[dataset]
     let tempQuery = filterItems.length === 0 ? '*' : filterItems;
     let query = `${this.API_URL}/public-datasets/query/${dataset}/?q=${tempQuery}&facet=true`;
@@ -185,19 +188,6 @@ export class PublicDatasetsComponent implements OnInit {
     query += rangeQuery;
     return query;
   }
-
-  // buildFacetFieldQueryRangeString(categoryArrayRange, dataset) {
-  //   let query;
-  //   let rangeQuery = '';
-  //   for (let k = 0; k < categoryArrayRange.length; k++) {
-  //     let category = categoryArrayRange[k];
-  //     let low = this.sliderStorage[dataset][category]['low'];
-  //     let high = this.sliderStorage[dataset][category]['high'];
-  //     rangeQuery += `&facet.query={!tag=q1}${category}:[${low} TO ${high}]`
-  //   }
-  //   query = `${this.API_URL}/public-datasets/query/${dataset}/?q=*&facet=true` + rangeQuery;
-  //   return query;
-  // }
 
   getQueryResults(queryString) {
     return this.httpClient.get(queryString)
@@ -252,7 +242,77 @@ export class PublicDatasetsComponent implements OnInit {
       this.checkBoxObj[dataset][cat] = this.checkBoxObj[dataset][cat].filter(item => item !== newQueryItem);
       this.checkboxStatus[dataset][cat][subcat] = false;
     }
-    this.filterData(dataset)
+    this.createAltQuery(dataset);
+    this.filterData(dataset);
+  }
+
+  
+
+  createAltQuery(dataset) {
+    console.log("checkbox object: ", this.checkBoxObj)
+    for (let mainCat in this.checkBoxObj[dataset]) {
+      let newQueryString = '';
+      for (let cat in this.checkBoxObj[dataset]) {
+        if (this.checkBoxObj[dataset][cat].length > 0 && cat !== mainCat) {
+          let temp = "(" + this.checkBoxObj[dataset][cat].join(' OR ') + ")"
+          if (newQueryString.length > 0) {
+            newQueryString += " AND " + temp;
+          } else {
+            newQueryString += temp;
+          }
+        }
+      }
+      console.log("from create: ", newQueryString)
+      //add query from range here before passing it on to updateFacet
+      let rangeQuery = '';
+      for (let cat in this.sliderStorage[dataset]) {
+        let data = this.sliderStorage[dataset][cat]
+        let temp = `${cat}:[${data["low"]} TO ${data["high"]}]`;
+        if (rangeQuery.length > 0) {
+          rangeQuery += " AND " + temp;
+        } else {
+          rangeQuery += temp;
+        }
+      }
+      rangeQuery = `(${rangeQuery})`;
+      //change this after add range values for gtex
+      if (dataset === 'gtex-rnaseq') {
+        this.searchQueryResults = (newQueryString.length > 0) ? newQueryString : '*';
+      } else {
+        this.searchQueryResults = (newQueryString.length > 0) ? `${newQueryString} AND ${rangeQuery}` : rangeQuery;
+      }
+
+      let tempQuery = this.searchQueryResults.length === 0 ? '*' : this.searchQueryResults;
+      let query = `${this.API_URL}/public-datasets/query/${dataset}/?q=${tempQuery}&facet=true`;
+      query += "&facet.field=" + mainCat;
+
+      if (this.altStorage[dataset][mainCat] === undefined) {
+        this.altStorage[dataset][mainCat] = {};
+      }
+      this.altStorage[dataset][mainCat]["altQuery"] = query
+    }
+
+    for (let cat in this.altStorage[dataset]) {
+      this.getQueryResults(this.altStorage[dataset][cat]['altQuery'])
+        .subscribe(res => {
+          this.facetField = res['facet_counts']['facet_fields'];
+          for (let cat in this.facetField) {
+            let arr = this.facetField[cat]
+              this.altStorage[dataset][cat]["data"] = [];
+            
+            for (let i = 0; i < arr.length; i += 2) {
+              let obj = {};
+              obj[arr[i]] = arr[i + 1];
+
+              this.altStorage[dataset][cat]["data"].push(obj); 
+              
+            }
+          }
+        })
+
+    }
+
+    console.log("alt storage results: ", this.altStorage[dataset], this.storageDataSet[dataset])
   }
 
   setSliderValue(value) {
@@ -296,7 +356,7 @@ export class PublicDatasetsComponent implements OnInit {
 
 
     let temp = this.addQuerySearchString(this.currentDataset, this.searchQueryResults)
-    console.log("temp: ", temp)
+    // console.log("temp: ", temp)
     this.updateFilterValues(temp, this.storageDataSet[this.currentDataset], this.checkboxStatus[dataset], dataset, false)
   }
 
@@ -331,5 +391,11 @@ export class PublicDatasetsComponent implements OnInit {
       'tcga-rnaseq': {},
       'gtex-rnaseq': {},
     };
+
+    this.altStorage = {
+      'target-rnaseq': {},
+      'tcga-rnaseq': {},
+      'gtex-rnaseq': {},
+    }
   }
 }

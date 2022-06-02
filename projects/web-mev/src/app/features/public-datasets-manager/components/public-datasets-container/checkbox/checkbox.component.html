@@ -2,24 +2,39 @@
     <div class="labelContainer">
         <label class="example-margin checkBoxLabel">{{title ? title: info.key}}: </label>
     </div>
-    <div *ngFor="let cat of info.value | keyvalue | slice:0:filterSize; let i = index">
-        <div *ngFor=" let object of info.value[i] | keyvalue" class="checkboxContainer">
-            <mat-checkbox 
-                class="example-margin checkBoxContent"
-                [checked]="pds.checkboxStatus[currentDataset][info.key][object.key]"
-                (change)="pds.onChecked($event.checked, info.key, object.key, currentDataset)">
-                {{object.key}}
-            </mat-checkbox>
-            <mat-chip class="counter">
-                {{info.value[i][object.key]}}</mat-chip>
-                
+    <div *ngIf="alt[info.key] === undefined">
+        <!-- <h1>Main</h1> -->
+        <div *ngFor="let cat of info.value | keyvalue | slice:0:filterSize; let i = index">
+            <div *ngFor=" let object of info.value[i] | keyvalue" class="checkboxContainer">
+                <mat-checkbox class="example-margin checkBoxContent"
+                    [checked]="pds.checkboxStatus[currentDataset][info.key][object.key]"
+                    (change)="pds.onChecked($event.checked, info.key, object.key, currentDataset)">
+                    {{object.key}}
+                </mat-checkbox>
+                <mat-chip class="counter">
+                    {{info.value[i][object.key] }}</mat-chip>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="alt[info.key] !== undefined">
+        <!-- <h1>Alt</h1> -->
+        <div *ngFor="let cat of alt[info.key].data | keyvalue | slice:0:filterSize; let i = index">
+            <div *ngFor=" let object of alt[info.key].data[i] | keyvalue" class="checkboxContainer">
+                <mat-checkbox class="example-margin checkBoxContent"
+                    [checked]="pds.checkboxStatus[currentDataset][info.key][object.key]"
+                    (change)="pds.onChecked($event.checked, info.key, object.key, currentDataset)">
+                    {{object.key}}
+                </mat-checkbox>
+                <mat-chip class="counter">
+                    {{alt[info.key].data[i][object.key]}}</mat-chip>
+            </div>
         </div>
     </div>
     <div class="checkboxSection">
         <div *ngIf="objectLength > minimum" class="showMore" (click)="showMore()">{{ showDescription ? 'Less':
             (objectLength-minimum) + ' more' }}... </div>
     </div>
-
 </section>
 <!-- <section class="example-section checkboxAccordion">
     <mat-accordion>

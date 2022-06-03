@@ -17,6 +17,9 @@
 .ngx-slider {
     margin: 50px 0;
 }
+.histogram{
+    margin-left: -35px;
+}
 
 // We need to use ::ng-deep to overcome view encapsulation
 ::ng-deep {

@@ -1,8 +1,8 @@
 <section class="example-section ">
     <div class="labelContainer">
-        <label class="example-margin checkBoxLabel">{{title ? title: info.key}}: </label>
+        <label class="example-margin checkBoxLabel">{{info.key.replaceAll("_", " ")}}: </label>
     </div>
-    <div *ngIf="alt[info.key] === undefined">
+    <div *ngIf="version === '1'">
         <!-- <h1>Main</h1> -->
         <div *ngFor="let cat of info.value | keyvalue | slice:0:filterSize; let i = index">
             <div *ngFor=" let object of info.value[i] | keyvalue" class="checkboxContainer">
@@ -17,7 +17,7 @@
         </div>
     </div>
 
-    <div *ngIf="alt[info.key] !== undefined">
+    <div *ngIf="version === '2'">
         <!-- <h1>Alt</h1> -->
         <div *ngFor="let cat of alt[info.key].data | keyvalue | slice:0:filterSize; let i = index">
             <div *ngFor=" let object of alt[info.key].data[i] | keyvalue" class="checkboxContainer">
@@ -36,27 +36,3 @@
             (objectLength-minimum) + ' more' }}... </div>
     </div>
 </section>
-<!-- <section class="example-section checkboxAccordion">
-    <mat-accordion>
-        <mat-expansion-panel class="expansionPanel" [expanded]="!showResult" (opened)="showResult = false"
-            (closed)="showResult = true">
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    <mat-card-header>
-                        <mat-card-title><label class="example-margin checkBoxLabel">{{title ? title: info.key}}: </label></mat-card-title>
-                    </mat-card-header>
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-            <mat-card-content class="analysis-card__main">
-                <div *ngFor="let cat of info.value | keyvalue">
-                    <mat-checkbox class="example-margin checkBoxContent"
-                        [checked]="pds.checkboxStatus[info.key][cat.key]"
-                        (change)="pds.onChecked($event.checked, info.key, cat.key, currentDataset)">
-                        {{cat.key}} ({{cat.value}})
-                    </mat-checkbox>
-                </div>
-
-            </mat-card-content>
-        </mat-expansion-panel>
-    </mat-accordion>
-</section> -->

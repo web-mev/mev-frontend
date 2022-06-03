@@ -15,6 +15,7 @@ export class SliderPDSComponent extends PublicDatasetsComponent implements OnIni
   @Input() countNum;
   @Input() title
   @Output() childEvent = new EventEmitter()
+  @Input() category
 
   minValue;
   maxValue;

@@ -14,6 +14,7 @@ import { PublicDatasetsComponent } from './components/public-datasets-container/
 import { PublicDatasetExportNameDialogComponent } from './components/export-name-dialog/export-name-dialog.component';
 import { CheckBoxComponent } from './components/public-datasets-container/checkbox/checkbox.component';
 import { SliderPDSComponent } from './components/public-datasets-container/slider/slider.component';
+import { HistogramComponent } from './components/public-datasets-container/histogram/histogram.component'
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { SliderPDSComponent } from './components/public-datasets-container/slide
     GtexComponent,
     PublicDatasetExportNameDialogComponent,
     CheckBoxComponent,
-    SliderPDSComponent
+    SliderPDSComponent,
+    HistogramComponent
   ],
   exports: [
     PublicDatasetsComponent

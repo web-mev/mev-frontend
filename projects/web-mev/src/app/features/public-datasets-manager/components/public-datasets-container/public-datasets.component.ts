@@ -19,6 +19,7 @@ export class PublicDatasetsComponent implements OnInit {
   facetField;
   searchQueryResults: string = "";
   checkBoxItems = [];
+  isLoading = false;
 
   targetFields = ["ethnicity", "gender", "race", "vital_status", "cog_renal_stage", "last_known_disease_status", "morphology", "primary_diagnosis", "progression_or_recurrence", "site_of_resection_or_biopsy", "tissue_or_organ_of_origin", "tumor_grade", "dbgap_accession_number", "disease_type", "name", "primary_site", "project_id"];
   tcgaFields = ["alcohol_history", "ethnicity", "gender", "race", "vital_status", "vital_status", "ajcc_pathologic_m", "ajcc_pathologic_n", "ajcc_pathologic_stage", "ajcc_pathologic_t", "ajcc_staging_system_edition", "classification_of_tumor", "days_to_diagnosis", "icd_10_code", "last_known_disease_status", "morphology", "primary_diagnosis", "prior_malignancy", "prior_treatment", "progression_or_recurrence", "site_of_resection_or_biopsy", "synchronous_malignancy", "tissue_or_organ_of_origin", "tumor_grade", "disease_type", "name", "primary_site", "project_id"];
@@ -169,7 +170,6 @@ export class PublicDatasetsComponent implements OnInit {
   }
 
   addQuerySearchString(dataset, filterItems) {
-    // console.log("what is filter items: ", filterItems)
     let categoryArray = this.filterFields[dataset]
     let tempQuery = filterItems.length === 0 ? '*' : filterItems;
     let query = `${this.API_URL}/public-datasets/query/${dataset}/?q=${tempQuery}&facet=true`;
@@ -230,6 +230,7 @@ export class PublicDatasetsComponent implements OnInit {
   }
 
   onChecked(currResult, cat, subcat, dataset) {
+    this.isLoading = true
     let newQueryItem = `${cat}:"${subcat}"`;
     if (currResult === true) {
       if (!this.checkBoxObj[dataset][cat]) {
@@ -246,10 +247,9 @@ export class PublicDatasetsComponent implements OnInit {
     this.filterData(dataset);
   }
 
-  
+
 
   createAltQuery(dataset) {
-    console.log("checkbox object: ", this.checkBoxObj)
     for (let mainCat in this.checkBoxObj[dataset]) {
       let newQueryString = '';
       for (let cat in this.checkBoxObj[dataset]) {
@@ -262,7 +262,6 @@ export class PublicDatasetsComponent implements OnInit {
           }
         }
       }
-      console.log("from create: ", newQueryString)
       //add query from range here before passing it on to updateFacet
       let rangeQuery = '';
       for (let cat in this.sliderStorage[dataset]) {
@@ -296,23 +295,21 @@ export class PublicDatasetsComponent implements OnInit {
       this.getQueryResults(this.altStorage[dataset][cat]['altQuery'])
         .subscribe(res => {
           this.facetField = res['facet_counts']['facet_fields'];
-          for (let cat in this.facetField) {
+          for (let subcat in this.facetField) {
             let arr = this.facetField[cat]
-              this.altStorage[dataset][cat]["data"] = [];
-            
+            this.altStorage[dataset][cat]["data"] = [];
+
             for (let i = 0; i < arr.length; i += 2) {
               let obj = {};
               obj[arr[i]] = arr[i + 1];
 
-              this.altStorage[dataset][cat]["data"].push(obj); 
-              
+              this.altStorage[dataset][cat]["data"].push(obj);
+
             }
           }
+          this.isLoading = false;
         })
-
     }
-
-    console.log("alt storage results: ", this.altStorage[dataset], this.storageDataSet[dataset])
   }
 
   setSliderValue(value) {
@@ -356,7 +353,6 @@ export class PublicDatasetsComponent implements OnInit {
 
 
     let temp = this.addQuerySearchString(this.currentDataset, this.searchQueryResults)
-    // console.log("temp: ", temp)
     this.updateFilterValues(temp, this.storageDataSet[this.currentDataset], this.checkboxStatus[dataset], dataset, false)
   }
 

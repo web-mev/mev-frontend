@@ -21,13 +21,12 @@ export class PublicDatasetsComponent implements OnInit {
   checkBoxItems = [];
   isLoading = false;
 
-  targetFields = ["ethnicity", "gender", "race", "vital_status", "cog_renal_stage", "last_known_disease_status", "morphology", "primary_diagnosis", "progression_or_recurrence", "site_of_resection_or_biopsy", "tissue_or_organ_of_origin", "tumor_grade", "dbgap_accession_number", "disease_type", "name", "primary_site", "project_id"];
-  tcgaFields = ["alcohol_history", "ethnicity", "gender", "race", "vital_status", "vital_status", "ajcc_pathologic_m", "ajcc_pathologic_n", "ajcc_pathologic_stage", "ajcc_pathologic_t", "ajcc_staging_system_edition", "classification_of_tumor", "days_to_diagnosis", "icd_10_code", "last_known_disease_status", "morphology", "primary_diagnosis", "prior_malignancy", "prior_treatment", "progression_or_recurrence", "site_of_resection_or_biopsy", "synchronous_malignancy", "tissue_or_organ_of_origin", "tumor_grade", "disease_type", "name", "primary_site", "project_id"];
-  // gtexFields = [];
-  gtexFields = ["tissue", "sex", "age_range", "hardy_scale_death", "rna_rin", "nucleic_acid_isolation_batch", "expression_batch", "kit", "collection_site_code"];
+  targetFields = ["ethnicity", "gender", "race", "vital_status", "cog_renal_stage", "morphology", "primary_diagnosis", "progression_or_recurrence", "site_of_resection_or_biopsy", "dbgap_accession_number", "disease_type", "name", "primary_site"];
+  tcgaFields = ["alcohol_history", "ethnicity", "gender", "race", "vital_status", "vital_status", "ajcc_pathologic_m", "ajcc_pathologic_n", "ajcc_pathologic_stage", "ajcc_pathologic_t", "ajcc_staging_system_edition", "icd_10_code", "morphology", "primary_diagnosis", "prior_malignancy", "prior_treatment", "site_of_resection_or_biopsy", "synchronous_malignancy", "tissue_or_organ_of_origin", "disease_type", "name", "primary_site", "project_id"];
+  gtexFields = ["tissue", "sex", "age_range", "hardy_scale_death", "nucleic_acid_isolation_batch", "expression_batch", "collection_site_code"];
   targetRangeFields = ["age_at_diagnosis", "days_to_last_follow_up", "year_of_diagnosis"];
   tcgaRangeFields = ["age_at_diagnosis", "age_at_index", "days_to_birth", "days_to_last_follow_up", "year_of_birth", "year_of_diagnosis"];
-  gtexRangeFields = []
+  gtexRangeFields = ["rna_rin"]
   filterFields = {
     'target-rnaseq': this.targetFields,
     'tcga-rnaseq': this.tcgaFields,
@@ -45,21 +44,24 @@ export class PublicDatasetsComponent implements OnInit {
         "floor": 3,
         "ceil": 11828,
         "low": 3,
-        "high": 11828
+        "high": 11828,
+        "not_reported": true
       },
       "days_to_last_follow_up": {
         "count": 0,
         "floor": 0,
         "ceil": 5938,
         "low": 0,
-        "high": 5938
+        "high": 5938,
+        "not_reported": true
       },
       "year_of_diagnosis": {
         "count": 0,
         "floor": 1900,
         "ceil": 2015,
         "low": 1900,
-        "high": 2015
+        "high": 2015,
+        "not_reported": true
       }
     },
     'tcga-rnaseq': {
@@ -68,46 +70,59 @@ export class PublicDatasetsComponent implements OnInit {
         "floor": 5267,
         "ceil": 32872,
         "low": 5267,
-        "high": 32872
+        "high": 32872,
+        "not_reported": true
       },
       "age_at_index": {
         "count": 0,
         "floor": 14,
         "ceil": 90,
         "low": 14,
-        "high": 90
+        "high": 90,
+        "not_reported": true
       },
       "days_to_birth": {
         "count": 0,
         "floor": -32872,
         "ceil": -5267,
         "low": -32872,
-        "high": -5267
+        "high": -5267,
+        "not_reported": true
       },
       "days_to_last_follow_up": {
         "count": 0,
         "floor": -64,
         "ceil": 11252,
         "low": -64,
-        "high": 11252
+        "high": 11252,
+        "not_reported": true
       },
       "year_of_birth": {
         "count": 0,
         "floor": 1902,
         "ceil": 1997,
         "low": 1902,
-        "high": 1997
+        "high": 1997,
+        "not_reported": true
       },
       "year_of_diagnosis": {
         "count": 0,
         "floor": 1978,
         "ceil": 2013,
         "low": 1978,
-        "high": 2013
+        "high": 2013,
+        "not_reported": true
       }
     },
     "gtex-rnaseq": {
-
+      "rna_rin": {
+        "count": 0,
+        "floor": 3,
+        "ceil": 10,
+        "low": 3,
+        "high": 10,
+        "not_reported": true
+      },
     }
   }
 
@@ -170,21 +185,30 @@ export class PublicDatasetsComponent implements OnInit {
   }
 
   addQuerySearchString(dataset, filterItems) {
-    let categoryArray = this.filterFields[dataset]
-    let tempQuery = filterItems.length === 0 ? '*' : filterItems;
-    let query = `${this.API_URL}/public-datasets/query/${dataset}/?q=${tempQuery}&facet=true`;
-
-    for (let i = 0; i < categoryArray.length; i++) {
-      query += "&facet.field=" + categoryArray[i];
-    }
     let categoryArrayRange = this.filterRangeFields[dataset]
     let rangeQuery = '';
+    let missingRangeQuery = '';
     for (let k = 0; k < categoryArrayRange.length; k++) {
       let category = categoryArrayRange[k];
       let low = this.sliderStorage[dataset][category]['low'];
       let high = this.sliderStorage[dataset][category]['high'];
       rangeQuery += `&facet.query={!tag=q1}${category}:[${low} TO ${high}]`
+      if (missingRangeQuery.length === 0) {
+        missingRangeQuery += `(* -${category}:*)`
+      } else {
+        missingRangeQuery += ` OR (* -${category}:*)`
+      }
+
     }
+
+    let categoryArray = this.filterFields[dataset]
+    let tempQuery = filterItems.length === 0 ? missingRangeQuery : `${filterItems} OR ${missingRangeQuery}`;
+    let query = `${this.API_URL}/public-datasets/query/${dataset}/?q=${tempQuery}&facet=true`;
+
+    for (let i = 0; i < categoryArray.length; i++) {
+      query += "&facet.field=" + categoryArray[i];
+    }
+
     query += rangeQuery;
     return query;
   }
@@ -247,7 +271,10 @@ export class PublicDatasetsComponent implements OnInit {
     this.filterData(dataset);
   }
 
-
+  // onCheckedNotReported(currResult, cat, dataset) {
+  //   // this.sliderStorage[dataset][cat]["not_reported"] = currResult;
+  //   console.log("check box checked")
+  // }
 
   createAltQuery(dataset) {
     for (let mainCat in this.checkBoxObj[dataset]) {
@@ -264,6 +291,7 @@ export class PublicDatasetsComponent implements OnInit {
       }
       //add query from range here before passing it on to updateFacet
       let rangeQuery = '';
+      let missingRangeQuery = '';
       for (let cat in this.sliderStorage[dataset]) {
         let data = this.sliderStorage[dataset][cat]
         let temp = `${cat}:[${data["low"]} TO ${data["high"]}]`;
@@ -272,14 +300,23 @@ export class PublicDatasetsComponent implements OnInit {
         } else {
           rangeQuery += temp;
         }
+
+        //Need to add conditional on if checked box marked
+        if (missingRangeQuery.length === 0) {
+          missingRangeQuery += `(* -${cat}:*)`
+        } else {
+          missingRangeQuery += ` OR (* -${cat}:*)`
+        }
+
+
       }
-      rangeQuery = `(${rangeQuery})`;
+      rangeQuery = (missingRangeQuery.length === 0) ? `(${rangeQuery})` : `(${rangeQuery}) OR (${missingRangeQuery})`;
       //change this after add range values for gtex
-      if (dataset === 'gtex-rnaseq') {
-        this.searchQueryResults = (newQueryString.length > 0) ? newQueryString : '*';
-      } else {
-        this.searchQueryResults = (newQueryString.length > 0) ? `${newQueryString} AND ${rangeQuery}` : rangeQuery;
-      }
+      // if (dataset === 'gtex-rnaseq') {
+      //   this.searchQueryResults = (newQueryString.length > 0) ? newQueryString : '*';
+      // } else {
+      this.searchQueryResults = (newQueryString.length > 0) ? `${newQueryString} AND ${rangeQuery}` : rangeQuery;
+      // }
 
       let tempQuery = this.searchQueryResults.length === 0 ? '*' : this.searchQueryResults;
       let query = `${this.API_URL}/public-datasets/query/${dataset}/?q=${tempQuery}&facet=true`;
@@ -292,6 +329,7 @@ export class PublicDatasetsComponent implements OnInit {
     }
 
     for (let cat in this.altStorage[dataset]) {
+      this.isLoading = true;
       this.getQueryResults(this.altStorage[dataset][cat]['altQuery'])
         .subscribe(res => {
           this.facetField = res['facet_counts']['facet_fields'];
@@ -307,8 +345,9 @@ export class PublicDatasetsComponent implements OnInit {
 
             }
           }
-          this.isLoading = false;
+          
         })
+        this.isLoading = false;
     }
   }
 

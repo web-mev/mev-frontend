@@ -2,7 +2,6 @@ import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core
 import * as d3 from 'd3';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
-import { RouteConfigLoadEnd } from '@angular/router';
 
 @Component({
   selector: 'mev-histogram',
@@ -15,11 +14,12 @@ export class HistogramComponent implements OnInit {
   @Input() data
   @Input() currentDataset
   @Input() category
+  private readonly API_URL = environment.apiUrl;
 
   constructor(private httpClient: HttpClient) { }
 
   ngOnInit(): void {
-    this.getData('target-rnaseq')
+    this.getData(this.currentDataset, this.category)
   }
 
   getQueryResults(queryString) {
@@ -27,16 +27,16 @@ export class HistogramComponent implements OnInit {
   }
   facetField
   histogramDataStorage = {
-    'target-rnaseq': {
-    }
+    'target-rnaseq': {},
+    'tcga-rnaseq': {},
+    'gtex-rnaseq': {}
   }
   countArray = []
 
-  getData(dataset) {
-    let query = 'https://api-dev.tm4.org/api/public-datasets/query/target-rnaseq/?q=*&facet=true&facet.field=age_at_diagnosis'
+  getData(dataset, category) {
+    let query = `${this.API_URL}/public-datasets/query/${dataset}/?q=*&facet=true&facet.field=${category}`;
     this.getQueryResults(query)
       .subscribe(res => {
-        console.log("Histogram: ", res)
         this.facetField = res['facet_counts']['facet_fields'];
         for (let subcat in this.facetField) {
           let arr = this.facetField[subcat]
@@ -46,30 +46,21 @@ export class HistogramComponent implements OnInit {
             let obj = {};
             obj[arr[i]] = arr[i + 1];
             this.histogramDataStorage[dataset][subcat].push(obj)
-            // this.histogramDataStorage[dataset][subcat]["data"].push(obj);
-
           }
         }
-        // console.log("histo: ",this.histogramDataStorage)
 
-        for (let i = 0; i < this.histogramDataStorage[dataset]['age_at_diagnosis'].length; i++) {
-          // console.log(this.histogramDataStorage[dataset]['age_at_diagnosis'][i])
-          let object1 = this.histogramDataStorage[dataset]['age_at_diagnosis'][i]
+        for (let i = 0; i < this.histogramDataStorage[dataset][category].length; i++) {
+          let object1 = this.histogramDataStorage[dataset][category][i]
           for (const [key, value] of Object.entries(object1)) {
-            // console.log(`${key}: ${value}`);
             for (let j = 0; j < value; j++) {
               let tempObject = {
-                "age": parseInt(key)
+                "value": parseInt(key)
               }
               this.countArray.push(tempObject)
             }
           }
-
-
         }
-
-        console.log("count: ", this.countArray)
-        this.createHistogram()
+        this.createHistogram();
       })
     
   }
@@ -91,7 +82,7 @@ export class HistogramComponent implements OnInit {
 
     // X axis: scale and draw:
     var x = d3.scaleLinear()
-      .domain([0, d3.max(this.countArray, function (d) { return +d.age })])     // can use this instead of 1000 to have the max of data: d3.max(data, function(d) { return +d.price })
+      .domain([d3.min(this.countArray, function (d) { return +d.value }), d3.max(this.countArray, function (d) { return +d.value })])     // can use this instead of 1000 to have the max of data: d3.max(data, function(d) { return +d.price })
       .range([0, width]);
     svg.append("g")
       .attr("transform", "translate(0," + height + ")")
@@ -99,7 +90,7 @@ export class HistogramComponent implements OnInit {
 
     // set the parameters for the histogram
     var histogram = d3.histogram()
-      .value(function (d) { return d.age; })   // I need to give the vector of value
+      .value(function (d) { return d.value; })   // I need to give the vector of value
       .domain(x.domain())  // then the domain of the graphic
       .thresholds(x.ticks(15)); // then the numbers of bins
 
@@ -118,7 +109,7 @@ export class HistogramComponent implements OnInit {
       .data(bins)
       .enter()
       .append("rect")
-      .attr("x", 1)
+      .attr("x", 0)
       .attr("transform", function (d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
       .attr("width", function (d) { return Math.abs(x(d.x1) - x(d.x0) - 1); })
       .attr("height", function (d) { return height - y(d.length); })

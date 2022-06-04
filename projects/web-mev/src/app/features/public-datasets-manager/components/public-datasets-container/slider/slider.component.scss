@@ -19,6 +19,7 @@
 }
 .histogram{
     margin-left: -35px;
+
 }
 
 // We need to use ::ng-deep to overcome view encapsulation
@@ -117,4 +118,17 @@
         border-radius: 4px;
         background: #fff;
     }
+    .custom-slider {
+        margin-top: -30px;
+    }
+}
+
+.checkBoxContent {
+    font-size: 13px;
+    text-transform: capitalize;
+}
+
+.checkboxContainer {
+    margin-top: -20px;
+    margin-bottom: 30px;
 }

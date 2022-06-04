@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, OnInit, EventEmitter, Output, OnChanges } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { Options, ChangeContext } from '@angular-slider/ngx-slider';
 import { PublicDatasetsComponent } from '../public-datasets.component';
 
@@ -22,7 +22,6 @@ export class SliderPDSComponent extends PublicDatasetsComponent implements OnIni
   count;
   options: Options;
 
-
   ngOnInit(): void {
     this.minValue = this.sliderStorage[this.currentDataset][this.info.key]['low'];
     this.maxValue = this.sliderStorage[this.currentDataset][this.info.key]['high'];
@@ -31,7 +30,7 @@ export class SliderPDSComponent extends PublicDatasetsComponent implements OnIni
       floor: this.sliderStorage[this.currentDataset][this.info.key]['floor'],
       ceil: this.sliderStorage[this.currentDataset][this.info.key]['ceil'],
       showTicks: true,
-      tickStep: (this.maxValue - this.minValue)/8
+      tickStep: (this.maxValue - this.minValue) / 8
     };
   }
 

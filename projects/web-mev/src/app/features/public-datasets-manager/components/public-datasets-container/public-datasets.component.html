@@ -4,7 +4,7 @@
         *ngIf="currentDataset !== '' ">
         <div class="sideContainer">
             <div *ngFor="let item of storageDataSet[currentDataset] | keyvalue">
-                <mev-checkbox *ngIf="altStorage[currentDataset][item.key] === undefined; else elseBlock" [info]='item'
+                <mev-checkbox *ngIf="altStorage[currentDataset][item.key]['altQuery'] === ''; else elseBlock" [info]='item'
                     [alt]='altStorage[currentDataset]' [currentDataset]="currentDataset" version="1"></mev-checkbox>
                 <ng-template #elseBlock>
                     <mev-checkbox *ngIf="altStorage[currentDataset][item.key]" [info]='item'

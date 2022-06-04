@@ -21,9 +21,9 @@ export class PublicDatasetsComponent implements OnInit {
   checkBoxItems = [];
   isLoading = false;
 
-  targetFields = ["ethnicity", "gender", "race", "vital_status", "cog_renal_stage", "morphology", "primary_diagnosis", "progression_or_recurrence", "site_of_resection_or_biopsy", "dbgap_accession_number", "disease_type", "name", "primary_site"];
-  tcgaFields = ["alcohol_history", "ethnicity", "gender", "race", "vital_status", "vital_status", "ajcc_pathologic_m", "ajcc_pathologic_n", "ajcc_pathologic_stage", "ajcc_pathologic_t", "ajcc_staging_system_edition", "icd_10_code", "morphology", "primary_diagnosis", "prior_malignancy", "prior_treatment", "site_of_resection_or_biopsy", "synchronous_malignancy", "tissue_or_organ_of_origin", "disease_type", "name", "primary_site", "project_id"];
-  gtexFields = ["tissue", "sex", "age_range", "hardy_scale_death", "nucleic_acid_isolation_batch", "expression_batch", "collection_site_code"];
+  targetFields = ["ethnicity", "gender", "race", "vital_status", "cog_renal_stage", "morphology", "primary_diagnosis", "site_of_resection_or_biopsy", "dbgap_accession_number", "disease_type", "name", "primary_site"];
+  tcgaFields = ["alcohol_history", "ethnicity", "gender", "race", "vital_status", "vital_status", "ajcc_pathologic_m", "ajcc_pathologic_n", "ajcc_pathologic_stage", "ajcc_pathologic_t", "ajcc_staging_system_edition", "icd_10_code", "morphology", "primary_diagnosis", "prior_malignancy", "prior_treatment", "site_of_resection_or_biopsy", "synchronous_malignancy", "disease_type", "name", "primary_site"];
+  gtexFields = ["sex", "age_range", "hardy_scale_death", "nucleic_acid_isolation_batch", "expression_batch", "collection_site_code"];
   targetRangeFields = ["age_at_diagnosis", "days_to_last_follow_up", "year_of_diagnosis"];
   tcgaRangeFields = ["age_at_diagnosis", "age_at_index", "days_to_birth", "days_to_last_follow_up", "year_of_birth", "year_of_diagnosis"];
   gtexRangeFields = ["rna_rin"]
@@ -163,6 +163,7 @@ export class PublicDatasetsComponent implements OnInit {
 
       //gets the numbers for each category
       this.updateFilterValues(this.queryStringForFilters, this.storageDataSet[dataset], this.checkboxStatus[dataset], dataset, true);
+      // console.log("storages: ", this.storageDataSet[dataset], this.altStorage[dataset])
     }
   }
 
@@ -239,6 +240,16 @@ export class PublicDatasetsComponent implements OnInit {
             if (initializeCheckbox === true) {
               checkboxStatus[cat] = obj2;
             }
+            if (this.altStorage[dataset][cat] === undefined) {
+              this.altStorage[dataset][cat] = {
+                "altQuery": '',
+                "data": []
+              };
+            }
+            if (this.altStorage[dataset][cat]["altQuery"].length === 0) {
+              this.altStorage[dataset][cat]["data"].push(obj);
+            }
+
           }
         }
         //for the range queries only
@@ -254,7 +265,7 @@ export class PublicDatasetsComponent implements OnInit {
   }
 
   onChecked(currResult, cat, subcat, dataset) {
-    this.isLoading = true
+    // this.isLoading = true
     let newQueryItem = `${cat}:"${subcat}"`;
     if (currResult === true) {
       if (!this.checkBoxObj[dataset][cat]) {
@@ -266,6 +277,7 @@ export class PublicDatasetsComponent implements OnInit {
     } else if (currResult === false) {
       this.checkBoxObj[dataset][cat] = this.checkBoxObj[dataset][cat].filter(item => item !== newQueryItem);
       this.checkboxStatus[dataset][cat][subcat] = false;
+      // this.altStorage[dataset][cat]["data"].length = 0;
     }
     this.createAltQuery(dataset);
     this.filterData(dataset);
@@ -311,12 +323,8 @@ export class PublicDatasetsComponent implements OnInit {
 
       }
       rangeQuery = (missingRangeQuery.length === 0) ? `(${rangeQuery})` : `(${rangeQuery}) OR (${missingRangeQuery})`;
-      //change this after add range values for gtex
-      // if (dataset === 'gtex-rnaseq') {
-      //   this.searchQueryResults = (newQueryString.length > 0) ? newQueryString : '*';
-      // } else {
+
       this.searchQueryResults = (newQueryString.length > 0) ? `${newQueryString} AND ${rangeQuery}` : rangeQuery;
-      // }
 
       let tempQuery = this.searchQueryResults.length === 0 ? '*' : this.searchQueryResults;
       let query = `${this.API_URL}/public-datasets/query/${dataset}/?q=${tempQuery}&facet=true`;
@@ -330,24 +338,29 @@ export class PublicDatasetsComponent implements OnInit {
 
     for (let cat in this.altStorage[dataset]) {
       this.isLoading = true;
-      this.getQueryResults(this.altStorage[dataset][cat]['altQuery'])
-        .subscribe(res => {
-          this.facetField = res['facet_counts']['facet_fields'];
-          for (let subcat in this.facetField) {
-            let arr = this.facetField[cat]
-            this.altStorage[dataset][cat]["data"] = [];
+      let query = this.altStorage[dataset][cat]['altQuery']
+      // console.log("query: ", query)
+      if (query.length > 0) {
+        this.getQueryResults(query)
+          .subscribe(res => {
+            console.log("res: ", res)
+            this.facetField = res['facet_counts']['facet_fields'];
+            for (let subcat in this.facetField) {
+              let arr = this.facetField[cat]
+              // this.altStorage[dataset][cat]["data"] = []; //need to remove all items
+              let temp = [];
+              for (let i = 0; i < arr.length; i += 2) {
+                let obj = {};
+                obj[arr[i]] = arr[i + 1];
 
-            for (let i = 0; i < arr.length; i += 2) {
-              let obj = {};
-              obj[arr[i]] = arr[i + 1];
+                temp.push(obj);
 
-              this.altStorage[dataset][cat]["data"].push(obj);
-
+              }
+              this.altStorage[dataset][cat]["data"] = temp;
             }
-          }
-          
-        })
-        this.isLoading = false;
+          })
+      }
+      this.isLoading = false;
     }
   }
 
@@ -384,11 +397,11 @@ export class PublicDatasetsComponent implements OnInit {
     }
     rangeQuery = `(${rangeQuery})`;
     //change this after add range values for gtex
-    if (dataset === 'gtex-rnaseq') {
-      this.searchQueryResults = (newQueryString.length > 0) ? newQueryString : '*';
-    } else {
-      this.searchQueryResults = (newQueryString.length > 0) ? `${newQueryString} AND ${rangeQuery}` : rangeQuery;
-    }
+    // if (dataset === 'gtex-rnaseq') {
+    //   this.searchQueryResults = (newQueryString.length > 0) ? newQueryString : '*';
+    // } else {
+    this.searchQueryResults = (newQueryString.length > 0) ? `${newQueryString} AND ${rangeQuery}` : rangeQuery;
+    // }
 
 
     let temp = this.addQuerySearchString(this.currentDataset, this.searchQueryResults)
@@ -402,6 +415,7 @@ export class PublicDatasetsComponent implements OnInit {
   backToBrowse() {
     this.currentDataset = '';
     this.searchQueryResults = '';
+    this.isLoading = false;
 
     //reset storage to default
     for (let dataset in this.sliderStorage) {

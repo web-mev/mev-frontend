@@ -3,6 +3,7 @@
         <label class="example-margin checkBoxLabel">{{info.key.replaceAll("_", " ")}}: </label>
     </div>
     <div *ngIf="version === '1'">
+        <!-- <h1>Main</h1> -->
         <div *ngFor="let cat of info.value | keyvalue | slice:0:filterSize; let i = index">
             <div *ngFor=" let object of info.value[i] | keyvalue" class="checkboxContainer">
                 <mat-checkbox class="example-margin checkBoxContent"
@@ -17,6 +18,7 @@
     </div>
 
     <div *ngIf="version === '2'">
+        <!-- <h1>Alt</h1> -->
         <div *ngFor="let cat of alt[info.key].data | keyvalue | slice:0:filterSize; let i = index">
             <div *ngFor=" let object of alt[info.key].data[i] | keyvalue" class="checkboxContainer">
                 <mat-checkbox class="example-margin checkBoxContent"

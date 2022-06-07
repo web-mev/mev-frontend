@@ -15,6 +15,13 @@ export class HistogramComponent implements OnInit {
   @Input() currentDataset
   @Input() category
   private readonly API_URL = environment.apiUrl;
+  facetField
+  histogramDataStorage = {
+    'target-rnaseq': {},
+    'tcga-rnaseq': {},
+    'gtex-rnaseq': {}
+  }
+  countArray = []
 
   constructor(private httpClient: HttpClient) { }
 
@@ -25,13 +32,6 @@ export class HistogramComponent implements OnInit {
   getQueryResults(queryString) {
     return this.httpClient.get(queryString)
   }
-  facetField
-  histogramDataStorage = {
-    'target-rnaseq': {},
-    'tcga-rnaseq': {},
-    'gtex-rnaseq': {}
-  }
-  countArray = []
 
   getData(dataset, category) {
     let query = `${this.API_URL}/public-datasets/query/${dataset}/?q=*&facet=true&facet.field=${category}`;
@@ -67,9 +67,9 @@ export class HistogramComponent implements OnInit {
 
   createHistogram() {
     // set the dimensions and margins of the graph
-    var margin = { top: 10, right: 30, bottom: 30, left: 40 },
+    var margin = { top: 10, right: 30, bottom: 20, left: 40 },
       width = 340 - margin.left - margin.right,
-      height = 200 - margin.top - margin.bottom;
+      height = 140 - margin.top - margin.bottom;
 
     // append the svg object to the body of the page
     var svg = d3.select(`#${this.idValue}`)
@@ -86,7 +86,7 @@ export class HistogramComponent implements OnInit {
       .range([0, width]);
     svg.append("g")
       .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x).tickValues([]));
+      .call(d3.axisBottom(x).tickValues([]).tickSizeOuter(0));
 
     // set the parameters for the histogram
     var histogram = d3.histogram()
@@ -101,8 +101,8 @@ export class HistogramComponent implements OnInit {
     var y = d3.scaleLinear()
       .range([height, 0]);
     y.domain([0, d3.max(bins, function (d) { return d.length; })]);   // d3.hist has to be called before the Y axis obviously
-    svg.append("g")
-      .call(d3.axisLeft(y).tickFormat(""));
+    // svg.append("g")
+    //   .call(d3.axisLeft(y).tickFormat(""));
 
     // append the bar rectangles to the svg element
     svg.selectAll("rect")

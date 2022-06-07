@@ -3,22 +3,59 @@
     <mat-drawer #drawer class="filter-sidenav" mode="side" [opened]="currentDataset.length>0"
         *ngIf="currentDataset !== '' ">
         <div class="sideContainer">
+            <div class="filtersTitle">Filters</div>
             <div *ngFor="let item of storageDataSet[currentDataset] | keyvalue">
-                <mev-checkbox *ngIf="altStorage[currentDataset][item.key]['altQuery'] === ''; else elseBlock" [info]='item'
-                    [alt]='altStorage[currentDataset]' [currentDataset]="currentDataset" version="1"></mev-checkbox>
-                <ng-template #elseBlock>
-                    <mev-checkbox *ngIf="altStorage[currentDataset][item.key]" [info]='item'
-                        [alt]='altStorage[currentDataset]' [currentDataset]="currentDataset" version="2">
+                <div *ngIf="!advanceFields.includes(item.key)">
+                    <mev-checkbox *ngIf="altStorage[currentDataset][item.key]['altQuery'] === ''; else elseBlock"
+                        [info]='item' [alt]='altStorage[currentDataset]' [currentDataset]="currentDataset" version="1"
+                        [displayDetails]="true">
                     </mev-checkbox>
-                </ng-template>
+                    <ng-template #elseBlock>
+                        <mev-checkbox *ngIf="altStorage[currentDataset][item.key]" [info]='item'
+                            [alt]='altStorage[currentDataset]' [currentDataset]="currentDataset" version="2"
+                            [displayDetails]="true">
+                        </mev-checkbox>
+                    </ng-template>
+                </div>
             </div>
-            <br>
             <div *ngFor="let item of sliderStorage[currentDataset] | keyvalue">
-                <mev-slider [info]='item' [currentDataset]="currentDataset" [category]="item.key"
-                    [countNum]="sliderStorage[currentDataset][item.key]['count']" (childEvent)="setSliderValue($event)">
-                </mev-slider>
+                <div *ngIf="!advanceFields.includes(item.key)">
+                    <mev-slider [info]='item' [currentDataset]="currentDataset" [category]="item.key"
+                        [countNum]="sliderStorage[currentDataset][item.key]['count']"
+                        (childEvent)="setSliderValue($event)" [displayDetails]="true" (checkEvent)="onExcludeNotReported($event)">
+                    </mev-slider>
+                </div>
             </div>
-            <br>
+            <div *ngIf="displayAdvance === true">
+                <div *ngFor="let item of storageDataSet[currentDataset] | keyvalue">
+                    <div *ngIf="advanceFields.includes(item.key)">
+                        <mev-checkbox *ngIf="altStorage[currentDataset][item.key]['altQuery'] === ''; else elseBlock"
+                            [info]='item' [alt]='altStorage[currentDataset]' [currentDataset]="currentDataset"
+                            version="1" [displayDetails]="false">
+                        </mev-checkbox>
+                        <ng-template #elseBlock>
+                            <mev-checkbox *ngIf="altStorage[currentDataset][item.key]" [info]='item'
+                                [alt]='altStorage[currentDataset]' [currentDataset]="currentDataset" version="2"
+                                [displayDetails]="true">
+                            </mev-checkbox>
+                        </ng-template>
+                    </div>
+                </div>
+                <div *ngFor="let item of sliderStorage[currentDataset] | keyvalue">
+                    <div *ngIf="advanceFields.includes(item.key)">
+                        <mev-slider [info]='item' [currentDataset]="currentDataset" [category]="item.key"
+                            [countNum]="sliderStorage[currentDataset][item.key]['count']"
+                            (childEvent)="setSliderValue($event)" [displayDetails]="false" (checkEvent)="onExcludeNotReported($event)">
+                        </mev-slider>
+                    </div>
+                </div>
+            </div>
+            <div class="buttonRow">
+                <button mat-stroked-button color="accent" (click)="onDisplayAdvance()">
+                    <mat-icon aria-hidden="false" aria-label="Example home icon">tune</mat-icon> {{displayAdvance ?
+                    "Hide": "Show"}} Advance Filters
+                </button>
+            </div>
         </div>
     </mat-drawer>
 
@@ -43,7 +80,5 @@
         <ng-container *ngIf="currentDataset === 'gtex-rnaseq'">
             <gtex-rnaseq-explorer [query]="searchQueryResults"></gtex-rnaseq-explorer>
         </ng-container>
-
     </div>
-
 </mat-drawer-container>

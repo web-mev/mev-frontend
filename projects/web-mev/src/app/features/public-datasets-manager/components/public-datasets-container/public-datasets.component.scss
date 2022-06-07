@@ -39,12 +39,6 @@ ul {
     text-transform: capitalize;
 }
 
-// .sliderGroup {
-//     font-weight: bold;
-//     font-size: 14px;
-//     text-transform: capitalize;
-// }
-
 ::ng-deep {
     .mat-checkbox-inner-container {
         width: 12px !important;
@@ -54,29 +48,18 @@ ul {
         display: flex;
         flex-direction: row;
     }
-    .filter-sidenav{
+    .filter-sidenav {
         flex: 0 0 auto;
     }
+    .buttonRow {
+        display: flex;
+        justify-content: center;
+    }
 }
-
-// ::ng-deep {
-//     .custom-slider {
-//       .ngx-slider {
-//         // .ngx-slider-selection {
-//         //   background: rgb(255, 255, 0) !important;
-//         // }
-
-//         // .ngx-slider-model-value {
-//         //     font-size: 12px !important;
-//         // }
-//         // .ngx-slider-model-high{
-//         //     font-size: 12x !important;
-//         //     color: tomato !important;
-//         // }
-//         // .ngx-slider-pointer-min{
-//         //     height: 24px;
-//         //     width: 24px;
-//         // }
-//       }
-//     }
-//   }
+.filtersTitle{
+    font-size: 42px;
+    font-weight: 300;
+    color: rgba(0,0,0,.7);
+    margin-bottom: 12px;
+    letter-spacing: 3px;
+}

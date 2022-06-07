@@ -14,6 +14,7 @@ export class CheckBoxComponent implements OnChanges, OnInit {
   @Input() currentDataset;
   @Input() alt
   @Input() version
+  @Input() displayDetails
   showDescription: boolean = false;
   filterSize: number = 5;
   minimum = 5
@@ -29,5 +30,9 @@ export class CheckBoxComponent implements OnChanges, OnInit {
   showMore(){
     this.showDescription = !this.showDescription;
     this.filterSize = this.showDescription === false ? 5 : 200;
+  }
+  
+  expandSection(){
+    this.displayDetails = !this.displayDetails;
   }
 }

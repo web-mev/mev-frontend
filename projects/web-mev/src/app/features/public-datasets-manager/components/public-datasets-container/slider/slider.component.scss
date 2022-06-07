@@ -8,78 +8,23 @@
 
 .labelContainer {
     background-color: rgba(55, 71, 79, 0.8);
-    width: 120%;
+    width: 108%;
     height: 40px;
-    margin: -10px 0 10px -10px;
+    margin: -8px 0 10px -10px;
     color: white;
+    display: flex;
+    flex-direction: row;
 }
 
 .ngx-slider {
     margin: 50px 0;
 }
-.histogram{
+.histogram {
     margin-left: -35px;
-
 }
 
 // We need to use ::ng-deep to overcome view encapsulation
 ::ng-deep {
-    // .custom-slider .ngx-slider .ngx-slider-bar {
-    //     background: rgba(55, 71, 79, 0.2);
-    //     height: 5px;
-    // }
-    // .custom-slider .ngx-slider .ngx-slider-selection {
-    //     background: #ff9a81;
-    // }
-
-    // .custom-slider .ngx-slider .ngx-slider-pointer {
-    //     // width: 10px;
-    //     // height: 15px;
-    //     // top: auto; /* to remove the default positioning */
-    //     // bottom: 0;
-    //     // background-color: #03a9f4;
-    //     position: absolute;
-    //     width: 24px;
-    //     height: 24px;
-    //     background: #090909;
-    //     border-radius: 50%;
-    //     top: -100%;
-    //     // left: 50%;
-    //     transform: translate(-50%, -50%);
-    //     z-index: 2;
-    //     box-shadow: inset 0px 2px 4px #909090;
-
-    // }
-    // .custom-slider .ngx-slider .ngx-slider-pointer::before {
-    //     content: '';
-    //     position: absolute;
-    //     top: 50%;
-    //     left: 50%;
-    //     transform: translate(-50%, -50%);
-    //     width: 7px;
-    //     height: 7px;
-    //     background: #333;
-    //     border-radius: inherit;
-    //     transition: 0.3s;
-    // }
-    // .custom-slider:hover .ngx-slider .ngx-slider-pointer::before {
-    //     background: #2ae9c9;
-    // }
-
-    // .custom-slider .ngx-slider .ngx-slider-pointer:after {
-    //     display: none;
-    // }
-
-    // .custom-slider .ngx-slider .ngx-slider-bubble {
-    //     bottom: 14px;
-    // }
-
-    // .custom-slider .ngx-slider .ngx-slider-limit {
-    //     font-weight: bold;
-    //     color: rgba(55, 71, 79, 0.7) !important;
-    //     margin-left: -10px !important;
-    // }
-
     .custom-slider .ngx-slider .ngx-slider-tick {
         width: 1px;
         height: 15px;
@@ -88,10 +33,6 @@
         background: rgba(55, 71, 79, 0.8);
         top: -1px;
     }
-
-    // .custom-slider .ngx-slider .ngx-slider-tick.ngx-slider-selected {
-    //     background: rgb(0, 110, 255);
-    // }
 
     .ngx-slider .ngx-slider-bubble {
         font-size: 12px !important;
@@ -109,12 +50,12 @@
     }
 
     .ngx-slider .ngx-slider-pointer:after {
-        content: '';
+        content: "";
         width: 8px !important;
         height: 8px !important;
         position: absolute;
-        top: 8px !important;;
-        left: 8px !important;;
+        top: 8px !important;
+        left: 8px !important;
         border-radius: 4px;
         background: #fff;
     }
@@ -131,4 +72,8 @@
 .checkboxContainer {
     margin-top: -20px;
     margin-bottom: 30px;
+}
+.expandIcon{
+    margin: auto 20px auto auto;
+    cursor: pointer;
 }

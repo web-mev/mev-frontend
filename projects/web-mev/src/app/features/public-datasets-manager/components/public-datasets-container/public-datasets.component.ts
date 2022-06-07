@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@
 import { FormBuilder } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
+import { T } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'mev-public-datasets',
@@ -26,7 +27,8 @@ export class PublicDatasetsComponent implements OnInit {
   gtexFields = ["sex", "age_range", "hardy_scale_death", "nucleic_acid_isolation_batch", "expression_batch", "collection_site_code"];
   targetRangeFields = ["age_at_diagnosis", "days_to_last_follow_up", "year_of_diagnosis"];
   tcgaRangeFields = ["age_at_diagnosis", "age_at_index", "days_to_birth", "days_to_last_follow_up", "year_of_birth", "year_of_diagnosis"];
-  gtexRangeFields = ["rna_rin"]
+  gtexRangeFields = ["rna_rin"];
+  advanceFields = ["cog_renal_stage", "dbgap_accession_number", "morphology", "disease_type", "primary_site", "site_of_resection_or_biopsy", "days_to_last_follow_up", "ajcc_pathologic_m", "ajcc_pathologic_n", "ajcc_pathologic_t", "ajcc_staging_system_edition", "alcohol_history", "icd_10_code", "synchronous_malignancy", "age_at_index", "days_to_birth", "year_of_birth", "year_of_diagnosis", "nucleic_acid_isolation_batch", "expression_batch", "collection_site_code", "rna_rin"];
   filterFields = {
     'target-rnaseq': this.targetFields,
     'tcga-rnaseq': this.tcgaFields,
@@ -148,6 +150,8 @@ export class PublicDatasetsComponent implements OnInit {
     'tcga-rnaseq': {},
     'gtex-rnaseq': {},
   }
+  displayAdvance: boolean = false;
+  excludeList = [];
 
   constructor(fb: FormBuilder, private httpClient: HttpClient, private ref: ChangeDetectorRef) { }
 
@@ -163,7 +167,6 @@ export class PublicDatasetsComponent implements OnInit {
 
       //gets the numbers for each category
       this.updateFilterValues(this.queryStringForFilters, this.storageDataSet[dataset], this.checkboxStatus[dataset], dataset, true);
-      // console.log("storages: ", this.storageDataSet[dataset], this.altStorage[dataset])
     }
   }
 
@@ -276,17 +279,24 @@ export class PublicDatasetsComponent implements OnInit {
 
     } else if (currResult === false) {
       this.checkBoxObj[dataset][cat] = this.checkBoxObj[dataset][cat].filter(item => item !== newQueryItem);
-      this.checkboxStatus[dataset][cat][subcat] = false;
-      // this.altStorage[dataset][cat]["data"].length = 0;
+      this.checkboxStatus[dataset][cat][subcat] = false
     }
     this.createAltQuery(dataset);
     this.filterData(dataset);
   }
 
-  // onCheckedNotReported(currResult, cat, dataset) {
-  //   // this.sliderStorage[dataset][cat]["not_reported"] = currResult;
-  //   console.log("check box checked")
-  // }
+
+
+  onExcludeNotReported(result) {
+    let temp = result.dataset + "_" + result.cat;
+    if (result.checked === false) {
+      this.excludeList.push(temp)
+    } else {
+      this.excludeList = this.excludeList.filter(item => item !== temp)
+    }
+    this.createAltQuery(result.dataset);
+    this.filterData(result.dataset);
+  }
 
   createAltQuery(dataset) {
     for (let mainCat in this.checkBoxObj[dataset]) {
@@ -305,6 +315,7 @@ export class PublicDatasetsComponent implements OnInit {
       let rangeQuery = '';
       let missingRangeQuery = '';
       for (let cat in this.sliderStorage[dataset]) {
+
         let data = this.sliderStorage[dataset][cat]
         let temp = `${cat}:[${data["low"]} TO ${data["high"]}]`;
         if (rangeQuery.length > 0) {
@@ -312,18 +323,18 @@ export class PublicDatasetsComponent implements OnInit {
         } else {
           rangeQuery += temp;
         }
-
-        //Need to add conditional on if checked box marked
-        if (missingRangeQuery.length === 0) {
-          missingRangeQuery += `(* -${cat}:*)`
-        } else {
-          missingRangeQuery += ` OR (* -${cat}:*)`
+        let temp2 = dataset + "_" + cat;
+        if (!this.excludeList.includes(temp2)) {
+          //Need to add conditional on if checked box marked
+          if (missingRangeQuery.length === 0) {
+            missingRangeQuery += `(* -${cat}:*)`
+          } else {
+            missingRangeQuery += ` OR (* -${cat}:*)`
+          }
         }
-
-
       }
-      rangeQuery = (missingRangeQuery.length === 0) ? `(${rangeQuery})` : `(${rangeQuery}) OR (${missingRangeQuery})`;
 
+      rangeQuery = (missingRangeQuery.length === 0) ? `(${rangeQuery})` : `(${rangeQuery}) OR (${missingRangeQuery})`;
       this.searchQueryResults = (newQueryString.length > 0) ? `${newQueryString} AND ${rangeQuery}` : rangeQuery;
 
       let tempQuery = this.searchQueryResults.length === 0 ? '*' : this.searchQueryResults;
@@ -333,28 +344,23 @@ export class PublicDatasetsComponent implements OnInit {
       if (this.altStorage[dataset][mainCat] === undefined) {
         this.altStorage[dataset][mainCat] = {};
       }
-      this.altStorage[dataset][mainCat]["altQuery"] = query
+      this.altStorage[dataset][mainCat]["altQuery"] = query;
     }
 
     for (let cat in this.altStorage[dataset]) {
       this.isLoading = true;
-      let query = this.altStorage[dataset][cat]['altQuery']
-      // console.log("query: ", query)
+      let query = this.altStorage[dataset][cat]['altQuery'];
       if (query.length > 0) {
         this.getQueryResults(query)
           .subscribe(res => {
-            console.log("res: ", res)
             this.facetField = res['facet_counts']['facet_fields'];
             for (let subcat in this.facetField) {
-              let arr = this.facetField[cat]
-              // this.altStorage[dataset][cat]["data"] = []; //need to remove all items
+              let arr = this.facetField[cat];
               let temp = [];
               for (let i = 0; i < arr.length; i += 2) {
                 let obj = {};
                 obj[arr[i]] = arr[i + 1];
-
                 temp.push(obj);
-
               }
               this.altStorage[dataset][cat]["data"] = temp;
             }
@@ -396,16 +402,15 @@ export class PublicDatasetsComponent implements OnInit {
       }
     }
     rangeQuery = `(${rangeQuery})`;
-    //change this after add range values for gtex
-    // if (dataset === 'gtex-rnaseq') {
-    //   this.searchQueryResults = (newQueryString.length > 0) ? newQueryString : '*';
-    // } else {
-    this.searchQueryResults = (newQueryString.length > 0) ? `${newQueryString} AND ${rangeQuery}` : rangeQuery;
-    // }
 
+    this.searchQueryResults = (newQueryString.length > 0) ? `${newQueryString} AND ${rangeQuery}` : rangeQuery;
 
     let temp = this.addQuerySearchString(this.currentDataset, this.searchQueryResults)
     this.updateFilterValues(temp, this.storageDataSet[this.currentDataset], this.checkboxStatus[dataset], dataset, false)
+  }
+
+  onDisplayAdvance() {
+    this.displayAdvance = !this.displayAdvance;
   }
 
   setDataset(datasetTag: string) {
@@ -432,7 +437,6 @@ export class PublicDatasetsComponent implements OnInit {
             this.checkboxStatus[dataset][cat][subcat] === false;
           }
         }
-
       }
     }
     this.checkBoxObj = {

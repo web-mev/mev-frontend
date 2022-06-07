@@ -2,7 +2,6 @@ import { Component, ChangeDetectionStrategy, Input, OnInit, EventEmitter, Output
 import { Options, ChangeContext } from '@angular-slider/ngx-slider';
 import { PublicDatasetsComponent } from '../public-datasets.component';
 
-
 @Component({
   selector: 'mev-slider',
   templateUrl: './slider.component.html',
@@ -16,6 +15,8 @@ export class SliderPDSComponent extends PublicDatasetsComponent implements OnIni
   @Input() title
   @Output() childEvent = new EventEmitter()
   @Input() category
+  @Input() displayDetails
+  @Output() checkEvent = new EventEmitter()
 
   minValue;
   maxValue;
@@ -43,4 +44,15 @@ export class SliderPDSComponent extends PublicDatasetsComponent implements OnIni
     }
     this.childEvent.emit(temp)
   }
+
+  onCheckedNotReported(currResult, cat, dataset) {
+    let temp = {
+      "checked": currResult,
+      "cat": cat,
+      "dataset" : dataset
+    }
+    this.checkEvent.emit(temp)
+  }
+
+
 }

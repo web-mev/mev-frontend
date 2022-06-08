@@ -1,6 +1,6 @@
 <section>
     <div class="labelContainer">
-        <label class="sliderGroup sliderLabel">{{info.key.replaceAll("_", " ")}}: ({{info.value.count}})</label>
+        <label class="sliderGroup sliderLabel">{{info.key.replaceAll("_", " ")}}: <span class="sliderCounter">({{info.value.count}})</span></label>
         <mat-icon class="expandIcon" (click)="displayDetails = !displayDetails">{{displayDetails ? "expand_more" :
             "expand_less"}}</mat-icon>
     </div>

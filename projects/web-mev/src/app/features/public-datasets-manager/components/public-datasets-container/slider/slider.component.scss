@@ -4,6 +4,7 @@
     text-transform: capitalize;
     height: 20px;
     margin: 8px 10px;
+    display: inline-flex;
 }
 
 .labelContainer {
@@ -60,7 +61,7 @@
         background: #fff;
     }
     .custom-slider {
-        margin-top: -30px;
+        margin-top: -72px;
     }
 }
 
@@ -76,4 +77,10 @@
 .expandIcon{
     margin: auto 20px auto auto;
     cursor: pointer;
+}
+.sliderCounter{
+    font-size: 12px;
+    font-weight: 400;
+    margin-left: 10px;
+    margin-top: 4px;
 }

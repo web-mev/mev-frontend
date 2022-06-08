@@ -25,7 +25,7 @@ export class PublicDatasetsComponent implements OnInit {
   targetFields = ["ethnicity", "gender", "race", "vital_status", "cog_renal_stage", "morphology", "primary_diagnosis", "site_of_resection_or_biopsy", "dbgap_accession_number", "disease_type", "name", "primary_site"];
   tcgaFields = ["alcohol_history", "ethnicity", "gender", "race", "vital_status", "vital_status", "ajcc_pathologic_m", "ajcc_pathologic_n", "ajcc_pathologic_stage", "ajcc_pathologic_t", "ajcc_staging_system_edition", "icd_10_code", "morphology", "primary_diagnosis", "prior_malignancy", "prior_treatment", "site_of_resection_or_biopsy", "synchronous_malignancy", "disease_type", "name", "primary_site"];
   gtexFields = ["sex", "age_range", "hardy_scale_death", "nucleic_acid_isolation_batch", "expression_batch", "collection_site_code"];
-  targetRangeFields = ["age_at_diagnosis", "days_to_last_follow_up", "year_of_diagnosis"];
+  targetRangeFields = ["age_at_diagnosis", "days_to_last_follow_up", "year_of_diagnosis"]; //"days_to_death", "days_to_birth"
   tcgaRangeFields = ["age_at_diagnosis", "age_at_index", "days_to_birth", "days_to_last_follow_up", "year_of_birth", "year_of_diagnosis"];
   gtexRangeFields = ["rna_rin"];
   advanceFields = ["cog_renal_stage", "dbgap_accession_number", "morphology", "disease_type", "primary_site", "site_of_resection_or_biopsy", "days_to_last_follow_up", "ajcc_pathologic_m", "ajcc_pathologic_n", "ajcc_pathologic_t", "ajcc_staging_system_edition", "alcohol_history", "icd_10_code", "synchronous_malignancy", "age_at_index", "days_to_birth", "year_of_birth", "year_of_diagnosis", "nucleic_acid_isolation_batch", "expression_batch", "collection_site_code", "rna_rin"];
@@ -128,46 +128,65 @@ export class PublicDatasetsComponent implements OnInit {
     }
   }
 
-  storageDataSet = {
-    'target-rnaseq': {},
-    'tcga-rnaseq': {},
-    'gtex-rnaseq': {},
-  };
+  storageDataSet = {};
   //checkbox object keeps track of which items are checked
-  checkBoxObj = {
-    'target-rnaseq': {},
-    'tcga-rnaseq': {},
-    'gtex-rnaseq': {},
-  };
+  checkBoxObj = {};
   //checkbox status keeps track of every checkbox for true/false values
-  checkboxStatus = {
-    'target-rnaseq': {},
-    'tcga-rnaseq': {},
-    'gtex-rnaseq': {},
-  }
-  altStorage = {
-    'target-rnaseq': {},
-    'tcga-rnaseq': {},
-    'gtex-rnaseq': {},
-  }
+  checkboxStatus = {}
+  altStorage = {}
   displayAdvance: boolean = false;
   excludeList = [];
+
 
   constructor(fb: FormBuilder, private httpClient: HttpClient, private ref: ChangeDetectorRef) { }
 
   ngOnInit(): void { }
 
-  // count = 0
   afterLoaded() {
     for (let dataset in this.filterFields) {
+      this.createRangeDataStorage(dataset);
       //builds the initial query string
       this.queryStringForFilters = this.getFacetFieldQueryString(dataset);
 
       this.createAltQuery(dataset)
 
+      if (!this.storageDataSet[dataset]) {
+        this.storageDataSet[dataset] = {}
+      }
+      if (!this.checkboxStatus[dataset]) {
+        this.checkboxStatus[dataset] = {}
+      }
       //gets the numbers for each category
       this.updateFilterValues(this.queryStringForFilters, this.storageDataSet[dataset], this.checkboxStatus[dataset], dataset, true);
     }
+  }
+
+
+  createRangeDataStorage(dataset) {
+    //https://api-dev.tm4.org/api/public-datasets/query/target-rnaseq/?q=*&stats=true&stats.field={!tag=piv1,piv2%20min=true%20max=true}age_at_diagnosis
+    let categoryArray = this.filterRangeFields[dataset];
+    let query = `${this.API_URL}/public-datasets/query/${dataset}/?q=*&stats=true`;
+    for (let i = 0; i < categoryArray.length; i++) {
+      query += `&stats.field={!tag=piv1,piv2 min=true max=true}${categoryArray[i]}`
+    }
+    this.getQueryResults(query)
+      .subscribe(res => {
+        let stats_field = res["stats"]["stats_fields"];
+        for (let cat in stats_field) {
+          if (!this.sliderStorage[dataset]) {
+            this.sliderStorage[dataset] = {};
+          }
+          this.sliderStorage[dataset][cat] = {
+            "count": 0,
+            "floor": stats_field[cat]["min"],
+            "ceil": stats_field[cat]["max"],
+            "low": stats_field[cat]["min"],
+            "high": stats_field[cat]["max"],
+            "not_reported": true
+          }
+        }
+
+      })
   }
 
   getFacetFieldQueryString(dataset) {
@@ -197,12 +216,12 @@ export class PublicDatasetsComponent implements OnInit {
       let low = this.sliderStorage[dataset][category]['low'];
       let high = this.sliderStorage[dataset][category]['high'];
       rangeQuery += `&facet.query={!tag=q1}${category}:[${low} TO ${high}]`
-      if (missingRangeQuery.length === 0) {
-        missingRangeQuery += `(* -${category}:*)`
-      } else {
-        missingRangeQuery += ` OR (* -${category}:*)`
-      }
-
+      // if (missingRangeQuery.length === 0) {
+      //   missingRangeQuery += `(* -${category}:*)`
+      // } else {
+      //   missingRangeQuery += ` OR (* -${category}:*)`
+      // }
+      missingRangeQuery += (missingRangeQuery.length === 0) ? `(* -${category}:*)` : ` OR (* -${category}:*)`
     }
 
     let categoryArray = this.filterFields[dataset]
@@ -222,6 +241,8 @@ export class PublicDatasetsComponent implements OnInit {
   }
 
   updateFilterValues(query, saveTo, checkboxStatus, dataset, initializeCheckbox) {
+    console.log("update filter val: ", query)
+    console.log("slider storage: ", this.sliderStorage[dataset])
     this.getQueryResults(query)
       .subscribe(res => {
         this.facetField = res['facet_counts']['facet_fields'];
@@ -234,16 +255,19 @@ export class PublicDatasetsComponent implements OnInit {
             let obj = {};
             obj[arr[i]] = arr[i + 1];
 
-            if (initializeCheckbox === true) {
+            if (initializeCheckbox) {
               obj2[arr[i]] = false;
             }
 
             //if it does exist, look for that id and replace, else just add it
             saveTo[cat].push(obj); //the change here saveTo[cat] = obj
-            if (initializeCheckbox === true) {
+            if (initializeCheckbox) {
               checkboxStatus[cat] = obj2;
             }
-            if (this.altStorage[dataset][cat] === undefined) {
+            if (!this.altStorage[dataset]) {
+              this.altStorage[dataset] = {}
+            }
+            if (!this.altStorage[dataset][cat]) {
               this.altStorage[dataset][cat] = {
                 "altQuery": '',
                 "data": []
@@ -261,14 +285,16 @@ export class PublicDatasetsComponent implements OnInit {
           let indexOfColon = item.indexOf(':')
           let cat = item.slice(9, indexOfColon)
           let count = res["facet_counts"]['facet_queries'][item];
+          console.log("range count: ", res["facet_counts"]['facet_queries'][item], item, cat)
           this.sliderStorage[dataset][cat]['count'] = count;
         }
-
       })
   }
 
   onChecked(currResult, cat, subcat, dataset) {
-    // this.isLoading = true
+    if (!this.checkBoxObj[dataset]) {
+      this.checkBoxObj[dataset] = {};
+    }
     let newQueryItem = `${cat}:"${subcat}"`;
     if (currResult === true) {
       if (!this.checkBoxObj[dataset][cat]) {
@@ -299,6 +325,9 @@ export class PublicDatasetsComponent implements OnInit {
   }
 
   createAltQuery(dataset) {
+    if (!this.checkBoxObj[dataset]) {
+      this.checkBoxObj[dataset] = {}
+    }
     for (let mainCat in this.checkBoxObj[dataset]) {
       let newQueryString = '';
       for (let cat in this.checkBoxObj[dataset]) {
@@ -341,7 +370,7 @@ export class PublicDatasetsComponent implements OnInit {
       let query = `${this.API_URL}/public-datasets/query/${dataset}/?q=${tempQuery}&facet=true`;
       query += "&facet.field=" + mainCat;
 
-      if (this.altStorage[dataset][mainCat] === undefined) {
+      if (!this.altStorage[dataset][mainCat]) {
         this.altStorage[dataset][mainCat] = {};
       }
       this.altStorage[dataset][mainCat]["altQuery"] = query;
@@ -351,6 +380,7 @@ export class PublicDatasetsComponent implements OnInit {
       this.isLoading = true;
       let query = this.altStorage[dataset][cat]['altQuery'];
       if (query.length > 0) {
+        console.log("alt query: ", query)
         this.getQueryResults(query)
           .subscribe(res => {
             this.facetField = res['facet_counts']['facet_fields'];
@@ -439,16 +469,7 @@ export class PublicDatasetsComponent implements OnInit {
         }
       }
     }
-    this.checkBoxObj = {
-      'target-rnaseq': {},
-      'tcga-rnaseq': {},
-      'gtex-rnaseq': {},
-    };
-
-    this.altStorage = {
-      'target-rnaseq': {},
-      'tcga-rnaseq': {},
-      'gtex-rnaseq': {},
-    }
+    this.checkBoxObj = {};
+    this.altStorage = {};
   }
 }

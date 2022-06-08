@@ -92,7 +92,7 @@ export class HistogramComponent implements OnInit {
     var histogram = d3.histogram()
       .value(function (d) { return d.value; })   // I need to give the vector of value
       .domain(x.domain())  // then the domain of the graphic
-      .thresholds(x.ticks(15)); // then the numbers of bins
+      .thresholds(x.ticks(20)); // then the numbers of bins
 
     // And apply this function to data to get the bins
     var bins = histogram(this.countArray);
@@ -114,5 +114,7 @@ export class HistogramComponent implements OnInit {
       .attr("width", function (d) { return Math.abs(x(d.x1) - x(d.x0) - 1); })
       .attr("height", function (d) { return height - y(d.length); })
       .style("fill", "#69b3a2")
+      .style("opacity", 0.6)
+      
   }
 }

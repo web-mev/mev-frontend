@@ -14,6 +14,8 @@ export class HistogramComponent implements OnInit {
   @Input() data
   @Input() currentDataset
   @Input() category
+  // @Input() mainQuery;
+
   private readonly API_URL = environment.apiUrl;
   facetField
   histogramDataStorage = {
@@ -21,20 +23,30 @@ export class HistogramComponent implements OnInit {
     'tcga-rnaseq': {},
     'gtex-rnaseq': {}
   }
-  countArray = []
+  countArray = [];
+  queryParams = '*';
 
   constructor(private httpClient: HttpClient) { }
 
   ngOnInit(): void {
     this.getData(this.currentDataset, this.category)
+
   }
+  // ngOnChanges(changes: SimpleChanges): void {
+  // console.log("main query from histogram: ", this.mainQuery)
+  // if(this.mainQuery.length > 0){
+  //   this.queryParams = this.mainQuery;
+  // }
+
+  // this.getData(this.currentDataset, this.category);
+  // }
 
   getQueryResults(queryString) {
     return this.httpClient.get(queryString)
   }
 
   getData(dataset, category) {
-    let query = `${this.API_URL}/public-datasets/query/${dataset}/?q=*&facet=true&facet.field=${category}`;
+    let query = `${this.API_URL}/public-datasets/query/${dataset}/?q=${this.queryParams}&facet=true&facet.field=${category}`;
     this.getQueryResults(query)
       .subscribe(res => {
         this.facetField = res['facet_counts']['facet_fields'];
@@ -62,7 +74,7 @@ export class HistogramComponent implements OnInit {
         }
         this.createHistogram();
       })
-    
+
   }
 
   createHistogram() {
@@ -115,6 +127,6 @@ export class HistogramComponent implements OnInit {
       .attr("height", function (d) { return height - y(d.length); })
       .style("fill", "#69b3a2")
       .style("opacity", 0.6)
-      
+
   }
 }

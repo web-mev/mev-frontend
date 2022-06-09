@@ -17,7 +17,6 @@ import { PublicDatasetsComponent } from '../public-datasets-container/public-dat
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PublicDatasetsListComponent implements OnInit {
-
   publicDatasets: PublicDataset[];
   @Output() datasetSelectedEvent = new EventEmitter<string>();
 
@@ -29,7 +28,7 @@ export class PublicDatasetsListComponent implements OnInit {
 
   ngOnInit() {
     this.loadData();
-    this.publicDS.afterLoaded();
+    this.publicDS.initializeFilterData();
   }
 
   public loadData() {
@@ -42,7 +41,6 @@ export class PublicDatasetsListComponent implements OnInit {
   }
 
   chooseDataset(datasetTag: string) {
-    console.log("choosing dataset: ", datasetTag)
     this.datasetSelectedEvent.emit(datasetTag);
   }
 

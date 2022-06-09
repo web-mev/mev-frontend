@@ -17,6 +17,7 @@ export class SliderPDSComponent extends PublicDatasetsComponent implements OnIni
   @Input() category
   @Input() displayDetails
   @Output() checkEvent = new EventEmitter()
+  // @Input() mainQuery: string;
 
   minValue;
   maxValue;

@@ -18,11 +18,13 @@
                     </ng-template>
                 </div>
             </div>
+
             <div *ngFor="let item of sliderStorage[currentDataset] | keyvalue">
                 <div *ngIf="!advanceFields.includes(item.key)">
                     <mev-slider [info]='item' [currentDataset]="currentDataset" [category]="item.key"
                         [countNum]="sliderStorage[currentDataset][item.key]['count']"
-                        (childEvent)="setSliderValue($event)" [displayDetails]="true" (checkEvent)="onExcludeNotReported($event)">
+                        (childEvent)="setSliderValue($event)" [displayDetails]="true"
+                        (checkEvent)="onNotReportedChecked($event)">
                     </mev-slider>
                 </div>
             </div>
@@ -45,7 +47,8 @@
                     <div *ngIf="advanceFields.includes(item.key)">
                         <mev-slider [info]='item' [currentDataset]="currentDataset" [category]="item.key"
                             [countNum]="sliderStorage[currentDataset][item.key]['count']"
-                            (childEvent)="setSliderValue($event)" [displayDetails]="false" (checkEvent)="onExcludeNotReported($event)">
+                            (childEvent)="setSliderValue($event)" [displayDetails]="false"
+                            (checkEvent)="onNotReportedChecked($event)">
                         </mev-slider>
                     </div>
                 </div>

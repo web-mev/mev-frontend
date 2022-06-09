@@ -2,7 +2,6 @@ import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@
 import { FormBuilder } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
-import { T } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'mev-public-datasets',
@@ -12,15 +11,15 @@ import { T } from '@angular/cdk/keycodes';
 })
 export class PublicDatasetsComponent implements OnInit {
   private readonly API_URL = environment.apiUrl;
-  currentDataset = '';
+  currentDataset: string = '';
   queryStringForFilters: string = '';
-  queryRangeString = '';
+  queryRangeString: string = '';
   filterItems = {};
   filterRangeItems = {};
   facetField;
   searchQueryResults: string = "";
   checkBoxItems = [];
-  isLoading = false;
+  isLoading: boolean = false;
 
   targetFields = ["ethnicity", "gender", "race", "vital_status", "cog_renal_stage", "morphology", "primary_diagnosis", "site_of_resection_or_biopsy", "dbgap_accession_number", "disease_type", "name", "primary_site"];
   tcgaFields = ["alcohol_history", "ethnicity", "gender", "race", "vital_status", "vital_status", "ajcc_pathologic_m", "ajcc_pathologic_n", "ajcc_pathologic_stage", "ajcc_pathologic_t", "ajcc_staging_system_edition", "icd_10_code", "morphology", "primary_diagnosis", "prior_malignancy", "prior_treatment", "site_of_resection_or_biopsy", "synchronous_malignancy", "disease_type", "name", "primary_site"];
@@ -137,17 +136,15 @@ export class PublicDatasetsComponent implements OnInit {
   displayAdvance: boolean = false;
   excludeList = [];
 
-
   constructor(fb: FormBuilder, private httpClient: HttpClient, private ref: ChangeDetectorRef) { }
 
   ngOnInit(): void { }
 
-  afterLoaded() {
+  initializeFilterData() {
     for (let dataset in this.filterFields) {
       this.createRangeDataStorage(dataset);
       //builds the initial query string
-      this.queryStringForFilters = this.getFacetFieldQueryString(dataset);
-
+      this.queryStringForFilters = this.getFacetFieldQuery(dataset);
       this.createAltQuery(dataset)
 
       if (!this.storageDataSet[dataset]) {
@@ -157,12 +154,13 @@ export class PublicDatasetsComponent implements OnInit {
         this.checkboxStatus[dataset] = {}
       }
       //gets the numbers for each category
-      this.updateFilterValues(this.queryStringForFilters, this.storageDataSet[dataset], this.checkboxStatus[dataset], dataset, true);
+      this.updateFilterValues(this.queryStringForFilters, this.checkboxStatus[dataset], dataset, true);
     }
   }
 
 
   createRangeDataStorage(dataset) {
+    //example of the query
     //https://api-dev.tm4.org/api/public-datasets/query/target-rnaseq/?q=*&stats=true&stats.field={!tag=piv1,piv2%20min=true%20max=true}age_at_diagnosis
     let categoryArray = this.filterRangeFields[dataset];
     let query = `${this.API_URL}/public-datasets/query/${dataset}/?q=*&stats=true`;
@@ -189,7 +187,7 @@ export class PublicDatasetsComponent implements OnInit {
       })
   }
 
-  getFacetFieldQueryString(dataset) {
+  getFacetFieldQuery(dataset) {
     let categoryArray = this.filterFields[dataset]
     let query = `${this.API_URL}/public-datasets/query/${dataset}/?q=*&facet=true`;
     for (let i = 0; i < categoryArray.length; i++) {
@@ -207,7 +205,7 @@ export class PublicDatasetsComponent implements OnInit {
     return query;
   }
 
-  addQuerySearchString(dataset, filterItems) {
+  addSearchQuery(dataset, filterItems) {
     let categoryArrayRange = this.filterRangeFields[dataset]
     let rangeQuery = '';
     let missingRangeQuery = '';
@@ -215,13 +213,8 @@ export class PublicDatasetsComponent implements OnInit {
       let category = categoryArrayRange[k];
       let low = this.sliderStorage[dataset][category]['low'];
       let high = this.sliderStorage[dataset][category]['high'];
-      rangeQuery += `&facet.query={!tag=q1}${category}:[${low} TO ${high}]`
-      // if (missingRangeQuery.length === 0) {
-      //   missingRangeQuery += `(* -${category}:*)`
-      // } else {
-      //   missingRangeQuery += ` OR (* -${category}:*)`
-      // }
-      missingRangeQuery += (missingRangeQuery.length === 0) ? `(* -${category}:*)` : ` OR (* -${category}:*)`
+      rangeQuery += `&facet.query={!tag=q1}${category}:[${low} TO ${high}]`;
+      missingRangeQuery += (missingRangeQuery.length === 0) ? `(* -${category}:*)` : ` OR (* -${category}:*)`;
     }
 
     let categoryArray = this.filterFields[dataset]
@@ -231,7 +224,7 @@ export class PublicDatasetsComponent implements OnInit {
     for (let i = 0; i < categoryArray.length; i++) {
       query += "&facet.field=" + categoryArray[i];
     }
-
+    this.mainQuery = tempQuery;
     query += rangeQuery;
     return query;
   }
@@ -240,80 +233,89 @@ export class PublicDatasetsComponent implements OnInit {
     return this.httpClient.get(queryString)
   }
 
-  updateFilterValues(query, saveTo, checkboxStatus, dataset, initializeCheckbox) {
-    console.log("update filter val: ", query)
-    console.log("slider storage: ", this.sliderStorage[dataset])
+  updateFilterValues(query, checkboxStatus, dataset, initializeCheckbox) {
     this.getQueryResults(query)
       .subscribe(res => {
         this.facetField = res['facet_counts']['facet_fields'];
-        for (let cat in this.facetField) {
-          let arr = this.facetField[cat]
-
-          let obj2 = {}; //this is for checkbox status
-          saveTo[cat] = [];
-          for (let i = 0; i < arr.length; i += 2) {
-            let obj = {};
-            obj[arr[i]] = arr[i + 1];
-
-            if (initializeCheckbox) {
-              obj2[arr[i]] = false;
-            }
-
-            //if it does exist, look for that id and replace, else just add it
-            saveTo[cat].push(obj); //the change here saveTo[cat] = obj
-            if (initializeCheckbox) {
-              checkboxStatus[cat] = obj2;
-            }
-            if (!this.altStorage[dataset]) {
-              this.altStorage[dataset] = {}
-            }
-            if (!this.altStorage[dataset][cat]) {
-              this.altStorage[dataset][cat] = {
-                "altQuery": '',
-                "data": []
-              };
-            }
-            if (this.altStorage[dataset][cat]["altQuery"].length === 0) {
-              this.altStorage[dataset][cat]["data"].push(obj);
-            }
-
+        for (let category in this.facetField) {
+          let arr = this.facetField[category]
+          let checkboxStatusObj = {}; //this is for checkbox status
+          this.storageDataSet[dataset][category] = [];
+          if (!this.altStorage[dataset]) {
+            this.altStorage[dataset] = {}
           }
+          if (!this.altStorage[dataset][category]) {
+            this.altStorage[dataset][category] = {
+              "altQuery": '',
+              "data": []
+            };
+          }
+          if (!this.checkBoxObj[dataset][category]) {
+            this.altStorage[dataset][category]["data"] = [];
+          }
+          if (initializeCheckbox) {
+            for (let j = 0; j < arr.length; j += 2) {
+              let countObj = {};
+              countObj[arr[j]] = arr[j + 1];
+              checkboxStatusObj[arr[j]] = false;
+              this.storageDataSet[dataset][category].push(countObj);
+              checkboxStatus[category] = checkboxStatusObj;
+              if (!this.checkBoxObj[dataset][category]) {
+                this.altStorage[dataset][category]["data"].push(countObj);
+              }
+            }
+          } else {
+            for (let i = 0; i < arr.length; i += 2) {
+              let countObj = {};
+              countObj[arr[i]] = arr[i + 1];
+
+              //if it does exist, look for that id and replace, else just add it
+              this.storageDataSet[dataset][category].push(countObj);
+
+              ///need to remove items from the array before pushing them
+              if (!this.checkBoxObj[dataset][category]) {
+                this.altStorage[dataset][category]["data"].push(countObj);
+              }
+            }
+          }
+
+
         }
         //for the range queries only
         let facet_queries = res["facet_counts"]["facet_queries"];
         for (let item in facet_queries) {
           let indexOfColon = item.indexOf(':')
-          let cat = item.slice(9, indexOfColon)
+          let category = item.slice(9, indexOfColon)
           let count = res["facet_counts"]['facet_queries'][item];
-          console.log("range count: ", res["facet_counts"]['facet_queries'][item], item, cat)
-          this.sliderStorage[dataset][cat]['count'] = count;
+          this.sliderStorage[dataset][category]['count'] = count;
         }
       })
   }
-
-  onChecked(currResult, cat, subcat, dataset) {
+  mainQuery = "";
+  onChecked(isChecked, category, subcategory, dataset) {
     if (!this.checkBoxObj[dataset]) {
       this.checkBoxObj[dataset] = {};
     }
-    let newQueryItem = `${cat}:"${subcat}"`;
-    if (currResult === true) {
-      if (!this.checkBoxObj[dataset][cat]) {
-        this.checkBoxObj[dataset][cat] = [];
+    let newQueryItem = `${category}:"${subcategory}"`;
+    if (isChecked) {
+      if (!this.checkBoxObj[dataset][category]) {
+        this.checkBoxObj[dataset][category] = [];
       }
-      this.checkBoxObj[dataset][cat].push(newQueryItem);
-      this.checkboxStatus[dataset][cat][subcat] = true;
+      this.checkBoxObj[dataset][category].push(newQueryItem);
+      this.checkboxStatus[dataset][category][subcategory] = true;
 
-    } else if (currResult === false) {
-      this.checkBoxObj[dataset][cat] = this.checkBoxObj[dataset][cat].filter(item => item !== newQueryItem);
-      this.checkboxStatus[dataset][cat][subcat] = false
+    } else if (!isChecked) {
+      this.checkBoxObj[dataset][category] = this.checkBoxObj[dataset][category].filter(item => item !== newQueryItem);
+      if (this.checkBoxObj[dataset][category].length === 0) {
+        delete this.checkBoxObj[dataset][category]
+      }
+      this.checkboxStatus[dataset][category][subcategory] = false
     }
     this.createAltQuery(dataset);
     this.filterData(dataset);
   }
 
-
-
-  onExcludeNotReported(result) {
+  onNotReportedChecked(result) {
     let temp = result.dataset + "_" + result.cat;
     if (result.checked === false) {
       this.excludeList.push(temp)
@@ -380,7 +382,6 @@ export class PublicDatasetsComponent implements OnInit {
       this.isLoading = true;
       let query = this.altStorage[dataset][cat]['altQuery'];
       if (query.length > 0) {
-        console.log("alt query: ", query)
         this.getQueryResults(query)
           .subscribe(res => {
             this.facetField = res['facet_counts']['facet_fields'];
@@ -435,8 +436,9 @@ export class PublicDatasetsComponent implements OnInit {
 
     this.searchQueryResults = (newQueryString.length > 0) ? `${newQueryString} AND ${rangeQuery}` : rangeQuery;
 
-    let temp = this.addQuerySearchString(this.currentDataset, this.searchQueryResults)
-    this.updateFilterValues(temp, this.storageDataSet[this.currentDataset], this.checkboxStatus[dataset], dataset, false)
+    let temp = this.addSearchQuery(this.currentDataset, this.searchQueryResults)
+    console.log("query ", temp)
+    this.updateFilterValues(temp, this.checkboxStatus[dataset], dataset, false)
   }
 
   onDisplayAdvance() {

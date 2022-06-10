@@ -135,6 +135,7 @@ export class PublicDatasetsComponent implements OnInit {
   altStorage = {}
   displayAdvance: boolean = false;
   excludeList = [];
+  mainQuery: string = "*";
 
   constructor(fb: FormBuilder, private httpClient: HttpClient, private ref: ChangeDetectorRef) { }
 
@@ -291,7 +292,7 @@ export class PublicDatasetsComponent implements OnInit {
         }
       })
   }
-  mainQuery = "*";
+
   onChecked(isChecked, category, subcategory, dataset) {
     if (!this.checkBoxObj[dataset]) {
       this.checkBoxObj[dataset] = {};
@@ -472,5 +473,6 @@ export class PublicDatasetsComponent implements OnInit {
     }
     this.checkBoxObj = {};
     this.altStorage = {};
+    this.mainQuery = '*';
   }
 }

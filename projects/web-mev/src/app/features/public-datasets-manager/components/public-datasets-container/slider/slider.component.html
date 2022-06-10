@@ -6,7 +6,7 @@
     </div>
     <div *ngIf="displayDetails">
         <mev-histogram id={{info.key}} class="histogram" [idValue]="info.key" [data]="info"
-            [currentDataset]="currentDataset" [category]="category" ></mev-histogram>
+            [currentDataset]="currentDataset" [category]="category" [mainQuery]="mainQuery" [sliderdata]="sliderdata"></mev-histogram>
         <div class="custom-slider">
             <ngx-slider [(value)]="minValue" [(highValue)]="maxValue" [options]="options"
                 (userChangeEnd)="onUserChangeEnd($event)">

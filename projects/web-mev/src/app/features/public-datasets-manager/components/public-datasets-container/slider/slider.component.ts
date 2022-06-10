@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit, EventEmitter, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { Options, ChangeContext } from '@angular-slider/ngx-slider';
 import { PublicDatasetsComponent } from '../public-datasets.component';
 
@@ -17,7 +17,8 @@ export class SliderPDSComponent extends PublicDatasetsComponent implements OnIni
   @Input() category
   @Input() displayDetails
   @Output() checkEvent = new EventEmitter()
-  // @Input() mainQuery: string;
+  @Input() mainQuery: string;
+  @Input() sliderdata
 
   minValue;
   maxValue;
@@ -50,10 +51,8 @@ export class SliderPDSComponent extends PublicDatasetsComponent implements OnIni
     let temp = {
       "checked": currResult,
       "cat": cat,
-      "dataset" : dataset
+      "dataset": dataset
     }
     this.checkEvent.emit(temp)
   }
-
-
 }

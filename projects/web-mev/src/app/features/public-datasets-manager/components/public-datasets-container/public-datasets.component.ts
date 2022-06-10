@@ -291,7 +291,7 @@ export class PublicDatasetsComponent implements OnInit {
         }
       })
   }
-  mainQuery = "";
+  mainQuery = "*";
   onChecked(isChecked, category, subcategory, dataset) {
     if (!this.checkBoxObj[dataset]) {
       this.checkBoxObj[dataset] = {};
@@ -437,7 +437,6 @@ export class PublicDatasetsComponent implements OnInit {
     this.searchQueryResults = (newQueryString.length > 0) ? `${newQueryString} AND ${rangeQuery}` : rangeQuery;
 
     let temp = this.addSearchQuery(this.currentDataset, this.searchQueryResults)
-    console.log("query ", temp)
     this.updateFilterValues(temp, this.checkboxStatus[dataset], dataset, false)
   }
 

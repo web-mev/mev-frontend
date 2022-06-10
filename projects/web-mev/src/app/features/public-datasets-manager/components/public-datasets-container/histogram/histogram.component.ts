@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import * as d3 from 'd3';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
@@ -9,12 +9,13 @@ import { environment } from '@environments/environment';
   styleUrls: ['./histogram.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HistogramComponent implements OnInit {
+export class HistogramComponent implements OnChanges {
   @Input() idValue
   @Input() data
   @Input() currentDataset
   @Input() category
-  // @Input() mainQuery;
+  @Input() mainQuery
+  @Input() sliderdata
 
   private readonly API_URL = environment.apiUrl;
   facetField
@@ -24,22 +25,15 @@ export class HistogramComponent implements OnInit {
     'gtex-rnaseq': {}
   }
   countArray = [];
-  queryParams = '*';
+  queryParams: string;
 
   constructor(private httpClient: HttpClient) { }
 
-  ngOnInit(): void {
-    this.getData(this.currentDataset, this.category)
-
+  ngOnChanges(changes: SimpleChanges): void {
+    this.queryParams = this.mainQuery;
+    this.countArray = [];
+    this.getData(this.currentDataset, this.category);
   }
-  // ngOnChanges(changes: SimpleChanges): void {
-  // console.log("main query from histogram: ", this.mainQuery)
-  // if(this.mainQuery.length > 0){
-  //   this.queryParams = this.mainQuery;
-  // }
-
-  // this.getData(this.currentDataset, this.category);
-  // }
 
   getQueryResults(queryString) {
     return this.httpClient.get(queryString)
@@ -53,7 +47,6 @@ export class HistogramComponent implements OnInit {
         for (let subcat in this.facetField) {
           let arr = this.facetField[subcat]
           this.histogramDataStorage[dataset][subcat] = []
-
           for (let i = 0; i < arr.length; i += 2) {
             let obj = {};
             obj[arr[i]] = arr[i + 1];
@@ -72,19 +65,25 @@ export class HistogramComponent implements OnInit {
             }
           }
         }
-        this.createHistogram();
+        let min = this.sliderdata[dataset][category]["floor"];
+        let max = this.sliderdata[dataset][category]["ceil"]
+        this.createHistogram(min, max);
       })
-
   }
 
-  createHistogram() {
+  createHistogram(min, max) {
+    d3.select(`#${this.idValue}`)
+      .selectAll('svg')
+      .remove()
+      .exit()
+
     // set the dimensions and margins of the graph
-    var margin = { top: 10, right: 30, bottom: 20, left: 40 },
+    let margin = { top: 10, right: 30, bottom: 20, left: 40 },
       width = 340 - margin.left - margin.right,
       height = 140 - margin.top - margin.bottom;
 
     // append the svg object to the body of the page
-    var svg = d3.select(`#${this.idValue}`)
+    let svg = d3.select(`#${this.idValue}`)
       .append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
@@ -93,40 +92,47 @@ export class HistogramComponent implements OnInit {
         "translate(" + margin.left + "," + margin.top + ")");
 
     // X axis: scale and draw:
-    var x = d3.scaleLinear()
-      .domain([d3.min(this.countArray, function (d) { return +d.value }), d3.max(this.countArray, function (d) { return +d.value })])     // can use this instead of 1000 to have the max of data: d3.max(data, function(d) { return +d.price })
+    let x = d3.scaleLinear()
+      // .domain([d3.min(this.countArray, function (d) { return +d.value }), d3.max(this.countArray, function (d) { return +d.value })])     // can use this instead of 1000 to have the max of data: d3.max(data, function(d) { return +d.price })
+      .domain([min, max])
       .range([0, width]);
     svg.append("g")
       .attr("transform", "translate(0," + height + ")")
       .call(d3.axisBottom(x).tickValues([]).tickSizeOuter(0));
 
     // set the parameters for the histogram
-    var histogram = d3.histogram()
+    let histogram = d3.histogram()
       .value(function (d) { return d.value; })   // I need to give the vector of value
       .domain(x.domain())  // then the domain of the graphic
       .thresholds(x.ticks(20)); // then the numbers of bins
 
     // And apply this function to data to get the bins
-    var bins = histogram(this.countArray);
+    let bins = histogram(this.countArray);
 
     // Y axis: scale and draw:
-    var y = d3.scaleLinear()
+    let y = d3.scaleLinear()
       .range([height, 0]);
     y.domain([0, d3.max(bins, function (d) { return d.length; })]);   // d3.hist has to be called before the Y axis obviously
     // svg.append("g")
-    //   .call(d3.axisLeft(y).tickFormat(""));
+    //   .call(d3.axisLeft(y).tickFormat(""))
 
     // append the bar rectangles to the svg element
-    svg.selectAll("rect")
-      .data(bins)
+    let bar = svg.selectAll("rect")
+      .data(bins, d => d.x0)
+
+    bar.exit().remove()
+      .transition()
+      .duration(1500)
+
+    bar
       .enter()
       .append("rect")
-      .attr("x", 0)
       .attr("transform", function (d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
       .attr("width", function (d) { return Math.abs(x(d.x1) - x(d.x0) - 1); })
       .attr("height", function (d) { return height - y(d.length); })
       .style("fill", "#69b3a2")
       .style("opacity", 0.6)
-
+      .merge(bar)
+      .attr("height", function (d) { return height - y(d.length); })
   }
 }

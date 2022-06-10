@@ -24,7 +24,7 @@
                     <mev-slider [info]='item' [currentDataset]="currentDataset" [category]="item.key"
                         [countNum]="sliderStorage[currentDataset][item.key]['count']"
                         (childEvent)="setSliderValue($event)" [displayDetails]="true"
-                        (checkEvent)="onNotReportedChecked($event)">
+                        (checkEvent)="onNotReportedChecked($event)" [mainQuery]="mainQuery" [sliderdata]="sliderStorage">
                     </mev-slider>
                 </div>
             </div>
@@ -48,7 +48,7 @@
                         <mev-slider [info]='item' [currentDataset]="currentDataset" [category]="item.key"
                             [countNum]="sliderStorage[currentDataset][item.key]['count']"
                             (childEvent)="setSliderValue($event)" [displayDetails]="false"
-                            (checkEvent)="onNotReportedChecked($event)">
+                            (checkEvent)="onNotReportedChecked($event)" [mainQuery]="mainQuery" [sliderdata]="sliderStorage">
                         </mev-slider>
                     </div>
                 </div>

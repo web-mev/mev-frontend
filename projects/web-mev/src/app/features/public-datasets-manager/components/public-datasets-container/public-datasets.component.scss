@@ -9,18 +9,18 @@
     vertical-align: bottom;
 }
 
-.filter-sidenav{
+.filter-sidenav {
     width: 300px;
     margin-top: 20px;
     background-color: #ddebf2;
 }
 
-.filter-sidenav-content{
+.filter-sidenav-content {
     margin-left: 20px;
-    
+    height: 100%;
 }
 
-.sideContainer{
+.sideContainer {
     margin: 10px;
 }
 
@@ -29,3 +29,37 @@ ul {
     padding-left: 10px;
 }
 
+.checkBoxLabel {
+    font-weight: bold;
+    font-size: 12px;
+    text-transform: capitalize;
+}
+.checkBoxContent {
+    font-size: 12px;
+    text-transform: capitalize;
+}
+
+::ng-deep {
+    .mat-checkbox-inner-container {
+        width: 12px !important;
+        height: 12px !important;
+    }
+    .filter-container {
+        display: flex;
+        flex-direction: row;
+    }
+    .filter-sidenav {
+        flex: 0 0 auto;
+    }
+    .buttonRow {
+        display: flex;
+        justify-content: center;
+    }
+}
+.filtersTitle{
+    font-size: 42px;
+    font-weight: 300;
+    color: rgba(0,0,0,.7);
+    margin-bottom: 12px;
+    letter-spacing: 3px;
+}

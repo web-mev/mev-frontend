@@ -35,6 +35,7 @@
   },
   "homepage": "https://github.com/web-mev/mev-frontend#readme",
   "dependencies": {
+    "@angular-slider/ngx-slider": "^2.0.4",
     "@angular/animations": "~12.2.15",
     "@angular/cdk": "~12.2.13",
     "@angular/common": "~12.2.15",

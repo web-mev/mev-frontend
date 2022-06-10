@@ -1,0 +1,25 @@
+<section>
+    <div class="labelContainer">
+        <label class="sliderGroup sliderLabel">{{info.key.replaceAll("_", " ")}}: <span class="sliderCounter">({{info.value.count}})</span></label>
+        <mat-icon class="expandIcon" (click)="displayDetails = !displayDetails">{{displayDetails ? "expand_more" :
+            "expand_less"}}</mat-icon>
+    </div>
+    <div *ngIf="displayDetails">
+        <mev-histogram id={{info.key}} class="histogram" [idValue]="info.key" [data]="info"
+            [currentDataset]="currentDataset" [category]="category" [mainQuery]="mainQuery" [sliderdata]="sliderdata"></mev-histogram>
+        <div class="custom-slider">
+            <ngx-slider [(value)]="minValue" [(highValue)]="maxValue" [options]="options"
+                (userChangeEnd)="onUserChangeEnd($event)">
+            </ngx-slider>
+        </div>
+        <div class="checkboxContainer">
+            <mat-checkbox class="example-margin checkBoxContent"
+                [checked]="sliderStorage[currentDataset][category]['not_reported']"
+                (change)="onCheckedNotReported($event.checked, category, currentDataset)">
+                Not Reported
+            </mat-checkbox>
+            <!-- <mat-chip class="counter">99</mat-chip> -->
+        </div>
+    </div>
+
+</section>

@@ -1,0 +1,39 @@
+<section class="example-section ">
+    <div class="labelContainer">
+        <label class="example-margin checkBoxLabel">{{info.key.replaceAll("_", " ")}}: </label>
+        <mat-icon class="expandIcon" (click)="expandSection()">{{displayDetails ? "expand_more" :
+            "expand_less"}}</mat-icon>
+    </div>
+    <div *ngIf="displayDetails">
+        <div *ngIf="version === '1'">
+            <div *ngFor="let cat of info.value | keyvalue | slice:0:filterSize; let i = index">
+                <div *ngFor=" let object of info.value[i] | keyvalue" class="checkboxContainer">
+                    <mat-checkbox class="example-margin checkBoxContent"
+                        [checked]="pds.checkboxStatus[currentDataset][info.key][object.key]"
+                        (change)="pds.onChecked($event.checked, info.key, object.key, currentDataset)">
+                        {{object.key}}
+                    </mat-checkbox>
+                    <mat-chip class="counter">
+                        {{info.value[i][object.key] }}</mat-chip>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="version === '2'">
+            <div *ngFor="let cat of alt[info.key].data | keyvalue | slice:0:filterSize; let i = index">
+                <div *ngFor=" let object of alt[info.key].data[i] | keyvalue" class="checkboxContainer">
+                    <mat-checkbox class="example-margin checkBoxContent"
+                        [checked]="pds.checkboxStatus[currentDataset][info.key][object.key]"
+                        (change)="pds.onChecked($event.checked, info.key, object.key, currentDataset)">
+                        {{object.key}}
+                    </mat-checkbox>
+                    <mat-chip class="counter">
+                        {{alt[info.key].data[i][object.key]}}</mat-chip>
+                </div>
+            </div>
+        </div>
+        <div class="checkboxSection">
+            <div *ngIf="objectLength > minimum" class="showMore" (click)="showMore()">{{ showDescription ? 'Less':
+                (objectLength-minimum) + ' more' }}... </div>
+        </div>
+    </div>
+</section>

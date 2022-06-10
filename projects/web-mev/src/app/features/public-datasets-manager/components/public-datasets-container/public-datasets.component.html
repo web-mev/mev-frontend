@@ -1,45 +1,87 @@
+<mev-spinner-overlay *ngIf="isLoading"></mev-spinner-overlay>
 <mat-drawer-container class="filter-container" autosize>
-    <!-- <mat-drawer #drawer class="filter-sidenav" mode="side" [opened]="chosenDataset.length>0">
-        <button type="button" mat-button (click)="drawer.toggle()">Toggle sidenav</button>
+    <mat-drawer #drawer class="filter-sidenav" mode="side" [opened]="currentDataset.length>0"
+        *ngIf="currentDataset !== '' ">
         <div class="sideContainer">
-            <span>
-                <section class="example-section">
-                    
-                    <ul>
-                        <li><h4>Alcohol History:</h4></li>
-                        <li><mat-checkbox formControlName="pepperoni">Yes</mat-checkbox></li>
-                        <li><mat-checkbox formControlName="extracheese">No</mat-checkbox></li>
-                        <li><mat-checkbox formControlName="mushroom">Not Reported</mat-checkbox></li>
-                    </ul>
-                    
-                  </section>
-            </span>
-        </div>
+            <div class="filtersTitle">Filters</div>
+            <div *ngFor="let item of storageDataSet[currentDataset] | keyvalue">
+                <div *ngIf="!advanceFields.includes(item.key)">
+                    <mev-checkbox *ngIf="altStorage[currentDataset][item.key]['altQuery'] === ''; else elseBlock"
+                        [info]='item' [alt]='altStorage[currentDataset]' [currentDataset]="currentDataset" version="1"
+                        [displayDetails]="true">
+                    </mev-checkbox>
+                    <ng-template #elseBlock>
+                        <mev-checkbox *ngIf="altStorage[currentDataset][item.key]" [info]='item'
+                            [alt]='altStorage[currentDataset]' [currentDataset]="currentDataset" version="2"
+                            [displayDetails]="true">
+                        </mev-checkbox>
+                    </ng-template>
+                </div>
+            </div>
 
-    </mat-drawer> -->
+            <div *ngFor="let item of sliderStorage[currentDataset] | keyvalue">
+                <div *ngIf="!advanceFields.includes(item.key)">
+                    <mev-slider [info]='item' [currentDataset]="currentDataset" [category]="item.key"
+                        [countNum]="sliderStorage[currentDataset][item.key]['count']"
+                        (childEvent)="setSliderValue($event)" [displayDetails]="true"
+                        (checkEvent)="onNotReportedChecked($event)" [mainQuery]="mainQuery" [sliderdata]="sliderStorage">
+                    </mev-slider>
+                </div>
+            </div>
+            <div *ngIf="displayAdvance === true">
+                <div *ngFor="let item of storageDataSet[currentDataset] | keyvalue">
+                    <div *ngIf="advanceFields.includes(item.key)">
+                        <mev-checkbox *ngIf="altStorage[currentDataset][item.key]['altQuery'] === ''; else elseBlock"
+                            [info]='item' [alt]='altStorage[currentDataset]' [currentDataset]="currentDataset"
+                            version="1" [displayDetails]="false">
+                        </mev-checkbox>
+                        <ng-template #elseBlock>
+                            <mev-checkbox *ngIf="altStorage[currentDataset][item.key]" [info]='item'
+                                [alt]='altStorage[currentDataset]' [currentDataset]="currentDataset" version="2"
+                                [displayDetails]="true">
+                            </mev-checkbox>
+                        </ng-template>
+                    </div>
+                </div>
+                <div *ngFor="let item of sliderStorage[currentDataset] | keyvalue">
+                    <div *ngIf="advanceFields.includes(item.key)">
+                        <mev-slider [info]='item' [currentDataset]="currentDataset" [category]="item.key"
+                            [countNum]="sliderStorage[currentDataset][item.key]['count']"
+                            (childEvent)="setSliderValue($event)" [displayDetails]="false"
+                            (checkEvent)="onNotReportedChecked($event)" [mainQuery]="mainQuery" [sliderdata]="sliderStorage">
+                        </mev-slider>
+                    </div>
+                </div>
+            </div>
+            <div class="buttonRow">
+                <button mat-stroked-button color="accent" (click)="onDisplayAdvance()">
+                    <mat-icon aria-hidden="false" aria-label="Example home icon">tune</mat-icon> {{displayAdvance ?
+                    "Hide": "Show"}} Advance Filters
+                </button>
+            </div>
+        </div>
+    </mat-drawer>
 
     <div class="filter-sidenav-content">
-        <ng-container *ngIf="chosenDataset === ''">
+        <ng-container *ngIf="currentDataset === ''">
             <mev-public-datasets-list (datasetSelectedEvent)="setDataset($event)"></mev-public-datasets-list>
         </ng-container>
 
-        <div *ngIf="chosenDataset !== ''" id="go-back" (click)="backToBrowse()">
+        <div *ngIf="currentDataset !== ''" id="go-back" (click)="backToBrowse()">
             <mat-icon class="nav__icon" aria-label="Back to datasets">reply</mat-icon>
             <span class="nav__text">Back to browsing datasets</span>
         </div>
 
-        <ng-container *ngIf="chosenDataset === 'tcga-rnaseq'">
-            <tcga-rnaseq-explorer></tcga-rnaseq-explorer>
+        <ng-container *ngIf="currentDataset === 'tcga-rnaseq'">
+            <tcga-rnaseq-explorer [query]="searchQueryResults"></tcga-rnaseq-explorer>
         </ng-container>
 
-        <ng-container *ngIf="chosenDataset === 'target-rnaseq'">
-            <target-rnaseq-explorer></target-rnaseq-explorer>
+        <ng-container *ngIf="currentDataset === 'target-rnaseq'">
+            <target-rnaseq-explorer [query]="searchQueryResults"></target-rnaseq-explorer>
         </ng-container>
 
-        <ng-container *ngIf="chosenDataset === 'gtex-rnaseq'">
-            <gtex-rnaseq-explorer></gtex-rnaseq-explorer>
+        <ng-container *ngIf="currentDataset === 'gtex-rnaseq'">
+            <gtex-rnaseq-explorer [query]="searchQueryResults"></gtex-rnaseq-explorer>
         </ng-container>
-
     </div>
-
 </mat-drawer-container>

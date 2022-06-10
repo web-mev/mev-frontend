@@ -1,0 +1,87 @@
+.sliderLabel {
+    font-weight: bold;
+    font-size: 16px;
+    text-transform: capitalize;
+    height: 20px;
+    margin: 8px 10px;
+    display: inline-flex;
+}
+
+.labelContainer {
+    background-color: rgba(55, 71, 79, 0.8);
+    width: 108%;
+    height: 40px;
+    margin: -8px 0 10px -10px;
+    color: white;
+    display: flex;
+    flex-direction: row;
+}
+
+.ngx-slider {
+    margin: 50px 0;
+}
+.histogram {
+    margin-left: -35px;
+}
+
+// We need to use ::ng-deep to overcome view encapsulation
+::ng-deep {
+    .custom-slider .ngx-slider .ngx-slider-tick {
+        width: 1px;
+        height: 15px;
+        margin-left: 4px;
+        border-radius: 0;
+        background: rgba(55, 71, 79, 0.8);
+        top: -1px;
+    }
+
+    .ngx-slider .ngx-slider-bubble {
+        font-size: 12px !important;
+        margin-left: 4px !important;
+    }
+
+    .ngx-slider .ngx-slider-pointer {
+        cursor: pointer;
+        width: 24px !important;
+        height: 24px !important;
+        top: -10px !important;
+        background-color: #0db9f0;
+        z-index: 3;
+        border-radius: 16px;
+    }
+
+    .ngx-slider .ngx-slider-pointer:after {
+        content: "";
+        width: 8px !important;
+        height: 8px !important;
+        position: absolute;
+        top: 8px !important;
+        left: 8px !important;
+        border-radius: 4px;
+        background: #fff;
+    }
+    .custom-slider {
+        margin-top: -72px;
+    }
+}
+
+.checkBoxContent {
+    font-size: 13px;
+    text-transform: capitalize;
+}
+
+.checkboxContainer {
+    margin-top: -30px;
+    margin-bottom: 30px;
+    margin-left: 7px;
+}
+.expandIcon{
+    margin: auto 20px auto auto;
+    cursor: pointer;
+}
+.sliderCounter{
+    font-size: 12px;
+    font-weight: 400;
+    margin-left: 10px;
+    margin-top: 4px;
+}

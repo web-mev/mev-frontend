@@ -219,7 +219,8 @@ export class PublicDatasetsComponent implements OnInit {
     }
 
     let categoryArray = this.filterFields[dataset]
-    let tempQuery = filterItems.length === 0 ? missingRangeQuery : `${filterItems} OR ${missingRangeQuery}`;
+    // let tempQuery = filterItems.length === 0 ? missingRangeQuery : `${filterItems} OR ${missingRangeQuery}`;
+    let tempQuery = filterItems.length === 0 ? missingRangeQuery : `${filterItems}`;
     let query = `${this.API_URL}/public-datasets/query/${dataset}/?q=${tempQuery}&facet=true`;
 
     for (let i = 0; i < categoryArray.length; i++) {
@@ -426,7 +427,7 @@ export class PublicDatasetsComponent implements OnInit {
     let rangeQuery = '';
     for (let cat in this.sliderStorage[dataset]) {
       let data = this.sliderStorage[dataset][cat]
-      let temp = `${cat}:[${data["low"]} TO ${data["high"]}]`;
+      let temp = `(${cat}:[${data["low"]} TO ${data["high"]}] OR (* -${cat}:*))`;
       if (rangeQuery.length > 0) {
         rangeQuery += " AND " + temp;
       } else {

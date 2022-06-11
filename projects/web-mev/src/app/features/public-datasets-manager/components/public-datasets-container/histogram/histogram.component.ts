@@ -33,6 +33,7 @@ export class HistogramComponent implements OnChanges {
     this.queryParams = this.mainQuery;
     this.countArray = [];
     this.getData(this.currentDataset, this.category);
+    console.log("count array: ", this.countArray, this.queryParams)
   }
 
   getQueryResults(queryString) {

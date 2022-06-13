@@ -45,6 +45,8 @@ export class SliderPDSComponent extends PublicDatasetsComponent implements OnIni
       "high": this.maxValue
     }
     this.childEvent.emit(temp)
+    this.minValue = Math.floor(this.minValue)
+    this.maxValue = Math.floor(this.maxValue)
   }
 
   onCheckedNotReported(currResult, cat, dataset) {

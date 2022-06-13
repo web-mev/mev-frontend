@@ -1,4 +1,4 @@
-import { Component, OnChanges, ChangeDetectionStrategy, SimpleChanges, Input, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
 import { PublicDatasetsComponent } from '../public-datasets.component';
 
 @Component({
@@ -7,7 +7,7 @@ import { PublicDatasetsComponent } from '../public-datasets.component';
   styleUrls: ['./checkbox.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CheckBoxComponent implements OnChanges, OnInit {
+export class CheckBoxComponent implements OnInit {
   @Input() info;
   @Input() checked;
   @Input() title;
@@ -22,7 +22,8 @@ export class CheckBoxComponent implements OnChanges, OnInit {
   
   constructor(public pds: PublicDatasetsComponent) { }
 
-  ngOnChanges(changes: SimpleChanges): void {}
+  // ngOnChanges(changes: SimpleChanges): void {}
+
   ngOnInit(): void {
     this.objectLength = Object.keys(this.info.value).length;
   }

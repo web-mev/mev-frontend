@@ -20,9 +20,7 @@ export class CheckBoxComponent implements OnInit {
   minimum = 5
   objectLength;
   
-  constructor(public pds: PublicDatasetsComponent) { }
-
-  // ngOnChanges(changes: SimpleChanges): void {}
+  constructor(public pds: PublicDatasetsComponent) {}
 
   ngOnInit(): void {
     this.objectLength = Object.keys(this.info.value).length;

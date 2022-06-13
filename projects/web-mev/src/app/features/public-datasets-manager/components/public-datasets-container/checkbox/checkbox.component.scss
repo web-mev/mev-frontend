@@ -21,6 +21,7 @@ ul {
         text-transform: capitalize;
     }
 
+
     .mat-checkbox-layout .mat-checkbox-label {
         white-space: normal !important;
     }
@@ -30,6 +31,30 @@ ul {
     .mat-checkbox-layout .mat-checkbox-label {
         line-height: 14px;
         margin: 3px 0;
+    }
+    .counter {
+        margin-left: auto;
+        background-color: steelblue !important;
+        font-size: 12px;
+        color: #fff !important;
+        font-weight: bold;
+        margin-top: auto;
+        margin-bottom: auto;
+        margin-right: 5px;
+        padding: 2px 6px;
+        border-radius: 6px;
+    }
+    .unselectCounter {
+        margin-left: auto;
+        background-color: rgba(153, 153, 153, .4) !important;
+        font-size: 12px;
+        color: #fff !important;
+        font-weight: bold;
+        margin-top: auto;
+        margin-bottom: auto;
+        margin-right: 5px;
+        padding: 2px 6px;
+        border-radius: 6px;
     }
 }
 .checkboxSection {
@@ -60,18 +85,7 @@ ul {
     flex-direction: row;
 }
 
-.counter {
-    margin-left: auto;
-    background-color: steelblue !important;
-    font-size: 12px;
-    color: #fff !important;
-    font-weight: bold;
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-right: 5px;
-    padding: 2px 6px;
-    border-radius: 6px;
-}
+
 .checkboxContainer {
     display: flex;
     flex-direction: row;

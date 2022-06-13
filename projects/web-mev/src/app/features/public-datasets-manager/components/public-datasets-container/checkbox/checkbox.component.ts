@@ -22,7 +22,9 @@ export class CheckBoxComponent implements OnChanges, OnInit {
   
   constructor(public pds: PublicDatasetsComponent) { }
 
-  ngOnChanges(changes: SimpleChanges): void {}
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log("checkbox status: ", this.pds.checkboxStatus[this.currentDataset])
+  }
   ngOnInit(): void {
     this.objectLength = Object.keys(this.info.value).length;
   }

@@ -37,7 +37,8 @@ import { TopGoBubblePlotComponent } from './components/topgo/bubble-plot/bubble-
 import { PandaComponent } from './components/panda/panda.component';
 import { MatBadgeModule } from '@angular/material/badge';
 import { GeneMappingComponent } from './components/gene-mapping/geneMapping.component';
-import { SubnetVisualizationFormComponent } from './components/subnet-visualization/subnet-visualization.component'
+import { SubnetVisualizationFormComponent } from './components/subnet-visualization/subnet-visualization.component';
+import { DecontxComponent } from './components/decontx-decontamination/decontx.component'
 
 @NgModule({
   declarations: [
@@ -75,7 +76,8 @@ import { SubnetVisualizationFormComponent } from './components/subnet-visualizat
     TopGoBubblePlotComponent,
     PandaComponent,
     GeneMappingComponent,
-    SubnetVisualizationFormComponent
+    SubnetVisualizationFormComponent,
+    DecontxComponent
   ],
   imports: [CommonModule, SharedModule, DragDropModule, MatBadgeModule],
   exports: [
@@ -104,7 +106,8 @@ import { SubnetVisualizationFormComponent } from './components/subnet-visualizat
     TopGoBubblePlotComponent,
     PandaComponent,
     GeneMappingComponent,
-    SubnetVisualizationFormComponent
+    SubnetVisualizationFormComponent,
+    DecontxComponent
   ]
 })
 export class D3Module { }

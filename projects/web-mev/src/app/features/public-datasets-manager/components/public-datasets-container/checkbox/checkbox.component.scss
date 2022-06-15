@@ -21,40 +21,41 @@ ul {
         text-transform: capitalize;
     }
 
-
     .mat-checkbox-layout .mat-checkbox-label {
         white-space: normal !important;
     }
     .mat-checkbox-inner-container {
-        margin-top: 4px;
+        margin-top: 2px;
     }
     .mat-checkbox-layout .mat-checkbox-label {
         line-height: 14px;
-        margin: 3px 0;
+        margin: 2px 0;
     }
     .counter {
-        margin-left: auto;
+        margin: 1px 1px 1px auto;
         background-color: steelblue !important;
-        font-size: 12px;
+        font-size: 10px;
         color: #fff !important;
         font-weight: bold;
-        margin-top: auto;
-        margin-bottom: auto;
-        margin-right: 5px;
-        padding: 2px 6px;
-        border-radius: 6px;
+        padding: 5px 8px;
+        border-radius: 12px;
     }
     .unselectCounter {
-        margin-left: auto;
-        background-color: rgba(153, 153, 153, .4) !important;
-        font-size: 12px;
+        margin: 1px 1px 1px auto;
+        background-color: rgba(153, 153, 153, 0.4) !important;
+        font-size: 10px;
         color: #fff !important;
         font-weight: bold;
-        margin-top: auto;
-        margin-bottom: auto;
-        margin-right: 5px;
-        padding: 2px 6px;
-        border-radius: 6px;
+        padding: 5px 8px;
+        border-radius: 12px;
+    }
+    .checkboxContainer {
+        display: flex;
+        flex-direction: row;
+        box-sizing: border-box;
+        position: relative;
+        outline: none;
+        margin: 0px 0;
     }
 }
 .checkboxSection {
@@ -80,27 +81,17 @@ ul {
     height: 40px;
     margin: -8px 0 10px -10px;
     color: white;
-
     display: flex;
     flex-direction: row;
 }
 
-
-.checkboxContainer {
-    display: flex;
-    flex-direction: row;
-    box-sizing: border-box;
-    position: relative;
-    outline: none;
-    margin: 8px 0;
-}
 .mat-checkbox-layout .mat-checkbox-label {
     font-size: 14px;
 }
 .displayNone {
     display: none;
 }
-.expandIcon{
+.expandIcon {
     margin: auto 20px auto auto;
     cursor: pointer;
 }

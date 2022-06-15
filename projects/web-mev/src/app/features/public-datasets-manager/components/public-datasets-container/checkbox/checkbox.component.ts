@@ -15,14 +15,12 @@ export class CheckBoxComponent implements OnInit {
   @Input() alt
   @Input() version
   @Input() displayDetails
-  showDescription: boolean = false;
+  showDescription: boolean;
   filterSize: number = 5;
   minimum = 5
   objectLength;
   
-  constructor(public pds: PublicDatasetsComponent) { }
-
-  // ngOnChanges(changes: SimpleChanges): void {}
+  constructor(public pds: PublicDatasetsComponent) {}
 
   ngOnInit(): void {
     this.objectLength = Object.keys(this.info.value).length;
@@ -31,6 +29,7 @@ export class CheckBoxComponent implements OnInit {
   showMore(){
     this.showDescription = !this.showDescription;
     this.filterSize = this.showDescription === false ? 5 : 200;
+    console.log("show more changed: ", this.showDescription, this.filterSize)
   }
   
   expandSection(){

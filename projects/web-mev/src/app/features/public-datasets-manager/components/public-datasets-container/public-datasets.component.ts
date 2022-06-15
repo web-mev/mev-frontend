@@ -281,7 +281,6 @@ export class PublicDatasetsComponent implements OnInit {
             }
           }
 
-
         }
         //for the range queries only
         let facet_queries = res["facet_counts"]["facet_queries"];

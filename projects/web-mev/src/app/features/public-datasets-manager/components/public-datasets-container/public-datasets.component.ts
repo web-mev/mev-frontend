@@ -281,7 +281,6 @@ export class PublicDatasetsComponent implements OnInit {
             }
           }
 
-
         }
         //for the range queries only
         let facet_queries = res["facet_counts"]["facet_queries"];
@@ -292,7 +291,6 @@ export class PublicDatasetsComponent implements OnInit {
           this.sliderStorage[dataset][category]['count'] = count;
         }
       })
-      console.log("alt storage: ", this.altStorage[dataset], this.checkBoxObj[dataset])
   }
 
   onChecked(isChecked, category, subcategory, dataset) {

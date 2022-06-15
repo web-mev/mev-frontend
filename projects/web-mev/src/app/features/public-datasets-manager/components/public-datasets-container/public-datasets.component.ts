@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, ComponentFactoryResolver } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
@@ -292,6 +292,7 @@ export class PublicDatasetsComponent implements OnInit {
           this.sliderStorage[dataset][category]['count'] = count;
         }
       })
+      console.log("alt storage: ", this.altStorage[dataset], this.checkBoxObj[dataset])
   }
 
   onChecked(isChecked, category, subcategory, dataset) {

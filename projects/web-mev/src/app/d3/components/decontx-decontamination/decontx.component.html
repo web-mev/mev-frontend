@@ -1,4 +1,4 @@
-<!-- <mev-spinner-overlay *ngIf="isLoading"></mev-spinner-overlay> -->
+<mev-spinner-overlay *ngIf="isLoading"></mev-spinner-overlay>
 <mat-card class="analysis-card">
     <mat-card-header>
         <div mat-card-avatar class="analysis-card__img"></div>
@@ -33,7 +33,127 @@
             significant edge weights.
         </p>
     </mat-card-content>
-    <div id="histogram">
-
+    <div class="btn-panel">
+        <mat-button-toggle-group #viewMode="matButtonToggleGroup" value="log10" (change)="changeYAxis($event.value)">
+            <mat-button-toggle value="log10">
+                Log10( Count )
+            </mat-button-toggle>
+            <mat-button-toggle value="counts">
+                Counts
+            </mat-button-toggle>
+        </mat-button-toggle-group>
     </div>
+    <br>
+    <div class="sample-list-container">
+        <button class="saveObsBtn" mat-raised-button color="accent" (click)="onCreateCustomSampleSet()"
+            [disabled]="!selectedSamples.length">
+            <mat-icon>add</mat-icon>
+            {{'Save as a Sample Set'}}
+        </button>
+        <br>
+        <div class="sample-list">
+            <div id="selectedSamplesTitle">
+                <p>
+                    <span>
+                        Selected Samples:
+                    </span>
+                </p>
+            </div>
+            <span class="sample-list__item">
+                <mat-chip-list>
+                    <mat-chip class="sampleChips" color="amber"
+                        *ngFor="let item of selectedSamples | slice:0:50; let i=index">{{ item }}
+                    </mat-chip>
+                    <p *ngIf="selectedSamples.length > 50" id="selectedSamplesElips">
+                        <span *ngIf="selectedSamples.length < 1000" matBadge={{selectedSamples.length}}>
+                            ...
+                        </span>
+                        <span *ngIf="selectedSamples.length >= 1000" class="stretch-badge-small"
+                            matBadge={{selectedSamples.length}}>
+                            ...
+                        </span>
+                    </p>
+                </mat-chip-list>
+            </span>
+        </div>
+    </div>
+
+    <br>
+    <!-- <div *ngFor="let item of decontxClass | keyvalue">
+        <p>{{ item.key }}</p>
+    </div> -->
+    <mat-grid-list cols="3" rowHeight="2:1" *ngIf="decontxClass">
+        <mat-grid-tile *ngFor="let item of decontxClass | keyvalue">
+            <mat-grid-list cols="1" rowHeight="2:1">
+                <section class="checkbox">
+                    <mat-checkbox class="example-margin" [(ngModel)]="checkedObj[item.key]">
+                        Select Group {{item.key}}
+                    </mat-checkbox>
+                </section>
+                <div [attr.id]="'histogram' +item.key" class="histogram"></div>
+            </mat-grid-list>
+        </mat-grid-tile>
+        <!-- <mat-grid-tile>
+            <mat-grid-list cols="1" rowHeight="2:1">
+                <section class="checkbox">
+                    <mat-checkbox class="example-margin" [(ngModel)]="checkedObj['1']">
+                        Select Group
+                    </mat-checkbox>
+                </section>
+                <div id="histogram1" class="histogram"></div>
+            </mat-grid-list>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <mat-grid-list cols="1" rowHeight="2:1">
+                <section class="checkbox">
+                    <mat-checkbox class="example-margin" [(ngModel)]="checkedObj['2']">
+                        Select Group
+                    </mat-checkbox>
+                </section>
+                <div id="histogram2" class="histogram"></div>
+            </mat-grid-list>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <mat-grid-list cols="1" rowHeight="2:1">
+                <section class="checkbox">
+                    <mat-checkbox class="example-margin" [(ngModel)]="checkedObj['3']">
+                        Select Group
+                    </mat-checkbox>
+                </section>
+                <div id="histogram3" class="histogram"></div>
+            </mat-grid-list>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <mat-grid-list cols="1" rowHeight="2:1">
+                <section class="checkbox">
+                    <mat-checkbox class="example-margin" [(ngModel)]="checkedObj['4']">
+                        Select Group
+                    </mat-checkbox>
+                </section>
+                <div id="histogram4" class="histogram"></div>
+            </mat-grid-list>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <mat-grid-list cols="1" rowHeight="2:1">
+                <section class="checkbox">
+                    <mat-checkbox class="example-margin" [(ngModel)]="checkedObj['5']">
+                        Select Group
+                    </mat-checkbox>
+                </section>
+                <div id="histogram5" class="histogram"></div>
+            </mat-grid-list>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <mat-grid-list cols="1" rowHeight="2:1">
+                <section class="checkbox">
+                    <mat-checkbox class="example-margin" [(ngModel)]="checkedObj['6']">
+                        Select Group
+                    </mat-checkbox>
+                </section>
+                <div id="histogram6" class="histogram"></div>
+            </mat-grid-list>
+        </mat-grid-tile> -->
+
+    </mat-grid-list>
+
 </mat-card>

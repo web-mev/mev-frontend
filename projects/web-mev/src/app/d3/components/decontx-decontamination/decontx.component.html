@@ -8,35 +8,21 @@
     <br>
     <mat-card-content class="analysis-card__main">
         <p class="analysis-card__instruction">
-            Visualize your Panda regulatory network inference below.
+            Visualize your Decontx inference below.
         </p>
         <p class="analysis-card__instruction">
-            Note that visualizing the entire network is not feasible; Panda generates an edge weight (a measure
-            of
-            the evidence for regulation) for each combination of gene and transcription factor and data of that
-            size
-            is not easily visualized. Hence, we provide tools to subset the results and show the most strongly
-            connected elements of the regulatory network. We do this by finding the genes with the greatest sum
-            of
-            the edge weights and selecting the "children" (transcription factors) which have the largest edge
-            weights. For each of those TFs, in turn, we find the genes with the greatest edge weights.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+            ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+            nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
+            anim id est laborum
         </p>
-        <p class="analysis-card__instruction">
-            The number of layers controls how many times we perform that process of switching between finding
-            the
-            top genes or TFs. The number of children determines the number of "top hits" we find at each level.
-        </p>
-        <p class="analysis-card__instruction">
-            Alternatively, if you have a gene or TF of interest, you can search on that to find networks based
-            on
-            that search term. Note, however, that a successful gene-based query may not have particularly
-            significant edge weights.
-        </p>
+
     </mat-card-content>
     <div class="btn-panel">
         <mat-button-toggle-group #viewMode="matButtonToggleGroup" value="log10" (change)="changeYAxis($event.value)">
             <mat-button-toggle value="log10">
-                Log10( Count )
+                Log10( Counts )
             </mat-button-toggle>
             <mat-button-toggle value="counts">
                 Counts
@@ -46,30 +32,31 @@
     <br>
     <div class="sample-list-container">
         <button class="saveObsBtn" mat-raised-button color="accent" (click)="onCreateCustomSampleSet()"
-            [disabled]="!selectedSamples.length">
+            [disabled]="!displayNames.length">
             <mat-icon>add</mat-icon>
-            {{'Save as a Sample Set'}}
+            Save as a Cell Set
         </button>
+        <br>
         <br>
         <div class="sample-list">
             <div id="selectedSamplesTitle">
                 <p>
                     <span>
-                        Selected Samples:
+                        Selected Cells:
                     </span>
                 </p>
             </div>
             <span class="sample-list__item">
                 <mat-chip-list>
                     <mat-chip class="sampleChips" color="amber"
-                        *ngFor="let item of selectedSamples | slice:0:50; let i=index">{{ item }}
+                        *ngFor="let item of displayNames | slice:0:50; let i=index">{{ item }}
                     </mat-chip>
-                    <p *ngIf="selectedSamples.length > 50" id="selectedSamplesElips">
-                        <span *ngIf="selectedSamples.length < 1000" matBadge={{selectedSamples.length}}>
+                    <p *ngIf="displayNames.length > 50" id="selectedSamplesElips">
+                        <span *ngIf="displayNames.length < 1000" matBadge={{displayNames.length}}>
                             ...
                         </span>
-                        <span *ngIf="selectedSamples.length >= 1000" class="stretch-badge-small"
-                            matBadge={{selectedSamples.length}}>
+                        <span *ngIf="displayNames.length >= 1000" class="stretch-badge-small"
+                            matBadge={{displayNames.length}}>
                             ...
                         </span>
                     </p>
@@ -77,83 +64,18 @@
             </span>
         </div>
     </div>
-
     <br>
-    <!-- <div *ngFor="let item of decontxClass | keyvalue">
-        <p>{{ item.key }}</p>
-    </div> -->
-    <mat-grid-list cols="3" rowHeight="2:1" *ngIf="decontxClass">
+    <mat-grid-list [cols]="windowWidth < 1650 ? 2 : 3" rowHeight="2:1" *ngIf="decontxClass">
         <mat-grid-tile *ngFor="let item of decontxClass | keyvalue">
             <mat-grid-list cols="1" rowHeight="2:1">
                 <section class="checkbox">
-                    <mat-checkbox class="example-margin" [(ngModel)]="checkedObj[item.key]">
+                    <mat-checkbox class="example-margin" [(ngModel)]="checkedObj[item.key]"
+                        (click)="onAddToSampleSet(item.key)">
                         Select Group {{item.key}}
                     </mat-checkbox>
                 </section>
-                <div [attr.id]="'histogram' +item.key" class="histogram"></div>
+                <div [attr.id]="'histogram' + item.key" class="histogram"></div>
             </mat-grid-list>
         </mat-grid-tile>
-        <!-- <mat-grid-tile>
-            <mat-grid-list cols="1" rowHeight="2:1">
-                <section class="checkbox">
-                    <mat-checkbox class="example-margin" [(ngModel)]="checkedObj['1']">
-                        Select Group
-                    </mat-checkbox>
-                </section>
-                <div id="histogram1" class="histogram"></div>
-            </mat-grid-list>
-        </mat-grid-tile>
-        <mat-grid-tile>
-            <mat-grid-list cols="1" rowHeight="2:1">
-                <section class="checkbox">
-                    <mat-checkbox class="example-margin" [(ngModel)]="checkedObj['2']">
-                        Select Group
-                    </mat-checkbox>
-                </section>
-                <div id="histogram2" class="histogram"></div>
-            </mat-grid-list>
-        </mat-grid-tile>
-        <mat-grid-tile>
-            <mat-grid-list cols="1" rowHeight="2:1">
-                <section class="checkbox">
-                    <mat-checkbox class="example-margin" [(ngModel)]="checkedObj['3']">
-                        Select Group
-                    </mat-checkbox>
-                </section>
-                <div id="histogram3" class="histogram"></div>
-            </mat-grid-list>
-        </mat-grid-tile>
-        <mat-grid-tile>
-            <mat-grid-list cols="1" rowHeight="2:1">
-                <section class="checkbox">
-                    <mat-checkbox class="example-margin" [(ngModel)]="checkedObj['4']">
-                        Select Group
-                    </mat-checkbox>
-                </section>
-                <div id="histogram4" class="histogram"></div>
-            </mat-grid-list>
-        </mat-grid-tile>
-        <mat-grid-tile>
-            <mat-grid-list cols="1" rowHeight="2:1">
-                <section class="checkbox">
-                    <mat-checkbox class="example-margin" [(ngModel)]="checkedObj['5']">
-                        Select Group
-                    </mat-checkbox>
-                </section>
-                <div id="histogram5" class="histogram"></div>
-            </mat-grid-list>
-        </mat-grid-tile>
-        <mat-grid-tile>
-            <mat-grid-list cols="1" rowHeight="2:1">
-                <section class="checkbox">
-                    <mat-checkbox class="example-margin" [(ngModel)]="checkedObj['6']">
-                        Select Group
-                    </mat-checkbox>
-                </section>
-                <div id="histogram6" class="histogram"></div>
-            </mat-grid-list>
-        </mat-grid-tile> -->
-
     </mat-grid-list>
-
 </mat-card>

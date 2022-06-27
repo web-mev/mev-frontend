@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, OnInit, ViewChildren } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit, ViewChildren, OnChanges, SimpleChanges } from '@angular/core';
 import { environment } from '@environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { catchError } from "rxjs/operators";
@@ -8,8 +8,7 @@ import * as d3 from 'd3';
 import { MatDialog } from '@angular/material/dialog';
 import { AddSampleSetComponent } from '../dialogs/add-sample-set/add-sample-set.component';
 import { MetadataService } from '@app/core/metadata/metadata.service';
-import { CustomSetType } from '@app/_models/metadata';
-
+import { CustomSetType, CustomSet } from '@app/_models/metadata';
 
 @Component({
     selector: 'mev-decontx',
@@ -26,8 +25,11 @@ export class DecontxComponent implements OnInit {
     selectedSamples = [];
     clusterType: string = '';
     checkedObj = {};
-    // plotReady = false
     isLoading = true;
+    selectedSamplesNames = [];
+    displayNames = [];
+    windowWidth;
+    customObservationSets;
 
     constructor(
         private httpClient: HttpClient,
@@ -38,6 +40,7 @@ export class DecontxComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
+        this.windowWidth = window.innerWidth
         let decontxID = this.outputs["decontaminate_output"];
         this.apiService
             .getResourceContent(decontxID)
@@ -58,14 +61,9 @@ export class DecontxComponent implements OnInit {
                 }
                 for (let item in this.decontxClass) {
                     this.checkedObj[item] = false;
-                    // await new Promise(resolve => setTimeout(resolve, 3000)); // 3 sec
-                    // this.plotReady = true;
-                    // this.isLoading = false;
                     this.createHistogram(item);
                 }
-                this.changeYAxis('counts')
-                this.isLoading = true
-                await new Promise(resolve => setTimeout(resolve, 1)); // 3 sec
+                await new Promise(resolve => setTimeout(resolve, 1)); // 0.001 sec
                 this.changeYAxis('log10')
                 this.isLoading = false
             });
@@ -73,13 +71,7 @@ export class DecontxComponent implements OnInit {
 
     createHistogram(group) {
         let data = this.decontxClass[group];
-        let location = 'histogram' + group
-        // let location = group
-        // d3.select("#histogram")
-        //     .selectAll('svg')
-        //     .remove()
-        //     .exit()
-
+        let location = 'histogram' + group;
         d3.select(`#${location}`)
             .selectAll('svg')
             .remove()
@@ -197,38 +189,52 @@ export class DecontxComponent implements OnInit {
 
         svg.append("circle").attr("cx", width).attr("cy", 30).attr("r", 4).style("fill", "#69b3a2")
         svg.append("text").attr("x", width + 10).attr("y", 30).text("Class: " + group).style("font-size", "12px").attr("alignment-baseline", "middle")
-
     }
 
     changeYAxis(value) {
         this.toggleValue = value;
         for (let item in this.decontxClass) {
             this.createHistogram(item)
-
         }
     }
-
+    
     onCreateCustomSampleSet() {
         let samples = this.selectedSamples.map(elem => ({ id: elem }));
         const dialogRef = this.dialog.open(AddSampleSetComponent, {
-            data: { type: this.clusterType === 'observationType' ? CustomSetType.ObservationSet : CustomSetType.FeatureSet }
+            data: { type: CustomSetType.ObservationSet }
         });
 
         dialogRef.afterClosed().subscribe(customSetData => {
             if (customSetData) {
-                const customSet = {
+                const observationSet: CustomSet = {
                     name: customSetData.name,
-                    type: this.clusterType === 'observationType' ? CustomSetType.ObservationSet : CustomSetType.FeatureSet,
+                    type: CustomSetType.ObservationSet,
                     color: customSetData.color,
                     elements: samples,
                     multiple: true
                 };
+
+                if (this.metadataService.addCustomSet(observationSet)) {
+                    this.customObservationSets = this.metadataService.getCustomObservationSets();
+                }
             }
-        })
+        });
+
     }
 
     onAddToSampleSet(button) {
-        console.log("id: ", button)
-        // this.selectedSamples.concat(group)
+        if (this.checkedObj[button] === false) {
+            this.selectedSamplesNames.push(button)
+            let temp = "Class " + button;
+            this.displayNames.push(temp)
+        } else {
+            this.selectedSamplesNames = this.selectedSamplesNames.filter(name => name !== button)
+            let temp = "Class " + button;
+            this.displayNames = this.displayNames.filter(name => name !== temp)
+        }
+        this.selectedSamples = [];
+        for (let i = 1; i < this.selectedSamplesNames.length + 1; i++) {
+            this.selectedSamples = this.selectedSamples.concat(this.decontxIds[i])
+        }
     }
 }

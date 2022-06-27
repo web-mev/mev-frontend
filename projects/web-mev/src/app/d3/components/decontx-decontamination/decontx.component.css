@@ -6,7 +6,7 @@
 }
 
 .analysis-card__img {
-    background-image: url('~assets/icons/panda.png');
+    background-image: url('~assets/icons/histogram.png');
     background-size: 30px;
     background-position: top right;
     background-repeat: no-repeat;
@@ -51,9 +51,9 @@ mat-slider {
     margin-left: 50px;
     margin-top: 20px;
 }
-/* .histogram{
-    margin-left: -120px;
+
+@media screen and (max-width: 1449px){
+    .mat-grid-tile-content{
+        display: initial;
+    }
 }
-.mat-checkbox{
-    margin-left: 250px;
-} */

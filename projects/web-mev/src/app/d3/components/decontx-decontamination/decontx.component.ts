@@ -16,6 +16,7 @@ import { CustomSetType, CustomSet } from '@app/_models/metadata';
     styleUrls: ['./decontx.component.css'],
     changeDetection: ChangeDetectionStrategy.Default
 })
+
 export class DecontxComponent implements OnInit {
     @Input() outputs;
     private readonly API_URL = environment.apiUrl;
@@ -66,7 +67,15 @@ export class DecontxComponent implements OnInit {
                 await new Promise(resolve => setTimeout(resolve, 1)); // 0.001 sec
                 this.changeYAxis('log10')
                 this.isLoading = false
-            });
+            },
+                error => {
+                    console.log("Error: ", error);
+                    let message = `Error: ${error.error.error}`
+                    this.notificationService.warn(message);
+                    throw error;
+                }
+
+            );
     }
 
     createHistogram(group) {
@@ -78,7 +87,7 @@ export class DecontxComponent implements OnInit {
             .exit()
 
         // set the dimensions and margins of the graph
-        let margin = { top: 10, right: 130, bottom: 50, left: 100 },
+        let margin = { top: 10, right: 80, bottom: 80, left: 100 },
             width = 500 - margin.left - margin.right,
             height = 200 - margin.top - margin.bottom;
 
@@ -103,7 +112,7 @@ export class DecontxComponent implements OnInit {
             .append('text')
             .classed('label', true)
             .attr('x', width / 1.25)
-            .attr('y', height + margin.bottom - 10)
+            .attr('y', height + margin.bottom * .5)
             .style('text-anchor', 'end')
             .style('font-size', '12px')
             .text("Estimated Contamination ( % )");
@@ -123,7 +132,7 @@ export class DecontxComponent implements OnInit {
                 .range([height, 1]);
             y.domain([0, Math.log10(d3.max(bins, function (d) { return d.length; })) * 1.25]);   // d3.hist has to be called before the Y axis obviously
             svg.append("g")
-                .call(d3.axisLeft(y))
+                .call(d3.axisLeft(y).ticks(6))
 
             svg
                 .append('text')
@@ -158,7 +167,7 @@ export class DecontxComponent implements OnInit {
                 .range([height, 1]);
             y.domain([0, (d3.max(bins, function (d) { return d.length; })) * 1.25]);
             svg.append("g")
-                .call(d3.axisLeft(y).tickFormat(d => Math.round(d))) //for frequency Y scale
+                .call(d3.axisLeft(y).ticks(6)) //for frequency Y scale
 
             svg
                 .append('text')
@@ -186,9 +195,6 @@ export class DecontxComponent implements OnInit {
                 .style("fill", "#69b3a2")
                 .style("opacity", .6)
         }
-
-        svg.append("circle").attr("cx", width).attr("cy", 30).attr("r", 4).style("fill", "#69b3a2")
-        svg.append("text").attr("x", width + 10).attr("y", 30).text("Class: " + group).style("font-size", "12px").attr("alignment-baseline", "middle")
     }
 
     changeYAxis(value) {
@@ -197,7 +203,7 @@ export class DecontxComponent implements OnInit {
             this.createHistogram(item)
         }
     }
-    
+
     onCreateCustomSampleSet() {
         let samples = this.selectedSamples.map(elem => ({ id: elem }));
         const dialogRef = this.dialog.open(AddSampleSetComponent, {
@@ -219,17 +225,16 @@ export class DecontxComponent implements OnInit {
                 }
             }
         });
-
     }
 
     onAddToSampleSet(button) {
         if (this.checkedObj[button] === false) {
             this.selectedSamplesNames.push(button)
-            let temp = "Class " + button;
+            let temp = "Group " + button;
             this.displayNames.push(temp)
         } else {
             this.selectedSamplesNames = this.selectedSamplesNames.filter(name => name !== button)
-            let temp = "Class " + button;
+            let temp = "Group " + button;
             this.displayNames = this.displayNames.filter(name => name !== temp)
         }
         this.selectedSamples = [];

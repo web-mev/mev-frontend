@@ -4,8 +4,6 @@
         <div mat-card-avatar class="analysis-card__img"></div>
         <mat-card-title>DecontX Decontamination: {{ outputs?.job_name }}</mat-card-title>
     </mat-card-header>
-
-    <br>
     <mat-card-content class="analysis-card__main">
         <p class="analysis-card__instruction">
             Visualize your Decontx inference below.
@@ -17,7 +15,6 @@
             nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
             anim id est laborum
         </p>
-
     </mat-card-content>
     <div class="btn-panel">
         <mat-button-toggle-group #viewMode="matButtonToggleGroup" value="log10" (change)="changeYAxis($event.value)">
@@ -42,7 +39,7 @@
             <div id="selectedSamplesTitle">
                 <p>
                     <span>
-                        Selected Cells:
+                        Selected Cell Groups:
                     </span>
                 </p>
             </div>
@@ -51,15 +48,6 @@
                     <mat-chip class="sampleChips" color="amber"
                         *ngFor="let item of displayNames | slice:0:50; let i=index">{{ item }}
                     </mat-chip>
-                    <p *ngIf="displayNames.length > 50" id="selectedSamplesElips">
-                        <span *ngIf="displayNames.length < 1000" matBadge={{displayNames.length}}>
-                            ...
-                        </span>
-                        <span *ngIf="displayNames.length >= 1000" class="stretch-badge-small"
-                            matBadge={{displayNames.length}}>
-                            ...
-                        </span>
-                    </p>
                 </mat-chip-list>
             </span>
         </div>

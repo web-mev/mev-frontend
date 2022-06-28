@@ -227,14 +227,14 @@ export class DecontxComponent implements OnInit {
         });
     }
 
-    onAddToSampleSet(button) {
-        if (this.checkedObj[button] === false) {
-            this.selectedSamplesNames.push(button)
-            let temp = "Group " + button;
+    onAddToSampleSet(setName) {
+        if (this.checkedObj[setName] === false) {
+            this.selectedSamplesNames.push(setName)
+            let temp = "Group " + setName;
             this.displayNames.push(temp)
         } else {
-            this.selectedSamplesNames = this.selectedSamplesNames.filter(name => name !== button)
-            let temp = "Group " + button;
+            this.selectedSamplesNames = this.selectedSamplesNames.filter(name => name !== setName)
+            let temp = "Group " + setName;
             this.displayNames = this.displayNames.filter(name => name !== temp)
         }
         this.selectedSamples = [];

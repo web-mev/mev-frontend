@@ -1,0 +1,59 @@
+#cy {
+    height: 700px;
+    background-color: transparent;
+    position: relative;
+    top: -20px;
+}
+
+.analysis-card__img {
+    background-image: url('~assets/icons/histogram.png');
+    background-size: 30px;
+    background-position: top right;
+    background-repeat: no-repeat;
+}
+
+.analysis-card__content {
+    padding-top: 1rem;
+}
+
+.mat-radio-button~.mat-radio-button {
+    margin-left: 16px;
+}
+
+#radio-group-axis {
+    display: block;
+    font-weight: 500;
+}
+
+mat-slider {
+    width: 350px;
+}
+
+#downloadButton {
+    float: right;
+    z-index: 99;
+}
+
+.searchField{
+    width: 50%;
+}
+
+.filterButton{
+    margin-left: 15px;
+}
+
+.analysis-card__instruction{
+    color: rgba(0,0,0,.8);
+}
+
+.checkbox{
+    /* margin-top: -200px; */
+    margin-left: 50px;
+    margin-top: 20px;
+}
+
+@media screen and (max-width: 1449px){
+    .mat-grid-tile-content{
+        display: initial;
+    }
+}

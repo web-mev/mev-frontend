@@ -78,6 +78,10 @@
     <ng-container *ngIf="operationName === 'Gene ID Mapping'">
         <mev-gene-mapping [outputs]="outputs"></mev-gene-mapping>
     </ng-container>
+    
+    <ng-container *ngIf="operationName === 'SCTK DecontX decontamination'">
+        <mev-decontx [outputs]="outputs"></mev-decontx>
+    </ng-container>
 </div>
 
 <ng-template #error>

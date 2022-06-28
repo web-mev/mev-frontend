@@ -2,6 +2,8 @@ import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@
 import { FormBuilder } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
+import { catchError } from "rxjs/operators";
+import { NotificationService } from '@core/notifications/notification.service';
 
 @Component({
   selector: 'mev-public-datasets',
@@ -137,7 +139,12 @@ export class PublicDatasetsComponent implements OnInit {
   excludeList = [];
   mainQuery: string = "*";
 
-  constructor(fb: FormBuilder, private httpClient: HttpClient, private ref: ChangeDetectorRef) { }
+  constructor(
+    fb: FormBuilder,
+    private httpClient: HttpClient,
+    private ref: ChangeDetectorRef,
+    private readonly notificationService: NotificationService,
+  ) { }
 
   ngOnInit(): void { }
 
@@ -233,6 +240,13 @@ export class PublicDatasetsComponent implements OnInit {
 
   getQueryResults(queryString) {
     return this.httpClient.get(queryString)
+      .pipe(
+        catchError(error => {
+          console.log("Error: ", error);
+          let message = `Error: ${error.error.error}`
+          this.notificationService.warn(message)
+          throw error;
+        }))
   }
 
   updateFilterValues(query, checkboxStatus, dataset, initializeCheckbox) {

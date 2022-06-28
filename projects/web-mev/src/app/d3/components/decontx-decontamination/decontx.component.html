@@ -1,0 +1,69 @@
+<mev-spinner-overlay *ngIf="isLoading"></mev-spinner-overlay>
+<mat-card class="analysis-card">
+    <mat-card-header>
+        <div mat-card-avatar class="analysis-card__img"></div>
+        <mat-card-title>DecontX Decontamination: {{ outputs?.job_name }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="analysis-card__main">
+        <p class="analysis-card__instruction">
+            Visualize your Decontx inference below.
+        </p>
+        <p class="analysis-card__instruction">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+            ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+            nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
+            anim id est laborum
+        </p>
+    </mat-card-content>
+    <div class="btn-panel">
+        <mat-button-toggle-group #viewMode="matButtonToggleGroup" value="log10" (change)="changeYAxis($event.value)">
+            <mat-button-toggle value="log10">
+                Log10( Counts )
+            </mat-button-toggle>
+            <mat-button-toggle value="counts">
+                Counts
+            </mat-button-toggle>
+        </mat-button-toggle-group>
+    </div>
+    <br>
+    <div class="sample-list-container">
+        <button class="saveObsBtn" mat-raised-button color="accent" (click)="onCreateCustomSampleSet()"
+            [disabled]="!displayNames.length">
+            <mat-icon>add</mat-icon>
+            Save as a Cell Set
+        </button>
+        <br>
+        <br>
+        <div class="sample-list">
+            <div id="selectedSamplesTitle">
+                <p>
+                    <span>
+                        Selected Cell Groups:
+                    </span>
+                </p>
+            </div>
+            <span class="sample-list__item">
+                <mat-chip-list>
+                    <mat-chip class="sampleChips" color="amber"
+                        *ngFor="let item of displayNames | slice:0:50; let i=index">{{ item }}
+                    </mat-chip>
+                </mat-chip-list>
+            </span>
+        </div>
+    </div>
+    <br>
+    <mat-grid-list [cols]="windowWidth < 1650 ? 2 : 3" rowHeight="2:1" *ngIf="decontxClass">
+        <mat-grid-tile *ngFor="let item of decontxClass | keyvalue">
+            <mat-grid-list cols="1" rowHeight="2:1">
+                <section class="checkbox">
+                    <mat-checkbox class="example-margin" [(ngModel)]="checkedObj[item.key]"
+                        (click)="onAddToSampleSet(item.key)">
+                        Select Group {{item.key}}
+                    </mat-checkbox>
+                </section>
+                <div [attr.id]="'histogram' + item.key" class="histogram"></div>
+            </mat-grid-list>
+        </mat-grid-tile>
+    </mat-grid-list>
+</mat-card>

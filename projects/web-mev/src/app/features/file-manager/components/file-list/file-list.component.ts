@@ -55,6 +55,7 @@ export class FileListComponent implements OnInit {
   displayedColumns = [
     'name',
     'resource_type',
+    'format_type',
     'status',
     'size',
     'created',
@@ -68,6 +69,7 @@ export class FileListComponent implements OnInit {
   uploadProgressData: Map<string, object>;
   availableResourceTypes = {};
   resourceTypeData;
+  acceptableResourceTypes = {};
 
   // due to the polling nature of the file browser, once a user selects a resource type in the dropdown,
   // we need to keep track of what they did. Otherwise, when the polling feature refreshes the table, the 
@@ -126,7 +128,14 @@ export class FileListComponent implements OnInit {
     // tmp hot fix. note the loadResourceTypes function below.
     this.fileService.getResourceTypes().subscribe(res => {
       this.resourceTypeData = res;
+
+      for (let item of res){
+        let key = item.resource_type_key
+        let avail = item.acceptable_formats
+        this.acceptableResourceTypes[key] = avail
+      }
     })
+    
   }
 
   loadResourceTypes() {
@@ -170,10 +179,13 @@ export class FileListComponent implements OnInit {
   }
 
   setResourceType($event, row) {
-    this.validatingInfo[row.id] = $event.value;
+    // this.validatingInfo[row.id] = $event.value;
+    console.log("event: ", $event, row)
+    this.validatingInfo[row.id] = this.tempStorage[row.id]['fileType'];
     const updateData: any = {
       id: row.id,
-      resource_type: $event.value
+      resource_type: this.tempStorage[row.id]['fileType'],
+      file_format: $event.value
     };
     row.is_active = false;
     this.fileService.updateFile(updateData).subscribe(data => {
@@ -228,11 +240,77 @@ export class FileListComponent implements OnInit {
       // the resource type may be null, but we may be in the process of 
       // validating it. Return the value that the user just set, which is 
       // stored in the validatingInfo object
+      
       if (Object.keys(this.validatingInfo).includes(row.id) && row.status === "Validating...") {
         return this.validatingInfo[row.id];
       }
       return '---';
     }
+  }
+  getFileFormatVal(row) {
+    if (row.file_format) {
+      // if the resource was already validated for another type, but we are attempting to
+      // change it, this keeps the dropdown on this "new" selected value. Otherwise, the refresh of the table
+      // will appear to revert to the old type
+      if (Object.keys(this.validatingInfo).includes(row.id)) {
+        if (row.is_active) {
+          // if we are here, it means that the file has completed validation.
+          delete this.validatingInfo[row.id];
+
+          // also need to modify the behaviorsubject that is tracking this file.
+          // This will then trigger the polling behavior to cease before the maximum
+          // polling time is reached.
+          const filesBeingValidated = this.currentlyValidatingBS.value;
+          const updatedArray = [];
+
+          // if there are multiple files simultaneously being validated, we 
+          // need to ensure we keep those.
+          for (const i in filesBeingValidated) {
+            const uuid = filesBeingValidated[i];
+            if (row.id !== uuid) {
+              updatedArray.push(uuid);
+            }
+          }
+          this.currentlyValidatingBS.next(updatedArray);
+
+          return row.file_format
+        } else {
+          return this.validatingInfo[row.id];
+        }
+      }
+
+      // simply return the already-validated resource type.
+      return row.file_format
+
+    } else {
+      // the resource type may be null, but we may be in the process of 
+      // validating it. Return the value that the user just set, which is 
+      // stored in the validatingInfo object
+      if (Object.keys(this.validatingInfo).includes(row.id) && row.status === "Validating...") {
+        return this.validatingInfo[row.id];
+      }
+      return '---';
+    }
+  }
+
+  tempStorage = {};
+  setFileType($event, row){
+    let id = row.id;
+    let selectedFileType = $event.value;
+    let obj = {}
+    obj["fileType"]= selectedFileType
+    this.tempStorage[id] = obj;
+  }
+
+  setFormatType($event, row){
+    // let optionsArray = this.acceptableResourceTypes[this.tempStorage[row.id]['fileType']]
+    // let id = row.id;
+    // let index = $event.value;
+    // let selectedFileType = index.value.key
+    // let obj = {}
+    // obj["formatType"]= selectedFileType
+    // this.tempStorage[id] = obj;
+    this.setResourceType($event, row)
   }
 
 

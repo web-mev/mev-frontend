@@ -19,6 +19,7 @@ export class ContactComponent {
 
   onSubmit(event: any) {
     let endPoint = `${this.API_URL}/feedback/`
+    console.log("endpoint: ", endPoint)
     this.postData(endPoint, { "message": event.target.comments.value }).subscribe(res => {
       this.notificationService.warn("The message has been successfully sent to our developers. We appreciate your feedback and will get back to you soon.");
     })

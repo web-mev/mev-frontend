@@ -4,7 +4,7 @@ import {
   OnInit,
   ViewChild,
   ChangeDetectionStrategy,
-  ChangeDetectorRef
+  ChangeDetectorRef,
 } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DataSource } from '@angular/cdk/collections';
@@ -13,11 +13,10 @@ import {
   fromEvent,
   merge,
   timer,
-  interval,
   Observable,
   Subscription
 } from 'rxjs';
-import { map, debounceTime, distinctUntilChanged, takeUntil, filter, tap } from 'rxjs/operators';
+import { map, debounceTime, distinctUntilChanged, takeUntil, filter} from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -67,8 +66,8 @@ export class FileListComponent implements OnInit {
   dataSource: ExampleDataSource | null;
   id: string;
   uploadProgressData: Map<string, object>;
-  availableResourceTypes = {};
   resourceTypeData;
+  availableResourceTypes = {};
   acceptableResourceTypes = {};
 
   // due to the polling nature of the file browser, once a user selects a resource type in the dropdown,
@@ -123,19 +122,19 @@ export class FileListComponent implements OnInit {
         }
       }
     );
-    
+
     //Gets data from API to fill File Types Modal
     // tmp hot fix. note the loadResourceTypes function below.
     this.fileService.getResourceTypes().subscribe(res => {
       this.resourceTypeData = res;
 
-      for (let item of res){
+      for (let item of res) {
         let key = item.resource_type_key
         let avail = item.acceptable_formats
         this.acceptableResourceTypes[key] = avail
       }
     })
-    
+
   }
 
   loadResourceTypes() {
@@ -161,7 +160,6 @@ export class FileListComponent implements OnInit {
   * Starts a polling routine which checks for the validation status
   */
   startPollingRefresh(maxSecs: number) {
-
     // wait 100ms, then emit every 5s
     const intervalSource = timer(100, 5000);
 
@@ -178,18 +176,23 @@ export class FileListComponent implements OnInit {
     )
   }
 
-  setResourceType($event, row) {
-    // this.validatingInfo[row.id] = $event.value;
-    console.log("event: ", $event, row)
-    this.validatingInfo[row.id] = this.tempStorage[row.id]['fileType'];
-    const updateData: any = {
-      id: row.id,
-      resource_type: this.tempStorage[row.id]['fileType'],
-      file_format: $event.value
-    };
+  setResourceType($event, row, itemChanged) {
+    this.validatingInfo[row.id] = row.resource_type ? row.resource_type : this.currentSelectedFileType[row.id]['fileType'];
+    let updateData: any = {}
+    if (itemChanged === 'fileTypeAndFormat') {
+      updateData = {
+        id: row.id,
+        resource_type: this.currentSelectedFileType[row.id]['fileType'] ? this.currentSelectedFileType[row.id]['fileType'] : row.resource_type,
+        file_format: $event.value
+      };
+    } else if (itemChanged === 'fileTypeOnly') {
+      updateData = {
+        id: row.id,
+        resource_type: this.currentSelectedFileType[row.id]['fileType'] ? this.currentSelectedFileType[row.id]['fileType'] : row.resource_type
+      };
+    }
     row.is_active = false;
     this.fileService.updateFile(updateData).subscribe(data => {
-
       // get the current files being validated and add this new one
       const filesBeingValidated = this.currentlyValidatingBS.value;
       filesBeingValidated.push(data['id']);
@@ -226,13 +229,12 @@ export class FileListComponent implements OnInit {
             }
           }
           this.currentlyValidatingBS.next(updatedArray);
-
           return row.resource_type
+
         } else {
           return this.validatingInfo[row.id];
         }
       }
-
       // simply return the already-validated resource type.
       return row.resource_type
 
@@ -240,7 +242,7 @@ export class FileListComponent implements OnInit {
       // the resource type may be null, but we may be in the process of 
       // validating it. Return the value that the user just set, which is 
       // stored in the validatingInfo object
-      
+
       if (Object.keys(this.validatingInfo).includes(row.id) && row.status === "Validating...") {
         return this.validatingInfo[row.id];
       }
@@ -293,24 +295,27 @@ export class FileListComponent implements OnInit {
     }
   }
 
-  tempStorage = {};
-  setFileType($event, row){
+  currentSelectedFileType = {};
+  formatTypeNeedsChange = {}
+  setFileType($event, row) {
     let id = row.id;
     let selectedFileType = $event.value;
     let obj = {}
-    obj["fileType"]= selectedFileType
-    this.tempStorage[id] = obj;
+    obj["fileType"] = selectedFileType
+    this.currentSelectedFileType[id] = obj;
+    if(!this.acceptableResourceTypes[selectedFileType].some(item => item.key === row.file_format)){
+      this.formatTypeNeedsChange[id] = true;
+    }
+
+    if(row.resource_type && this.acceptableResourceTypes[selectedFileType].some(item => item.key === row.file_format)){
+      this.setResourceType($event, row, 'fileTypeOnly')
+    }
   }
 
-  setFormatType($event, row){
-    // let optionsArray = this.acceptableResourceTypes[this.tempStorage[row.id]['fileType']]
-    // let id = row.id;
-    // let index = $event.value;
-    // let selectedFileType = index.value.key
-    // let obj = {}
-    // obj["formatType"]= selectedFileType
-    // this.tempStorage[id] = obj;
-    this.setResourceType($event, row)
+  setFormatType($event, row) {
+    let id = row.id;
+    this.formatTypeNeedsChange[id] = false;
+    this.setResourceType($event, row, 'fileTypeAndFormat')
   }
 
 

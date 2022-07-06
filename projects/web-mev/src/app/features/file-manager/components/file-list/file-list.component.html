@@ -62,7 +62,7 @@
     <ng-container matColumnDef="resource_type">
       <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">File type</mat-header-cell>
       <mat-cell *matCellDef="let row">
-        <mat-select (selectionChange)="setFileType($event, row)" [value]="getResourceTypeVal(row)">
+        <mat-select (selectionChange)="setFileType($event, row)" [value]="row.status === ''? getResourceTypeVal(row) : '---'">
           <mat-option value="---" disabled>Please specify file type</mat-option>
           <mat-option *ngFor="let type of availableResourceTypes | keyvalue" [value]="type.key">
             {{ type.value.title }}
@@ -74,18 +74,35 @@
     <ng-container matColumnDef="format_type">
       <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">Format Type</mat-header-cell>
       <mat-cell *matCellDef="let row">
-        <mat-select *ngIf="tempStorage[row.id] || row.file_format" (selectionChange)="setFormatType($event, row)"
+        <mat-select *ngIf="currentSelectedFileType[row.id] || row.file_format" (selectionChange)="setFormatType($event, row)"
           [value]="getFileFormatVal(row)">
-          <div *ngIf="row.file_format === null">
+          <div *ngIf="row.file_format === null && !formatTypeNeedsChange[row.id]">
             <mat-option value="---" disabled>Please specify format type</mat-option>
-            <mat-option *ngFor="let type of acceptableResourceTypes[tempStorage[row.id]['fileType']] | keyvalue"
+            <mat-option *ngFor="let type of acceptableResourceTypes[currentSelectedFileType[row.id]['fileType']] | keyvalue"
               [value]="type.value.key">
               {{ type.value.key }}
             </mat-option>
           </div>
-          <div *ngIf="row.file_format">
+          <div *ngIf="row.file_format && row.resource_type === null || row.status !== '' && !formatTypeNeedsChange[row.id]">
             <mat-option value="---" disabled>Please specify format type</mat-option>
-            <mat-option *ngFor="let type of acceptableResourceTypes[row.resource_type] | keyvalue" [value]="type.value.key">
+            <mat-option *ngFor="let type of acceptableResourceTypes[row.resource_type] | keyvalue"
+              [value]="type.value.key">
+              {{ type.value.key }}
+            </mat-option>
+          </div>
+          <!-- if everything is okay, have file_format be disabled -->
+          <div *ngIf="row.file_format && row.resource_type !== null && row.status === '' && !formatTypeNeedsChange[row.id]">
+            <mat-option value="---" disabled>Please specify format type</mat-option>
+            <mat-option *ngFor="let type of acceptableResourceTypes[row.resource_type] | keyvalue"
+              [value]="type.value.key" disabled>
+              {{ type.value.key }}
+            </mat-option>
+          </div>
+          <!-- if file_type has been changed and new file_formats need to be loaded -->
+          <div *ngIf="formatTypeNeedsChange[row.id]">
+            <mat-option value="---" disabled>Please specify format type</mat-option>
+            <mat-option *ngFor="let type of acceptableResourceTypes[currentSelectedFileType[row.id]['fileType']] | keyvalue"
+              [value]="type.value.key">
               {{ type.value.key }}
             </mat-option>
           </div>
@@ -96,7 +113,7 @@
 
     <ng-container matColumnDef="status">
       <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">Status</mat-header-cell>
-      <mat-cell *matCellDef="let row"> {{ row.status}}</mat-cell>
+      <mat-cell *matCellDef="let row" class="statusMessage"> {{ row.status}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="size">

@@ -37,8 +37,9 @@ ul {
         font-size: 10px;
         color: #fff !important;
         font-weight: bold;
-        padding: 5px 8px;
-        border-radius: 12px;
+        padding: 5px 9px;
+        height: 26px;
+        border-radius: 40px;
     }
     .unselectCounter {
         margin: 1px 1px 1px auto;
@@ -46,8 +47,9 @@ ul {
         font-size: 10px;
         color: #fff !important;
         font-weight: bold;
-        padding: 5px 8px;
-        border-radius: 12px;
+        padding: 5px 9px;
+        height: 26px;
+        border-radius: 40px;
     }
     .checkboxContainer {
         display: flex;
@@ -56,6 +58,9 @@ ul {
         position: relative;
         outline: none;
         margin: 0px 0;
+    }
+    .mat-chip{
+        vertical-align: middle !important;
     }
 }
 .checkboxSection {

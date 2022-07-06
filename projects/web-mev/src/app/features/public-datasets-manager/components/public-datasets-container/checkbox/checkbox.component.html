@@ -5,22 +5,25 @@
             "expand_less"}}</mat-icon>
     </div>
     <div *ngIf="displayDetails">
+        <!-- Initial view with no items checked -->
         <div *ngIf="version === '1'">
             <div *ngFor="let cat of info.value | keyvalue | slice:0:filterSize; let i = index">
                 <div *ngFor=" let object of info.value[i] | keyvalue" class="checkboxContainer">
                     <mat-checkbox class="checkBoxContent"
                         [checked]="pds.checkboxStatus[currentDataset][info.key][object.key]"
-                        (change)="pds.onChecked($event.checked, info.key, object.key, currentDataset)">
+                        (change)="pds.onChecked($event.checked, info.key, object.key, currentDataset);">
                         {{object.key}}
                     </mat-checkbox>
-                    <mat-chip
+                    <mat-chip 
                         [ngClass]="pds.checkboxStatus[currentDataset][info.key][object.key] ? 'counter' : 'unselectCounter'">
                         {{info.value[i][object.key] }}</mat-chip>
                 </div>
             </div>
         </div>
+        <!-- Checkboxes with individual filters applied to them -->
         <div *ngIf="version === '2'">
-            <div *ngFor="let cat of alt[info.key].data | keyvalue | slice:0:filterSize; let i = index">
+            <!-- Displayed checked items at the top -->
+            <div *ngFor="let cat of alt[info.key].data | keyvalue | slice:0:200; let i = index">
                 <div *ngFor=" let object of alt[info.key].data[i] | keyvalue" class="checkboxContainer">
                     <mat-checkbox *ngIf="pds.checkboxStatus[currentDataset][info.key][object.key]"
                         class="checkBoxContent" [checked]="pds.checkboxStatus[currentDataset][info.key][object.key]"
@@ -32,6 +35,7 @@
                         {{alt[info.key].data[i][object.key]}}</mat-chip>
                 </div>
             </div>
+            <!-- Displayed unchecked items -->
             <div *ngFor="let cat of alt[info.key].data | keyvalue | slice:0:filterSize; let i = index">
                 <div *ngFor=" let object of alt[info.key].data[i] | keyvalue" class="checkboxContainer">
                     <mat-checkbox *ngIf="!pds.checkboxStatus[currentDataset][info.key][object.key]"

@@ -12,7 +12,8 @@
   <p>
     Note that we need to know what type of file we are working with. Hence, after upload, we
     ask that you specify a file type. To learn more about the available file types and their
-    formats, <a class="linkType" (click)="viewFileTypes()">click here</a>. If applicable, you can preview the file to check that we have
+    formats, <a class="linkType" (click)="viewFileTypes()">click here</a>. If applicable, you can preview the file to
+    check that we have
     parsed it correctly. If
     something does not appear to be correct, you may have to edit your file offline and
     upload again.
@@ -61,8 +62,8 @@
     <ng-container matColumnDef="resource_type">
       <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">File type</mat-header-cell>
       <mat-cell *matCellDef="let row">
-        <mat-select (selectionChange)="setResourceType($event, row)" [value]="getResourceTypeVal(row)">
-          <mat-option value ="---" disabled>Please specify file type</mat-option>
+        <mat-select (selectionChange)="setFileType($event, row)" [value]="row.status === ''? getResourceTypeVal(row) : '---'">
+          <mat-option value="---" disabled>Please specify file type</mat-option>
           <mat-option *ngFor="let type of availableResourceTypes | keyvalue" [value]="type.key">
             {{ type.value.title }}
           </mat-option>
@@ -70,9 +71,49 @@
       </mat-cell>
     </ng-container>
 
+    <ng-container matColumnDef="format_type">
+      <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">Format Type</mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        <mat-select *ngIf="currentSelectedFileType[row.id] || row.file_format" (selectionChange)="setFormatType($event, row)"
+          [value]="getFileFormatVal(row)">
+          <div *ngIf="row.file_format === null && !formatTypeNeedsChange[row.id]">
+            <mat-option value="---" disabled>Please specify format type</mat-option>
+            <mat-option *ngFor="let type of acceptableResourceTypes[currentSelectedFileType[row.id]['fileType']] | keyvalue"
+              [value]="type.value.key">
+              {{ type.value.key }}
+            </mat-option>
+          </div>
+          <div *ngIf="row.file_format && row.resource_type === null || row.status !== '' && !formatTypeNeedsChange[row.id]">
+            <mat-option value="---" disabled>Please specify format type</mat-option>
+            <mat-option *ngFor="let type of acceptableResourceTypes[row.resource_type] | keyvalue"
+              [value]="type.value.key">
+              {{ type.value.key }}
+            </mat-option>
+          </div>
+          <!-- if everything is okay, have file_format be disabled -->
+          <div *ngIf="row.file_format && row.resource_type !== null && row.status === '' && !formatTypeNeedsChange[row.id]">
+            <mat-option value="---" disabled>Please specify format type</mat-option>
+            <mat-option *ngFor="let type of acceptableResourceTypes[row.resource_type] | keyvalue"
+              [value]="type.value.key" disabled>
+              {{ type.value.key }}
+            </mat-option>
+          </div>
+          <!-- if file_type has been changed and new file_formats need to be loaded -->
+          <div *ngIf="formatTypeNeedsChange[row.id]">
+            <mat-option value="---" disabled>Please specify format type</mat-option>
+            <mat-option *ngFor="let type of acceptableResourceTypes[currentSelectedFileType[row.id]['fileType']] | keyvalue"
+              [value]="type.value.key">
+              {{ type.value.key }}
+            </mat-option>
+          </div>
+
+        </mat-select>
+      </mat-cell>
+    </ng-container>
+
     <ng-container matColumnDef="status">
       <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">Status</mat-header-cell>
-      <mat-cell *matCellDef="let row"> {{ row.status}}</mat-cell>
+      <mat-cell *matCellDef="let row" class="statusMessage"> {{ row.status}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="size">

@@ -17,6 +17,7 @@ export class File {
     public name: string,
     public resource_type: string, // FileType
     public readable_resource_type: string,
+    public file_format: string,
     public owner_email: string,
     public is_active: boolean,
     public is_public: boolean,
@@ -44,6 +45,7 @@ export class FileAdapter {
       item.name,
       item.resource_type,
       item.readable_resource_type,
+      item.file_format,
       item.owner_email,
       item.is_active,
       item.is_public,

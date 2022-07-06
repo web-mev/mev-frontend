@@ -46,7 +46,6 @@ export class DecontxComponent implements OnInit {
         this.apiService
             .getResourceContent(decontxID)
             .subscribe(async res => {
-                console.log("res: ", res)
                 for (let i = 0; i < res.length; i++) {
                     let currentClass = res[i]['values']['decontx_class'];
                     let currentContaminationNumber = res[i]['values']['decontx_contamination'];

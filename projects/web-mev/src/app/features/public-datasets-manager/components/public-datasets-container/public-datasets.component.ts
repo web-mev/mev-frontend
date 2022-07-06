@@ -166,7 +166,6 @@ export class PublicDatasetsComponent implements OnInit {
     }
   }
 
-
   createRangeDataStorage(dataset) {
     //example of the query
     //https://api-dev.tm4.org/api/public-datasets/query/target-rnaseq/?q=*&stats=true&stats.field={!tag=piv1,piv2%20min=true%20max=true}age_at_diagnosis
@@ -191,7 +190,6 @@ export class PublicDatasetsComponent implements OnInit {
             "not_reported": true
           }
         }
-
       })
   }
 
@@ -226,7 +224,6 @@ export class PublicDatasetsComponent implements OnInit {
     }
 
     let categoryArray = this.filterFields[dataset]
-    // let tempQuery = filterItems.length === 0 ? missingRangeQuery : `${filterItems} OR ${missingRangeQuery}`;
     let tempQuery = filterItems.length === 0 ? missingRangeQuery : `${filterItems}`;
     let query = `${this.API_URL}/public-datasets/query/${dataset}/?q=${tempQuery}&facet=true`;
 
@@ -294,7 +291,6 @@ export class PublicDatasetsComponent implements OnInit {
               }
             }
           }
-
         }
         //for the range queries only
         let facet_queries = res["facet_counts"]["facet_queries"];
@@ -371,7 +367,6 @@ export class PublicDatasetsComponent implements OnInit {
         }
         let temp2 = dataset + "_" + cat;
         if (!this.excludeList.includes(temp2)) {
-          //Need to add conditional on if checked box marked
           if (missingRangeQuery.length === 0) {
             missingRangeQuery += `(* -${cat}:*)`
           } else {
@@ -382,7 +377,6 @@ export class PublicDatasetsComponent implements OnInit {
 
       rangeQuery = (missingRangeQuery.length === 0) ? `(${rangeQuery})` : `(${rangeQuery}) OR (${missingRangeQuery})`;
       this.searchQueryResults = (newQueryString.length > 0) ? `${newQueryString} AND ${rangeQuery}` : rangeQuery;
-
       let tempQuery = this.searchQueryResults.length === 0 ? '*' : this.searchQueryResults;
       let query = `${this.API_URL}/public-datasets/query/${dataset}/?q=${tempQuery}&facet=true`;
       query += "&facet.field=" + mainCat;
@@ -392,7 +386,6 @@ export class PublicDatasetsComponent implements OnInit {
       }
       this.altStorage[dataset][mainCat]["altQuery"] = query;
     }
-
     for (let cat in this.altStorage[dataset]) {
       this.isLoading = true;
       let query = this.altStorage[dataset][cat]['altQuery'];
@@ -440,7 +433,9 @@ export class PublicDatasetsComponent implements OnInit {
     let rangeQuery = '';
     for (let cat in this.sliderStorage[dataset]) {
       let data = this.sliderStorage[dataset][cat]
-      let temp = `(${cat}:[${data["low"]} TO ${data["high"]}] OR (* -${cat}:*))`;
+      let excludeString = dataset + "_" + cat;
+      let temp = this.excludeList.includes(excludeString) ? `(${cat}:[${data["low"]} TO ${data["high"]}])` : `(${cat}:[${data["low"]} TO ${data["high"]}] OR (* -${cat}:*))`;
+
       if (rangeQuery.length > 0) {
         rangeQuery += " AND " + temp;
       } else {
@@ -448,9 +443,7 @@ export class PublicDatasetsComponent implements OnInit {
       }
     }
     rangeQuery = `(${rangeQuery})`;
-
     this.searchQueryResults = (newQueryString.length > 0) ? `${newQueryString} AND ${rangeQuery}` : rangeQuery;
-
     let temp = this.addSearchQuery(this.currentDataset, this.searchQueryResults)
     this.updateFilterValues(temp, this.checkboxStatus[dataset], dataset, false)
   }

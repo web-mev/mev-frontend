@@ -1,47 +1,6 @@
-// import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-// import { FileService } from '@app/features/file-manager/services/file-manager.service';
-// import { NotificationService } from '@core/notifications/notification.service';
-// import { PublicDatasetService } from '../../services/public-datasets.service';
-// import { GtexComponent } from '../gtex/gtex.component';
-// import { MatDialog } from '@angular/material/dialog';
 
-// @Component({
-//   selector: 'gtex-rnaseq-explorer',
-//   templateUrl: './gtex-rnaseq.component.html',
-//   styleUrls: ['./gtex-rnaseq.component.scss'],
-//   changeDetection: ChangeDetectionStrategy.OnPush
-// })
-// export class GtexRnaseqComponent extends GtexComponent implements OnInit {
-//   datasetTag = 'gtex-rnaseq';
-//   name_map_key = 'gtex_type_to_name_map'
 
-//   constructor(
-//     public cdRef: ChangeDetectorRef,
-//     public pdService: PublicDatasetService,
-//     public notificationService: NotificationService,
-//     public fileService: FileService,
-//     public dialog: MatDialog
-//   ) {
-//     super(cdRef, pdService, notificationService, fileService, dialog);
-//   }
-
-//   ngOnInit(): void {
-//     this.fetchData(this.datasetTag, this.name_map_key);
-//   }
-
-//   createDataset(dataType: string) {
-//     this._createDataset(dataType, this.datasetTag);
-//   }
-// }
-
-import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Input,
-  OnChanges
-} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input, OnChanges, Output, EventEmitter } from '@angular/core';
 import { FileService } from '@app/features/file-manager/services/file-manager.service';
 import { NotificationService } from '@core/notifications/notification.service';
 import { PublicDatasetService } from '../../services/public-datasets.service';
@@ -59,7 +18,8 @@ import { PublicDatasetExportNameDialogComponent } from '../export-name-dialog/ex
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GtexRnaseqComponent extends GdcRnaseqComponent implements OnChanges, OnInit {
-  @Input() query: string = "placeholder for nowx"
+  @Input() query: string = "";
+  @Output() someEvent = new EventEmitter<string>();
   datasetTag = 'gtex-rnaseq';
   name_map_key = 'gtex_type_to_name_map';
   tissue_types_url = '';
@@ -138,7 +98,7 @@ export class GtexRnaseqComponent extends GdcRnaseqComponent implements OnChanges
         // "project" each of these tissues corresponds to. We get that by adding
         // to the fl=... param
 
-        url_suffix = datasetTag + `?q=tissue:"${tissue_name}" AND ${this.query}&rows=${count}&fl=sample_id`
+        url_suffix = (this.query.length === 0) ? datasetTag + `?q=tissue:"${tissue_name}"&rows=${count}&fl=sample_id` : datasetTag + `?q=tissue:"${tissue_name}" AND ${this.query}&rows=${count}&fl=sample_id`;
         $observable_dict[tissue_name] = this.pdService.makeSolrQuery(url_suffix);
       }
     }
@@ -195,6 +155,7 @@ export class GtexRnaseqComponent extends GdcRnaseqComponent implements OnChanges
             this.notificationService.success('Your files are being prepared.' +
               ' You can check the status of these in the file browser.'
             );
+            // this.someEvent.emit();
           }
         );
       }

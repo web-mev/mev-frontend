@@ -24,7 +24,8 @@
                     <mev-slider [info]='item' [currentDataset]="currentDataset" [category]="item.key"
                         [countNum]="sliderStorage[currentDataset][item.key]['count']"
                         (childEvent)="setSliderValue($event)" [displayDetails]="true"
-                        (checkEvent)="onNotReportedChecked($event)" [mainQuery]="mainQuery" [sliderdata]="sliderStorage">
+                        (checkEvent)="onNotReportedChecked($event)" [mainQuery]="mainQuery"
+                        [sliderdata]="sliderStorage">
                     </mev-slider>
                 </div>
             </div>
@@ -48,7 +49,8 @@
                         <mev-slider [info]='item' [currentDataset]="currentDataset" [category]="item.key"
                             [countNum]="sliderStorage[currentDataset][item.key]['count']"
                             (childEvent)="setSliderValue($event)" [displayDetails]="false"
-                            (checkEvent)="onNotReportedChecked($event)" [mainQuery]="mainQuery" [sliderdata]="sliderStorage">
+                            (checkEvent)="onNotReportedChecked($event)" [mainQuery]="mainQuery"
+                            [sliderdata]="sliderStorage">
                         </mev-slider>
                     </div>
                 </div>
@@ -73,15 +75,16 @@
         </div>
 
         <ng-container *ngIf="currentDataset === 'tcga-rnaseq'">
-            <tcga-rnaseq-explorer [query]="searchQueryResults"></tcga-rnaseq-explorer>
+            <tcga-rnaseq-explorer [query]="searchQueryResults" (someEvent)="resetVariables()"></tcga-rnaseq-explorer>
         </ng-container>
 
         <ng-container *ngIf="currentDataset === 'target-rnaseq'">
-            <target-rnaseq-explorer [query]="searchQueryResults"></target-rnaseq-explorer>
+            <target-rnaseq-explorer [query]="searchQueryResults" (someEvent)="resetVariables()">
+            </target-rnaseq-explorer>
         </ng-container>
 
         <ng-container *ngIf="currentDataset === 'gtex-rnaseq'">
-            <gtex-rnaseq-explorer [query]="searchQueryResults"></gtex-rnaseq-explorer>
+            <gtex-rnaseq-explorer [query]="searchQueryResults" (someEvent)="resetVariables()"></gtex-rnaseq-explorer>
         </ng-container>
     </div>
 </mat-drawer-container>

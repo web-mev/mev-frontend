@@ -126,7 +126,6 @@ export class FileListComponent implements OnInit {
     //Gets data from API to fill File Types Modal
     // tmp hot fix. note the loadResourceTypes function below.
     this.fileService.getResourceTypes().subscribe(res => {
-      console.log("res: ", res)
       this.resourceTypeData = res;
 
       for (let item of res) {

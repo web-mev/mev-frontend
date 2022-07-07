@@ -1,11 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Input,
-  OnChanges
-} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input, OnChanges, Output, EventEmitter } from '@angular/core';
 import { FileService } from '@app/features/file-manager/services/file-manager.service';
 import { NotificationService } from '@core/notifications/notification.service';
 import { PublicDatasetService } from '../../services/public-datasets.service';
@@ -23,7 +16,8 @@ import { PublicDatasetExportNameDialogComponent } from '../export-name-dialog/ex
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TargetRnaseqComponent extends GdcRnaseqComponent implements OnChanges, OnInit {
-  @Input() query: string = "placeholder for nowx"
+  @Input() query: string = "";
+  @Output() someEvent = new EventEmitter<string>();
   datasetTag = 'target-rnaseq';
   name_map_key = 'target_type_to_name_map';
   tissue_types_url = '';
@@ -134,7 +128,7 @@ export class TargetRnaseqComponent extends GdcRnaseqComponent implements OnChang
         for(let i in this.selectedNames){
             let type_id = this.selectedNames[i];
             let count = this.type_count_dict[type_id];
-            url_suffix = datasetTag + `?q=project_id:"${type_id}"  AND ${this.query}&rows=${count}&fl=id`;
+            url_suffix = (this.query.length === 0) ? datasetTag + `?q=project_id:"${type_id}"&rows=${count}&fl=id` : datasetTag + `?q=project_id:"${type_id}" AND ${this.query}&rows=${count}&fl=id`;
             $observable_dict[type_id] = this.pdService.makeSolrQuery(url_suffix);
         }
     } else if(dataType === 'byTissue'){
@@ -145,7 +139,7 @@ export class TargetRnaseqComponent extends GdcRnaseqComponent implements OnChang
             // using the "cancer type" as the key, we need to also find out which 
             // "project" each of these tissues corresponds to. We get that by adding
             // to the fl=... param
-            url_suffix = datasetTag + `?q=tissue_or_organ_of_origin:"${tissue_name}" AND ${this.query}&rows=${count}&fl=id,project_id`;
+            url_suffix = (this.query.length === 0) ? datasetTag + `?q=tissue_or_organ_of_origin:"${tissue_name}"&rows=${count}&fl=id,project_id` : datasetTag + `?q=tissue_or_organ_of_origin:"${tissue_name}" AND ${this.query}&rows=${count}&fl=id,project_id`;
             $observable_dict[tissue_name] = this.pdService.makeSolrQuery(url_suffix);
         }
     }
@@ -201,7 +195,9 @@ export class TargetRnaseqComponent extends GdcRnaseqComponent implements OnChang
                     this.notificationService.success('Your files are being prepared.' +
                         ' You can check the status of these in the file browser.'
                     );
+                    // this.someEvent.emit();
                 }
+                
             );  
         }    
     );

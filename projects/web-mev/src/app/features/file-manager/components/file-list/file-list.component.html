@@ -72,7 +72,7 @@
     </ng-container>
 
     <ng-container matColumnDef="format_type">
-      <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">Format Type</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">Format Type Test</mat-header-cell>
       <mat-cell *matCellDef="let row">
         <mat-select *ngIf="currentSelectedFileType[row.id] || row.file_format" (selectionChange)="setFormatType($event, row)"
           [value]="getFileFormatVal(row)">

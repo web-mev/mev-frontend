@@ -303,10 +303,11 @@ export class FileListComponent implements OnInit {
     let obj = {}
     obj["fileType"] = selectedFileType
     this.currentSelectedFileType[id] = obj;
+    console.log("from setFileType: ", selectedFileType, this.acceptableResourceTypes)
     if(!this.acceptableResourceTypes[selectedFileType].some(item => item.key === row.file_format)){
       this.formatTypeNeedsChange[id] = true;
     }
-
+    console.log("row: ", row)
     if(row.resource_type && this.acceptableResourceTypes[selectedFileType].some(item => item.key === row.file_format)){
       this.setResourceType($event, row, 'fileTypeOnly')
     }

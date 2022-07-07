@@ -4,14 +4,14 @@
         <div mat-card-avatar class="analysis-card__img"></div>
         <mat-card-title>DecontX Decontamination: {{ outputs?.job_name }}</mat-card-title>
     </mat-card-header>
-    <mat-card-content class="analysis-card__main">
+    <!-- <mat-card-content class="analysis-card__main">
         <p class="analysis-card__instruction">
             DecontX is a Bayesian method to estimate and remove contamination in individual cells in single cell RNASeq
             experiments. You can find details at: <a
                 href="https://genomebiology.biomedcentral.com/articles/10.1186/s13059-020-1950-6" target="_blank">Yang S
                 2022</a>
         </p>
-    </mat-card-content>
+    </mat-card-content> -->
     <br>
     <div class="btn-panel">
         <mat-button-toggle-group #viewMode="matButtonToggleGroup" value="log10" (change)="changeYAxis($event.value)">

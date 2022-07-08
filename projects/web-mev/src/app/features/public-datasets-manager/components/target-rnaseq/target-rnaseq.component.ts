@@ -1,13 +1,12 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input, OnChanges, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input, OnChanges } from '@angular/core';
 import { FileService } from '@app/features/file-manager/services/file-manager.service';
 import { NotificationService } from '@core/notifications/notification.service';
 import { PublicDatasetService } from '../../services/public-datasets.service';
 import { GdcRnaseqComponent } from '../gdc_base/gdc-base.component';
 import { MatDialog } from '@angular/material/dialog';
 import { forkJoin } from 'rxjs';
-import {PublicDatasetsComponent} from '../public-datasets-container/public-datasets.component';
+import { PublicDatasetsComponent } from '../public-datasets-container/public-datasets.component';
 import { PublicDatasetExportNameDialogComponent } from '../export-name-dialog/export-name-dialog.component';
-
 
 @Component({
   selector: 'target-rnaseq-explorer',
@@ -17,11 +16,10 @@ import { PublicDatasetExportNameDialogComponent } from '../export-name-dialog/ex
 })
 export class TargetRnaseqComponent extends GdcRnaseqComponent implements OnChanges, OnInit {
   @Input() query: string = "";
-  @Output() someEvent = new EventEmitter<string>();
   datasetTag = 'target-rnaseq';
   name_map_key = 'target_type_to_name_map';
   tissue_types_url = '';
-  types_url ='';
+  types_url = '';
 
   constructor(
     public cdRef: ChangeDetectorRef,
@@ -38,8 +36,8 @@ export class TargetRnaseqComponent extends GdcRnaseqComponent implements OnChang
     this.fetchDataTarget(this.datasetTag, this.name_map_key);
   }
 
-  ngOnInit(): void {}
-  
+  ngOnInit(): void { }
+
 
   createDataset(dataType: string) {
     this._createDatasetTarget(dataType, this.datasetTag);
@@ -57,7 +55,7 @@ export class TargetRnaseqComponent extends GdcRnaseqComponent implements OnChang
 
     let originalTypeQueryURL = 'target-rnaseq/?q=*:*&facet=on&facet.field=project_id&rows=0&facet.gender.sort';
     this.types_url = (this.query.length === 0) ? originalTypeQueryURL : `${this.datasetTag}/?q=${this.query}&facet=on&facet.field=project_id&facet.gender.sort`;
-    
+
     $observable_dict['solr_query'] = this.pdService.makeSolrQuery(this.types_url);
     $observable_dict['db_query'] = this.pdService.getPublicDatasetDetails(datasetTag);
     forkJoin($observable_dict).subscribe(
@@ -83,9 +81,11 @@ export class TargetRnaseqComponent extends GdcRnaseqComponent implements OnChang
           })
         }
         this.cdRef.markForCheck();
+        this.getCurrentCount();
       }
+
     );
-    
+
     let originalTissueQueryURL = 'target-rnaseq/?q=*:*&facet=on&facet.field=tissue_or_organ_of_origin&rows=0&facet.gender.sort';
     this.tissue_types_url = (this.query.length === 0) ? originalTissueQueryURL : `${this.datasetTag}/?q=${this.query}&facet=on&facet.field=tissue_or_organ_of_origin&facet.gender.sort`;
 
@@ -106,16 +106,17 @@ export class TargetRnaseqComponent extends GdcRnaseqComponent implements OnChang
           })
         }
         this.cdRef.markForCheck();
+        this.getCurrentCount();
       }
     );
 
   }
 
-  _createDatasetTarget(dataType: string, datasetTag: string){
+  _createDatasetTarget(dataType: string, datasetTag: string) {
     let $observable_dict = {};
 
-    const dialogRef = this.dialog.open(PublicDatasetExportNameDialogComponent, {disableClose: true});
-  
+    const dialogRef = this.dialog.open(PublicDatasetExportNameDialogComponent, { disableClose: true });
+
     // we add the observable returned by `afterClosed` so that we can simultaneously query the backend
     // for sample IDs corresponding to the users selection(s) PLUS get any custom name they provide
     // for this data export. By putting all these observables into an object, we can then use the forkJoin
@@ -124,82 +125,122 @@ export class TargetRnaseqComponent extends GdcRnaseqComponent implements OnChang
     this.cdRef.markForCheck();
     let url_suffix = '';
     // will have type (TCGA, TARGET, etc. identifier) (or tissue) addressing an Observable
-    if(dataType === 'byType'){
-        for(let i in this.selectedNames){
-            let type_id = this.selectedNames[i];
-            let count = this.type_count_dict[type_id];
-            url_suffix = (this.query.length === 0) ? datasetTag + `?q=project_id:"${type_id}"&rows=${count}&fl=id` : datasetTag + `?q=project_id:"${type_id}" AND ${this.query}&rows=${count}&fl=id`;
-            $observable_dict[type_id] = this.pdService.makeSolrQuery(url_suffix);
-        }
-    } else if(dataType === 'byTissue'){
-        for(let i in this.selectedNames){
-            let tissue_name = this.selectedNames[i];
-            let count = this.tissue_count_dict[tissue_name];
-            // since the data is organized (on the backend) into a structured HDFS
-            // using the "cancer type" as the key, we need to also find out which 
-            // "project" each of these tissues corresponds to. We get that by adding
-            // to the fl=... param
-            url_suffix = (this.query.length === 0) ? datasetTag + `?q=tissue_or_organ_of_origin:"${tissue_name}"&rows=${count}&fl=id,project_id` : datasetTag + `?q=tissue_or_organ_of_origin:"${tissue_name}" AND ${this.query}&rows=${count}&fl=id,project_id`;
-            $observable_dict[tissue_name] = this.pdService.makeSolrQuery(url_suffix);
-        }
+    if (dataType === 'byType') {
+      for (let i in this.selectedNames) {
+        let type_id = this.selectedNames[i];
+        let count = this.type_count_dict[type_id];
+        url_suffix = (this.query.length === 0) ? datasetTag + `?q=project_id:"${type_id}"&rows=${count}&fl=id` : datasetTag + `?q=project_id:"${type_id}" AND ${this.query}&rows=${count}&fl=id`;
+        $observable_dict[type_id] = this.pdService.makeSolrQuery(url_suffix);
+      }
+    } else if (dataType === 'byTissue') {
+      for (let i in this.selectedNames) {
+        let tissue_name = this.selectedNames[i];
+        let count = this.tissue_count_dict[tissue_name];
+        // since the data is organized (on the backend) into a structured HDFS
+        // using the "cancer type" as the key, we need to also find out which 
+        // "project" each of these tissues corresponds to. We get that by adding
+        // to the fl=... param
+        url_suffix = (this.query.length === 0) ? datasetTag + `?q=tissue_or_organ_of_origin:"${tissue_name}"&rows=${count}&fl=id,project_id` : datasetTag + `?q=tissue_or_organ_of_origin:"${tissue_name}" AND ${this.query}&rows=${count}&fl=id,project_id`;
+        $observable_dict[tissue_name] = this.pdService.makeSolrQuery(url_suffix);
+      }
     }
     // forkJoin forces all the observables to complete and then takes
     // their results. If we don't do this, the subsequent request to
     // create the dataset can be 'waiting' for the list of sample IDs
     // and hence the request for dataset creation will be incomplete/invalid.
     forkJoin($observable_dict).subscribe(
-        results => {
-            let datasetName = results['output_name'];
-            delete results['output_name'];
+      results => {
+        let datasetName = results['output_name'];
+        delete results['output_name'];
 
-            // a value of `null` here is a signal that the user aborted
-            // creation of the dataset via the modal (the one which asks
-            // them to provide a custom name for the data export). Hence, we 
-            // bail if a null is encountered
-            if (datasetName === null ){
-                return;
+        // a value of `null` here is a signal that the user aborted
+        // creation of the dataset via the modal (the one which asks
+        // them to provide a custom name for the data export). Hence, we 
+        // bail if a null is encountered
+        if (datasetName === null) {
+          return;
+        }
+        let filter_payload = {};
+        let doc_list = [];
+        Object.keys(results).forEach(key => {
+          doc_list = results[key]['response']['docs'];
+          if (dataType === 'byType') {
+            filter_payload[key] = doc_list.map(doc => doc['id']);
+          } else {
+            // queried by tissue. To make a proper request to the endpoint, 
+            // we need to map the samples to their "types" (e.g. TCGA cancer type)
+            // rather than map the sample IDs via their tissue.
+            for (let doc_idx in doc_list) {
+              let doc = doc_list[doc_idx];
+              let id = doc['id'];
+              let project_id = doc['project_id'];
+              if (filter_payload.hasOwnProperty(project_id)) {
+                filter_payload[project_id].push(id);
+              } else {
+                filter_payload[project_id] = [id];
+              }
             }
-            let filter_payload = {};
-            let doc_list = [];
-            Object.keys(results).forEach(key => {
-                doc_list = results[key]['response']['docs'];
-                if(dataType === 'byType'){
-                    filter_payload[key] = doc_list.map(doc => doc['id']);
-                } else {
-                    // queried by tissue. To make a proper request to the endpoint, 
-                    // we need to map the samples to their "types" (e.g. TCGA cancer type)
-                    // rather than map the sample IDs via their tissue.
-                    for(let doc_idx in doc_list){
-                        let doc = doc_list[doc_idx];
-                        let id = doc['id'];
-                        let project_id = doc['project_id'];
-                        if (filter_payload.hasOwnProperty(project_id) ){
-                            filter_payload[project_id].push(id);
-                        } else {
-                            filter_payload[project_id] = [id];
-                        }
-                    }
-                }
-            });
-            let final_payload = {
-                'filters': filter_payload,
-                'output_name': datasetName
-            };
-            this.isWaiting = true;
+          }
+        });
+        let final_payload = {
+          'filters': filter_payload,
+          'output_name': datasetName
+        };
+        this.isWaiting = true;
+        this.cdRef.markForCheck();
+        this.pdService.createDataset(datasetTag, final_payload).subscribe(
+          results => {
+            this.isWaiting = false;
             this.cdRef.markForCheck();
-            this.pdService.createDataset(datasetTag,final_payload).subscribe(
-                results => {
-                    this.isWaiting = false;
-                    this.cdRef.markForCheck();
-                    this.fileService.getAllFilesPolled();
-                    this.notificationService.success('Your files are being prepared.' +
-                        ' You can check the status of these in the file browser.'
-                    );
-                    // this.someEvent.emit();
-                }
-                
-            );  
-        }    
+            this.fileService.getAllFilesPolled();
+            this.notificationService.success('Your files are being prepared.' +
+              ' You can check the status of these in the file browser.'
+            );
+          }
+        );
+      }
     );
-}
+  }
+  checkboxSelectionTarget(event, name: string, category) {
+    if (event['checked']) {
+      this.selectedNames.push(name);
+      this.publicDataSetComponent.checkboxStatus['target-rnaseq'][category][name] = true;
+    } else {
+      let index = this.selectedNames.indexOf(name);
+      if (index > -1) {
+        this.selectedNames.splice(index, 1);
+      }
+      this.publicDataSetComponent.checkboxStatus['target-rnaseq'][category][name] = false;
+    }
+    this.getCurrentCount();
+  }
+
+  getCurrentCount() {
+    let sum = 0;
+    if (this.viewMode === 'byType') {
+      for (let i = 0; i < this.types_list.length; i++) {
+        if (this.selectedNames.includes(this.types_list[i].name)) {
+          sum += this.types_list[i].count
+        }
+      }
+    } else if (this.viewMode === 'byTissue') {
+      for (let i = 0; i < this.tissue_list.length; i++) {
+        if (this.selectedNames.includes(this.tissue_list[i].name)) {
+          sum += this.tissue_list[i].count
+        }
+      }
+    }
+
+    this.totalSelectedSamples = sum;
+  }
+
+  onTypeToggleTarget(viewMode: string) {
+    this.viewMode = viewMode;
+    this.selectedNames = [];
+    this.totalSelectedSamples = 0;
+    this.publicDataSetComponent.resetVariables();
+  }
+
+
+
 }

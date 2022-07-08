@@ -5,7 +5,7 @@
         <div class="sideContainer">
             <div class="filtersTitle">Filters</div>
             <div *ngFor="let item of storageDataSet[currentDataset] | keyvalue">
-                <div *ngIf="!advanceFields.includes(item.key)">
+                <div *ngIf="!advanceFields.includes(item.key) && item.key !== 'project_id' && item.key !== 'tissue_or_organ_of_origin' && item.key !=='tissue'">
                     <mev-checkbox *ngIf="altStorage[currentDataset][item.key]['altQuery'] === ''; else elseBlock"
                         [info]='item' [alt]='altStorage[currentDataset]' [currentDataset]="currentDataset" version="1"
                         [displayDetails]="true">
@@ -75,16 +75,16 @@
         </div>
 
         <ng-container *ngIf="currentDataset === 'tcga-rnaseq'">
-            <tcga-rnaseq-explorer [query]="searchQueryResults" (someEvent)="resetVariables()"></tcga-rnaseq-explorer>
+            <tcga-rnaseq-explorer [query]="searchQueryResults"></tcga-rnaseq-explorer>
         </ng-container>
 
         <ng-container *ngIf="currentDataset === 'target-rnaseq'">
-            <target-rnaseq-explorer [query]="searchQueryResults" (someEvent)="resetVariables()">
+            <target-rnaseq-explorer [query]="searchQueryResults">
             </target-rnaseq-explorer>
         </ng-container>
 
         <ng-container *ngIf="currentDataset === 'gtex-rnaseq'">
-            <gtex-rnaseq-explorer [query]="searchQueryResults" (someEvent)="resetVariables()"></gtex-rnaseq-explorer>
+            <gtex-rnaseq-explorer [query]="searchQueryResults"></gtex-rnaseq-explorer>
         </ng-container>
     </div>
 </mat-drawer-container>

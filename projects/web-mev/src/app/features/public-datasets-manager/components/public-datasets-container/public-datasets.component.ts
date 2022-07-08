@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
@@ -24,9 +24,9 @@ export class PublicDatasetsComponent implements OnInit {
   checkBoxItems = [];
   isLoading: boolean = false;
 
-  targetFields = ["ethnicity", "gender", "race", "vital_status", "cog_renal_stage", "morphology", "primary_diagnosis", "site_of_resection_or_biopsy", "dbgap_accession_number", "disease_type", "name", "primary_site"];
-  tcgaFields = ["alcohol_history", "ethnicity", "gender", "race", "vital_status", "vital_status", "ajcc_pathologic_m", "ajcc_pathologic_n", "ajcc_pathologic_t", "ajcc_pathologic_stage", "ajcc_staging_system_edition", "icd_10_code", "morphology", "primary_diagnosis", "prior_malignancy", "prior_treatment", "site_of_resection_or_biopsy", "synchronous_malignancy", "disease_type", "name", "primary_site"]; //"ajcc_pathologic_stage",
-  gtexFields = ["sex", "age_range", "hardy_scale_death", "nucleic_acid_isolation_batch", "expression_batch", "collection_site_code"];
+  targetFields = ["ethnicity", "gender", "race", "vital_status", "cog_renal_stage", "morphology", "primary_diagnosis", "site_of_resection_or_biopsy", "dbgap_accession_number", "disease_type", "name", "primary_site", "project_id", "tissue_or_organ_of_origin"];
+  tcgaFields = ["alcohol_history", "ethnicity", "gender", "race", "vital_status", "vital_status", "ajcc_pathologic_m", "ajcc_pathologic_n", "ajcc_pathologic_t", "ajcc_pathologic_stage", "ajcc_staging_system_edition", "icd_10_code", "morphology", "primary_diagnosis", "prior_malignancy", "prior_treatment", "site_of_resection_or_biopsy", "synchronous_malignancy", "disease_type", "name", "primary_site", "project_id", "tissue_or_organ_of_origin"]; //"ajcc_pathologic_stage",
+  gtexFields = ["sex", "age_range", "hardy_scale_death", "nucleic_acid_isolation_batch", "expression_batch", "collection_site_code", "tissue"];
   targetRangeFields = ["age_at_diagnosis", "days_to_last_follow_up", "year_of_diagnosis"]; //"days_to_death", "days_to_birth"
   tcgaRangeFields = ["age_at_diagnosis", "age_at_index", "days_to_birth", "days_to_last_follow_up", "year_of_birth", "year_of_diagnosis"];
   gtexRangeFields = ["rna_rin"];
@@ -279,6 +279,7 @@ export class PublicDatasetsComponent implements OnInit {
                 this.altStorage[dataset][category]["data"].push(countObj);
               }
             }
+
           } else {
             for (let i = 0; i < arr.length; i += 2) {
               let countObj = {};
@@ -302,7 +303,9 @@ export class PublicDatasetsComponent implements OnInit {
           let count = res["facet_counts"]['facet_queries'][item];
           this.sliderStorage[dataset][category]['count'] = count;
         }
+
       })
+
   }
 
   onChecked(isChecked, category, subcategory, dataset) {
@@ -459,14 +462,18 @@ export class PublicDatasetsComponent implements OnInit {
   }
 
   backToBrowse() {
-    this.resetVariables()
-  }
-
-  resetVariables() {
     this.currentDataset = '';
     this.searchQueryResults = '';
     this.isLoading = false;
 
+    this.checkBoxObj = {};
+    this.altStorage = {};
+    this.mainQuery = '*';
+
+    this.resetVariables()
+  }
+
+  resetVariables() {
     //reset storage to default
     for (let dataset in this.sliderStorage) {
       for (let cat in this.sliderStorage[dataset]) {
@@ -479,13 +486,10 @@ export class PublicDatasetsComponent implements OnInit {
       for (let cat in this.checkboxStatus[dataset]) {
         for (let subcat in this.checkboxStatus[dataset][cat]) {
           if (this.checkboxStatus[dataset][cat][subcat] === true) {
-            this.checkboxStatus[dataset][cat][subcat] === false;
+            this.checkboxStatus[dataset][cat][subcat] = false;
           }
         }
       }
     }
-    this.checkBoxObj = {};
-    this.altStorage = {};
-    this.mainQuery = '*';
   }
 }

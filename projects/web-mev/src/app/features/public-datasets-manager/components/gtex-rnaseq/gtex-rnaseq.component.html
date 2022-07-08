@@ -35,7 +35,7 @@
             <div>Number of samples: {{t.count}}</div>
         </mat-card-content>
         <mat-card-footer class="checkBoxContainer">
-            <mat-checkbox (change)="checkboxSelection($event, t.name)"></mat-checkbox>
+            <mat-checkbox (change)="checkboxSelectionGtex($event, t.name, 'tissue')" [checked]="publicDataSetComponent.checkboxStatus['gtex-rnaseq']['tissue'][t.name]"></mat-checkbox>
         </mat-card-footer>
     </mat-card>
 </div>

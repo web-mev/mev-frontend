@@ -1,6 +1,6 @@
 
 
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input, OnChanges, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input, OnChanges } from '@angular/core';
 import { FileService } from '@app/features/file-manager/services/file-manager.service';
 import { NotificationService } from '@core/notifications/notification.service';
 import { PublicDatasetService } from '../../services/public-datasets.service';
@@ -10,7 +10,6 @@ import { forkJoin } from 'rxjs';
 import { PublicDatasetsComponent } from '../public-datasets-container/public-datasets.component';
 import { PublicDatasetExportNameDialogComponent } from '../export-name-dialog/export-name-dialog.component';
 
-
 @Component({
   selector: 'gtex-rnaseq-explorer',
   templateUrl: './gtex-rnaseq.component.html',
@@ -19,7 +18,6 @@ import { PublicDatasetExportNameDialogComponent } from '../export-name-dialog/ex
 })
 export class GtexRnaseqComponent extends GdcRnaseqComponent implements OnChanges, OnInit {
   @Input() query: string = "";
-  @Output() someEvent = new EventEmitter<string>();
   datasetTag = 'gtex-rnaseq';
   name_map_key = 'gtex_type_to_name_map';
   tissue_types_url = '';
@@ -38,11 +36,10 @@ export class GtexRnaseqComponent extends GdcRnaseqComponent implements OnChanges
 
   ngOnChanges(): void {
     this.fetchDataGtex(this.datasetTag, this.name_map_key);
-    
+
   }
 
   ngOnInit(): void { }
-
 
   createDataset(dataType: string) {
     this._createDatasetGtex(dataType, this.datasetTag);
@@ -72,6 +69,7 @@ export class GtexRnaseqComponent extends GdcRnaseqComponent implements OnChanges
           })
         }
         this.cdRef.markForCheck();
+        this.getCurrentCount();
       }
     );
   }
@@ -147,6 +145,7 @@ export class GtexRnaseqComponent extends GdcRnaseqComponent implements OnChanges
         };
         this.isWaiting = true;
         this.cdRef.markForCheck();
+
         this.pdService.createDataset(datasetTag, final_payload).subscribe(
           results => {
             this.isWaiting = false;
@@ -155,10 +154,33 @@ export class GtexRnaseqComponent extends GdcRnaseqComponent implements OnChanges
             this.notificationService.success('Your files are being prepared.' +
               ' You can check the status of these in the file browser.'
             );
-            // this.someEvent.emit();
           }
         );
       }
     );
+  }
+  checkboxSelectionGtex(event, name: string, category) {
+    if (event['checked']) {
+      this.selectedNames.push(name);
+      this.publicDataSetComponent.checkboxStatus['gtex-rnaseq'][category][name] = true;
+
+    } else {
+      let index = this.selectedNames.indexOf(name);
+      if (index > -1) {
+        this.selectedNames.splice(index, 1);
+      }
+      this.publicDataSetComponent.checkboxStatus['gtex-rnaseq'][category][name] = false;
+    }
+    this.getCurrentCount();
+  }
+
+  getCurrentCount() {
+    let sum = 0;
+    for (let i = 0; i < this.tissue_list.length; i++) {
+      if (this.selectedNames.includes(this.tissue_list[i].name)) {
+        sum += this.tissue_list[i].count
+      }
+    }
+    this.totalSelectedSamples = sum;
   }
 }

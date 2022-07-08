@@ -13,7 +13,7 @@
 </p>
 
 <div class="btn-panel">
-    <mat-button-toggle-group #viewMode="matButtonToggleGroup" value="byType" (change)="onTypeToggle(viewMode.value)">
+    <mat-button-toggle-group #viewMode="matButtonToggleGroup" value="byType" (change)="onTypeToggleTarget(viewMode.value)">
         <mat-button-toggle value="byType" aria-label="View by TARGET type">
             TARGET types
         </mat-button-toggle>
@@ -41,7 +41,7 @@
             <div>Number of samples: {{t.count}}</div>
         </mat-card-content>
         <mat-card-footer class="checkBoxContainer">
-            <mat-checkbox (change)="checkboxSelection($event, t.name)"></mat-checkbox>
+            <mat-checkbox (change)="checkboxSelectionTarget($event, t.name, 'project_id')" [checked]="publicDataSetComponent.checkboxStatus['target-rnaseq']['project_id'][t.name]"></mat-checkbox>
         </mat-card-footer>
     </mat-card>
 </div>
@@ -54,7 +54,7 @@
             <div>Number of samples: {{t.count}}</div>
         </mat-card-content>
         <mat-card-footer class="checkBoxContainer">
-            <mat-checkbox (change)="checkboxSelection($event, t.name)"></mat-checkbox>
+            <mat-checkbox (change)="checkboxSelectionTarget($event, t.name, 'tissue_or_organ_of_origin')" [checked]="publicDataSetComponent.checkboxStatus['target-rnaseq']['tissue_or_organ_of_origin'][t.name]"></mat-checkbox>
         </mat-card-footer>
     </mat-card>
 </div>

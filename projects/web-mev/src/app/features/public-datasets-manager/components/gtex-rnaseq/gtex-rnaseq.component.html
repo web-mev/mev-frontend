@@ -19,7 +19,7 @@
 </div>
 
 <div class="btn-panel">
-    <button mat-raised-button color="accent" [disabled]="selectedNames.length === 0"
+    <button mat-raised-button color="accent" [disabled]="totalSelectedSamples === 0"
         (click)="createDataset(viewMode.value)">
         <mat-icon aria-label="Create dataset">add</mat-icon>
         <span *ngIf="totalSelectedSamples === 0">Create dataset</span>

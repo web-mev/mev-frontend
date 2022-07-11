@@ -139,6 +139,7 @@ export class PublicDatasetsComponent implements OnInit {
   displayAdvance: boolean = false;
   excludeList = [];
   mainQuery: string = "*";
+  showMoreStorage = {};
 
   constructor(
     fb: FormBuilder,

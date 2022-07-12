@@ -16,7 +16,7 @@ import {
   Observable,
   Subscription
 } from 'rxjs';
-import { map, debounceTime, distinctUntilChanged, takeUntil, filter} from 'rxjs/operators';
+import { map, debounceTime, distinctUntilChanged, takeUntil, filter } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -303,12 +303,10 @@ export class FileListComponent implements OnInit {
     let obj = {}
     obj["fileType"] = selectedFileType
     this.currentSelectedFileType[id] = obj;
-    console.log("from setFileType: ", selectedFileType, this.acceptableResourceTypes)
-    if(!this.acceptableResourceTypes[selectedFileType].some(item => item.key === row.file_format)){
+    if (!this.acceptableResourceTypes[selectedFileType].some(item => item.key === row.file_format)) {
       this.formatTypeNeedsChange[id] = true;
     }
-    console.log("row: ", row)
-    if(row.resource_type && this.acceptableResourceTypes[selectedFileType].some(item => item.key === row.file_format)){
+    if (row.resource_type && this.acceptableResourceTypes[selectedFileType].some(item => item.key === row.file_format)) {
       this.setResourceType($event, row, 'fileTypeOnly')
     }
   }
@@ -365,11 +363,11 @@ export class FileListComponent implements OnInit {
    * Open a modal dialog to edit file properties
    *
    */
-  editItem(i: number, id: string, file_name: string, resource_type: string) {
+  editItem(i: number, id: string, file_name: string, resource_type: string, file_format: string) {
     this.id = id;
 
     const dialogRef = this.dialog.open(EditFileDialogComponent, {
-      data: { id: id, name: file_name, resource_type: resource_type }
+      data: { id: id, name: file_name, resource_type: resource_type, file_format: file_format }
     });
 
     dialogRef.afterClosed().subscribe(result => {

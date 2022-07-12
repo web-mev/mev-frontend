@@ -72,7 +72,7 @@
     </ng-container>
 
     <ng-container matColumnDef="format_type">
-      <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">Format Type Test</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">Format Type</mat-header-cell>
       <mat-cell *matCellDef="let row">
         <mat-select *ngIf="currentSelectedFileType[row.id] || row.file_format" (selectionChange)="setFormatType($event, row)"
           [value]="getFileFormatVal(row)">
@@ -153,7 +153,7 @@
         </button>
 
         <button mat-icon-button color="accent" title="Edit" [disabled]="!row.is_active"
-          (click)="editItem(i, row.id, row.name, row.resource_type)">
+          (click)="editItem(i, row.id, row.name, row.resource_type, row.file_format)">
           <mat-icon aria-label="Edit">edit</mat-icon>
         </button>
 

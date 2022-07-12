@@ -95,6 +95,7 @@ export class FileListComponent implements OnInit {
   @ViewChild('filter', { static: true }) filter: ElementRef;
 
   ngOnInit() {
+    // this.isWait = true;
     this.loadData();
     this.loadResourceTypes();
 
@@ -120,6 +121,7 @@ export class FileListComponent implements OnInit {
           this.uploadInProgressMsg = '';
           this.ref.markForCheck();
         }
+        
       }
     );
 
@@ -134,7 +136,7 @@ export class FileListComponent implements OnInit {
         this.acceptableResourceTypes[key] = avail
       }
     })
-
+    // this.isWait = false;
   }
 
   loadResourceTypes() {
@@ -177,6 +179,8 @@ export class FileListComponent implements OnInit {
   }
 
   setResourceType($event, row, itemChanged) {
+    console.log("row: ", row)
+    
     this.validatingInfo[row.id] = row.resource_type ? row.resource_type : this.currentSelectedFileType[row.id]['fileType'];
     let updateData: any = {}
     if (itemChanged === 'fileTypeAndFormat') {
@@ -201,7 +205,9 @@ export class FileListComponent implements OnInit {
 
       this.refresh();
       this.startPollingRefresh(1200);
+      
     });
+    
   }
 
   getResourceTypeVal(row) {
@@ -296,7 +302,8 @@ export class FileListComponent implements OnInit {
   }
 
   currentSelectedFileType = {};
-  formatTypeNeedsChange = {}
+  formatTypeNeedsChange = {};
+
   setFileType($event, row) {
     let id = row.id;
     let selectedFileType = $event.value;
@@ -306,7 +313,7 @@ export class FileListComponent implements OnInit {
     if (!this.acceptableResourceTypes[selectedFileType].some(item => item.key === row.file_format)) {
       this.formatTypeNeedsChange[id] = true;
     }
-    if (row.resource_type && this.acceptableResourceTypes[selectedFileType].some(item => item.key === row.file_format)) {
+    if (row.resource_type && row.status === '' && this.acceptableResourceTypes[selectedFileType].some(item => item.key === row.file_format)) {
       this.setResourceType($event, row, 'fileTypeOnly')
     }
   }
@@ -367,7 +374,8 @@ export class FileListComponent implements OnInit {
     this.id = id;
 
     const dialogRef = this.dialog.open(EditFileDialogComponent, {
-      data: { id: id, name: file_name, resource_type: resource_type, file_format: file_format }
+      data: { id: id, name: file_name, resource_type: resource_type, file_format: file_format },
+      autoFocus: false
     });
 
     dialogRef.afterClosed().subscribe(result => {

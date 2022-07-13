@@ -16,7 +16,7 @@ import {
   Observable,
   Subscription
 } from 'rxjs';
-import { map, debounceTime, distinctUntilChanged, takeUntil, filter} from 'rxjs/operators';
+import { map, debounceTime, distinctUntilChanged, takeUntil, filter } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -81,6 +81,9 @@ export class FileListComponent implements OnInit {
   isWait = false;
   Object = Object;
   private fileUploadProgressSubscription: Subscription = new Subscription();
+  isPolling: boolean = false;
+  currentSelectedFileType = {};
+  formatTypeNeedsChange = {};
 
   constructor(
     public httpClient: HttpClient,
@@ -134,7 +137,27 @@ export class FileListComponent implements OnInit {
         this.acceptableResourceTypes[key] = avail
       }
     })
+  }
 
+  getStatus(row) {
+    // Checks to see if any Status are set to "Processing...""
+    // If status is set to "Processing", then Polling will be paused until status is finished and changed
+    this.isPolling = this.checkPollingStatus();
+    if (this.isPolling) {
+      this.isWait = false;
+    }
+    return row.status
+  }
+
+  checkPollingStatus() {
+    let polling = true;
+    for (let index in this.dataSource.renderedData) {
+      let row = this.dataSource.renderedData[index]
+      if (row["status"] === "Processing...") {
+        polling = false;
+      }
+    }
+    return polling
   }
 
   loadResourceTypes() {
@@ -169,10 +192,16 @@ export class FileListComponent implements OnInit {
       filter(id_list => id_list.length === 0)
     )
     const mergedObservable = merge(timer$, validationListEmpty)
+
     intervalSource.pipe(
       takeUntil(mergedObservable)
     ).subscribe(
-      x => this.refresh()
+      x => {
+        this.isPolling = this.checkPollingStatus()
+        if (this.isPolling === true) {
+          this.refresh();
+        }
+      }
     )
   }
 
@@ -199,9 +228,13 @@ export class FileListComponent implements OnInit {
 
       this.currentlyValidatingBS.next(filesBeingValidated);
 
-      this.refresh();
+      this.isPolling = this.checkPollingStatus()
+      if (this.isPolling === true) {
+        this.refresh()
+      }
       this.startPollingRefresh(1200);
     });
+
   }
 
   getResourceTypeVal(row) {
@@ -230,7 +263,6 @@ export class FileListComponent implements OnInit {
           }
           this.currentlyValidatingBS.next(updatedArray);
           return row.resource_type
-
         } else {
           return this.validatingInfo[row.id];
         }
@@ -249,6 +281,7 @@ export class FileListComponent implements OnInit {
       return '---';
     }
   }
+
   getFileFormatVal(row) {
     if (row.file_format) {
       // if the resource was already validated for another type, but we are attempting to
@@ -295,19 +328,16 @@ export class FileListComponent implements OnInit {
     }
   }
 
-  currentSelectedFileType = {};
-  formatTypeNeedsChange = {}
   setFileType($event, row) {
     let id = row.id;
     let selectedFileType = $event.value;
     let obj = {}
     obj["fileType"] = selectedFileType
     this.currentSelectedFileType[id] = obj;
-    if(!this.acceptableResourceTypes[selectedFileType].some(item => item.key === row.file_format)){
+    if (!this.acceptableResourceTypes[selectedFileType].some(item => item.key === row.file_format)) {
       this.formatTypeNeedsChange[id] = true;
     }
-
-    if(row.resource_type && this.acceptableResourceTypes[selectedFileType].some(item => item.key === row.file_format)){
+    if (row.resource_type && row.status === '' && this.acceptableResourceTypes[selectedFileType].some(item => item.key === row.file_format)) {
       this.setResourceType($event, row, 'fileTypeOnly')
     }
   }
@@ -318,7 +348,6 @@ export class FileListComponent implements OnInit {
     this.setResourceType($event, row, 'fileTypeAndFormat')
   }
 
-
   /**
    * Open a modal dialog to upload files
    *
@@ -328,7 +357,9 @@ export class FileListComponent implements OnInit {
       data: { file: File }
     });
 
-    dialogRef.afterClosed().subscribe(() => { });
+    dialogRef.afterClosed().subscribe(() => {
+      this.isWait = true;
+    });
   }
 
   /**
@@ -349,7 +380,10 @@ export class FileListComponent implements OnInit {
           this.notificationService.success(this.dropboxUploadCompleteMsg);
           this.dropboxUploadInProgressMsg = '';
           this.ref.markForCheck();
-          this.refresh();
+          this.isPolling = this.checkPollingStatus()
+          if (this.isPolling === true) {
+            this.refresh()
+          }
         });
       },
       cancel: () => { },
@@ -364,11 +398,12 @@ export class FileListComponent implements OnInit {
    * Open a modal dialog to edit file properties
    *
    */
-  editItem(i: number, id: string, file_name: string, resource_type: string) {
+  editItem(i: number, id: string, file_name: string, resource_type: string, file_format: string) {
     this.id = id;
 
     const dialogRef = this.dialog.open(EditFileDialogComponent, {
-      data: { id: id, name: file_name, resource_type: resource_type }
+      data: { id: id, name: file_name, resource_type: resource_type, file_format: file_format },
+      autoFocus: false
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -400,7 +435,6 @@ export class FileListComponent implements OnInit {
    *
    */
   previewItem(fileId: string) {
-    this.isWait = true;
     this.fileService.getFilePreview(fileId).subscribe(data => {
       const previewData = {};
       if (data?.results?.length && 'rowname' in data.results[0]) {
@@ -418,7 +452,6 @@ export class FileListComponent implements OnInit {
         previewData['rows'] = rows;
         previewData['values'] = values;
       }
-      this.isWait = false;
       this.ref.markForCheck();
       this.dialog.open(PreviewDialogComponent, {
         data: {
@@ -428,7 +461,6 @@ export class FileListComponent implements OnInit {
     },
       error => {
         // error was already reported to the user--
-        this.isWait = false;
         this.ref.markForCheck();
       });
   }
@@ -598,4 +630,6 @@ export class ExampleDataSource extends DataSource<File> {
       );
     });
   }
+
+
 }

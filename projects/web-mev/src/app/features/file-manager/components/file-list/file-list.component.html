@@ -62,7 +62,9 @@
     <ng-container matColumnDef="resource_type">
       <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">File type</mat-header-cell>
       <mat-cell *matCellDef="let row">
-        <mat-select (selectionChange)="setFileType($event, row)" [value]="row.status === ''? getResourceTypeVal(row) : '---'">
+        <mat-select (selectionChange)="setFileType($event, row)"
+          [value]="(row.status === 'Validating...' || row.status === 'Processing...') ? '' : getResourceTypeVal(row)"
+          [disabled]="row.status === 'Processing...'">
           <mat-option value="---" disabled>Please specify file type</mat-option>
           <mat-option *ngFor="let type of availableResourceTypes | keyvalue" [value]="type.key">
             {{ type.value.title }}
@@ -74,16 +76,19 @@
     <ng-container matColumnDef="format_type">
       <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">Format Type</mat-header-cell>
       <mat-cell *matCellDef="let row">
-        <mat-select *ngIf="currentSelectedFileType[row.id] || row.file_format" (selectionChange)="setFormatType($event, row)"
-          [value]="getFileFormatVal(row)">
+        <mat-select *ngIf="currentSelectedFileType[row.id] || row.file_format"
+          (selectionChange)="setFormatType($event, row)"
+          [value]="(row.status === 'Validating...' || row.status === 'Processing...') ?  '' : getFileFormatVal(row)">
           <div *ngIf="row.file_format === null && !formatTypeNeedsChange[row.id]">
             <mat-option value="---" disabled>Please specify format type</mat-option>
-            <mat-option *ngFor="let type of acceptableResourceTypes[currentSelectedFileType[row.id]['fileType']] | keyvalue"
+            <mat-option
+              *ngFor="let type of acceptableResourceTypes[currentSelectedFileType[row.id]['fileType']] | keyvalue"
               [value]="type.value.key">
               {{ type.value.key }}
             </mat-option>
           </div>
-          <div *ngIf="row.file_format && row.resource_type === null || row.status !== '' && !formatTypeNeedsChange[row.id]">
+          <div
+            *ngIf="row.file_format && row.resource_type === null || row.status !== '' && !formatTypeNeedsChange[row.id]">
             <mat-option value="---" disabled>Please specify format type</mat-option>
             <mat-option *ngFor="let type of acceptableResourceTypes[row.resource_type] | keyvalue"
               [value]="type.value.key">
@@ -91,7 +96,8 @@
             </mat-option>
           </div>
           <!-- if everything is okay, have file_format be disabled -->
-          <div *ngIf="row.file_format && row.resource_type !== null && row.status === '' && !formatTypeNeedsChange[row.id]">
+          <div
+            *ngIf="row.file_format && row.resource_type !== null && row.status === '' && !formatTypeNeedsChange[row.id]">
             <mat-option value="---" disabled>Please specify format type</mat-option>
             <mat-option *ngFor="let type of acceptableResourceTypes[row.resource_type] | keyvalue"
               [value]="type.value.key" disabled>
@@ -101,7 +107,8 @@
           <!-- if file_type has been changed and new file_formats need to be loaded -->
           <div *ngIf="formatTypeNeedsChange[row.id]">
             <mat-option value="---" disabled>Please specify format type</mat-option>
-            <mat-option *ngFor="let type of acceptableResourceTypes[currentSelectedFileType[row.id]['fileType']] | keyvalue"
+            <mat-option
+              *ngFor="let type of acceptableResourceTypes[currentSelectedFileType[row.id]['fileType']] | keyvalue"
               [value]="type.value.key">
               {{ type.value.key }}
             </mat-option>
@@ -113,7 +120,7 @@
 
     <ng-container matColumnDef="status">
       <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">Status</mat-header-cell>
-      <mat-cell *matCellDef="let row" class="statusMessage"> {{ row.status}}</mat-cell>
+      <mat-cell *matCellDef="let row" class="statusMessage"> {{ getStatus(row) }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="size">
@@ -153,7 +160,7 @@
         </button>
 
         <button mat-icon-button color="accent" title="Edit" [disabled]="!row.is_active"
-          (click)="editItem(i, row.id, row.name, row.resource_type)">
+          (click)="editItem(i, row.id, row.name, row.resource_type, row.file_format)">
           <mat-icon aria-label="Edit">edit</mat-icon>
         </button>
 

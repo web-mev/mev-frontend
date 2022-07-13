@@ -19,7 +19,7 @@
 </div>
 
 <div class="btn-panel">
-    <button mat-raised-button color="accent" [disabled]="selectedNames.length === 0"
+    <button mat-raised-button color="accent" [disabled]="totalSelectedSamples === 0"
         (click)="createDataset(viewMode.value)">
         <mat-icon aria-label="Create dataset">add</mat-icon>
         <span *ngIf="totalSelectedSamples === 0">Create dataset</span>
@@ -35,7 +35,7 @@
             <div>Number of samples: {{t.count}}</div>
         </mat-card-content>
         <mat-card-footer class="checkBoxContainer">
-            <mat-checkbox (change)="checkboxSelection($event, t.name)"></mat-checkbox>
+            <mat-checkbox (change)="checkboxSelectionGtex($event, t.name, 'tissue')" [checked]="publicDataSetComponent.checkboxStatus['gtex-rnaseq']['tissue'][t.name]"></mat-checkbox>
         </mat-card-footer>
     </mat-card>
 </div>

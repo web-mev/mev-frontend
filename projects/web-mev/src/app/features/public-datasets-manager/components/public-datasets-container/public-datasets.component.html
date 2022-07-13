@@ -5,15 +5,15 @@
         <div class="sideContainer">
             <div class="filtersTitle">Filters</div>
             <div *ngFor="let item of storageDataSet[currentDataset] | keyvalue">
-                <div *ngIf="!advanceFields.includes(item.key)">
+                <div *ngIf="!advanceFields.includes(item.key) && item.key !== 'project_id' && item.key !== 'tissue_or_organ_of_origin' && item.key !=='tissue'">
                     <mev-checkbox *ngIf="altStorage[currentDataset][item.key]['altQuery'] === ''; else elseBlock"
                         [info]='item' [alt]='altStorage[currentDataset]' [currentDataset]="currentDataset" version="1"
-                        [displayDetails]="true">
+                        [displayDetails]="true" [showMoreStatus]="showMoreStorage">
                     </mev-checkbox>
                     <ng-template #elseBlock>
                         <mev-checkbox *ngIf="altStorage[currentDataset][item.key]" [info]='item'
                             [alt]='altStorage[currentDataset]' [currentDataset]="currentDataset" version="2"
-                            [displayDetails]="true">
+                            [displayDetails]="true" [showMoreStatus]="showMoreStorage">
                         </mev-checkbox>
                     </ng-template>
                 </div>
@@ -24,7 +24,8 @@
                     <mev-slider [info]='item' [currentDataset]="currentDataset" [category]="item.key"
                         [countNum]="sliderStorage[currentDataset][item.key]['count']"
                         (childEvent)="setSliderValue($event)" [displayDetails]="true"
-                        (checkEvent)="onNotReportedChecked($event)" [mainQuery]="mainQuery" [sliderdata]="sliderStorage">
+                        (checkEvent)="onNotReportedChecked($event)" [mainQuery]="mainQuery"
+                        [sliderdata]="sliderStorage">
                     </mev-slider>
                 </div>
             </div>
@@ -33,12 +34,12 @@
                     <div *ngIf="advanceFields.includes(item.key)">
                         <mev-checkbox *ngIf="altStorage[currentDataset][item.key]['altQuery'] === ''; else elseBlock"
                             [info]='item' [alt]='altStorage[currentDataset]' [currentDataset]="currentDataset"
-                            version="1" [displayDetails]="false">
+                            version="1" [displayDetails]="false" [showMoreStatus]="showMoreStorage">
                         </mev-checkbox>
                         <ng-template #elseBlock>
                             <mev-checkbox *ngIf="altStorage[currentDataset][item.key]" [info]='item'
                                 [alt]='altStorage[currentDataset]' [currentDataset]="currentDataset" version="2"
-                                [displayDetails]="true">
+                                [displayDetails]="true" [showMoreStatus]="showMoreStorage">
                             </mev-checkbox>
                         </ng-template>
                     </div>
@@ -48,7 +49,8 @@
                         <mev-slider [info]='item' [currentDataset]="currentDataset" [category]="item.key"
                             [countNum]="sliderStorage[currentDataset][item.key]['count']"
                             (childEvent)="setSliderValue($event)" [displayDetails]="false"
-                            (checkEvent)="onNotReportedChecked($event)" [mainQuery]="mainQuery" [sliderdata]="sliderStorage">
+                            (checkEvent)="onNotReportedChecked($event)" [mainQuery]="mainQuery"
+                            [sliderdata]="sliderStorage">
                         </mev-slider>
                     </div>
                 </div>
@@ -77,7 +79,8 @@
         </ng-container>
 
         <ng-container *ngIf="currentDataset === 'target-rnaseq'">
-            <target-rnaseq-explorer [query]="searchQueryResults"></target-rnaseq-explorer>
+            <target-rnaseq-explorer [query]="searchQueryResults">
+            </target-rnaseq-explorer>
         </ng-container>
 
         <ng-container *ngIf="currentDataset === 'gtex-rnaseq'">

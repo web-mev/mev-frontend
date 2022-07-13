@@ -1,5 +1,5 @@
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Component, Inject, OnInit, } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { FileService } from '@file-manager/services/file-manager.service';
 import { FileType } from '@app/shared/models/file-type';
@@ -61,7 +61,7 @@ export class EditFileDialogComponent implements OnInit {
     this.fileService.updateFile(updateData).subscribe(data => {
       this.dialogRef.close(data);
     });
-    
+
   }
 
   loadResourceTypes() {
@@ -90,7 +90,7 @@ export class EditFileDialogComponent implements OnInit {
     // empty stuff
   }
 
-  setFormatType($event){
+  setFormatType($event) {
     this.data.file_format = $event.value;
   }
 }

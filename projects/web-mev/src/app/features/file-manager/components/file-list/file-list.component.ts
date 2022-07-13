@@ -82,6 +82,8 @@ export class FileListComponent implements OnInit {
   Object = Object;
   private fileUploadProgressSubscription: Subscription = new Subscription();
   isPolling: boolean = false;
+  currentSelectedFileType = {};
+  formatTypeNeedsChange = {};
 
   constructor(
     public httpClient: HttpClient,
@@ -121,7 +123,6 @@ export class FileListComponent implements OnInit {
           this.uploadInProgressMsg = '';
           this.ref.markForCheck();
         }
-
       }
     );
 
@@ -280,6 +281,7 @@ export class FileListComponent implements OnInit {
       return '---';
     }
   }
+
   getFileFormatVal(row) {
     if (row.file_format) {
       // if the resource was already validated for another type, but we are attempting to
@@ -325,9 +327,6 @@ export class FileListComponent implements OnInit {
       return '---';
     }
   }
-
-  currentSelectedFileType = {};
-  formatTypeNeedsChange = {};
 
   setFileType($event, row) {
     let id = row.id;
@@ -436,7 +435,6 @@ export class FileListComponent implements OnInit {
    *
    */
   previewItem(fileId: string) {
-    // this.isWait = true;
     this.fileService.getFilePreview(fileId).subscribe(data => {
       const previewData = {};
       if (data?.results?.length && 'rowname' in data.results[0]) {
@@ -454,7 +452,6 @@ export class FileListComponent implements OnInit {
         previewData['rows'] = rows;
         previewData['values'] = values;
       }
-      // this.isWait = false;
       this.ref.markForCheck();
       this.dialog.open(PreviewDialogComponent, {
         data: {
@@ -464,7 +461,6 @@ export class FileListComponent implements OnInit {
     },
       error => {
         // error was already reported to the user--
-        // this.isWait = false;
         this.ref.markForCheck();
       });
   }

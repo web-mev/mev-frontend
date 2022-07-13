@@ -81,6 +81,7 @@ export class FileListComponent implements OnInit {
   isWait = false;
   Object = Object;
   private fileUploadProgressSubscription: Subscription = new Subscription();
+  isPolling: boolean = false;
 
   constructor(
     public httpClient: HttpClient,
@@ -95,7 +96,6 @@ export class FileListComponent implements OnInit {
   @ViewChild('filter', { static: true }) filter: ElementRef;
 
   ngOnInit() {
-    // this.isWait = true;
     this.loadData();
     this.loadResourceTypes();
 
@@ -121,7 +121,7 @@ export class FileListComponent implements OnInit {
           this.uploadInProgressMsg = '';
           this.ref.markForCheck();
         }
-        
+
       }
     );
 
@@ -136,7 +136,28 @@ export class FileListComponent implements OnInit {
         this.acceptableResourceTypes[key] = avail
       }
     })
-    // this.isWait = false;
+  }
+
+  getStatus(row) {
+    // Checks to see if any Status are set to Processing...
+    // If status is set to Processing, then Polling will be paused until this status is changed to anything else.
+    this.isPolling = this.checkPollingStatus();
+    if (this.isPolling) {
+      this.isWait = false;
+    }
+
+    return row.status
+  }
+
+  checkPollingStatus() {
+    let polling = true;
+    for (let index in this.dataSource.renderedData) {
+      let row = this.dataSource.renderedData[index]
+      if (row["status"] === "Processing...") {
+        polling = false;
+      }
+    }
+    return polling
   }
 
   loadResourceTypes() {
@@ -171,16 +192,20 @@ export class FileListComponent implements OnInit {
       filter(id_list => id_list.length === 0)
     )
     const mergedObservable = merge(timer$, validationListEmpty)
+
     intervalSource.pipe(
       takeUntil(mergedObservable)
     ).subscribe(
-      x => this.refresh()
+      x => {
+        this.isPolling = this.checkPollingStatus()
+        if (this.isPolling === true) {
+          this.refresh();
+        }
+      }
     )
   }
 
   setResourceType($event, row, itemChanged) {
-    console.log("row: ", row)
-    
     this.validatingInfo[row.id] = row.resource_type ? row.resource_type : this.currentSelectedFileType[row.id]['fileType'];
     let updateData: any = {}
     if (itemChanged === 'fileTypeAndFormat') {
@@ -203,11 +228,13 @@ export class FileListComponent implements OnInit {
 
       this.currentlyValidatingBS.next(filesBeingValidated);
 
-      this.refresh();
+      this.isPolling = this.checkPollingStatus()
+      if (this.isPolling === true) {
+        this.refresh()
+      }
       this.startPollingRefresh(1200);
-      
     });
-    
+
   }
 
   getResourceTypeVal(row) {
@@ -324,7 +351,6 @@ export class FileListComponent implements OnInit {
     this.setResourceType($event, row, 'fileTypeAndFormat')
   }
 
-
   /**
    * Open a modal dialog to upload files
    *
@@ -334,7 +360,10 @@ export class FileListComponent implements OnInit {
       data: { file: File }
     });
 
-    dialogRef.afterClosed().subscribe(() => { });
+    dialogRef.afterClosed().subscribe(() => {
+      this.isWait = true;
+      // setTimeout(() => this.isWait = false, 1000);
+    });
   }
 
   /**
@@ -355,7 +384,10 @@ export class FileListComponent implements OnInit {
           this.notificationService.success(this.dropboxUploadCompleteMsg);
           this.dropboxUploadInProgressMsg = '';
           this.ref.markForCheck();
-          this.refresh();
+          this.isPolling = this.checkPollingStatus()
+          if (this.isPolling === true) {
+            this.refresh()
+          }
         });
       },
       cancel: () => { },
@@ -407,7 +439,7 @@ export class FileListComponent implements OnInit {
    *
    */
   previewItem(fileId: string) {
-    this.isWait = true;
+    // this.isWait = true;
     this.fileService.getFilePreview(fileId).subscribe(data => {
       const previewData = {};
       if (data?.results?.length && 'rowname' in data.results[0]) {
@@ -425,7 +457,7 @@ export class FileListComponent implements OnInit {
         previewData['rows'] = rows;
         previewData['values'] = values;
       }
-      this.isWait = false;
+      // this.isWait = false;
       this.ref.markForCheck();
       this.dialog.open(PreviewDialogComponent, {
         data: {
@@ -435,7 +467,7 @@ export class FileListComponent implements OnInit {
     },
       error => {
         // error was already reported to the user--
-        this.isWait = false;
+        // this.isWait = false;
         this.ref.markForCheck();
       });
   }
@@ -605,4 +637,6 @@ export class ExampleDataSource extends DataSource<File> {
       );
     });
   }
+
+
 }

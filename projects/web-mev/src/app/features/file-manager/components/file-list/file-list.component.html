@@ -63,7 +63,8 @@
       <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">File type</mat-header-cell>
       <mat-cell *matCellDef="let row">
         <mat-select (selectionChange)="setFileType($event, row)"
-          [value]="row.status !== 'Validating...'? getResourceTypeVal(row): (row.resource_type === null ? '---' : '')">
+          [value]="(row.status === 'Validating...' || row.status === 'Processing...') ? '' : getResourceTypeVal(row)"
+          [disabled]="row.status === 'Processing...'">
           <mat-option value="---" disabled>Please specify file type</mat-option>
           <mat-option *ngFor="let type of availableResourceTypes | keyvalue" [value]="type.key">
             {{ type.value.title }}
@@ -77,7 +78,7 @@
       <mat-cell *matCellDef="let row">
         <mat-select *ngIf="currentSelectedFileType[row.id] || row.file_format"
           (selectionChange)="setFormatType($event, row)"
-          [value]="row.status !== 'Validating...'? getFileFormatVal(row): (row.resource_type === null ? '---' : '')">
+          [value]="(row.status === 'Validating...' || row.status === 'Processing...') ?  '' : getFileFormatVal(row)">
           <div *ngIf="row.file_format === null && !formatTypeNeedsChange[row.id]">
             <mat-option value="---" disabled>Please specify format type</mat-option>
             <mat-option
@@ -119,7 +120,7 @@
 
     <ng-container matColumnDef="status">
       <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">Status</mat-header-cell>
-      <mat-cell *matCellDef="let row" class="statusMessage"> {{ row.status}}</mat-cell>
+      <mat-cell *matCellDef="let row" class="statusMessage"> {{ getStatus(row) }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="size">

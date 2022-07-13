@@ -139,13 +139,12 @@ export class FileListComponent implements OnInit {
   }
 
   getStatus(row) {
-    // Checks to see if any Status are set to Processing...
-    // If status is set to Processing, then Polling will be paused until this status is changed to anything else.
+    // Checks to see if any Status are set to "Processing...""
+    // If status is set to "Processing", then Polling will be paused until status is finished and changed
     this.isPolling = this.checkPollingStatus();
     if (this.isPolling) {
       this.isWait = false;
     }
-
     return row.status
   }
 
@@ -263,7 +262,6 @@ export class FileListComponent implements OnInit {
           }
           this.currentlyValidatingBS.next(updatedArray);
           return row.resource_type
-
         } else {
           return this.validatingInfo[row.id];
         }
@@ -362,7 +360,6 @@ export class FileListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(() => {
       this.isWait = true;
-      // setTimeout(() => this.isWait = false, 1000);
     });
   }
 

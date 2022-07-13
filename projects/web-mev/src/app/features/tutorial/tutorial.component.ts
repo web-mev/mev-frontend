@@ -27,19 +27,22 @@ export class TutorialComponent implements OnInit {
       name: 'Example count matrix',
       direct_url: 'https://storage.googleapis.com/mev-example-data/hbr_and_uhr_counts.tsv',
       bucket_path: 'gs://mev-example-data/hbr_and_uhr_counts.tsv',
-      resource_type: 'RNASEQ_COUNT_MTX'
+      resource_type: 'RNASEQ_COUNT_MTX',
+      file_format: 'TSV'
     },
     {
       name: 'Example annotations',
       direct_url: 'https://storage.googleapis.com/mev-example-data/hbr_and_uhr_annotations.csv',
       bucket_path: 'gs://mev-example-data/hbr_and_uhr_annotations.csv',
-      resource_type: 'ANN'
+      resource_type: 'ANN',
+      file_format: 'CSV'
     },
     {
       name: 'Example single-cell dataset (counts only)',
       direct_url: 'https://storage.googleapis.com/mev-example-data/sctk_1k.csv',
       bucket_path: 'gs://mev-example-data/sctk_1k.csv',
-      resource_type: 'RNASEQ_COUNT_MTX'
+      resource_type: 'RNASEQ_COUNT_MTX',
+      file_format: 'CSV'
     }
   ];
   displayedColumns: string[];
@@ -59,11 +62,12 @@ export class TutorialComponent implements OnInit {
     }
   }
 
-  addFile(bucketPath: string, resourceType: string){
+  addFile(bucketPath: string, resourceType: string, file_format: string){
     this.tutorialService.addTutorialFile(
       {
         bucket_path: bucketPath,
-        resource_type: resourceType
+        resource_type: resourceType,
+        file_format: file_format
       }
     ).subscribe(
       x=>{

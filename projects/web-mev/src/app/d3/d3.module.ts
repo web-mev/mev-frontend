@@ -38,7 +38,8 @@ import { PandaComponent } from './components/panda/panda.component';
 import { MatBadgeModule } from '@angular/material/badge';
 import { GeneMappingComponent } from './components/gene-mapping/geneMapping.component';
 import { SubnetVisualizationFormComponent } from './components/subnet-visualization/subnet-visualization.component';
-import { DecontxComponent } from './components/decontx-decontamination/decontx.component'
+import { DecontxComponent } from './components/decontx-decontamination/decontx.component';
+import { CellRangerComponent } from './components/sctk-10x-cell-ranger/cell_ranger.component';
 
 @NgModule({
   declarations: [
@@ -77,7 +78,8 @@ import { DecontxComponent } from './components/decontx-decontamination/decontx.c
     PandaComponent,
     GeneMappingComponent,
     SubnetVisualizationFormComponent,
-    DecontxComponent
+    DecontxComponent,
+    CellRangerComponent,
   ],
   imports: [CommonModule, SharedModule, DragDropModule, MatBadgeModule],
   exports: [
@@ -107,7 +109,8 @@ import { DecontxComponent } from './components/decontx-decontamination/decontx.c
     PandaComponent,
     GeneMappingComponent,
     SubnetVisualizationFormComponent,
-    DecontxComponent
+    DecontxComponent,
+    CellRangerComponent
   ]
 })
 export class D3Module { }

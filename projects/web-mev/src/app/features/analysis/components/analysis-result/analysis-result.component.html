@@ -82,6 +82,10 @@
     <ng-container *ngIf="operationName === 'SCTK DecontX decontamination'">
         <mev-decontx [outputs]="outputs"></mev-decontx>
     </ng-container>
+
+    <ng-container *ngIf="operationName === 'SCTK 10x CellRanger import'">
+        <mev-cell-ranger [outputs]="outputs"></mev-cell-ranger>
+    </ng-container>
 </div>
 
 <ng-template #error>

@@ -5,6 +5,8 @@ import {
   ViewChild,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
+  Output,
+  EventEmitter
 } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DataSource } from '@angular/cdk/collections';
@@ -16,14 +18,15 @@ import {
   Observable,
   Subscription
 } from 'rxjs';
-import { map, debounceTime, distinctUntilChanged, takeUntil, filter } from 'rxjs/operators';
+import { map, debounceTime, distinctUntilChanged, takeUntil, filter, concatMap, takeWhile, } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { MatSelect } from '@angular/material/select';
 
 import { NotificationService } from '@core/core.module';
 import { FileService } from '@file-manager/services/file-manager.service';
-import { File } from '@app/shared/models/file';
+import { File, FileAdapter } from '@app/shared/models/file';
 import { AddFileDialogComponent } from '@app/features/file-manager/components/dialogs/add-file-dialog/add-file-dialog.component';
 import { EditFileDialogComponent } from '@app/features/file-manager/components/dialogs/edit-file-dialog/edit-file-dialog.component';
 import { DeleteFileDialogComponent } from '@app/features/file-manager/components/dialogs/delete-file-dialog/delete-file-dialog.component';
@@ -31,6 +34,7 @@ import { Dropbox, DropboxChooseOptions } from '@file-manager/models/dropbox';
 import { PreviewDialogComponent } from '@app/features/workspace-detail/components/dialogs/preview-dialog/preview-dialog.component';
 import { ViewFileTypesDialogComponent } from '../dialogs/view-file-types-dialog/view-file-types-dialog.component';
 import { FileType } from '@app/shared/models/file-type';
+import { environment } from '@environments/environment';
 
 declare var Dropbox: Dropbox;
 
@@ -78,19 +82,21 @@ export class FileListComponent implements OnInit {
   // this allows us to initiate and stop polling behavior when files are being validated. 
   // We track a list of file identifiers (UUID) that are currently being validated by the backend.
   private currentlyValidatingBS: BehaviorSubject<Array<string>> = new BehaviorSubject([]);
-  isWait = false;
+  // isWait = false;
   Object = Object;
   private fileUploadProgressSubscription: Subscription = new Subscription();
   isPolling: boolean = false;
   currentSelectedFileType = {};
   formatTypeNeedsChange = {};
+  isDropDownOpen: boolean = false;
 
   constructor(
     public httpClient: HttpClient,
     public dialog: MatDialog,
     public fileService: FileService,
     private readonly notificationService: NotificationService,
-    private ref: ChangeDetectorRef
+    private ref: ChangeDetectorRef,
+    private adapter: FileAdapter,
   ) { }
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -139,13 +145,15 @@ export class FileListComponent implements OnInit {
     })
   }
 
+  onOpenDropDown() {
+    this.isDropDownOpen = true;
+  }
+
+  onCloseDropDown(select: MatSelect) {
+    this.isDropDownOpen = false;
+  }
+
   getStatus(row) {
-    // Checks to see if any Status are set to "Processing...""
-    // If status is set to "Processing", then Polling will be paused until status is finished and changed
-    this.isPolling = this.checkPollingStatus();
-    if (this.isPolling) {
-      this.isWait = false;
-    }
     return row.status
   }
 
@@ -153,7 +161,7 @@ export class FileListComponent implements OnInit {
     let polling = true;
     for (let index in this.dataSource.renderedData) {
       let row = this.dataSource.renderedData[index]
-      if (row["status"] === "Processing...") {
+      if (row["status"] === "Processing..." || this.isDropDownOpen === true) {
         polling = false;
       }
     }
@@ -234,7 +242,6 @@ export class FileListComponent implements OnInit {
       }
       this.startPollingRefresh(1200);
     });
-
   }
 
   getResourceTypeVal(row) {
@@ -357,9 +364,7 @@ export class FileListComponent implements OnInit {
       data: { file: File }
     });
 
-    dialogRef.afterClosed().subscribe(() => {
-      this.isWait = true;
-    });
+    dialogRef.afterClosed().subscribe(() => {});
   }
 
   /**
@@ -552,12 +557,11 @@ export class ExampleDataSource extends DataSource<File> {
       this._filterChange,
       this._paginator.page
     ];
-    this._exampleDatabase.getAllFilesPolled();
+    this._exampleDatabase.getAllFilesPolledFileList();
 
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
-
         this.filteredData = this._exampleDatabase.data
           .slice()
           .filter((file: File) => {
@@ -630,6 +634,4 @@ export class ExampleDataSource extends DataSource<File> {
       );
     });
   }
-
-
 }

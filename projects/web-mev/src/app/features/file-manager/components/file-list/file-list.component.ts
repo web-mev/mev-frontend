@@ -20,6 +20,7 @@ import { map, debounceTime, distinctUntilChanged, takeUntil, filter } from 'rxjs
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { MatSelect } from '@angular/material/select';
 
 import { NotificationService } from '@core/core.module';
 import { FileService } from '@file-manager/services/file-manager.service';
@@ -78,19 +79,19 @@ export class FileListComponent implements OnInit {
   // this allows us to initiate and stop polling behavior when files are being validated. 
   // We track a list of file identifiers (UUID) that are currently being validated by the backend.
   private currentlyValidatingBS: BehaviorSubject<Array<string>> = new BehaviorSubject([]);
-  isWait = false;
   Object = Object;
   private fileUploadProgressSubscription: Subscription = new Subscription();
   isPolling: boolean = false;
   currentSelectedFileType = {};
   formatTypeNeedsChange = {};
+  isDropDownOpen: boolean = false;
 
   constructor(
     public httpClient: HttpClient,
     public dialog: MatDialog,
     public fileService: FileService,
     private readonly notificationService: NotificationService,
-    private ref: ChangeDetectorRef
+    private ref: ChangeDetectorRef,
   ) { }
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -139,13 +140,15 @@ export class FileListComponent implements OnInit {
     })
   }
 
+  onOpenDropDown() {
+    this.isDropDownOpen = true;
+  }
+
+  onCloseDropDown(select: MatSelect) {
+    this.isDropDownOpen = false;
+  }
+
   getStatus(row) {
-    // Checks to see if any Status are set to "Processing...""
-    // If status is set to "Processing", then Polling will be paused until status is finished and changed
-    this.isPolling = this.checkPollingStatus();
-    if (this.isPolling) {
-      this.isWait = false;
-    }
     return row.status
   }
 
@@ -153,7 +156,7 @@ export class FileListComponent implements OnInit {
     let polling = true;
     for (let index in this.dataSource.renderedData) {
       let row = this.dataSource.renderedData[index]
-      if (row["status"] === "Processing...") {
+      if (row["status"] === "Processing..." || this.isDropDownOpen === true) {
         polling = false;
       }
     }
@@ -234,7 +237,6 @@ export class FileListComponent implements OnInit {
       }
       this.startPollingRefresh(1200);
     });
-
   }
 
   getResourceTypeVal(row) {
@@ -357,9 +359,7 @@ export class FileListComponent implements OnInit {
       data: { file: File }
     });
 
-    dialogRef.afterClosed().subscribe(() => {
-      this.isWait = true;
-    });
+    dialogRef.afterClosed().subscribe(() => {});
   }
 
   /**
@@ -552,12 +552,11 @@ export class ExampleDataSource extends DataSource<File> {
       this._filterChange,
       this._paginator.page
     ];
-    this._exampleDatabase.getAllFilesPolled();
+    this._exampleDatabase.getAllFilesPolledFileList();
 
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
-
         this.filteredData = this._exampleDatabase.data
           .slice()
           .filter((file: File) => {
@@ -630,6 +629,4 @@ export class ExampleDataSource extends DataSource<File> {
       );
     });
   }
-
-
 }

@@ -1,4 +1,4 @@
-<mev-spinner-overlay *ngIf="isWait"></mev-spinner-overlay>
+<!-- <mev-spinner-overlay *ngIf="isWait"></mev-spinner-overlay> -->
 
 <div class="instruction">
   <p>
@@ -62,9 +62,9 @@
     <ng-container matColumnDef="resource_type">
       <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">File type</mat-header-cell>
       <mat-cell *matCellDef="let row">
-        <mat-select (selectionChange)="setFileType($event, row)"
+        <mat-select #select (selectionChange)="setFileType($event, row)"
           [value]="(row.status === 'Validating...' || row.status === 'Processing...') ? '' : getResourceTypeVal(row)"
-          [disabled]="row.status === 'Processing...'">
+          [disabled]="row.status === 'Processing...'" (click)="onOpenDropDown()" (closed)="onCloseDropDown(select)">
           <mat-option value="---" disabled>Please specify file type</mat-option>
           <mat-option *ngFor="let type of availableResourceTypes | keyvalue" [value]="type.key">
             {{ type.value.title }}
@@ -76,9 +76,10 @@
     <ng-container matColumnDef="format_type">
       <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">Format Type</mat-header-cell>
       <mat-cell *matCellDef="let row">
-        <mat-select *ngIf="currentSelectedFileType[row.id] || row.file_format"
+        <mat-select *ngIf="currentSelectedFileType[row.id] || row.file_format" #select
           (selectionChange)="setFormatType($event, row)"
-          [value]="(row.status === 'Validating...' || row.status === 'Processing...') ?  '' : getFileFormatVal(row)">
+          [value]="(row.status === 'Validating...' || row.status === 'Processing...') ?  '' : getFileFormatVal(row)"
+          (click)="onOpenDropDown()" (closed)="onCloseDropDown(select)">
           <div *ngIf="row.file_format === null && !formatTypeNeedsChange[row.id]">
             <mat-option value="---" disabled>Please specify format type</mat-option>
             <mat-option

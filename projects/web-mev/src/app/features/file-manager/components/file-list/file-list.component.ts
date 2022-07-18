@@ -85,6 +85,7 @@ export class FileListComponent implements OnInit {
   currentSelectedFileType = {};
   formatTypeNeedsChange = {};
   isDropDownOpen: boolean = false;
+  isWait: boolean = false;
 
   constructor(
     public httpClient: HttpClient,
@@ -154,11 +155,8 @@ export class FileListComponent implements OnInit {
 
   checkPollingStatus() {
     let polling = true;
-    for (let index in this.dataSource.renderedData) {
-      let row = this.dataSource.renderedData[index]
-      if (row["status"] === "Processing..." || this.isDropDownOpen === true) {
-        polling = false;
-      }
+    if (this.isDropDownOpen === true) {
+      polling = false;
     }
     return polling
   }
@@ -359,7 +357,22 @@ export class FileListComponent implements OnInit {
       data: { file: File }
     });
 
-    dialogRef.afterClosed().subscribe(() => {});
+    dialogRef.afterClosed().subscribe(() => {
+      const source = timer(1000, 5000);
+      let processingTimer = source.subscribe(val => {
+        let isProcessing = false;
+        for (let index in this.dataSource.renderedData) {
+          let row = this.dataSource.renderedData[index]
+          if (row.status === "Processing...") {
+            this.refresh();
+            isProcessing = true
+          }
+        }
+        if (isProcessing === false) {
+          processingTimer.unsubscribe()
+        }
+      })
+    });
   }
 
   /**
@@ -435,6 +448,7 @@ export class FileListComponent implements OnInit {
    *
    */
   previewItem(fileId: string) {
+    this.isWait = true;
     this.fileService.getFilePreview(fileId).subscribe(data => {
       const previewData = {};
       if (data?.results?.length && 'rowname' in data.results[0]) {
@@ -452,6 +466,7 @@ export class FileListComponent implements OnInit {
         previewData['rows'] = rows;
         previewData['values'] = values;
       }
+      this.isWait = false;
       this.ref.markForCheck();
       this.dialog.open(PreviewDialogComponent, {
         data: {
@@ -461,6 +476,7 @@ export class FileListComponent implements OnInit {
     },
       error => {
         // error was already reported to the user--
+        this.isWait = false;
         this.ref.markForCheck();
       });
   }

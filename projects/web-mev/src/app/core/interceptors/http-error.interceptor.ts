@@ -27,11 +27,6 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         if (typeof error === 'string') {
           return throwError(error);
         }
-        if (error.status === 502) {
-          console.log("found 502!!")
-        }
-        console.log("error from http interceptor: ", error)
-
         // If Unauthorized (401) and it is not user sign-in, we perform refresh process to get refresh token and don't show notification error for the user
         if (
           error instanceof HttpErrorResponse &&
@@ -45,7 +40,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
           error.status === 413) {
           errorMessage = 'The file you are attempting to upload is too large for our basic upload process. Please use an alternate method suitable for large files.';
           this.notificationService.error(errorMessage);
-          return throwError(errorMessage);
+          return throwError(() => errorMessage);
         }
         if (
           error instanceof HttpErrorResponse &&
@@ -71,14 +66,14 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         // structure of the error responses can vary depending on the endpoint.  
         //this.notificationService.error(errorMessage);
         if (error.status === 500) {
-          return throwError(errorMessage);
+          return throwError(() => errorMessage);
         } else {
           // If the next.handle(request) is uncommented, then 
           // calling functions cannot act on any 400 or 404 error codes
           // By instead throwing the error, we can act on it and issue
           // an appropriate messageß
           //return next.handle(request);
-          return throwError(error);
+          return throwError(() => error);
         }
       })
     );

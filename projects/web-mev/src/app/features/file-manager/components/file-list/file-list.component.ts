@@ -124,6 +124,8 @@ export class FileListComponent implements OnInit {
           this.refresh();
           this.uploadInProgressMsg = '';
           this.ref.markForCheck();
+
+          this.checkStatusIsProcessing();
         }
       }
     );
@@ -357,22 +359,7 @@ export class FileListComponent implements OnInit {
       data: { file: File }
     });
 
-    dialogRef.afterClosed().subscribe(() => {
-      const source = timer(1000, 5000);
-      let processingTimer = source.subscribe(val => {
-        let isProcessing = false;
-        for (let index in this.dataSource.renderedData) {
-          let row = this.dataSource.renderedData[index]
-          if (row.status === "Processing...") {
-            this.refresh();
-            isProcessing = true
-          }
-        }
-        if (isProcessing === false) {
-          processingTimer.unsubscribe()
-        }
-      })
-    });
+    dialogRef.afterClosed().subscribe(() => { });
   }
 
   /**
@@ -529,6 +516,25 @@ export class FileListComponent implements OnInit {
         }
         this.dataSource.filter = this.filter.nativeElement.value;
       });
+  }
+
+  //Refreshes UI every 5s if Status is "Processing" to get it to load the next state
+  checkStatusIsProcessing() {
+    const source = timer(1000, 5000);
+    let processingTimer = source.subscribe(val => {
+      let isProcessing = false;
+      for (let index in this.dataSource.renderedData) {
+        let row = this.dataSource.renderedData[index]
+        if (row.status === "Processing...") {
+          this.refresh();
+          isProcessing = true;
+        }
+      }
+      if (isProcessing === false) {
+        this.refresh();
+        processingTimer.unsubscribe()
+      }
+    })
   }
 }
 

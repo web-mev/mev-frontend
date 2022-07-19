@@ -15,7 +15,7 @@ import { NotificationService } from '@core/notifications/notification.service';
  * */
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
-  constructor(private readonly notificationService: NotificationService) {}
+  constructor(private readonly notificationService: NotificationService) { }
 
   intercept(
     request: HttpRequest<any>,
@@ -27,7 +27,6 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         if (typeof error === 'string') {
           return throwError(error);
         }
-
         // If Unauthorized (401) and it is not user sign-in, we perform refresh process to get refresh token and don't show notification error for the user
         if (
           error instanceof HttpErrorResponse &&
@@ -38,11 +37,18 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         }
         if (
           error instanceof HttpErrorResponse &&
-          error.status === 413){
-            errorMessage = 'The file you are attempting to upload is too large for our basic upload process. Please use an alternate method suitable for large files.';
-            this.notificationService.error(errorMessage);
-            return throwError(errorMessage);
-          }
+          error.status === 413) {
+          errorMessage = 'The file you are attempting to upload is too large for our basic upload process. Please use an alternate method suitable for large files.';
+          this.notificationService.error(errorMessage);
+          return throwError(() => errorMessage);
+        }
+        if (
+          error instanceof HttpErrorResponse &&
+          error.status === 502) {
+          errorMessage = 'The server is experiencing intermittent issues and is not responding. Please try again later.';
+          this.notificationService.error(errorMessage);
+          return throwError(() => errorMessage);
+        }
         if (error.error instanceof ErrorEvent) {
           errorMessage = `Error: ${error.error.message}`;
         } else {
@@ -59,15 +65,15 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         // HOWEVER, that can lead to some poorly formatted messages since the
         // structure of the error responses can vary depending on the endpoint.  
         //this.notificationService.error(errorMessage);
-        if(error.status === 500){
-          return throwError(errorMessage);
+        if (error.status === 500) {
+          return throwError(() => errorMessage);
         } else {
           // If the next.handle(request) is uncommented, then 
           // calling functions cannot act on any 400 or 404 error codes
           // By instead throwing the error, we can act on it and issue
           // an appropriate messageß
           //return next.handle(request);
-          return throwError(error);
+          return throwError(() => error);
         }
       })
     );

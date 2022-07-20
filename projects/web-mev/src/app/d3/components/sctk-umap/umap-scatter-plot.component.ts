@@ -14,6 +14,9 @@ import { AnalysesService } from '@app/features/analysis/services/analysis.servic
 import { MetadataService } from '@app/core/metadata/metadata.service';
 import { CustomSetType, CustomSet } from '@app/_models/metadata';
 
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { environment } from '@environments/environment';
+
 /**
  * Scatter Plot Component
  *
@@ -35,6 +38,10 @@ export class UmapScatterPlotComponent implements OnChanges {
   customObservationSets = [];
   sampleColorMap = {}; // mapping individual samples and colors (used for points in scatter plot)
   sampleSetColors = []; // the list of sample sets and their colors (used for legend in scatter plot)
+
+  geneObj = {};
+  geneMin;
+  geneMax;
 
   /* Chart settings */
   containerId = '#scatterPlot';
@@ -62,15 +69,41 @@ export class UmapScatterPlotComponent implements OnChanges {
   brushListener;
   zoomTransform;
 
+  private readonly API_URL = environment.apiUrl;
+
   constructor(
     public dialog: MatDialog,
     private apiService: AnalysesService,
-    private metadataService: MetadataService
-  ) {}
+    private metadataService: MetadataService,
+    private httpClient: HttpClient,
+  ) { }
 
   ngOnChanges(): void {
     this.customObservationSets = this.metadataService.getCustomObservationSets();
-    this.generateScatterPlot();
+    // this.generateScatterPlot();
+
+    console.log("outputs: ", this.outputs)
+    //need to dynamically get workspaceID
+    // let test_workspaceID = '534691c4-303c-4d5a-938d-2eb851c8d31d';
+    let uuid = this.outputs["SctkUmapDimensionReduce.raw_counts"]
+    console.log('uuid: ', uuid)
+    //search term
+    let gene = 'ENSG00000238009'
+    this.httpClient.get(
+      `${this.API_URL}/resources/${uuid}/contents/?__rowname__=[eq]:${gene}`).subscribe(res => {
+        console.log("values for gradient: ", res[0].values)
+        let arr = [];
+        arr = Object.values(res[0].values)
+        this.geneObj = res[0].values;
+        this.geneMin = Math.min(...arr);
+        this.geneMax = Math.max(...arr);
+        // console.log("min/max: ", min, max)
+        console.log("gene: ", this.geneObj, this.geneMin, this.geneMax)
+        this.generateScatterPlot();
+      })
+
+    
+
   }
 
   onResize(event) {
@@ -86,6 +119,7 @@ export class UmapScatterPlotComponent implements OnChanges {
     this.apiService
       .getResourceContent(resourceId, 1, this.maxPointNumber)
       .subscribe(response => {
+        console.log("umap_output: ", response)
         this.umapData = {
           ...response
         };
@@ -187,6 +221,10 @@ export class UmapScatterPlotComponent implements OnChanges {
       .scaleLinear()
       .rangeRound([height, 0])
       .nice();
+
+    let color2 = d3.scaleLinear()
+      .domain([this.geneMin, this.geneMax])
+      .range(["rgb(220,220,220)", "steelblue"]);
 
     const xMax = d3.max(data, d => <number>d[this.xCat]);
     const xMin = d3.min(data, d => <number>d[this.xCat]);
@@ -308,7 +346,9 @@ export class UmapScatterPlotComponent implements OnChanges {
           ')'
       )
       .style('fill', d => {
-        return this.sampleColorMap[d[this.pointCat]] || 'grey';
+        console.log("d: ", d["sample"], this.geneObj[d.sample], this.geneObj)
+        return this.sampleColorMap[d[this.pointCat]] || color2(this.geneObj[d.sample]);
+        // .attr("fill", function(d){ return color2(d)})
       })
       .attr('stroke', d =>
         this.sampleColorMap[d[this.pointCat]] === 'transparent' ? '#000' : ''
@@ -333,7 +373,7 @@ export class UmapScatterPlotComponent implements OnChanges {
       .enter()
       .append('g')
       .classed('legend', true)
-      .attr('transform', function(d, i) {
+      .attr('transform', function (d, i) {
         return 'translate(0,' + i * 20 + ')';
       });
 
@@ -352,13 +392,13 @@ export class UmapScatterPlotComponent implements OnChanges {
       .attr('class', 'legend-label')
       .text(d => d.name);
 
-      // this may seem trivial here, but it keeps the plot mode (zoom/pan vs. select)
-      // consistent. Otherwise it gets reset to be zoom each time this function is called.
-      this.onChartViewChange(this.chartViewMode);
+    // this may seem trivial here, but it keeps the plot mode (zoom/pan vs. select)
+    // consistent. Otherwise it gets reset to be zoom each time this function is called.
+    this.onChartViewChange(this.chartViewMode);
 
-      // resets since otherwise you will see "selected samples" (the count) when the plot does not show any
-      // as being brushed.
-      this.selectedSamples = [];
+    // resets since otherwise you will see "selected samples" (the count) when the plot does not show any
+    // as being brushed.
+    this.selectedSamples = [];
 
   }
 

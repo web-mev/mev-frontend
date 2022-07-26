@@ -56,8 +56,6 @@ export class UmapScatterPlotComponent implements OnChanges {
 
   pointCat = 'sample'; // data field used to label individual points
 
-
-
   /* D3 chart variables */
   xAxis; // axes
   yAxis;
@@ -234,7 +232,7 @@ export class UmapScatterPlotComponent implements OnChanges {
       .rangeRound([height, 0])
       .nice();
 
-    let color2 = d3.scaleLinear()
+    let colorGradient = d3.scaleLinear()
       .domain([this.geneMin, this.geneMax])
       .range(["rgb(220,220,220)", "steelblue"]);
 
@@ -361,7 +359,7 @@ export class UmapScatterPlotComponent implements OnChanges {
         if (this.overlayValue === '') {
           return this.sampleColorMap[d[this.pointCat]] || 'grey';
         } else {
-          return this.sampleColorMap[d[this.pointCat]] || color2(this.geneObj[d.sample]);
+          return this.sampleColorMap[d[this.pointCat]] || colorGradient(this.geneObj[d.sample]);
         }
       })
       .attr('stroke', d =>
@@ -406,18 +404,16 @@ export class UmapScatterPlotComponent implements OnChanges {
       .attr('class', 'legend-label')
       .text(d => d.name);
 
-
-
     // Gradient Legend
     if (this.overlayValue !== '') {
       var data2 = [{ "color": "rgb(220,220,220)", "value": this.geneMin }, { "color": "steelblue", "value": this.geneMax }];
       var extent = d3.extent(data2, d => d.value);
 
-      var padding = 9;
-      var width2 = 350;
-      var innerWidth = width2 - (padding * 2);
+      var paddingGradient = 9;
+      var widthGradient = 350;
+      var innerWidth = widthGradient - (paddingGradient * 2);
       var barHeight = 8;
-      var height2 = 200;
+      var heightGradient = 200;
 
       var xScale = d3.scaleLinear()
         .range([0, innerWidth - 100])
@@ -431,8 +427,8 @@ export class UmapScatterPlotComponent implements OnChanges {
 
       var svg = d3.select(".legend")
         .append("svg")
-        .attr("width", width2)
-        .attr("height", height2)
+        .attr("width", widthGradient)
+        .attr("height", heightGradient)
         .attr('x', width + 10)
         .attr('y', (this.sampleSetColors.length * 20) + 70);
 
@@ -448,7 +444,7 @@ export class UmapScatterPlotComponent implements OnChanges {
         .attr("stop-color", d => d.color)
 
       var g = svg.append("g")
-        .attr("transform", `translate(${padding + 10}, 30)`)
+        .attr("transform", `translate(${paddingGradient + 10}, 30)`)
 
       g.append("rect")
         .attr("width", innerWidth - 100)

@@ -454,7 +454,8 @@ export class UmapScatterPlotComponent implements OnChanges {
       svg.append('text')
         .attr('y', 20)
         .attr('x', 17)
-        .style('fill', 'rgba(0,0,0,.8)')
+        .style('fill', 'rgba(0,0,0,.7)')
+        .style('font-size', '11px')
         .attr("text-anchor", "start")
         .attr("font-weight", "bold")
         .text("Expression (counts)");

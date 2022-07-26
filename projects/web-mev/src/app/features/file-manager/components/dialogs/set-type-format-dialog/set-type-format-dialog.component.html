@@ -1,26 +1,7 @@
 <div class="container">
-  <h3 mat-dialog-title>Edit File</h3>
+  <h3 mat-dialog-title>Set File Type & Format Type</h3>
 
   <form class="mat-dialog-content" (ngSubmit)="submit" #formControl="ngForm">
-
-    <!--div class="form">
-      <mat-form-field color="accent">
-        <input matInput #input class="form-control" placeholder="Id" [(ngModel)]="data.id" name="id" required >
-        <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
-      </mat-form-field>
-    </div-->
-
-    <div class="form">
-      <mat-form-field color="accent">
-        <input matInput #input class="form-control" placeholder="File name" [(ngModel)]="data.name" name="name"
-          required>
-        <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
-      </mat-form-field>
-    </div>
-    <p class="hints">
-      Note that the file name is simply for helping users identify their files. We don't use it to determine file types
-      or formats.
-    </p>
     <div class="form">
       <mat-form-field color="accent">
         <mat-label>Select a resource type</mat-label>
@@ -50,8 +31,6 @@
     <div *ngFor="let type of acceptableResourceTypes[data.resource_type] | keyvalue">
       <p class="hints" *ngIf="type.value.key === data.file_format">{{type.value.description}}</p>
     </div>
-
-
     <br>
     <br>
     <div mat-dialog-actions>

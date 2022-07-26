@@ -1,0 +1,42 @@
+<div class="container">
+  <h3 mat-dialog-title>Set File Type & Format Type</h3>
+
+  <form class="mat-dialog-content" (ngSubmit)="submit" #formControl="ngForm">
+    <div class="form">
+      <mat-form-field color="accent">
+        <mat-label>Select a resource type</mat-label>
+        <mat-select [(ngModel)]=data.resource_type name="resource_type" required>
+          <mat-option *ngFor="let type of resourceTypes | keyvalue" [value]="type.key">
+            {{ type.value.title }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
+      </mat-form-field>
+    </div>
+    <p class="hints" *ngIf=resourceTypes[data.resource_type]>
+      {{ resourceTypes[data.resource_type].description }}</p>
+
+    <div class="form">
+      <mat-form-field color="accent">
+        <mat-label>Select a format type</mat-label>
+        <mat-select [value]=data.file_format name="format_type" (selectionChange)="setFormatType($event)" required>
+          <mat-option *ngFor="let type of acceptableResourceTypes[data.resource_type] | keyvalue"
+            [value]="type.value.key">
+            {{ type.value.key }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
+      </mat-form-field>
+    </div>
+    <div *ngFor="let type of acceptableResourceTypes[data.resource_type] | keyvalue">
+      <p class="hints" *ngIf="type.value.key === data.file_format">{{type.value.description}}</p>
+    </div>
+    <br>
+    <br>
+    <div mat-dialog-actions>
+      <button mat-button [type]="submit" [disabled]="!formControl.valid" (click)="stopEdit()" mat-raised-button
+        color="accent">Save</button>
+      <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
+    </div>
+  </form>
+</div>

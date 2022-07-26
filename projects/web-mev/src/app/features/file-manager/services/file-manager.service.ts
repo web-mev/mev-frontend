@@ -111,30 +111,30 @@ export class FileService {
   }
 
   //For the file-list.component, need a shorter max time of 5s in order to not refresh whole table for the first 20s and close dropdown menu
-  public getAllFilesPolledFileList(): void {
-    // refresh the status of the resource validation process every 5 seconds
-    let maxTime2 = 5000;
-    const maxTimer$ = timer(maxTime2);
-    timer(0, 5000)
-      .pipe(
-        concatMap(() => this.httpClient.get(`${this.API_URL}/resources/`)),
-        map((files: File[]) => files.map(file => this.adapter.adapt(file))),
-        takeWhile(
-          files =>
-            files.some(file => {
-              let file_is_inactive = !(file.is_active);
-              let waiting =  this.FILE_VALIDATION_PROGRESS_STATUSES.includes(file.status);
-              return (file_is_inactive || waiting)
-            }
-            ),
-          true
-        ),
-        takeUntil(maxTimer$)
-      )
-      .subscribe(data => {
-        this.dataChange.next(data);
-      });
-  }
+  // public getAllFilesPolledFileList(): void {
+  //   // refresh the status of the resource validation process every 5 seconds
+  //   let maxTime2 = 5000;
+  //   const maxTimer$ = timer(maxTime2);
+  //   timer(0, 5000)
+  //     .pipe(
+  //       concatMap(() => this.httpClient.get(`${this.API_URL}/resources/`)),
+  //       map((files: File[]) => files.map(file => this.adapter.adapt(file))),
+  //       takeWhile(
+  //         files =>
+  //           files.some(file => {
+  //             let file_is_inactive = !(file.is_active);
+  //             let waiting =  this.FILE_VALIDATION_PROGRESS_STATUSES.includes(file.status);
+  //             return (file_is_inactive || waiting)
+  //           }
+  //           ),
+  //         true
+  //       ),
+  //       takeUntil(maxTimer$)
+  //     )
+  //     .subscribe(data => {
+  //       this.dataChange.next(data);
+  //     });
+  // }
 
   /**
    * Add file, post method

@@ -7,6 +7,7 @@ import { AddFileDialogComponent } from '@app/features/file-manager/components/di
 import { EditFileDialogComponent } from '@app/features/file-manager/components/dialogs/edit-file-dialog/edit-file-dialog.component';
 import { DeleteFileDialogComponent } from '@app/features/file-manager/components/dialogs/delete-file-dialog/delete-file-dialog.component';
 import { ProgressSnackbarComponent } from '@file-manager/components/progress-snackbar/progress-snackbar.component';
+import { SetTypeFormatDialogComponent } from '@app/features/file-manager/components/dialogs/set-type-format-dialog/set-type-format-dialog.component';
 
 import { SharedModule } from '@app/shared/shared.module';
 import { ViewFileTypesDialogComponent } from './components/dialogs/view-file-types-dialog/view-file-types-dialog.component';
@@ -19,7 +20,8 @@ import { FileDownloadDirective } from './directives/file-download'
     DeleteFileDialogComponent,
     ProgressSnackbarComponent,
     ViewFileTypesDialogComponent,
-    FileDownloadDirective
+    FileDownloadDirective,
+    SetTypeFormatDialogComponent 
   ],
   exports: [FileListComponent],
   imports: [CommonModule, FileManagerRoutingModule, SharedModule]

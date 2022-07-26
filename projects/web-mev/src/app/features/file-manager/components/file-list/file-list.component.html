@@ -60,62 +60,15 @@
     </ng-container>
 
     <ng-container matColumnDef="resource_type">
-      <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">File type</mat-header-cell>
-      <mat-cell *matCellDef="let row">
-        <mat-select #select (selectionChange)="setFileType($event, row)"
-          [value]="(row.status === 'Validating...' || row.status === 'Processing...') ? '' : getResourceTypeVal(row)"
-          [disabled]="row.status === 'Processing...'" (click)="onOpenDropDown()" (closed)="onCloseDropDown(select)">
-          <mat-option value="---" disabled>Please specify file type</mat-option>
-          <mat-option *ngFor="let type of availableResourceTypes | keyvalue" [value]="type.key">
-            {{ type.value.title }}
-          </mat-option>
-        </mat-select>
-      </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="format_type">
-      <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">Format Type</mat-header-cell>
-      <mat-cell *matCellDef="let row">
-        <mat-select *ngIf="currentSelectedFileType[row.id] || row.file_format" #select
-          (selectionChange)="setFormatType($event, row)"
-          [value]="(row.status === 'Validating...' || row.status === 'Processing...') ?  '' : getFileFormatVal(row)"
-          (click)="onOpenDropDown()" (closed)="onCloseDropDown(select)">
-          <div *ngIf="row.file_format === null && !formatTypeNeedsChange[row.id]">
-            <mat-option value="---" disabled>Please specify format type</mat-option>
-            <mat-option
-              *ngFor="let type of acceptableResourceTypes[currentSelectedFileType[row.id]['fileType']] | keyvalue"
-              [value]="type.value.key">
-              {{ type.value.key }}
-            </mat-option>
-          </div>
-          <div
-            *ngIf="row.file_format && row.resource_type === null || row.status !== '' && !formatTypeNeedsChange[row.id]">
-            <mat-option value="---" disabled>Please specify format type</mat-option>
-            <mat-option *ngFor="let type of acceptableResourceTypes[row.resource_type] | keyvalue"
-              [value]="type.value.key">
-              {{ type.value.key }}
-            </mat-option>
-          </div>
-          <!-- if everything is okay, have file_format be disabled -->
-          <div
-            *ngIf="row.file_format && row.resource_type !== null && row.status === '' && !formatTypeNeedsChange[row.id]">
-            <mat-option value="---" disabled>Please specify format type</mat-option>
-            <mat-option *ngFor="let type of acceptableResourceTypes[row.resource_type] | keyvalue"
-              [value]="type.value.key" disabled>
-              {{ type.value.key }}
-            </mat-option>
-          </div>
-          <!-- if file_type has been changed and new file_formats need to be loaded -->
-          <div *ngIf="formatTypeNeedsChange[row.id]">
-            <mat-option value="---" disabled>Please specify format type</mat-option>
-            <mat-option
-              *ngFor="let type of acceptableResourceTypes[currentSelectedFileType[row.id]['fileType']] | keyvalue"
-              [value]="type.value.key">
-              {{ type.value.key }}
-            </mat-option>
-          </div>
-
-        </mat-select>
+      <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">File/Format type</mat-header-cell>
+      <mat-cell *matCellDef="let row; let i=index;" [class.warning-cell]="!row.resource_type">
+        <div *ngIf="row.readable_resource_type !== null">{{row.readable_resource_type}},
+          {{row.file_format}}</div>
+        <button *ngIf="row.readable_resource_type === null"
+          [disabled]="row.status === 'Processing...' || row.status === 'Validating...'" mat-raised-button color="accent"
+          (click)="setFileTypeFormatType(i, row.id, row.name, row.resource_type, row.file_format)">
+          Set Type/Format
+        </button>
       </mat-cell>
     </ng-container>
 

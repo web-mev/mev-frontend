@@ -60,7 +60,7 @@
     </ng-container>
 
     <ng-container matColumnDef="resource_type">
-      <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">File/Format type</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">File & Format type</mat-header-cell>
       <mat-cell *matCellDef="let row; let i=index;" [class.warning-cell]="!row.resource_type">
         <div *ngIf="row.readable_resource_type !== null">{{row.readable_resource_type}},
           {{row.file_format}}</div>

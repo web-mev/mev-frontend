@@ -14,10 +14,12 @@ import { AnalysesService } from '@app/features/analysis/services/analysis.servic
 import { MetadataService } from '@app/core/metadata/metadata.service';
 import { CustomSetType, CustomSet } from '@app/_models/metadata';
 
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
+import { catchError } from 'rxjs/operators';
+import { NotificationService } from '@core/notifications/notification.service';
 
-/**
+/**vagr
  * Scatter Plot Component
  *
  * Used for plotting the UMAP projection
@@ -40,8 +42,8 @@ export class UmapScatterPlotComponent implements OnChanges {
   sampleSetColors = []; // the list of sample sets and their colors (used for legend in scatter plot)
 
   geneObj = {};
-  geneMin;
-  geneMax;
+  geneMin = 0;
+  geneMax = 1;
 
   /* Chart settings */
   containerId = '#scatterPlot';
@@ -68,6 +70,8 @@ export class UmapScatterPlotComponent implements OnChanges {
   zoomListener;
   brushListener;
   zoomTransform;
+  overlayValue = '';
+  isWait = false;
 
   private readonly API_URL = environment.apiUrl;
 
@@ -76,34 +80,44 @@ export class UmapScatterPlotComponent implements OnChanges {
     private apiService: AnalysesService,
     private metadataService: MetadataService,
     private httpClient: HttpClient,
+    private readonly notificationService: NotificationService
   ) { }
 
   ngOnChanges(): void {
+    this.isWait = true;
     this.customObservationSets = this.metadataService.getCustomObservationSets();
-    // this.generateScatterPlot();
+    if (this.overlayValue === '') {
+      this.generateScatterPlot();
+    } else {
+      this.getOverlayValues();
+    }
+  }
 
-    console.log("outputs: ", this.outputs)
-    //need to dynamically get workspaceID
-    // let test_workspaceID = '534691c4-303c-4d5a-938d-2eb851c8d31d';
-    let uuid = this.outputs["SctkUmapDimensionReduce.raw_counts"]
-    console.log('uuid: ', uuid)
-    //search term
-    let gene = 'ENSG00000238009'
+  getOverlayValues() {
+    let uuid = this.outputs["SctkUmapDimensionReduce.raw_counts"];
+    let gene = this.overlayValue;
     this.httpClient.get(
-      `${this.API_URL}/resources/${uuid}/contents/?__rowname__=[eq]:${gene}`).subscribe(res => {
-        console.log("values for gradient: ", res[0].values)
-        let arr = [];
-        arr = Object.values(res[0].values)
-        this.geneObj = res[0].values;
-        this.geneMin = Math.min(...arr);
-        this.geneMax = Math.max(...arr);
-        // console.log("min/max: ", min, max)
-        console.log("gene: ", this.geneObj, this.geneMin, this.geneMax)
-        this.generateScatterPlot();
+      `${this.API_URL}/resources/${uuid}/contents/?__rowname__=[eq]:${gene}`).pipe(
+        catchError(error => {
+          this.isWait = false;
+          this.notificationService.error(`Error: ${error.message}`);
+          throw error;
+        }))
+      .subscribe(res => {
+        this.isWait = false;
+        if (res !== [] && res[0]) {
+          let arr = [];
+          arr = Object.values(res[0].values)
+          this.geneObj = res[0].values;
+          this.geneMin = Math.min(...arr);
+          this.geneMax = Math.max(...arr);
+          this.generateScatterPlot();
+        } else {
+          this.overlayValue = '';
+          let error = "There was a problem with the gene name you entered. Please try again."
+          this.notificationService.error(`Error: ${error}`);
+        }
       })
-
-    
-
   }
 
   onResize(event) {
@@ -115,11 +129,10 @@ export class UmapScatterPlotComponent implements OnChanges {
    */
   generateScatterPlot() {
     const resourceId = this.outputs['SctkUmapDimensionReduce.umap_output'];
-
     this.apiService
       .getResourceContent(resourceId, 1, this.maxPointNumber)
       .subscribe(response => {
-        console.log("umap_output: ", response)
+        this.isWait = false;
         this.umapData = {
           ...response
         };
@@ -133,7 +146,6 @@ export class UmapScatterPlotComponent implements OnChanges {
    */
   reformatData() {
     const results = this.umapData.results;
-
     const newPoints = [];
     if (results.length > 0 && results[0].values) {
       const sampleNames = Object.keys(results[0].values);
@@ -346,9 +358,11 @@ export class UmapScatterPlotComponent implements OnChanges {
           ')'
       )
       .style('fill', d => {
-        console.log("d: ", d["sample"], this.geneObj[d.sample], this.geneObj)
-        return this.sampleColorMap[d[this.pointCat]] || color2(this.geneObj[d.sample]);
-        // .attr("fill", function(d){ return color2(d)})
+        if (this.overlayValue === '') {
+          return this.sampleColorMap[d[this.pointCat]] || 'grey';
+        } else {
+          return this.sampleColorMap[d[this.pointCat]] || color2(this.geneObj[d.sample]);
+        }
       })
       .attr('stroke', d =>
         this.sampleColorMap[d[this.pointCat]] === 'transparent' ? '#000' : ''
@@ -380,17 +394,79 @@ export class UmapScatterPlotComponent implements OnChanges {
     legend
       .append('circle')
       .attr('r', 5)
-      .attr('cx', width + 20)
+      .attr('cx', width + 30)
       .attr('fill', d => d.color)
       .attr('stroke', d => (d.color !== 'transparent' ? d.color : '#000'));
 
     legend
       .append('text')
-      .attr('x', width + 35)
+      .attr('x', width + 45)
       .attr('dy', '.35em')
       .style('fill', '#000')
       .attr('class', 'legend-label')
       .text(d => d.name);
+
+
+
+    // Gradient Legend
+    if (this.overlayValue !== '') {
+      var data2 = [{ "color": "rgb(220,220,220)", "value": this.geneMin }, { "color": "steelblue", "value": this.geneMax }];
+      var extent = d3.extent(data2, d => d.value);
+
+      var padding = 9;
+      var width2 = 350;
+      var innerWidth = width2 - (padding * 2);
+      var barHeight = 8;
+      var height2 = 200;
+
+      var xScale = d3.scaleLinear()
+        .range([0, innerWidth - 100])
+        .domain(extent);
+
+      var xTicks = data2.filter(f => f.value === this.geneMin || f.value === this.geneMax).map(d => d.value);
+
+      var xAxis2 = d3.axisBottom(xScale)
+        .tickSize(barHeight * 2)
+        .tickValues(xTicks);
+
+      var svg = d3.select(".legend")
+        .append("svg")
+        .attr("width", width2)
+        .attr("height", height2)
+        .attr('x', width + 10)
+        .attr('y', (this.sampleSetColors.length * 20) + 70);
+
+      var defs = svg.append("defs");
+      var linearGradient = defs
+        .append("linearGradient")
+        .attr("id", "myGradient");
+
+      linearGradient.selectAll("stop")
+        .data(data2)
+        .enter().append("stop")
+        .attr("offset", d => ((d.value - extent[0]) / (extent[1] - extent[0]) * 100) + "%")
+        .attr("stop-color", d => d.color)
+
+      var g = svg.append("g")
+        .attr("transform", `translate(${padding + 10}, 30)`)
+
+      g.append("rect")
+        .attr("width", innerWidth - 100)
+        .attr("height", barHeight)
+        .style("fill", "url(#myGradient)");
+
+      svg.append('text')
+        .attr('y', 20)
+        .attr('x', 17)
+        .style('fill', 'rgba(0,0,0,.8)')
+        .attr("text-anchor", "start")
+        .attr("font-weight", "bold")
+        .text("Expression (counts)");
+
+      g.append("g")
+        .call(xAxis2)
+        .select(".domain").remove();
+    }
 
     // this may seem trivial here, but it keeps the plot mode (zoom/pan vs. select)
     // consistent. Otherwise it gets reset to be zoom each time this function is called.
@@ -525,5 +601,10 @@ export class UmapScatterPlotComponent implements OnChanges {
 
   isCustomObservationSetChecked(setName) {
     return this.sampleSetColors.find(set => set.name === setName);
+  }
+
+  onOverlay() {
+    this.isWait = true;
+    this.getOverlayValues();
   }
 }

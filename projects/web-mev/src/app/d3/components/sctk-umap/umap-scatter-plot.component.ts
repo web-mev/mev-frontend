@@ -421,7 +421,7 @@ export class UmapScatterPlotComponent implements OnChanges {
 
       var xTicks = data2.filter(f => f.value === this.geneMin || f.value === this.geneMax).map(d => d.value);
 
-      var xAxis2 = d3.axisBottom(xScale)
+      var xAxisGradient = d3.axisBottom(xScale)
         .tickSize(barHeight * 2)
         .tickValues(xTicks);
 
@@ -460,7 +460,7 @@ export class UmapScatterPlotComponent implements OnChanges {
         .text("Expression (counts)");
 
       g.append("g")
-        .call(xAxis2)
+        .call(xAxisGradient)
         .select(".domain").remove();
     }
 

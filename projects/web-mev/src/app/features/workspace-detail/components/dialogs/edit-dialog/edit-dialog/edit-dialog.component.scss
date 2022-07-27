@@ -9,10 +9,6 @@
   min-width: 450px;
 }
 
-// .container > * {
-//   width: 100%;
-// }
-
 .mat-dialog-content {
   max-height: none;
   overflow: visible;
@@ -45,7 +41,7 @@
 ///new styling
 .headerSpan {
   display: flex;
-  background-color: #1DA1F2;
+  background-color: #1da1f2;
   margin: -35px -40px 20px -40px;
 }
 
@@ -59,10 +55,10 @@
   font-weight: bold;
   font-size: 24px;
 }
-.dialogContent{
+.dialogContent {
   font-size: 14px;
   font-weight: 400;
-  color: rgba(0,0,0,.6);
+  color: rgba(0, 0, 0, 0.6);
   margin-top: 1em;
 }
 
@@ -71,12 +67,11 @@
   color: white;
 }
 
-.closeDialogButton:hover{
-  opacity: .75;
+.closeDialogButton:hover {
+  opacity: 0.75;
 }
 
 .submitBtnContainer {
-  position: absolute;
-  bottom: 0;
-  right: 24px;
+  display: flex;
+  justify-content: flex-end;
 }

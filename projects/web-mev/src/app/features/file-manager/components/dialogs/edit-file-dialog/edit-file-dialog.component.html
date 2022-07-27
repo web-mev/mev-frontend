@@ -55,15 +55,8 @@
     <div *ngFor="let type of acceptableResourceTypes[data.resource_type] | keyvalue">
       <p class="hints" *ngIf="type.value.key === data.file_format">{{type.value.description}}</p>
     </div>
-
-
     <br>
     <br>
-    <!-- <div mat-dialog-actions>
-      <button mat-button [type]="submit" [disabled]="!formControl.valid" (click)="stopEdit()" mat-raised-button
-        color="accent">Save</button>
-      <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
-    </div> -->
     <div class="submitBtnContainer">
       <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
       <button mat-button [type]="submit" [disabled]="!formControl.valid" (click)="stopEdit()" mat-raised-button

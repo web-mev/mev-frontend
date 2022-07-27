@@ -1,19 +1,25 @@
 <div class="container">
-  <h3 mat-dialog-title>Add new workspace</h3>
+  <span class="headerSpan">
+    <div class="dialogTitle">Add New Workspace</div>
+    <button class="closeDialogButton" mat-dialog-close mat-icon-button type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </span>
 
   <form class="mat-dialog-content" (ngSubmit)="submit" #formControl="ngForm">
 
     <div class="form">
       <mat-form-field color="accent">
-        <input matInput #input class="form-control" placeholder="Workspace name" [(ngModel)]="data.workspace_name" name="workspace_name" required >
+        <input matInput #input class="form-control" placeholder="Workspace name" [(ngModel)]="data.workspace_name"
+          name="workspace_name" required>
         <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
       </mat-form-field>
     </div>
 
-    <div mat-dialog-actions>
-      <button mat-button mat-raised-button color="accent" [type]="submit" [disabled]="!formControl.valid" (click)="confirmAdd()">Save</button>
+    <div class="submitBtnContainer">
       <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
+      <button mat-button mat-raised-button color="accent" [type]="submit" [disabled]="!formControl.valid"
+        (click)="confirmAdd()">Save</button>
     </div>
-    <p></p>
   </form>
 </div>

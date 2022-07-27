@@ -1,16 +1,25 @@
 <div class="container">
-  <h3 mat-dialog-title>This workspace will be deleted. Are you sure?
-    (Note that your files will NOT be deleted)
-  </h3>
+  <span class="headerSpan">
+    <div class="dialogTitle">Delete Workspace</div>
+    <button class="closeDialogButton" mat-dialog-close mat-icon-button type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </span>
+  <span>
+    <h3 class="boldText">This workspace will be deleted. Are you sure?</h3>
+    <h4>(Note that your files will NOT be deleted)</h4>
+  </span>
+  <br>
   <div mat-dialog-content>
     Id: {{data.id}}
-    <p></p>
+    <br>
     Workspace name: {{data.workspace_name}}
-    <p></p>
+    <br>
   </div>
-
-  <div mat-dialog-actions>
-    <button mat-button [mat-dialog-close]="1" (click)="confirmDelete()">Delete</button>
+  <br>
+  <br>
+  <div class="submitBtnContainer">
     <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
+    <button mat-button [mat-dialog-close]="1" (click)="confirmDelete()" mat-raised-button color="accent">Delete</button>
   </div>
 </div>

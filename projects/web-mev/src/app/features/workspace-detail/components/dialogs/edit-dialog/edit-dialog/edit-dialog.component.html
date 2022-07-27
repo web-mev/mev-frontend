@@ -1,5 +1,10 @@
 <div class="container">
-  <h3 mat-dialog-title>Edit Resource</h3>
+  <span class="headerSpan">
+    <div class="dialogTitle">Edit Resource</div>
+    <button class="closeDialogButton" mat-dialog-close mat-icon-button type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </span>
 
   <form class="mat-dialog-content" (ngSubmit)="submit" #formControl="ngForm">
     <div class="form">
@@ -15,10 +20,10 @@
     </p>
     <br>
     <br>
-    <div mat-dialog-actions>
-      <button mat-button [type]="submit" [disabled]="!formControl.valid" [mat-dialog-close]="1" (click)="stopEdit()"
-        mat-raised-button color="accent">Save</button>
+    <div class="submitBtnContainer">
       <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
+      <button mat-button [type]="submit" [disabled]="!formControl.valid" (click)="stopEdit()" mat-raised-button
+      color="accent">Save</button>
     </div>
   </form>
 </div>

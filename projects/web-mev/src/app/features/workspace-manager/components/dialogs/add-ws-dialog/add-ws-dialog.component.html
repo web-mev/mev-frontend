@@ -11,11 +11,12 @@
     <div class="form">
       <mat-form-field color="accent">
         <input matInput #input class="form-control" placeholder="Workspace name" [(ngModel)]="data.workspace_name"
-          name="workspace_name" required>
+          name="workspace_name" (keydown.enter)="confirmAdd()" required>
         <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
       </mat-form-field>
     </div>
-
+    <br>
+    <br>
     <div class="submitBtnContainer">
       <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
       <button mat-button mat-raised-button color="accent" [type]="submit" [disabled]="!formControl.valid"

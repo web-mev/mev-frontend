@@ -5,19 +5,22 @@
       <mat-icon>close</mat-icon>
     </button>
   </span>
-  <h3 mat-dialog-title>This resource will be deleted from your workspace. Are you sure?</h3>
-  <div mat-dialog-content>
-    <b>File: {{ resource.name }}</b>
-    <p>
-      Resource type: {{ resource.readable_resource_type }}<br>
-      Size: {{ resource.size | byteName}}<br>
-      Created: {{ resource.created | date :'medium' }}<br>
-    </p>
+  <div class="title">This resource will be deleted from your workspace. Are you sure?</div>
+  <br>
+  <div class="content">
+    File: {{ resource.name }}
+    <br>
+    Resource type: {{ resource.readable_resource_type }}
+    <br>
+    Size: {{ resource.size | byteName}}
+    <br>
+    Created: {{ resource.created | date :'medium' }}
+    <br>
   </div>
+  <br>
+  <br>
   <div class="submitBtnContainer">
     <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
-    <button mat-button [mat-dialog-close]="1" (click)="confirmDelete()" mat-raised-button
-    color="accent">Delete</button>
-    
+    <button mat-button [mat-dialog-close]="1" (click)="confirmDelete()" mat-raised-button color="accent">Delete</button>
   </div>
 </div>

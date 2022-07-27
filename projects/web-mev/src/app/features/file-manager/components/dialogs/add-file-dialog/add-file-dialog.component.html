@@ -5,8 +5,11 @@
       <mat-icon>close</mat-icon>
     </button>
   </span>
-  <h3 mat-dialog-title class="dialogContent">Locate and select one or more files on your computer.
-    <br> Then click the Upload button.</h3>
+  <div mat-dialog-title class="dialogContent">
+    Locate and select one or more files on your computer. Then click the Upload button.
+    <br>
+    Note that to streamline analysis tools, we save all table-based data to TSV format, regardless of the initial format.
+  </div>
 
   <form class="mat-dialog-content" (ngSubmit)="submit" #formControl="ngForm">
 

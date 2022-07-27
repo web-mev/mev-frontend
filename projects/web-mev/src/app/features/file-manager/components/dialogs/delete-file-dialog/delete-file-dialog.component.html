@@ -5,14 +5,16 @@
       <mat-icon>close</mat-icon>
     </button>
   </span>
-  <h3 mat-dialog-title>This file will be deleted. Are you sure?</h3>
-  <div mat-dialog-content>
+  <div class="title">This file will be deleted. Are you sure?</div>
+  <br>
+  <div class="content">
     File name: {{data.name}}
-    <p></p>
+    <br>
     File type: {{ data.readable_resource_type || 'N/A' }}
-    <p></p>
+    <br>
   </div>
-
+  <br>
+  <br>
   <div class="submitBtnContainer">
     <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
     <button mat-button [mat-dialog-close]="1" (click)="confirmDelete()" mat-raised-button color="accent">Delete</button>

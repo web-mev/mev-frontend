@@ -1,4 +1,10 @@
 <div class="container">
+  <span class="headerSpan">
+    <div class="dialogTitle">Delete</div>
+    <button class="closeDialogButton" mat-dialog-close mat-icon-button type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </span>
   <h3 mat-dialog-title>This file will be deleted. Are you sure?</h3>
   <div mat-dialog-content>
     File name: {{data.name}}
@@ -7,8 +13,8 @@
     <p></p>
   </div>
 
-  <div mat-dialog-actions>
-    <button mat-button [mat-dialog-close]="1" (click)="confirmDelete()">Delete</button>
+  <div class="submitBtnContainer">
     <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
+    <button mat-button [mat-dialog-close]="1" (click)="confirmDelete()" mat-raised-button color="accent">Delete</button>
   </div>
 </div>

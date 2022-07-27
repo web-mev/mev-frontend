@@ -1,17 +1,31 @@
 <div class="container">
-    <h3 mat-dialog-title>This resource will be deleted from your workspace. Are you sure?</h3>
-    <div mat-dialog-content>
-      <b>File: {{ resource.name }}</b>
-      <p>
+  <span class="headerSpan">
+    <div class="dialogTitle">Delete</div>
+    <button class="closeDialogButton" mat-dialog-close mat-icon-button type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </span>
+  <h3 mat-dialog-title>This resource will be deleted from your workspace. Are you sure?</h3>
+  <div mat-dialog-content>
+    <b>File: {{ resource.name }}</b>
+    <p>
       Resource type: {{ resource.readable_resource_type }}<br>
       Size: {{ resource.size | byteName}}<br>
       Created: {{ resource.created | date :'medium' }}<br>
-      </p>
-    </div>
-  
-    <div mat-dialog-actions>
-      <button mat-button [mat-dialog-close]="1" (click)="confirmDelete()">Delete</button>
-      <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
-    </div>
+    </p>
   </div>
-  
+
+  <!-- <div mat-dialog-actions>
+    <button mat-button [mat-dialog-close]="1" (click)="confirmDelete()">Delete</button>
+    <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
+  </div> -->
+  <div class="submitBtnContainer">
+    <!-- <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
+    <button mat-button [type]="submit" [disabled]="!formControl.valid" (click)="stopEdit()" mat-raised-button
+    color="accent">Save</button> -->
+    <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
+    <button mat-button [mat-dialog-close]="1" (click)="confirmDelete()" mat-raised-button
+    color="accent">Delete</button>
+    
+  </div>
+</div>

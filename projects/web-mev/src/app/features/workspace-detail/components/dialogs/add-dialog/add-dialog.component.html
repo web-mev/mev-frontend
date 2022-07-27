@@ -1,5 +1,11 @@
 <div class="container">
-  <h3 mat-dialog-title>Select one or more resources from the list to add to the Workspace.
+  <span class="headerSpan">
+    <div class="dialogTitle">Add Resource</div>
+    <button class="closeDialogButton" mat-dialog-close mat-icon-button type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </span>
+  <h3 mat-dialog-title class="dialogContent">Select one or more resources from the list to add to the Workspace.
     <br> Then click the Add button.</h3>
 
   <form class="mat-dialog-content" (ngSubmit)="submit" #formControl="ngForm">
@@ -24,9 +30,14 @@
 
     </div>
 
-    <div mat-dialog-actions>
+    <!-- <div mat-dialog-actions>
       <button mat-button [mat-dialog-close]="1" mat-raised-button color="accent" (click)="confirmAdd()">Add</button>
       <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
+    </div> -->
+    <div class="submitBtnContainer">
+      <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
+      <button mat-button [mat-dialog-close]="1" mat-raised-button color="accent" (click)="confirmAdd()">Add</button>
+      
     </div>
 
   </form>

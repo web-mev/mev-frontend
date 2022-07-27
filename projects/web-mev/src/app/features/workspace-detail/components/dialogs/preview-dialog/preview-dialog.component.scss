@@ -20,3 +20,47 @@ td {
 .btn-group {
   margin-top: 25px;
 }
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-width: 450px;
+}
+
+///new styling
+.headerSpan {
+  display: flex;
+  background-color: #1da1f2;
+  margin: -35px -40px 20px -40px;
+}
+
+.dialogTitle {
+  justify-content: flex-start;
+  width: 85%;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin: 20px 0 10px 30px;
+  color: white;
+  font-weight: bold;
+  font-size: 24px;
+}
+.dialogContent {
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.6);
+  // margin-top: 1em;
+}
+
+.closeDialogButton {
+  margin: 10px 10px 0 0;
+  color: white;
+}
+
+.closeDialogButton:hover {
+  opacity: 0.75;
+}
+
+.submitBtnContainer {
+  display: flex;
+  justify-content: flex-end;
+}

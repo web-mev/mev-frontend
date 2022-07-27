@@ -56,7 +56,8 @@ export class EditFileDialogComponent implements OnInit {
     updateData = {
       id: this.data.id,
       resource_type: this.data.resource_type,
-      file_format: this.data.file_format
+      file_format: this.data.file_format,
+      name: this.data.name
     };
     this.fileService.updateFile(updateData).subscribe(data => {
       this.dialogRef.close(data);

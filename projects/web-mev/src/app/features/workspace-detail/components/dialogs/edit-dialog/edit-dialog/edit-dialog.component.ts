@@ -44,6 +44,14 @@ export class EditDialogComponent {
    *
    */
   stopEdit(): void {
-    this.fileService.updateFile(this.data).subscribe(data => {});
+    let updateData: any = {}
+    updateData = {
+      id: this.data.id,
+      resource_type: this.data.resource_type,
+      name: this.data.name
+    };
+    this.fileService.updateFile(updateData).subscribe(data => {
+      this.dialogRef.close(data);
+    });
   }
 }

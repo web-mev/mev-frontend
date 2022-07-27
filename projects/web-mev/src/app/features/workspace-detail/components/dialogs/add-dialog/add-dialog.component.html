@@ -5,15 +5,13 @@
       <mat-icon>close</mat-icon>
     </button>
   </span>
-  <h3 mat-dialog-title class="dialogContent">Select one or more resources from the list to add to the Workspace.
-    <br> Then click the Add button.</h3>
-
+  <div mat-dialog-title class="dialogContent">Select one or more resources from the list to add to the Workspace.
+    <br> Then click the Add button.
+  </div>
   <form class="mat-dialog-content" (ngSubmit)="submit" #formControl="ngForm">
-
     <div class="form">
-
-      <angular2-multiselect [data]="files | validFilesPipe" [(ngModel)]="selectedFiles"
-        [settings]="dropdownSettings" name="resource">
+      <angular2-multiselect [data]="files | validFilesPipe" [(ngModel)]="selectedFiles" [settings]="dropdownSettings"
+        name="resource">
         <c-item>
           <ng-template let-item="item">
             <span class="resource-label">{{ item.name }} </span>
@@ -27,7 +25,6 @@
           </ng-template>
         </c-badge>
       </angular2-multiselect>
-
     </div>
     <div class="submitBtnContainer">
       <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>

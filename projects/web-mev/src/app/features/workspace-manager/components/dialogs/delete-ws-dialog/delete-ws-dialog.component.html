@@ -1,19 +1,19 @@
 <div class="container">
   <span class="headerSpan">
-    <div class="dialogTitle">Delete Workspace</div>
+    <div class="dialogTitle">Delete</div>
     <button class="closeDialogButton" mat-dialog-close mat-icon-button type="button">
       <mat-icon>close</mat-icon>
     </button>
   </span>
   <span>
-    <h3 class="boldText">This workspace will be deleted. Are you sure?</h3>
-    <h4>(Note that your files will NOT be deleted)</h4>
+    <div class="title">This workspace will be deleted. Are you sure?</div>
+    <div class="subtitle">(Note that your files will NOT be deleted)</div>
   </span>
   <br>
-  <div mat-dialog-content>
-    Id: {{data.id}}
+  <div class="content">
+    ID: {{data.id}}
     <br>
-    Workspace name: {{data.workspace_name}}
+    Workspace Name: {{data.workspace_name}}
     <br>
   </div>
   <br>

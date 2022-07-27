@@ -46,3 +46,16 @@
   display: flex;
   justify-content: flex-end;
 }
+
+.title{
+  font-size: 20px;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.8);
+  max-width: 600px;
+}
+
+.content{
+  font-size: 16px;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.7);
+}

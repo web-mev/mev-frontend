@@ -35,7 +35,6 @@ td {
 }
 
 .dialogTitle {
-
   justify-content: flex-start;
   width: 85%;
   padding-top: 5px;
@@ -49,12 +48,13 @@ td {
   font-size: 14px;
   font-weight: 400;
   color: rgba(0, 0, 0, 0.6);
-  // margin-top: 1em;
 }
 
 .closeDialogButton {
-  margin: 10px 10px 0 0;
   color: white;
+  position: absolute;
+  right: -20px;
+  top: -15px;
 }
 
 .closeDialogButton:hover {
@@ -64,4 +64,17 @@ td {
 .submitBtnContainer {
   display: flex;
   justify-content: flex-end;
+}
+
+.tableContainer {
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.7);
+  width: 800px;
+  overflow-x: scroll;
+}
+
+.headerContainer {
+  position: relative;
+  width: 100%;
 }

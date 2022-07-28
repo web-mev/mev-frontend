@@ -70,8 +70,9 @@ td {
   font-size: 12px;
   font-weight: 400;
   color: rgba(0, 0, 0, 0.7);
-  width: 800px;
-  overflow-x: scroll;
+  width: 70vw;
+  max-height: 50vh;
+  overflow: scroll;
 }
 
 .headerContainer {

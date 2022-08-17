@@ -21,5 +21,7 @@
             [checked]="resourceType === options.name" (change)="onRadioChangeAxis($event.value)">{{ options.name }}
         </mat-radio-button>
     </mat-radio-group>
+
+    <mev-png-download-button [containerId]="containerId" [imageName]="imageName"></mev-png-download-button>
     <div id="lioness"></div>
 </mat-card>

@@ -40,7 +40,8 @@ import { GeneMappingComponent } from './components/gene-mapping/geneMapping.comp
 import { SubnetVisualizationFormComponent } from './components/subnet-visualization/subnet-visualization.component';
 import { DecontxComponent } from './components/decontx-decontamination/decontx.component';
 import { CellRangerComponent } from './components/sctk-10x-cell-ranger/cell_ranger.component';
-import { LionComponent } from './components/lioness/lioness.component'
+import { LionComponent } from './components/lioness/lioness.component';
+import { DownloadPNGButtonComponent } from './components/download-png-button/download-png-button.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { LionComponent } from './components/lioness/lioness.component'
     LimmaComponent,
     HclComponent,
     DownloadButtonComponent,
+    DownloadPNGButtonComponent,
     GseaComponent,
     RugPlotComponent,
     KmeansComponent,

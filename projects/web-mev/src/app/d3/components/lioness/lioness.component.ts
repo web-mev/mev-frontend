@@ -30,33 +30,34 @@ export class LionComponent implements OnInit {
     windowHeight = 1000;
     radioButtonList = [
         {
-            name: "Genes"
+            name: "Transcription Factor"
         },
         {
-            name: "Transcription Factor"
-        }
+            name: "Genes"
+        },
     ];
     resourceType = "Transcription Factor";
     radioButtonListAxis = [
         {
-            name: "X-Axis"
+            name: "Y-Axis"
         },
         {
-            name: "Y-Axis"
+            name: "X-Axis"
         }
     ];
-    resourceTypeAxis = "X-Axis";
+    resourceTypeAxis = "Y-Axis";
     precision = 2;
     tooltipOffsetX = 10;
     isGene = false;
-    useXAxis = true;
+    useYAxis = true;
+    containerId = '#lioness';
+    imageName = 'lioness_heatmap'; // file name for downloaded SVG image
 
     private readonly API_URL = environment.apiUrl;
 
     constructor(
         private httpClient: HttpClient,
         private readonly notificationService: NotificationService,
-        private analysesService: AnalysesService,
     ) { }
 
     ngOnInit(): void {
@@ -70,43 +71,24 @@ export class LionComponent implements OnInit {
         let uuid_gene = '971af5e3-e567-42ff-b20d-a38f6fb44e0b';
         let uuid_tf = 'cc67929c-cafb-456d-b009-c013a3f4d655';
         let uuid = this.resourceType === "Genes" ? uuid_gene : uuid_tf;
-        this.analysesService
-            .getResourceContent(uuid)
+
+        let count = 100;
+        let queryURL = `https://api-dev.tm4.org/api/resources/${uuid}/contents/transform/?transform-name=heatmap-reduce&mad_n=${count}`
+        this.httpClient.get(queryURL).pipe(
+            catchError(error => {
+                console.log("Error: ", error.message);
+                let message = `Error: ${error.error.error}`;
+                throw message
+            }))
             .subscribe(data => {
                 this.isLoading = false;
-                console.log("data: ", data)
                 this.xAxisArr = [];
                 this.yAxisArr = [];
-                if (this.useXAxis) {
-                    for (let i = 0; i < 10; i++) {
-                        this.xAxisArr.push(data[i].rowname)
-                        let values = data[i].values
-                        for (let item in values) {
-                            if (data[i].values[item] < this.min) {
-                                this.min = data[i].values[item];
-                            }
-                            if (data[i].values[item] > this.max) {
-                                this.max = data[i].values[item];
-                            }
-                            if (!this.yAxisArr.includes(item)) {
-                                this.yAxisArr.push(item)
-                            }
-
-
-                            let temp = {
-                                xValue: data[i].rowname,
-                                yValue: item,
-                                value: data[i].values[item]
-                            }
-                            this.lionessData.push(temp);
-
-                        }
-                    }
-                } else {
-                    for (let i = 0; i < 10; i++) {
+                if (this.useYAxis) {
+                    for (let i = 0; i < Object.keys(data).length; i++) {
                         this.yAxisArr.push(data[i].rowname)
-                        let values = data[i].values
-                        for (let item in values) {
+                        let valuesArr = data[i].values
+                        for (let item in valuesArr) {
                             if (data[i].values[item] < this.min) {
                                 this.min = data[i].values[item];
                             }
@@ -117,27 +99,45 @@ export class LionComponent implements OnInit {
                                 this.xAxisArr.push(item)
                             }
 
-
                             let temp = {
-                                yValue: data[i].rowname,
                                 xValue: item,
+                                yValue: data[i].rowname,
                                 value: data[i].values[item]
                             }
                             this.lionessData.push(temp);
+                        }
+                    }
+                } else {
+                    for (let i = 0; i < Object.keys(data).length; i++) {
+                        this.xAxisArr.push(data[i].rowname)
+                        let valuesArr = data[i].values
+                        for (let item in valuesArr) {
+                            if (data[i].values[item] < this.min) {
+                                this.min = data[i].values[item];
+                            }
+                            if (data[i].values[item] > this.max) {
+                                this.max = data[i].values[item];
+                            }
+                            if (!this.yAxisArr.includes(item)) {
+                                this.yAxisArr.push(item)
+                            }
 
+                            let temp = {
+                                yValue: item,
+                                xValue: data[i].rowname,
+                                value: data[i].values[item]
+                            }
+                            this.lionessData.push(temp);
                         }
                     }
                 }
-                console.log("lion data: ", this.lionessData)
-
                 this.createHeatmap();
-
             });
     }
 
     createHeatmap() {
         // set the dimensions and margins of the graph
-        const margin = { top: 30, right: 30, bottom: 30, left: 30 },
+        const margin = { top: 30, right: 200, bottom: 30, left: 30 },
             width = (this.windowWidth * .75) - margin.left - margin.right,
             height = this.windowHeight - margin.top - margin.bottom;
 
@@ -146,10 +146,10 @@ export class LionComponent implements OnInit {
             .attr('class', 'd3-tip')
             .offset([-10, 0])
             .html((event, d) => {
-                let xAxisDescription = this.isGene ? 'Gene' : 'Transcription Factor';
-                let tipBox = `<div><div class="category">${xAxisDescription}:</div> ${d.xValue}</div>
-                <div><div class="category">Samples/Observations:</div> ${d.yValue}</div>
-                <div><div class="category">Value: </div>${d.value}</div>`
+                // let xAxisDescription = this.isGene ? 'Gene' : 'Transcription Factor';
+                let tipBox = `<div><div class="category">Samples/Observations:</div> ${this.useYAxis ? d.xValue : d.yValue}</div>
+                <div><div class="category">${this.resourceType}:</div> ${this.useYAxis ? d.yValue : d.xValue}</div>
+                <div><div class="category">Edge Weights: </div>${d.value}</div>`
                 return tipBox
             });
 
@@ -192,24 +192,28 @@ export class LionComponent implements OnInit {
         svg.append('text')
             .classed('label', true)
             .attr('transform', 'rotate(-90)')
-            .attr('y', -margin.left + 10)
+            .attr('y', -margin.left + 5)
             .attr('x', -height / 2)
             .attr('dy', '.71em')
             .style('text-anchor', 'middle')
-            .text(this.useXAxis ? "Samples/Observations" : `${this.resourceType}`);
+            .text(this.useYAxis ? `${this.resourceType}` : "Samples/Observations");
+
 
         svg
             .append('text')
             .classed('label', true)
             .attr('x', width / 2)
-            .attr('y', height + margin.bottom - 10)
+            .attr('y', height + margin.bottom - 5)
             .style('text-anchor', 'end')
-            .text(this.useXAxis ? `${this.resourceType}` : "Samples/Observations");
+            .text(this.useYAxis ? "Samples/Observations" : `${this.resourceType}`);
+        ;
+
+        let offset = Math.max(Math.abs(this.min), Math.abs(this.max))
 
         // Build color scale
         const myColor = d3.scaleLinear()
-            .range(["#1E90FF", "#EE204D"])
-            .domain([this.min, this.max])
+            .range(["royalblue", "#fffafa", "crimson",])
+            .domain([-offset, 0, offset])
 
         //Read the data
         let data = this.lionessData
@@ -221,6 +225,7 @@ export class LionComponent implements OnInit {
             .attr("width", x.bandwidth())
             .attr("height", y.bandwidth())
             .style("fill", function (d) {
+                // console.log(d.value)
                 return myColor(d.value)
             })
             .on('mouseover', function (mouseEvent: any, d) {
@@ -228,6 +233,66 @@ export class LionComponent implements OnInit {
                 pointTip.style('left', mouseEvent.x + tooltipOffsetX + 'px');
             })
             .on('mouseout', pointTip.hide);
+
+        //gradient legend
+        var correlationColorData = [{ "color": "royalblue", "value": -offset }, { "color": "#fffafa", "value": 0 }, { "color": "crimson", "value": offset }];
+        var extent = d3.extent(correlationColorData, d => d.value);
+
+        var paddingGradient = 9;
+        var widthGradient = 250;
+        var innerWidth = widthGradient - (paddingGradient * 2);
+        var barHeight = 8;
+        var heightGradient = 100;
+
+        var xScaleCorr = d3.scaleLinear()
+            .range([0, innerWidth - 100])
+            .domain(extent);
+
+        // var xTicksCorr = correlationColorData.filter(f => f.value === -offset || f.value === offset).map(d => d.value);
+        let xTicksCorr = [-offset, offset]
+
+        var xAxisGradient = d3.axisBottom(xScaleCorr)
+            .tickSize(barHeight * 2)
+            .tickValues(xTicksCorr);
+
+        var correlationLegend = d3.select("g")
+            .append("svg")
+            .attr("width", widthGradient)
+            .attr("height", heightGradient)
+            .attr('x', width + 5)
+            .attr('y', 50);
+
+        var defs = correlationLegend.append("defs");
+        var linearGradient = defs
+            .append("linearGradient")
+            .attr("id", "myGradient");
+
+        linearGradient.selectAll("stop")
+            .data(correlationColorData)
+            .enter().append("stop")
+            .attr("offset", d => ((d.value - extent[0]) / (extent[1] - extent[0]) * 100) + "%")
+            .attr("stop-color", d => d.color)
+
+        var g = correlationLegend.append("g")
+            .attr("transform", `translate(${paddingGradient + 10}, 30)`)
+
+        g.append("rect")
+            .attr("width", innerWidth - 100)
+            .attr("height", barHeight)
+            .style("fill", "url(#myGradient)");
+
+        correlationLegend.append('text')
+            .attr('y', 20)
+            .attr('x', 17)
+            .style('fill', 'rgba(0,0,0,.7)')
+            .style('font-size', '11px')
+            .attr("text-anchor", "start")
+            .attr("font-weight", "bold")
+            .text("Edge Weights");
+
+        g.append("g")
+            .call(xAxisGradient)
+            .select(".domain")
     }
 
     onRadioChangeAxis(axis) {
@@ -237,7 +302,7 @@ export class LionComponent implements OnInit {
 
 
     onRadioChangeAxis2(axis) {
-        this.useXAxis = (axis === 'X-Axis') ? true : false;
+        this.useYAxis = (axis === 'Y-Axis') ? true : false;
         this.getData();
     }
 

@@ -2,7 +2,6 @@ import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { NotificationService } from '@core/notifications/notification.service';
-import { AnalysesService } from '@app/features/analysis/services/analysis.service';
 import * as d3 from 'd3';
 import d3Tip from 'd3-tip';
 
@@ -131,6 +130,7 @@ export class LionComponent implements OnInit {
                         }
                     }
                 }
+                console.log("axis: ", this.xAxisArr, this.yAxisArr)
                 this.createHeatmap();
             });
     }
@@ -146,7 +146,6 @@ export class LionComponent implements OnInit {
             .attr('class', 'd3-tip')
             .offset([-10, 0])
             .html((event, d) => {
-                // let xAxisDescription = this.isGene ? 'Gene' : 'Transcription Factor';
                 let tipBox = `<div><div class="category">Samples/Observations:</div> ${this.useYAxis ? d.xValue : d.yValue}</div>
                 <div><div class="category">${this.resourceType}:</div> ${this.useYAxis ? d.yValue : d.xValue}</div>
                 <div><div class="category">Edge Weights: </div>${d.value}</div>`

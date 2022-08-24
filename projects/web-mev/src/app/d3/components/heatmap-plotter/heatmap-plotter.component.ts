@@ -1,18 +1,19 @@
-import { 
-  Component, 
-  OnInit, 
+import {
+  Component,
+  OnInit,
   Input,
   ChangeDetectionStrategy,
   ElementRef,
   ViewChild,
 } from '@angular/core';
-import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { FormGroup, Validators, FormBuilder, FormArray, FormControl } from '@angular/forms';
 import { MetadataService } from '@app/core/metadata/metadata.service';
 import * as d3 from 'd3';
 import d3Tip from 'd3-tip';
 //import {MatRadioModule} from '@angular/material/radio';
-import {MatExpansionPanel} from '@angular/material/expansion';
+import { MatExpansionPanel } from '@angular/material/expansion';
+import { AnalysesService } from '@app/features/analysis/services/analysis.service';
 
 @Component({
   selector: 'd3-heatmap',
@@ -27,80 +28,85 @@ export class D3HeatmapPlotComponent implements OnInit {
   that is, values is an object where the keys are samples/observations
   and they point at the expression for that sample
   */
- @Input() resourceData;
- @Input() isWait;
- 
- @ViewChild('heatmap')
- svgElement: ElementRef;
+  @Input() resourceData;
+  @Input() resourceDataAnnotation;
+  @Input() isWait;
+  workspaceId = 'd93ff039-3692-44c0-be6c-9d48ac9284e4'
 
- @ViewChild(MatExpansionPanel) plotOptionsPanel: MatExpansionPanel;
+  @ViewChild('heatmap')
+  svgElement: ElementRef;
 
- customObservationSets = [];
- customObservationSetsToPlot = [];
- heatmapData = [];
- plotReady = false;
- tilesTooSmall = false;
- validPlot = false;
- warnMsg = '';
- imgAdjustForm: FormGroup;
- imgAdjustFormSubmitted = false;
- panelOpenState = false;
+  @ViewChild(MatExpansionPanel) plotOptionsPanel: MatExpansionPanel;
 
- // heatmap settings
- imageName = 'heatmap'; // file name for downloaded SVG image
- precision = 2;
- outerHeight = 500;
- minTileSize = 5;
- tooltipOffsetX = 10; // to position the tooltip on the right side of the triggering element
- finalWidth;
- finalHeight;
- origWidth;
- origHeight;
- showObsLabels = true; //whether to label the obs
- showFeatureLabels = true; //whether to label the features
- logScale = false;
- margin = { top: 50, right: 150, bottom: 200, left: 100 }; // chart margins
- containerId = '#heatmap';
- // for common reference when determining the orientation of the heatmap
- samplesInColumnsKey = '__SIC__';
- samplesInColumnsText = 'Samples/observations in columns';
- samplesInRowsKey = '__SIR__';
- samplesInRowsText = 'Samples/observations in rows';
- squareTiles = false; //if true, then the tiles will be squares
- orientationOptions = [
-   {label: this.samplesInColumnsText, key:this.samplesInColumnsKey},
-   {label: this.samplesInRowsText, key:this.samplesInRowsKey},
- ];
- orientation;
- // after the user interacts with the radio, this will be true forever
- userOrientationSelected = false; 
+  customObservationSets = [];
+  customObservationSetsToPlot = [];
+  heatmapData = [];
+  plotReady = false;
+  tilesTooSmall = false;
+  validPlot = false;
+  warnMsg = '';
+  imgAdjustForm: FormGroup;
+  imgAdjustFormSubmitted = false;
+  panelOpenState = false;
 
- // after the user interacts with the sizing form, this will be true forever
- userSpecifiedSize = false;
+  // heatmap settings
+  imageName = 'heatmap'; // file name for downloaded SVG image
+  precision = 2;
+  outerHeight = 500;
+  minTileSize = 5;
+  tooltipOffsetX = 10; // to position the tooltip on the right side of the triggering element
+  finalWidth;
+  finalHeight;
+  origWidth;
+  origHeight;
+  showObsLabels = true; //whether to label the obs
+  showFeatureLabels = true; //whether to label the features
+  logScale = false;
+  margin = { top: 50, right: 150, bottom: 200, left: 100 }; // chart margins
+  containerId = '#heatmap';
+  // for common reference when determining the orientation of the heatmap
+  samplesInColumnsKey = '__SIC__';
+  samplesInColumnsText = 'Samples/observations in columns';
+  samplesInRowsKey = '__SIR__';
+  samplesInRowsText = 'Samples/observations in rows';
+  squareTiles = false; //if true, then the tiles will be squares
+  orientationOptions = [
+    { label: this.samplesInColumnsText, key: this.samplesInColumnsKey },
+    { label: this.samplesInRowsText, key: this.samplesInRowsKey },
+  ];
+  orientation;
+  // after the user interacts with the radio, this will be true forever
+  userOrientationSelected = false;
 
- colormapOptions = {
-   'Brown-blue-green': d3.interpolateBrBG,
-   'Purple-green': d3.interpolatePRGn,
-   'Purple-orange': d3.interpolatePuOr,
-   'Red-blue': d3.interpolateRdBu,
-   'Red-yellow-blue': d3.interpolateRdYlBu,
-   'Viridis': d3.interpolateViridis,
-   'Ciridis': d3.interpolateCividis
- }
- colormapList = Object.keys(this.colormapOptions);
- defaultColormap = 'Viridis';
- selectedColormap = '';
+  // after the user interacts with the sizing form, this will be true forever
+  userSpecifiedSize = false;
+
+  colormapOptions = {
+    'Brown-blue-green': d3.interpolateBrBG,
+    'Purple-green': d3.interpolatePRGn,
+    'Purple-orange': d3.interpolatePuOr,
+    'Red-blue': d3.interpolateRdBu,
+    'Red-yellow-blue': d3.interpolateRdYlBu,
+    'Viridis': d3.interpolateViridis,
+    'Ciridis': d3.interpolateCividis
+  }
+  colormapList = Object.keys(this.colormapOptions);
+  defaultColormap = 'Viridis';
+  selectedColormap = '';
+  numOfRows = 1;
+  annData = {};
 
   constructor(
     private metadataService: MetadataService,
     private formBuilder: FormBuilder,
+    private apiService: AnalysesService
   ) { }
 
   ngOnInit(): void {
     this.customObservationSets = this.metadataService.getCustomObservationSets();
-    let groupControlsArr = new FormArray(this.customObservationSets.map( obs => {
-        return new FormControl(false);
-      }
+    let groupControlsArr = new FormArray(this.customObservationSets.map(obs => {
+      return new FormControl(false);
+    }
     ));
     this.imgAdjustForm = this.formBuilder.group({
       'imgWidth': ['', ''],
@@ -110,9 +116,11 @@ export class D3HeatmapPlotComponent implements OnInit {
       'imgObsLabels': [this.showObsLabels, ''],
       'imgFeatureLabels': [this.showFeatureLabels, ''],
       'logScale': [this.logScale, ''],
-      'colormaps': [this.defaultColormap,''],
+      'colormaps': [this.defaultColormap, ''],
       'imgGroups': groupControlsArr
     })
+
+
     this.generateHeatmap();
   }
 
@@ -120,9 +128,10 @@ export class D3HeatmapPlotComponent implements OnInit {
     this.heatmapData = this.resourceData;
     this.generateHeatmap();
   }
+
   generateHeatmap() {
-    if (this.svgElement){
-      this.createHeatmap();
+    if (this.svgElement && this.resourceData.length > 0) {
+      this.setAnnotationData();
       this.plotReady = true;
     }
   }
@@ -147,14 +156,14 @@ export class D3HeatmapPlotComponent implements OnInit {
     this.userSpecifiedSize = false;
 
     let w = this.imgAdjustForm.value['imgWidth'];
-    if(w) {
+    if (w) {
       this.finalWidth = w;
       this.userSpecifiedSize = true;
     } else {
       this.finalWidth = this.origWidth;
     }
     let h = this.imgAdjustForm.value['imgHeight'];
-    if(h){
+    if (h) {
       this.finalHeight = h;
       this.userSpecifiedSize = true;
     } else {
@@ -164,39 +173,40 @@ export class D3HeatmapPlotComponent implements OnInit {
     this.orientation = this.imgAdjustForm.value['imgOrientation'];
     this.userOrientationSelected = true;
 
-    if(this.imgAdjustForm.value['imgAspectRatio']){
+    if (this.imgAdjustForm.value['imgAspectRatio']) {
       this.squareTiles = true;
     } else {
       this.squareTiles = false;
     }
 
-    if(this.imgAdjustForm.value['imgObsLabels']){
+    if (this.imgAdjustForm.value['imgObsLabels']) {
       this.showObsLabels = true;
     } else {
       this.showObsLabels = false;
     }
 
-    if(this.imgAdjustForm.value['imgFeatureLabels']){
+    if (this.imgAdjustForm.value['imgFeatureLabels']) {
       this.showFeatureLabels = true;
     } else {
       this.showFeatureLabels = false;
     }
 
-    if(this.imgAdjustForm.value['logScale']){
+    if (this.imgAdjustForm.value['logScale']) {
       this.logScale = true;
     } else {
       this.logScale = false;
     }
 
     let chosenMap = this.imgAdjustForm.value['colormaps'];
-    if (this.colormapList.includes(chosenMap)){
+    if (this.colormapList.includes(chosenMap)) {
       this.selectedColormap = chosenMap;
     }
 
     // 
     this.panelOpenState = false;
     this.plotOptionsPanel.close();
-    this.createHeatmap();
+
+    // this.createHeatmap();
   }
 
   makeScale(domain, range) {
@@ -209,16 +219,21 @@ export class D3HeatmapPlotComponent implements OnInit {
 
   clearChart() {
     d3.select(this.containerId)
-    .selectAll('svg')
-    .remove();
+      .selectAll('svg')
+      .remove();
   }
 
+  xAxisArr = [];
   createHeatmap() {
-
+    for (let col in this.resourceData[0].values) {
+      this.xAxisArr.push(col)
+    }
+    this.numOfRows = this.resourceData.length + 1
+    
     // before doing anything, get rid of anything that may have been there
     this.clearChart();
 
-    if(this.resourceData.length === 0){
+    if (this.resourceData.length === 0) {
       this.validPlot = false;
       return
     }
@@ -252,12 +267,12 @@ export class D3HeatmapPlotComponent implements OnInit {
         let valueMap = item.values;
 
         allFeatures.push(rowname);
-        if(idx == 0){
+        if (idx == 0) {
           allObservations = Object.keys(valueMap);
 
           // If the user requested plotting specific observation sets (in order!)
           // we have to rearrange the allObservations array
-          if(this.customObservationSetsToPlot.length > 0){
+          if (this.customObservationSetsToPlot.length > 0) {
             this.customObservationSetsToPlot.forEach(
               obsSet => {
                 obsSet.elements.forEach(
@@ -270,9 +285,9 @@ export class D3HeatmapPlotComponent implements OnInit {
           }
 
           let initVals = [];
-          for (let [obsId, v] of Object.entries(valueMap)){
+          for (let [obsId, v] of Object.entries(valueMap)) {
             const val = Number(v);
-            if(orderedObservations.includes(obsId)){
+            if (orderedObservations.includes(obsId)) {
               initVals.push(val);
             }
           }
@@ -283,31 +298,31 @@ export class D3HeatmapPlotComponent implements OnInit {
         }
         for (let [obsId, v] of Object.entries(valueMap)) {
           const val = Number(v);
-          if (val < minVal){
+          if (val < minVal) {
             minVal = val;
-          } else if (val > maxVal){
+          } else if (val > maxVal) {
             maxVal = val;
           }
 
-          if(orderedObservations.includes(obsId)){
-         reformattedData.push(
-           {
-              featureId: rowname,
-              obsId: obsId,
-              value: val // we want to display the true data on hover. Even if logged, that will only affect the color.
-           }
-         ); 
+          if (orderedObservations.includes(obsId)) {
+            reformattedData.push(
+              {
+                featureId: rowname,
+                obsId: obsId,
+                value: val // we want to display the true data on hover. Even if logged, that will only affect the color.
+              }
+            );
+          }
         }
-       }
       }
     );
     let pseudocount = 0;
-    if(this.logScale){
+    if (this.logScale) {
 
       // if the minimum is less than zero, we can't take the log.
       // Since the plot is effectively qualitative (since it's a visual depiction)
       // we simply tranlate all the numbers so that the minimum is zero
-      if (minVal < 0){
+      if (minVal < 0) {
         let offset = Math.abs(minVal);
         minVal += offset;
         maxVal += offset;
@@ -322,7 +337,7 @@ export class D3HeatmapPlotComponent implements OnInit {
       // of the plot. Same goes for larger ranges. e.g. if it's [0,100], then making the minimum=0.1
       // is not going to materially affect the visual.
       if (minVal === 0) {
-        pseudocount = 0.001*(maxVal - minVal);
+        pseudocount = 0.001 * (maxVal - minVal);
         minVal += pseudocount;
         maxVal += pseudocount;
       }
@@ -338,8 +353,8 @@ export class D3HeatmapPlotComponent implements OnInit {
     * orientation. After they touch it once, it will never enter
     * this block
     */
-   if(!this.userOrientationSelected){
-      if (allFeatures.length > allObservations.length){
+    if (!this.userOrientationSelected) {
+      if (allFeatures.length > allObservations.length) {
         this.orientation = this.samplesInRowsKey;
       } else {
         this.orientation = this.samplesInColumnsKey;
@@ -377,26 +392,26 @@ export class D3HeatmapPlotComponent implements OnInit {
     let yB = yScale.bandwidth();
 
     let tileX, tileY;
-    if(this.squareTiles){
+    if (this.squareTiles) {
       // set the ratio to the smaller of the two scales. Otherwise we would 
       // exceed the "natural" exterior dimensions of the figure
-      if(xB <= yB){
-        this.finalWidth = xB*(xDomain.length);
-        this.finalHeight = xB*(yDomain.length);
+      if (xB <= yB) {
+        this.finalWidth = xB * (xDomain.length);
+        this.finalHeight = xB * (yDomain.length);
         tileX = tileY = xB;
       } else {
-        this.finalWidth = yB*(xDomain.length);
-        this.finalHeight = yB*(yDomain.length);
+        this.finalWidth = yB * (xDomain.length);
+        this.finalHeight = yB * (yDomain.length);
         tileX = tileY = yB;
       }
     } else {
-      this.finalWidth = xB*(xDomain.length);
-      this.finalHeight = yB*(yDomain.length);
+      this.finalWidth = xB * (xDomain.length);
+      this.finalHeight = yB * (yDomain.length);
       tileX = xB;
       tileY = yB;
     }
 
-    if (tileX < this.minTileSize){
+    if (tileX < this.minTileSize) {
       this.tilesTooSmall = true;
     } else if (tileY < this.minTileSize) {
       this.tilesTooSmall = true;
@@ -404,7 +419,7 @@ export class D3HeatmapPlotComponent implements OnInit {
       this.tilesTooSmall = false;
     }
 
-    if (this.tilesTooSmall){
+    if (this.tilesTooSmall) {
       this.validPlot = false;
       return;
     }
@@ -417,9 +432,9 @@ export class D3HeatmapPlotComponent implements OnInit {
     const pointTip = d3Tip()
       .attr('class', 'd3-tip')
       .offset([-10, 0])
-      .html((event, d) => { 
-        return '(' + d.featureId + ', '+ d.obsId +'): ' +d.value.toFixed(this.precision);
-       });
+      .html((event, d) => {
+        return '(' + d.featureId + ', ' + d.obsId + '): ' + d.value.toFixed(this.precision);
+      });
 
     const svg = d3
       .select(this.containerId)
@@ -444,17 +459,17 @@ export class D3HeatmapPlotComponent implements OnInit {
 
     let heatmapTiles = svg.append('g');
     let selection = heatmapTiles.selectAll('rect')
-      .data(reformattedData, (d) => '(' +d['obsId'] + ',' + d['featureId'] + ')');
+      .data(reformattedData, (d) => '(' + d['obsId'] + ',' + d['featureId'] + ')');
 
-    if(this.selectedColormap === ''){
+    if (this.selectedColormap === '') {
       this.selectedColormap = this.defaultColormap;
     }
     let colormapInterpolator = this.colormapOptions[this.selectedColormap];
     selection
       .enter()
       .append('rect')
-      .attr('x', d=> xScale(d[xSelector]))
-      .attr('y', d=> yScale(d[ySelector]))
+      .attr('x', d => xScale(d[xSelector]))
+      .attr('y', d => yScale(d[ySelector]))
       .attr('height', tileY)
       .attr('width', tileX)
       .attr('fill', d => {
@@ -464,59 +479,78 @@ export class D3HeatmapPlotComponent implements OnInit {
         // value of the data on the mouseover event
         let dataValue = this.logScale ? Math.log2(d['value'] + pseudocount) : d['value'];
         return colormapInterpolator(
-          (dataValue - minVal)/(maxVal-minVal)
+          (dataValue - minVal) / (maxVal - minVal)
         )
       })
-      .on('mouseover', function(mouseEvent: any, d) {
+      .on('mouseover', function (mouseEvent: any, d) {
         pointTip.show(mouseEvent, d, this);
         pointTip.style('left', mouseEvent.x + tooltipOffsetX + 'px');
       })
       .on('mouseout', pointTip.hide);
 
+    // var hardyScaleColor = d3.scaleLinear()
+    // .range(["#fff44f", "tomato"])
+    // .domain([0, 5])
+
+    let tempAnnotations = this.annData;
+
+    svg.selectAll()
+      .data(this.xAxisArr)
+      .join("rect")
+      .attr("x", function (d) {
+        return xScale(d)
+      })
+      .attr("y", 20)
+      .attr("width", xScale.bandwidth())
+      .attr("height", height / (this.numOfRows * 2) - 1)
+      .style("fill", function (d) {
+        // return "red"
+        return (tempAnnotations[d].hardy_scale_death === 4) ? "#00AB66" : "darkorchid"
+      })
+
     selection
       .exit()
       .remove();
 
-    if (this.showObsLabels || this.showFeatureLabels){
+    if (this.showObsLabels || this.showFeatureLabels) {
       let axesContainer = svg.append('g');
 
       if (this.showObsLabels) {
-        if (obsAxis === 'x'){
+        if (obsAxis === 'x') {
           axesContainer.append('g')
-          .call(d3.axisBottom(xScale))
-          .attr('transform', 'translate(0,' + (this.margin.top + this.finalHeight) + ')')
-          .selectAll('text')
-          .attr("y", -4)
-          .attr("x", 9)
-          .attr("transform", "rotate(90)")
-          .style("text-anchor", "start");
+            .call(d3.axisBottom(xScale))
+            .attr('transform', 'translate(0,' + (this.margin.top + this.finalHeight) + ')')
+            .selectAll('text')
+            .attr("y", -4)
+            .attr("x", 9)
+            .attr("transform", "rotate(90)")
+            .style("text-anchor", "start");
         } else {
           axesContainer.append('g')
-          .call(d3.axisLeft(yScale))
-          .attr('transform', 'translate('+ this.margin.left +', 0 )');
+            .call(d3.axisLeft(yScale))
+            .attr('transform', 'translate(' + this.margin.left + ', 0 )');
         }
 
       }
-      if (this.showFeatureLabels){
-        if (featureAxis === 'x'){
+      if (this.showFeatureLabels) {
+        if (featureAxis === 'x') {
           axesContainer.append('g')
-          .call(d3.axisBottom(xScale))
-          .attr('transform', 'translate(0,' + (this.margin.top + this.finalHeight) + ')')
-          .selectAll('text')
-          .attr("y", -4)
-          .attr("x", 9)
-          .attr("transform", "rotate(90)")
-          .style("text-anchor", "start");
+            .call(d3.axisBottom(xScale))
+            .attr('transform', 'translate(0,' + (this.margin.top + this.finalHeight) + ')')
+            .selectAll('text')
+            .attr("y", -4)
+            .attr("x", 9)
+            .attr("transform", "rotate(90)")
+            .style("text-anchor", "start");
         } else {
           axesContainer.append('g')
-          .call(d3.axisLeft(yScale))
-          .attr('transform', 'translate('+ this.margin.left +', 0 )');
+            .call(d3.axisLeft(yScale))
+            .attr('transform', 'translate(' + this.margin.left + ', 0 )');
         }
       }
     }
 
     this.validPlot = true;
-
   }
 
   /**
@@ -543,6 +577,22 @@ export class D3HeatmapPlotComponent implements OnInit {
 
   drop(event: CdkDragDrop<any[]>) {
     moveItemInArray(this.customObservationSetsToPlot, event.previousIndex, event.currentIndex);
+  }
+
+  setAnnotationData() {
+    for (let i = 0; i < this.resourceDataAnnotation.length; i++) {
+      let rowName = this.resourceDataAnnotation[i].rowname;
+      let values = this.resourceDataAnnotation[i].values;
+      let temp = {}
+      for (let key in values) {
+        let value = values[key]
+        temp[key] = value
+      }
+      this.annData[rowName] = temp
+    }
+    this.isWait = false;
+    this.createHeatmap();
+
   }
 
 }

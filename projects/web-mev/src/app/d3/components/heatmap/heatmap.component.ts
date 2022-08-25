@@ -98,7 +98,6 @@ export class HeatmapFormComponent implements OnInit {
       )
       //.pipe(finalize(() => this.loadingSubject.next(false)))
       .subscribe(features => {
-        console.log("features: ", features)
         this.plotData = features;
         // this.isWaiting = false;
       });

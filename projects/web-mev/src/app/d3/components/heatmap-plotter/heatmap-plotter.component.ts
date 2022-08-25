@@ -52,7 +52,7 @@ export class D3HeatmapPlotComponent implements OnInit {
   // heatmap settings
   imageName = 'heatmap'; // file name for downloaded SVG image
   precision = 2;
-  outerHeight = 500;
+  outerHeight = 1200 //500;
   minTileSize = 5;
   tooltipOffsetX = 10; // to position the tooltip on the right side of the triggering element
   finalWidth;
@@ -229,7 +229,7 @@ export class D3HeatmapPlotComponent implements OnInit {
       this.xAxisArr.push(col)
     }
     this.numOfRows = this.resourceData.length + 1
-    
+
     // before doing anything, get rid of anything that may have been there
     this.clearChart();
 
@@ -488,25 +488,40 @@ export class D3HeatmapPlotComponent implements OnInit {
       })
       .on('mouseout', pointTip.hide);
 
-    // var hardyScaleColor = d3.scaleLinear()
-    // .range(["#fff44f", "tomato"])
-    // .domain([0, 5])
-
     let tempAnnotations = this.annData;
+    let colorRange = ["#ac92eb", "#4fc1e8", "#a0d568", "#ffce54", "#ed5564", "#feb144"]
+    let catOptions = [];
+    let count = 0;
+    // let heightCategory = height / (this.numOfRows * 2) - 1;
+    let heightCategory = 10;
+    let spacer = this.margin.top - 15;
 
-    svg.selectAll()
-      .data(this.xAxisArr)
-      .join("rect")
-      .attr("x", function (d) {
-        return xScale(d)
-      })
-      .attr("y", 20)
-      .attr("width", xScale.bandwidth())
-      .attr("height", height / (this.numOfRows * 2) - 1)
-      .style("fill", function (d) {
-        // return "red"
-        return (tempAnnotations[d].hardy_scale_death === 4) ? "#00AB66" : "darkorchid"
-      })
+    for (let index in this.categoryOptions) {
+
+      if (this.categoryOptions[index].length <= 6 && this.categoryOptions[index].length >= 1) {
+        console.log(index, this.categoryOptions[index])
+
+        catOptions = this.categoryOptions[index]
+        var testScaleColor = d3.scaleOrdinal()
+          .range(colorRange)
+          .domain(catOptions)
+
+        svg.selectAll()
+          .data(this.xAxisArr)
+          .join("rect")
+          .attr("x", function (d) {
+            return xScale(d)
+          })
+          .attr("y", spacer - count * heightCategory)
+          .attr("width", xScale.bandwidth() - 0.4)
+          .attr("height", heightCategory - 0.4)
+          .style("fill", function (d) {
+            return testScaleColor(tempAnnotations[d][index])
+          })
+        count++;
+      }
+
+    }
 
     selection
       .exit()
@@ -579,6 +594,8 @@ export class D3HeatmapPlotComponent implements OnInit {
     moveItemInArray(this.customObservationSetsToPlot, event.previousIndex, event.currentIndex);
   }
 
+  categoryOptions = {};
+
   setAnnotationData() {
     for (let i = 0; i < this.resourceDataAnnotation.length; i++) {
       let rowName = this.resourceDataAnnotation[i].rowname;
@@ -587,9 +604,19 @@ export class D3HeatmapPlotComponent implements OnInit {
       for (let key in values) {
         let value = values[key]
         temp[key] = value
+
+        if (this.categoryOptions[key] === undefined) {
+          this.categoryOptions[key] = [];
+        } else if (!this.categoryOptions[key].includes(value)) {
+          this.categoryOptions[key].push(value)
+        }
+
       }
       this.annData[rowName] = temp
     }
+
+    console.log("annData: ", this.annData)
+    console.log("cat options: ", this.categoryOptions)
     this.isWait = false;
     this.createHeatmap();
 

@@ -62,7 +62,7 @@ export class D3HeatmapPlotComponent implements OnInit {
   showObsLabels = true; //whether to label the obs
   showFeatureLabels = true; //whether to label the features
   logScale = false;
-  margin = { top: 50, right: 150, bottom: 200, left: 100 }; // chart margins
+  margin = { top: 50, right: 350, bottom: 200, left: 100 }; // chart margins
   containerId = '#heatmap';
   // for common reference when determining the orientation of the heatmap
   samplesInColumnsKey = '__SIC__';
@@ -488,18 +488,84 @@ export class D3HeatmapPlotComponent implements OnInit {
       })
       .on('mouseout', pointTip.hide);
 
+    //category overlay
     let tempAnnotations = this.annData;
     let colorRange = ["#ac92eb", "#4fc1e8", "#a0d568", "#ffce54", "#ed5564", "#feb144"]
     let catOptions = [];
     let count = 0;
-    // let heightCategory = height / (this.numOfRows * 2) - 1;
     let heightCategory = 10;
     let spacer = this.margin.top - 15;
+    let catYLocation = 0;
 
     for (let index in this.categoryOptions) {
+      if (index === 'hardy_scale_death') {
 
-      if (this.categoryOptions[index].length <= 6 && this.categoryOptions[index].length >= 1) {
-        console.log(index, this.categoryOptions[index])
+        //gradient legend
+        let min = 0
+        let max = 5
+        var correlationColorData = [{ "color": "royalblue", "value": min }, { "color": "lightyellow", "value": ((min + max) / 2) }, { "color": "crimson", "value": max }];
+        var extent = d3.extent(correlationColorData, d => d.value);
+
+        var paddingGradient = 9;
+        var widthGradient = 250;
+        var innerWidth = widthGradient - (paddingGradient * 2);
+        var barHeight = 8;
+        var heightGradient = 100;
+
+        var xScaleCorr = d3.scaleLinear()
+          .range([0, innerWidth - 100])
+          .domain(extent);
+
+        let xTicksCorr = [min, max]
+
+        var xAxisGradient = d3.axisBottom(xScaleCorr)
+          .tickSize(barHeight * 2)
+          .tickValues(xTicksCorr);
+
+        var correlationLegend = d3.select("g")
+          .append("svg")
+          .attr("width", widthGradient)
+          .attr("height", heightGradient)
+          .attr('x', width + 75)
+          .attr('y', catYLocation + 50)
+
+        var defs = correlationLegend.append("defs");
+        var linearGradient = defs
+          .append("linearGradient")
+          .attr("id", "myGradient");
+
+        linearGradient.selectAll("stop")
+          .data(correlationColorData)
+          .enter().append("stop")
+          .attr("offset", d => ((d.value - extent[0]) / (extent[1] - extent[0]) * 100) + "%")
+          .attr("stop-color", d => d.color)
+
+        var g = correlationLegend.append("g")
+          .attr("transform", `translate(${paddingGradient + 10}, 30)`)
+
+        g.append("rect")
+          .attr("width", innerWidth - 100)
+          .attr("height", barHeight)
+          .style("fill", "url(#myGradient)");
+
+        correlationLegend.append('text')
+          .attr('x', 0)
+          .attr('y', 15)
+          .style('fill', 'rgba(0,0,0,.7)')
+          .style('font-size', '16px')
+          .attr("text-anchor", "start")
+          .attr("font-weight", "bold")
+          .text(index.replace(/_/g, " ").toUpperCase());
+
+        g.append("g")
+          .call(xAxisGradient)
+          .select(".domain")
+
+        catYLocation += 100;
+      }
+
+      else if (this.categoryOptions[index].length <= 6 && this.categoryOptions[index].length >= 1) {
+        console.log(index, this.categoryOptions[index], this.categoryOptions)
 
         catOptions = this.categoryOptions[index]
         var testScaleColor = d3.scaleOrdinal()
@@ -519,9 +585,53 @@ export class D3HeatmapPlotComponent implements OnInit {
             return testScaleColor(tempAnnotations[d][index])
           })
         count++;
+
+        // select the svg area
+        var SvgLegend = d3.select("g")
+          .append("svg")
+          .attr('x', width)
+          .attr('y', catYLocation)
+
+        catYLocation += (catOptions.length * 30) + 50 //height of each row and space between the legends 
+
+        // Add one dot in the legend for each name.
+        SvgLegend.selectAll("mydots")
+          .data(catOptions)
+          .enter()
+          .append("circle")
+          .attr("cx", 100)
+          .attr("cy", function (d, i) { return 100 + i * 25 }) // 100 is where the first dot appears. 25 is the distance between dots
+          .attr("r", 7)
+          .style("fill", d => {
+            console.log("d: ", d, testScaleColor(d))
+            return testScaleColor(d)
+            // return (d === "Male") ? "#00AB66" : "darkorchid"
+          })
+
+        // Add one dot in the legend for each name.
+        SvgLegend.selectAll("mylabels")
+          .data(catOptions)
+          .enter()
+          .append("text")
+          .attr("x", 120)
+          .attr("y", function (d, i) { return 100 + i * 25 }) // 100 is where the first dot appears. 25 is the distance between dots
+          .style("fill", "rgba(0,0,0,.7)")
+          .text(function (d) { return d })
+          .attr("text-anchor", "left")
+          .style("alignment-baseline", "middle")
+
+        SvgLegend.append('text')
+          .attr('x', 75)
+          .attr('y', 75)
+          .style('fill', 'rgba(0,0,0,.7)')
+          .style('font-size', '16px')
+          .attr("text-anchor", "start")
+          .attr("font-weight", "bold")
+          .text(index.replace(/_/g, " ").toUpperCase());
       }
 
     }
+
 
     selection
       .exit()
@@ -615,8 +725,8 @@ export class D3HeatmapPlotComponent implements OnInit {
       this.annData[rowName] = temp
     }
 
-    console.log("annData: ", this.annData)
-    console.log("cat options: ", this.categoryOptions)
+    // console.log("annData: ", this.annData)
+    // console.log("cat options: ", this.categoryOptions)
     this.isWait = false;
     this.createHeatmap();
 

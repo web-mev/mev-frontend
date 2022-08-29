@@ -13,7 +13,7 @@ import * as d3 from 'd3';
 import d3Tip from 'd3-tip';
 //import {MatRadioModule} from '@angular/material/radio';
 import { MatExpansionPanel } from '@angular/material/expansion';
-import { AnalysesService } from '@app/features/analysis/services/analysis.service';
+// import { AnalysesService } from '@app/features/analysis/services/analysis.service';
 
 @Component({
   selector: 'd3-heatmap',
@@ -99,7 +99,7 @@ export class D3HeatmapPlotComponent implements OnInit {
   constructor(
     private metadataService: MetadataService,
     private formBuilder: FormBuilder,
-    private apiService: AnalysesService
+    // private apiService: AnalysesService
   ) { }
 
   ngOnInit(): void {
@@ -119,7 +119,6 @@ export class D3HeatmapPlotComponent implements OnInit {
       'colormaps': [this.defaultColormap, ''],
       'imgGroups': groupControlsArr
     })
-
 
     this.generateHeatmap();
   }
@@ -496,13 +495,43 @@ export class D3HeatmapPlotComponent implements OnInit {
     let heightCategory = 10;
     let spacer = this.margin.top - 15;
     let catYLocation = 0;
+    let overlayObj = {};
 
     for (let index in this.categoryOptions) {
-      if (index === 'hardy_scale_death') {
+      let isNumber = true;
+      for (let i = 0; i < this.categoryOptions[index].length; i++) {
+        if (isNaN(this.categoryOptions[index][i])) {
+          isNumber = false
+        }
+      }
+      overlayObj[index] = isNumber
+
+      if (isNumber) {
+        let min = Math.min(...this.categoryOptions[index])
+        let max = Math.max(...this.categoryOptions[index])
+        catOptions = this.categoryOptions[index]
+
+        // Build color scale
+        var myColor = d3.scaleLinear()
+          .range(["royalblue", "lightyellow", "crimson",])
+          .domain([min, (max + min) / 2, max])
+
+        svg.selectAll()
+          .data(this.xAxisArr)
+          .join("rect")
+          .attr("x", function (d) {
+            return xScale(d)
+          })
+          .attr("y", spacer - count * heightCategory)
+          .attr("width", xScale.bandwidth() - 0.4)
+          .attr("height", heightCategory - 0.4)
+          .style("fill", function (d) {
+           
+            return myColor(tempAnnotations[d][index])
+          })
+        count++;
 
         //gradient legend
-        let min = 0
-        let max = 5
         var correlationColorData = [{ "color": "royalblue", "value": min }, { "color": "lightyellow", "value": ((min + max) / 2) }, { "color": "crimson", "value": max }];
         var extent = d3.extent(correlationColorData, d => d.value);
 
@@ -564,8 +593,7 @@ export class D3HeatmapPlotComponent implements OnInit {
         catYLocation += 100;
       }
 
-      else if (this.categoryOptions[index].length <= 6 && this.categoryOptions[index].length >= 1) {
-        console.log(index, this.categoryOptions[index], this.categoryOptions)
+      else if (this.categoryOptions[index].length <= 6 && this.categoryOptions[index].length > 1) {
 
         catOptions = this.categoryOptions[index]
         var testScaleColor = d3.scaleOrdinal()
@@ -603,9 +631,7 @@ export class D3HeatmapPlotComponent implements OnInit {
           .attr("cy", function (d, i) { return 100 + i * 25 }) // 100 is where the first dot appears. 25 is the distance between dots
           .attr("r", 7)
           .style("fill", d => {
-            console.log("d: ", d, testScaleColor(d))
             return testScaleColor(d)
-            // return (d === "Male") ? "#00AB66" : "darkorchid"
           })
 
         // Add one dot in the legend for each name.
@@ -629,9 +655,7 @@ export class D3HeatmapPlotComponent implements OnInit {
           .attr("font-weight", "bold")
           .text(index.replace(/_/g, " ").toUpperCase());
       }
-
     }
-
 
     selection
       .exit()
@@ -724,12 +748,7 @@ export class D3HeatmapPlotComponent implements OnInit {
       }
       this.annData[rowName] = temp
     }
-
-    // console.log("annData: ", this.annData)
-    // console.log("cat options: ", this.categoryOptions)
     this.isWait = false;
     this.createHeatmap();
-
   }
-
 }

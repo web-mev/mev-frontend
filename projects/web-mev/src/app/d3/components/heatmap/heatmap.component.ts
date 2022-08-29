@@ -62,7 +62,6 @@ export class HeatmapFormComponent implements OnInit {
       )
       .subscribe(data => {
         this.exp_files = data;
-        // this.isLoaded = true;
       });
 
     //gets the annotation only files
@@ -83,7 +82,6 @@ export class HeatmapFormComponent implements OnInit {
   }
 
   createPlot() {
-    // console.log("input form: ", this.inputForm)
     const resourceId = this.inputForm.value['expMtx'];
     const selectedFeatureSet = this.inputForm.value['featureSet'];
     const elements = selectedFeatureSet['elements'].map(obj => obj.id);
@@ -99,7 +97,6 @@ export class HeatmapFormComponent implements OnInit {
       //.pipe(finalize(() => this.loadingSubject.next(false)))
       .subscribe(features => {
         this.plotData = features;
-        // this.isWaiting = false;
       });
 
       const resourceId_ann = this.inputForm.value['ann'];
@@ -108,9 +105,7 @@ export class HeatmapFormComponent implements OnInit {
         resourceId_ann,
       )
       .subscribe(features => {
-        console.log("features_ann: ", features)
         this.PlotDataAnnotation = features;
-        // this.isWaiting = false;
       });
   }
 

@@ -11,9 +11,7 @@ import { FormGroup, Validators, FormBuilder, FormArray, FormControl } from '@ang
 import { MetadataService } from '@app/core/metadata/metadata.service';
 import * as d3 from 'd3';
 import d3Tip from 'd3-tip';
-//import {MatRadioModule} from '@angular/material/radio';
 import { MatExpansionPanel } from '@angular/material/expansion';
-// import { AnalysesService } from '@app/features/analysis/services/analysis.service';
 import { NotificationService } from '@core/notifications/notification.service';
 
 @Component({
@@ -33,7 +31,7 @@ export class D3HeatmapPlotComponent implements OnInit {
   @Input() resourceDataAnnotation;
   @Input() isWait;
   @Input() useAnnotation;
-  workspaceId = 'd93ff039-3692-44c0-be6c-9d48ac9284e4'
+  // workspaceId = 'd93ff039-3692-44c0-be6c-9d48ac9284e4'
 
   @ViewChild('heatmap')
   svgElement: ElementRef;
@@ -69,6 +67,7 @@ export class D3HeatmapPlotComponent implements OnInit {
   margin;
   marginAnnotation = { top: 50, right: 200, bottom: 50, left: 100 }; // chart margins for annotations included
   marginMain = { top: 50, right: 150, bottom: 200, left: 100 }; // chart margins
+  heightCategory = 10; //height of individual category overlay
   containerId = '#heatmap';
   // for common reference when determining the orientation of the heatmap
   samplesInColumnsKey = '__SIC__';
@@ -97,7 +96,7 @@ export class D3HeatmapPlotComponent implements OnInit {
     'Ciridis': d3.interpolateCividis
   }
   colormapList = Object.keys(this.colormapOptions);
-  defaultColormap = 'Viridis';
+  defaultColormap = 'Red-blue';
   selectedColormap = '';
   numOfRows = 1;
   annData = {};
@@ -107,7 +106,6 @@ export class D3HeatmapPlotComponent implements OnInit {
   constructor(
     private metadataService: MetadataService,
     private formBuilder: FormBuilder,
-    // private apiService: AnalysesService
     private readonly notificationService: NotificationService
   ) { }
 
@@ -218,11 +216,10 @@ export class D3HeatmapPlotComponent implements OnInit {
       this.selectedColormap = chosenMap;
     }
 
-    // 
     this.panelOpenState = false;
     this.plotOptionsPanel.close();
 
-    // this.createHeatmap();
+    this.createHeatmap();
   }
 
   makeScale(domain, range) {
@@ -240,10 +237,10 @@ export class D3HeatmapPlotComponent implements OnInit {
   }
 
   xAxisArr = [];
+
   createHeatmap() {
     this.xAxisArr = [];
     this.categoryToIgnore = [];
-
     for (let col in this.resourceData[0].values) {
       this.xAxisArr.push(col)
     }
@@ -477,7 +474,6 @@ export class D3HeatmapPlotComponent implements OnInit {
       .attr(
         'transform',
         'translate(0,0)'
-        // 'translate(' + this.margin.left + ',' + this.margin.top + ')'
       )
       .style('fill', 'none');
 
@@ -526,11 +522,11 @@ export class D3HeatmapPlotComponent implements OnInit {
     let tempAnnotations = this.annData;
     let colorRange = ["#ac92eb", "#4fc1e8", "#a0d568", "#ffce54", "#ed5564", "#feb144"]
     let catOptions = [];
-    let count = 0;
-    let heightCategory = 10;
+    let count = 0; //Keeps track of overlay items for the legends for y position and overall number of overlay items
+
     let spacer = this.margin.top - 15;
     let catYLocation = 0;
-    let overlayObj = {};
+    // let overlayObj = {};
 
     for (let index in this.categoryOptions) {
       let isNumber = true;
@@ -539,7 +535,7 @@ export class D3HeatmapPlotComponent implements OnInit {
           isNumber = false
         }
       }
-      overlayObj[index] = isNumber
+      // overlayObj[index] = isNumber
 
       if (isNumber) {
         let min = Math.min(...this.categoryOptions[index])
@@ -548,8 +544,10 @@ export class D3HeatmapPlotComponent implements OnInit {
 
         // Build color scale
         var myColor = d3.scaleLinear()
-          .range(["royalblue", "lightyellow", "crimson",])
-          .domain([min, (max + min) / 2, max])
+          // .range(["royalblue", "lightyellow", "crimson"])
+          // .domain([min, (max + min) / 2, max])
+          .range(["royalblue", "crimson"])
+          .domain([min, max])
 
         svg.selectAll()
           .data(this.xAxisArr)
@@ -557,9 +555,9 @@ export class D3HeatmapPlotComponent implements OnInit {
           .attr("x", function (d) {
             return xScale(d)
           })
-          .attr("y", spacer - count * heightCategory)
+          .attr("y", spacer - count * this.heightCategory)
           .attr("width", xScale.bandwidth() - 0.4)
-          .attr("height", heightCategory - 0.4)
+          .attr("height", this.heightCategory - 0.4)
           .style("fill", function (d) {
             return myColor(tempAnnotations[d][index])
           })
@@ -571,9 +569,9 @@ export class D3HeatmapPlotComponent implements OnInit {
         count++;
 
         //gradient legend
-
         catYLocation += 20;
-        var correlationColorData = [{ "color": "royalblue", "value": min }, { "color": "lightyellow", "value": ((min + max) / 2) }, { "color": "crimson", "value": max }];
+        // var correlationColorData = [{ "color": "royalblue", "value": min }, { "color": "lightyellow", "value": ((min + max) / 2) }, { "color": "crimson", "value": max }];
+        var correlationColorData = [{ "color": "royalblue", "value": min }, { "color": "crimson", "value": max }];
         var extent = d3.extent(correlationColorData, d => d.value);
 
         var paddingGradient = 2;
@@ -649,9 +647,9 @@ export class D3HeatmapPlotComponent implements OnInit {
           .attr("x", function (d) {
             return xScale(d)
           })
-          .attr("y", spacer - count * heightCategory)
+          .attr("y", spacer - count * this.heightCategory)
           .attr("width", xScale.bandwidth() - 0.4)
-          .attr("height", heightCategory - 0.4)
+          .attr("height", this.heightCategory - 0.4)
           .style("fill", function (d) {
             return testScaleColor(tempAnnotations[d][index])
           })
@@ -710,9 +708,6 @@ export class D3HeatmapPlotComponent implements OnInit {
         this.categoryToIgnore.push(index.replace(/_/g, " "))
       }
     }
-    if (this.categoryToIgnore.length > 0) {
-      this.sendAlertMessage()
-    }
 
     selection
       .exit()
@@ -723,7 +718,7 @@ export class D3HeatmapPlotComponent implements OnInit {
 
       if (this.showObsLabels) {
         if (obsAxis === 'x') {
-          if (this.useAnnotation === false) {
+          if (this.xAxisArr.length <= 25) {
             axesContainer.append('g')
               .call(d3.axisBottom(xScale))
               .attr('transform', 'translate(0,' + (this.margin.top + this.finalHeight) + ')')
@@ -735,15 +730,18 @@ export class D3HeatmapPlotComponent implements OnInit {
           }
 
         } else {
-          axesContainer.append('g')
-            .call(d3.axisLeft(yScale))
-            .attr('transform', 'translate(' + this.margin.left + ', 0 )');
+          if (this.resourceData.length <= 25) {
+            axesContainer.append('g')
+              .call(d3.axisLeft(yScale))
+              .attr('transform', 'translate(' + this.margin.left + ', 0 )');
+          }
         }
 
       }
+
       if (this.showFeatureLabels) {
         if (featureAxis === 'x') {
-          if (this.useAnnotation === false) {
+          if (this.xAxisArr.length <= 25) {
             axesContainer.append('g')
               .call(d3.axisBottom(xScale))
               .attr('transform', 'translate(0,' + (this.margin.top + this.finalHeight) + ')')
@@ -755,13 +753,20 @@ export class D3HeatmapPlotComponent implements OnInit {
           }
 
         } else {
-          axesContainer.append('g')
-            .call(d3.axisLeft(yScale))
-            .attr('transform', 'translate(' + this.margin.left + ', 0 )');
+          if (this.resourceData.length <= 25) {
+            axesContainer.append('g')
+              .call(d3.axisLeft(yScale))
+              .attr('transform', 'translate(' + this.margin.left + ', 0 )');
+          }
+
         }
       }
     }
-    this.scrollTo('heatmap')
+
+    this.scrollTo('heatmap');
+    if (this.categoryToIgnore.length > 0) {
+      this.sendAlertMessage()
+    }
     this.validPlot = true;
   }
 
@@ -811,8 +816,30 @@ export class D3HeatmapPlotComponent implements OnInit {
       }
       this.annData[rowName] = temp
     }
-    this.isWait = false;
 
+    //find the number of overlay categories in order to calculate the margin top needed for the graph
+    let categoryCount = 0;
+    for (let index in this.categoryOptions) {
+      let isNumber = true;
+      for (let i = 0; i < this.categoryOptions[index].length; i++) {
+        if (isNaN(this.categoryOptions[index][i])) {
+          isNumber = false
+        }
+      }
+      if (isNumber) {
+        categoryCount++;
+      } else if (this.categoryOptions[index].length <= 6 && this.categoryOptions[index].length > 1) {
+        categoryCount++;
+      }
+    }
+    
+    let xAxisLength = Object.keys(this.resourceData[0].values).length;
+    let yAxisLength = this.resourceData.length;
+    this.margin.left = yAxisLength <= 25 ? 100 : 50;
+    this.margin.bottom = xAxisLength <= 25 ? 200 : 50;
+    this.margin.top = categoryCount * this.heightCategory + 20;
+
+    this.isWait = false;
     this.createHeatmap();
   }
 

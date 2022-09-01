@@ -41,6 +41,7 @@ export class HeatmapFormComponent implements OnInit {
 
   annotation_resource_type = ['ANN'];
   ann_files = [];
+  useAnnotation = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -52,7 +53,7 @@ export class HeatmapFormComponent implements OnInit {
     this.inputForm = this.formBuilder.group({
       'expMtx': ['', Validators.required],
       'featureSet': ['', Validators.required],
-      'ann': ['', Validators.required],
+      'ann': [''],
     })
     this.all_featuresets = this.metadataService.getCustomFeatureSets();
     this.apiService
@@ -99,14 +100,18 @@ export class HeatmapFormComponent implements OnInit {
         this.plotData = features;
       });
 
-      const resourceId_ann = this.inputForm.value['ann'];
+    const resourceId_ann = this.inputForm.value['ann'];
+    if (this.inputForm.value['ann'] !== "") {
+      this.useAnnotation = true;
       this.apiService
-      .getResourceContent(
-        resourceId_ann,
-      )
-      .subscribe(features => {
-        this.PlotDataAnnotation = features;
-      });
+        .getResourceContent(
+          resourceId_ann,
+        )
+        .subscribe(features => {
+          this.PlotDataAnnotation = features;
+        });
+    }
+
   }
 
   /**

@@ -1,30 +1,30 @@
 <mev-spinner-overlay *ngIf="!isLoaded"></mev-spinner-overlay>
 <mat-card>
-    <mat-card-header>
-        <div mat-card-avatar class="analysis-card__img"></div>
-        <mat-card-title>Heatmap</mat-card-title>
-    </mat-card-header>
-<mat-card-content class="analysis-card__main">
+  <mat-card-header>
+    <div mat-card-avatar class="analysis-card__img"></div>
+    <mat-card-title>Heatmap</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="analysis-card__main">
     <p>
-        Use this plotting tool to show a two-dimensional heatmap representation of
-        your expression data
+      Use this plotting tool to show a two-dimensional heatmap representation of
+      your expression data
     </p>
     <p>
-        Plotting controls allow you to stratify by custom groupings.
+      Plotting controls allow you to stratify by custom groupings.
     </p>
     <mat-divider [inset]="true"></mat-divider>
 
-<div class="analysis-card__content">
-<form *ngIf="inputForm && isLoaded" [formGroup]="inputForm" (ngSubmit)="onSubmit()">
+    <div class="analysis-card__content">
+      <form *ngIf="inputForm && isLoaded" [formGroup]="inputForm" (ngSubmit)="onSubmit()">
 
-    <ng-container>
-        <div class="label">
-          Expression data source: <span class="redAsterisk">* </span>
-          <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-            matTooltip="The expression data to use in the heatmap" aria-label="Info tooltip about the field">info
-          </mat-icon>
-        </div>
-        <mat-form-field class="form-control" color="accent">
+        <ng-container>
+          <div class="label">
+            Expression data source: <span class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+              matTooltip="The expression data to use in the heatmap" aria-label="Info tooltip about the field">info
+            </mat-icon>
+          </div>
+          <mat-form-field class="form-control" color="accent">
             <mat-select formControlName="expMtx">
               <mat-option *ngFor="let file of exp_files" [value]="file.id">
                 {{ file.name }}
@@ -35,17 +35,17 @@
                 This field is required
               </mat-error>
             </div>
-        </mat-form-field>
-      </ng-container>
+          </mat-form-field>
+        </ng-container>
 
-      <ng-container>
-        <div class="label">
-          Features/genes to plot: <span class="redAsterisk">* </span>
-          <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-            matTooltip="Which genes/features to display in the plot" aria-label="Info tooltip about the field">info
-          </mat-icon>
-        </div>
-        <mat-form-field class="form-control" color="accent">
+        <ng-container>
+          <div class="label">
+            Features/genes to plot: <span class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+              matTooltip="Which genes/features to display in the plot" aria-label="Info tooltip about the field">info
+            </mat-icon>
+          </div>
+          <mat-form-field class="form-control" color="accent">
             <mat-select formControlName="featureSet">
               <mat-option *ngFor="let set of all_featuresets" [value]="set">
                 {{ set.name }}
@@ -56,40 +56,36 @@
                 This field is required
               </mat-error>
             </div>
-        </mat-form-field>
-      </ng-container>
+          </mat-form-field>
+        </ng-container>
 
-      <ng-container>
-        <div class="label">
-          Annotation File: <span class="redAsterisk">* </span>
-          <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-            matTooltip="The expression data to use in the heatmap" aria-label="Info tooltip about the field">info
-          </mat-icon>
-        </div>
-        <mat-form-field class="form-control" color="accent">
+        <ng-container>
+          <div class="label">
+            Annotation File:
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+              matTooltip="The annotation data will be used to display the category overlay." aria-label="Info tooltip about the field">info
+            </mat-icon>
+          </div>
+          <mat-form-field class="form-control" color="accent">
             <mat-select formControlName="ann">
               <mat-option *ngFor="let file of ann_files" [value]="file.id">
                 {{ file.name }}
               </mat-option>
             </mat-select>
-            <div *ngIf="submitted && f['ann'].errors">
-              <mat-error *ngIf="f['ann'].errors.required">
-                This field is required
-              </mat-error>
-            </div>
-        </mat-form-field>
-      </ng-container>
+          </mat-form-field>
+        </ng-container>
 
-      <div>
-      <button mat-raised-button color="accent" type="submit" [disabled]="!inputForm.valid"
-      (click)="createPlot()">Plot
-    </button>
+        <div>
+          <button mat-raised-button color="accent" type="submit" [disabled]="!inputForm.valid"
+            (click)="createPlot()">Plot
+          </button>
+        </div>
+      </form>
     </div>
-</form>
-</div>
-<mat-divider [inset]="true"></mat-divider>
+    <mat-divider [inset]="true"></mat-divider>
 
-<d3-heatmap [resourceData]="plotData" [resourceDataAnnotation]="PlotDataAnnotation" [isWait]="isWaiting"></d3-heatmap>
-</mat-card-content>
+    <d3-heatmap [resourceData]="plotData" [resourceDataAnnotation]="PlotDataAnnotation" [isWait]="isWaiting" [useAnnotation]="useAnnotation">
+    </d3-heatmap>
+  </mat-card-content>
 
 </mat-card>

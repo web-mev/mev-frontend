@@ -237,6 +237,7 @@ export class D3HeatmapPlotComponent implements OnInit {
   }
 
   xAxisArr = [];
+  yLocationLengend = 0;
 
   createHeatmap() {
     this.xAxisArr = [];
@@ -370,12 +371,17 @@ export class D3HeatmapPlotComponent implements OnInit {
     * this block
     */
     if (!this.userOrientationSelected) {
-      if (allFeatures.length > allObservations.length) {
-        this.orientation = this.samplesInRowsKey;
+      if (this.useAnnotation === false) {
+        if (allFeatures.length > allObservations.length) {
+          this.orientation = this.samplesInRowsKey;
+        } else {
+          this.orientation = this.samplesInColumnsKey;
+        }
+        this.f['imgOrientation'].setValue(this.orientation);
       } else {
         this.orientation = this.samplesInColumnsKey;
       }
-      this.f['imgOrientation'].setValue(this.orientation);
+
     }
     /* Setting up X-axis and Y-axis*/
 
@@ -401,7 +407,8 @@ export class D3HeatmapPlotComponent implements OnInit {
 
     // setup initial x and y scales
     let xScale = this.makeScale(xDomain, [this.margin.left, this.margin.left + width]);
-    let yScale = this.makeScale(yDomain, [this.margin.top, this.margin.top + height]);
+    let maxGraphHeight = 1200;
+    let yScale = this.yLocationLengend > this.windowHeight ? this.makeScale(yDomain, [this.margin.top, maxGraphHeight]) : this.makeScale(yDomain, [this.margin.top, this.margin.top + height]);
 
     // use the bandwidth to establish the final sizes
     let xB = xScale.bandwidth();
@@ -477,11 +484,11 @@ export class D3HeatmapPlotComponent implements OnInit {
       )
       .style('fill', 'none');
 
-    svg
-      .append('rect')
-      .attr('width', width)
-      .attr('height', height)
-      .style('fill', 'transparent');
+    // svg
+    //   .append('rect')
+    //   .attr('width', width)
+    //   .attr('height', height)
+    //   .style('fill', 'transparent');
 
     const tooltipOffsetX = this.tooltipOffsetX;
     svg.call(pointTip);
@@ -528,7 +535,7 @@ export class D3HeatmapPlotComponent implements OnInit {
     let catYLocation = 0;
     // let overlayObj = {};
 
-    for (let index in this.categoryOptions) {
+    for (let index of this.categoryOptionsArr) {
       let isNumber = true;
       for (let i = 0; i < this.categoryOptions[index].length; i++) {
         if (isNaN(this.categoryOptions[index][i])) {
@@ -540,98 +547,101 @@ export class D3HeatmapPlotComponent implements OnInit {
       if (isNumber) {
         let min = Math.min(...this.categoryOptions[index])
         let max = Math.max(...this.categoryOptions[index])
-        catOptions = this.categoryOptions[index]
+        if (min !== max) {
+          catOptions = this.categoryOptions[index]
 
-        // Build color scale
-        var myColor = d3.scaleLinear()
-          // .range(["royalblue", "lightyellow", "crimson"])
-          // .domain([min, (max + min) / 2, max])
-          .range(["royalblue", "crimson"])
-          .domain([min, max])
+          // Build color scale
+          var myColor = d3.scaleLinear()
+            // .range(["royalblue", "lightyellow", "crimson"])
+            // .domain([min, (max + min) / 2, max])
+            .range(["royalblue", "crimson"])
+            .domain([min, max])
 
-        svg.selectAll()
-          .data(this.xAxisArr)
-          .join("rect")
-          .attr("x", function (d) {
-            return xScale(d)
-          })
-          .attr("y", spacer - count * this.heightCategory)
-          .attr("width", xScale.bandwidth() - 0.4)
-          .attr("height", this.heightCategory - 0.4)
-          .style("fill", function (d) {
-            return myColor(tempAnnotations[d][index])
-          })
-          .on('mouseover', function (mouseEvent: any, d) {
-            pointTipOverlay.show(mouseEvent, d, tempAnnotations[d][index], index, this);
-            pointTipOverlay.style('left', mouseEvent.x + tooltipOffsetX + 'px');
-          })
-          .on('mouseout', pointTipOverlay.hide);
-        count++;
+          svg.selectAll()
+            .data(this.xAxisArr)
+            .join("rect")
+            .attr("x", function (d) {
+              return xScale(d)
+            })
+            .attr("y", spacer - count * this.heightCategory)
+            .attr("width", xScale.bandwidth() - 0.4)
+            .attr("height", this.heightCategory - 0.4)
+            .style("fill", function (d) {
+              return myColor(tempAnnotations[d][index])
+            })
+            .on('mouseover', function (mouseEvent: any, d) {
+              pointTipOverlay.show(mouseEvent, d, tempAnnotations[d][index], index, this);
+              pointTipOverlay.style('left', mouseEvent.x + tooltipOffsetX + 'px');
+            })
+            .on('mouseout', pointTipOverlay.hide);
+          count++;
 
-        //gradient legend
-        catYLocation += 20;
-        // var correlationColorData = [{ "color": "royalblue", "value": min }, { "color": "lightyellow", "value": ((min + max) / 2) }, { "color": "crimson", "value": max }];
-        var correlationColorData = [{ "color": "royalblue", "value": min }, { "color": "crimson", "value": max }];
-        var extent = d3.extent(correlationColorData, d => d.value);
+          //gradient legend
+          catYLocation += 20;
+          // var correlationColorData = [{ "color": "royalblue", "value": min }, { "color": "lightyellow", "value": ((min + max) / 2) }, { "color": "crimson", "value": max }];
+          var correlationColorData = [{ "color": "royalblue", "value": min }, { "color": "crimson", "value": max }];
+          var extent = d3.extent(correlationColorData, d => d.value);
 
-        var paddingGradient = 2;
-        var widthGradient = 275;
-        var innerWidth = widthGradient - (paddingGradient * 2);
-        var barHeight = 8;
-        var heightGradient = 100;
+          var paddingGradient = 2;
+          var widthGradient = 275;
+          var innerWidth = widthGradient - (paddingGradient * 2);
+          var barHeight = 8;
+          var heightGradient = 100;
 
-        var xScaleCorr = d3.scaleLinear()
-          .range([0, innerWidth - 100])
-          .domain(extent);
+          var xScaleCorr = d3.scaleLinear()
+            .range([0, innerWidth - 100])
+            .domain(extent);
 
-        let xTicksCorr = [min, max]
+          let xTicksCorr = [min, max]
 
-        var xAxisGradient = d3.axisBottom(xScaleCorr)
-          .tickSize(barHeight * 2)
-          .tickValues(xTicksCorr);
+          var xAxisGradient = d3.axisBottom(xScaleCorr)
+            .tickSize(barHeight * 2)
+            .tickValues(xTicksCorr);
 
-        let graphWidth = this.xAxisArr.length * xScale.bandwidth()
-        let legendPadding = 10
-        var correlationLegend = d3.select("g")
-          .append("svg")
-          .attr("width", widthGradient)
-          .attr("height", heightGradient)
-          .attr('x', graphWidth + this.margin.left + legendPadding)
-          .attr('y', catYLocation + 40)
+          let graphWidth = this.xAxisArr.length * xScale.bandwidth()
+          let legendPadding = 10
+          var correlationLegend = d3.select("g")
+            .append("svg")
+            .attr("width", widthGradient)
+            .attr("height", heightGradient)
+            .attr('x', graphWidth + this.margin.left + legendPadding)
+            .attr('y', catYLocation + 40)
 
-        var defs = correlationLegend.append("defs");
-        var linearGradient = defs
-          .append("linearGradient")
-          .attr("id", "myGradient");
+          var defs = correlationLegend.append("defs");
+          var linearGradient = defs
+            .append("linearGradient")
+            .attr("id", "myGradient");
 
-        linearGradient.selectAll("stop")
-          .data(correlationColorData)
-          .enter().append("stop")
-          .attr("offset", d => ((d.value - extent[0]) / (extent[1] - extent[0]) * 100) + "%")
-          .attr("stop-color", d => d.color)
+          linearGradient.selectAll("stop")
+            .data(correlationColorData)
+            .enter().append("stop")
+            .attr("offset", d => ((d.value - extent[0]) / (extent[1] - extent[0]) * 100) + "%")
+            .attr("stop-color", d => d.color)
 
-        var g = correlationLegend.append("g")
-          .attr("transform", `translate(${paddingGradient + 10}, 30)`)
+          var g = correlationLegend.append("g")
+            .attr("transform", `translate(${paddingGradient + 10}, 30)`)
 
-        g.append("rect")
-          .attr("width", innerWidth - 100)
-          .attr("height", barHeight)
-          .style("fill", "url(#myGradient)");
+          g.append("rect")
+            .attr("width", innerWidth - 100)
+            .attr("height", barHeight)
+            .style("fill", "url(#myGradient)");
 
-        correlationLegend.append('text')
-          .attr('x', 0)
-          .attr('y', 15)
-          .style('fill', 'rgba(0,0,0,.7)')
-          .style('font-size', '10px')
-          .attr("text-anchor", "start")
-          .attr("font-weight", "bold")
-          .text(index.replace(/_/g, " ").toUpperCase());
+          correlationLegend.append('text')
+            .attr('x', 0)
+            .attr('y', 15)
+            .style('fill', 'rgba(0,0,0,.7)')
+            .style('font-size', '10px')
+            .attr("text-anchor", "start")
+            .attr("font-weight", "bold")
+            .text(index.replace(/_/g, " ").toUpperCase());
 
-        g.append("g")
-          .call(xAxisGradient)
-          .select(".domain")
+          g.append("g")
+            .call(xAxisGradient)
+            .select(".domain")
 
-        catYLocation += 50;
+          catYLocation += 50;
+        }
+
       }
 
       else if (this.categoryOptions[index].length <= 6 && this.categoryOptions[index].length > 1) {
@@ -707,6 +717,14 @@ export class D3HeatmapPlotComponent implements OnInit {
       else if (this.categoryOptions[index].length > 6 || this.categoryOptions[index].length === 1) {
         this.categoryToIgnore.push(index.replace(/_/g, " "))
       }
+
+
+    }
+
+    if (catYLocation > this.outerHeight) {
+      this.outerHeight = catYLocation + 100;
+      this.yLocationLengend = catYLocation;
+      this.createHeatmap();
     }
 
     selection
@@ -797,6 +815,7 @@ export class D3HeatmapPlotComponent implements OnInit {
   }
 
   categoryOptions = {};
+  categoryOptionsArr = [];
 
   setAnnotationData() {
     for (let i = 0; i < this.resourceDataAnnotation.length; i++) {
@@ -808,6 +827,7 @@ export class D3HeatmapPlotComponent implements OnInit {
         temp[key] = value
 
         if (this.categoryOptions[key] === undefined) {
+          this.categoryOptionsArr.push(key)
           this.categoryOptions[key] = [];
         } else if (!this.categoryOptions[key].includes(value)) {
           this.categoryOptions[key].push(value)
@@ -816,6 +836,7 @@ export class D3HeatmapPlotComponent implements OnInit {
       }
       this.annData[rowName] = temp
     }
+    this.categoryOptionsArr = this.categoryOptionsArr.reverse();
 
     //find the number of overlay categories in order to calculate the margin top needed for the graph
     let categoryCount = 0;
@@ -832,7 +853,7 @@ export class D3HeatmapPlotComponent implements OnInit {
         categoryCount++;
       }
     }
-    
+
     let xAxisLength = Object.keys(this.resourceData[0].values).length;
     let yAxisLength = this.resourceData.length;
     this.margin.left = yAxisLength <= 25 ? 100 : 50;

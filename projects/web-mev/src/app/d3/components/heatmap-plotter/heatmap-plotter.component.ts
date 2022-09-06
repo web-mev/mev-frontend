@@ -101,6 +101,7 @@ export class D3HeatmapPlotComponent implements OnInit {
   numOfRows = 1;
   annData = {};
   categoryToIgnore = [];
+  removeOverlayArray = [];
 
 
   constructor(
@@ -544,7 +545,7 @@ export class D3HeatmapPlotComponent implements OnInit {
       }
       // overlayObj[index] = isNumber
 
-      if (isNumber) {
+      if (isNumber && !this.removeOverlayArray.includes(index)) {
         let min = Math.min(...this.categoryOptions[index])
         let max = Math.max(...this.categoryOptions[index])
         if (min !== max) {
@@ -633,7 +634,19 @@ export class D3HeatmapPlotComponent implements OnInit {
             .style('font-size', '10px')
             .attr("text-anchor", "start")
             .attr("font-weight", "bold")
-            .text(index.replace(/_/g, " ").toUpperCase());
+            .text(index.replace(/_/g, " ").toUpperCase())
+
+          correlationLegend.append('text')
+            .attr('x', this.margin.right - 20)
+            .attr('y', 7)
+            .attr("class", "closePointer")
+            .style('fill', 'red')
+            .style('font-size', '10px')
+            .attr("text-anchor", "start")
+            .text("X")
+            .on("click", () => {
+              this.removeOverlay(index)
+            });
 
           g.append("g")
             .call(xAxisGradient)
@@ -644,7 +657,7 @@ export class D3HeatmapPlotComponent implements OnInit {
 
       }
 
-      else if (this.categoryOptions[index].length <= 6 && this.categoryOptions[index].length > 1) {
+      else if (this.categoryOptions[index].length <= 6 && this.categoryOptions[index].length > 1 && !this.removeOverlayArray.includes(index)) {
 
         catOptions = this.categoryOptions[index]
         var testScaleColor = d3.scaleOrdinal()
@@ -712,7 +725,19 @@ export class D3HeatmapPlotComponent implements OnInit {
           .style('font-size', '10px')
           .attr("text-anchor", "start")
           .attr("font-weight", "bold")
-          .text(index.replace(/_/g, " ").toUpperCase());
+          .text(index.replace(/_/g, " ").toUpperCase())
+
+        SvgLegend.append('text')
+          .attr('x', this.margin.right - 20)
+          .attr('y', 78)
+          .attr("class", "closePointer")
+          .style('fill', 'tomato')
+          .style('font-size', '10px')
+          .attr("text-anchor", "start")
+          .text("X")
+          .on("click", () => {
+            this.removeOverlay(index)
+          });
       }
       else if (this.categoryOptions[index].length > 6 || this.categoryOptions[index].length === 1) {
         this.categoryToIgnore.push(index.replace(/_/g, " "))
@@ -836,6 +861,7 @@ export class D3HeatmapPlotComponent implements OnInit {
       }
       this.annData[rowName] = temp
     }
+
     this.categoryOptionsArr = this.categoryOptionsArr.reverse();
 
     //find the number of overlay categories in order to calculate the margin top needed for the graph
@@ -873,5 +899,11 @@ export class D3HeatmapPlotComponent implements OnInit {
   scrollTo(htmlID) {
     const element = document.getElementById(htmlID) as HTMLElement;
     element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+  }
+
+
+  removeOverlay(category) {
+    this.removeOverlayArray.push(category)
+    this.createHeatmap()
   }
 }

@@ -82,8 +82,14 @@ export class HeatmapFormComponent implements OnInit {
     this.isWaiting = true;
   }
 
+  savedResourceId = '';
+  hasResourceChanged = false;
+
   createPlot() {
     const resourceId = this.inputForm.value['expMtx'];
+    this.hasResourceChanged = (resourceId !== this.savedResourceId) ? true : false;
+    this.savedResourceId = resourceId;
+
     const selectedFeatureSet = this.inputForm.value['featureSet'];
     const elements = selectedFeatureSet['elements'].map(obj => obj.id);
     const filters = { '__rowname__': '[in]:' + elements.join(',') }

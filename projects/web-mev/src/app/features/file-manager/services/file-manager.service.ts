@@ -126,7 +126,7 @@ export class FileService {
 
     for (let i = 0; i < files.length; i++) {
       const formData = new FormData();
-      formData.set('upload_file', files[i], files[i].name);
+      formData.set('datafile', files[i], files[i].name);
 
       this.httpClient
         .post(`${this.API_URL}/resources/upload/`, formData, {
@@ -179,12 +179,12 @@ export class FileService {
   }
 
   /**
-   * Update file properties, put method
+   * Update file properties, PATCH method
    *
    */
   updateFile(file: File): Observable<any> {
     return this.httpClient
-      .put(`${this.API_URL}/resources/${file.id}/`, file)
+      .patch(`${this.API_URL}/resources/${file.id}/`, file)
   }
 
   /**

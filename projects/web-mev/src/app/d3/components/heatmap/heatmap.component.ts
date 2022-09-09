@@ -86,6 +86,7 @@ export class HeatmapFormComponent implements OnInit {
   hasResourceChanged = false;
 
   createPlot() {
+    this.isWaiting = true;
     const resourceId = this.inputForm.value['expMtx'];
     this.hasResourceChanged = (resourceId !== this.savedResourceId) ? true : false;
     this.savedResourceId = resourceId;

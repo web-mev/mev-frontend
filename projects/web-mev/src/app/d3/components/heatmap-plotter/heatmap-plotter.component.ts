@@ -148,7 +148,7 @@ export class D3HeatmapPlotComponent implements OnInit {
   generateHeatmap() {
     //reset variables when changing resources
     if (this.hasResourceChanged) {
-      
+
       this.removeOverlayArray = [];
       this.annData = {};
     }
@@ -478,6 +478,14 @@ export class D3HeatmapPlotComponent implements OnInit {
         return tipBox
       });
 
+    const legendInfoTip = d3Tip()
+      .attr('class', 'd3-tip')
+      .offset([-10, 0])
+      .html((event, d, value, category) => {
+        let tipBox = `<div class="legendInfo">Since we cannot distinguish categorical attributes identified by numbers, they will be displayed using a gradient. If you would like to change this behavior, change your group identifiers to be non-numerical.</div>`
+        return tipBox
+      });
+
     const svg = d3
       .select(this.containerId)
       .append('svg')
@@ -499,6 +507,7 @@ export class D3HeatmapPlotComponent implements OnInit {
     const tooltipOffsetX = this.tooltipOffsetX;
     svg.call(pointTip);
     svg.call(pointTipOverlay);
+    svg.call(legendInfoTip);
 
     let heatmapTiles = svg.append('g');
     let selection = heatmapTiles.selectAll('rect')
@@ -683,7 +692,7 @@ export class D3HeatmapPlotComponent implements OnInit {
             .attr('x', 0)
             .attr('y', 15)
             .style('fill', 'rgba(0,0,0,.7)')
-            .style('font-size', '10px')
+            .style('font-size', '9px')
             .attr("text-anchor", "start")
             .attr("font-weight", "bold")
             .text(index.replace(/_/g, " ").toUpperCase())
@@ -705,6 +714,24 @@ export class D3HeatmapPlotComponent implements OnInit {
             .on("mouseout", function (d) {
               d3.select(this).style("fill", "rgba(0,0,0,.5)");
             });
+
+          correlationLegend
+            .append('text')
+            .attr('x', index.length * 5 + 25)
+            .attr('y', 15)
+            .attr("class", "closePointer")
+            .style('fill', 'rgba(0,0,0,.7)')
+            .style('font-size', '10px')
+            .style('font-weight', 'bold')
+            .text("ⓘ")
+            .on("click", () => {
+              this.removeOverlay(index)
+            })
+            .on('mouseover', function (mouseEvent: any, d) {
+              legendInfoTip.show(mouseEvent, d, this);
+              legendInfoTip.style('left', mouseEvent.x + tooltipOffsetX + 'px');
+            })
+            .on('mouseout', legendInfoTip.hide);
 
           g.append("g")
             .call(xAxisGradient)
@@ -761,7 +788,7 @@ export class D3HeatmapPlotComponent implements OnInit {
           .attr('x', 0)
           .attr('y', 85)
           .style('fill', 'rgba(0,0,0,.7)')
-          .style('font-size', '10px')
+          .style('font-size', '9px')
           .attr("text-anchor", "start")
           .attr("font-weight", "bold")
           .text(index.replace(/_/g, " ").toUpperCase())
@@ -783,6 +810,24 @@ export class D3HeatmapPlotComponent implements OnInit {
           .on("mouseout", function (d) {
             d3.select(this).style("fill", "rgba(0,0,0,.5)");
           });
+
+        SvgLegend
+          .append('text')
+          .attr('x', index.length * 5 + 25)
+          .attr('y', 85)
+          .attr("class", "closePointer")
+          .style('fill', 'rgba(0,0,0,.7)')
+          .style('font-size', '10px')
+          .style('font-weight', 'bold')
+          .text("ⓘ")
+          .on("click", () => {
+            this.removeOverlay(index)
+          })
+          .on('mouseover', function (mouseEvent: any, d) {
+            legendInfoTip.show(mouseEvent, d, this);
+            legendInfoTip.style('left', mouseEvent.x + tooltipOffsetX + 'px');
+          })
+          .on('mouseout', legendInfoTip.hide);
       }
     }
 

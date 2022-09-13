@@ -32,7 +32,6 @@ export class D3HeatmapPlotComponent implements OnInit {
   @Input() isWait;
   @Input() useAnnotation;
   @Input() hasResourceChanged
-  // workspaceId = 'd93ff039-3692-44c0-be6c-9d48ac9284e4'
 
   @ViewChild('heatmap')
   svgElement: ElementRef;
@@ -148,7 +147,6 @@ export class D3HeatmapPlotComponent implements OnInit {
   generateHeatmap() {
     //reset variables when changing resources
     if (this.hasResourceChanged) {
-
       this.removeOverlayArray = [];
       this.annData = {};
     }
@@ -175,17 +173,18 @@ export class D3HeatmapPlotComponent implements OnInit {
 
   onSubmit() {
     this.imgAdjustFormSubmitted = true;
-
     this.userSpecifiedSize = false;
-
     let w = this.imgAdjustForm.value['imgWidth'];
+
     if (w) {
       this.finalWidth = w;
       this.userSpecifiedSize = true;
     } else {
       this.finalWidth = this.origWidth;
     }
+
     let h = this.imgAdjustForm.value['imgHeight'];
+
     if (h) {
       this.finalHeight = h;
       this.userSpecifiedSize = true;
@@ -390,7 +389,6 @@ export class D3HeatmapPlotComponent implements OnInit {
 
     }
     /* Setting up X-axis and Y-axis*/
-
     let xDomain, yDomain, xSelector, ySelector, featureAxis, obsAxis;
     if (this.orientation === this.samplesInColumnsKey) {
 
@@ -481,7 +479,7 @@ export class D3HeatmapPlotComponent implements OnInit {
     const legendInfoTip = d3Tip()
       .attr('class', 'd3-tip')
       .offset([-10, 0])
-      .html((event, d, value, category) => {
+      .html(() => {
         let tipBox = `<div class="legendInfo">Since we cannot distinguish categorical attributes identified by numbers, they will be displayed using a gradient. If you would like to change this behavior, change your group identifiers to be non-numerical.</div>`
         return tipBox
       });
@@ -625,7 +623,6 @@ export class D3HeatmapPlotComponent implements OnInit {
 
     //just for legends
     let reverseCategoryOptions = this.categoryOptionsArr.slice().reverse();
-
     for (let index of reverseCategoryOptions) {
       let isNumber = true;
       for (let i = 0; i < this.categoryOptions[index].length; i++) {
@@ -639,7 +636,7 @@ export class D3HeatmapPlotComponent implements OnInit {
         let max = Math.trunc(Math.ceil(Math.max(...this.categoryOptions[index])))
         if (min !== max) {
 
-          //gradient legend
+          //Gradient legend
           catYLocation += 40;
           var correlationColorData = [{ "color": "royalblue", "value": min }, { "color": "crimson", "value": max }];
           var extent = d3.extent(correlationColorData, d => d.value);
@@ -662,14 +659,14 @@ export class D3HeatmapPlotComponent implements OnInit {
 
           let graphWidth = this.xAxisArr.length * xScale.bandwidth()
           let legendPadding = 10
-          var correlationLegend = d3.select("g")
+          var gradientLegend = d3.select("g")
             .append("svg")
             .attr("width", widthGradient)
             .attr("height", heightGradient)
             .attr('x', graphWidth + this.margin.left + legendPadding)
             .attr('y', catYLocation + 40)
 
-          var defs = correlationLegend.append("defs");
+          var defs = gradientLegend.append("defs");
           var linearGradient = defs
             .append("linearGradient")
             .attr("id", "myGradient");
@@ -680,7 +677,7 @@ export class D3HeatmapPlotComponent implements OnInit {
             .attr("offset", d => ((d.value - extent[0]) / (extent[1] - extent[0]) * 100) + "%")
             .attr("stop-color", d => d.color)
 
-          var g = correlationLegend.append("g")
+          var g = gradientLegend.append("g")
             .attr("transform", `translate(${paddingGradient + 10}, 30)`)
 
           g.append("rect")
@@ -688,16 +685,17 @@ export class D3HeatmapPlotComponent implements OnInit {
             .attr("height", barHeight)
             .style("fill", "url(#myGradient)");
 
-          correlationLegend.append('text')
+          let gradientNode = gradientLegend.append('text')
             .attr('x', 0)
             .attr('y', 15)
+            .attr("class", index)
             .style('fill', 'rgba(0,0,0,.7)')
-            .style('font-size', '9px')
+            .style('font-size', '10px')
             .attr("text-anchor", "start")
             .attr("font-weight", "bold")
             .text(index.replace(/_/g, " ").toUpperCase())
 
-          correlationLegend.append('text')
+          gradientLegend.append('text')
             .attr('x', this.margin.right - 20)
             .attr('y', 15)
             .attr("class", "closePointer")
@@ -715,9 +713,8 @@ export class D3HeatmapPlotComponent implements OnInit {
               d3.select(this).style("fill", "rgba(0,0,0,.5)");
             });
 
-          correlationLegend
-            .append('text')
-            .attr('x', index.length * 5 + 25)
+          gradientLegend.append('text')
+            .attr('x', gradientNode.node().getComputedTextLength() + 5)
             .attr('y', 15)
             .attr("class", "closePointer")
             .style('fill', 'rgba(0,0,0,.7)')
@@ -750,7 +747,7 @@ export class D3HeatmapPlotComponent implements OnInit {
         let graphWidth = this.xAxisArr.length * xScale.bandwidth()
         let legendPadding = 10
         // select the svg area
-        var SvgLegend = d3.select("g")
+        var CategoryLegend = d3.select("g")
           .append("svg")
           .attr('x', graphWidth + this.margin.left + legendPadding)
           .attr('y', catYLocation)
@@ -758,7 +755,7 @@ export class D3HeatmapPlotComponent implements OnInit {
         catYLocation += (catOptions.length * 27) + 20 //height of each row and space between the legends 
 
         // Add one dot in the legend for each name.
-        SvgLegend.selectAll("mydots")
+        CategoryLegend.selectAll("mydots")
           .data(catOptions)
           .enter()
           .append("circle")
@@ -770,7 +767,7 @@ export class D3HeatmapPlotComponent implements OnInit {
           })
 
         // Add one dot in the legend for each name.
-        SvgLegend.selectAll("mylabels")
+        CategoryLegend.selectAll("mylabels")
           .data(catOptions)
           .enter()
           .append("text")
@@ -784,16 +781,16 @@ export class D3HeatmapPlotComponent implements OnInit {
           .attr("text-anchor", "left")
           .style("alignment-baseline", "middle")
 
-        SvgLegend.append('text')
+        let catNode = CategoryLegend.append('text')
           .attr('x', 0)
           .attr('y', 85)
           .style('fill', 'rgba(0,0,0,.7)')
-          .style('font-size', '9px')
+          .style('font-size', '10px')
           .attr("text-anchor", "start")
           .attr("font-weight", "bold")
           .text(index.replace(/_/g, " ").toUpperCase())
 
-        SvgLegend.append('text')
+        CategoryLegend.append('text')
           .attr('x', this.margin.right - 20)
           .attr('y', 85)
           .attr("class", "closePointer")
@@ -811,23 +808,22 @@ export class D3HeatmapPlotComponent implements OnInit {
             d3.select(this).style("fill", "rgba(0,0,0,.5)");
           });
 
-        SvgLegend
-          .append('text')
-          .attr('x', index.length * 5 + 25)
-          .attr('y', 85)
-          .attr("class", "closePointer")
-          .style('fill', 'rgba(0,0,0,.7)')
-          .style('font-size', '10px')
-          .style('font-weight', 'bold')
-          .text("ⓘ")
-          .on("click", () => {
-            this.removeOverlay(index)
-          })
-          .on('mouseover', function (mouseEvent: any, d) {
-            legendInfoTip.show(mouseEvent, d, this);
-            legendInfoTip.style('left', mouseEvent.x + tooltipOffsetX + 'px');
-          })
-          .on('mouseout', legendInfoTip.hide);
+        // CategoryLegend.append('text')
+        //   .attr('x', catNode.node().getComputedTextLength() + 5)
+        //   .attr('y', 85)
+        //   .attr("class", "closePointer")
+        //   .style('fill', 'rgba(0,0,0,.7)')
+        //   .style('font-size', '10px')
+        //   .style('font-weight', 'bold')
+        //   .text("ⓘ")
+        //   .on("click", () => {
+        //     this.removeOverlay(index)
+        //   })
+        //   .on('mouseover', function (mouseEvent: any, d) {
+        //     legendInfoTip.show(mouseEvent, d, this);
+        //     legendInfoTip.style('left', mouseEvent.x + tooltipOffsetX + 'px');
+        //   })
+        //   .on('mouseout', legendInfoTip.hide);
       }
     }
 
@@ -973,7 +969,6 @@ export class D3HeatmapPlotComponent implements OnInit {
     this.margin.left = yAxisLength <= 25 ? 100 : 50;
     this.margin.bottom = xAxisLength <= 25 ? 200 : 50;
     this.margin.top = categoryCount * this.heightCategory + 20;
-
     this.isWait = false;
     this.createHeatmap();
   }

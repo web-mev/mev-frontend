@@ -40,6 +40,8 @@ import { GeneMappingComponent } from './components/gene-mapping/geneMapping.comp
 import { SubnetVisualizationFormComponent } from './components/subnet-visualization/subnet-visualization.component';
 import { DecontxComponent } from './components/decontx-decontamination/decontx.component';
 import { CellRangerComponent } from './components/sctk-10x-cell-ranger/cell_ranger.component';
+import { LionComponent } from './components/lioness/lioness.component';
+import { DownloadPNGButtonComponent } from './components/download-png-button/download-png-button.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +52,7 @@ import { CellRangerComponent } from './components/sctk-10x-cell-ranger/cell_rang
     LimmaComponent,
     HclComponent,
     DownloadButtonComponent,
+    DownloadPNGButtonComponent,
     GseaComponent,
     RugPlotComponent,
     KmeansComponent,
@@ -80,6 +83,7 @@ import { CellRangerComponent } from './components/sctk-10x-cell-ranger/cell_rang
     SubnetVisualizationFormComponent,
     DecontxComponent,
     CellRangerComponent,
+    LionComponent
   ],
   imports: [CommonModule, SharedModule, DragDropModule, MatBadgeModule],
   exports: [
@@ -110,7 +114,8 @@ import { CellRangerComponent } from './components/sctk-10x-cell-ranger/cell_rang
     GeneMappingComponent,
     SubnetVisualizationFormComponent,
     DecontxComponent,
-    CellRangerComponent
+    CellRangerComponent,
+    LionComponent
   ]
 })
 export class D3Module { }

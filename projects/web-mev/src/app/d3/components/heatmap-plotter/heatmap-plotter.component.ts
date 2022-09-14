@@ -174,7 +174,7 @@ export class D3HeatmapPlotComponent implements OnInit {
     return this.imgAdjustForm.controls;
   }
 
-  
+
 
   onSubmit() {
     this.imgAdjustFormSubmitted = true;
@@ -582,23 +582,27 @@ export class D3HeatmapPlotComponent implements OnInit {
               .range(["royalblue", "crimson"])
               .domain([min, max])
 
-            svg.selectAll()
-              .data(this.xAxisArr)
-              .join("rect")
-              .attr("x", function (d) {
-                return xScale(d)
-              })
-              .attr("y", spacer - count * this.heightCategory)
-              .attr("width", xScale.bandwidth() - 0.4)
-              .attr("height", this.heightCategory - 0.4)
-              .style("fill", function (d) {
-                return tempAnnotations[d] !== undefined ? myColor(tempAnnotations[d][index]) : "black"
-              })
-              .on('mouseover', function (mouseEvent: any, d) {
-                pointTipOverlay.show(mouseEvent, d, tempAnnotations[d][index], index, this);
-                pointTipOverlay.style('left', mouseEvent.x + tooltipOffsetX + 'px');
-              })
-              .on('mouseout', pointTipOverlay.hide);
+            if (tempAnnotations[this.xAxisArr[0]] !== undefined) {
+              svg.selectAll()
+                .data(this.xAxisArr)
+                .join("rect")
+                .attr("x", function (d) {
+                  return xScale(d)
+                })
+                .attr("y", spacer - count * this.heightCategory)
+                .attr("width", xScale.bandwidth() - 0.4)
+                .attr("height", this.heightCategory - 0.4)
+                .style("fill", function (d) {
+                  return tempAnnotations[d] !== undefined ? myColor(tempAnnotations[d][index]) : 'black'
+                })
+                .on('mouseover', function (mouseEvent: any, d) {
+                  pointTipOverlay.show(mouseEvent, d, tempAnnotations[d][index], index, this);
+                  pointTipOverlay.style('left', mouseEvent.x + tooltipOffsetX + 'px');
+                })
+                .on('mouseout', pointTipOverlay.hide);
+            }
+
+
             count++;
           } else {
             this.categoryToIgnore.push(index.replace(/_/g, " "))
@@ -612,23 +616,26 @@ export class D3HeatmapPlotComponent implements OnInit {
             .range(colorRange)
             .domain(catOptions)
 
-          svg.selectAll()
-            .data(this.xAxisArr)
-            .join("rect")
-            .attr("x", function (d) {
-              return xScale(d)
-            })
-            .attr("y", spacer - count * this.heightCategory)
-            .attr("width", xScale.bandwidth() - 0.4)
-            .attr("height", this.heightCategory - 0.4)
-            .style("fill", function (d) {
-              return tempAnnotations[d] !== undefined ? testScaleColor(tempAnnotations[d][index]) : "black"
-            })
-            .on('mouseover', function (mouseEvent: any, d) {
-              pointTipOverlay.show(mouseEvent, d, tempAnnotations[d][index], index, this);
-              pointTipOverlay.style('left', mouseEvent.x + tooltipOffsetX + 'px');
-            })
-            .on('mouseout', pointTipOverlay.hide);
+          if (tempAnnotations[this.xAxisArr[0]] !== undefined) {
+            svg.selectAll()
+              .data(this.xAxisArr)
+              .join("rect")
+              .attr("x", function (d) {
+                return xScale(d)
+              })
+              .attr("y", spacer - count * this.heightCategory)
+              .attr("width", xScale.bandwidth() - 0.4)
+              .attr("height", this.heightCategory - 0.4)
+              .style("fill", function (d) {
+                return tempAnnotations[d] !== undefined ? testScaleColor(tempAnnotations[d][index]) : 'black'
+              })
+              .on('mouseover', function (mouseEvent: any, d) {
+                pointTipOverlay.show(mouseEvent, d, tempAnnotations[d][index], index, this);
+                pointTipOverlay.style('left', mouseEvent.x + tooltipOffsetX + 'px');
+              })
+              .on('mouseout', pointTipOverlay.hide);
+          }
+
           count++;
         }
         //categories not to display

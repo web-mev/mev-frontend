@@ -601,8 +601,6 @@ export class D3HeatmapPlotComponent implements OnInit {
                 })
                 .on('mouseout', pointTipOverlay.hide);
             }
-
-
             count++;
           } else {
             this.categoryToIgnore.push(index.replace(/_/g, " "))
@@ -635,7 +633,6 @@ export class D3HeatmapPlotComponent implements OnInit {
               })
               .on('mouseout', pointTipOverlay.hide);
           }
-
           count++;
         }
         //categories not to display
@@ -990,7 +987,7 @@ export class D3HeatmapPlotComponent implements OnInit {
     ignoreMessage += this.categoryToIgnore.length > 1 ? "and " + this.categoryToIgnore[lastIndex] + "." : this.categoryToIgnore[lastIndex] + ".";
 
     let message = "These annotation categories will not be displayed because they are either too large or too small to effectively color code: " + ignoreMessage
-    this.notificationService.warn(message);
+    this.notificationService.warn(message, 2000);
   }
 
   scrollTo(htmlID) {

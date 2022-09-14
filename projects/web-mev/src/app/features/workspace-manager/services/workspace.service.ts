@@ -48,7 +48,7 @@ export class WorkspaceService {
   // UPDATE, PUT METHOD
   updateWorkspace(workspace: Workspace): void {
     this.httpClient
-      .put(`${this.API_URL}/${workspace.id}/`, workspace)
+      .patch(`${this.API_URL}/${workspace.id}/`, workspace)
       .subscribe(data => {
         this.dialogData = workspace;
       });

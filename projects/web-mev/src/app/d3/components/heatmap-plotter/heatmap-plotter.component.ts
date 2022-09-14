@@ -104,6 +104,7 @@ export class D3HeatmapPlotComponent implements OnInit {
   removeOverlayArray = [];
   xAxisArr = [];
   yLocationLengend = 0;
+  hideOverlay = false;
 
   constructor(
     private metadataService: MetadataService,
@@ -141,10 +142,12 @@ export class D3HeatmapPlotComponent implements OnInit {
   ngOnChanges(): void {
     this.margin = this.useAnnotation ? this.marginAnnotation : this.marginMain;
     this.heatmapData = this.resourceData;
+
     this.generateHeatmap();
   }
 
   generateHeatmap() {
+
     //reset variables when changing resources
     if (this.hasResourceChanged) {
       this.removeOverlayArray = [];
@@ -170,6 +173,8 @@ export class D3HeatmapPlotComponent implements OnInit {
   get f() {
     return this.imgAdjustForm.controls;
   }
+
+  
 
   onSubmit() {
     this.imgAdjustFormSubmitted = true;
@@ -226,6 +231,16 @@ export class D3HeatmapPlotComponent implements OnInit {
 
     this.panelOpenState = false;
     this.plotOptionsPanel.close();
+
+    if (this.imgAdjustForm.value.imgOrientation === this.samplesInRowsKey) {
+      this.hideOverlay = true;
+      this.margin.left = 200;
+      this.margin.right = 100;
+    } else {
+      this.hideOverlay = false;
+      this.margin.left = 100;
+      this.margin.right = 200;
+    }
 
     this.createHeatmap();
   }
@@ -546,25 +561,56 @@ export class D3HeatmapPlotComponent implements OnInit {
     let spacer = this.margin.top - 30; //30 is the height of the space between graph and overlay
     let catYLocation = 0;
 
-    // just for overlays
-    for (let index of this.categoryOptionsArr) {
-      let isNumber = true;
-      for (let i = 0; i < this.categoryOptions[index].length; i++) {
-        if (isNaN(this.categoryOptions[index][i])) {
-          isNumber = false
+    if (this.hideOverlay === false) {
+      // just for overlays
+      for (let index of this.categoryOptionsArr) {
+        let isNumber = true;
+        for (let i = 0; i < this.categoryOptions[index].length; i++) {
+          if (isNaN(this.categoryOptions[index][i])) {
+            isNumber = false
+          }
         }
-      }
-      //If all values are numbers, will use a gradient
-      if (isNumber && !this.removeOverlayArray.includes(index)) {
-        let min = Math.trunc(Math.floor(Math.min(...this.categoryOptions[index])))
-        let max = Math.trunc(Math.ceil(Math.max(...this.categoryOptions[index])))
-        if (min !== max) {
-          catOptions = this.categoryOptions[index]
+        //If all values are numbers, will use a gradient
+        if (isNumber && !this.removeOverlayArray.includes(index)) {
+          let min = Math.trunc(Math.floor(Math.min(...this.categoryOptions[index])))
+          let max = Math.trunc(Math.ceil(Math.max(...this.categoryOptions[index])))
+          if (min !== max) {
+            catOptions = this.categoryOptions[index]
 
-          // Build color scale
-          var myColor = d3.scaleLinear()
-            .range(["royalblue", "crimson"])
-            .domain([min, max])
+            // Build color scale
+            var myColor = d3.scaleLinear()
+              .range(["royalblue", "crimson"])
+              .domain([min, max])
+
+            svg.selectAll()
+              .data(this.xAxisArr)
+              .join("rect")
+              .attr("x", function (d) {
+                return xScale(d)
+              })
+              .attr("y", spacer - count * this.heightCategory)
+              .attr("width", xScale.bandwidth() - 0.4)
+              .attr("height", this.heightCategory - 0.4)
+              .style("fill", function (d) {
+                return tempAnnotations[d] !== undefined ? myColor(tempAnnotations[d][index]) : "black"
+              })
+              .on('mouseover', function (mouseEvent: any, d) {
+                pointTipOverlay.show(mouseEvent, d, tempAnnotations[d][index], index, this);
+                pointTipOverlay.style('left', mouseEvent.x + tooltipOffsetX + 'px');
+              })
+              .on('mouseout', pointTipOverlay.hide);
+            count++;
+          } else {
+            this.categoryToIgnore.push(index.replace(/_/g, " "))
+          }
+
+        }
+        //For use if values are categorical
+        else if (this.categoryOptions[index].length <= 6 && this.categoryOptions[index].length > 1 && !this.removeOverlayArray.includes(index)) {
+          catOptions = this.categoryOptions[index]
+          var testScaleColor = d3.scaleOrdinal()
+            .range(colorRange)
+            .domain(catOptions)
 
           svg.selectAll()
             .data(this.xAxisArr)
@@ -576,7 +622,7 @@ export class D3HeatmapPlotComponent implements OnInit {
             .attr("width", xScale.bandwidth() - 0.4)
             .attr("height", this.heightCategory - 0.4)
             .style("fill", function (d) {
-              return tempAnnotations[d] !== undefined ? myColor(tempAnnotations[d][index]) : "black"
+              return tempAnnotations[d] !== undefined ? testScaleColor(tempAnnotations[d][index]) : "black"
             })
             .on('mouseover', function (mouseEvent: any, d) {
               pointTipOverlay.show(mouseEvent, d, tempAnnotations[d][index], index, this);
@@ -584,120 +630,185 @@ export class D3HeatmapPlotComponent implements OnInit {
             })
             .on('mouseout', pointTipOverlay.hide);
           count++;
-        } else {
+        }
+        //categories not to display
+        else if (this.categoryOptions[index].length > 6 || this.categoryOptions[index].length <= 1) {
           this.categoryToIgnore.push(index.replace(/_/g, " "))
         }
-
       }
-      //For use if values are categorical
-      else if (this.categoryOptions[index].length <= 6 && this.categoryOptions[index].length > 1 && !this.removeOverlayArray.includes(index)) {
-        catOptions = this.categoryOptions[index]
-        var testScaleColor = d3.scaleOrdinal()
-          .range(colorRange)
-          .domain(catOptions)
 
-        svg.selectAll()
-          .data(this.xAxisArr)
-          .join("rect")
-          .attr("x", function (d) {
-            return xScale(d)
-          })
-          .attr("y", spacer - count * this.heightCategory)
-          .attr("width", xScale.bandwidth() - 0.4)
-          .attr("height", this.heightCategory - 0.4)
-          .style("fill", function (d) {
-            return tempAnnotations[d] !== undefined ? testScaleColor(tempAnnotations[d][index]) : "black"
-          })
-          .on('mouseover', function (mouseEvent: any, d) {
-            pointTipOverlay.show(mouseEvent, d, tempAnnotations[d][index], index, this);
-            pointTipOverlay.style('left', mouseEvent.x + tooltipOffsetX + 'px');
-          })
-          .on('mouseout', pointTipOverlay.hide);
-        count++;
-      }
-      //categories not to display
-      else if (this.categoryOptions[index].length > 6 || this.categoryOptions[index].length <= 1) {
-        this.categoryToIgnore.push(index.replace(/_/g, " "))
-      }
-    }
-
-    //just for legends
-    let reverseCategoryOptions = this.categoryOptionsArr.slice().reverse();
-    for (let index of reverseCategoryOptions) {
-      let isNumber = true;
-      for (let i = 0; i < this.categoryOptions[index].length; i++) {
-        if (isNaN(this.categoryOptions[index][i])) {
-          isNumber = false
+      //just for legends
+      let reverseCategoryOptions = this.categoryOptionsArr.slice().reverse();
+      for (let index of reverseCategoryOptions) {
+        let isNumber = true;
+        for (let i = 0; i < this.categoryOptions[index].length; i++) {
+          if (isNaN(this.categoryOptions[index][i])) {
+            isNumber = false
+          }
         }
-      }
 
-      if (isNumber && !this.removeOverlayArray.includes(index)) {
-        let min = Math.trunc(Math.floor(Math.min(...this.categoryOptions[index])))
-        let max = Math.trunc(Math.ceil(Math.max(...this.categoryOptions[index])))
-        if (min !== max) {
+        if (isNumber && !this.removeOverlayArray.includes(index)) {
+          let min = Math.trunc(Math.floor(Math.min(...this.categoryOptions[index])))
+          let max = Math.trunc(Math.ceil(Math.max(...this.categoryOptions[index])))
+          if (min !== max) {
 
-          //Gradient legend
-          catYLocation += 40;
-          var correlationColorData = [{ "color": "royalblue", "value": min }, { "color": "crimson", "value": max }];
-          var extent = d3.extent(correlationColorData, d => d.value);
+            //Gradient legend
+            catYLocation += 40;
+            var correlationColorData = [{ "color": "royalblue", "value": min }, { "color": "crimson", "value": max }];
+            var extent = d3.extent(correlationColorData, d => d.value);
 
-          var paddingGradient = 10;
-          var widthGradient = 250;
-          var innerWidth = widthGradient - (paddingGradient * 2);
-          var barHeight = 8;
-          var heightGradient = 100;
+            var paddingGradient = 10;
+            var widthGradient = 250;
+            var innerWidth = widthGradient - (paddingGradient * 2);
+            var barHeight = 8;
+            var heightGradient = 100;
 
-          var xScaleCorr = d3.scaleLinear()
-            .range([0, innerWidth - 100])
-            .domain(extent);
+            var xScaleCorr = d3.scaleLinear()
+              .range([0, innerWidth - 100])
+              .domain(extent);
 
-          let xTicksCorr = [min, max];
+            let xTicksCorr = [min, max];
 
-          var xAxisGradient = d3.axisBottom(xScaleCorr)
-            .tickSize(barHeight * 2)
-            .tickValues(xTicksCorr);
+            var xAxisGradient = d3.axisBottom(xScaleCorr)
+              .tickSize(barHeight * 2)
+              .tickValues(xTicksCorr);
+
+            let graphWidth = this.xAxisArr.length * xScale.bandwidth()
+            let legendPadding = 10
+            var gradientLegend = d3.select("g")
+              .append("svg")
+              .attr("width", widthGradient)
+              .attr("height", heightGradient)
+              .attr('x', graphWidth + this.margin.left + legendPadding)
+              .attr('y', catYLocation + 40)
+
+            var defs = gradientLegend.append("defs");
+            var linearGradient = defs
+              .append("linearGradient")
+              .attr("id", "myGradient");
+
+            linearGradient.selectAll("stop")
+              .data(correlationColorData)
+              .enter().append("stop")
+              .attr("offset", d => ((d.value - extent[0]) / (extent[1] - extent[0]) * 100) + "%")
+              .attr("stop-color", d => d.color)
+
+            var g = gradientLegend.append("g")
+              .attr("transform", `translate(${paddingGradient + 10}, 30)`)
+
+            g.append("rect")
+              .attr("width", innerWidth - 100)
+              .attr("height", barHeight)
+              .style("fill", "url(#myGradient)");
+
+            let gradientNode = gradientLegend.append('text')
+              .attr('x', 0)
+              .attr('y', 15)
+              .attr("class", index)
+              .style('fill', 'rgba(0,0,0,.7)')
+              .style('font-size', '10px')
+              .attr("text-anchor", "start")
+              .attr("font-weight", "bold")
+              .text(index.replace(/_/g, " ").toUpperCase())
+
+            gradientLegend.append('text')
+              .attr('x', this.margin.right - 20)
+              .attr('y', 15)
+              .attr("class", "closePointer")
+              .style('fill', 'rgba(0,0,0,.5)')
+              .style('font-size', '12px')
+              .attr("text-anchor", "start")
+              .text("X")
+              .on("click", () => {
+                this.removeOverlay(index)
+              })
+              .on("mouseover", function (d) {
+                d3.select(this).style("fill", "rgba(0,0,0,.8)");
+              })
+              .on("mouseout", function (d) {
+                d3.select(this).style("fill", "rgba(0,0,0,.5)");
+              });
+
+            gradientLegend.append('text')
+              .attr('x', gradientNode.node().getComputedTextLength() + 5)
+              .attr('y', 15)
+              .attr("class", "closePointer")
+              .style('fill', 'rgba(0,0,0,.7)')
+              .style('font-size', '10px')
+              .style('font-weight', 'bold')
+              .text("ⓘ")
+              .on("click", () => {
+                this.removeOverlay(index)
+              })
+              .on('mouseover', function (mouseEvent: any, d) {
+                legendInfoTip.show(mouseEvent, d, this);
+                legendInfoTip.style('left', mouseEvent.x + tooltipOffsetX + 'px');
+              })
+              .on('mouseout', legendInfoTip.hide);
+
+            g.append("g")
+              .call(xAxisGradient)
+              .select(".domain")
+
+            catYLocation += 60;
+          }
+        }
+        else if (this.categoryOptions[index].length <= 6 && this.categoryOptions[index].length > 1 && !this.removeOverlayArray.includes(index)) {
+          catOptions = this.categoryOptions[index];
+          let colorRange = ["#ac92eb", "#4fc1e8", "#a0d568", "#ffce54", "#ed5564", "#feb144"];
+          var testScaleColor = d3.scaleOrdinal()
+            .range(colorRange)
+            .domain(catOptions)
 
           let graphWidth = this.xAxisArr.length * xScale.bandwidth()
           let legendPadding = 10
-          var gradientLegend = d3.select("g")
+          // select the svg area
+          var CategoryLegend = d3.select("g")
             .append("svg")
-            .attr("width", widthGradient)
-            .attr("height", heightGradient)
             .attr('x', graphWidth + this.margin.left + legendPadding)
-            .attr('y', catYLocation + 40)
+            .attr('y', catYLocation)
 
-          var defs = gradientLegend.append("defs");
-          var linearGradient = defs
-            .append("linearGradient")
-            .attr("id", "myGradient");
+          catYLocation += (catOptions.length * 27) + 20 //height of each row and space between the legends 
 
-          linearGradient.selectAll("stop")
-            .data(correlationColorData)
-            .enter().append("stop")
-            .attr("offset", d => ((d.value - extent[0]) / (extent[1] - extent[0]) * 100) + "%")
-            .attr("stop-color", d => d.color)
+          // Add one dot in the legend for each name.
+          CategoryLegend.selectAll("mydots")
+            .data(catOptions)
+            .enter()
+            .append("circle")
+            .attr("cx", 10)
+            .attr("cy", function (d, i) { return 100 + i * 20 }) // 100 is where the first dot appears. 25 is the distance between dots
+            .attr("r", 5)
+            .style("fill", d => {
+              return testScaleColor(d)
+            })
 
-          var g = gradientLegend.append("g")
-            .attr("transform", `translate(${paddingGradient + 10}, 30)`)
+          // Add one dot in the legend for each name.
+          CategoryLegend.selectAll("mylabels")
+            .data(catOptions)
+            .enter()
+            .append("text")
+            .attr("x", 20)
+            .attr("y", function (d, i) { return 100 + i * 20 }) // 100 is where the first dot appears. 25 is the distance between dots
+            .style("fill", "rgba(0,0,0,.7)")
+            .style('font-size', '8px')
+            .text(function (d) {
+              return d
+            })
+            .attr("text-anchor", "left")
+            .style("alignment-baseline", "middle")
 
-          g.append("rect")
-            .attr("width", innerWidth - 100)
-            .attr("height", barHeight)
-            .style("fill", "url(#myGradient)");
-
-          let gradientNode = gradientLegend.append('text')
+          CategoryLegend.append('text')
             .attr('x', 0)
-            .attr('y', 15)
-            .attr("class", index)
+            .attr('y', 85)
             .style('fill', 'rgba(0,0,0,.7)')
             .style('font-size', '10px')
             .attr("text-anchor", "start")
             .attr("font-weight", "bold")
             .text(index.replace(/_/g, " ").toUpperCase())
 
-          gradientLegend.append('text')
+          CategoryLegend.append('text')
             .attr('x', this.margin.right - 20)
-            .attr('y', 15)
+            .attr('y', 85)
             .attr("class", "closePointer")
             .style('fill', 'rgba(0,0,0,.5)')
             .style('font-size', '12px')
@@ -713,117 +824,7 @@ export class D3HeatmapPlotComponent implements OnInit {
               d3.select(this).style("fill", "rgba(0,0,0,.5)");
             });
 
-          gradientLegend.append('text')
-            .attr('x', gradientNode.node().getComputedTextLength() + 5)
-            .attr('y', 15)
-            .attr("class", "closePointer")
-            .style('fill', 'rgba(0,0,0,.7)')
-            .style('font-size', '10px')
-            .style('font-weight', 'bold')
-            .text("ⓘ")
-            .on("click", () => {
-              this.removeOverlay(index)
-            })
-            .on('mouseover', function (mouseEvent: any, d) {
-              legendInfoTip.show(mouseEvent, d, this);
-              legendInfoTip.style('left', mouseEvent.x + tooltipOffsetX + 'px');
-            })
-            .on('mouseout', legendInfoTip.hide);
-
-          g.append("g")
-            .call(xAxisGradient)
-            .select(".domain")
-
-          catYLocation += 60;
         }
-      }
-      else if (this.categoryOptions[index].length <= 6 && this.categoryOptions[index].length > 1 && !this.removeOverlayArray.includes(index)) {
-        catOptions = this.categoryOptions[index];
-        let colorRange = ["#ac92eb", "#4fc1e8", "#a0d568", "#ffce54", "#ed5564", "#feb144"];
-        var testScaleColor = d3.scaleOrdinal()
-          .range(colorRange)
-          .domain(catOptions)
-
-        let graphWidth = this.xAxisArr.length * xScale.bandwidth()
-        let legendPadding = 10
-        // select the svg area
-        var CategoryLegend = d3.select("g")
-          .append("svg")
-          .attr('x', graphWidth + this.margin.left + legendPadding)
-          .attr('y', catYLocation)
-
-        catYLocation += (catOptions.length * 27) + 20 //height of each row and space between the legends 
-
-        // Add one dot in the legend for each name.
-        CategoryLegend.selectAll("mydots")
-          .data(catOptions)
-          .enter()
-          .append("circle")
-          .attr("cx", 10)
-          .attr("cy", function (d, i) { return 100 + i * 20 }) // 100 is where the first dot appears. 25 is the distance between dots
-          .attr("r", 5)
-          .style("fill", d => {
-            return testScaleColor(d)
-          })
-
-        // Add one dot in the legend for each name.
-        CategoryLegend.selectAll("mylabels")
-          .data(catOptions)
-          .enter()
-          .append("text")
-          .attr("x", 20)
-          .attr("y", function (d, i) { return 100 + i * 20 }) // 100 is where the first dot appears. 25 is the distance between dots
-          .style("fill", "rgba(0,0,0,.7)")
-          .style('font-size', '8px')
-          .text(function (d) {
-            return d
-          })
-          .attr("text-anchor", "left")
-          .style("alignment-baseline", "middle")
-
-        let catNode = CategoryLegend.append('text')
-          .attr('x', 0)
-          .attr('y', 85)
-          .style('fill', 'rgba(0,0,0,.7)')
-          .style('font-size', '10px')
-          .attr("text-anchor", "start")
-          .attr("font-weight", "bold")
-          .text(index.replace(/_/g, " ").toUpperCase())
-
-        CategoryLegend.append('text')
-          .attr('x', this.margin.right - 20)
-          .attr('y', 85)
-          .attr("class", "closePointer")
-          .style('fill', 'rgba(0,0,0,.5)')
-          .style('font-size', '12px')
-          .attr("text-anchor", "start")
-          .text("X")
-          .on("click", () => {
-            this.removeOverlay(index)
-          })
-          .on("mouseover", function (d) {
-            d3.select(this).style("fill", "rgba(0,0,0,.8)");
-          })
-          .on("mouseout", function (d) {
-            d3.select(this).style("fill", "rgba(0,0,0,.5)");
-          });
-
-        // CategoryLegend.append('text')
-        //   .attr('x', catNode.node().getComputedTextLength() + 5)
-        //   .attr('y', 85)
-        //   .attr("class", "closePointer")
-        //   .style('fill', 'rgba(0,0,0,.7)')
-        //   .style('font-size', '10px')
-        //   .style('font-weight', 'bold')
-        //   .text("ⓘ")
-        //   .on("click", () => {
-        //     this.removeOverlay(index)
-        //   })
-        //   .on('mouseover', function (mouseEvent: any, d) {
-        //     legendInfoTip.show(mouseEvent, d, this);
-        //     legendInfoTip.style('left', mouseEvent.x + tooltipOffsetX + 'px');
-        //   })
-        //   .on('mouseout', legendInfoTip.hide);
       }
     }
 

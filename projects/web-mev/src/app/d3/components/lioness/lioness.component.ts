@@ -130,7 +130,6 @@ export class LionComponent implements OnInit {
                         }
                     }
                 }
-                console.log("axis: ", this.xAxisArr, this.yAxisArr)
                 this.createHeatmap();
             });
     }
@@ -224,7 +223,6 @@ export class LionComponent implements OnInit {
             .attr("width", x.bandwidth())
             .attr("height", y.bandwidth())
             .style("fill", function (d) {
-                // console.log(d.value)
                 return myColor(d.value)
             })
             .on('mouseover', function (mouseEvent: any, d) {

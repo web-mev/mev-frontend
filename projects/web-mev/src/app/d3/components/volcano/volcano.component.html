@@ -1,18 +1,26 @@
 <mev-spinner-overlay *ngIf="!isLoaded"></mev-spinner-overlay>
 <br>
 <br>
-<h5>Fold Change Threshold: </h5>
+<mat-slide-toggle [(ngModel)]="showFCBounds">Show Log Fold Change threshold bounds</mat-slide-toggle>
+<br>
+<mat-slide-toggle [(ngModel)]="showPValueBounds">Show P Value threshold bounds</mat-slide-toggle>
+<br>
+<br>
+<h5>Log2 Fold Change Threshold: </h5>
 <div class="custom-slider">
   <ngx-slider [(value)]="fcValue" [options]="fcOptions">
   </ngx-slider>
 </div>
-<h5>P-Value Threshold: </h5>
+<h5>-Log10 P-Value Threshold: </h5>
 <div class="custom-slider">
   <ngx-slider [(value)]="pValue" [options]="pValOptions">
   </ngx-slider>
 </div>
-<button mat-raised-button color="accent" type="submit" (click)="createChart()">Plot
+<button mat-raised-button color="accent" type="submit" (click)="regeneratePlot()">Plot
 </button>
 <br>
 <br>
+<div class="button-panel">
+  <mev-png-download-button [containerId]="containerId" [imageName]="imageName"></mev-png-download-button>
+</div>
 <div id="volcanoPlot"></div>

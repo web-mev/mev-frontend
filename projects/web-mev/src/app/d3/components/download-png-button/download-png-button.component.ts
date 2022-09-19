@@ -16,6 +16,7 @@ import * as svgAsPng from 'save-svg-as-png';
 export class DownloadPNGButtonComponent {
   @Input() containerId;
   @Input() imageName;
+
   constructor() { }
 
   /**

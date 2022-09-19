@@ -21,7 +21,11 @@ import { Options, ChangeContext } from '@angular-slider/ngx-slider';
 // export class VolcanoComponent extends MevBaseExpressionPlotFormComponent {
 export class VolcanoComponent implements OnInit {
   @Input() data
+  containerId = '#volcanoPlot';
+  imageName = 'volcanoPlot';
   isLoaded = true
+  showFCBounds = true;
+  showPValueBounds = true;
   private readonly API_URL = environment.apiUrl;
 
   constructor(
@@ -37,12 +41,12 @@ export class VolcanoComponent implements OnInit {
 
   fcValue = 0.5;
   fcOptions: Options = {
-    floor: 0,
-    ceil: 1,
+    floor: 0.5,
+    ceil: 2,
     showTicks: true,
     showSelectionBar: true,
-    step: .25,
-    ticksArray: [0, 0.5, 1]
+    step: .5,
+    ticksArray: [0.5, 1, 1.5, 2]
   };
 
   pValue = 0.01;
@@ -54,15 +58,20 @@ export class VolcanoComponent implements OnInit {
     showSelectionBar: true,
     // step: 0.001,
     stepsArray: [
-      {value: 0.001},
-      {value: 0.005},
-      {value: 0.01},
-      {value: 0.05},
+      { value: 0.001 },
+      { value: 0.005 },
+      { value: 0.01 },
+      { value: 0.05 },
     ],
     ticksArray: [0.001, 0.005, 0.01, 0.05]
   };
 
+  windowWidth = 1600;
+  windowHeight = 900;
+
   ngOnInit() {
+    this.windowWidth = window.innerWidth
+    this.windowHeight = window.innerHeight
 
     this.isLoaded = false;
     let deseqId = this.data['dge_results'];
@@ -70,7 +79,6 @@ export class VolcanoComponent implements OnInit {
       .getResourceContent(deseqId)
       .subscribe(res => {
         this.isLoaded = true;
-        console.log("res: ", res)
         for (let gene of res) {
           let name = gene.rowname;
           let pvalue = gene.values.pvalue
@@ -92,16 +100,19 @@ export class VolcanoComponent implements OnInit {
           }
         }
         this.createChart();
-
       })
   }
 
-  createChart() {
+  regeneratePlot(){
     this.isLoaded = false;
+    this.createChart();
+  }
+
+  createChart() {
     // set the dimensions and margins of the graph
     var margin = { top: 10, right: 30, bottom: 60, left: 60 },
-      width = 460 - margin.left - margin.right,
-      height = 400 - margin.top - margin.bottom;
+      width = this.windowWidth * .66 - margin.left - margin.right,
+      height = this.windowHeight * .7 - margin.top - margin.bottom;
 
     d3.select("#volcanoPlot")
       .selectAll('svg')
@@ -157,38 +168,45 @@ export class VolcanoComponent implements OnInit {
       .append("circle")
       .attr("cx", function (d) { return x(d.foldChange); })
       .attr("cy", function (d) { return y(-Math.log10(d.pvalue)); })
-      .attr("r", 1)
+      .attr("r", 2)
       .style("fill", d => {
-        if (d.foldChange < -this.fcValue) {
-          return "green"
-        } else if (d.foldChange >= -this.fcValue && d.foldChange <= this.fcValue) {
-          return "black"
+        if (d.foldChange < -this.fcValue && -Math.log10(d.pvalue) > -Math.log10(this.pValue)) {
+          return "rgba(65,105,225, .8)"
+        } else if (d.foldChange > this.fcValue && -Math.log10(d.pvalue) > -Math.log10(this.pValue)) {
+          return "rgb(255,99,71, .8)"
         } else {
-          return "red"
+          return "rgba(140,140,140, .8)"
         }
       })
 
-    svg.append("line")
-      .style("stroke", "red")
-      .attr("x1", x(this.fcValue))
-      .attr("y1", 0)
-      .attr("x2", x(this.fcValue))
-      .attr("y2", height);
+    if (this.showFCBounds === true) {
+      svg.append("line")
+        .style("stroke", "tomato")
+        .attr("x1", x(this.fcValue))
+        .attr("y1", 0)
+        .attr("x2", x(this.fcValue))
+        .attr("y2", height);
 
-    svg.append("line")
-      .style("stroke", "green")
-      .attr("x1", x(-this.fcValue))
-      .attr("y1", 0)
-      .attr("x2", x(-this.fcValue))
-      .attr("y2", height);
+      svg.append("line")
+        .style("stroke", "royalblue")
+        .attr("x1", x(-this.fcValue))
+        .attr("y1", 0)
+        .attr("x2", x(-this.fcValue))
+        .attr("y2", height);
 
-    svg.append("line")
-      .style("stroke", "blue")
-      .attr("x1", 0)
-      .attr("y1", y(this.pValue))
-      .attr("x2", width)
-      .attr("y2", y(this.pValue));
+    }
 
-    this.isLoaded = true;
+    if (this.showPValueBounds === true) {
+      svg.append("line")
+        .style("stroke", "rgba(110,110,110, .6)")
+        .attr("x1", 0)
+        .attr("y1", y(-Math.log10(this.pValue)))
+        .attr("x2", width)
+        .attr("y2", y(-Math.log10(this.pValue)));
+    }
+
+    setTimeout(() => {
+      this.isLoaded = true;
+    }, 1000)
   }
 }

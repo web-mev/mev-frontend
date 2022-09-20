@@ -125,7 +125,7 @@
           <mev-download-button [containerId]="containerId" [imageName]="imageName"></mev-download-button>  
         </div>      
         <div #boxPlot id="boxPlot" class="chart" (window:resize)="onResize($event)"></div>
-  
+        <mev-volcano [data]="outputs"></mev-volcano>
       </div>
   
     </mat-card-content>

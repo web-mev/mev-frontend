@@ -42,6 +42,7 @@ import { DecontxComponent } from './components/decontx-decontamination/decontx.c
 import { CellRangerComponent } from './components/sctk-10x-cell-ranger/cell_ranger.component';
 import { LionComponent } from './components/lioness/lioness.component';
 import { DownloadPNGButtonComponent } from './components/download-png-button/download-png-button.component';
+import { VolcanoComponent } from './components/volcano/volcano.component'
 
 @NgModule({
   declarations: [
@@ -83,7 +84,8 @@ import { DownloadPNGButtonComponent } from './components/download-png-button/dow
     SubnetVisualizationFormComponent,
     DecontxComponent,
     CellRangerComponent,
-    LionComponent
+    LionComponent,
+    VolcanoComponent
   ],
   imports: [CommonModule, SharedModule, DragDropModule, MatBadgeModule],
   exports: [
@@ -115,7 +117,8 @@ import { DownloadPNGButtonComponent } from './components/download-png-button/dow
     SubnetVisualizationFormComponent,
     DecontxComponent,
     CellRangerComponent,
-    LionComponent
+    LionComponent,
+    VolcanoComponent
   ]
 })
 export class D3Module { }

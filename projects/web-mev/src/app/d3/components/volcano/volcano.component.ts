@@ -1,12 +1,8 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
-import { MevBaseExpressionPlotFormComponent } from '../base-expression-plot-form/base-expression-plot-form.component';
 import { AnalysesService } from '@app/features/analysis/services/analysis.service';
 import { environment } from '@environments/environment';
-import { HttpClient } from '@angular/common/http';
-import { NotificationService } from '@core/notifications/notification.service';
 import * as d3 from 'd3';
-import d3Tip from 'd3-tip';
-import { Options, ChangeContext } from '@angular-slider/ngx-slider';
+import { Options } from '@angular-slider/ngx-slider';
 
 /*
 * Component for presenting the form which creates a boxplot.
@@ -30,10 +26,11 @@ export class VolcanoComponent implements OnInit {
 
   constructor(
     private apiService: AnalysesService,
-    private httpClient: HttpClient,
   ) { }
 
   resData = [];
+  windowWidth = 1600;
+  windowHeight = 900;
   pMin = 1000;
   pMax = 0;
   foldMin = 1000;
@@ -54,9 +51,7 @@ export class VolcanoComponent implements OnInit {
     floor: 0.001,
     ceil: 0.05,
     showTicks: true,
-    // showTicksValues: true,
     showSelectionBar: true,
-    // step: 0.001,
     stepsArray: [
       { value: 0.001 },
       { value: 0.005 },
@@ -65,9 +60,6 @@ export class VolcanoComponent implements OnInit {
     ],
     ticksArray: [0.001, 0.005, 0.01, 0.05]
   };
-
-  windowWidth = 1600;
-  windowHeight = 900;
 
   ngOnInit() {
     this.windowWidth = window.innerWidth
@@ -179,7 +171,7 @@ export class VolcanoComponent implements OnInit {
         }
       })
 
-    if (this.showFCBounds === true) {
+    if (this.showFCBounds) {
       svg.append("line")
         .style("stroke", "tomato")
         .attr("x1", x(this.fcValue))
@@ -196,7 +188,7 @@ export class VolcanoComponent implements OnInit {
 
     }
 
-    if (this.showPValueBounds === true) {
+    if (this.showPValueBounds) {
       svg.append("line")
         .style("stroke", "rgba(110,110,110, .6)")
         .attr("x1", 0)

@@ -85,7 +85,6 @@ export class PlottingMenuComponent implements OnInit {
   }
 
   onSelectNode(node:SimpleNode) {
-    console.log('selected:' + node.name);
     this.currentPlotType = node.id;
     this.activeNode = node;
   }

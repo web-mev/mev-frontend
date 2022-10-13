@@ -1,0 +1,13 @@
+<button mat-button [matMenuTriggerFor]="menu" title="Click to download the image" id="downloadButton">
+    <mat-icon>save_alt</mat-icon>
+</button>
+<mat-menu #menu="matMenu" id="buttonMenu" yPosition="below" xPosition="before">
+    <button mat-menu-item (click)="onSaveImagePNG()">
+        <mat-icon>cloud_download</mat-icon>
+        <span>Download PNG</span>
+    </button>
+    <!-- <button mat-menu-item (click)="onSaveImageSVG()">
+        <mat-icon>cloud_download</mat-icon>
+        <span>Download SVG</span>
+    </button> -->
+</mat-menu>

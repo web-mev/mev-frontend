@@ -78,7 +78,6 @@ export class HclComponent implements OnChanges {
     this.customObservationSets = this.clusterType === 'observationType' ? this.metadataService.getCustomObservationSets() : this.metadataService.getCustomFeatureSets();
     this.apiService.getResourceContent(obsResourceId).subscribe(response => {
       this.hierObsData = d3.hierarchy(response);
-      console.log("hier: ", this.hierObsData);
       this.createChart(this.hierObsData, this.obsTreeContainerId);
     });
   }
@@ -97,7 +96,6 @@ export class HclComponent implements OnChanges {
   }
   //Pointer mode
   onClickNodeTypeChange(type) {
-    console.log('onclick mode: ', type)
     this.onClickMode = type;
     this.update(this.hierObsData);
   }

@@ -1,0 +1,27 @@
+<mev-spinner-overlay *ngIf="isLoading"></mev-spinner-overlay>
+<mat-card class="analysis-card">
+    <mat-card-header>
+        <div mat-card-avatar class="analysis-card__img"></div>
+
+        <mat-card-title>Lioness: {{ outputs?.job_name }}</mat-card-title>
+    </mat-card-header>
+    <label id="example-radio-group-label">Select Axis for {{resourceType}}</label>
+    <br>
+    <mat-radio-group aria-label="Select an Axis" [(ngModel)]="resourceTypeAxis">
+        <mat-radio-button *ngFor="let options of radioButtonListAxis" [value]="options.name"
+            [checked]="resourceTypeAxis === options.name" (change)="onRadioChangeAxis2($event.value)">{{ options.name }}
+        </mat-radio-button>
+    </mat-radio-group>
+    <br>
+    <br>
+    <label id="example-radio-group-label">Select Resource Type</label>
+    <br>
+    <mat-radio-group aria-label="Select an Axis" [(ngModel)]="resourceType">
+        <mat-radio-button *ngFor="let options of radioButtonList" [value]="options.name"
+            [checked]="resourceType === options.name" (change)="onRadioChangeAxis($event.value)">{{ options.name }}
+        </mat-radio-button>
+    </mat-radio-group>
+
+    <mev-png-download-button [containerId]="containerId" [imageName]="imageName"></mev-png-download-button>
+    <div id="lioness"></div>
+</mat-card>

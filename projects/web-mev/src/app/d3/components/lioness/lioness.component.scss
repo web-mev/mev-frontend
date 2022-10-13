@@ -1,0 +1,45 @@
+.analysis-card__img {
+  background-image: url("~assets/icons/lioness.png");
+  background-size: 30px;
+  background-position: top center;
+  background-repeat: no-repeat;
+}
+
+.analysis-card__content {
+  padding-top: 1rem;
+}
+
+::ng-deep {
+  .d3-tip {
+    margin: 1rem 0;
+    padding: 8px;
+    position: fixed;
+    z-index: 1000;
+    font-size: 11px;
+    border-radius: 3px;
+    box-shadow: 2px 2px 4px rgb(0 0 0 / 10%);
+    background-color: rgba(255, 255, 255, 0.95);
+    border: 1px solid #d9d9d9;
+    color: rgba(0, 0, 0, 0.9);
+  }
+
+  .d3-tip table th,
+  td {
+    padding: 5px 10px;
+  }
+
+  .category {
+    display: inline;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.9);
+  }
+}
+
+.mat-radio-button~.mat-radio-button {
+  margin-left: 16px;
+}
+
+#radio-group-axis {
+  display: block;
+  font-weight: 500;
+}

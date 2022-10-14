@@ -475,14 +475,13 @@ export class MetadataComponent implements OnInit {
       let setsArr = [];
       for(const s of this.selection.selected) {
         const obj = {
-          multiple: s['multiple'],
           elements: s['elements']
         }
         setsArr.push(obj)
         setNames.push(s['name']);
       }
       const setType = [...setTypes][0]; // converts the set into a list- it's a single item if we are here anyway
-      const t = setType === CustomSetType.FeatureSet ? 'feature' : 'observation';
+      const t = setType === CustomSetType.FeatureSet ? 'feature_set' : 'observation_set';
       const payload = {
         sets: setsArr,
         set_type: t,
@@ -520,8 +519,7 @@ export class MetadataComponent implements OnInit {
                 name: customSetData.name,
                 type: setType,
                 color: customSetData.color,
-                elements: newSet.elements,
-                multiple: newSet.multiple
+                elements: newSet.elements
               };
               this.metadataService.addCustomSet(customSet);
             }
@@ -557,8 +555,7 @@ export class MetadataComponent implements OnInit {
                 name: customSetData.name,
                 type: setType,
                 color: customSetData.color,
-                elements: newSet.elements,
-                multiple: newSet.multiple
+                elements: newSet.elements
               };
               this.metadataService.addCustomSet(customSet);
             }
@@ -570,6 +567,7 @@ export class MetadataComponent implements OnInit {
 
   makeSetDifference(){   
     const setData = this.prepForSetOperations();
+    console.log(setData);
     if(setData) {
       const setType = setData.setType
       const tmpPayload = setData.payload;
@@ -606,8 +604,7 @@ export class MetadataComponent implements OnInit {
                   name: data.name,
                   type: setType,
                   color: data.color,
-                  elements: customSetData.elements,
-                  multiple: customSetData.multiple
+                  elements: customSetData.elements
                 };
                 this.metadataService.addCustomSet(customSet);
               }

@@ -268,8 +268,7 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
               name: customSetData.name,
               color: customSetData.color,
               type: CustomSetType.FeatureSet,
-              elements: elements,
-              multiple: true
+              elements: elements
             };
             this.metadataService.addCustomSet(customSet);
           });
@@ -516,8 +515,7 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
               name: customSetData.name,
               color: customSetData.color,
               type: CustomSetType.ObservationSet,
-              elements: this.chartViewMode ? samples : elements,
-              multiple: true
+              elements: this.chartViewMode ? samples : elements
             };
 
             if (this.metadataService.addCustomSet(observationSet)) {

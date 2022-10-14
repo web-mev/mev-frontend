@@ -28,5 +28,4 @@ export interface CustomSet {
   color?: string;
   type: CustomSetType;
   elements: CustomSetElement[];
-  multiple: boolean;
 }

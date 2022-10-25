@@ -3,7 +3,7 @@ variable "backend_hostname" {
   type        = string
 }
 
-variable "https_cert" {
+variable "https_cert_arn" {
   description = "Identifier for the HTTPS certificate"
   type        = string
 }

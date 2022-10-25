@@ -74,7 +74,7 @@ data "aws_s3_bucket" "log" {
 resource "aws_s3_bucket_logging" "website" {
   bucket        = aws_s3_bucket.website.id
   target_bucket = data.aws_s3_bucket.log.id
-  target_prefix = "${local.stack}/s3"
+  target_prefix = "${local.stack}/s3/"
 }
 
 resource "aws_cloudfront_distribution" "website" {

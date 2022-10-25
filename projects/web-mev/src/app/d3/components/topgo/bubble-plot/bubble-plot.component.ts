@@ -48,9 +48,11 @@ export class TopGoBubblePlotComponent implements OnChanges {
 
   ngOnChanges(): void {
     this.dataInput = this.data;
-    this.zeroPVal = this.data.find(d => d.elim_pval === 0);
-    this.setRadiusSize(this.dataInput.length);
-    this.setMinMaxVariables()
+    if(this.dataInput.length > 0){
+      this.zeroPVal = this.data.find(d => d.elim_pval === 0);
+      this.setRadiusSize(this.dataInput.length);
+      this.setMinMaxVariables()
+    }
   }
 
   //Sets the size of bubble radiius depending on the size of data on y-axis

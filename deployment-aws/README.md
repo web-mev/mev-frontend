@@ -26,6 +26,10 @@ Create a DNS record using the domain name returned by `terraform apply`:
 ```
 <website_hostname> CNAME <cloudfront_distribution_domain_name>
 ```
+Create and/or edit `vagrant/env.txt`:
+```shell
+cp vagrant/env.tmpl vagrant/env.txt
+```
 Build the site:
 ```shell
 vagrant up

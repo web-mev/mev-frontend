@@ -42,7 +42,7 @@ testem.log
 .terraform/
 .terraform.tfstate*
 terraform.tfstate*
-terraform.tfvars*
+*.tfvars
 /deployment/terraform/*.json
 
 # e2e

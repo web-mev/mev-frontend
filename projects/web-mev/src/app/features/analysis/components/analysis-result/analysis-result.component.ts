@@ -18,11 +18,13 @@ import {
 export class AnalysisResultComponent implements OnChanges {
   @Input() outputs;
   operationName: string;
-  constructor() {}
+  constructor() { }
 
   ngOnChanges(): void {
+    
     this.outputs = { ...this.outputs };
     this.operationName = this.getOperationName();
+    console.log("operation name: ", this.operationName)
   }
 
   /**

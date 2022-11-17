@@ -1,0 +1,57 @@
+<mev-spinner-overlay *ngIf="isLoading"></mev-spinner-overlay>
+<mat-card class="analysis-card">
+    <mat-card-header>
+        <div mat-card-avatar class="analysis-card__img"></div>
+        <mat-card-title>Likelihood Ratio Test: {{ outputs?.job_name }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="analysis-card__main">
+        <p class="analysis-card__instruction">
+            To maintain compatibility with our other differential expression tools and other downstream analyses (such
+            as GSEA), we report a “log2 fold change” column. Since the likelihood ratio test is a comparison across
+            multiple groups, we report the log fold change for one of the comparisons ({{lfc_comparison}}). If you wish
+            to compute the fold-change for other comparisons, you can perform a pairwise comparison of for the
+            groups of interest using one of the other differential expression tools.
+        </p>
+        <mat-divider [inset]="true"></mat-divider>
+        <div class="analysis-card__content">
+            <div class="d-flex justify-content-center">
+                <table mat-table [dataSource]="dataSource.slice(pageIndex*limit, pageIndex*limit+limit)"
+                    class="mat-elevation-z8" *ngIf="dataSource.length > 0">
+                    <ng-container matColumnDef="gene">
+                        <th mat-header-cell *matHeaderCellDef>Gene </th>
+                        <td mat-cell *matCellDef="let element"> {{element.gene}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="baseMean">
+                        <th mat-header-cell *matHeaderCellDef> Base Mean </th>
+                        <td mat-cell *matCellDef="let element"> {{element.baseMean}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="log2FoldChange">
+                        <th mat-header-cell *matHeaderCellDef> Log 2 Fold Change </th>
+                        <td mat-cell *matCellDef="let element"> {{element.log2FoldChange}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="statistic">
+                        <th mat-header-cell *matHeaderCellDef> Statistic </th>
+                        <td mat-cell *matCellDef="let element"> {{element.statistic}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="pvalue">
+                        <th mat-header-cell *matHeaderCellDef> P-Value </th>
+                        <td mat-cell *matCellDef="let element"> {{element.pvalue}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="padj">
+                        <th mat-header-cell *matHeaderCellDef> PadJ </th>
+                        <td mat-cell *matCellDef="let element"> {{element.padj}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-center paginator" *ngIf="dataSource.length > 0">
+                <mat-paginator [length]="dataSource.length" [pageSize]="25" [pageSizeOptions]="[5, 10, 25, 100]"
+                    aria-label="Select page" (page)="handlePageEvent($event)">
+                </mat-paginator>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>

@@ -52,7 +52,11 @@
                     aria-label="Select page" (page)="handlePageEvent($event)">
                 </mat-paginator>
             </div>
-            <!-- <d3-boxplot [resourceData]="this.boxplotData_test" [isWait]="isLoading"></d3-boxplot> -->
+            <div *ngIf="showBoxplot">
+                <mev-likelihood-box-plot [resourceData]="boxplotData"></mev-likelihood-box-plot>
+            </div>
+            
+            
         </div>
     </mat-card-content>
 </mat-card>

@@ -13,8 +13,6 @@ import { catchError } from 'rxjs/operators';
     changeDetection: ChangeDetectionStrategy.Default
 })
 
-
-
 export class LikelihoodRatioTestComponent implements OnInit {
     @Input() outputs;
     isLoading = false;
@@ -25,12 +23,11 @@ export class LikelihoodRatioTestComponent implements OnInit {
     lfc_comparison = '';
     private readonly API_URL = environment.apiUrl;
     sampleIdToGroup = {};
-    boxplotData = {};
-    boxplotData_test = [1,2,3,4,5,6,7,7,4,3,23,66,2,3]
+    boxplotData = [];
+    showBoxplot = false;
 
     constructor(
-        private httpClient: HttpClient,
-        // private readonly notificationService: NotificationService,
+        private httpClient: HttpClient
     ) { }
 
 
@@ -69,38 +66,36 @@ export class LikelihoodRatioTestComponent implements OnInit {
                 console.log("data: ", data)
                 this.isLoading = false;
                 for (let i in data) {
-                    let temp = {
-                        gene: data[i]['rowname'],
-                        baseMean: data[i]['values']['baseMean'],
-                        log2FoldChange: data[i]['values']['log2FoldChange'],
-                        statistic: data[i]['values']['statistic'],
-                        pvalue: data[i]['values']['pvalue'],
-                        padj: data[i]['values']['padj'],
+                    if (parseInt(i) < 3) {
+                        let temp = {
+                            gene: data[i]['rowname'],
+                            baseMean: data[i]['values']['baseMean'],
+                            log2FoldChange: data[i]['values']['log2FoldChange'],
+                            statistic: data[i]['values']['statistic'],
+                            pvalue: data[i]['values']['pvalue'],
+                            padj: data[i]['values']['padj'],
 
-                    }
-                    this.dataSource.push(temp)
-                }
-                for (let i in data) {
-                    let rowname = data[i]['rowname']
-                    if (this.boxplotData[rowname] === undefined) {
-                        this.boxplotData[rowname] = {}
-                    }
+                        }
+                        this.dataSource.push(temp)
+                        for (let name in data[i]['values']) {
+                            if (name !== 'baseMean' && name !== 'log2FoldChange' && name !== 'statistic' && name !== 'pvalue' && name !== 'padj') {
+                                let temp = {
+                                    name: name ,
+                                    key: data[i]['rowname'] + "_" + this.sampleIdToGroup[name],
+                                    value: data[i]['values'][name]
 
-                    for (let index in data[i]['values']) {
-                        if (this.sampleIdToGroup[index] !== undefined) {
-                            let cat = this.sampleIdToGroup[index]
-                            if (this.boxplotData[rowname][cat] === undefined) {
-                                this.boxplotData[rowname][cat] = [];
+                                }
+                                this.boxplotData.push(temp);
                             }
-                            let value = data[i]['values'][index]
-                            this.boxplotData[rowname][cat].push(value)
                         }
                     }
                 }
-                console.log("boxplot data: ", this.boxplotData)
+                console.log("boxplotdata: ", this.boxplotData)
 
+                this.showBoxplot = true;
             });
     }
+    boxplotDataArr = [];
 
     handlePageEvent(details) {
         this.pageIndex = details.pageIndex

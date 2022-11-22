@@ -44,6 +44,7 @@ import { LionComponent } from './components/lioness/lioness.component';
 import { DownloadPNGButtonComponent } from './components/download-png-button/download-png-button.component';
 import { VolcanoComponent } from './components/volcano/volcano.component';
 import { LikelihoodRatioTestComponent } from './components/likelihood-ratio-test/likelihood-ratio-test.component';
+import { LikelihoodBoxPlotComponent } from './components/likelihood-ratio-test/likelihood-boxplot/box-plot.component'
 
 @NgModule({
   declarations: [
@@ -87,7 +88,8 @@ import { LikelihoodRatioTestComponent } from './components/likelihood-ratio-test
     CellRangerComponent,
     LionComponent,
     VolcanoComponent,
-    LikelihoodRatioTestComponent 
+    LikelihoodRatioTestComponent,
+    LikelihoodBoxPlotComponent
   ],
   imports: [CommonModule, SharedModule, DragDropModule, MatBadgeModule],
   exports: [
@@ -121,7 +123,8 @@ import { LikelihoodRatioTestComponent } from './components/likelihood-ratio-test
     CellRangerComponent,
     LionComponent,
     VolcanoComponent,
-    LikelihoodRatioTestComponent 
+    LikelihoodRatioTestComponent,
+    LikelihoodBoxPlotComponent
   ]
 })
 export class D3Module { }

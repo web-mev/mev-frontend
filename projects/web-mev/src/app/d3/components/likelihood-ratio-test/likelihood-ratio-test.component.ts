@@ -32,7 +32,6 @@ export class LikelihoodRatioTestComponent implements OnInit {
 
 
     ngOnInit(): void {
-        console.log("outputs: ", this.outputs)
         this.createSample2GroupDict()
         this.lfc_comparison = this.outputs['lfc_comparison']
         let dge_results = this.outputs['dge_results'];
@@ -48,7 +47,7 @@ export class LikelihoodRatioTestComponent implements OnInit {
                 this.sampleIdToGroup[categoryArr[index]] = item
             }
         }
-        console.log("sampleID to Group: ", this.sampleIdToGroup)
+        console.log("SampleID to group: ", this.sampleIdToGroup)
     }
 
 
@@ -63,10 +62,9 @@ export class LikelihoodRatioTestComponent implements OnInit {
                 throw message
             }))
             .subscribe(data => {
-                console.log("data: ", data)
                 this.isLoading = false;
                 for (let i in data) {
-                    if (parseInt(i) < 3) {
+                    if (parseInt(i) < 6) {
                         let temp = {
                             gene: data[i]['rowname'],
                             baseMean: data[i]['values']['baseMean'],
@@ -82,7 +80,9 @@ export class LikelihoodRatioTestComponent implements OnInit {
                                 let temp = {
                                     name: name ,
                                     key: data[i]['rowname'] + "_" + this.sampleIdToGroup[name],
-                                    value: data[i]['values'][name]
+                                    value: data[i]['values'][name],
+                                    group: this.sampleIdToGroup[name],
+                                    gene: data[i]['rowname']
 
                                 }
                                 this.boxplotData.push(temp);
@@ -90,7 +90,6 @@ export class LikelihoodRatioTestComponent implements OnInit {
                         }
                     }
                 }
-                console.log("boxplotdata: ", this.boxplotData)
 
                 this.showBoxplot = true;
             });

@@ -1,0 +1,80 @@
+::ng-deep {
+    .d3-tip {
+        margin: 1rem 0;
+        padding: 8px;
+        position: fixed;
+        z-index: 1000;
+        font-size: 11px;
+        border-radius: 3px;
+        box-shadow: 2px 2px 4px rgb(0 0 0 / 10%);
+        background-color: rgba(255, 255, 255, 0.95);
+        border: 1px solid #d9d9d9;
+        color: rgba(0, 0, 0, 0.9);
+    }
+
+    .d3-tip table th,
+    td {
+        padding: 5px 10px;
+    }
+
+    .category {
+        display: inline;
+        font-weight: 500;
+        color: rgba(0, 0, 0, 0.9);
+    }
+}
+
+.example-section {
+    margin: 12px 0;
+}
+
+.sample-list {
+    padding: 15px 0;
+    font-weight: bold;
+}
+.sampleChips {
+    font-size: 10px;
+}
+
+.saveObsBtn {
+    margin-top: 10px;
+}
+
+#spinnerContainer {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 1;
+}
+
+#selectedSamplesElips {
+    margin: auto 0 auto 10px;
+    font-weight: bold;
+}
+
+#selectedSamplesTitle {
+    margin-bottom: 5px;
+}
+
+.stretch-badge-small > .mat-badge-content {
+    margin: auto;
+    width: auto;
+    border-radius: 13px;
+    right: unset !important;
+    min-width: 22px;
+    min-height: 20px;
+    font-size: 8px;
+    right: -20px !important;
+    background-color: #f50057;
+}
+.mat-badge-content {
+    background-color: #f50057;
+    margin: auto;
+    width: auto;
+    border-radius: 13px;
+    right: unset !important;
+    min-width: 22px;
+    min-height: 20px;
+    font-size: 12px;
+    right: -20px !important;
+}

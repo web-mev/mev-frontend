@@ -81,14 +81,10 @@ export class D3BoxPlotComponent implements OnInit, OnChanges, AfterViewInit {
 
   ngOnInit() {
     this.customObservationSets = this.metadataService.getCustomObservationSets();
-    console.log("custonObs: ", this.customObservationSets, this.customObservationSetsToPlot)
-    console.log("resourceData: ", this.resourceData)
     this.generateBoxPlot();
   }
 
   ngOnChanges(): void {
-    console.log("custonObs: ", this.customObservationSets, this.customObservationSetsToPlot)
-    console.log("resourceData: ", this.resourceData)
     this.generateBoxPlot();
   }
 

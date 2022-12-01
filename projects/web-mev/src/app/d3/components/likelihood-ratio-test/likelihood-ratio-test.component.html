@@ -48,12 +48,12 @@
             </div>
 
             <div class="d-flex justify-content-center paginator" *ngIf="dataSource.length > 0">
-                <mat-paginator [length]="dataSource.length" [pageSize]="limit" [pageSizeOptions]="[5, 10, 25, 100]"
+                <mat-paginator [length]="dataSource.length" [pageSize]="limit" [pageSizeOptions]="[5, 10, 25]"
                     aria-label="Select page" (page)="handlePageEvent($event)">
                 </mat-paginator>
             </div>
             <div *ngIf="showBoxplot">
-                <mev-likelihood-box-plot [resourceData]="boxplotData"></mev-likelihood-box-plot>
+                <mev-likelihood-box-plot [resourceData]="boxplotData" [limit]="limit" [pageIndex]="pageIndex"></mev-likelihood-box-plot>
             </div>
 
 

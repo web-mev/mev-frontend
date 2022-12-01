@@ -1,9 +1,6 @@
-import { Component, ChangeDetectionStrategy, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges } from '@angular/core';
 import * as d3 from 'd3';
 import d3Tip from 'd3-tip';
-// import { HttpClient } from '@angular/common/http';
-// import { catchError } from "rxjs/operators";
-// import { nest } from 'd3-collection';
 import * as d3Collection from 'd3-collection';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -17,12 +14,13 @@ import { CustomSetType } from '@app/_models/metadata';
   changeDetection: ChangeDetectionStrategy.Default
 })
 
-export class LikelihoodBoxPlotComponent implements OnInit, OnChanges {
+export class LikelihoodBoxPlotComponent implements OnChanges {
   @Input() metadataCatId = '';
   @Input() metadataNumId = '';
   @Input() metadataLookUp = {};
   @Input() resourceData
-  // @Input() sampleIdtoGroup
+  @Input() limit
+  @Input() pageIndex
 
   groups = this._formBuilder.group({
     alive: false,
@@ -39,8 +37,6 @@ export class LikelihoodBoxPlotComponent implements OnInit, OnChanges {
   max = -Infinity;
   xAxisArr = [];
   sumstat = [];
-
-  limit = 1000;
   showPoints = false;
 
   constructor(
@@ -48,30 +44,54 @@ export class LikelihoodBoxPlotComponent implements OnInit, OnChanges {
     public dialog: MatDialog
   ) { }
 
-  ngOnInit(): void { }
-
   ngOnChanges(changes: SimpleChanges): void {
+    this.resetVariables();
     this.isLoading = true;
-    this.boxPlotData = this.resourceData;
+    this.boxPlotData = this.resourceData; //add limit and pageIndex
+    // this.resourceData.
     // this.setBoxPlotTypes();
+    console.log("BP DATA: ", this.boxPlotData, this.resourceData.length)
     this.getXAxisValues();
     // this.createBoxPlot()
-    console.log("BP DATA: ", this.boxPlotData)
-
   }
 
   groupArr = [];
   myColor = ["#8dd3c7", "#ffffb3", "#bebada", "#fb8072", "#80b1d3", "#fdb462", "#b3de69", "#fccde5", "#d9d9d9", "#bc80bd", "#ccebc5", "#ffed6f"]
+  pointsToPlot = [];
 
   getXAxisValues() {
+    this.sumstat = d3Collection.nest() // nest function allows to group the calculation per level of a factor
+      .key(function (d) { return d.key; })
+      .rollup(function (d) {
+        let q1 = d3.quantile(d.map(function (g) { return g.value; }).sort(d3.ascending), .25)
+        let median = d3.quantile(d.map(function (g) { return g.value; }).sort(d3.ascending), .5)
+        let q3 = d3.quantile(d.map(function (g) { return g.value; }).sort(d3.ascending), .75)
+        let interQuantileRange = q3 - q1
+        let min = q1 - 1.5 * interQuantileRange
+        let max = q3 + 1.5 * interQuantileRange
+        return ({ q1: q1, median: median, q3: q3, interQuantileRange: interQuantileRange, min: min, max: max, group: d[0].group })
+      })
+      .entries(this.boxPlotData)
+
     for (let index in this.boxPlotData) {
-      if (!this.xAxisArr.includes(this.boxPlotData[index]['key'])) {
-        this.xAxisArr.push(this.boxPlotData[index]['key'])
-      }
       if (!this.groupArr.includes(this.boxPlotData[index]['group'])) {
         this.groupArr.push(this.boxPlotData[index]['group'])
       }
+
+      if (this.xAxisArr.includes(this.boxPlotData[index].key)) {
+        this.pointsToPlot.push(this.boxPlotData[index])
+      }
+
     }
+    let groupLength = this.groupArr.length
+    let startIndex = this.pageIndex * this.limit * groupLength
+
+    let slicedSumStat = this.sumstat.slice(startIndex, startIndex + this.limit * groupLength);
+
+    for (let index in slicedSumStat) {
+      this.xAxisArr.push(slicedSumStat[index]['key'])
+    }
+
     this.setBoxPlotTypes();
   }
   // customObservationSetsToPlot = [];
@@ -79,6 +99,7 @@ export class LikelihoodBoxPlotComponent implements OnInit, OnChanges {
 
 
   setBoxPlotTypes() {
+
 
     if (this.groupArr.length) {
       let i = 0;
@@ -99,12 +120,8 @@ export class LikelihoodBoxPlotComponent implements OnInit, OnChanges {
         // samples: Object.keys(this.resourceData[0].values)
       };
     }
-    console.log("BP Type: ", this.boxPlotTypes)
-    console.log("group arr: ", this.groupArr)
     this.createBoxPlot()
   }
-
-
 
   togglePoints() {
     this.showPoints = !this.showPoints;
@@ -118,6 +135,7 @@ export class LikelihoodBoxPlotComponent implements OnInit, OnChanges {
     this.min = Infinity;
     this.max = -Infinity;
     this.xAxisArr = [];
+    this.pointsToPlot = [];
   }
 
   createBoxPlot() {
@@ -154,6 +172,7 @@ export class LikelihoodBoxPlotComponent implements OnInit, OnChanges {
 
     svg.call(pointTip);
 
+    let tempXAxisArr = this.xAxisArr;
     let tempMin = this.min
     let tempMax = this.max
 
@@ -169,8 +188,11 @@ export class LikelihoodBoxPlotComponent implements OnInit, OnChanges {
         let min = q1 - 1.5 * interQuantileRange
         let max = q3 + 1.5 * interQuantileRange
 
-        tempMin = Math.min(min, tempMin)
-        tempMax = Math.max(max, tempMax)
+        if (tempXAxisArr.includes(d[0].key)) {
+          tempMin = Math.min(min, tempMin)
+          tempMax = Math.max(max, tempMax)
+        }
+
         return ({ q1: q1, median: median, q3: q3, interQuantileRange: interQuantileRange, min: min, max: max, group: d[0].group })
       })
       .entries(this.boxPlotData)
@@ -209,10 +231,14 @@ export class LikelihoodBoxPlotComponent implements OnInit, OnChanges {
       .range([height, 0])
     svg.append("g").call(d3.axisLeft(y))
 
+    let groupLength = this.groupArr.length
+    let startIndex = this.pageIndex * this.limit * groupLength
+    let slicedSumStat = this.sumstat.slice(startIndex, startIndex + this.limit * groupLength);
+
     // Show the main vertical line
     svg
       .selectAll("vertLines")
-      .data(this.sumstat)
+      .data(slicedSumStat)
       .enter()
       .append("line")
       .attr("x1", function (d) { return (x(d.key)) })
@@ -227,7 +253,7 @@ export class LikelihoodBoxPlotComponent implements OnInit, OnChanges {
     let bpType = this.boxPlotTypes
     svg
       .selectAll("boxes")
-      .data(this.sumstat)
+      .data(slicedSumStat)
       .enter()
       .append("rect")
       .attr("x", function (d) { return (x(d.key) - boxWidth / 2) })
@@ -235,7 +261,6 @@ export class LikelihoodBoxPlotComponent implements OnInit, OnChanges {
       .attr("height", function (d) { return (y(d.value.q1) - y(d.value.q3)) })
       .attr("width", boxWidth)
       .attr("stroke", "black")
-      // .style("fill", "#69b3a2")
       .style("fill", function (d) {
         let cat = d["value"].group
         return bpType[cat].color
@@ -249,7 +274,7 @@ export class LikelihoodBoxPlotComponent implements OnInit, OnChanges {
     // // Show the median
     svg
       .selectAll("medianLines")
-      .data(this.sumstat)
+      .data(slicedSumStat)
       .enter()
       .append("line")
       .attr("x1", function (d) { return (x(d.key) - boxWidth / 2) })
@@ -283,21 +308,16 @@ export class LikelihoodBoxPlotComponent implements OnInit, OnChanges {
       .style('font-size', '8px')
       .text("X-Axis Label")
 
-    // let concatedData = this.boxPlotData.slice(0,3)
-
     // Add individual points with jitter
     var jitterWidth = boxWidth //How far the points are scattered in the x-direction
     if (this.showPoints) {
       svg
         .selectAll("indPoints")
-        .data(this.boxPlotData)
+        .data(this.pointsToPlot)
         .enter()
         .append("circle")
         .attr("cx", function (d) { return (x(d.key) - jitterWidth / 2 + Math.random() * jitterWidth) })
-        .attr("cy", function (d) {
-          console.log("d: ", d)
-          return (y(d.value))
-        })
+        .attr("cy", function (d) { return (y(d.value)) })
         .attr("r", 2)
         .style("fill", "white")
         .attr("stroke", "black")
@@ -332,12 +352,6 @@ export class LikelihoodBoxPlotComponent implements OnInit, OnChanges {
       .attr('class', 'legend-label')
       .text(d => d.label);
   }
-
-  // refreshData() {
-  //   this.boxPlotData = [];
-  //   this.min = Infinity;
-  //   this.max = -Infinity;
-  // }
 
   /**
    * Function that is triggered when the user clicks the "Create a custom sample" button

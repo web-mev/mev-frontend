@@ -1,9 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
-// import { NotificationService } from '@core/notifications/notification.service';
-// import * as d3 from 'd3';
-// import d3Tip from 'd3-tip';
 import { catchError } from 'rxjs/operators';
 
 @Component({
@@ -19,7 +16,7 @@ export class LikelihoodRatioTestComponent implements OnInit {
     displayedColumns: string[] = ['gene', 'baseMean', 'log2FoldChange', 'statistic', 'pvalue', 'padj'];
     dataSource = [];
     pageIndex = 0;
-    limit = 10;
+    limit = 5;
     lfc_comparison = '';
     private readonly API_URL = environment.apiUrl;
     sampleIdToGroup = {};
@@ -47,12 +44,13 @@ export class LikelihoodRatioTestComponent implements OnInit {
                 this.sampleIdToGroup[categoryArr[index]] = item
             }
         }
-        console.log("SampleID to group: ", this.sampleIdToGroup)
+        // console.log("SampleID to group: ", this.sampleIdToGroup)
     }
 
 
 
     getData(uuid) {
+        console.log("getdata: ", uuid)
         this.isLoading = true;
         let queryURL = `${this.API_URL}/resources/${uuid}/contents/`;
         this.httpClient.get(queryURL).pipe(
@@ -62,9 +60,10 @@ export class LikelihoodRatioTestComponent implements OnInit {
                 throw message
             }))
             .subscribe(data => {
+                console.log("inside get request: ", data)
                 this.isLoading = false;
                 for (let i in data) {
-                    if (parseInt(i) < 6) {
+                    if (parseInt(i) < 50) {
                         let temp = {
                             gene: data[i]['rowname'],
                             baseMean: data[i]['values']['baseMean'],

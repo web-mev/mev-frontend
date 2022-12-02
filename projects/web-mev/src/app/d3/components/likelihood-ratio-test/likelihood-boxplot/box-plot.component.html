@@ -1,8 +1,7 @@
-<mat-checkbox (click)="togglePoints()">Show individual samples</mat-checkbox>
-<br>
+
 <h4>Groups:</h4>
-<div *ngFor="let item of groupArr">
-    <mat-checkbox (click)="togglePoints()">{{item}}</mat-checkbox>
+<div class="checkboxGroup" *ngFor="let item of groupArr">
+    <mat-checkbox (click)="toggleCheckBoxGroup(item)">{{item}}</mat-checkbox>
 </div>
 <button class="saveObsBtn" mat-raised-button color="accent" (click)="onCreateCustomSampleSet()"
     [disabled]="!selectedSamples.length">
@@ -34,8 +33,6 @@
         </mat-chip-list>
     </span>
 </div>
-
-
+<mat-checkbox class="showIndivSamples" (click)="togglePoints()">Show individual samples</mat-checkbox>
 <mev-download-button [containerId]="containerId" [imageName]="imageName"></mev-download-button>
-<!-- <div #boxPlot id="boxPlot" class="chart" ></div> -->
 <div #boxplot id="boxplot"></div>

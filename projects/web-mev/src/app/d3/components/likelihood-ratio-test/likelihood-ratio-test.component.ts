@@ -44,13 +44,11 @@ export class LikelihoodRatioTestComponent implements OnInit {
                 this.sampleIdToGroup[categoryArr[index]] = item
             }
         }
-        // console.log("SampleID to group: ", this.sampleIdToGroup)
     }
 
 
 
     getData(uuid) {
-        console.log("getdata: ", uuid)
         this.isLoading = true;
         let queryURL = `${this.API_URL}/resources/${uuid}/contents/`;
         this.httpClient.get(queryURL).pipe(
@@ -60,7 +58,6 @@ export class LikelihoodRatioTestComponent implements OnInit {
                 throw message
             }))
             .subscribe(data => {
-                console.log("inside get request: ", data)
                 this.isLoading = false;
                 for (let i in data) {
                     if (parseInt(i) < 50) {
@@ -82,7 +79,6 @@ export class LikelihoodRatioTestComponent implements OnInit {
                                     value: data[i]['values'][name],
                                     group: this.sampleIdToGroup[name],
                                     gene: data[i]['rowname']
-
                                 }
                                 this.boxplotData.push(temp);
                             }

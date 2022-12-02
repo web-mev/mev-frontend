@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, ElementRef } from '@angular/core';
 import * as d3 from 'd3';
 import d3Tip from 'd3-tip';
 import * as d3Collection from 'd3-collection';
@@ -6,6 +6,7 @@ import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AddSampleSetComponent } from '../../dialogs/add-sample-set/add-sample-set.component';
 import { CustomSetType } from '@app/_models/metadata';
+import { MetadataService } from '@app/core/metadata/metadata.service';
 
 @Component({
   selector: 'mev-likelihood-box-plot',
@@ -29,7 +30,8 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
   });
 
   imageName = 'boxplot';
-  containerId = '#boxplot'
+  containerId = '#boxplot';
+  boxWidth = 20;
 
   isLoading = false;
   boxPlotData = [];
@@ -39,26 +41,24 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
   sumstat = [];
   showPoints = false;
 
+  groupArr = [];
+  myColor = ["#fd7f6f", "#7eb0d5", "#b2e061", "#bd7ebe", "#ffb55a", "#ffee65", "#beb9db", "#fdcce5", "#8bd3c7"]
+  pointsToPlot = [];
+
   constructor(
     private _formBuilder: FormBuilder,
+    private metadataService: MetadataService,
     public dialog: MatDialog
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.resetVariables();
     this.isLoading = true;
-    this.boxPlotData = this.resourceData; //add limit and pageIndex
-    // this.resourceData.
-    // this.setBoxPlotTypes();
-    console.log("BP DATA: ", this.boxPlotData, this.resourceData.length)
+    this.boxPlotData = this.resourceData;
     this.getXAxisValues();
-    // this.createBoxPlot()
   }
 
-  groupArr = [];
-  myColor = ["#8dd3c7", "#ffffb3", "#bebada", "#fb8072", "#80b1d3", "#fdb462", "#b3de69", "#fccde5", "#d9d9d9", "#bc80bd", "#ccebc5", "#ffed6f"]
-  pointsToPlot = [];
-
+  checkboxData = {};
   getXAxisValues() {
     this.sumstat = d3Collection.nest() // nest function allows to group the calculation per level of a factor
       .key(function (d) { return d.key; })
@@ -76,10 +76,15 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
     for (let index in this.boxPlotData) {
       if (!this.groupArr.includes(this.boxPlotData[index]['group'])) {
         this.groupArr.push(this.boxPlotData[index]['group'])
-      }
 
-      if (this.xAxisArr.includes(this.boxPlotData[index].key)) {
-        this.pointsToPlot.push(this.boxPlotData[index])
+        let name = this.boxPlotData[index]['group']
+        let temp = {
+          name: name,
+          checked: false,
+          sampleIds: []
+        }
+        this.checkboxData[name] = temp;
+
       }
 
     }
@@ -92,11 +97,25 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
       this.xAxisArr.push(slicedSumStat[index]['key'])
     }
 
+    // let count = 0;
+    for (let index in this.boxPlotData) {
+      // if (this.xAxisArr.includes(this.boxPlotData[index].key)) {
+      //   count++
+      // }
+
+      if (this.xAxisArr.includes(this.boxPlotData[index].key)) {
+        this.pointsToPlot.push(this.boxPlotData[index])
+
+        let currGroup = this.boxPlotData[index].group
+        let currSampleId = this.boxPlotData[index].name
+        this.checkboxData[currGroup].sampleIds.push(currSampleId)
+      }
+
+    }
+
     this.setBoxPlotTypes();
   }
-  // customObservationSetsToPlot = [];
   boxPlotTypes = {};
-
 
   setBoxPlotTypes() {
 
@@ -106,18 +125,14 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
       this.groupArr.forEach(set => {
         this.boxPlotTypes[set] = {
           label: set,
-          // yCat: set.name,
-          color: this.myColor[i],
-          // samples: set.elements.map(el => el.id)
+          color: this.myColor[i]
         };
         i++;
       });
     } else {
       this.boxPlotTypes['All samples'] = {
         label: 'All samples',
-        // yCat: 'All samples',
-        color: '#69b3a2',
-        // samples: Object.keys(this.resourceData[0].values)
+        color: '#69b3a2'
       };
     }
     this.createBoxPlot()
@@ -130,6 +145,17 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
     this.getXAxisValues()
   }
 
+  toggleCheckBoxGroup(name) {
+    this.checkboxData[name].checked = !this.checkboxData[name].checked
+    this.selectedSamples = [];
+
+    for (let cat in this.checkboxData) {
+      if (this.checkboxData[cat].checked === true) {
+        this.selectedSamples = this.selectedSamples.concat(this.checkboxData[cat].sampleIds)
+      }
+    }
+  }
+
   resetVariables() {
     this.boxPlotData = [];
     this.min = Infinity;
@@ -140,9 +166,11 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
 
   createBoxPlot() {
     // set the dimensions and margins of the graph
-    var margin = { top: 10, right: 150, bottom: 100, left: 100 },
-      width = 800 - margin.left - margin.right,
-      height = 500 - margin.top - margin.bottom;
+    const outerWidth = Math.max(window.innerWidth * 0.66, 800);
+    const outerHeight = Math.max(window.innerHeight * 0.75, 500);
+    var margin = { top: 10, right: 150, bottom: 125, left: 100 },
+      width = outerWidth - margin.left - margin.right,
+      height = outerHeight - margin.top - margin.bottom;
 
     d3.select("#boxplot")
       .selectAll('svg')
@@ -180,7 +208,6 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
     this.sumstat = d3Collection.nest() // nest function allows to group the calculation per level of a factor
       .key(function (d) { return d.key; })
       .rollup(function (d) {
-        // console.log("rollup d: ", d)
         let q1 = d3.quantile(d.map(function (g) { return g.value; }).sort(d3.ascending), .25)
         let median = d3.quantile(d.map(function (g) { return g.value; }).sort(d3.ascending), .5)
         let q3 = d3.quantile(d.map(function (g) { return g.value; }).sort(d3.ascending), .75)
@@ -200,29 +227,40 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
     this.min = tempMin > 0 ? tempMin * .8 : tempMin * 1.2;
     this.max = tempMax * 1.2;
 
-    // if (this.sumstat.length > 12) {
-    //   this.sumstat.sort((b, a) => b.value.median - a.value.median)
-    //   let slicedArr = this.sumstat.slice(0, 6).concat(this.sumstat.slice(this.sumstat.length - 6, this.sumstat.length))
-    //   this.sumstat = slicedArr;
-    //   this.xAxisArr = [];
-    //   for (let i = 0; i < this.sumstat.length; i++) {
-    //     this.xAxisArr.push(this.sumstat[i].key)
-    //   }
-    // }
-
     // Show the X scale
     var x = d3.scaleBand()
       .range([0, width])
       .domain(this.xAxisArr)
       .paddingInner(1)
       .paddingOuter(.5)
+
+    var xAxisFilter = d3.axisBottom(x)
+      .tickValues(x.domain().filter(d => {
+        return d.includes(this.groupArr[0])
+      }))
+      .tickSize(0)
+
+    // let dy = this.boxWidth * (this.groupArr.length / 2);
+
+    // let tickLocation = (width / this.limit) / 2 - this.boxWidth
+
+    let labelPosition = width / this.limit
+
+
     svg.append("g")
       .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x))
+      .call(xAxisFilter)
+      .selectAll('.tick')
+
+      .attr('transform', (d, i) => { return "translate(" + (i * labelPosition + labelPosition / 2) + ",10)" })
       .selectAll('text')
+      .text(d => {
+        let endIndex = d.indexOf("_")
+        return d.substring(0, endIndex)
+      })
       .style('text-anchor', 'end')
-      .attr('dx', '-.8em')
-      .attr('dy', '.15em')
+      .attr('dx', "0px")
+      .attr('dy', "0px")
       .attr('transform', 'rotate(-45)');
 
     // Show the Y scale
@@ -249,7 +287,7 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
       .style("width", 40)
 
     // // rectangle for the main box
-    var boxWidth = 20
+    var boxWidth = this.boxWidth;
     let bpType = this.boxPlotTypes
     svg
       .selectAll("boxes")
@@ -293,9 +331,8 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
       .attr('dy', '.71em')
       .style('fill', 'rgba(0,0,0,.8)')
       .style('text-anchor', 'middle')
-      .style('font-size', '8px')
+      .style('font-size', '10px')
       .text("Y-Axis Label")
-
 
     svg
       .append('text')
@@ -305,12 +342,13 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
       .attr('y', height + margin.bottom - 10)
       .style('fill', 'rgba(0,0,0,.8)')
       .style('text-anchor', 'middle')
-      .style('font-size', '8px')
+      .style('font-size', '10px')
       .text("X-Axis Label")
 
     // Add individual points with jitter
     var jitterWidth = boxWidth //How far the points are scattered in the x-direction
-    if (this.showPoints) {
+
+    if (this.showPoints === true) {
       svg
         .selectAll("indPoints")
         .data(this.pointsToPlot)
@@ -335,7 +373,7 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
       .append('g')
       .classed('legend', true)
       .attr('transform', function (d, i) {
-        return 'translate(0,' + i * 20 + ')';
+        return 'translate(0,' + (i * 20 + 40) + ')';
       });
 
     legend
@@ -349,6 +387,7 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
       .attr('x', width + 20)
       .attr('dy', '.35em')
       .style('fill', '#000')
+      .style('font-size', '12px')
       .attr('class', 'legend-label')
       .text(d => d.label);
   }
@@ -356,7 +395,7 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
   /**
    * Function that is triggered when the user clicks the "Create a custom sample" button
    */
-  selectedSamples = ['c0c2059a-2931-4834-84a7-bfacf137c182'];
+  selectedSamples = [];
   onCreateCustomSampleSet() {
     let samples = this.selectedSamples.map(elem => ({ id: elem }));
     const dialogRef = this.dialog.open(AddSampleSetComponent, {
@@ -372,6 +411,11 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
           elements: samples,
           multiple: true
         };
+
+        // if the custom set has been successfully added, reset selectedSamples
+        if (this.metadataService.addCustomSet(customSet)) {
+          this.selectedSamples = [];
+        }
       }
     })
   }

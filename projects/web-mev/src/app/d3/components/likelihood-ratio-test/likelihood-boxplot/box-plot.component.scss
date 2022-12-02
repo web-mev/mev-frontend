@@ -29,7 +29,7 @@
 }
 
 .sample-list {
-    padding: 15px 0;
+    padding: 25px 0;
     font-weight: bold;
 }
 .sampleChips {
@@ -37,7 +37,7 @@
 }
 
 .saveObsBtn {
-    margin-top: 10px;
+    margin-top: 20px;
 }
 
 #spinnerContainer {
@@ -77,4 +77,13 @@
     min-height: 20px;
     font-size: 12px;
     right: -20px !important;
+}
+
+.checkboxGroup{
+    margin-left: 10px;
+}
+
+.showIndivSamples{
+    margin: 30px 0;
+    display: block;
 }

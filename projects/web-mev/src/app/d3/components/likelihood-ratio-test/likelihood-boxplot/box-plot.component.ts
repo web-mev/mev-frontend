@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, ElementRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges } from '@angular/core';
 import * as d3 from 'd3';
 import d3Tip from 'd3-tip';
 import * as d3Collection from 'd3-collection';
@@ -16,24 +16,20 @@ import { MetadataService } from '@app/core/metadata/metadata.service';
 })
 
 export class LikelihoodBoxPlotComponent implements OnChanges {
-  @Input() metadataCatId = '';
-  @Input() metadataNumId = '';
-  @Input() metadataLookUp = {};
   @Input() resourceData
   @Input() limit
   @Input() pageIndex
 
-  groups = this._formBuilder.group({
-    alive: false,
-    dead: false,
-    unknown: false,
-  });
+  // groups = this._formBuilder.group({
+  //   alive: false,
+  //   dead: false,
+  //   unknown: false,
+  // });
 
   imageName = 'boxplot';
   containerId = '#boxplot';
   boxWidth = 20;
-
-  isLoading = false;
+  isWaiting = false;
   boxPlotData = [];
   min = Infinity;
   max = -Infinity;
@@ -44,34 +40,40 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
   groupArr = [];
   myColor = ["#fd7f6f", "#7eb0d5", "#b2e061", "#bd7ebe", "#ffb55a", "#ffee65", "#beb9db", "#fdcce5", "#8bd3c7"]
   pointsToPlot = [];
+  boxPlotTypes = {};
 
   constructor(
-    private _formBuilder: FormBuilder,
+    // private _formBuilder: FormBuilder,
     private metadataService: MetadataService,
     public dialog: MatDialog
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
+    this.boxWidth = this.limit === 5 ? 20 : 10;
     this.resetVariables();
-    this.isLoading = true;
+    this.isWaiting = true;
     this.boxPlotData = this.resourceData;
-    this.getXAxisValues();
+    setTimeout(() => {      //used setTimeout in order to get loading animation to display before the rendering starts
+      this.getXAxisValues();
+    }, 100)
   }
 
   checkboxData = {};
   getXAxisValues() {
-    this.sumstat = d3Collection.nest() // nest function allows to group the calculation per level of a factor
-      .key(function (d) { return d.key; })
-      .rollup(function (d) {
-        let q1 = d3.quantile(d.map(function (g) { return g.value; }).sort(d3.ascending), .25)
-        let median = d3.quantile(d.map(function (g) { return g.value; }).sort(d3.ascending), .5)
-        let q3 = d3.quantile(d.map(function (g) { return g.value; }).sort(d3.ascending), .75)
-        let interQuantileRange = q3 - q1
-        let min = q1 - 1.5 * interQuantileRange
-        let max = q3 + 1.5 * interQuantileRange
-        return ({ q1: q1, median: median, q3: q3, interQuantileRange: interQuantileRange, min: min, max: max, group: d[0].group })
-      })
-      .entries(this.boxPlotData)
+    if (this.sumstat.length === 0) {
+      this.sumstat = d3Collection.nest() // nest function allows to group the calculation per level of a factor
+        .key(function (d) { return d.key; })
+        .rollup(function (d) {
+          let q1 = d3.quantile(d.map(function (g) { return g.value; }).sort(d3.ascending), .25)
+          let median = d3.quantile(d.map(function (g) { return g.value; }).sort(d3.ascending), .5)
+          let q3 = d3.quantile(d.map(function (g) { return g.value; }).sort(d3.ascending), .75)
+          let interQuantileRange = q3 - q1
+          let min = q1 - 1.5 * interQuantileRange
+          let max = q3 + 1.5 * interQuantileRange
+          return ({ q1: q1, median: median, q3: q3, interQuantileRange: interQuantileRange, min: min, max: max, group: d[0].group })
+        })
+        .entries(this.boxPlotData)
+    }
 
     for (let index in this.boxPlotData) {
       if (!this.groupArr.includes(this.boxPlotData[index]['group'])) {
@@ -84,7 +86,6 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
           sampleIds: []
         }
         this.checkboxData[name] = temp;
-
       }
 
     }
@@ -97,12 +98,7 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
       this.xAxisArr.push(slicedSumStat[index]['key'])
     }
 
-    // let count = 0;
     for (let index in this.boxPlotData) {
-      // if (this.xAxisArr.includes(this.boxPlotData[index].key)) {
-      //   count++
-      // }
-
       if (this.xAxisArr.includes(this.boxPlotData[index].key)) {
         this.pointsToPlot.push(this.boxPlotData[index])
 
@@ -110,16 +106,12 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
         let currSampleId = this.boxPlotData[index].name
         this.checkboxData[currGroup].sampleIds.push(currSampleId)
       }
-
     }
-
     this.setBoxPlotTypes();
   }
-  boxPlotTypes = {};
+
 
   setBoxPlotTypes() {
-
-
     if (this.groupArr.length) {
       let i = 0;
       this.groupArr.forEach(set => {
@@ -142,7 +134,10 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
     this.showPoints = !this.showPoints;
     this.resetVariables()
     this.boxPlotData = this.resourceData;
-    this.getXAxisValues()
+    this.isWaiting = true;
+    setTimeout(() => {      //used setTimeout in order to get loading animation to display before the rendering starts
+      this.getXAxisValues();
+    }, 100)
   }
 
   toggleCheckBoxGroup(name) {
@@ -200,32 +195,19 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
 
     svg.call(pointTip);
 
-    let tempXAxisArr = this.xAxisArr;
-    let tempMin = this.min
-    let tempMax = this.max
+    let groupLength = this.groupArr.length
+    let startIndex = this.pageIndex * this.limit * groupLength
+    let slicedSumStat = this.sumstat.slice(startIndex, startIndex + this.limit * groupLength);
 
-    // Compute quartiles, median, inter quantile range min and max --> these info are then used to draw the box.
-    this.sumstat = d3Collection.nest() // nest function allows to group the calculation per level of a factor
-      .key(function (d) { return d.key; })
-      .rollup(function (d) {
-        let q1 = d3.quantile(d.map(function (g) { return g.value; }).sort(d3.ascending), .25)
-        let median = d3.quantile(d.map(function (g) { return g.value; }).sort(d3.ascending), .5)
-        let q3 = d3.quantile(d.map(function (g) { return g.value; }).sort(d3.ascending), .75)
-        let interQuantileRange = q3 - q1
-        let min = q1 - 1.5 * interQuantileRange
-        let max = q3 + 1.5 * interQuantileRange
+    for (let i = 0; i < slicedSumStat.length; i++) {
+      let currMin = slicedSumStat[i].value.min
+      let currMax = slicedSumStat[i].value.max
 
-        if (tempXAxisArr.includes(d[0].key)) {
-          tempMin = Math.min(min, tempMin)
-          tempMax = Math.max(max, tempMax)
-        }
-
-        return ({ q1: q1, median: median, q3: q3, interQuantileRange: interQuantileRange, min: min, max: max, group: d[0].group })
-      })
-      .entries(this.boxPlotData)
-
-    this.min = tempMin > 0 ? tempMin * .8 : tempMin * 1.2;
-    this.max = tempMax * 1.2;
+      this.min = Math.min(this.min, currMin)
+      this.max = Math.max(this.max, currMax)
+    }
+    this.min = this.min > 0 ? this.min * .9 : this.min * 1.1;
+    this.max = this.max * 1.1;
 
     // Show the X scale
     var x = d3.scaleBand()
@@ -240,12 +222,7 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
       }))
       .tickSize(0)
 
-    // let dy = this.boxWidth * (this.groupArr.length / 2);
-
-    // let tickLocation = (width / this.limit) / 2 - this.boxWidth
-
     let labelPosition = width / this.limit
-
 
     svg.append("g")
       .attr("transform", "translate(0," + height + ")")
@@ -268,10 +245,6 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
       .domain([this.min, this.max])
       .range([height, 0])
     svg.append("g").call(d3.axisLeft(y))
-
-    let groupLength = this.groupArr.length
-    let startIndex = this.pageIndex * this.limit * groupLength
-    let slicedSumStat = this.sumstat.slice(startIndex, startIndex + this.limit * groupLength);
 
     // Show the main vertical line
     svg
@@ -332,7 +305,7 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
       .style('fill', 'rgba(0,0,0,.8)')
       .style('text-anchor', 'middle')
       .style('font-size', '10px')
-      .text("Y-Axis Label")
+      .text("Expression")
 
     svg
       .append('text')
@@ -343,7 +316,7 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
       .style('fill', 'rgba(0,0,0,.8)')
       .style('text-anchor', 'middle')
       .style('font-size', '10px')
-      .text("X-Axis Label")
+      .text("Gene")
 
     // Add individual points with jitter
     var jitterWidth = boxWidth //How far the points are scattered in the x-direction
@@ -390,6 +363,8 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
       .style('font-size', '12px')
       .attr('class', 'legend-label')
       .text(d => d.label);
+
+    this.isWaiting = false;
   }
 
   /**

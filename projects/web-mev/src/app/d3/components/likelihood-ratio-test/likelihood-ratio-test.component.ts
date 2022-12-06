@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { catchError } from 'rxjs/operators';
@@ -10,7 +10,7 @@ import { catchError } from 'rxjs/operators';
     changeDetection: ChangeDetectionStrategy.Default
 })
 
-export class LikelihoodRatioTestComponent implements OnInit {
+export class LikelihoodRatioTestComponent implements OnInit, OnChanges {
     @Input() outputs;
     isLoading = false;
     displayedColumns: string[] = ['gene', 'baseMean', 'log2FoldChange', 'statistic', 'pvalue', 'padj'];
@@ -36,6 +36,10 @@ export class LikelihoodRatioTestComponent implements OnInit {
 
     }
 
+    ngOnChanges(changes: SimpleChanges): void {
+        console.log("change happened!!!")
+    }
+
     createSample2GroupDict() {
         let categories = this.outputs['sample_to_group_mapping']
         for (let item in categories) {
@@ -59,8 +63,9 @@ export class LikelihoodRatioTestComponent implements OnInit {
             }))
             .subscribe(data => {
                 this.isLoading = false;
+                console.log("data: ", data)
                 for (let i in data) {
-                    if (parseInt(i) < 50) {
+                    if (parseInt(i) < 50000) {
                         let temp = {
                             gene: data[i]['rowname'],
                             baseMean: data[i]['values']['baseMean'],
@@ -74,7 +79,7 @@ export class LikelihoodRatioTestComponent implements OnInit {
                         for (let name in data[i]['values']) {
                             if (name !== 'baseMean' && name !== 'log2FoldChange' && name !== 'statistic' && name !== 'pvalue' && name !== 'padj') {
                                 let temp = {
-                                    name: name ,
+                                    name: name,
                                     key: data[i]['rowname'] + "_" + this.sampleIdToGroup[name],
                                     value: data[i]['values'][name],
                                     group: this.sampleIdToGroup[name],
@@ -94,5 +99,28 @@ export class LikelihoodRatioTestComponent implements OnInit {
     handlePageEvent(details) {
         this.pageIndex = details.pageIndex
         this.limit = details.pageSize
+        // console.log("start loading #1")
+        // this.isLoading = true;
     }
+
+
+    // changeLoadingStatus(newItem: boolean) {
+    //     console.log("there was a change froomo loading status: ", newItem)
+    //     if (newItem === false) {
+    //         // setTimeout(() => {
+    //         //     console.log("stop loading")
+    //         //     this.isLoading = newItem;
+    //         // }, 1000)
+    //         console.log("stop loading")
+    //         this.isLoading = newItem;
+    //     } else {
+    //         console.log("start!!")
+    //         // this.isLoading = newItem;
+    //          setTimeout(() => {
+    //             this.isLoading = newItem;
+    //         }, 1000)
+    //     }
+
+
+    // }
 }

@@ -2,7 +2,6 @@ import { Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges } f
 import * as d3 from 'd3';
 import d3Tip from 'd3-tip';
 import * as d3Collection from 'd3-collection';
-import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AddSampleSetComponent } from '../../dialogs/add-sample-set/add-sample-set.component';
 import { CustomSetType } from '@app/_models/metadata';
@@ -17,18 +16,11 @@ import { MetadataService } from '@app/core/metadata/metadata.service';
 
 export class LikelihoodBoxPlotComponent implements OnChanges {
   @Input() resourceData
-  @Input() limit
+  @Input() limit = 6;
   @Input() pageIndex
-
-  // groups = this._formBuilder.group({
-  //   alive: false,
-  //   dead: false,
-  //   unknown: false,
-  // });
 
   imageName = 'boxplot';
   containerId = '#boxplot';
-  boxWidth = 20;
   isWaiting = false;
   boxPlotData = [];
   min = Infinity;
@@ -38,18 +30,18 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
   showPoints = false;
 
   groupArr = [];
-  myColor = ["#fd7f6f", "#7eb0d5", "#b2e061", "#bd7ebe", "#ffb55a", "#ffee65", "#beb9db", "#fdcce5", "#8bd3c7"]
+  myColor = ["#fd7f6f", "#7eb0d5", "#b2e061", "#bd7ebe", "#ffb55a", "#ffee65", "#beb9db", "#fdcce5", "#8bd3c7", "#9080ff"];
   pointsToPlot = [];
   boxPlotTypes = {};
+  checkboxData = {};
+  selectedSamples = [];
 
   constructor(
-    // private _formBuilder: FormBuilder,
     private metadataService: MetadataService,
     public dialog: MatDialog
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.boxWidth = this.limit === 5 ? 20 : 10;
     this.resetVariables();
     this.isWaiting = true;
     this.boxPlotData = this.resourceData;
@@ -58,7 +50,6 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
     }, 100)
   }
 
-  checkboxData = {};
   getXAxisValues() {
     if (this.sumstat.length === 0) {
       this.sumstat = d3Collection.nest() // nest function allows to group the calculation per level of a factor
@@ -87,11 +78,9 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
         }
         this.checkboxData[name] = temp;
       }
-
     }
     let groupLength = this.groupArr.length
     let startIndex = this.pageIndex * this.limit * groupLength
-
     let slicedSumStat = this.sumstat.slice(startIndex, startIndex + this.limit * groupLength);
 
     for (let index in slicedSumStat) {
@@ -107,20 +96,19 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
         this.checkboxData[currGroup].sampleIds.push(currSampleId)
       }
     }
+
     this.setBoxPlotTypes();
   }
 
-
   setBoxPlotTypes() {
     if (this.groupArr.length) {
-      let i = 0;
-      this.groupArr.forEach(set => {
+      for (let i = 0; i < this.groupArr.length; i++) {
+        let set = this.groupArr[i]
         this.boxPlotTypes[set] = {
           label: set,
           color: this.myColor[i]
         };
-        i++;
-      });
+      }
     } else {
       this.boxPlotTypes['All samples'] = {
         label: 'All samples',
@@ -159,13 +147,14 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
     this.pointsToPlot = [];
   }
 
+
   createBoxPlot() {
     // set the dimensions and margins of the graph
     const outerWidth = Math.max(window.innerWidth * 0.66, 800);
     const outerHeight = Math.max(window.innerHeight * 0.75, 500);
-    var margin = { top: 10, right: 150, bottom: 125, left: 100 },
-      width = outerWidth - margin.left - margin.right,
-      height = outerHeight - margin.top - margin.bottom;
+    var margin = { top: 10, right: 150, bottom: 125, left: 100 };
+    var width = outerWidth - margin.left - margin.right;
+    var height = outerHeight - margin.top - margin.bottom;
 
     d3.select("#boxplot")
       .selectAll('svg')
@@ -228,7 +217,6 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
       .attr("transform", "translate(0," + height + ")")
       .call(xAxisFilter)
       .selectAll('.tick')
-
       .attr('transform', (d, i) => { return "translate(" + (i * labelPosition + labelPosition / 2) + ",10)" })
       .selectAll('text')
       .text(d => {
@@ -260,7 +248,7 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
       .style("width", 40)
 
     // // rectangle for the main box
-    var boxWidth = this.boxWidth;
+    var boxWidth = (width * .75) / (this.limit * this.groupArr.length)
     let bpType = this.boxPlotTypes
     svg
       .selectAll("boxes")
@@ -370,7 +358,6 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
   /**
    * Function that is triggered when the user clicks the "Create a custom sample" button
    */
-  selectedSamples = [];
   onCreateCustomSampleSet() {
     let samples = this.selectedSamples.map(elem => ({ id: elem }));
     const dialogRef = this.dialog.open(AddSampleSetComponent, {

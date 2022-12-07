@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { catchError } from 'rxjs/operators';
@@ -10,7 +10,7 @@ import { catchError } from 'rxjs/operators';
     changeDetection: ChangeDetectionStrategy.Default
 })
 
-export class LikelihoodRatioTestComponent implements OnInit, OnChanges {
+export class LikelihoodRatioTestComponent implements OnInit {
     @Input() outputs;
     isLoading = false;
     displayedColumns: string[] = ['gene', 'baseMean', 'log2FoldChange', 'statistic', 'pvalue', 'padj'];
@@ -27,17 +27,11 @@ export class LikelihoodRatioTestComponent implements OnInit, OnChanges {
         private httpClient: HttpClient
     ) { }
 
-
     ngOnInit(): void {
         this.createSample2GroupDict()
         this.lfc_comparison = this.outputs['lfc_comparison']
         let dge_results = this.outputs['dge_results'];
         this.getData(dge_results);
-
-    }
-
-    ngOnChanges(changes: SimpleChanges): void {
-        console.log("change happened!!!")
     }
 
     createSample2GroupDict() {
@@ -50,8 +44,6 @@ export class LikelihoodRatioTestComponent implements OnInit, OnChanges {
         }
     }
 
-
-
     getData(uuid) {
         this.isLoading = true;
         let queryURL = `${this.API_URL}/resources/${uuid}/contents/`;
@@ -63,9 +55,7 @@ export class LikelihoodRatioTestComponent implements OnInit, OnChanges {
             }))
             .subscribe(data => {
                 this.isLoading = false;
-                console.log("data: ", data)
                 for (let i in data) {
-                    if (parseInt(i) < 50000) {
                         let temp = {
                             gene: data[i]['rowname'],
                             baseMean: data[i]['values']['baseMean'],
@@ -73,7 +63,6 @@ export class LikelihoodRatioTestComponent implements OnInit, OnChanges {
                             statistic: data[i]['values']['statistic'],
                             pvalue: data[i]['values']['pvalue'],
                             padj: data[i]['values']['padj'],
-
                         }
                         this.dataSource.push(temp)
                         for (let name in data[i]['values']) {
@@ -88,39 +77,14 @@ export class LikelihoodRatioTestComponent implements OnInit, OnChanges {
                                 this.boxplotData.push(temp);
                             }
                         }
-                    }
                 }
-
                 this.showBoxplot = true;
             });
     }
-    boxplotDataArr = [];
 
     handlePageEvent(details) {
-        this.pageIndex = details.pageIndex
-        this.limit = details.pageSize
-        // console.log("start loading #1")
-        // this.isLoading = true;
+        this.pageIndex = details.pageIndex;
+        this.limit = details.pageSize;
     }
 
-
-    // changeLoadingStatus(newItem: boolean) {
-    //     console.log("there was a change froomo loading status: ", newItem)
-    //     if (newItem === false) {
-    //         // setTimeout(() => {
-    //         //     console.log("stop loading")
-    //         //     this.isLoading = newItem;
-    //         // }, 1000)
-    //         console.log("stop loading")
-    //         this.isLoading = newItem;
-    //     } else {
-    //         console.log("start!!")
-    //         // this.isLoading = newItem;
-    //          setTimeout(() => {
-    //             this.isLoading = newItem;
-    //         }, 1000)
-    //     }
-
-
-    // }
 }

@@ -288,7 +288,6 @@ export class HclComponent implements OnChanges {
    */
   onCreateCustomSampleSet() {
     let samples = this.selectedSamples.map(elem => ({ id: elem }));
-    console.log("HCL samples: ", this.selectedSamples, samples)
     const dialogRef = this.dialog.open(AddSampleSetComponent, {
       data: { type: this.clusterType === 'observationType' ? CustomSetType.ObservationSet : CustomSetType.FeatureSet }
     });

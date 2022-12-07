@@ -99,6 +99,7 @@ export class LoginComponent implements OnInit {
     }
 
     this.loading = true;
+
     this.authenticationService
       .login(this.f.email.value, this.f.password.value)
       .subscribe(
@@ -106,6 +107,9 @@ export class LoginComponent implements OnInit {
           this.router.navigate([this.returnUrl]);
         },
         error => {
+          if (error.status == 401 || error.status == 400) {
+            this.notificationService.error(`Error ${error.status}: Wrong Email or Password. Try again or click Forgot Password to reset it.`);
+          }
           this.loading = false;
         }
       );

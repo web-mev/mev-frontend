@@ -110,7 +110,7 @@ export class LionComponent implements OnInit {
         let uuid = this.resourceType === "Genes" ? uuid_gene : uuid_tf;
 
         let count = 100;
-        let queryURL = `https://api-dev.tm4.org/api/resources/${uuid}/contents/transform/?transform-name=heatmap-reduce&mad_n=${count}`
+        let queryURL = `${this.API_URL}/resources/${uuid}/contents/transform/?transform-name=heatmap-reduce&mad_n=${count}`
         this.httpClient.get(queryURL).pipe(
             catchError(error => {
                 console.log("Error: ", error.message);

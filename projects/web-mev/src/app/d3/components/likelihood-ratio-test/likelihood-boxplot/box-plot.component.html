@@ -1,0 +1,38 @@
+<mev-spinner-overlay *ngIf="isWaiting"></mev-spinner-overlay>
+<h4>Groups:</h4>
+<div class="checkboxGroup" *ngFor="let item of groupArr">
+    <mat-checkbox (click)="toggleCheckBoxGroup(item)">{{item}}</mat-checkbox>
+</div>
+<button class="saveObsBtn" mat-raised-button color="accent" (click)="onCreateCustomSampleSet()"
+    [disabled]="!selectedSamples.length">
+    <mat-icon>add</mat-icon>
+    Save as a Observation Set
+</button>
+<div class="sample-list" *ngIf="selectedSamples.length > 0">
+    <div id="selectedSamplesTitle">
+        <p>
+            <span>
+                Selected Samples:
+            </span>
+        </p>
+    </div>
+    <span class="sample-list__item">
+        <mat-chip-list>
+            <mat-chip class="sampleChips" color="amber"
+                *ngFor="let item of selectedSamples | slice:0:50; let i=index">{{ item }}
+            </mat-chip>
+            <p *ngIf="selectedSamples.length > 50" id="selectedSamplesElips">
+                <span *ngIf="selectedSamples.length < 1000" matBadge={{selectedSamples.length}}>
+                    ...
+                </span>
+                <span *ngIf="selectedSamples.length >= 1000" class="stretch-badge-small"
+                    matBadge={{selectedSamples.length}}>
+                    ...
+                </span>
+            </p>
+        </mat-chip-list>
+    </span>
+</div>
+<mat-checkbox class="showIndivSamples" (click)="togglePoints()">Show individual samples</mat-checkbox>
+<mev-download-button [containerId]="containerId" [imageName]="imageName"></mev-download-button>
+<div #boxplot id="boxplot"></div>

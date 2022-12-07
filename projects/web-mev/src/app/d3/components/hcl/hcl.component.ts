@@ -67,11 +67,29 @@ export class HclComponent implements OnChanges {
   //   this.createChart(this.root, this.obsTreeContainerId);
   // }
 
+  showObservation = true;
+  showFeature = true;
+
   /**
    * Function to retrieve data for Observation HCL plot
    */
 
   generateHCL() {
+    //checks to see if Features and Observation Clusters are not empty
+    this.apiService.getResourceContent(this.outputs['HierarchicalCluster.feature_clusters'])
+      .subscribe(response => {
+        if (Object.keys(response).length === 0) {
+          this.showFeature = false;
+        }
+      });
+
+    this.apiService.getResourceContent(this.outputs['HierarchicalCluster.observation_clusters'])
+      .subscribe(response => {
+        if (Object.keys(response).length === 0) {
+          this.showObservation = false;
+        }
+      });
+
     const obsResourceId = this.outputs[this.clusterType === 'observationType' ? 'HierarchicalCluster.observation_clusters' : 'HierarchicalCluster.feature_clusters'];
     this.isObservation = this.outputs['HierarchicalCluster.observation_clusters'];
     this.isFeature = this.outputs['HierarchicalCluster.feature_clusters'];
@@ -80,6 +98,8 @@ export class HclComponent implements OnChanges {
       this.hierObsData = d3.hierarchy(response);
       this.createChart(this.hierObsData, this.obsTreeContainerId);
     });
+
+    
   }
 
   //Updates the chart without fetching the data again
@@ -413,4 +433,6 @@ export class HclComponent implements OnChanges {
         if (d.data.isHighlighted) return 'highlighted';
       });
   }
+
+
 }

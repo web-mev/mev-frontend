@@ -24,32 +24,33 @@
                     <div class="toggleHeader">Cluster Dimensions: </div>
                     <mat-button-toggle-group class="toogleGroup" #chartMode="matButtonToggleGroup"
                         [(ngModel)]="clusterType">
-                        <mat-button-toggle *ngIf="isObservation" value="observationType"
+                        <mat-button-toggle *ngIf="showObservation" value="observationType"
                             (change)="onClusterTypeChange($event.value)" aria-label="Text align center">
                             Observation
                         </mat-button-toggle>
-                        <mat-button-toggle *ngIf="isFeature" value="featureType"
+                        <mat-button-toggle *ngIf="showFeature" value="featureType"
                             (change)="onClusterTypeChange($event.value)" aria-label="Text align left">
                             Features
                         </mat-button-toggle>
                     </mat-button-toggle-group>
                     <div class="toggleHeader">Pointer Mode: </div>
                     <mat-button-toggle-group class="toogleGroup" #chartMode="matButtonToggleGroup"
-                        [(ngModel)]="onClickMode" >
+                        [(ngModel)]="onClickMode">
                         <mat-button-toggle value="expandNode" (change)="onClickNodeTypeChange($event.value)"
                             aria-label="Text align center">
                             Expand Node
                         </mat-button-toggle>
-                        <mat-button-toggle value="addToList"
-                            (change)="onClickNodeTypeChange($event.value)" aria-label="Text align left">
+                        <mat-button-toggle value="addToList" (change)="onClickNodeTypeChange($event.value)"
+                            aria-label="Text align left">
                             {{clusterType === 'observationType' ? 'Add to Observation List': 'Add to Features List'}}
                         </mat-button-toggle>
                     </mat-button-toggle-group>
                     <div class="sample-list-container">
-                        <button class="saveObsBtn" mat-raised-button
-                            color="accent" (click)="onCreateCustomSampleSet()" [disabled]="!selectedSamples.length">
+                        <button class="saveObsBtn" mat-raised-button color="accent" (click)="onCreateCustomSampleSet()"
+                            [disabled]="!selectedSamples.length">
                             <mat-icon>add</mat-icon>
-                            {{clusterType === 'observationType' ? 'Save as a Observation Set': 'Save as a Features Set'}}
+                            {{clusterType === 'observationType' ? 'Save as a Observation Set': 'Save as a Features
+                            Set'}}
                         </button>
 
                         <div class="sample-list" *ngIf="selectedSamples.length">

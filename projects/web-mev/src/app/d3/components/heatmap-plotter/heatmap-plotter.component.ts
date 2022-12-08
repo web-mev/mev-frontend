@@ -1,11 +1,4 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  ChangeDetectionStrategy,
-  ElementRef,
-  ViewChild,
-} from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy, ElementRef, ViewChild, SimpleChanges } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { FormGroup, Validators, FormBuilder, FormArray, FormControl } from '@angular/forms';
 import { MetadataService } from '@app/core/metadata/metadata.service';
@@ -55,6 +48,7 @@ export class D3HeatmapPlotComponent implements OnInit {
   imageName = 'heatmap'; // file name for downloaded SVG image
   precision = 2;
   outerHeight = 500;
+  outerWidth = 800;
   minTileSize = 1; // originally set to 5
   tooltipOffsetX = 10; // to position the tooltip on the right side of the triggering element
   finalWidth;
@@ -93,7 +87,8 @@ export class D3HeatmapPlotComponent implements OnInit {
     'Red-blue': d3.interpolateRdBu,
     'Red-yellow-blue': d3.interpolateRdYlBu,
     'Viridis': d3.interpolateViridis,
-    'Ciridis': d3.interpolateCividis
+    'Ciridis': d3.interpolateCividis,
+    'Lioness': d3.interpolateRgb("blue", "white", "red")
   }
   colormapList = Object.keys(this.colormapOptions);
   defaultColormap = 'Red-blue';
@@ -116,6 +111,7 @@ export class D3HeatmapPlotComponent implements OnInit {
     this.windowWidth = window.innerWidth
     this.windowHeight = window.innerHeight
     this.outerHeight = Math.max(this.windowHeight, 500)
+    this.outerWidth = Math.max(this.windowWidth, 500)
 
     this.margin = this.marginMain;
 
@@ -139,22 +135,24 @@ export class D3HeatmapPlotComponent implements OnInit {
     this.generateHeatmap();
   }
 
-  ngOnChanges(): void {
+  ngOnChanges(changes: SimpleChanges): void {
     this.margin = this.useAnnotation ? this.marginAnnotation : this.marginMain;
     this.heatmapData = this.resourceData;
 
-    this.generateHeatmap();
+    //data isn't ready for 1s. need to find a better way to handle this later.
+    setTimeout(() => {
+      this.generateHeatmap()
+    }, 1000)
   }
 
   generateHeatmap() {
-
     //reset variables when changing resources
     if (this.hasResourceChanged) {
       this.removeOverlayArray = [];
       this.annData = {};
     }
 
-    if (this.svgElement && this.resourceData.length > 0) {
+    if (this.resourceData.length > 0) {
       this.setAnnotationData();
       this.plotReady = true;
     }
@@ -173,8 +171,6 @@ export class D3HeatmapPlotComponent implements OnInit {
   get f() {
     return this.imgAdjustForm.controls;
   }
-
-
 
   onSubmit() {
     this.imgAdjustFormSubmitted = true;
@@ -282,7 +278,8 @@ export class D3HeatmapPlotComponent implements OnInit {
     } else {
       // if the user has never dictated a size
       this.origHeight = this.outerHeight;
-      this.origWidth = this.svgElement.nativeElement.offsetWidth;
+      // this.origWidth = this.svgElement.nativeElement.offsetWidth;
+      this.origWidth = this.outerWidth;
       outerWidth = this.origWidth;
       outerHeight = this.origHeight;
     }
@@ -530,6 +527,13 @@ export class D3HeatmapPlotComponent implements OnInit {
       this.selectedColormap = this.defaultColormap;
     }
     let colormapInterpolator = this.colormapOptions[this.selectedColormap];
+    minVal = -Math.max(Math.abs(minVal), Math.abs(maxVal))
+    maxVal = Math.max(Math.abs(minVal), Math.abs(maxVal))
+
+    let lionessColor = d3.scaleLinear()
+      .range(["royalblue", "#fffafa", "crimson"])
+      .domain([minVal, 0, maxVal])
+
     selection
       .enter()
       .append('rect')
@@ -543,15 +547,37 @@ export class D3HeatmapPlotComponent implements OnInit {
         // to represent the color. This way, the user can still see the true 
         // value of the data on the mouseover event
         let dataValue = this.logScale ? Math.log2(d['value'] + pseudocount) : d['value'];
-        return colormapInterpolator(
-          (dataValue - minVal) / (maxVal - minVal)
-        )
+        // return colormapInterpolator(
+        //   (dataValue - minVal) / (maxVal - minVal)
+        // )
+
+        //for lioness
+        return lionessColor(dataValue)
       })
       .on('mouseover', function (mouseEvent: any, d) {
         pointTip.show(mouseEvent, d, this);
         pointTip.style('left', mouseEvent.x + tooltipOffsetX + 'px');
       })
       .on('mouseout', pointTip.hide);
+
+    svg.append('text')
+      .classed('label', true)
+      .attr('transform', 'rotate(-90)')
+      .attr('y', 15)
+      .attr('x', -height / 2)
+      // .attr('dy', '.71em')
+      .style('text-anchor', 'middle')
+      .style('fill', 'black')
+      .text("Y Axis Label");
+
+    svg
+      .append('text')
+      .classed('label', true)
+      .attr('x', this.finalWidth / 2)
+      .attr('y', height + this.margin.bottom - 5)
+      .style('text-anchor', 'start')
+      .style('fill', 'black')
+      .text("X Axis Label");
 
     //category overlay
     let tempAnnotations = { ...this.annData }

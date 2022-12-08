@@ -94,6 +94,7 @@ export class HeatmapFormComponent implements OnInit {
     const selectedFeatureSet = this.inputForm.value['featureSet'];
     const elements = selectedFeatureSet['elements'].map(obj => obj.id);
     const filters = { '__rowname__': '[in]:' + elements.join(',') }
+    console.log("filters: ", filters)
     this.apiService
       .getResourceContent(
         resourceId,
@@ -104,6 +105,7 @@ export class HeatmapFormComponent implements OnInit {
       )
       //.pipe(finalize(() => this.loadingSubject.next(false)))
       .subscribe(features => {
+        this.isWaiting = false;
         this.plotData = features;
       });
 

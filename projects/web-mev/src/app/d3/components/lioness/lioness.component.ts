@@ -1,11 +1,15 @@
-import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { NotificationService } from '@core/notifications/notification.service';
 import * as d3 from 'd3';
 import d3Tip from 'd3-tip';
+import { ActivatedRoute } from '@angular/router';
+import { AnalysesService } from '@app/features/analysis/services/analysis.service';
 
 import { catchError } from 'rxjs/operators';
+import {D3HeatmapPlotComponent} from './../heatmap-plotter/heatmap-plotter.component';
+import { FormGroup, Validators, FormBuilder, Form } from '@angular/forms';
 
 @Component({
     selector: 'mev-lioness',
@@ -14,6 +18,21 @@ import { catchError } from 'rxjs/operators';
     changeDetection: ChangeDetectionStrategy.Default
 })
 export class LionComponent implements OnInit {
+    @ViewChild(D3HeatmapPlotComponent ) child: D3HeatmapPlotComponent ; 
+
+    //just to import generic heatmap
+    useAnnotation = false;
+    hasResourceChanged = false;
+    isWaiting = false;
+    plotData = [];
+    PlotDataAnnotation = [];
+    workspaceId
+    inputForm: FormGroup;
+
+
+
+
+
     @Input() outputs;
     isLoading: boolean = false;
     lionessData = [];
@@ -55,11 +74,30 @@ export class LionComponent implements OnInit {
     private readonly API_URL = environment.apiUrl;
 
     constructor(
+        private route: ActivatedRoute,
         private httpClient: HttpClient,
         private readonly notificationService: NotificationService,
+        private apiService: AnalysesService
     ) { }
 
+    ann_files=[];
+    annotation_resource_type = ['ANN'];
+
     ngOnInit(): void {
+        this.isLoading = true;
+        this.workspaceId = this.route.snapshot.paramMap.get('workspaceId');
+
+        //gets the annotation only files
+        this.apiService
+            .getAvailableResourcesByParam(
+                this.annotation_resource_type,
+                this.workspaceId
+            )
+            .subscribe(data => {
+                this.ann_files = data;
+                this.isLoading = false;
+                // this.isLoaded = true;
+            });
         this.windowWidth = window.innerWidth;
         this.windowHeight = window.innerHeight;
         this.getData()
@@ -72,7 +110,7 @@ export class LionComponent implements OnInit {
         let uuid = this.resourceType === "Genes" ? uuid_gene : uuid_tf;
 
         let count = 100;
-        let queryURL = `https://api-dev.tm4.org/api/resources/${uuid}/contents/transform/?transform-name=heatmap-reduce&mad_n=${count}`
+        let queryURL = `${this.API_URL}/resources/${uuid}/contents/transform/?transform-name=heatmap-reduce&mad_n=${count}`
         this.httpClient.get(queryURL).pipe(
             catchError(error => {
                 console.log("Error: ", error.message);
@@ -80,6 +118,13 @@ export class LionComponent implements OnInit {
                 throw message
             }))
             .subscribe(data => {
+                for (let index in data) {
+                    this.plotData.push(data[index])
+                }
+                console.log("plotdata: ", this.plotData)
+
+
+
                 this.isLoading = false;
                 this.xAxisArr = [];
                 this.yAxisArr = [];
@@ -130,6 +175,7 @@ export class LionComponent implements OnInit {
                         }
                     }
                 }
+                // console.log("x/y: ", this.xAxisArr, this.yAxisArr, this.lionessData)
                 this.createHeatmap();
             });
     }
@@ -210,7 +256,7 @@ export class LionComponent implements OnInit {
 
         // Build color scale
         const myColor = d3.scaleLinear()
-            .range(["royalblue", "#fffafa", "crimson",])
+            .range(["royalblue", "#fffafa", "crimson"])
             .domain([-offset, 0, offset])
 
         //Read the data

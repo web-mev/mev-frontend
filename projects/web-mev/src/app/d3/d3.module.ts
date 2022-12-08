@@ -42,7 +42,9 @@ import { DecontxComponent } from './components/decontx-decontamination/decontx.c
 import { CellRangerComponent } from './components/sctk-10x-cell-ranger/cell_ranger.component';
 import { LionComponent } from './components/lioness/lioness.component';
 import { DownloadPNGButtonComponent } from './components/download-png-button/download-png-button.component';
-import { VolcanoComponent } from './components/volcano/volcano.component'
+import { VolcanoComponent } from './components/volcano/volcano.component';
+import { LikelihoodRatioTestComponent } from './components/likelihood-ratio-test/likelihood-ratio-test.component';
+import { LikelihoodBoxPlotComponent } from './components/likelihood-ratio-test/likelihood-boxplot/box-plot.component'
 
 @NgModule({
   declarations: [
@@ -85,7 +87,9 @@ import { VolcanoComponent } from './components/volcano/volcano.component'
     DecontxComponent,
     CellRangerComponent,
     LionComponent,
-    VolcanoComponent
+    VolcanoComponent,
+    LikelihoodRatioTestComponent,
+    LikelihoodBoxPlotComponent
   ],
   imports: [CommonModule, SharedModule, DragDropModule, MatBadgeModule],
   exports: [
@@ -118,7 +122,9 @@ import { VolcanoComponent } from './components/volcano/volcano.component'
     DecontxComponent,
     CellRangerComponent,
     LionComponent,
-    VolcanoComponent
+    VolcanoComponent,
+    LikelihoodRatioTestComponent,
+    LikelihoodBoxPlotComponent
   ]
 })
 export class D3Module { }

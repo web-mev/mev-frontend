@@ -346,8 +346,7 @@ export class KmeansComponent implements OnChanges {
           name: customSetData.name,
           type: CustomSetType.ObservationSet,
           color: customSetData.color,
-          elements: selectedSamples,
-          multiple: true
+          elements: selectedSamples
         };
 
         if (this.metadataService.addCustomSet(observationSet)) {

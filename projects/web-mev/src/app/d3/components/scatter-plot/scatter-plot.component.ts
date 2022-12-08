@@ -506,8 +506,7 @@ export class ScatterPlotComponent implements OnChanges {
           name: customSetData.name,
           type: CustomSetType.ObservationSet,
           color: customSetData.color,
-          elements: samples,
-          multiple: true
+          elements: samples
         };
 
         if (this.metadataService.addCustomSet(observationSet)) {

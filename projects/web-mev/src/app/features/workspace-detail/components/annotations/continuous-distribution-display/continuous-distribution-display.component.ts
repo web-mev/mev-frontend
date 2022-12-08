@@ -696,8 +696,7 @@ export class ContinuousDistributionDisplayComponent implements OnInit {
                 name: z[0],
                 type: CustomSetType.ObservationSet,
                 color: Utils.getRandomColor(),
-                elements: z[1],
-                multiple: true
+                elements: z[1]
             };
             this.metadataService.addCustomSet(observationSet)
         }

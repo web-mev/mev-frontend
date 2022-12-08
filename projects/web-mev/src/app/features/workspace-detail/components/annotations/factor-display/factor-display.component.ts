@@ -195,8 +195,7 @@ export class FactorDisplayComponent implements OnInit {
                     name: `${this.fieldName}:${category}`,
                     type: CustomSetType.ObservationSet,
                     color: this.colorMap.get(category),
-                    elements: items,
-                    multiple: true
+                    elements: items
                 };
                 this.metadataService.addCustomSet(observationSet)
             }

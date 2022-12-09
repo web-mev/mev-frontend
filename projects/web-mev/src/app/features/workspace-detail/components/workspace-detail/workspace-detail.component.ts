@@ -129,7 +129,7 @@ export class WorkspaceDetailComponent implements OnInit {
       if (result === 1) {
         setTimeout(() => {
           this.refresh();
-        }, 100)
+        }, 500)
       }
     });
   }
@@ -198,7 +198,7 @@ export class WorkspaceDetailComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       setTimeout(() => {
         this.refresh();
-      }, 500)
+      }, 1000)
     });
   }
 

@@ -121,9 +121,6 @@ export class LionComponent implements OnInit {
                 for (let index in data) {
                     this.plotData.push(data[index])
                 }
-                console.log("plotdata: ", this.plotData)
-
-
 
                 this.isLoading = false;
                 this.xAxisArr = [];
@@ -175,7 +172,6 @@ export class LionComponent implements OnInit {
                         }
                     }
                 }
-                // console.log("x/y: ", this.xAxisArr, this.yAxisArr, this.lionessData)
                 this.createHeatmap();
             });
     }

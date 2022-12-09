@@ -58,7 +58,7 @@ export class WorkspaceDetailComponent implements OnInit {
     private notificationService: NotificationService,
     private workspaceAdapter: WorkspaceAdapter,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // populate some dummy workspace data. Otherwise it complains that 
@@ -86,12 +86,12 @@ export class WorkspaceDetailComponent implements OnInit {
         this.workspaceResourcesDS.sort = this.sort;
       },
       error => {
-        if(error.status === 404){
+        if (error.status === 404) {
           this.notificationService.warn(`There was no workspace (${this.workspaceId}) found.`);
           this.router.navigate(["workarea"])
         }
       }
-    
+
     );
     this.service.getWorkspaceDetail(this.workspaceId).subscribe(
       data => {
@@ -127,7 +127,9 @@ export class WorkspaceDetailComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === 1) {
-        this.refresh();
+        setTimeout(() => {
+          this.refresh();
+        }, 100)
       }
     });
   }
@@ -194,7 +196,9 @@ export class WorkspaceDetailComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.refresh();
+      setTimeout(() => {
+        this.refresh();
+      }, 100)
     });
   }
 

@@ -8,10 +8,10 @@ import {
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import {MatChipInputEvent} from '@angular/material/chips';
+import { MatChipInputEvent } from '@angular/material/chips';
 import { MatPaginator } from '@angular/material/paginator';
 import { CustomSetType } from '@app/_models/metadata';
-import {COMMA, ENTER, SPACE} from '@angular/cdk/keycodes';
+import { COMMA, ENTER, SPACE } from '@angular/cdk/keycodes';
 
 /**
  * Add Feature Dialog Component
@@ -36,7 +36,7 @@ export class AddFeatureSetDialogComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<AddFeatureSetDialogComponent>,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.featureSetForm = this.formBuilder.group({
@@ -48,10 +48,13 @@ export class AddFeatureSetDialogComponent implements OnInit {
 
   onAddFeature(event: MatChipInputEvent): void {
     const featureName = (event.value || '').trim();
+    let featureNameArr = featureName.split(" ");
 
-    let index = this.featureSet.indexOf(featureName);
-    if (featureName && index === -1) {
-      this.featureSet.push(featureName);
+    for (let i = 0; i < featureNameArr.length; i++) {
+      let index = this.featureSet.indexOf(featureNameArr[i]);
+      if (featureNameArr[i] && index === -1) {
+        this.featureSet.push(featureNameArr[i]);
+      }
     }
 
     // Clear the input value
@@ -87,7 +90,7 @@ export class AddFeatureSetDialogComponent implements OnInit {
     const name = this.featureSetForm.value.featureSetName;
     const color = this.featureSetForm.value.featureSetColor;
     const elements = this.featureSet.map(feature => {
-      return {id: feature};
+      return { id: feature };
     });
     const newFeatureSet = {
       name: name,

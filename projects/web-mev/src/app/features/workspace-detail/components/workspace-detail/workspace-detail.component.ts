@@ -198,7 +198,7 @@ export class WorkspaceDetailComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       setTimeout(() => {
         this.refresh();
-      }, 100)
+      }, 500)
     });
   }
 

@@ -105,9 +105,11 @@ export class LionComponent implements OnInit {
 
     getData() {
         this.isLoading = true;
-        let uuid_gene = '971af5e3-e567-42ff-b20d-a38f6fb44e0b';
+        // let uuid_gene = '971af5e3-e567-42ff-b20d-a38f6fb44e0b';
+        let uuid_gene = '61e7a0a9-33fc-4822-8248-7a3740cc8abc';
         let uuid_tf = 'cc67929c-cafb-456d-b009-c013a3f4d655';
         let uuid = this.resourceType === "Genes" ? uuid_gene : uuid_tf;
+        console.log("resouce type: ", this.resourceType)
 
         let count = 100;
         let queryURL = `${this.API_URL}/resources/${uuid}/contents/transform/?transform-name=heatmap-reduce&mad_n=${count}`

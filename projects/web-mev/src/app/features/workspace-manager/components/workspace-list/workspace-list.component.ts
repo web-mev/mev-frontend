@@ -33,7 +33,7 @@ export class WorkspaceListComponent implements OnInit {
     public httpClient: HttpClient,
     public dialog: MatDialog,
     public workspaceService: WorkspaceService
-  ) {}
+  ) { }
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -54,7 +54,9 @@ export class WorkspaceListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === 1) {
-        this.refresh();
+        setTimeout(() => {
+          this.refresh();
+        }, 300)
       }
     });
   }
@@ -67,7 +69,9 @@ export class WorkspaceListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === 1) {
-        this.refresh();
+        setTimeout(() => {
+          this.refresh();
+        }, 300)
       }
     });
   }
@@ -80,7 +84,9 @@ export class WorkspaceListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === 1) {
-        this.refresh();
+        setTimeout(() => {
+          this.refresh();
+        }, 300)
       }
     });
   }
@@ -98,7 +104,9 @@ export class WorkspaceListComponent implements OnInit {
           return;
         }
         this.dataSource.filter = this.filter.nativeElement.value;
+
       });
+    
   }
 }
 
@@ -164,7 +172,7 @@ export class ExampleDataSource extends DataSource<Workspace> {
     );
   }
 
-  disconnect() {}
+  disconnect() { }
 
   /** Returns a sorted copy of the database data. */
   sortData(data: Workspace[]): Workspace[] {

@@ -83,7 +83,7 @@
   </mat-table>
 
 
-  <div class="no-results" [style.display]="dataSource.renderedData.length == 0 ? '' : 'none'">
+  <div *ngIf="dataSource.renderedData.length === 0" class="no-results">
     No results are available
   </div>
 

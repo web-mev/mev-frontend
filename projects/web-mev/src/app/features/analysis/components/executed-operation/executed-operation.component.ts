@@ -101,12 +101,13 @@ export class ExecutedOperationComponent implements OnInit {
     private route: ActivatedRoute,
     private apiService: AnalysesService,
     public cdRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   /**
    * Initialize the datasource for the Operation Tree
    */
   ngOnInit(): void {
+
     const operationTree = {};
     const workspaceId = this.route.snapshot.paramMap.get('workspaceId');
     this.executedOperationResultSubscription = this.apiService
@@ -143,7 +144,7 @@ export class ExecutedOperationComponent implements OnInit {
               }
               operationTreeArr.push(categoryLevel);
             }
-            operationTreeArr.sort(function(a, b) {
+            operationTreeArr.sort(function (a, b) {
               var nameA = a.name.toUpperCase();
               var nameB = b.name.toUpperCase();
               if (nameA < nameB) {
@@ -155,6 +156,7 @@ export class ExecutedOperationComponent implements OnInit {
               return 0;
             });
             this.dataSource.data = operationTreeArr.sort();
+            console.log("op tree: ", operationTreeArr)
           });
         }),
         switchMap(() => {
@@ -166,7 +168,7 @@ export class ExecutedOperationComponent implements OnInit {
               this.execOperationId
             );
 
-            if(execOperation){
+            if (execOperation) {
               // expand the parent nodes if there is an operation selected
               const nodesToExpand = [
                 execOperation.operation.operation_name,
@@ -189,6 +191,7 @@ export class ExecutedOperationComponent implements OnInit {
                   ...execOperation.inputs,
                   error_messages: execOperation.error_messages
                 };
+                console.log("outputs2: ", this.outputs)
                 return of({ body: execOperation });
               }
 
@@ -209,7 +212,10 @@ export class ExecutedOperationComponent implements OnInit {
           ...response?.body?.inputs,
           error_messages: response?.body?.error_messages
         };
+        console.log("outputs: ", this.outputs)
       });
+
+    
   }
 
   /**

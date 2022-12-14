@@ -156,7 +156,6 @@ export class ExecutedOperationComponent implements OnInit {
               return 0;
             });
             this.dataSource.data = operationTreeArr.sort();
-            console.log("op tree: ", operationTreeArr)
           });
         }),
         switchMap(() => {
@@ -191,7 +190,6 @@ export class ExecutedOperationComponent implements OnInit {
                   ...execOperation.inputs,
                   error_messages: execOperation.error_messages
                 };
-                console.log("outputs2: ", this.outputs)
                 return of({ body: execOperation });
               }
 
@@ -212,7 +210,6 @@ export class ExecutedOperationComponent implements OnInit {
           ...response?.body?.inputs,
           error_messages: response?.body?.error_messages
         };
-        console.log("outputs: ", this.outputs)
       });
 
     

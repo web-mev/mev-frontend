@@ -174,7 +174,6 @@ import { forkJoin } from 'rxjs';
                 // "project" each of these tissues corresponds to. We get that by adding
                 // to the fl=... param
                 url_suffix = datasetTag + `?q=tissue_or_organ_of_origin:"${tissue_name}"&rows=${count}&fl=id,project_id`;
-                console.log("url suffix: ", url_suffix)
                 $observable_dict[tissue_name] = this.pdService.makeSolrQuery(url_suffix);
             }
         }

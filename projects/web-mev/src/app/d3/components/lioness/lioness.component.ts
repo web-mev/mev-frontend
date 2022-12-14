@@ -8,8 +8,6 @@ import { ActivatedRoute } from '@angular/router';
 import { AnalysesService } from '@app/features/analysis/services/analysis.service';
 
 import { catchError } from 'rxjs/operators';
-import {D3HeatmapPlotComponent} from './../heatmap-plotter/heatmap-plotter.component';
-import { FormGroup, Validators, FormBuilder, Form } from '@angular/forms';
 
 @Component({
     selector: 'mev-lioness',
@@ -18,20 +16,8 @@ import { FormGroup, Validators, FormBuilder, Form } from '@angular/forms';
     changeDetection: ChangeDetectionStrategy.Default
 })
 export class LionComponent implements OnInit {
-    @ViewChild(D3HeatmapPlotComponent ) child: D3HeatmapPlotComponent ; 
-
-    //just to import generic heatmap
-    useAnnotation = false;
-    hasResourceChanged = false;
-    isWaiting = false;
-    plotData = [];
-    PlotDataAnnotation = [];
-    workspaceId
-    inputForm: FormGroup;
-
-
-
-
+    plotData = []; 
+    workspaceId;
 
     @Input() outputs;
     isLoading: boolean = false;
@@ -80,7 +66,7 @@ export class LionComponent implements OnInit {
         private apiService: AnalysesService
     ) { }
 
-    ann_files=[];
+    ann_files = [];
     annotation_resource_type = ['ANN'];
 
     ngOnInit(): void {
@@ -96,7 +82,6 @@ export class LionComponent implements OnInit {
             .subscribe(data => {
                 this.ann_files = data;
                 this.isLoading = false;
-                // this.isLoaded = true;
             });
         this.windowWidth = window.innerWidth;
         this.windowHeight = window.innerHeight;
@@ -105,14 +90,13 @@ export class LionComponent implements OnInit {
 
     getData() {
         this.isLoading = true;
-        // let uuid_gene = '971af5e3-e567-42ff-b20d-a38f6fb44e0b';
-        let uuid_gene = '61e7a0a9-33fc-4822-8248-7a3740cc8abc';
-        let uuid_tf = 'cc67929c-cafb-456d-b009-c013a3f4d655';
+
+        let uuid_gene = this.outputs['mevLioness.lioness_gene_ts_tsv'];
+        let uuid_tf = this.outputs['mevLioness.lioness_tf_ts_tsv'];
         let uuid = this.resourceType === "Genes" ? uuid_gene : uuid_tf;
-        console.log("resouce type: ", this.resourceType)
 
         let count = 100;
-        let queryURL = `${this.API_URL}/resources/${uuid}/contents/transform/?transform-name=heatmap-reduce&mad_n=${count}`
+        let queryURL = `${this.API_URL}/resources/${uuid}/contents/transform/?transform-name=heatmap-reduce&mad_n=${count}`;
         this.httpClient.get(queryURL).pipe(
             catchError(error => {
                 console.log("Error: ", error.message);
@@ -219,17 +203,12 @@ export class LionComponent implements OnInit {
             .range([0, width])
             .domain(xGroup)
             .padding(0.01);
-        // svg.append("g")
-        //     .attr("transform", `translate(0, ${height})`)
-        //     .call(d3.axisBottom(x))
 
         // Build X scales and axis:
         const y = d3.scaleBand()
             .range([height, 0])
             .domain(yGroup)
             .padding(0.01);
-        // svg.append("g")
-        //     .call(d3.axisLeft(y));
 
         svg.append('text')
             .classed('label', true)
@@ -341,10 +320,8 @@ export class LionComponent implements OnInit {
         this.getData();
     }
 
-
     onRadioChangeAxis2(axis) {
         this.useYAxis = (axis === 'Y-Axis') ? true : false;
         this.getData();
     }
-
 }

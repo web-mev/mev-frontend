@@ -199,9 +199,6 @@ import {
      * Function to prepape the outputs data for D3 box plot visualization
      */
     preprocessBoxPlotData() {
-        console.log(this.outputs);
-        console.log('??????????????????????????????????');
-
         // the base samples can be undefined in the sense that in a biomarker (one group vs. all)
         // analysis, we do not explicitly 
         const baseSamples = [];
@@ -331,7 +328,6 @@ import {
         .attr('class', 'd3-tip')
         .offset([-10, 0])
         .html((event, d) => {
-            console.log('hoever:', d);
           const htmlTable =
             '<table><thead><th></th><th>' +
             this.boxPlotTypes.Experimental.label +

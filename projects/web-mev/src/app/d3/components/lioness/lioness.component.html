@@ -25,30 +25,4 @@
     <mev-png-download-button [containerId]="containerId" [imageName]="imageName"></mev-png-download-button>
     <div id="lioness"></div>
 
-
-    <!-- <mat-divider [inset]="true"></mat-divider>
-    <p>Test for heatmap using the generic template. Still under construction</p>
-    <ng-container>
-        <div class="label">
-            Annotation File:
-            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-                matTooltip="The annotation data will be used to display the category overlay."
-                aria-label="Info tooltip about the field">info
-            </mat-icon>
-        </div>
-        <mat-form-field class="form-control" color="accent">
-            <mat-select formControlName="ann">
-                <mat-option *ngFor="let file of ann_files" [value]="file.id">
-                    {{ file.name }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-    </ng-container>
-    <br>
-    <button mat-raised-button color="accent" type="submit" (click)="this.child.generateHeatmap()">Plot
-    </button>
-    <d3-heatmap [resourceData]="plotData" [resourceDataAnnotation]="PlotDataAnnotation" [isWait]="isWaiting"
-        [useAnnotation]="useAnnotation" [hasResourceChanged]="hasResourceChanged">
-    </d3-heatmap> -->
-
 </mat-card>

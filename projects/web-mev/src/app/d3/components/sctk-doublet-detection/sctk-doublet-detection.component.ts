@@ -228,7 +228,6 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
    * Function is triggered when submitting the form with table filters
    */
   onSubmit() {
-    console.log('submit!');
     this.paginator.pageIndex = this.defaultPageIndex;
     this.loadPage();
   }

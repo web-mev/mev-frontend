@@ -93,8 +93,7 @@ export class HeatmapFormComponent implements OnInit {
 
     const selectedFeatureSet = this.inputForm.value['featureSet'];
     const elements = selectedFeatureSet['elements'].map(obj => obj.id);
-    const filters = { '__rowname__': '[in]:' + elements.join(',') }
-    console.log("filters: ", filters)
+    const filters = { '__rowname__': '[in]:' + elements.join(',') };
     this.apiService
       .getResourceContent(
         resourceId,

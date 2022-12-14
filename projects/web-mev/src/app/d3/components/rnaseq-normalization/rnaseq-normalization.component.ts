@@ -155,7 +155,6 @@ export class RnaSeqNormalizationComponent implements OnInit, AfterViewInit  {
         this.dataSource.sampleNames$.subscribe( data => {
                 this.dynamicColumns = data
                 this.displayColumns = [...this.staticCols, ...data];
-                console.log(this.displayColumns);
             }
         );
     }
@@ -205,7 +204,6 @@ export class RnaSeqNormalizationComponent implements OnInit, AfterViewInit  {
      * Function is triggered when submitting the form with table filters
      */
     onSubmit() {
-        console.log('submit!');
         this.paginator.pageIndex = this.defaultPageIndex;
         this.loadPage();
     }

@@ -82,6 +82,7 @@ export class FileListComponent implements OnInit {
   isPolling: boolean = false;
   currentSelectedFileType = {};
   isWait: boolean = false;
+  currStatus = {};
 
   constructor(
     public httpClient: HttpClient,
@@ -134,7 +135,20 @@ export class FileListComponent implements OnInit {
   }
 
   getStatus(row) {
+    if (this.currStatus[row.name] === undefined) {
+      this.currStatus[row.name] = false;
+    }
+
+    if (row.status.length > 60) {
+      let truncStatus = row.status.split(". ");
+      return truncStatus[0] + "."
+    }
+
     return row.status
+  }
+
+  toggleStatus(row) {
+    this.currStatus[row.name] = !this.currStatus[row.name];
   }
 
   loadResourceTypes() {

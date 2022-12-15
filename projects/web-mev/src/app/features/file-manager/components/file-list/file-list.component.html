@@ -74,7 +74,10 @@
 
     <ng-container matColumnDef="status">
       <mat-header-cell *matHeaderCellDef mat-sort-header class="file-table-header">Status</mat-header-cell>
-      <mat-cell *matCellDef="let row"> {{ getStatus(row) }}</mat-cell>
+      <mat-cell *matCellDef="let row"> {{ currStatus[row.name] ? row.status : getStatus(row)}}
+        <mat-icon class="expandIcon" *ngIf="row.status.length > 60" (click)="toggleStatus(row)">{{ currStatus[row.name]
+          ? 'expand_less' : 'expand_more'}}</mat-icon>
+      </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="size">

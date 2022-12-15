@@ -38,12 +38,12 @@ mat-cell {
 
 .warning-cell--asterisk {
   &:after {
-    content: ' *';
+    content: " *";
   }
 }
 
 .warning-note {
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
   font-size: 14px;
   font-weight: bold;
   color: grey;
@@ -52,7 +52,7 @@ mat-cell {
 }
 
 .no-results {
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
   font-size: 12px;
 }
 
@@ -74,4 +74,18 @@ mat-cell {
   text-decoration: none;
 }
 
+.expandIcon {
+  color: grey;
+  cursor: pointer;
+  display: inline;
+  line-height: 0;
+  font-size: 18px;
+  padding: 1px;
+}
 
+.expandIcon:hover {
+  opacity: 0.7;
+  border-radius: 30px;
+  padding: 1px;
+  background-color: rgba(211, 211, 211, 0.2);
+}

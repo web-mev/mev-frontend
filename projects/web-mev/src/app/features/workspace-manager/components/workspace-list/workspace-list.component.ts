@@ -53,11 +53,10 @@ export class WorkspaceListComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result === 1) {
-        setTimeout(() => {
-          this.refresh();
-        }, 300)
-      }
+      let timeout = (result === 1) ? 300 : 1000;
+      setTimeout(() => {
+        this.refresh();
+      }, timeout)
     });
   }
 
@@ -104,9 +103,8 @@ export class WorkspaceListComponent implements OnInit {
           return;
         }
         this.dataSource.filter = this.filter.nativeElement.value;
-
       });
-    
+
   }
 }
 

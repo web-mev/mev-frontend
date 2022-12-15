@@ -1,14 +1,13 @@
 <div class="container">
-    <p>Enter the name of a new feature/gene set and add items to it. Then click the Add button.</p>
-    
-    <p>Note that we cannot check 
-        the names against what is contained in your data, so spelling is important!
-    </p>
+    <div class="metadata-card__instruction">
+        <p>Enter the name of a new feature/gene set and add items to it. Then click the Add button.</p>
+        <p>If you have a list of genes, you can copy/paste into the field. Make sure they are separated by a space or are on separate lines.</p>
+        <p>Note that we cannot check the names against what is contained in your data, so spelling is important!</p>
+    </div>
 
     <form class="mat-dialog-content" (ngSubmit)="submit" [formGroup]="featureSetForm">
 
         <div class="form">
-
             <mat-form-field class="form-control" color="accent">
                 <mat-label>Enter feature set name</mat-label>
                 <input matInput formControlName=featureSetName name=featureSetName>
@@ -16,38 +15,31 @@
 
             <mat-form-field class="form-control" color="accent">
                 <mat-label>Select your color for the feature set:</mat-label>
-                <input type="color" class="color-picker-input" matInput formControlName=featureSetColor name=featureSetColor>
-            </mat-form-field> 
+                <input type="color" class="color-picker-input" matInput formControlName=featureSetColor
+                    name=featureSetColor>
+            </mat-form-field>
 
             <mat-form-field class="example-chip-list">
                 <mat-label>Add features/genes</mat-label>
                 <mat-chip-list #chipList aria-label="Feature/gene selection">
-                  <mat-chip
-                  class=""
-                    *ngFor="let feature of featureSet"
-                    [selectable]="selectable"
-                    [removable]="removable"
-                    (removed)="remove(feature)">
-                    {{feature}}
-                        <mat-icon class="rm-icon" (click)="remove(feature)" aria-label="remove feature" matChipRemove>cancel</mat-icon>
-                  </mat-chip>
-                  <input
-                    placeholder="Type name and hit Enter"
-                    
-                    formControlName=individualFeatureName
-                    name=individualFeatureName
-                    [matChipInputFor]="chipList"
-                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                    [matChipInputAddOnBlur]=true
-                    (matChipInputTokenEnd)="onAddFeature($event)">
+                    <mat-chip class="" *ngFor="let feature of featureSet" [selectable]="selectable"
+                        [removable]="removable" (removed)="remove(feature)">
+                        {{feature}}
+                        <mat-icon class="rm-icon" (click)="remove(feature)" aria-label="remove feature" matChipRemove>
+                            cancel</mat-icon>
+                    </mat-chip>
+                    <input placeholder="Type or paste name(s) and hit Enter" formControlName=individualFeatureName
+                        name=individualFeatureName [matChipInputFor]="chipList"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]=true
+                        (matChipInputTokenEnd)="onAddFeature($event)">
                 </mat-chip-list>
-              </mat-form-field>
-              
+            </mat-form-field>
+
         </div>
 
         <div class="button-panel">
-            <button mat-button [mat-dialog-close]="1" mat-raised-button color="accent"
-               [type]="submit" [disabled]="!featureSetForm.valid" (click)="confirmAdd()">Create set</button>
+            <button mat-button [mat-dialog-close]="1" mat-raised-button color="accent" [type]="submit"
+                [disabled]="!featureSetForm.valid" (click)="confirmAdd()">Create set</button>
             <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
         </div>
     </form>

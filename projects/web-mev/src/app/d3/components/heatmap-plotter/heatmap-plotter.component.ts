@@ -108,7 +108,7 @@ export class D3HeatmapPlotComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.windowWidth = window.innerWidth
+    this.windowWidth = window.innerWidth - 500;
     this.windowHeight = window.innerHeight
     this.outerHeight = Math.max(this.windowHeight, 500)
     this.outerWidth = Math.max(this.windowWidth, 500)
@@ -504,7 +504,7 @@ export class D3HeatmapPlotComponent implements OnInit {
       .append('g')
       .attr(
         'transform',
-        'translate(0,0)'
+        'translate(50,0)'
       )
       .style('fill', 'none');
 
@@ -563,21 +563,22 @@ export class D3HeatmapPlotComponent implements OnInit {
     svg.append('text')
       .classed('label', true)
       .attr('transform', 'rotate(-90)')
-      .attr('y', 15)
+      .attr('y', -20)
       .attr('x', -height / 2)
       // .attr('dy', '.71em')
       .style('text-anchor', 'middle')
       .style('fill', 'black')
-      .text("Y Axis Label");
+      .text("Gene");
 
     svg
       .append('text')
       .classed('label', true)
       .attr('x', this.finalWidth / 2)
-      .attr('y', height + this.margin.bottom - 5)
+      // .attr('y', height + this.margin.bottom - 5)
+      .attr('y', height + this.margin.top + this.margin.bottom - 10)
       .style('text-anchor', 'start')
       .style('fill', 'black')
-      .text("X Axis Label");
+      .text("Sample / Observation");
 
     //category overlay
     let tempAnnotations = { ...this.annData }

@@ -35,6 +35,7 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
   boxPlotTypes = {};
   checkboxData = {};
   selectedSamples = [];
+  currPageIndex = 0;
 
   constructor(
     private metadataService: MetadataService,
@@ -42,15 +43,17 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
+    this.currPageIndex = this.pageIndex - 1;
     this.resetVariables();
     this.isWaiting = true;
     this.boxPlotData = this.resourceData;
     setTimeout(() => {      //used setTimeout in order to get loading animation to display before the rendering starts
       this.getXAxisValues();
-    }, 100)
+    }, 5000)
   }
 
   getXAxisValues() {
+
     if (this.sumstat.length === 0) {
       this.sumstat = d3Collection.nest() // nest function allows to group the calculation per level of a factor
         .key(function (d) { return d.key; })
@@ -66,6 +69,9 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
         .entries(this.boxPlotData)
     }
 
+    console.log("sumstat: ", this.sumstat)
+    console.log("box plot data in getXAxis: ", this.boxPlotData)
+
     for (let index in this.boxPlotData) {
       if (!this.groupArr.includes(this.boxPlotData[index]['group'])) {
         this.groupArr.push(this.boxPlotData[index]['group'])
@@ -80,22 +86,37 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
       }
     }
     let groupLength = this.groupArr.length
-    let startIndex = this.pageIndex * this.limit * groupLength
-    let slicedSumStat = this.sumstat.slice(startIndex, startIndex + this.limit * groupLength);
+    let startIndex = this.currPageIndex * this.limit * groupLength
+    // let slicedSumStat = this.sumstat.slice(startIndex, startIndex + this.limit * groupLength);
+    let slicedSumStat = this.sumstat.slice(0, this.limit * groupLength)
+    console.log("sliced sumstat: ", slicedSumStat, startIndex, startIndex + this.limit * groupLength)
 
     for (let index in slicedSumStat) {
       this.xAxisArr.push(slicedSumStat[index]['key'])
     }
 
+    let sampleIdLookupTable = {}
+
     for (let index in this.boxPlotData) {
       if (this.xAxisArr.includes(this.boxPlotData[index].key)) {
-        this.pointsToPlot.push(this.boxPlotData[index])
+        this.pointsToPlot.push(this.boxPlotData[index]);
 
-        let currGroup = this.boxPlotData[index].group
-        let currSampleId = this.boxPlotData[index].name
-        this.checkboxData[currGroup].sampleIds.push(currSampleId)
+        let currGroup = this.boxPlotData[index].group;
+        let currSampleId = this.boxPlotData[index].name;
+
+        if (sampleIdLookupTable[currGroup] === undefined) {
+          sampleIdLookupTable[currGroup] = {}
+        }
+
+        if (sampleIdLookupTable[currGroup][currSampleId] === undefined) {
+          sampleIdLookupTable[currGroup][currSampleId] = 1;
+
+          this.checkboxData[currGroup].sampleIds.push(currSampleId)
+        }
       }
     }
+
+    console.log("x axis arr: ", this.xAxisArr)
 
     this.setBoxPlotTypes();
   }
@@ -145,6 +166,8 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
     this.max = -Infinity;
     this.xAxisArr = [];
     this.pointsToPlot = [];
+
+    this.sumstat = [];
   }
 
 
@@ -185,8 +208,9 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
     svg.call(pointTip);
 
     let groupLength = this.groupArr.length
-    let startIndex = this.pageIndex * this.limit * groupLength
-    let slicedSumStat = this.sumstat.slice(startIndex, startIndex + this.limit * groupLength);
+    let startIndex = this.currPageIndex * this.limit * groupLength
+    // let slicedSumStat = this.sumstat.slice(startIndex, startIndex + this.limit * groupLength);
+    let slicedSumStat = this.sumstat.slice(0, this.limit * groupLength)
 
     for (let i = 0; i < slicedSumStat.length; i++) {
       let currMin = slicedSumStat[i].value.min

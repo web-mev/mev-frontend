@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { catchError } from 'rxjs/operators';
 
@@ -15,13 +15,15 @@ export class LikelihoodRatioTestComponent implements OnInit {
     isLoading = false;
     displayedColumns: string[] = ['gene', 'baseMean', 'log2FoldChange', 'statistic', 'pvalue', 'padj'];
     dataSource = [];
-    pageIndex = 0;
+    pageIndex = 1;
     limit = 5;
     lfc_comparison = '';
     private readonly API_URL = environment.apiUrl;
     sampleIdToGroup = {};
     boxplotData = [];
     showBoxplot = false;
+    tableDataLength = 0;
+    dge_results
 
     constructor(
         private httpClient: HttpClient
@@ -30,8 +32,8 @@ export class LikelihoodRatioTestComponent implements OnInit {
     ngOnInit(): void {
         this.createSample2GroupDict()
         this.lfc_comparison = this.outputs['lfc_comparison']
-        let dge_results = this.outputs['dge_results'];
-        this.getData(dge_results);
+        this.dge_results = this.outputs['dge_results'];
+        this.getData(this.dge_results);
     }
 
     createSample2GroupDict() {
@@ -46,7 +48,8 @@ export class LikelihoodRatioTestComponent implements OnInit {
 
     getData(uuid) {
         this.isLoading = true;
-        let queryURL = `${this.API_URL}/resources/${uuid}/contents/`;
+        let queryURL = `${this.API_URL}/resources/${uuid}/contents/?page=${this.pageIndex}&page_size=${this.limit}`;
+        this.boxplotData = [];
         this.httpClient.get(queryURL).pipe(
             catchError(error => {
                 console.log("Error: ", error.message);
@@ -54,37 +57,40 @@ export class LikelihoodRatioTestComponent implements OnInit {
                 throw message
             }))
             .subscribe(data => {
+                this.tableDataLength = data['count'];
                 this.isLoading = false;
-                for (let i in data) {
-                        let temp = {
-                            gene: data[i]['rowname'],
-                            baseMean: data[i]['values']['baseMean'],
-                            log2FoldChange: data[i]['values']['log2FoldChange'],
-                            statistic: data[i]['values']['statistic'],
-                            pvalue: data[i]['values']['pvalue'],
-                            padj: data[i]['values']['padj'],
-                        }
-                        this.dataSource.push(temp)
-                        for (let name in data[i]['values']) {
-                            if (name !== 'baseMean' && name !== 'log2FoldChange' && name !== 'statistic' && name !== 'pvalue' && name !== 'padj') {
-                                let temp = {
-                                    name: name,
-                                    key: data[i]['rowname'] + "_" + this.sampleIdToGroup[name],
-                                    value: data[i]['values'][name],
-                                    group: this.sampleIdToGroup[name],
-                                    gene: data[i]['rowname']
-                                }
-                                this.boxplotData.push(temp);
+                
+                for (let i in data['results']) {
+                    let temp = {
+                        gene: data['results'][i]['rowname'],
+                        baseMean: data['results'][i]['values']['baseMean'],
+                        log2FoldChange: data['results'][i]['values']['log2FoldChange'],
+                        statistic: data['results'][i]['values']['statistic'],
+                        pvalue: data['results'][i]['values']['pvalue'],
+                        padj: data['results'][i]['values']['padj'],
+                    }
+                    this.dataSource.push(temp)
+                    for (let name in data['results'][i]['values']) {
+                        if (name !== 'baseMean' && name !== 'log2FoldChange' && name !== 'statistic' && name !== 'pvalue' && name !== 'padj') {
+                            let temp = {
+                                name: name,
+                                key: data['results'][i]['rowname'] + "_" + this.sampleIdToGroup[name],
+                                value: data['results'][i]['values'][name],
+                                group: this.sampleIdToGroup[name],
+                                gene: data['results'][i]['rowname']
                             }
+                            this.boxplotData.push(temp);
                         }
+                    }
                 }
                 this.showBoxplot = true;
             });
     }
 
     handlePageEvent(details) {
-        this.pageIndex = details.pageIndex;
+        this.pageIndex = details.pageIndex +1;
         this.limit = details.pageSize;
+        this.getData(this.dge_results)
     }
 
 }

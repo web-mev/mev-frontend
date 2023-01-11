@@ -48,7 +48,8 @@ export class LikelihoodRatioTestComponent implements OnInit {
 
     getData(uuid) {
         this.isLoading = true;
-        let queryURL = `${this.API_URL}/resources/${uuid}/contents/?page=${this.pageIndex}&page_size=${this.limit}`;
+        let queryURL = `${this.API_URL}/resources/${uuid}/contents/?page=${this.currPageIndex}&page_size=${this.currLimit}`;
+        console.log("query url: ", queryURL)
         this.boxplotData = [];
         this.httpClient.get(queryURL).pipe(
             catchError(error => {
@@ -57,6 +58,7 @@ export class LikelihoodRatioTestComponent implements OnInit {
                 throw message
             }))
             .subscribe(data => {
+                console.log("got the data: ", data)
                 this.tableDataLength = data['count'];
                 this.isLoading = false;
                 
@@ -84,12 +86,17 @@ export class LikelihoodRatioTestComponent implements OnInit {
                     }
                 }
                 this.showBoxplot = true;
+                this.pageIndex = this.currPageIndex;
+                this.limit = this.currLimit;
             });
     }
 
+    currPageIndex = 1;
+    currLimit = 5;
+
     handlePageEvent(details) {
-        this.pageIndex = details.pageIndex +1;
-        this.limit = details.pageSize;
+        this.currPageIndex = details.pageIndex +1;
+        this.currLimit = details.pageSize;
         this.getData(this.dge_results)
     }
 

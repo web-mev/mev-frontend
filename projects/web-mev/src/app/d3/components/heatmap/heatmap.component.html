@@ -1,3 +1,4 @@
+<mev-spinner-overlay *ngIf="isWaiting"></mev-spinner-overlay>
 <mev-spinner-overlay *ngIf="!isLoaded"></mev-spinner-overlay>
 <mat-card>
   <mat-card-header>
@@ -85,7 +86,10 @@
     </div>
     <mat-divider [inset]="true"></mat-divider>
 
-    <d3-heatmap [resourceData]="plotData" [resourceDataAnnotation]="PlotDataAnnotation" [isWait]="isWaiting"
+    <!-- <d3-heatmap [resourceData]="plotData" [resourceDataAnnotation]="PlotDataAnnotation" [isWait]="isWaiting"
+      [useAnnotation]="useAnnotation" [hasResourceChanged]="hasResourceChanged">
+    </d3-heatmap> -->
+    <d3-heatmap [resourceData]="plotData" [resourceDataAnnotation]="PlotDataAnnotation"
       [useAnnotation]="useAnnotation" [hasResourceChanged]="hasResourceChanged">
     </d3-heatmap>
   </mat-card-content>

@@ -22,13 +22,13 @@ export class HeatmapFormComponent implements OnInit {
   @Input() workspaceId: string;
 
   submitted = false;
-  isWaiting = false;
+  isWaiting = false; //used for loading spinner
   inputForm: FormGroup;
   all_featuresets = [];
   exp_files = [];
   plotData = [];
   PlotDataAnnotation = [];
-  isLoaded = false;
+  isLoaded = false; //used for formfield inputs being loaded
   showResult = false;
   showLoading = false;
 
@@ -79,7 +79,6 @@ export class HeatmapFormComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
-    this.isWaiting = true;
   }
 
   savedResourceId = '';

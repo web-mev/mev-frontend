@@ -22,7 +22,6 @@ export class D3HeatmapPlotComponent implements OnInit {
   */
   @Input() resourceData;
   @Input() resourceDataAnnotation;
-  @Input() isWait;
   @Input() useAnnotation;
   @Input() hasResourceChanged
 
@@ -140,12 +139,15 @@ export class D3HeatmapPlotComponent implements OnInit {
     this.heatmapData = this.resourceData;
 
     //data isn't ready for 1s. need to find a better way to handle this later.
-    setTimeout(() => {
-      this.generateHeatmap()
-    }, 1000)
+    // setTimeout(() => {
+    //   this.generateHeatmap()
+    // }, 100)
+    this.generateHeatmap()
   }
 
   generateHeatmap() {
+    
+
     //reset variables when changing resources
     if (this.hasResourceChanged) {
       this.removeOverlayArray = [];
@@ -1001,7 +1003,7 @@ export class D3HeatmapPlotComponent implements OnInit {
     this.margin.left = yAxisLength <= 25 ? 100 : 50;
     this.margin.bottom = xAxisLength <= 25 ? 200 : 50;
     this.margin.top = categoryCount * this.heightCategory + 20;
-    this.isWait = false;
+    // this.isWait = false;
     this.createHeatmap();
   }
 

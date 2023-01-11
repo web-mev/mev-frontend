@@ -46,10 +46,13 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
     this.currPageIndex = this.pageIndex - 1;
     this.resetVariables();
     this.isWaiting = true;
+
     this.boxPlotData = this.resourceData;
-    setTimeout(() => {      //used setTimeout in order to get loading animation to display before the rendering starts
-      this.getXAxisValues();
-    }, 5000)
+    
+    // setTimeout(() => {      //used setTimeout in order to get loading animation to display before the rendering starts
+    //   this.getXAxisValues();
+    // }, 100)
+    this.getXAxisValues();
   }
 
   getXAxisValues() {
@@ -69,8 +72,8 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
         .entries(this.boxPlotData)
     }
 
-    console.log("sumstat: ", this.sumstat)
-    console.log("box plot data in getXAxis: ", this.boxPlotData)
+    // console.log("sumstat: ", this.sumstat)
+    // console.log("box plot data in getXAxis: ", this.boxPlotData)
 
     for (let index in this.boxPlotData) {
       if (!this.groupArr.includes(this.boxPlotData[index]['group'])) {
@@ -89,7 +92,7 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
     let startIndex = this.currPageIndex * this.limit * groupLength
     // let slicedSumStat = this.sumstat.slice(startIndex, startIndex + this.limit * groupLength);
     let slicedSumStat = this.sumstat.slice(0, this.limit * groupLength)
-    console.log("sliced sumstat: ", slicedSumStat, startIndex, startIndex + this.limit * groupLength)
+    // console.log("sliced sumstat: ", slicedSumStat, startIndex, startIndex + this.limit * groupLength)
 
     for (let index in slicedSumStat) {
       this.xAxisArr.push(slicedSumStat[index]['key'])
@@ -172,6 +175,8 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
 
 
   createBoxPlot() {
+    this.isWaiting = false;
+
     // set the dimensions and margins of the graph
     const outerWidth = Math.max(window.innerWidth * 0.66, 800);
     const outerHeight = Math.max(window.innerHeight * 0.75, 500);
@@ -376,7 +381,7 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
       .attr('class', 'legend-label')
       .text(d => d.label);
 
-    this.isWaiting = false;
+    // this.isWaiting = false;
   }
 
   /**

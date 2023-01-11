@@ -1,5 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
 import { AnalysesService } from '@app/features/analysis/services/analysis.service';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
 import { environment } from '@environments/environment';
 import * as d3 from 'd3';
 import { Options } from '@angular-slider/ngx-slider';
@@ -26,6 +28,7 @@ export class VolcanoComponent implements OnInit {
 
   constructor(
     private apiService: AnalysesService,
+    private httpClient: HttpClient,
   ) { }
 
   resData = [];
@@ -67,18 +70,28 @@ export class VolcanoComponent implements OnInit {
 
     this.isLoaded = false;
     let deseqId = this.data['dge_results'];
-    this.apiService
-      .getResourceContent(deseqId)
+
+    let queryURL = `${this.API_URL}/resources/${deseqId}/contents/transform/?transform-name=volcano-subset&pval=${this.pValue}&lfc=${this.fcValue}&fraction=0.0001`
+    this.httpClient.get(queryURL).pipe(
+      catchError(error => {
+        console.log("Error: ", error.message);
+        let message = `Error: ${error.error.error}`;
+        throw message
+      }))
       .subscribe(res => {
+        console.log("vol_res: ", res)
+
         this.isLoaded = true;
-        for (let gene of res) {
-          let name = gene.rowname;
-          let pvalue = gene.values.pvalue
-          let foldChange = gene.values.log2FoldChange;
+        for (let index in res) {
+          let gene = res[index]
+          let name = gene['rowname'];
+          let pvalue = gene['values']['pvalue']
+          let foldChange = gene['values']['log2FoldChange'];
 
           if (pvalue !== null && foldChange !== null) {
             this.pMin = Math.min(this.pMin, -Math.log10(pvalue));
             this.pMax = Math.max(this.pMax, -Math.log10(pvalue));
+
             this.foldMin = Math.min(this.foldMin, foldChange);
             this.foldMax = Math.max(this.foldMax, foldChange);
 
@@ -95,7 +108,7 @@ export class VolcanoComponent implements OnInit {
       })
   }
 
-  regeneratePlot(){
+  regeneratePlot() {
     this.isLoaded = false;
     this.createChart();
   }
@@ -185,7 +198,6 @@ export class VolcanoComponent implements OnInit {
         .attr("y1", 0)
         .attr("x2", x(-this.fcValue))
         .attr("y2", height);
-
     }
 
     if (this.showPValueBounds) {

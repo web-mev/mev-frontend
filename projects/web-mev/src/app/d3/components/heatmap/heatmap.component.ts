@@ -1,14 +1,10 @@
-// import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-// import { MevBaseExpressionPlotFormComponent } from '../base-expression-plot-form/base-expression-plot-form.component';
-// import { AnalysesService } from '@app/features/analysis/services/analysis.service';
-
 import {
   Component,
   OnInit,
   ChangeDetectionStrategy,
   Input
 } from '@angular/core';
-import { FormGroup, Validators, FormBuilder, Form } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { MetadataService } from '@app/core/metadata/metadata.service';
 import { AnalysesService } from '@app/features/analysis/services/analysis.service';
 

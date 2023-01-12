@@ -15,9 +15,9 @@ import { MetadataService } from '@app/core/metadata/metadata.service';
 })
 
 export class LikelihoodBoxPlotComponent implements OnChanges {
-  @Input() resourceData
+  @Input() resourceData;
   @Input() limit = 6;
-  @Input() pageIndex
+  @Input() pageIndex;
 
   imageName = 'boxplot';
   containerId = '#boxplot';
@@ -46,17 +46,11 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
     this.currPageIndex = this.pageIndex - 1;
     this.resetVariables();
     this.isWaiting = true;
-
     this.boxPlotData = this.resourceData;
-
-    // setTimeout(() => {      //used setTimeout in order to get loading animation to display before the rendering starts
-    //   this.getXAxisValues();
-    // }, 100)
     this.getXAxisValues();
   }
 
   getXAxisValues() {
-
     if (this.sumstat.length === 0) {
       this.sumstat = d3Collection.nest() // nest function allows to group the calculation per level of a factor
         .key(function (d) { return d.key; })
@@ -125,26 +119,24 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
         color: '#69b3a2'
       };
     }
-    this.createBoxPlot()
+    this.createBoxPlot();
   }
 
   togglePoints() {
     this.showPoints = !this.showPoints;
-    this.resetVariables()
+    this.resetVariables();
     this.boxPlotData = this.resourceData;
     this.isWaiting = true;
-    setTimeout(() => {      //used setTimeout in order to get loading animation to display before the rendering starts
-      this.getXAxisValues();
-    }, 100)
+    this.getXAxisValues();
   }
 
   toggleCheckBoxGroup(name) {
-    this.checkboxData[name].checked = !this.checkboxData[name].checked
+    this.checkboxData[name].checked = !this.checkboxData[name].checked;
     this.selectedSamples = [];
 
     for (let cat in this.checkboxData) {
       if (this.checkboxData[cat].checked === true) {
-        this.selectedSamples = this.selectedSamples.concat(this.checkboxData[cat].sampleIds)
+        this.selectedSamples = this.selectedSamples.concat(this.checkboxData[cat].sampleIds);
       }
     }
   }
@@ -155,7 +147,6 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
     this.max = -Infinity;
     this.xAxisArr = [];
     this.pointsToPlot = [];
-
     this.sumstat = [];
   }
 
@@ -198,17 +189,15 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
 
     svg.call(pointTip);
 
-    let groupLength = this.groupArr.length
-    let startIndex = this.currPageIndex * this.limit * groupLength
-    // let slicedSumStat = this.sumstat.slice(startIndex, startIndex + this.limit * groupLength);
-    let slicedSumStat = this.sumstat.slice(0, this.limit * groupLength)
+    let groupLength = this.groupArr.length;
+    let slicedSumStat = this.sumstat.slice(0, this.limit * groupLength);
 
     for (let i = 0; i < slicedSumStat.length; i++) {
-      let currMin = slicedSumStat[i].value.min
-      let currMax = slicedSumStat[i].value.max
+      let currMin = slicedSumStat[i].value.min;
+      let currMax = slicedSumStat[i].value.max;
 
-      this.min = Math.min(this.min, currMin)
-      this.max = Math.max(this.max, currMax)
+      this.min = Math.min(this.min, currMin);
+      this.max = Math.max(this.max, currMax);
     }
     this.min = this.min > 0 ? this.min * .9 : this.min * 1.1;
     this.max = this.max * 1.1;
@@ -226,7 +215,7 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
       }))
       .tickSize(0)
 
-    let labelPosition = width / this.limit
+    let labelPosition = width / this.limit;
 
     svg.append("g")
       .attr("transform", "translate(0," + height + ")")
@@ -263,8 +252,8 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
       .style("width", 40)
 
     // // rectangle for the main box
-    var boxWidth = (width * .75) / (this.limit * this.groupArr.length)
-    let bpType = this.boxPlotTypes
+    var boxWidth = (width * .75) / (this.limit * this.groupArr.length);
+    let bpType = this.boxPlotTypes;
     svg
       .selectAll("boxes")
       .data(slicedSumStat)
@@ -322,7 +311,7 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
       .text("Gene")
 
     // Add individual points with jitter
-    var jitterWidth = boxWidth //How far the points are scattered in the x-direction
+    var jitterWidth = boxWidth; //How far the points are scattered in the x-direction
 
     if (this.showPoints === true) {
       svg
@@ -366,8 +355,6 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
       .style('font-size', '12px')
       .attr('class', 'legend-label')
       .text(d => d.label);
-
-    // this.isWaiting = false;
   }
 
   /**

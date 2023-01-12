@@ -48,7 +48,7 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
     this.isWaiting = true;
 
     this.boxPlotData = this.resourceData;
-    
+
     // setTimeout(() => {      //used setTimeout in order to get loading animation to display before the rendering starts
     //   this.getXAxisValues();
     // }, 100)
@@ -72,9 +72,6 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
         .entries(this.boxPlotData)
     }
 
-    // console.log("sumstat: ", this.sumstat)
-    // console.log("box plot data in getXAxis: ", this.boxPlotData)
-
     for (let index in this.boxPlotData) {
       if (!this.groupArr.includes(this.boxPlotData[index]['group'])) {
         this.groupArr.push(this.boxPlotData[index]['group'])
@@ -89,37 +86,26 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
       }
     }
     let groupLength = this.groupArr.length
-    let startIndex = this.currPageIndex * this.limit * groupLength
-    // let slicedSumStat = this.sumstat.slice(startIndex, startIndex + this.limit * groupLength);
+    // let startIndex = this.currPageIndex * this.limit * groupLength
     let slicedSumStat = this.sumstat.slice(0, this.limit * groupLength)
-    // console.log("sliced sumstat: ", slicedSumStat, startIndex, startIndex + this.limit * groupLength)
 
     for (let index in slicedSumStat) {
       this.xAxisArr.push(slicedSumStat[index]['key'])
     }
 
-    let sampleIdLookupTable = {}
-
     for (let index in this.boxPlotData) {
+
       if (this.xAxisArr.includes(this.boxPlotData[index].key)) {
         this.pointsToPlot.push(this.boxPlotData[index]);
 
         let currGroup = this.boxPlotData[index].group;
         let currSampleId = this.boxPlotData[index].name;
 
-        if (sampleIdLookupTable[currGroup] === undefined) {
-          sampleIdLookupTable[currGroup] = {}
-        }
-
-        if (sampleIdLookupTable[currGroup][currSampleId] === undefined) {
-          sampleIdLookupTable[currGroup][currSampleId] = 1;
-
+        if (!this.checkboxData[currGroup].sampleIds.includes(currSampleId)) {
           this.checkboxData[currGroup].sampleIds.push(currSampleId)
         }
       }
     }
-
-    console.log("x axis arr: ", this.xAxisArr)
 
     this.setBoxPlotTypes();
   }

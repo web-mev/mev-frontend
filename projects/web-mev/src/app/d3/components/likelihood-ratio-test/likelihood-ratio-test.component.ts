@@ -24,6 +24,8 @@ export class LikelihoodRatioTestComponent implements OnInit {
     showBoxplot = false;
     tableDataLength = 0;
     dge_results
+    currPageIndex = 1;
+    currLimit = 5;
 
     constructor(
         private httpClient: HttpClient
@@ -49,7 +51,6 @@ export class LikelihoodRatioTestComponent implements OnInit {
     getData(uuid) {
         this.isLoading = true;
         let queryURL = `${this.API_URL}/resources/${uuid}/contents/?page=${this.currPageIndex}&page_size=${this.currLimit}`;
-        console.log("query url: ", queryURL)
         this.boxplotData = [];
         this.httpClient.get(queryURL).pipe(
             catchError(error => {
@@ -58,7 +59,6 @@ export class LikelihoodRatioTestComponent implements OnInit {
                 throw message
             }))
             .subscribe(data => {
-                console.log("got the data: ", data)
                 this.tableDataLength = data['count'];
                 this.isLoading = false;
                 
@@ -91,12 +91,16 @@ export class LikelihoodRatioTestComponent implements OnInit {
             });
     }
 
-    currPageIndex = 1;
-    currLimit = 5;
-
     handlePageEvent(details) {
-        this.currPageIndex = details.pageIndex +1;
         this.currLimit = details.pageSize;
+
+        if(details.pageSize !== this.limit){
+            this.currPageIndex = 1;
+            this.dataSource = [];
+        }else{
+            this.currPageIndex = details.pageIndex +1;
+        }
+
         this.getData(this.dge_results)
     }
 

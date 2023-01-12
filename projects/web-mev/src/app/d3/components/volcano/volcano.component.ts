@@ -63,6 +63,7 @@ export class VolcanoComponent implements OnInit {
     ],
     ticksArray: [0.001, 0.005, 0.01, 0.05]
   };
+  pvalueMin = 1000;
 
   ngOnInit() {
     this.windowWidth = window.innerWidth
@@ -71,7 +72,7 @@ export class VolcanoComponent implements OnInit {
     this.isLoaded = false;
     let deseqId = this.data['dge_results'];
 
-    let queryURL = `${this.API_URL}/resources/${deseqId}/contents/transform/?transform-name=volcano-subset&pval=${this.pValue}&lfc=${this.fcValue}&fraction=0.0001`
+    let queryURL = `${this.API_URL}/resources/${deseqId}/contents/transform/?transform-name=volcano-subset&pval=${this.pValue}&lfc=${this.fcValue}&fraction=0.001`
     this.httpClient.get(queryURL).pipe(
       catchError(error => {
         console.log("Error: ", error.message);
@@ -79,8 +80,6 @@ export class VolcanoComponent implements OnInit {
         throw message
       }))
       .subscribe(res => {
-        console.log("vol_res: ", res)
-
         this.isLoaded = true;
         for (let index in res) {
           let gene = res[index]
@@ -88,9 +87,10 @@ export class VolcanoComponent implements OnInit {
           let pvalue = gene['values']['pvalue']
           let foldChange = gene['values']['log2FoldChange'];
 
-          if (pvalue !== null && foldChange !== null) {
+          if (pvalue !== null && foldChange !== null && pvalue !== 0) {
             this.pMin = Math.min(this.pMin, -Math.log10(pvalue));
             this.pMax = Math.max(this.pMax, -Math.log10(pvalue));
+            this.pvalueMin = Math.min(this.pvalueMin, pvalue)
 
             this.foldMin = Math.min(this.foldMin, foldChange);
             this.foldMax = Math.max(this.foldMax, foldChange);
@@ -104,6 +104,23 @@ export class VolcanoComponent implements OnInit {
             this.resData.push(tempObj);
           }
         }
+        for (let index in res) {
+          let gene = res[index]
+          let name = gene['rowname'];
+          let pvalue = gene['values']['pvalue']
+          let foldChange = gene['values']['log2FoldChange'];
+
+          if (pvalue === 0) {
+            let tempObj = {
+              name,
+              pvalue: this.pvalueMin / 10**10,
+              foldChange
+            }
+
+            this.resData.push(tempObj);
+          }
+        }
+        this.pMax = this.pMax * 1.1;
         this.createChart();
       })
   }

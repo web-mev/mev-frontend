@@ -22,7 +22,6 @@ export class D3HeatmapPlotComponent implements OnInit {
   */
   @Input() resourceData;
   @Input() resourceDataAnnotation;
-  @Input() isWait;
   @Input() useAnnotation;
   @Input() hasResourceChanged
 
@@ -108,7 +107,7 @@ export class D3HeatmapPlotComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.windowWidth = window.innerWidth
+    this.windowWidth = window.innerWidth - 500;
     this.windowHeight = window.innerHeight
     this.outerHeight = Math.max(this.windowHeight, 500)
     this.outerWidth = Math.max(this.windowWidth, 500)
@@ -139,10 +138,7 @@ export class D3HeatmapPlotComponent implements OnInit {
     this.margin = this.useAnnotation ? this.marginAnnotation : this.marginMain;
     this.heatmapData = this.resourceData;
 
-    //data isn't ready for 1s. need to find a better way to handle this later.
-    setTimeout(() => {
-      this.generateHeatmap()
-    }, 1000)
+    this.generateHeatmap()
   }
 
   generateHeatmap() {
@@ -278,7 +274,6 @@ export class D3HeatmapPlotComponent implements OnInit {
     } else {
       // if the user has never dictated a size
       this.origHeight = this.outerHeight;
-      // this.origWidth = this.svgElement.nativeElement.offsetWidth;
       this.origWidth = this.outerWidth;
       outerWidth = this.origWidth;
       outerHeight = this.origHeight;
@@ -504,15 +499,9 @@ export class D3HeatmapPlotComponent implements OnInit {
       .append('g')
       .attr(
         'transform',
-        'translate(0,0)'
+        'translate(50,0)'
       )
       .style('fill', 'none');
-
-    // svg
-    //   .append('rect')
-    //   .attr('width', width)
-    //   .attr('height', height)
-    //   .style('fill', 'transparent');
 
     const tooltipOffsetX = this.tooltipOffsetX;
     svg.call(pointTip);
@@ -563,21 +552,21 @@ export class D3HeatmapPlotComponent implements OnInit {
     svg.append('text')
       .classed('label', true)
       .attr('transform', 'rotate(-90)')
-      .attr('y', 15)
+      .attr('y', -20)
       .attr('x', -height / 2)
       // .attr('dy', '.71em')
       .style('text-anchor', 'middle')
       .style('fill', 'black')
-      .text("Y Axis Label");
+      .text("Gene");
 
     svg
       .append('text')
       .classed('label', true)
       .attr('x', this.finalWidth / 2)
-      .attr('y', height + this.margin.bottom - 5)
+      .attr('y', this.useAnnotation ? (this.xAxisArr.length <= 25 ? height + this.margin.top - 30 : height + this.margin.top + 30) : height + this.margin.top + this.margin.bottom - 10)
       .style('text-anchor', 'start')
       .style('fill', 'black')
-      .text("X Axis Label");
+      .text("Sample / Observation");
 
     //category overlay
     let tempAnnotations = { ...this.annData }
@@ -878,17 +867,20 @@ export class D3HeatmapPlotComponent implements OnInit {
               .call(d3.axisBottom(xScale))
               .attr('transform', 'translate(0,' + (this.margin.top + this.finalHeight) + ')')
               .selectAll('text')
-              .attr("y", -4)
-              .attr("x", 9)
-              .attr("transform", "rotate(90)")
-              .style("text-anchor", "start");
+              .attr("y", 6)
+              .attr("x", -10)
+              .attr("transform", "rotate(-45)")
+              .style("text-anchor", "end")
+              .style("font-size", "8px")
+
           }
 
         } else {
           if (this.resourceData.length <= 25) {
             axesContainer.append('g')
               .call(d3.axisLeft(yScale))
-              .attr('transform', 'translate(' + this.margin.left + ', 0 )');
+              .attr('transform', 'translate(' + this.margin.left + ', 0 )')
+              .style("font-size", "8px");
           }
         }
 
@@ -904,14 +896,16 @@ export class D3HeatmapPlotComponent implements OnInit {
               .attr("y", -4)
               .attr("x", 9)
               .attr("transform", "rotate(90)")
-              .style("text-anchor", "start");
+              .style("text-anchor", "start")
+              .style("font-size", "8px")
           }
 
         } else {
           if (this.resourceData.length <= 25) {
             axesContainer.append('g')
               .call(d3.axisLeft(yScale))
-              .attr('transform', 'translate(' + this.margin.left + ', 0 )');
+              .attr('transform', 'translate(' + this.margin.left + ', 0 )')
+              .style("font-size", "8px");
           }
         }
       }
@@ -1000,7 +994,7 @@ export class D3HeatmapPlotComponent implements OnInit {
     this.margin.left = yAxisLength <= 25 ? 100 : 50;
     this.margin.bottom = xAxisLength <= 25 ? 200 : 50;
     this.margin.top = categoryCount * this.heightCategory + 20;
-    this.isWait = false;
+    // this.isWait = false;
     this.createHeatmap();
   }
 

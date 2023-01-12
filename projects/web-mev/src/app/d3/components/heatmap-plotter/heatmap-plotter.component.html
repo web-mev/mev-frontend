@@ -1,7 +1,4 @@
-<mev-spinner-overlay *ngIf="isWait"></mev-spinner-overlay>
-<!-- <button mat-raised-button color="accent" type="submit" (click)="generateHeatmap()">Plot
-</button> -->
-<div *ngIf="plotReady && (heatmapData.length > 0)">
+<div *ngIf="(resourceData.length > 0)">
     <mat-expansion-panel #accordion (opened)="panelOpenState = true" (closed)="panelOpenState = false">
         <mat-expansion-panel-header>
             <mat-panel-title>
@@ -127,17 +124,17 @@
                 {{warnMsg}}
             </mat-card>
         </div>
-        <div *ngIf="validPlot">
+        <div class="button-panel">
             <mev-download-button [containerId]="containerId" [imageName]="imageName"></mev-download-button>
         </div>
     </div>
 </div>
-<div *ngIf="plotReady && (heatmapData.length === 0) && !isWait">
+<div *ngIf="plotReady && (heatmapData.length === 0)">
     <mat-card class="no-data-error">
         No data to plot. Please check your input selections and retry.
     </mat-card>
 </div>
-<div *ngIf="plotReady && (tilesTooSmall) && !isWait">
+<div *ngIf="plotReady && (tilesTooSmall)">
     <mat-card class="no-data-error">
         Given the current dimensions of the screen and data, the heatmap tiles
         are smaller than the permitted minimum size. Either decrease the number of observations

@@ -1,14 +1,10 @@
-// import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-// import { MevBaseExpressionPlotFormComponent } from '../base-expression-plot-form/base-expression-plot-form.component';
-// import { AnalysesService } from '@app/features/analysis/services/analysis.service';
-
 import {
   Component,
   OnInit,
   ChangeDetectionStrategy,
   Input
 } from '@angular/core';
-import { FormGroup, Validators, FormBuilder, Form } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { MetadataService } from '@app/core/metadata/metadata.service';
 import { AnalysesService } from '@app/features/analysis/services/analysis.service';
 
@@ -22,13 +18,13 @@ export class HeatmapFormComponent implements OnInit {
   @Input() workspaceId: string;
 
   submitted = false;
-  isWaiting = false;
+  isWaiting = false; //used for loading spinner
   inputForm: FormGroup;
   all_featuresets = [];
   exp_files = [];
   plotData = [];
   PlotDataAnnotation = [];
-  isLoaded = false;
+  isLoaded = false; //used for formfield inputs being loaded
   showResult = false;
   showLoading = false;
 
@@ -79,7 +75,6 @@ export class HeatmapFormComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
-    this.isWaiting = true;
   }
 
   savedResourceId = '';

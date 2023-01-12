@@ -15,9 +15,9 @@ import { MetadataService } from '@app/core/metadata/metadata.service';
 })
 
 export class LikelihoodBoxPlotComponent implements OnChanges {
-  @Input() resourceData
+  @Input() resourceData;
   @Input() limit = 6;
-  @Input() pageIndex
+  @Input() pageIndex;
 
   imageName = 'boxplot';
   containerId = '#boxplot';
@@ -35,6 +35,7 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
   boxPlotTypes = {};
   checkboxData = {};
   selectedSamples = [];
+  currPageIndex = 0;
 
   constructor(
     private metadataService: MetadataService,
@@ -42,12 +43,11 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
+    this.currPageIndex = this.pageIndex - 1;
     this.resetVariables();
     this.isWaiting = true;
     this.boxPlotData = this.resourceData;
-    setTimeout(() => {      //used setTimeout in order to get loading animation to display before the rendering starts
-      this.getXAxisValues();
-    }, 100)
+    this.getXAxisValues();
   }
 
   getXAxisValues() {
@@ -80,20 +80,24 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
       }
     }
     let groupLength = this.groupArr.length
-    let startIndex = this.pageIndex * this.limit * groupLength
-    let slicedSumStat = this.sumstat.slice(startIndex, startIndex + this.limit * groupLength);
+    // let startIndex = this.currPageIndex * this.limit * groupLength
+    let slicedSumStat = this.sumstat.slice(0, this.limit * groupLength)
 
     for (let index in slicedSumStat) {
       this.xAxisArr.push(slicedSumStat[index]['key'])
     }
 
     for (let index in this.boxPlotData) {
-      if (this.xAxisArr.includes(this.boxPlotData[index].key)) {
-        this.pointsToPlot.push(this.boxPlotData[index])
 
-        let currGroup = this.boxPlotData[index].group
-        let currSampleId = this.boxPlotData[index].name
-        this.checkboxData[currGroup].sampleIds.push(currSampleId)
+      if (this.xAxisArr.includes(this.boxPlotData[index].key)) {
+        this.pointsToPlot.push(this.boxPlotData[index]);
+
+        let currGroup = this.boxPlotData[index].group;
+        let currSampleId = this.boxPlotData[index].name;
+
+        if (!this.checkboxData[currGroup].sampleIds.includes(currSampleId)) {
+          this.checkboxData[currGroup].sampleIds.push(currSampleId)
+        }
       }
     }
 
@@ -115,26 +119,24 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
         color: '#69b3a2'
       };
     }
-    this.createBoxPlot()
+    this.createBoxPlot();
   }
 
   togglePoints() {
     this.showPoints = !this.showPoints;
-    this.resetVariables()
+    this.resetVariables();
     this.boxPlotData = this.resourceData;
     this.isWaiting = true;
-    setTimeout(() => {      //used setTimeout in order to get loading animation to display before the rendering starts
-      this.getXAxisValues();
-    }, 100)
+    this.getXAxisValues();
   }
 
   toggleCheckBoxGroup(name) {
-    this.checkboxData[name].checked = !this.checkboxData[name].checked
+    this.checkboxData[name].checked = !this.checkboxData[name].checked;
     this.selectedSamples = [];
 
     for (let cat in this.checkboxData) {
       if (this.checkboxData[cat].checked === true) {
-        this.selectedSamples = this.selectedSamples.concat(this.checkboxData[cat].sampleIds)
+        this.selectedSamples = this.selectedSamples.concat(this.checkboxData[cat].sampleIds);
       }
     }
   }
@@ -145,10 +147,13 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
     this.max = -Infinity;
     this.xAxisArr = [];
     this.pointsToPlot = [];
+    this.sumstat = [];
   }
 
 
   createBoxPlot() {
+    this.isWaiting = false;
+
     // set the dimensions and margins of the graph
     const outerWidth = Math.max(window.innerWidth * 0.66, 800);
     const outerHeight = Math.max(window.innerHeight * 0.75, 500);
@@ -184,16 +189,15 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
 
     svg.call(pointTip);
 
-    let groupLength = this.groupArr.length
-    let startIndex = this.pageIndex * this.limit * groupLength
-    let slicedSumStat = this.sumstat.slice(startIndex, startIndex + this.limit * groupLength);
+    let groupLength = this.groupArr.length;
+    let slicedSumStat = this.sumstat.slice(0, this.limit * groupLength);
 
     for (let i = 0; i < slicedSumStat.length; i++) {
-      let currMin = slicedSumStat[i].value.min
-      let currMax = slicedSumStat[i].value.max
+      let currMin = slicedSumStat[i].value.min;
+      let currMax = slicedSumStat[i].value.max;
 
-      this.min = Math.min(this.min, currMin)
-      this.max = Math.max(this.max, currMax)
+      this.min = Math.min(this.min, currMin);
+      this.max = Math.max(this.max, currMax);
     }
     this.min = this.min > 0 ? this.min * .9 : this.min * 1.1;
     this.max = this.max * 1.1;
@@ -211,7 +215,7 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
       }))
       .tickSize(0)
 
-    let labelPosition = width / this.limit
+    let labelPosition = width / this.limit;
 
     svg.append("g")
       .attr("transform", "translate(0," + height + ")")
@@ -248,8 +252,8 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
       .style("width", 40)
 
     // // rectangle for the main box
-    var boxWidth = (width * .75) / (this.limit * this.groupArr.length)
-    let bpType = this.boxPlotTypes
+    var boxWidth = (width * .75) / (this.limit * this.groupArr.length);
+    let bpType = this.boxPlotTypes;
     svg
       .selectAll("boxes")
       .data(slicedSumStat)
@@ -307,7 +311,7 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
       .text("Gene")
 
     // Add individual points with jitter
-    var jitterWidth = boxWidth //How far the points are scattered in the x-direction
+    var jitterWidth = boxWidth; //How far the points are scattered in the x-direction
 
     if (this.showPoints === true) {
       svg
@@ -351,8 +355,6 @@ export class LikelihoodBoxPlotComponent implements OnChanges {
       .style('font-size', '12px')
       .attr('class', 'legend-label')
       .text(d => d.label);
-
-    this.isWaiting = false;
   }
 
   /**

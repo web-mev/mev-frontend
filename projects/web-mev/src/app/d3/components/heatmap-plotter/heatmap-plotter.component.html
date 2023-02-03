@@ -1,4 +1,4 @@
-<div *ngIf="(resourceData.length > 0)">
+<!-- <div *ngIf="(resourceData.length > 0)">
     <mat-expansion-panel #accordion (opened)="panelOpenState = true" (closed)="panelOpenState = false">
         <mat-expansion-panel-header>
             <mat-panel-title>
@@ -13,7 +13,7 @@
                 <div class="options-inner">
                     <div>
                         <mat-radio-group class="" formControlName="imgOrientation">
-                            <!-- (change)="changeOrientation($event)"> -->
+                            <!~~ (change)="changeOrientation($event)"> ~~>
                             <mat-radio-button class="" [value]="samplesInRowsKey">
                                 {{samplesInRowsText}}
                             </mat-radio-button>
@@ -68,7 +68,7 @@
                         </mat-form-field>
                     </div>
                     <div class="section-item">
-                        <!-- <mat-checkbox (change)="changeAspectRatio($event)" [checked]="squareTiles">Equal-sized tiles?</mat-checkbox> -->
+                        <!~~ <mat-checkbox (change)="changeAspectRatio($event)" [checked]="squareTiles">Equal-sized tiles?</mat-checkbox> ~~>
                         <mat-checkbox formControlName="imgAspectRatio" [checked]="squareTiles">Equal-sized tiles?
                         </mat-checkbox>
                     </div>
@@ -96,10 +96,10 @@
                             Current: {{this.finalHeight}}
                             <p class="info">
 
-                                <!-- <mat-icon id="info-icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                                <!~~ <mat-icon id="info-icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
                             aria-label="Info tooltip about the field">info
                           </mat-icon> Note that this is not an exact specification due to constraints
-                          imposed by other options and the layout configuration. -->
+                          imposed by other options and the layout configuration. ~~>
                             </p>
                         </div>
                     </div>
@@ -128,7 +128,8 @@
             <mev-download-button [containerId]="containerId" [imageName]="imageName"></mev-download-button>
         </div>
     </div>
-</div>
+</div> -->
+
 <div *ngIf="plotReady && (heatmapData.length === 0)">
     <mat-card class="no-data-error">
         No data to plot. Please check your input selections and retry.

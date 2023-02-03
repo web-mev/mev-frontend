@@ -549,12 +549,13 @@ export class D3HeatmapPlotComponent implements OnInit {
       })
       .on('mouseout', pointTip.hide);
 
+    let graphHeight = this.resourceData.length * tileY; //height of actual graph portion only
+
     svg.append('text')
       .classed('label', true)
       .attr('transform', 'rotate(-90)')
       .attr('y', -20)
-      .attr('x', -height / 2)
-      // .attr('dy', '.71em')
+      .attr('x', -(graphHeight) / 2 - this.margin.top)
       .style('text-anchor', 'middle')
       .style('fill', 'black')
       .text("Gene");
@@ -563,7 +564,7 @@ export class D3HeatmapPlotComponent implements OnInit {
       .append('text')
       .classed('label', true)
       .attr('x', this.finalWidth / 2)
-      .attr('y', this.useAnnotation ? (this.xAxisArr.length <= 25 ? height + this.margin.top - 30 : height + this.margin.top + 30) : height + this.margin.top + this.margin.bottom - 10)
+      .attr('y', this.useAnnotation ? (this.xAxisArr.length <= 25 ? graphHeight + this.margin.top - 30 : graphHeight + this.margin.top + 30) : height + this.margin.top + this.margin.bottom - 10)
       .style('text-anchor', 'start')
       .style('fill', 'black')
       .text("Sample / Observation");

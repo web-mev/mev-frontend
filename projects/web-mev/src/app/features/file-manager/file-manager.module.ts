@@ -8,10 +8,12 @@ import { EditFileDialogComponent } from '@app/features/file-manager/components/d
 import { DeleteFileDialogComponent } from '@app/features/file-manager/components/dialogs/delete-file-dialog/delete-file-dialog.component';
 import { ProgressSnackbarComponent } from '@file-manager/components/progress-snackbar/progress-snackbar.component';
 import { SetTypeFormatDialogComponent } from '@app/features/file-manager/components/dialogs/set-type-format-dialog/set-type-format-dialog.component';
+import { GlobusUploadComponent } from '@app/features/globus-transfer/components/globus-upload/globus-upload.component';
 
 import { SharedModule } from '@app/shared/shared.module';
 import { ViewFileTypesDialogComponent } from './components/dialogs/view-file-types-dialog/view-file-types-dialog.component';
 import { FileDownloadDirective } from './directives/file-download'
+
 @NgModule({
   declarations: [
     FileListComponent,
@@ -21,7 +23,8 @@ import { FileDownloadDirective } from './directives/file-download'
     ProgressSnackbarComponent,
     ViewFileTypesDialogComponent,
     FileDownloadDirective,
-    SetTypeFormatDialogComponent 
+    SetTypeFormatDialogComponent,
+    GlobusUploadComponent
   ],
   exports: [FileListComponent],
   imports: [CommonModule, FileManagerRoutingModule, SharedModule]

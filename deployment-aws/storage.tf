@@ -27,13 +27,13 @@ resource "aws_s3_bucket_policy" "website" {
   })
 }
 
-data "aws_s3_bucket" "log" {
-  bucket = "webmev-logs"
+resource "aws_s3_bucket" "log" {
+  bucket = "${local.stack}-webmev-frontend-logs"
 }
 
 resource "aws_s3_bucket_logging" "website" {
   bucket        = aws_s3_bucket.website.id
-  target_bucket = data.aws_s3_bucket.log.id
+  target_bucket = aws_s3_bucket.log.id
   target_prefix = "${local.stack}/s3/"
 }
 
@@ -60,7 +60,7 @@ resource "aws_cloudfront_distribution" "website" {
     }
   }
   logging_config {
-    bucket = data.aws_s3_bucket.log.bucket_regional_domain_name
+    bucket = aws_s3_bucket.log.bucket_regional_domain_name
     prefix = "${local.stack}/cloudfront/"
   }
   restrictions {

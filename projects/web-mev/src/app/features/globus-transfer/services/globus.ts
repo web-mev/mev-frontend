@@ -26,7 +26,13 @@ export class GlobusService {
    * provided by the backend
    */
    initGlobusUpload(): Observable<any> {
-    return this.httpClient.get(`${this.API_URL}/api/globus/initiate/?direction=upload`);
+    return this.httpClient.get(`${this.API_URL}/globus/initiate/?direction=upload`);
+  }
+
+  sendGlobusCode(code:string, direction:string): Observable<any> {
+    return this.httpClient.get(
+      `${this.API_URL}/globus/initiate/?code=${code}&direction=${direction}`
+    );
   }
 
 }

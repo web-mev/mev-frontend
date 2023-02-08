@@ -81,7 +81,12 @@ const routes: Routes = [
     path: 'change-password',
     component: PasswordChangeComponent
   },
-
+  {
+    path: "globus",
+    loadChildren: () =>
+      import('./features/globus-transfer/globus-transfer.module').then(m => m.GlobusModule),
+      canActivate: [AuthGuardService]
+  },
   {
     path: '**',
     redirectTo: 'about'
@@ -91,7 +96,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
-      useHash: true,
+      //useHash: true,
       scrollPositionRestoration: 'enabled',
       preloadingStrategy: PreloadAllModules,
       enableTracing: true

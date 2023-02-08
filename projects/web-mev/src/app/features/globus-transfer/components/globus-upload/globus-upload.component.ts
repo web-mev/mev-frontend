@@ -44,6 +44,7 @@ export class GlobusUploadComponent {
             paramObj[kvp_array[0]] = kvp_array[1];
           }
           this.storage.set('globus-state', paramObj['state']);
+          this.storage.set('globus-direction', 'upload');
         } else if ('globus-browser-url' in x){
           // if the user has Globus tokens on the backend, the backend
           // will return a link to the Globus file browser

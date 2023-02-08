@@ -11,28 +11,28 @@ import { environment } from '@environments/environment';
  * Used for operations with file in the File Manager
  */
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class GlobusService {
-  
-  private readonly API_URL = environment.apiUrl;
 
-  constructor(
-    private httpClient: HttpClient,
-  ) {}
+    private readonly API_URL = environment.apiUrl;
 
-  /**
-   * Gets the url to the Globus auth page
-   * provided by the backend
-   */
-   initGlobusUpload(): Observable<any> {
-    return this.httpClient.get(`${this.API_URL}/globus/initiate/?direction=upload`);
-  }
+    constructor(
+        private httpClient: HttpClient,
+    ) { }
 
-  sendGlobusCode(code:string, direction:string): Observable<any> {
-    return this.httpClient.get(
-      `${this.API_URL}/globus/initiate/?code=${code}&direction=${direction}`
-    );
-  }
+    /**
+     * Gets the url to the Globus auth page
+     * provided by the backend
+     */
+    initGlobusAuth(direction: string): Observable<any> {
+        return this.httpClient.get(`${this.API_URL}/globus/initiate/?direction=${direction}`);
+    }
+
+    sendGlobusCode(code: string, direction: string): Observable<any> {
+        return this.httpClient.get(
+            `${this.API_URL}/globus/initiate/?code=${code}&direction=${direction}`
+        );
+    }
 
 }

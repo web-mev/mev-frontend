@@ -48,6 +48,11 @@
   <div *ngIf="uploadInProgressMsg" class="process-status">{{ uploadInProgressMsg }}</div>
   <div *ngIf="dropboxUploadInProgressMsg" class="process-status">{{ dropboxUploadInProgressMsg }}</div>
 
+
+  <div *ngIf="globusInProgress" class="process-status">
+    <p>Globus is transferring...</p>
+  </div>
+
   <mat-table #table [dataSource]="dataSource" matSort matSortActive="created" matSortDirection="desc" class="mat-cell">
 
     <ng-container matColumnDef="id">

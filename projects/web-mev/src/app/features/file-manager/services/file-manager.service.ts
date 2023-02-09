@@ -71,6 +71,17 @@ export class FileService {
   }
 
   /**
+   * Queries a dummy api endpoint
+   */
+   queryDummy(forceIncomplete: boolean): Observable<any> {
+    if(forceIncomplete){
+      return this.httpClient.get(`${this.API_URL}/random/?force=true`,{observe : 'response'});
+    } else {
+      return this.httpClient.get(`${this.API_URL}/random/`, {observe : 'response'});
+    }
+  }
+
+  /**
    * Get file list
    *
    */

@@ -13,10 +13,11 @@ import {
   fromEvent,
   merge,
   timer,
+  interval,
   Observable,
   Subscription
 } from 'rxjs';
-import { map, debounceTime, distinctUntilChanged, takeUntil, filter } from 'rxjs/operators';
+import { map, debounceTime, distinctUntilChanged, takeUntil, filter, switchMap, takeWhile } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -83,6 +84,8 @@ export class FileListComponent implements OnInit {
   currentSelectedFileType = {};
   isWait: boolean = false;
   currStatus = {};
+  globusInProgress: boolean = false;
+  globusSubscription: Subscription;
 
   constructor(
     public httpClient: HttpClient,
@@ -99,7 +102,7 @@ export class FileListComponent implements OnInit {
   ngOnInit() {
     this.loadData();
     this.loadResourceTypes();
-
+    this.checkGlobus();
     this.fileUploadProgressSubscription = this.fileService.fileUploadsProgress.subscribe(
       uploadProgressData => {
         this.uploadProgressData = uploadProgressData;
@@ -134,6 +137,30 @@ export class FileListComponent implements OnInit {
     })
   }
 
+  checkGlobus(){
+
+    this.globusSubscription = interval(2000).pipe(
+      switchMap(
+        () => {
+          return this.fileService.queryDummy(false)
+        }
+      ),
+      // the second arg of `true` allows this to emit 
+      // the final case (when the transfers are complete)
+      takeWhile(result => result.status === 204, true )
+    ).subscribe(
+      result => {
+        if(result.status === 200){
+          this.globusInProgress = false;
+        } else {
+          this.globusInProgress = true;
+        }
+        this.ref.markForCheck();
+        console.log(result);
+      }
+    );
+  }
+
   getStatus(row) {
     if (this.currStatus[row.name] === undefined) {
       this.currStatus[row.name] = false;
@@ -164,6 +191,7 @@ export class FileListComponent implements OnInit {
 
   public ngOnDestroy(): void {
     this.fileUploadProgressSubscription.unsubscribe();
+    this.globusSubscription.unsubscribe();
   }
 
   refresh() {

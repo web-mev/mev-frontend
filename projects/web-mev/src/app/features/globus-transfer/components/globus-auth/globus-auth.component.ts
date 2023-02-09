@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { DOCUMENT } from '@angular/common';
 
 import { switchMap } from 'rxjs/operators';
@@ -15,25 +15,16 @@ import { GlobusService } from '@app/features/globus-transfer/services/globus';
 })
 export class GlobusAuthComponent implements OnInit {
 
-//   code: string;
-//   state: string;
-
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private activatedRoute: ActivatedRoute,
-    private router: Router,
     private storage: LclStorageService,
     private globusService: GlobusService
   ) 
   { }
 
   ngOnInit(): void {
-    //   this.activatedRoute.queryParamMap.subscribe(
-    //       data => {
-    //         this.code = data['params']['code'];
-    //         this.state = data['params']['state'];
-    //       } 
-    //   );
+
     this.activatedRoute.queryParamMap.pipe(
       switchMap(
         data => {

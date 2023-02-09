@@ -35,4 +35,11 @@ export class GlobusService {
         );
     }
 
+    startGlobusUpload(data: object): Observable<any> {
+        return this.httpClient.post(
+            `${this.API_URL}/globus/transfer/upload/`,
+            data
+        );
+    }
+
 }

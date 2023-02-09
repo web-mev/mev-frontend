@@ -5,7 +5,8 @@ import { GlobusService } from '@app/features/globus-transfer/services/globus';
 
 @Component({
   selector: 'upload-redirect',
-  templateUrl: './globus-upload-redirect.component.html'
+  templateUrl: './globus-upload-redirect.component.html',
+  styleUrls: ['./globus-upload-redirect.component.scss']
 })
 export class GlobusUploadRedirectComponent implements OnInit {
 

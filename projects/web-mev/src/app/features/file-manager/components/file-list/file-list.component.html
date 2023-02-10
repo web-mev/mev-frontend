@@ -48,9 +48,12 @@
   <div *ngIf="uploadInProgressMsg" class="process-status">{{ uploadInProgressMsg }}</div>
   <div *ngIf="dropboxUploadInProgressMsg" class="process-status">{{ dropboxUploadInProgressMsg }}</div>
 
-
-  <div *ngIf="globusInProgress" class="process-status">
-    <p>Globus is transferring...</p>
+  <div id="globus-transfer-list" *ngIf="activeGlobusTransfers.length"> Active Globus transfers:
+    <mat-chip-list>
+        <mat-chip *ngFor="let task_info of activeGlobusTransfers" color="primary">
+            {{task_info.label.length > 0 ? task_info.label : 'No label'}} ({{ task_info.task_id }})
+        </mat-chip>
+    </mat-chip-list>
   </div>
 
   <mat-table #table [dataSource]="dataSource" matSort matSortActive="created" matSortDirection="desc" class="mat-cell">

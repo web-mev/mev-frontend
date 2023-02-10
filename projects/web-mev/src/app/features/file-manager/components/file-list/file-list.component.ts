@@ -84,7 +84,7 @@ export class FileListComponent implements OnInit {
   currentSelectedFileType = {};
   isWait: boolean = false;
   currStatus = {};
-  globusInProgress: boolean = false;
+  activeGlobusTransfers: Array<string> = [];
   globusSubscription: Subscription;
 
   constructor(
@@ -137,26 +137,33 @@ export class FileListComponent implements OnInit {
     })
   }
 
+  /**
+   * Checks for existing Globus transfers. If there are
+   * > 0 transfers, start a polling operation to watch
+   * for changes.
+   */
   checkGlobus(){
 
-    this.globusSubscription = interval(2000).pipe(
+    this.globusSubscription = interval(5000).pipe(
       switchMap(
         () => {
-          return this.fileService.queryDummy(false)
+          return this.fileService.queryGlobusTransfers()
         }
       ),
       // the second arg of `true` allows this to emit 
-      // the final case (when the transfers are complete)
-      takeWhile(result => result.status === 204, true )
+      // the final case (when all transfers are complete)
+      takeWhile(result => result.length > 0, true )
     ).subscribe(
       result => {
-        if(result.status === 200){
-          this.globusInProgress = false;
-        } else {
-          this.globusInProgress = true;
-        }
+        this.activeGlobusTransfers = result;
+        // need this to update the UI element
+        // for the active transfers
         this.ref.markForCheck();
-        console.log(result);
+
+        // to reload the table of files
+        if(result.length === 0){
+          this.loadData();
+        }
       }
     );
   }

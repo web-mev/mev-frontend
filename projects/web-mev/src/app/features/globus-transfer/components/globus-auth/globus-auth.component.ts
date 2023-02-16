@@ -7,7 +7,7 @@ import { of } from 'rxjs';
 
 import { LclStorageService } from '@app/core/local-storage/lcl-storage.service';
 import { GlobusService } from '@app/features/globus-transfer/services/globus';
-
+import { handleBackendAuthResponse } from '../../globus_common';
 
 @Component({
   selector: 'globus-auth',
@@ -46,7 +46,9 @@ export class GlobusAuthComponent implements OnInit {
         data => {
           console.log('Returned: ');
           console.log(data);
-          let url = data['globus-browser-url'];
+          let url = handleBackendAuthResponse(data, this.storage);
+
+          // now redirect
           this.document.location.href = url;
         }
       );

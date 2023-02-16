@@ -69,6 +69,8 @@ export class FileListComponent implements OnInit {
   uploadProgressData: Map<string, object>;
   resourceTypeData;
   availableResourceTypes = {};
+  countdown: number;
+  globusPollInterval: number = 10; // polling interval in seconds
 
   // due to the polling nature of the file browser, once a user selects a resource type in the dropdown,
   // we need to keep track of what they did. Otherwise, when the polling feature refreshes the table, the 
@@ -86,6 +88,7 @@ export class FileListComponent implements OnInit {
   currStatus = {};
   activeGlobusTransfers: Array<string> = [];
   globusSubscription: Subscription;
+  countdownSubscription: Subscription;
 
   constructor(
     public httpClient: HttpClient,
@@ -137,6 +140,20 @@ export class FileListComponent implements OnInit {
     })
   }
 
+
+  _handle_globus_transfer(result) {
+    this.activeGlobusTransfers = result;
+    // need this to update the UI element
+    // for the active transfers
+    this.ref.markForCheck();
+
+    // to reload the table of files
+    if(result.length === 0){
+      this.loadData();
+    } else {
+      this.countdown = this.globusPollInterval;
+    }
+}
   /**
    * Checks for existing Globus transfers. If there are
    * > 0 transfers, start a polling operation to watch
@@ -144,7 +161,24 @@ export class FileListComponent implements OnInit {
    */
   checkGlobus(){
 
-    this.globusSubscription = interval(5000).pipe(
+    // perform an immediate check so the user sees the
+    // initiated transfer (if one exists)
+    this.fileService.queryGlobusTransfers().subscribe(
+      result => this._handle_globus_transfer(result)
+    );
+
+    // start a countdown timer so the user can see that 
+    // we are actively monitoring the upload
+    this.countdownSubscription = interval(1000).subscribe(
+      x => {
+        console.log('in countdown')
+        this.countdown -= 1;
+        this.ref.markForCheck();
+      }
+    );
+
+    // start a poll
+    this.globusSubscription = interval(1000*this.globusPollInterval).pipe(
       switchMap(
         () => {
           return this.fileService.queryGlobusTransfers()
@@ -152,20 +186,8 @@ export class FileListComponent implements OnInit {
       ),
       // the second arg of `true` allows this to emit 
       // the final case (when all transfers are complete)
-      takeWhile(result => result.length > 0, true )
-    ).subscribe(
-      result => {
-        this.activeGlobusTransfers = result;
-        // need this to update the UI element
-        // for the active transfers
-        this.ref.markForCheck();
-
-        // to reload the table of files
-        if(result.length === 0){
-          this.loadData();
-        }
-      }
-    );
+      takeWhile(result => result.length > 0, true ),
+    ).subscribe(result => this._handle_globus_transfer(result));
   }
 
   getStatus(row) {
@@ -199,6 +221,7 @@ export class FileListComponent implements OnInit {
   public ngOnDestroy(): void {
     this.fileUploadProgressSubscription.unsubscribe();
     this.globusSubscription.unsubscribe();
+    this.countdownSubscription.unsubscribe();
   }
 
   refresh() {

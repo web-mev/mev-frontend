@@ -24,8 +24,6 @@ export class GlobusDownloadRedirectComponent implements OnInit {
     this.activatedRoute.queryParamMap.pipe(
       switchMap(
         data => {
-          console.log('DATA');
-          console.log(data);
           // Data looks like:
             // {
             //   "label": "some-downloasd",

@@ -42,4 +42,11 @@ export class GlobusService {
         );
     }
 
+    startGlobusDownload(data: object): Observable<any> {
+        return this.httpClient.post(
+            `${this.API_URL}/globus/transfer/download/`,
+            data
+        );
+    }
+
 }

@@ -150,6 +150,7 @@ export class FileListComponent implements OnInit {
     // to reload the table of files
     if(result.length === 0){
       this.loadData();
+      this.countdownSubscription.unsubscribe();
     } else {
       this.countdown = this.globusPollInterval;
     }
@@ -506,6 +507,10 @@ export class FileListComponent implements OnInit {
         processingTimer.unsubscribe()
       }
     })
+  }
+
+  globusDownload(filePK: string){
+    console.log(`Send ${filePK} to Globus`);
   }
 }
 

@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { GlobusAuthComponent } from './components/globus-auth/globus-auth.component';
 import { GlobusUploadRedirectComponent } from './components/globus-upload-redirect/globus-upload-redirect.component';
+import { GlobusDownloadRedirectComponent } from './components/globus-download-redirect/globus-download-redirect.component';
 
 const routes: Routes = [
   {
@@ -12,6 +13,10 @@ const routes: Routes = [
   {
     path: 'upload-redirect',
     component: GlobusUploadRedirectComponent
+  },
+  {
+    path: 'download-redirect',
+    component: GlobusDownloadRedirectComponent
   }
 ];
 

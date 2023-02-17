@@ -141,9 +141,7 @@
             <mat-icon aria-label="Download">get_app</mat-icon>
           </button>
         </a>
-        <button mat-icon-button color="accent" title="Download to DropBox" disabled>
-          <mat-icon aria-label="Download">cloud_download</mat-icon>
-        </button>
+        <globus-download [resource_pk]="row.id"></globus-download>
 
       </mat-cell>
     </ng-container>

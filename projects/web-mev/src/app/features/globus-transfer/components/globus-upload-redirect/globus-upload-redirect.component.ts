@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
+
+import { NotificationService } from '@app/core/core.module';
+
 import { GlobusService } from '@app/features/globus-transfer/services/globus';
 
 @Component({
@@ -14,7 +17,8 @@ export class GlobusUploadRedirectComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private globusService: GlobusService
+    private globusService: GlobusService,
+    private notificationService: NotificationService
   ) 
   { }
 
@@ -42,7 +46,9 @@ export class GlobusUploadRedirectComponent implements OnInit {
       transfer_info => {
         console.log('Transfer info:');
         console.log(transfer_info);
-        //this.transfer_id = transfer_info['transfer_id'];
+        if (transfer_info['transfer_id'] === null){
+          this.notificationService.warn('There was a problem submitting the transfer. An admin has been notified, but you may attempt the transfer again.',15000);
+        }
         this.router.navigate(['/workarea']);
       }
     )

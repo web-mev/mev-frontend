@@ -121,29 +121,6 @@ export class AuthenticationService {
       );
   }
 
-  /**
-   * Google Login
-   *
-   */
-
-  googleSignInExternal(googleTokenId: string): Observable<any> {
-    return this.http
-      .post<any>(`${this.API_URL}/users/social/google/`, {
-        provider_token: googleTokenId
-      })
-      .pipe(
-        map(token => {
-          // login successful if there's a token in the response: {'refresh': '<REFRESH TOKEN>', 'access': '<ACCESS_TOKEN>'}
-          if (token && token.access) {
-            this.storeJwtToken(JSON.stringify(token.access));
-            this.storeRefreshToken(JSON.stringify(token.refresh));
-            this.currentUserSubject.next(token);
-          }
-          return token;
-        })
-      );
-  }
-
   startOAuth2Flow(authProvider: string): Observable<any> {
     return this.http.get(`${this.API_URL}/users/social/${authProvider}/`);
   }

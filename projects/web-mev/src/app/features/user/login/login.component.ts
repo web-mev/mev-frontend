@@ -8,7 +8,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 import { ROUTE_ANIMATIONS_ELEMENTS } from '@core/core.module';
-import { GoogleLoginProvider, SocialAuthService } from 'angularx-social-login';
 
 /**
  * Login Component
@@ -39,7 +38,6 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private authenticationService: AuthenticationService,
     private userService: UserService,
-    private socialAuthService: SocialAuthService,
     private readonly notificationService: NotificationService,
     @Inject(DOCUMENT) private document: Document,
     private storage: LclStorageService
@@ -119,30 +117,6 @@ export class LoginComponent implements OnInit {
       );
   }
 
-  /**
-   * Method to sign out with Google
-   */
-  signInWithGoogle(): void {
-    const socialPlatformProvider = GoogleLoginProvider.PROVIDER_ID;
-    this.loading = true;
-    this.socialAuthService.signIn(socialPlatformProvider).then(userData => {
-      // Google returns user data. Send user token to the server
-      localStorage.setItem('socialUser', JSON.stringify(userData));
-      this.authenticationService
-        .googleSignInExternal(userData.authToken)
-        .pipe(finalize(() => (this.loading = false)))
-        .subscribe(result => {
-          this.router.navigate(['/workarea']);
-        });
-    }, err => {
-      this.loading = false;
-      let error_msg = err['error'];
-      if (error_msg !== 'popup_closed_by_user') {
-        this.notificationService.error('Experienced an error with Google login. If this persists, please contact the WebMeV team.');
-      }
-    });
-  }
-
   startGoogleAuth(): void {
     console.log('Start alternate google auth...');
     this.authenticationService.startOAuth2Flow('google-oauth2').subscribe(
@@ -177,15 +151,5 @@ export class LoginComponent implements OnInit {
         this.document.location.href = url;
       }
     );
-  }
-
-  /**
-   * Generic method to sign out, regardless of Auth provider
-   */
-  signOut(): void {
-    this.socialAuthService.signOut().then(data => {
-      // debugger;
-      this.router.navigate([`/about`]);
-    });
   }
 }

@@ -52,12 +52,16 @@ export class UserService {
     return this.http.delete<any>(`${this.API_URL}/users/${id}/`);
   }
 
+  /**
+   * Queries the backend for the current user and 
+   * puts the email address into the appropriate
+   * BehaviorSubject so that other components are notified
+   * of the change.
+   */
   getCurrentUserEmail(): void{
     this.getAll().subscribe(
       allUsers => {
         let user = allUsers[0];
-        console.log('in getCurrentUserEmail');
-        console.log(user);
         this.currentUserEmailSubject.next(user['email']);
       }
     );

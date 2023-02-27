@@ -11,6 +11,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ContactComponent } from '@app/features/contact-dialog/contact.component';
 import { environment as env } from '../../environments/environment';
 
+import { SocialAuthService } from 'angularx-social-login';
+
 import {
   routeAnimations,
   LocalStorageService,
@@ -63,6 +65,7 @@ export class AppComponent implements OnInit {
     private bnIdle: BnNgIdleService,
     private authenticationService: AuthenticationService,
     public dialog: MatDialog,
+    private socialAuthService: SocialAuthService,
     private userService: UserService
   ) {
     this.authenticationService.currentUser.subscribe(x => {

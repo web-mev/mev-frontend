@@ -106,8 +106,6 @@ export class LoginComponent implements OnInit {
       .login(this.f.email.value, this.f.password.value)
       .subscribe(
         data => {
-          console.log('here, about to get current user email');
-          console.log(data);
           this.userService.getCurrentUserEmail();
           this.router.navigate([this.returnUrl]);
         },
@@ -121,10 +119,8 @@ export class LoginComponent implements OnInit {
   }
 
   startGoogleAuth(): void {
-    console.log('Start alternate google auth...');
     this.authenticationService.startOAuth2Flow('google-oauth2').subscribe(
       response => {
-        console.log(response);
 
         let url = '';
         // if the user has not previously authenticated

@@ -106,6 +106,9 @@ export class LoginComponent implements OnInit {
       .login(this.f.email.value, this.f.password.value)
       .subscribe(
         data => {
+          console.log('here, about to get current user email');
+          console.log(data);
+          this.userService.getCurrentUserEmail();
           this.router.navigate([this.returnUrl]);
         },
         error => {

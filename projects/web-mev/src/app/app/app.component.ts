@@ -11,9 +11,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { ContactComponent } from '@app/features/contact-dialog/contact.component';
 import { environment as env } from '../../environments/environment';
 
-//Used to load Google Client Library
-import { SocialAuthService } from 'angularx-social-login';
-
 import {
   routeAnimations,
   LocalStorageService,
@@ -35,7 +32,6 @@ import {
 })
 export class AppComponent implements OnInit {
   currentUser: User;
-  socialUser;
   isAuthenticated: boolean;
   isProd = env.production;
   envName = env.envName;
@@ -67,7 +63,6 @@ export class AppComponent implements OnInit {
     private bnIdle: BnNgIdleService,
     private authenticationService: AuthenticationService,
     public dialog: MatDialog,
-    private socialAuthService: SocialAuthService,
     private userService: UserService
   ) {
     this.authenticationService.currentUser.subscribe(x => {
@@ -86,7 +81,6 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.socialUser = JSON.parse(localStorage.getItem('socialUser'));
 
     // listen for the user’s idleness
     this.sessionSubscription$ = this.bnIdle

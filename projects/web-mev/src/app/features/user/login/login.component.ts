@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { LclStorageService } from '@app/core/local-storage/lcl-storage.service';
 import { AuthenticationService } from '@app/core/authentication/authentication.service';
 import { UserService } from '@app/core/user/user.service';
 import { NotificationService } from '@core/core.module';
@@ -38,7 +40,9 @@ export class LoginComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private userService: UserService,
     private socialAuthService: SocialAuthService,
-    private readonly notificationService: NotificationService
+    private readonly notificationService: NotificationService,
+    @Inject(DOCUMENT) private document: Document,
+    private storage: LclStorageService
   ) {
     // redirect to home if already logged in
     if (this.authenticationService.currentUserValue) {
@@ -137,6 +141,42 @@ export class LoginComponent implements OnInit {
         this.notificationService.error('Experienced an error with Google login. If this persists, please contact the WebMeV team.');
       }
     });
+  }
+
+  startGoogleAuth(): void {
+    console.log('Start alternate google auth...');
+    this.authenticationService.startOAuth2Flow('google-oauth2').subscribe(
+      response => {
+        console.log(response);
+
+        let url = '';
+        // if the user has not previously authenticated
+        // with Globus (and the backend does not have Globus
+        // tokens), then the backend will return a url to the
+        // Globus authentication page
+        if ('url' in response){
+
+          // part of the OAuth2 spec includes a 'state'
+          // parameter, which is part of the url params
+          // returned by the backend. We cache this in
+          // local browser storage so that we can later
+          // compare it with the response from the Globus
+          // auth server
+          url = response['url'];
+          let params = url.split("?")[1].split("&");
+          let paramObj = {};
+          for(let p of params){
+            let kvp_array = p.split("=");
+            paramObj[kvp_array[0]] = kvp_array[1];
+          }
+          this.storage.set('google-oauth2-state', paramObj['state']);
+        } else {
+          console.log('Unexpected response from backend.');
+          return;
+        }
+        this.document.location.href = url;
+      }
+    );
   }
 
   /**

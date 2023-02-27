@@ -7,6 +7,7 @@ import { TutorialComponent } from '@features/tutorial/tutorial.component';
 import { AuthGuardService } from '@core/auth/auth-guard.service';
 import { ResponsePasswordResetComponent } from './features/user/response-password-reset/response-password-reset.component';
 import { PasswordChangeComponent } from './features/user/password-change/password-change.component';
+import { AuthRedirectComponent } from './features/user/auth-redirect/auth-redirect.component';
 
 const routes: Routes = [
   {
@@ -81,7 +82,10 @@ const routes: Routes = [
     path: 'change-password',
     component: PasswordChangeComponent
   },
-
+  { 
+    path: 'oauth2-redirect',
+    component: AuthRedirectComponent
+  },
   {
     path: '**',
     redirectTo: 'about'
@@ -91,10 +95,10 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
-      useHash: true,
+      useHash: false,
       scrollPositionRestoration: 'enabled',
       preloadingStrategy: PreloadAllModules,
-      enableTracing: true
+      enableTracing: false
     })
   ],
   exports: [RouterModule]

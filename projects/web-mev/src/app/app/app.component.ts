@@ -5,6 +5,7 @@ import { Observable, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { BnNgIdleService } from 'bn-ng-idle';
 import { AuthenticationService } from '@app/core/authentication/authentication.service';
+import { UserService } from '@app/core/user/user.service';
 import { User } from '@app/_models/user';
 import { MatDialog } from '@angular/material/dialog';
 import { ContactComponent } from '@app/features/contact-dialog/contact.component';
@@ -67,6 +68,7 @@ export class AppComponent implements OnInit {
     private authenticationService: AuthenticationService,
     public dialog: MatDialog,
     private socialAuthService: SocialAuthService,
+    private userService: UserService
   ) {
     this.authenticationService.currentUser.subscribe(x => {
       this.isAuthenticated = x !== null;
@@ -104,7 +106,9 @@ export class AppComponent implements OnInit {
       );
     }
 
-    
+    if(this.authenticationService.isLoggedIn()){
+      this.userService.getCurrentUserEmail();
+    }
 
     this.isAuthenticated$ = this.store.pipe(select(selectIsAuthenticated));
     this.stickyHeader$ = this.store.pipe(select(selectSettingsStickyHeader));

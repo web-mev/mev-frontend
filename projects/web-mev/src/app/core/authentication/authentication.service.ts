@@ -144,6 +144,40 @@ export class AuthenticationService {
       );
   }
 
+  startOAuth2Flow(authProvider: string): Observable<any> {
+    return this.http.get(`${this.API_URL}/users/social/${authProvider}/`);
+  }
+
+  sendCode(code: string, state: string, scope: string): Observable<any> {
+    return this.http.post(
+      `${this.API_URL}/login/social/jwt-pair/`,
+      {
+        'provider': 'google-oauth2',
+        'code': code
+      }
+    ).pipe(
+      tap(
+        token_obj => {
+          // login successful if there's a token in the response: 
+          // {'refresh': '<REFRESH TOKEN>', 'token': '<ACCESS_TOKEN>'}
+          // Note that email + password logins return tokens with keys
+          // of 'refresh' and 'access'. Since the backend uses a 
+          // libraries to create both of those tokens, we have to 
+          // manipulate them to the frontend's expectation below
+          // (e.g. keys of refresh and access)
+          if (token_obj && token_obj.token) {
+            this.storeJwtToken(JSON.stringify(token_obj.token));
+            this.storeRefreshToken(JSON.stringify(token_obj.refresh));
+            let t = Object()
+            t.access = token_obj.token;
+            t.refresh = token_obj.refresh
+            this.currentUserSubject.next(t);
+          }
+        }
+      )
+    );
+  }
+
   /**
    * Request password reset
    *

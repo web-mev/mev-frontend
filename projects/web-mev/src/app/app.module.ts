@@ -14,6 +14,8 @@ import { AuthenticationService } from '@app/core/authentication/authentication.s
 import { LoginComponent } from './features/user/login/login.component';
 import { RegisterComponent } from './features/user/register/register.component';
 import { TutorialComponent } from './features/tutorial/tutorial.component';
+import { UserInfoComponent } from './features/user/info/info.component';
+import { AuthRedirectComponent } from './features/user/auth-redirect/auth-redirect.component';
 import { YouTubePlayerModule } from '@angular/youtube-player';
 
 import { FileManagerModule } from './features/file-manager/file-manager.module';
@@ -83,7 +85,9 @@ import { ContactComponent } from './features/contact-dialog/contact.component';
     RequestPasswordResetComponent,
     ResponsePasswordResetComponent,
     PasswordChangeComponent,
-    ContactComponent
+    ContactComponent,
+    AuthRedirectComponent,
+    UserInfoComponent
   ],
   providers: [
     BnNgIdleService,

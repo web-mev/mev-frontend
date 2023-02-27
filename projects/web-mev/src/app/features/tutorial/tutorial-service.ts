@@ -3,8 +3,6 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 
-//Used to load Google Client Library
-import { SocialAuthService } from 'angularx-social-login';
 
 /**
  * Used for adding the tutorial files to the user's files
@@ -17,7 +15,6 @@ export class TutorialService {
 
   constructor(
     private httpClient: HttpClient,
-    private socialAuthService: SocialAuthService
   ) {}
 
   /**

@@ -25,12 +25,6 @@ import { TokenInterceptor } from '@core/interceptors/token-interceptor.intercept
 
 import { SharedModule } from '@app/shared/shared.module';
 
-import {
-  SocialLoginModule,
-  GoogleLoginProvider,
-  SocialAuthServiceConfig
-} from 'angularx-social-login';
-
 import { jwtOptionsFactory } from '@app/jwtConfig';
 import { HttpErrorInterceptor } from '@core/interceptors/http-error.interceptor';
 import { RequestPasswordResetComponent } from './features/user/request-password-reset/request-password-reset.component';
@@ -67,9 +61,6 @@ import { ContactComponent } from './features/contact-dialog/contact.component';
       }
     }),
 
-    // Google authorization
-    SocialLoginModule,
-
     // app
     FileManagerModule,
     WorkspaceManagerModule,
@@ -104,20 +95,6 @@ import { ContactComponent } from './features/contact-dialog/contact.component';
     {
       provide: ErrorHandler,
       useClass: SentryErrorHandler
-    },
-    {
-      provide: 'SocialAuthServiceConfig',
-      useValue: {
-        autoLogin: false,
-        providers: [
-          {
-            id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider(
-                environment.googleOAuthClient
-              )
-          }
-        ]
-      } as SocialAuthServiceConfig
     }
   ],
   exports: [],

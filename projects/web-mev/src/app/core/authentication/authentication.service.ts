@@ -121,16 +121,32 @@ export class AuthenticationService {
       );
   }
 
+  /**
+   * This starts the OAuth2 flow. The webmev backend will respond with
+   * an auth url to the oauth2 provider. Often, subscribers of this will
+   * cache the canonical 'state' parameter so that it can be compared
+   * to the value returned following approval by the user
+   */
   startOAuth2Flow(authProvider: string): Observable<any> {
     return this.http.get(`${this.API_URL}/users/social/${authProvider}/`);
   }
 
-  sendCode(code: string, state: string, scope: string): Observable<any> {
+  /**
+   * This sends the oauth2 'code' to the webmev backend. There, oauth2
+   * client libraries will use that in combination with the client id/secret
+   * to get a token for the particular oauth2 provider. Then, the webmev
+   * backend will create a webmev JWT pair and return those. 
+   */
+  sendCode(provider: string, code: string, state: string, scope: string): Observable<any> {
+    console.log(`in send code with provider=${provider}`);
+    let protocol = window.location.protocol;
+    let host = window.location.host; 
     return this.http.post(
       `${this.API_URL}/login/social/jwt-pair/`,
       {
-        'provider': 'google-oauth2',
-        'code': code
+        'provider': provider,
+        'code': code, 
+        'redirect_uri': `${protocol}//${host}/oauth2-redirect/${provider}/`
       }
     ).pipe(
       tap(

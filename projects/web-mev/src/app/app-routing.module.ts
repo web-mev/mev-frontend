@@ -83,7 +83,7 @@ const routes: Routes = [
     component: PasswordChangeComponent
   },
   { 
-    path: 'oauth2-redirect',
+    path: 'oauth2-redirect/:oauth2_provider',
     component: AuthRedirectComponent
   },
   {

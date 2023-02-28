@@ -32,6 +32,8 @@ export class LoginComponent implements OnInit {
   token: string;
   uid: string;
 
+  GOOGLE_OAUTH2_PROVIDER = 'google-oauth2';
+
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
@@ -119,7 +121,7 @@ export class LoginComponent implements OnInit {
   }
 
   startGoogleAuth(): void {
-    this.authenticationService.startOAuth2Flow('google-oauth2').subscribe(
+    this.authenticationService.startOAuth2Flow(this.GOOGLE_OAUTH2_PROVIDER).subscribe(
       response => {
 
         let url = '';
@@ -142,7 +144,7 @@ export class LoginComponent implements OnInit {
             let kvp_array = p.split("=");
             paramObj[kvp_array[0]] = kvp_array[1];
           }
-          this.storage.set('google-oauth2-state', paramObj['state']);
+          this.storage.set(`${this.GOOGLE_OAUTH2_PROVIDER}-state`, paramObj['state']);
         } else {
           console.log('Unexpected response from backend.');
           return;

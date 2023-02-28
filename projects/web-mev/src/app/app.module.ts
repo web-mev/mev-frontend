@@ -14,6 +14,8 @@ import { AuthenticationService } from '@app/core/authentication/authentication.s
 import { LoginComponent } from './features/user/login/login.component';
 import { RegisterComponent } from './features/user/register/register.component';
 import { TutorialComponent } from './features/tutorial/tutorial.component';
+import { UserInfoComponent } from './features/user/info/info.component';
+import { AuthRedirectComponent } from './features/user/auth-redirect/auth-redirect.component';
 import { YouTubePlayerModule } from '@angular/youtube-player';
 
 import { FileManagerModule } from './features/file-manager/file-manager.module';
@@ -22,12 +24,6 @@ import { PublicDatasetsManagerModule } from './features/public-datasets-manager/
 import { TokenInterceptor } from '@core/interceptors/token-interceptor.interceptor';
 
 import { SharedModule } from '@app/shared/shared.module';
-
-import {
-  SocialLoginModule,
-  GoogleLoginProvider,
-  SocialAuthServiceConfig
-} from 'angularx-social-login';
 
 import { jwtOptionsFactory } from '@app/jwtConfig';
 import { HttpErrorInterceptor } from '@core/interceptors/http-error.interceptor';
@@ -65,9 +61,6 @@ import { ContactComponent } from './features/contact-dialog/contact.component';
       }
     }),
 
-    // Google authorization
-    SocialLoginModule,
-
     // app
     FileManagerModule,
     WorkspaceManagerModule,
@@ -83,7 +76,9 @@ import { ContactComponent } from './features/contact-dialog/contact.component';
     RequestPasswordResetComponent,
     ResponsePasswordResetComponent,
     PasswordChangeComponent,
-    ContactComponent
+    ContactComponent,
+    AuthRedirectComponent,
+    UserInfoComponent
   ],
   providers: [
     BnNgIdleService,
@@ -100,20 +95,6 @@ import { ContactComponent } from './features/contact-dialog/contact.component';
     {
       provide: ErrorHandler,
       useClass: SentryErrorHandler
-    },
-    {
-      provide: 'SocialAuthServiceConfig',
-      useValue: {
-        autoLogin: false,
-        providers: [
-          {
-            id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider(
-                environment.googleOAuthClient
-              )
-          }
-        ]
-      } as SocialAuthServiceConfig
     }
   ],
   exports: [],

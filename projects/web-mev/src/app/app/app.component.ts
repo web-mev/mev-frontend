@@ -5,13 +5,11 @@ import { Observable, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { BnNgIdleService } from 'bn-ng-idle';
 import { AuthenticationService } from '@app/core/authentication/authentication.service';
+import { UserService } from '@app/core/user/user.service';
 import { User } from '@app/_models/user';
 import { MatDialog } from '@angular/material/dialog';
 import { ContactComponent } from '@app/features/contact-dialog/contact.component';
 import { environment as env } from '../../environments/environment';
-
-//Used to load Google Client Library
-import { SocialAuthService } from 'angularx-social-login';
 
 import {
   routeAnimations,
@@ -34,7 +32,6 @@ import {
 })
 export class AppComponent implements OnInit {
   currentUser: User;
-  socialUser;
   isAuthenticated: boolean;
   isProd = env.production;
   envName = env.envName;
@@ -66,7 +63,7 @@ export class AppComponent implements OnInit {
     private bnIdle: BnNgIdleService,
     private authenticationService: AuthenticationService,
     public dialog: MatDialog,
-    private socialAuthService: SocialAuthService,
+    private userService: UserService
   ) {
     this.authenticationService.currentUser.subscribe(x => {
       this.isAuthenticated = x !== null;
@@ -84,7 +81,6 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.socialUser = JSON.parse(localStorage.getItem('socialUser'));
 
     // listen for the user’s idleness
     this.sessionSubscription$ = this.bnIdle
@@ -104,7 +100,9 @@ export class AppComponent implements OnInit {
       );
     }
 
-    
+    if(this.authenticationService.isLoggedIn()){
+      this.userService.getCurrentUserEmail();
+    }
 
     this.isAuthenticated$ = this.store.pipe(select(selectIsAuthenticated));
     this.stickyHeader$ = this.store.pipe(select(selectSettingsStickyHeader));

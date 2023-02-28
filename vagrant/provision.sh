@@ -30,7 +30,6 @@ sed -e 's?__DROPBOX_APP_KEY__?'"$MEV_DROPBOX_APP_KEY"'?g' projects/web-mev/src/i
 
 cp projects/web-mev/src/environments/environment.ts.tmpl environment.ts
 sed -i 's?__API_URL__?'"$MEV_API_ENDPOINT"'?g' environment.ts
-sed -i 's?__GOOGLE_OAUTH_CLIENT_ID__?'"$MEV_GOOGLE_OAUTH_CLIENT_ID"'?g' environment.ts
 sed -i 's?__MAX_UPLOAD_SIZE_BYTES__?'"$MEV_MAX_UPLOAD_SIZE_BYTES"'?g' environment.ts
 mv environment.ts projects/web-mev/src/environments/environment.ts
 

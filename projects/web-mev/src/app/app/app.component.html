@@ -68,17 +68,8 @@
           </button>
 
           <mat-menu #toolbarUserMenu="matMenu">
-
+            <user-info></user-info>
             <button mat-menu-item routerLink="/change-password">
-              <span *ngIf="socialUser" class="social-user-info">
-                <span class="social-user-info__name">
-                 {{ socialUser.name }}
-               </span>
-               <span class="social-user-info__email">
-                 {{ socialUser.email }}
-               </span>
-               </span>
-
               <mat-icon>
                 <fa-icon icon="lock"></fa-icon>
               </mat-icon>

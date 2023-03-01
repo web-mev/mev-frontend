@@ -3,9 +3,6 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ROUTE_ANIMATIONS_ELEMENTS } from '../../../core/core.module';
 import { Router, NavigationEnd } from '@angular/router';
 
-//Used to load Google Client Library
-import { SocialAuthService } from 'angularx-social-login';
-
 /**
  * About component
  * Used for the start WebMEV page
@@ -22,8 +19,7 @@ export class AboutComponent implements OnInit {
   showResult = true;
 
   constructor(
-    private _router: Router,
-    private socialAuthService: SocialAuthService,
+    private _router: Router
   ) { }
 
   /**

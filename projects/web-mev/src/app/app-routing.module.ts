@@ -7,6 +7,7 @@ import { TutorialComponent } from '@features/tutorial/tutorial.component';
 import { AuthGuardService } from '@core/auth/auth-guard.service';
 import { ResponsePasswordResetComponent } from './features/user/response-password-reset/response-password-reset.component';
 import { PasswordChangeComponent } from './features/user/password-change/password-change.component';
+import { AuthRedirectComponent } from './features/user/auth-redirect/auth-redirect.component';
 
 const routes: Routes = [
   {
@@ -87,6 +88,10 @@ const routes: Routes = [
       import('./features/globus-transfer/globus-transfer.module').then(m => m.GlobusModule),
       canActivate: [AuthGuardService]
   },
+  { 
+    path: 'oauth2-redirect/:oauth2_provider',
+    component: AuthRedirectComponent
+  },
   {
     path: '**',
     redirectTo: 'about'
@@ -96,10 +101,10 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
-      //useHash: true,
+      useHash: false,
       scrollPositionRestoration: 'enabled',
       preloadingStrategy: PreloadAllModules,
-      enableTracing: true
+      enableTracing: false
     })
   ],
   exports: [RouterModule]

@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { LclStorageService } from '@app/core/local-storage/lcl-storage.service';
 import { AuthenticationService } from '@app/core/authentication/authentication.service';
 import { UserService } from '@app/core/user/user.service';
 import { NotificationService } from '@core/core.module';
@@ -6,7 +8,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 import { ROUTE_ANIMATIONS_ELEMENTS } from '@core/core.module';
-import { GoogleLoginProvider, SocialAuthService } from 'angularx-social-login';
 
 /**
  * Login Component
@@ -31,14 +32,17 @@ export class LoginComponent implements OnInit {
   token: string;
   uid: string;
 
+  GOOGLE_OAUTH2_PROVIDER = 'google-oauth2';
+
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private authenticationService: AuthenticationService,
     private userService: UserService,
-    private socialAuthService: SocialAuthService,
-    private readonly notificationService: NotificationService
+    private readonly notificationService: NotificationService,
+    @Inject(DOCUMENT) private document: Document,
+    private storage: LclStorageService
   ) {
     // redirect to home if already logged in
     if (this.authenticationService.currentUserValue) {
@@ -104,6 +108,7 @@ export class LoginComponent implements OnInit {
       .login(this.f.email.value, this.f.password.value)
       .subscribe(
         data => {
+          this.userService.getCurrentUserEmail();
           this.router.navigate([this.returnUrl]);
         },
         error => {
@@ -115,37 +120,37 @@ export class LoginComponent implements OnInit {
       );
   }
 
-  /**
-   * Method to sign out with Google
-   */
-  signInWithGoogle(): void {
-    const socialPlatformProvider = GoogleLoginProvider.PROVIDER_ID;
-    this.loading = true;
-    this.socialAuthService.signIn(socialPlatformProvider).then(userData => {
-      // Google returns user data. Send user token to the server
-      localStorage.setItem('socialUser', JSON.stringify(userData));
-      this.authenticationService
-        .googleSignInExternal(userData.authToken)
-        .pipe(finalize(() => (this.loading = false)))
-        .subscribe(result => {
-          this.router.navigate(['/workarea']);
-        });
-    }, err => {
-      this.loading = false;
-      let error_msg = err['error'];
-      if (error_msg !== 'popup_closed_by_user') {
-        this.notificationService.error('Experienced an error with Google login. If this persists, please contact the WebMeV team.');
-      }
-    });
-  }
+  startGoogleAuth(): void {
+    this.authenticationService.startOAuth2Flow(this.GOOGLE_OAUTH2_PROVIDER).subscribe(
+      response => {
 
-  /**
-   * Generic method to sign out, regardless of Auth provider
-   */
-  signOut(): void {
-    this.socialAuthService.signOut().then(data => {
-      // debugger;
-      this.router.navigate([`/about`]);
-    });
+        let url = '';
+        // if the user has not previously authenticated
+        // with Globus (and the backend does not have Globus
+        // tokens), then the backend will return a url to the
+        // Globus authentication page
+        if ('url' in response){
+
+          // part of the OAuth2 spec includes a 'state'
+          // parameter, which is part of the url params
+          // returned by the backend. We cache this in
+          // local browser storage so that we can later
+          // compare it with the response from the Globus
+          // auth server
+          url = response['url'];
+          let params = url.split("?")[1].split("&");
+          let paramObj = {};
+          for(let p of params){
+            let kvp_array = p.split("=");
+            paramObj[kvp_array[0]] = kvp_array[1];
+          }
+          this.storage.set(`${this.GOOGLE_OAUTH2_PROVIDER}-state`, paramObj['state']);
+        } else {
+          console.log('Unexpected response from backend.');
+          return;
+        }
+        this.document.location.href = url;
+      }
+    );
   }
 }

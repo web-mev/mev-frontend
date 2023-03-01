@@ -11,14 +11,14 @@ resource "aws_s3_bucket_acl" "website" {
 resource "aws_s3_bucket_policy" "website" {
   bucket = aws_s3_bucket.website.id
   policy = jsonencode({
-    Version   = "2012-10-17"
+    Version = "2012-10-17"
     Statement = [
       {
         Sid       = "PublicReadGetObject"
         Effect    = "Allow"
         Principal = "*"
         Action    = "s3:GetObject"
-        Resource  = [
+        Resource = [
           aws_s3_bucket.website.arn,
           "${aws_s3_bucket.website.arn}/*",
         ]
@@ -27,13 +27,13 @@ resource "aws_s3_bucket_policy" "website" {
   })
 }
 
-data "aws_s3_bucket" "log" {
-  bucket = "webmev-logs"
+resource "aws_s3_bucket" "log" {
+  bucket = "${local.stack}-webmev-frontend-logs"
 }
 
 resource "aws_s3_bucket_logging" "website" {
   bucket        = aws_s3_bucket.website.id
-  target_bucket = data.aws_s3_bucket.log.id
+  target_bucket = aws_s3_bucket.log.id
   target_prefix = "${local.stack}/s3/"
 }
 
@@ -60,7 +60,7 @@ resource "aws_cloudfront_distribution" "website" {
     }
   }
   logging_config {
-    bucket = data.aws_s3_bucket.log.bucket_regional_domain_name
+    bucket = aws_s3_bucket.log.bucket_regional_domain_name
     prefix = "${local.stack}/cloudfront/"
   }
   restrictions {
@@ -72,5 +72,14 @@ resource "aws_cloudfront_distribution" "website" {
     acm_certificate_arn      = var.https_cert_arn
     minimum_protocol_version = "TLSv1.2_2021"
     ssl_support_method       = "sni-only"
+  }
+  # this block allows "direct" urls.
+  # Without this, attempts to access {var.website_hostname}/foo
+  # will generate a 404. By adding this, the angular app will
+  # properly load the route associated with /foo
+  custom_error_response {
+    error_code         = 404
+    response_code      = 200
+    response_page_path = "/index.html"
   }
 }

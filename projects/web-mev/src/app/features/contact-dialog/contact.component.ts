@@ -19,16 +19,23 @@ export class ContactComponent {
 
   onSubmit(event: any) {
     let endPoint = `${this.API_URL}/feedback/`;
-    this.postData(endPoint, { "message": event.target.comments.value }).subscribe(res => {
-      this.notificationService.warn("The message has been successfully sent to our developers. We appreciate your feedback and will get back to you soon.");
-    })
+    let msg = event.target.comments.value.trim();
+    if(msg.length > 0){
+      this.postData(endPoint, { "message": event.target.comments.value }).subscribe(
+        res => {
+          this.notificationService.warn("The message has been successfully sent to our developers. We appreciate your feedback and will get back to you soon.");
+        }
+      )
+    }
   }
 
   postData(url: string, postMessage: {}){
     return this.httpClient.post(url, postMessage).pipe(
       catchError(error => {
           console.log("Error: ", error);
-          this.notificationService.error(`Error: ${error}`);
+          let err_obj = error.error;
+          let messages = err_obj.message;
+          this.notificationService.error(`Error: ${messages.join()}`);
           throw error;
       }))
   }

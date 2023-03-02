@@ -12,6 +12,8 @@ import { SetTypeFormatDialogComponent } from '@app/features/file-manager/compone
 import { SharedModule } from '@app/shared/shared.module';
 import { ViewFileTypesDialogComponent } from './components/dialogs/view-file-types-dialog/view-file-types-dialog.component';
 import { FileDownloadDirective } from './directives/file-download'
+import { GlobusModule } from '../globus-transfer/globus-transfer.module';
+
 @NgModule({
   declarations: [
     FileListComponent,
@@ -21,9 +23,9 @@ import { FileDownloadDirective } from './directives/file-download'
     ProgressSnackbarComponent,
     ViewFileTypesDialogComponent,
     FileDownloadDirective,
-    SetTypeFormatDialogComponent 
+    SetTypeFormatDialogComponent
   ],
   exports: [FileListComponent],
-  imports: [CommonModule, FileManagerRoutingModule, SharedModule]
+  imports: [CommonModule, FileManagerRoutingModule, SharedModule, GlobusModule]
 })
 export class FileManagerModule {}

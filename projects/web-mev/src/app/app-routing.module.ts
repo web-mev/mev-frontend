@@ -82,6 +82,12 @@ const routes: Routes = [
     path: 'change-password',
     component: PasswordChangeComponent
   },
+  {
+    path: "globus",
+    loadChildren: () =>
+      import('./features/globus-transfer/globus-transfer.module').then(m => m.GlobusModule),
+      canActivate: [AuthGuardService]
+  },
   { 
     path: 'oauth2-redirect/:oauth2_provider',
     component: AuthRedirectComponent

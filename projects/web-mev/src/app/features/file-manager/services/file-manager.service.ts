@@ -71,6 +71,13 @@ export class FileService {
   }
 
   /**
+   * Queries for activate Globus tranfsers.
+   */
+   queryGlobusTransfers(): Observable<any> {
+    return this.httpClient.get(`${this.API_URL}/globus/transfer/`);
+  }
+
+  /**
    * Get file list
    *
    */

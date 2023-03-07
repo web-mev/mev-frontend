@@ -26,19 +26,22 @@ export class PublicDatasetsComponent implements OnInit {
 
   targetFields = ["ethnicity", "gender", "race", "vital_status", "cog_renal_stage", "morphology", "primary_diagnosis", "site_of_resection_or_biopsy", "dbgap_accession_number", "disease_type", "name", "primary_site", "project_id", "tissue_or_organ_of_origin"];
   tcgaFields = ["alcohol_history", "ethnicity", "gender", "race", "vital_status", "vital_status", "ajcc_pathologic_m", "ajcc_pathologic_n", "ajcc_pathologic_t", "ajcc_pathologic_stage", "ajcc_staging_system_edition", "icd_10_code", "morphology", "primary_diagnosis", "prior_malignancy", "prior_treatment", "site_of_resection_or_biopsy", "synchronous_malignancy", "disease_type", "name", "primary_site", "project_id", "tissue_or_organ_of_origin"]; //"ajcc_pathologic_stage",
+  tcgaMicroRnaseqFields = this.tcgaFields.concat(["Center_QC_failed","Item_flagged_DNU","Item_Flagged_Low_Quality"]);
   gtexFields = ["sex", "age_range", "hardy_scale_death", "nucleic_acid_isolation_batch", "expression_batch", "collection_site_code", "tissue"];
   targetRangeFields = ["age_at_diagnosis", "days_to_last_follow_up", "year_of_diagnosis"]; //"days_to_death", "days_to_birth"
   tcgaRangeFields = ["age_at_diagnosis", "age_at_index", "days_to_birth", "days_to_last_follow_up", "year_of_birth", "year_of_diagnosis"];
   gtexRangeFields = ["rna_rin"];
-  advanceFields = ["cog_renal_stage", "dbgap_accession_number", "morphology", "disease_type", "primary_site", "site_of_resection_or_biopsy", "days_to_last_follow_up", "ajcc_pathologic_m", "ajcc_pathologic_n", "ajcc_pathologic_t", "ajcc_staging_system_edition", "alcohol_history", "icd_10_code", "synchronous_malignancy", "age_at_index", "days_to_birth", "year_of_birth", "year_of_diagnosis", "nucleic_acid_isolation_batch", "expression_batch", "collection_site_code", "rna_rin"];
+  advanceFields = ["cog_renal_stage", "dbgap_accession_number", "morphology", "disease_type", "primary_site", "site_of_resection_or_biopsy", "days_to_last_follow_up", "ajcc_pathologic_m", "ajcc_pathologic_n", "ajcc_pathologic_t", "ajcc_staging_system_edition", "alcohol_history", "icd_10_code", "synchronous_malignancy", "age_at_index", "days_to_birth", "year_of_birth", "year_of_diagnosis", "nucleic_acid_isolation_batch", "expression_batch", "collection_site_code", "rna_rin", "Center_QC_failed","Item_flagged_DNU","Item_Flagged_Low_Quality"];
   filterFields = {
     'target-rnaseq': this.targetFields,
     'tcga-rnaseq': this.tcgaFields,
+    'tcga-micrornaseq': this.tcgaMicroRnaseqFields,
     'gtex-rnaseq': this.gtexFields
   }
   filterRangeFields = {
     'target-rnaseq': this.targetRangeFields,
     'tcga-rnaseq': this.tcgaRangeFields,
+    'tcga-micrornaseq': this.tcgaRangeFields,
     'gtex-rnaseq': this.gtexRangeFields
   };
   sliderStorage = {
@@ -127,7 +130,57 @@ export class PublicDatasetsComponent implements OnInit {
         "high": 10,
         "not_reported": true
       },
-    }
+    },
+    'tcga-micrornaseq': {
+      "age_at_diagnosis": {
+        "count": 0,
+        "floor": 5267,
+        "ceil": 32872,
+        "low": 5267,
+        "high": 32872,
+        "not_reported": true
+      },
+      "age_at_index": {
+        "count": 0,
+        "floor": 14,
+        "ceil": 90,
+        "low": 14,
+        "high": 90,
+        "not_reported": true
+      },
+      "days_to_birth": {
+        "count": 0,
+        "floor": -32872,
+        "ceil": -5267,
+        "low": -32872,
+        "high": -5267,
+        "not_reported": true
+      },
+      "days_to_last_follow_up": {
+        "count": 0,
+        "floor": -64,
+        "ceil": 11252,
+        "low": -64,
+        "high": 11252,
+        "not_reported": true
+      },
+      "year_of_birth": {
+        "count": 0,
+        "floor": 1902,
+        "ceil": 1997,
+        "low": 1902,
+        "high": 1997,
+        "not_reported": true
+      },
+      "year_of_diagnosis": {
+        "count": 0,
+        "floor": 1978,
+        "ceil": 2013,
+        "low": 1978,
+        "high": 2013,
+        "not_reported": true
+      }
+    },
   }
 
   storageDataSet = {};

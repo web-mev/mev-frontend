@@ -22,6 +22,7 @@ export class HistogramComponent implements OnChanges {
   histogramDataStorage = {
     'target-rnaseq': {},
     'tcga-rnaseq': {},
+    'tcga-micrornaseq': {},
     'gtex-rnaseq': {}
   }
   countArray = [];

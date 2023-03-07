@@ -151,8 +151,8 @@ export class PublicDatasetsComponent implements OnInit {
 
   ngOnInit(): void { }
 
-  initializeFilterData() {
-    for (let dataset in this.filterFields) {
+  initializeFilterData(activeSets: string[]) {
+    for (let dataset of activeSets) {
       this.createRangeDataStorage(dataset);
       //builds the initial query string
       this.queryStringForFilters = this.getFacetFieldQuery(dataset);

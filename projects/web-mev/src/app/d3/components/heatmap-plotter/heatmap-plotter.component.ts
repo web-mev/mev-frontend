@@ -254,15 +254,19 @@ export class D3HeatmapPlotComponent implements OnInit {
   createHeatmap() {
     this.xAxisArr = [];
     this.categoryToIgnore = [];
-    for (let col in this.resourceData[0].values) {
+
+    // using the first item of resourceData, get the sample/observation names
+    for (let col in this.heatmapData[0].values) {
       this.xAxisArr.push(col);
     }
-    this.numOfRows = this.resourceData.length + 1
+
+    // the number of genes/features:
+    this.numOfRows = this.heatmapData.length + 1
 
     // before doing anything, get rid of anything that may have been there
     this.clearChart();
 
-    if (this.resourceData.length === 0) {
+    if (this.heatmapData.length === 0) {
       this.validPlot = false;
       return
     }
@@ -321,12 +325,15 @@ export class D3HeatmapPlotComponent implements OnInit {
             }
           }
 
-          // set the min/max values to start
+          // set the min/max values to start- these will
+          // be updated as we iterate through the heatmap data
           minVal = d3.min(initVals);
           maxVal = d3.max(initVals);
         }
         for (let [obsId, v] of Object.entries(valueMap)) {
           const val = Number(v);
+
+          // update the min/max values
           if (val < minVal) {
             minVal = val;
           } else if (val > maxVal) {
@@ -497,10 +504,6 @@ export class D3HeatmapPlotComponent implements OnInit {
       .attr('width', outerWidth)
       .attr('height', outerHeight)
       .append('g')
-      .attr(
-        'transform',
-        'translate(50,0)'
-      )
       .style('fill', 'none');
 
     const tooltipOffsetX = this.tooltipOffsetX;
@@ -550,24 +553,6 @@ export class D3HeatmapPlotComponent implements OnInit {
       .on('mouseout', pointTip.hide);
 
     let graphHeight = this.resourceData.length * tileY; //height of actual graph portion only
-
-    svg.append('text')
-      .classed('label', true)
-      .attr('transform', 'rotate(-90)')
-      .attr('y', -20)
-      .attr('x', -(graphHeight) / 2 - this.margin.top)
-      .style('text-anchor', 'middle')
-      .style('fill', 'black')
-      .text("Gene");
-
-    svg
-      .append('text')
-      .classed('label', true)
-      .attr('x', this.finalWidth / 2)
-      .attr('y', this.useAnnotation ? (this.xAxisArr.length <= 25 ? graphHeight + this.margin.top - 30 : graphHeight + this.margin.top + 30) : height + this.margin.top + this.margin.bottom - 10)
-      .style('text-anchor', 'start')
-      .style('fill', 'black')
-      .text("Sample / Observation");
 
     //category overlay
     let tempAnnotations = { ...this.annData }
@@ -657,6 +642,9 @@ export class D3HeatmapPlotComponent implements OnInit {
         }
       }
 
+      let graphWidth = this.xAxisArr.length * xScale.bandwidth(); // gives how wide for just the heatmap
+      let legendPadding = 10; // space between heatmap area and annotations
+
       //just for legends
       let reverseCategoryOptions = this.categoryOptionsArr.slice().reverse();
       for (let index of reverseCategoryOptions) {
@@ -693,8 +681,6 @@ export class D3HeatmapPlotComponent implements OnInit {
               .tickSize(barHeight * 2)
               .tickValues(xTicksCorr);
 
-            let graphWidth = this.xAxisArr.length * xScale.bandwidth()
-            let legendPadding = 10
             var gradientLegend = d3.select("g")
               .append("svg")
               .attr("width", widthGradient)
@@ -780,8 +766,6 @@ export class D3HeatmapPlotComponent implements OnInit {
             .range(colorRange)
             .domain(catOptions)
 
-          let graphWidth = this.xAxisArr.length * xScale.bandwidth()
-          let legendPadding = 10
           // select the svg area
           var CategoryLegend = d3.select("g")
             .append("svg")

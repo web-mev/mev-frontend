@@ -78,6 +78,10 @@
             <tcga-rnaseq-explorer [query]="searchQueryResults"></tcga-rnaseq-explorer>
         </ng-container>
 
+        <ng-container *ngIf="currentDataset === 'tcga-micrornaseq'">
+            <tcga-micrornaseq-explorer [query]="searchQueryResults"></tcga-micrornaseq-explorer>
+        </ng-container>
+
         <ng-container *ngIf="currentDataset === 'target-rnaseq'">
             <target-rnaseq-explorer [query]="searchQueryResults">
             </target-rnaseq-explorer>

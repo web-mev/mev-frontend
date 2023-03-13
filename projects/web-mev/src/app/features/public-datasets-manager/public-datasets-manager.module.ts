@@ -8,6 +8,7 @@ import { TcgaRnaseqComponent } from './components/tcga-rnaseq/tcga-rnaseq.compon
 import { TargetRnaseqComponent } from './components/target-rnaseq/target-rnaseq.component';
 import { GtexRnaseqComponent } from './components/gtex-rnaseq/gtex-rnaseq.component';
 import { GtexComponent } from './components/gtex/gtex.component'
+import { TcgaMicroRnaseqComponent } from './components/tcga-micrornaseq/tcga-micrornaseq.component';
 
 import { SharedModule } from '@app/shared/shared.module';
 import { PublicDatasetsComponent } from './components/public-datasets-container/public-datasets.component'
@@ -23,6 +24,7 @@ import { HistogramComponent } from './components/public-datasets-container/histo
     PublicDatasetsListComponent,
     PublicDatasetCardComponent,
     TcgaRnaseqComponent,
+    TcgaMicroRnaseqComponent,
     TargetRnaseqComponent,
     GtexRnaseqComponent,
     GtexComponent,

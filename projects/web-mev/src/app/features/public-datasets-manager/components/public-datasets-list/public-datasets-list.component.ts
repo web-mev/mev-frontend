@@ -28,13 +28,14 @@ export class PublicDatasetsListComponent implements OnInit {
 
   ngOnInit() {
     this.loadData();
-    this.publicDS.initializeFilterData();
   }
 
   public loadData() {
     this.pdService.getPublicDatasets().subscribe(
       data => {
         this.publicDatasets = data;
+        let activeSets = this.publicDatasets.map(x => x.tag);
+        this.publicDS.initializeFilterData(activeSets);
         this.cdRef.markForCheck();
       }
     );

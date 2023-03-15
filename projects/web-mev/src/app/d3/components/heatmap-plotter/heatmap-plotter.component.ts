@@ -70,6 +70,9 @@ export class D3HeatmapPlotComponent implements OnInit {
 
   annotationPadding;
 
+  featuresLabel = 'genes/features';
+  observationsLabel = 'observations/samples';
+
   windowWidth = 1600;
   windowHeight = 900;
   imageName = 'heatmap'; // file name for downloaded SVG image
@@ -531,7 +534,7 @@ export class D3HeatmapPlotComponent implements OnInit {
     console.log(this.outerWidth, this.outerHeight);
 
     let totalLegendAllocation = this.calculateLegendAllocation(true);
-    if (totalLegendAllocation > this.outerHeight){
+    if (totalLegendAllocation > this.outerHeight) {
       console.log('legend was taller than outerheight- adjust!');
       this.outerHeight = totalLegendAllocation + 10;
     }
@@ -592,7 +595,7 @@ export class D3HeatmapPlotComponent implements OnInit {
     // readjust the total plot area (the SVG wrapper)
     this.outerWidth = heatmapWidth + this.margin.left + this.margin.right;
     this.outerHeight = heatmapHeight + this.margin.top + this.margin.bottom;
-    if (totalLegendAllocation > this.outerHeight){
+    if (totalLegendAllocation > this.outerHeight) {
       console.log('legend was taller than outerheight- adjust!');
       this.outerHeight = totalLegendAllocation + 10;
     }
@@ -728,7 +731,7 @@ export class D3HeatmapPlotComponent implements OnInit {
           // create the common elements for the legends (like title, the "X" close button, etc.)
           catLegend = legendOverlay.append("svg")
             .attr('x', 0)
-            //.attr('y', catYLocation)
+          //.attr('y', catYLocation)
 
           // add the "title" for the category
           legendTitleNode = catLegend.append('text')
@@ -768,7 +771,6 @@ export class D3HeatmapPlotComponent implements OnInit {
           let max = Math.trunc(Math.ceil(Math.max(...this.categoryOptions[index])))
           console.log(`gradient with count=${count}`);
           if (min !== max) {
-            //catOptions = this.categoryOptions[index]
 
             // Build color scale for colored annotation boxes:
             var annotationColorScale = d3.scaleLinear()
@@ -915,21 +917,6 @@ export class D3HeatmapPlotComponent implements OnInit {
           this.categoryToIgnore.push(index.replace(/_/g, " "))
         }
       }
-
-      //let graphWidth = this.xAxisArr.length * xScale.bandwidth(); // gives how wide for just the heatmap
-
-      //just for legends
-      let reverseCategoryOptions = this.categoryOptionsArr.slice().reverse();
-      console.log('RC: ', reverseCategoryOptions);
-
-      if (catYLocation > this.outerHeight) {
-        console.log('Exceeded!!!:', catYLocation, this.outerHeight);
-        this.outerHeight = catYLocation + 100;
-        this.yLocationLengend = catYLocation;
-        //this.createHeatmap();
-      } else {
-        console.log('did not exceed:', catYLocation, this.outerHeight);
-      }
     }
 
     selection
@@ -941,65 +928,58 @@ export class D3HeatmapPlotComponent implements OnInit {
 
       if (this.showObsLabels) {
         if (obsAxis === 'x') {
-          if (this.xAxisArr.length <= 25) {
+          if (tileX > this.tickLabelFontSize) {
             axesContainer.append('g')
               .call(d3.axisBottom(xScale))
               .attr('transform', 'translate(0,' + (this.margin.top + heatmapHeight) + ')')
               .selectAll('text')
-              .attr("y", 6)
+              .attr("y", -2)
               .attr("x", -10)
-              .attr("transform", "rotate(-45)")
+              .attr("transform", "rotate(-90)")
               .style("text-anchor", "end")
               .style("font-size", `${this.tickLabelFontSize}px`)
           } else {
-            let message = "There are too many observations to clearly show labels. Disabling.";
-            this.notificationService.warn(message, 5000);
-            this.showObsLabels = false;
-            this.f['imgObsLabels'].setValue(false);
-
+            this.textTooSmallWarning(this.observationsLabel);
           }
 
         } else {
-          if (this.resourceData.length <= 25) {
+          if (tileY > this.tickLabelFontSize) {
             axesContainer.append('g')
               .call(d3.axisLeft(yScale))
               .attr('transform', 'translate(' + this.margin.left + ', 0 )')
               .style("font-size", `${this.tickLabelFontSize}px`);
+          } else {
+            this.textTooSmallWarning(this.observationsLabel);
           }
         }
-
       }
 
       if (this.showFeatureLabels) {
-        if (this.heatmapData.length > 25) {
-          console.log('TOO MANY!!!!!!');
-          let message = "There are too many genes/features to clearly show labels. Disabling.";
-          this.notificationService.warn(message, 5000);
-          this.showFeatureLabels = false;
-          this.f['imgFeatureLabels'].setValue(false);
-        }
-        else {
-          if (featureAxis === 'x') {
-            if (this.xAxisArr.length <= 25) {
-              axesContainer.append('g')
-                .call(d3.axisBottom(xScale))
-                .attr('transform', 'translate(0,' + (this.margin.top + heatmapHeight) + ')')
-                .selectAll('text')
-                .attr("y", -4)
-                .attr("x", 9)
-                .attr("transform", "rotate(90)")
-                .style("text-anchor", "start")
-                .style("font-size", `${this.tickLabelFontSize}px`)
-            }
+        if (featureAxis === 'x') {
+          if (tileX > this.tickLabelFontSize) {
+            axesContainer.append('g')
+              .call(d3.axisBottom(xScale))
+              .attr('transform', 'translate(0,' + (this.margin.top + heatmapHeight) + ')')
+              .selectAll('text')
+              .attr("y", -2)
+              .attr("x", -10)
+              .attr("transform", "rotate(-90)")
+              .style("text-anchor", "end")
+              .style("font-size", `${this.tickLabelFontSize}px`)
           } else {
-            if (this.resourceData.length <= 25) {
-              axesContainer.append('g')
-                .call(d3.axisLeft(yScale))
-                .attr('transform', 'translate(' + this.margin.left + ', 0 )')
-                .style("font-size", `${this.tickLabelFontSize}px`);
-            }
+            this.textTooSmallWarning(this.featuresLabel);
+          }
+        } else { //if features are on the vertical axis
+          if (tileY > this.tickLabelFontSize) {
+            axesContainer.append('g')
+              .call(d3.axisLeft(yScale))
+              .attr('transform', 'translate(' + this.margin.left + ', 0 )')
+              .style("font-size", `${this.tickLabelFontSize}px`);
+          }else {
+            this.textTooSmallWarning(this.featuresLabel);
           }
         }
+
       }
     }
 
@@ -1155,9 +1135,23 @@ export class D3HeatmapPlotComponent implements OnInit {
     return categoryCount;
   }
 
+  textTooSmallWarning(label) {
+    let message = `There are too many ${label} to clearly show labels. Disabling.`;
+    this.notificationService.warn(message, 5000);
+    if (label === this.featuresLabel){
+      this.showFeatureLabels = false;
+      this.f['imgFeatureLabels'].setValue(false);
+    } else {
+      this.showObsLabels = false;
+      this.f['imgObsLabels'].setValue(false);
+    }
+  }
+
   sendAlertMessage() {
+    console.log('in send alert...categoryToIgnore=', this.categoryToIgnore);
     let ignoreMessage = '';
     for (let i = 0; i < this.categoryToIgnore.length - 1; i++) {
+      console.log('in send alert, ', this.categoryToIgnore[i]);
       ignoreMessage += this.categoryToIgnore[i] + ", "
     }
     let lastIndex = this.categoryToIgnore.length - 1;

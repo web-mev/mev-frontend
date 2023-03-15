@@ -80,7 +80,7 @@ export class D3HeatmapPlotComponent implements OnInit {
   outerHeight;
   outerWidth;
   targetTileSize = 20; // a reasonable default tile size to aim for
-  minTileSize = 1; // originally set to 5
+  minTileSize = 10; // originally set to 5
   tooltipOffsetX = 10; // to position the tooltip on the right side of the triggering element
   showObsLabels = true; //whether to label the obs
   showFeatureLabels = false; //whether to label the features
@@ -763,21 +763,111 @@ export class D3HeatmapPlotComponent implements OnInit {
             .on("mouseout", function (d) {
               d3.select(this).style("fill", "rgba(0,0,0,.5)");
             });
-        }
+        
 
-        //If all values are numbers, will use a gradient
-        if (isNumber && !this.removeOverlayArray.includes(index)) {
-          let min = Math.trunc(Math.floor(Math.min(...this.categoryOptions[index])))
-          let max = Math.trunc(Math.ceil(Math.max(...this.categoryOptions[index])))
-          console.log(`gradient with count=${count}`);
-          if (min !== max) {
+          //If all values are numbers, will use a gradient
+          if (isNumber && !this.removeOverlayArray.includes(index)) {
+            let min = Math.trunc(Math.floor(Math.min(...this.categoryOptions[index])))
+            let max = Math.trunc(Math.ceil(Math.max(...this.categoryOptions[index])))
+            console.log(`gradient with count=${count}`);
+            if (min !== max) {
 
-            // Build color scale for colored annotation boxes:
-            var annotationColorScale = d3.scaleLinear()
-              .range([this.gradientMinColor, this.gradientMaxColor])
-              .domain([min, max])
+              // Build color scale for colored annotation boxes:
+              var annotationColorScale = d3.scaleLinear()
+                .range([this.gradientMinColor, this.gradientMaxColor])
+                .domain([min, max])
 
-            // add the annotation tile which aligns with the heatmap
+              // add the annotation tile which aligns with the heatmap
+              if (tempAnnotations[orderedObservations[0]] !== undefined) {
+                this.addAnnotationOverlayTile(
+                  annotationOverlay,
+                  pointTipOverlay,
+                  tempAnnotations,
+                  index,
+                  orderedObservations,
+                  xScale,
+                  yScale,
+                  annotationColorScale,
+                  count
+                );
+              }
+              count++;
+
+              // now add the legend for this category:
+
+              // add an info tooltip to explain the colorbar
+              catLegend.append('text')
+                .attr('x', legendTitleNode.node().getComputedTextLength() + 5)
+                .attr('y', 15)
+                .attr("class", "closePointer")
+                .style('fill', 'rgba(0,0,0,.7)')
+                .style('font-size', '10px')
+                .style('font-weight', 'bold')
+                .text("ⓘ")
+                .on('mouseover', function (mouseEvent: any, d) {
+                  legendInfoTip.show(mouseEvent, d, this);
+                  legendInfoTip.style('left', mouseEvent.x + tooltipOffsetX + 'px');
+                })
+                .on('mouseout', legendInfoTip.hide);
+
+              // Setup a linear color gradient for the legend:
+              let gradientColorData = [
+                { "color": this.gradientMinColor, "value": min },
+                { "color": this.gradientMaxColor, "value": max }
+              ];
+              let gradientRange = [min, max];
+              let defs = catLegend.append("defs");
+              let linearGradient = defs
+                .append("linearGradient")
+                .attr("id", "myGradient");
+
+              linearGradient.selectAll("stop")
+                .data(gradientColorData)
+                .enter().append("stop")
+                .attr("offset", d => ((d.value - gradientRange[0]) / (gradientRange[1] - gradientRange[0]) * 100) + "%")
+                .attr("stop-color", d => d.color);
+
+              let gradientColorbarGroup = catLegend.append("g")
+                .attr("transform", `translate(${this.gradientBarPadding + 10}, 30)`);
+
+              let innerWidth = this.annotationLegendMinWidth - (this.gradientBarPadding * 2);
+              gradientColorbarGroup.append("rect")
+                .attr("width", innerWidth - 100)
+                .attr("height", this.gradientBarHeight)
+                .style("fill", "url(#myGradient)");
+
+              let gradientScale = d3.scaleLinear()
+                .range([0, innerWidth - 100])
+                .domain(gradientRange);
+              let xAxisGradient = d3.axisBottom(gradientScale)
+                .tickSize(this.gradientBarHeight * 2)
+                .tickValues(gradientRange);
+
+              gradientColorbarGroup.append("g")
+                .call(xAxisGradient)
+                .select(".domain")
+
+              catYLocation -= this.gradientLegendTypeHeight;
+              catLegend.attr('y', catYLocation)
+
+            } else {
+              console.log('triggered for min=max')
+              this.categoryToIgnore.push(index.replace(/_/g, " "))
+            }
+
+          }
+          //For use if values are categorical
+          else if (this.categoryOptions[index].length <= this.maximumCategoricalLevels
+            && this.categoryOptions[index].length > 1
+            && !this.removeOverlayArray.includes(index)) {
+
+            catOptions = this.categoryOptions[index]
+            let ordinalColorScale = d3.scaleOrdinal()
+              .range(colorRange)
+              .domain(catOptions)
+
+            console.log(`category with count=${count}`);
+
             if (tempAnnotations[orderedObservations[0]] !== undefined) {
               this.addAnnotationOverlayTile(
                 annotationOverlay,
@@ -787,134 +877,52 @@ export class D3HeatmapPlotComponent implements OnInit {
                 orderedObservations,
                 xScale,
                 yScale,
-                annotationColorScale,
+                ordinalColorScale,
                 count
               );
             }
             count++;
 
-            // now add the legend for this category:
-
-            // add an info tooltip to explain the colorbar
-            catLegend.append('text')
-              .attr('x', legendTitleNode.node().getComputedTextLength() + 5)
-              .attr('y', 15)
-              .attr("class", "closePointer")
-              .style('fill', 'rgba(0,0,0,.7)')
-              .style('font-size', '10px')
-              .style('font-weight', 'bold')
-              .text("ⓘ")
-              .on('mouseover', function (mouseEvent: any, d) {
-                legendInfoTip.show(mouseEvent, d, this);
-                legendInfoTip.style('left', mouseEvent.x + tooltipOffsetX + 'px');
+            // Add legend for this categorical display
+            catYLocation -= (catOptions.length * this.categoricalLegendMarkerSpacing) + 20 //height of each row and space between the legends 
+            catLegend
+              .attr('y', catYLocation)
+            catLegend.selectAll("mydots")
+              .data(catOptions)
+              .enter()
+              .append("circle")
+              .attr("cx", 10)
+              .attr("cy", (d, i) => { return this.categoricalLegendMarkerOffset + i * 20 })
+              .attr("r", 5)
+              .style("fill", d => {
+                return ordinalColorScale(d)
               })
-              .on('mouseout', legendInfoTip.hide);
 
-            // Setup a linear color gradient for the legend:
-            let gradientColorData = [
-              { "color": this.gradientMinColor, "value": min },
-              { "color": this.gradientMaxColor, "value": max }
-            ];
-            let gradientRange = [min, max];
-            let defs = catLegend.append("defs");
-            let linearGradient = defs
-              .append("linearGradient")
-              .attr("id", "myGradient");
-
-            linearGradient.selectAll("stop")
-              .data(gradientColorData)
-              .enter().append("stop")
-              .attr("offset", d => ((d.value - gradientRange[0]) / (gradientRange[1] - gradientRange[0]) * 100) + "%")
-              .attr("stop-color", d => d.color);
-
-            let gradientColorbarGroup = catLegend.append("g")
-              .attr("transform", `translate(${this.gradientBarPadding + 10}, 30)`);
-
-            let innerWidth = this.annotationLegendMinWidth - (this.gradientBarPadding * 2);
-            gradientColorbarGroup.append("rect")
-              .attr("width", innerWidth - 100)
-              .attr("height", this.gradientBarHeight)
-              .style("fill", "url(#myGradient)");
-
-            let gradientScale = d3.scaleLinear()
-              .range([0, innerWidth - 100])
-              .domain(gradientRange);
-            let xAxisGradient = d3.axisBottom(gradientScale)
-              .tickSize(this.gradientBarHeight * 2)
-              .tickValues(gradientRange);
-
-            gradientColorbarGroup.append("g")
-              .call(xAxisGradient)
-              .select(".domain")
-
-            catYLocation -= this.gradientLegendTypeHeight;
-            catLegend.attr('y', catYLocation)
-
-          } else {
+            // Add one dot in the legend for each name.
+            catLegend.selectAll("mylabels")
+              .data(catOptions)
+              .enter()
+              .append("text")
+              .attr("x", 20)
+              .attr("y", (d, i) => { return this.categoricalLegendMarkerOffset + i * 20 })
+              .style("fill", "rgba(0,0,0,.7)")
+              .style('font-size', '8px')
+              .text(function (d) {
+                return d
+              })
+              .attr("text-anchor", "left")
+              .style("alignment-baseline", "middle")
+          }
+          //categories not to display
+          else if (this.categoryOptions[index].length > this.maximumCategoricalLevels || this.categoryOptions[index].length <= 1) {
+            let exceededMaxCats = this.categoryOptions[index].length > this.maximumCategoricalLevels;
+            let fewerThanOne = this.categoryOptions[index].length <= 1;
+            console.log('about to add to ignore...', exceededMaxCats, fewerThanOne);
+            console.log(this.categoryOptions[index])
+            console.log('isNumber: ', isNumber);
+            console.log('rm array:', this.removeOverlayArray);
             this.categoryToIgnore.push(index.replace(/_/g, " "))
           }
-
-        }
-        //For use if values are categorical
-        else if (this.categoryOptions[index].length <= this.maximumCategoricalLevels
-          && this.categoryOptions[index].length > 1
-          && !this.removeOverlayArray.includes(index)) {
-
-          catOptions = this.categoryOptions[index]
-          let ordinalColorScale = d3.scaleOrdinal()
-            .range(colorRange)
-            .domain(catOptions)
-
-          console.log(`category with count=${count}`);
-
-          if (tempAnnotations[orderedObservations[0]] !== undefined) {
-            this.addAnnotationOverlayTile(
-              annotationOverlay,
-              pointTipOverlay,
-              tempAnnotations,
-              index,
-              orderedObservations,
-              xScale,
-              yScale,
-              ordinalColorScale,
-              count
-            );
-          }
-          count++;
-
-          // Add legend for this categorical display
-          catYLocation -= (catOptions.length * this.categoricalLegendMarkerSpacing) + 20 //height of each row and space between the legends 
-          catLegend
-            .attr('y', catYLocation)
-          catLegend.selectAll("mydots")
-            .data(catOptions)
-            .enter()
-            .append("circle")
-            .attr("cx", 10)
-            .attr("cy", (d, i) => { return this.categoricalLegendMarkerOffset + i * 20 })
-            .attr("r", 5)
-            .style("fill", d => {
-              return ordinalColorScale(d)
-            })
-
-          // Add one dot in the legend for each name.
-          catLegend.selectAll("mylabels")
-            .data(catOptions)
-            .enter()
-            .append("text")
-            .attr("x", 20)
-            .attr("y", (d, i) => { return this.categoricalLegendMarkerOffset + i * 20 })
-            .style("fill", "rgba(0,0,0,.7)")
-            .style('font-size', '8px')
-            .text(function (d) {
-              return d
-            })
-            .attr("text-anchor", "left")
-            .style("alignment-baseline", "middle")
-        }
-        //categories not to display
-        else if (this.categoryOptions[index].length > this.maximumCategoricalLevels || this.categoryOptions[index].length <= 1) {
-          this.categoryToIgnore.push(index.replace(/_/g, " "))
         }
       }
     }
@@ -928,56 +936,17 @@ export class D3HeatmapPlotComponent implements OnInit {
 
       if (this.showObsLabels) {
         if (obsAxis === 'x') {
-          if (tileX > this.tickLabelFontSize) {
-            axesContainer.append('g')
-              .call(d3.axisBottom(xScale))
-              .attr('transform', 'translate(0,' + (this.margin.top + heatmapHeight) + ')')
-              .selectAll('text')
-              .attr("y", -2)
-              .attr("x", -10)
-              .attr("transform", "rotate(-90)")
-              .style("text-anchor", "end")
-              .style("font-size", `${this.tickLabelFontSize}px`)
-          } else {
-            this.textTooSmallWarning(this.observationsLabel);
-          }
-
+          this.addXAxisLabels(axesContainer, heatmapHeight, xScale, tileX);
         } else {
-          if (tileY > this.tickLabelFontSize) {
-            axesContainer.append('g')
-              .call(d3.axisLeft(yScale))
-              .attr('transform', 'translate(' + this.margin.left + ', 0 )')
-              .style("font-size", `${this.tickLabelFontSize}px`);
-          } else {
-            this.textTooSmallWarning(this.observationsLabel);
-          }
+          this.addYAxisLabels(axesContainer, yScale, tileY);
         }
       }
 
       if (this.showFeatureLabels) {
         if (featureAxis === 'x') {
-          if (tileX > this.tickLabelFontSize) {
-            axesContainer.append('g')
-              .call(d3.axisBottom(xScale))
-              .attr('transform', 'translate(0,' + (this.margin.top + heatmapHeight) + ')')
-              .selectAll('text')
-              .attr("y", -2)
-              .attr("x", -10)
-              .attr("transform", "rotate(-90)")
-              .style("text-anchor", "end")
-              .style("font-size", `${this.tickLabelFontSize}px`)
-          } else {
-            this.textTooSmallWarning(this.featuresLabel);
-          }
-        } else { //if features are on the vertical axis
-          if (tileY > this.tickLabelFontSize) {
-            axesContainer.append('g')
-              .call(d3.axisLeft(yScale))
-              .attr('transform', 'translate(' + this.margin.left + ', 0 )')
-              .style("font-size", `${this.tickLabelFontSize}px`);
-          }else {
-            this.textTooSmallWarning(this.featuresLabel);
-          }
+          this.addXAxisLabels(axesContainer, heatmapHeight, xScale, tileX);
+        } else {
+          this.addYAxisLabels(axesContainer, yScale, tileY);
         }
 
       }
@@ -1144,6 +1113,33 @@ export class D3HeatmapPlotComponent implements OnInit {
     } else {
       this.showObsLabels = false;
       this.f['imgObsLabels'].setValue(false);
+    }
+  }
+
+  addXAxisLabels(axesContainer, heatmapHeight, xScale, tileX){
+    if (tileX > this.tickLabelFontSize) {
+      axesContainer.append('g')
+        .call(d3.axisBottom(xScale))
+        .attr('transform', 'translate(0,' + (this.margin.top + heatmapHeight) + ')')
+        .selectAll('text')
+        .attr("y", -2)
+        .attr("x", -10)
+        .attr("transform", "rotate(-90)")
+        .style("text-anchor", "end")
+        .style("font-size", `${this.tickLabelFontSize}px`)
+    } else {
+      this.textTooSmallWarning(this.observationsLabel);
+    }
+  }
+
+  addYAxisLabels(axesContainer, yScale, tileY){
+    if (tileY > this.tickLabelFontSize) {
+      axesContainer.append('g')
+        .call(d3.axisLeft(yScale))
+        .attr('transform', 'translate(' + this.margin.left + ', 0 )')
+        .style("font-size", `${this.tickLabelFontSize}px`);
+    } else {
+      this.textTooSmallWarning(this.observationsLabel);
     }
   }
 

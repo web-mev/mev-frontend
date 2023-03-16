@@ -71,6 +71,7 @@ export class D3HeatmapPlotComponent implements OnInit {
   gradientBarPadding = 10;
 
   heightCategory = 12; //height of individual category overlay
+  annotationOverlayPadding = 20;
 
   // a variable which holds the size of
   // the space taken up by the annotation tiles.
@@ -436,11 +437,15 @@ export class D3HeatmapPlotComponent implements OnInit {
       return
     }
 
+    console.log('removed: ', this.removeOverlayArray);
+    console.log('ignorecategory: ', this.categoryToIgnore);
     let categoryCount = this.setAnnotationData();
+    console.log('category count=', categoryCount)
     // this sets how much extra space we allocate for showing the
     // annotation overlays. Note that if we are hiding the annotations
     // then categoryCount = 0
-    this.annotationPadding = categoryCount * this.heightCategory + 20;
+    this.annotationPadding = categoryCount * this.heightCategory + (categoryCount > 0 ? this.annotationOverlayPadding: 0);
+    console.log(this.annotationPadding)
 
     let annotationLegendWidth = this.hideOverlay ? 0 : this.annotationLegendMinWidth;
 
@@ -473,17 +478,18 @@ export class D3HeatmapPlotComponent implements OnInit {
       this.orientation = this.naturalOrientation;
     }
 
+    // set the value in the form so it's consistent with 
+    // the orientation of the heatmap itself
     this.f['imgOrientation'].setValue(this.orientation);
 
     if (this.orientation === this.samplesInColumnsKey) {
 
-      //this.orientation = this.samplesInColumnsKey;
       this.margin.top = this.annotationPadding;
 
       // using the font size and longest labs, give a rough size for the 
       // room necessary to show those labels
       if (this.showFeatureLabels) {
-        this.margin.left = this.tickLabelFontSize * longestFeatureName;
+        this.margin.left = 0.9*this.tickLabelFontSize * longestFeatureName;
       }
       if (this.showObsLabels) {
         this.margin.bottom = this.tickLabelFontSize * longestObsName;
@@ -522,7 +528,7 @@ export class D3HeatmapPlotComponent implements OnInit {
       this.outerHeight = tmpTileHeight * allFeatures.length + this.margin.top + this.margin.bottom;
 
     } else {
-      this.orientation = this.samplesInRowsKey;
+
       if (this.showFeatureLabels) {
         this.margin.bottom = this.tickLabelFontSize * longestFeatureName;
       }
@@ -534,28 +540,43 @@ export class D3HeatmapPlotComponent implements OnInit {
       // - annotation legend (optional)
       let obsLabelWidth = 0;
       if (this.showObsLabels) {
-        obsLabelWidth = this.tickLabelFontSize * longestObsName;
+        obsLabelWidth = 0.9*this.tickLabelFontSize * longestObsName;
       }
-      this.margin.left = this.annotationPadding + obsLabelWidth;
+      console.log('about to set left margin with ', this.annotationPadding, obsLabelWidth);
 
-      // the available width after taking the "extra" stuff into account:
-      let tmpHeatmapWidth = this.outerWidth - annotationLegendWidth - this.margin.left;
+      // for height, we can afford to allow a vertical expansion. If
+      // the tiles are rather tall, we shrink them. If they're too small,
+      // we simply set them to the minimum size
       let tmpHeatmapHeight = this.outerHeight - this.margin.bottom;
-      let tmpTileWidth = tmpHeatmapWidth / allFeatures.length;
       let tmpTileHeight = tmpHeatmapHeight / orderedObservations.length;
-      if (tmpTileWidth > this.targetTileSize) {
-        tmpTileWidth = this.targetTileSize;
-      }
       if (tmpTileHeight > this.targetTileSize) {
         tmpTileHeight = this.targetTileSize;
       } else if (tmpTileHeight < this.minTileSize) {
         tmpTileHeight = this.minTileSize;
       }
+
+      this.margin.left = this.annotationPadding;
+      // now that we have a rough tile height, can we accommodate the labels (if requested)?
+      console.log('diems: ', this.showObsLabels, tmpTileHeight, this.tickLabelFontSize)
+      if (this.showObsLabels && (tmpTileHeight > this.tickLabelFontSize)){
+        this.margin.left += obsLabelWidth;
+      } 
+
+      // the available width after taking the "extra" stuff into account:
+      let tmpHeatmapWidth = this.outerWidth - annotationLegendWidth - this.margin.left;
+      let tmpTileWidth = tmpHeatmapWidth / allFeatures.length;
+      if (tmpTileWidth > this.targetTileSize) {
+        tmpTileWidth = this.targetTileSize;
+      }
+
       // now, given the tile height, adjust the this.outerHeight, since we
       // can afford to scroll
       this.outerHeight = tmpTileHeight * orderedObservations.length + this.margin.top + this.margin.bottom;
       this.margin.right = this.outerWidth - tmpTileWidth * allFeatures.length - this.margin.left;
     }
+
+    console.log('after preallocation, margins=', this.margin);
+    console.log('outerwidth=', this.outerWidth);
 
     let totalLegendAllocation = this.calculateLegendAllocation(true);
     if (totalLegendAllocation > this.outerHeight) {
@@ -563,6 +584,7 @@ export class D3HeatmapPlotComponent implements OnInit {
     }
     let heatmapWidth = this.outerWidth - this.margin.left - this.margin.right;
     let heatmapHeight = this.outerHeight - this.margin.top - this.margin.bottom;
+    console.log('after preallocation, width=', heatmapWidth);
 
     let pseudocount = 0;
     if (this.logScale) {
@@ -606,6 +628,7 @@ export class D3HeatmapPlotComponent implements OnInit {
     }
     heatmapWidth = tileX * xDomain.length;
     heatmapHeight = tileY * yDomain.length;
+    console.log('after tiles set:', heatmapWidth);
 
     // reset the scales to the final widths/height so everything lines up well
     xScale = this.makeScale(xDomain, [this.margin.left, this.margin.left + heatmapWidth]);
@@ -733,9 +756,10 @@ export class D3HeatmapPlotComponent implements OnInit {
 
       // this holds the legend for the annotations
       let legendOverlay = svg.append('g')
-        .attr("transform", `translate(${heatmapWidth + this.margin.left + legendPadding + 20}, 0)`);
+        .attr("transform", `translate(${heatmapWidth + this.margin.left + legendPadding}, 0)`);
 
       // iterate through the annotation categories, adding the visuals and legend
+      console.log('this.categoryOptionsArr: ', this.categoryOptionsArr)
       for (let numericalCatIndex in this.categoryOptionsArr) {
         let index = this.categoryOptionsArr[numericalCatIndex];
         let isNumber = this.isNumericScale(this.categoryOptions[index]);
@@ -777,51 +801,60 @@ export class D3HeatmapPlotComponent implements OnInit {
               d3.select(this).style("fill", "rgba(0,0,0,.5)");
             });
         
-
+          if (index === 'days_to_diagnosis'){
+          console.log(`For ${index}, isNumber=${isNumber}`)
+          }
           //If all values are numbers, will use a gradient
           if (isNumber && !this.removeOverlayArray.includes(index)) {
             let min = Math.trunc(Math.floor(Math.min(...this.categoryOptions[index])))
             let max = Math.trunc(Math.ceil(Math.max(...this.categoryOptions[index])))
-            if (min !== max) {
+            if (index === 'days_to_diagnosis'){
+              console.log('min and max:', min, max)
+            }
 
+            if (min !== max){
               // Build color scale for colored annotation boxes:
               var annotationColorScale = d3.scaleLinear()
                 .range([this.gradientMinColor, this.gradientMaxColor])
                 .domain([min, max])
+            } else {
+              var annotationColorScale = (x) => "rgba(0,0,0,0.5)" 
+            }
 
-              // add the annotation tile which aligns with the heatmap
-              if (tempAnnotations[orderedObservations[0]] !== undefined) {
-                this.addAnnotationOverlayTile(
-                  annotationOverlay,
-                  pointTipOverlay,
-                  tempAnnotations,
-                  index,
-                  orderedObservations,
-                  xScale,
-                  yScale,
-                  annotationColorScale,
-                  count
-                );
-              }
-              count++;
+            // add the annotation tile which aligns with the heatmap
+            if (tempAnnotations[orderedObservations[0]] !== undefined) {
+              this.addAnnotationOverlayTile(
+                annotationOverlay,
+                pointTipOverlay,
+                tempAnnotations,
+                index,
+                orderedObservations,
+                xScale,
+                yScale,
+                annotationColorScale,
+                count
+              );
+            }
+            count++;
 
-              // now add the legend for this category:
+            // now add the legend for this category:
 
-              // add an info tooltip to explain the colorbar
-              catLegend.append('text')
-                .attr('x', legendTitleNode.node().getComputedTextLength() + 5)
-                .attr('y', 15)
-                .attr("class", "closePointer")
-                .style('fill', 'rgba(0,0,0,.7)')
-                .style('font-size', '10px')
-                .style('font-weight', 'bold')
-                .text("ⓘ")
-                .on('mouseover', function (mouseEvent: any, d) {
-                  legendInfoTip.show(mouseEvent, d, this);
-                  legendInfoTip.style('left', mouseEvent.x + tooltipOffsetX + 'px');
-                })
-                .on('mouseout', legendInfoTip.hide);
+            // add an info tooltip to explain the colorbar
+            catLegend.append('text')
+              .attr('x', legendTitleNode.node().getComputedTextLength() + 5)
+              .attr('y', 15)
+              .attr("class", "closePointer")
+              .style('fill', 'rgba(0,0,0,.7)')
+              .style('font-size', '10px')
+              .style('font-weight', 'bold')
+              .text("ⓘ")
+              .on('mouseover', function (mouseEvent: any, d) {
+                legendInfoTip.show(mouseEvent, d, this);
+                legendInfoTip.style('left', mouseEvent.x + tooltipOffsetX + 'px');
+              })
+              .on('mouseout', legendInfoTip.hide);
 
+            if (min !== max ){
               // Setup a linear color gradient for the legend:
               let gradientColorData = [
                 { "color": this.gradientMinColor, "value": min },
@@ -858,14 +891,25 @@ export class D3HeatmapPlotComponent implements OnInit {
               gradientColorbarGroup.append("g")
                 .call(xAxisGradient)
                 .select(".domain")
-
-              catYLocation -= this.gradientLegendTypeHeight;
-              catLegend.attr('y', catYLocation)
-
             } else {
-              this.categoryToIgnore.push(index.replace(/_/g, " "))
+              let gradientColorbarGroup = catLegend.append("g")
+              .attr("transform", `translate(${this.gradientBarPadding + 10}, 30)`);
+              let innerWidth = this.annotationLegendMinWidth - (this.gradientBarPadding * 2);
+              gradientColorbarGroup.append("rect")
+                .attr("width", innerWidth - 100)
+                .attr("height", this.gradientBarHeight)
+                .style("fill", "rgba(0,0,0,0.5");
+              gradientColorbarGroup.append("text")
+                .attr("x", 0.5*(innerWidth - 100))
+                .attr("y", 20)
+                .style("fill", "rgba(0,0,0,.7)")
+                .style('font-size', '8px')
+                .text(`(All values = ${min})`)
+                .attr("text-anchor", "middle")
+                .style("alignment-baseline", "middle")
             }
-
+            catYLocation -= this.gradientLegendTypeHeight;
+            catLegend.attr('y', catYLocation)
           }
           //For use if values are categorical
           else if (this.categoryOptions[index].length <= this.maximumCategoricalLevels
@@ -926,6 +970,9 @@ export class D3HeatmapPlotComponent implements OnInit {
           else if (this.categoryOptions[index].length > this.maximumCategoricalLevels || this.categoryOptions[index].length <= 1) {
             this.categoryToIgnore.push(index.replace(/_/g, " "));
             catLegend.remove(); // we had created a "placeholder" title, etc. so we need to remove it.
+          }
+          else {
+            console.log('Im here');
           }
         }
       }
@@ -1000,7 +1047,8 @@ export class D3HeatmapPlotComponent implements OnInit {
         }
         // if we are orienting samples in rows, the annotations
         // are on the left side
-        return this.annotationPadding - count * this.heightCategory
+
+        return this.annotationPadding -this.annotationOverlayPadding- (count+1) * this.heightCategory
       })
       .attr("y", d => {
         if (this.orientation === this.samplesInColumnsKey) {
@@ -1100,7 +1148,9 @@ export class D3HeatmapPlotComponent implements OnInit {
         categoryCount++;
       }
     }
-    return categoryCount;
+
+    // acount for any categories that were removed
+    return categoryCount - this.removeOverlayArray.length;
   }
 
   textTooSmallWarning(label) {

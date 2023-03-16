@@ -36,9 +36,11 @@ export class D3HeatmapPlotComponent implements OnInit {
   plotReady = false;
   tilesTooSmall = false;
   validPlot = false;
-  warnMsg = '';
   imgAdjustForm: FormGroup;
   panelOpenState = false;
+
+  windowWidth;
+  windowHeight;
 
   // heatmap settings
   tickLabelFontSize = 8;
@@ -68,13 +70,17 @@ export class D3HeatmapPlotComponent implements OnInit {
   gradientBarHeight = 8;
   gradientBarPadding = 10;
 
+  heightCategory = 12; //height of individual category overlay
+
+  // a variable which holds the size of
+  // the space taken up by the annotation tiles.
+  // basically N * heightCategory where N is the
+  // number of annotation covariates
   annotationPadding;
 
   featuresLabel = 'genes/features';
   observationsLabel = 'observations/samples';
 
-  windowWidth = 1600;
-  windowHeight = 900;
   imageName = 'heatmap'; // file name for downloaded SVG image
   precision = 2;
   outerHeight;
@@ -85,25 +91,15 @@ export class D3HeatmapPlotComponent implements OnInit {
   showObsLabels = true; //whether to label the obs
   showFeatureLabels = false; //whether to label the features
   logScale = false;
-  margin;
   categoryOptions = {};
   categoryOptionsArr = [];
-  marginAnnotation = { top: 50, right: 200, bottom: 50, left: 100 }; // chart margins for annotations included
-  marginMain = { top: 0, right: 0, bottom: 0, left: 0 }; // chart margins
-  heightCategory = 12; //height of individual category overlay
+  margin;
   containerId = '#heatmap';
   // for common reference when determining the orientation of the heatmap
   samplesInColumnsKey = '__SIC__';
-  samplesInColumnsText = 'Samples/observations in columns';
   samplesInRowsKey = '__SIR__';
-  samplesInRowsText = 'Samples/observations in rows';
   squareTiles = false; //if true, then the tiles will be squares
-  orientationOptions = [
-    { label: this.samplesInColumnsText, key: this.samplesInColumnsKey },
-    { label: this.samplesInRowsText, key: this.samplesInRowsKey },
-  ];
   orientation;
-
 
   colormapOptions = {
     'Brown-blue-green': d3.interpolateBrBG,
@@ -121,8 +117,6 @@ export class D3HeatmapPlotComponent implements OnInit {
   annData = {};
   categoryToIgnore = [];
   removeOverlayArray = [];
-  xAxisArr = [];
-  yLocationLengend = 0;
   hideOverlay = false;
 
   constructor(
@@ -135,7 +129,7 @@ export class D3HeatmapPlotComponent implements OnInit {
     this.windowWidth = window.innerWidth - 500;
     this.windowHeight = window.innerHeight
 
-    this.margin = this.marginMain;
+    //this.margin = this.marginMain;
 
     this.customObservationSets = this.metadataService.getCustomObservationSets();
 
@@ -147,19 +141,17 @@ export class D3HeatmapPlotComponent implements OnInit {
       'colormaps': [this.defaultColormap, ''],
     })
 
-    this.generateHeatmap();
+    this.generateHeatmap(true);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.margin = this.useAnnotation ? this.marginAnnotation : this.marginMain;
     this.heatmapData = this.resourceData;
-
-    this.generateHeatmap()
+    this.generateHeatmap(true);
   }
 
-  generateHeatmap() {
+  generateHeatmap(fullRefresh) {
     //reset variables when changing resources
-    if (this.hasResourceChanged) {
+    if (this.hasResourceChanged && fullRefresh) {
       this.removeOverlayArray = [];
       this.annData = {};
     }
@@ -220,17 +212,7 @@ export class D3HeatmapPlotComponent implements OnInit {
     this.panelOpenState = false;
     this.plotOptionsPanel.close();
 
-    if (this.imgAdjustForm.value.imgOrientation === this.samplesInRowsKey) {
-      this.hideOverlay = true;
-      this.margin.left = 200;
-      this.margin.right = 100;
-    } else {
-      this.hideOverlay = false;
-      this.margin.left = 100;
-      this.margin.right = 200;
-    }
-
-    this.generateHeatmap();
+    this.generateHeatmap(false);
   }
 
   makeScale(domain, range) {
@@ -245,6 +227,9 @@ export class D3HeatmapPlotComponent implements OnInit {
     d3.select(this.containerId)
       .selectAll('svg')
       .remove();
+
+    this.margin = { top: 0, right: 0, bottom: 0, left: 0 };
+    ;
   }
 
   reformatData() {
@@ -396,10 +381,8 @@ export class D3HeatmapPlotComponent implements OnInit {
   }
 
   createHeatmap() {
-    console.log('Start createHeatmap. Outer height:', this.outerHeight);
     // before doing anything, get rid of anything that may have been there
     this.clearChart();
-
     if (this.heatmapData.length === 0) {
       this.validPlot = false;
       return
@@ -413,31 +396,19 @@ export class D3HeatmapPlotComponent implements OnInit {
 
     let annotationLegendWidth = this.hideOverlay ? 0 : this.annotationLegendMinWidth;
 
-    this.xAxisArr = [];
     this.categoryToIgnore = [];
-
-    // using the first item of the heatmapData, get the sample/observation names
-    for (let col in this.heatmapData[0].values) {
-      this.xAxisArr.push(col);
-    }
 
     // reformat the data so it's easier to work with in d3
     let [reformattedData, allFeatures, orderedObservations, minVal, maxVal] = this.reformatData();
 
     // to get an estimate for the size of the observation and feature labels, get the maximum length
     // of the strings for each:
-    console.log(allFeatures);
-    console.log(orderedObservations);
     let longestObsName, longestFeatureName = 0;
     if (this.showFeatureLabels || this.showObsLabels) {
       longestObsName = Math.max(...orderedObservations.map(x => x.length));
       longestFeatureName = Math.max(...allFeatures.map(x => x.length));
     }
-    console.log(longestObsName, longestFeatureName);
 
-    console.log('BEFORE:');
-    console.log(this.margin);
-    console.log(this.outerWidth, this.outerHeight);
     // by default, orient the heatmap such that it has a portrait
     // orientation. Vertical scrolls are fine, but horizontal makes 
     // other page elements look poor
@@ -469,7 +440,6 @@ export class D3HeatmapPlotComponent implements OnInit {
       if (tmpTileWidth > this.targetTileSize) {
         tmpTileWidth = this.targetTileSize;
       }
-      console.log(tmpTileWidth);
       this.margin.right = this.outerWidth - tmpTileWidth * orderedObservations.length - this.margin.left;
 
       // since we allow vertical scrolling, we can set the height of the heatmap.
@@ -489,7 +459,6 @@ export class D3HeatmapPlotComponent implements OnInit {
       // now, given the tile height, adjust the this.outerHeight, since we
       // can afford to scroll
       this.outerHeight = tmpTileHeight * allFeatures.length + this.margin.top + this.margin.bottom;
-
 
     } else {
 
@@ -529,16 +498,10 @@ export class D3HeatmapPlotComponent implements OnInit {
 
     }
 
-    console.log('AFTER:');
-    console.log(this.margin);
-    console.log(this.outerWidth, this.outerHeight);
-
     let totalLegendAllocation = this.calculateLegendAllocation(true);
     if (totalLegendAllocation > this.outerHeight) {
-      console.log('legend was taller than outerheight- adjust!');
       this.outerHeight = totalLegendAllocation + 10;
     }
-    console.log('Here(0): ', this.outerHeight);
     let heatmapWidth = this.outerWidth - this.margin.left - this.margin.right;
     let heatmapHeight = this.outerHeight - this.margin.top - this.margin.bottom;
 
@@ -571,10 +534,7 @@ export class D3HeatmapPlotComponent implements OnInit {
     // setup initial x and y scales
     let xScale = this.makeScale(xDomain, [this.margin.left, this.margin.left + heatmapWidth]);
     let yScale = this.makeScale(yDomain, [this.margin.top, this.margin.top + heatmapHeight]);
-    //let maxGraphHeight = this.windowHeight * .9 //1200 or 900 better?
-    //let yScale = this.yLocationLengend > this.windowHeight ? this.makeScale(yDomain, [this.margin.top, maxGraphHeight]) : this.makeScale(yDomain, [this.margin.top, this.margin.top + heatmapHeight]);
-
-    console.log('Just before setting final tile sizes, outerheight=', this.outerHeight);
+ 
     let tileX, tileY;
     [tileX, tileY] = this.setTileSizes(xScale, yScale);
 
@@ -596,10 +556,8 @@ export class D3HeatmapPlotComponent implements OnInit {
     this.outerWidth = heatmapWidth + this.margin.left + this.margin.right;
     this.outerHeight = heatmapHeight + this.margin.top + this.margin.bottom;
     if (totalLegendAllocation > this.outerHeight) {
-      console.log('legend was taller than outerheight- adjust!');
       this.outerHeight = totalLegendAllocation + 10;
     }
-    console.log('After setting final tiles, etc, we have outerHeight=', this.outerHeight);
 
     // tool tip for individual points (if displayed)
     const pointTip = d3Tip()
@@ -653,12 +611,10 @@ export class D3HeatmapPlotComponent implements OnInit {
       this.selectedColormap = this.defaultColormap;
     }
     let colormapInterpolator = this.colormapOptions[this.selectedColormap];
-    minVal = -Math.max(Math.abs(minVal), Math.abs(maxVal))
-    maxVal = Math.max(Math.abs(minVal), Math.abs(maxVal))
 
-    let lionessColor = d3.scaleLinear()
-      .range(["royalblue", "#fffafa", "crimson"])
-      .domain([minVal, 0, maxVal])
+    // let lionessColor = d3.scaleLinear()
+    //   .range(["royalblue", "#fffafa", "crimson"])
+    //   .domain([minVal, 0, maxVal])
 
     selection
       .enter()
@@ -673,12 +629,12 @@ export class D3HeatmapPlotComponent implements OnInit {
         // to represent the color. This way, the user can still see the true 
         // value of the data on the mouseover event
         let dataValue = this.logScale ? Math.log2(d['value'] + pseudocount) : d['value'];
-        // return colormapInterpolator(
-        //   (dataValue - minVal) / (maxVal - minVal)
-        // )
+        return colormapInterpolator(
+          (dataValue - minVal) / (maxVal - minVal)
+        )
 
         //for lioness
-        return lionessColor(dataValue)
+        //return lionessColor(dataValue)
       })
       .on('mouseover', function (mouseEvent: any, d) {
         pointTip.show(mouseEvent, d, this);
@@ -686,12 +642,13 @@ export class D3HeatmapPlotComponent implements OnInit {
       })
       .on('mouseout', pointTip.hide);
 
+    selection
+      .exit()
+      .remove();
+
     // Category and legend overlay
     // This avoids issues of scope with closures below-- 
     let tempAnnotations = { ...this.annData }
-    console.log('ann data:');
-    console.log(this.annData);
-    //console.log(tempAnnotations);
     let colorRange = ["#ac92eb", "#4fc1e8", "#a0d568", "#ffce54", "#ed5564", "#feb144"];
     let catOptions = [];
     let count = 0; //Keeps track of overlay items for the legends for y position and overall number of overlay items
@@ -709,8 +666,6 @@ export class D3HeatmapPlotComponent implements OnInit {
     let currentLegendAllocation = this.calculateLegendAllocation(false);
     let catYLocation = currentLegendAllocation;
 
-    console.log('this.categoryOptions');
-    console.log(this.categoryOptions);
     if (this.hideOverlay === false) {
 
       // this holds the graphical overlay of the annotations
@@ -731,7 +686,6 @@ export class D3HeatmapPlotComponent implements OnInit {
           // create the common elements for the legends (like title, the "X" close button, etc.)
           catLegend = legendOverlay.append("svg")
             .attr('x', 0)
-          //.attr('y', catYLocation)
 
           // add the "title" for the category
           legendTitleNode = catLegend.append('text')
@@ -769,7 +723,6 @@ export class D3HeatmapPlotComponent implements OnInit {
           if (isNumber && !this.removeOverlayArray.includes(index)) {
             let min = Math.trunc(Math.floor(Math.min(...this.categoryOptions[index])))
             let max = Math.trunc(Math.ceil(Math.max(...this.categoryOptions[index])))
-            console.log(`gradient with count=${count}`);
             if (min !== max) {
 
               // Build color scale for colored annotation boxes:
@@ -851,7 +804,6 @@ export class D3HeatmapPlotComponent implements OnInit {
               catLegend.attr('y', catYLocation)
 
             } else {
-              console.log('triggered for min=max')
               this.categoryToIgnore.push(index.replace(/_/g, " "))
             }
 
@@ -865,8 +817,6 @@ export class D3HeatmapPlotComponent implements OnInit {
             let ordinalColorScale = d3.scaleOrdinal()
               .range(colorRange)
               .domain(catOptions)
-
-            console.log(`category with count=${count}`);
 
             if (tempAnnotations[orderedObservations[0]] !== undefined) {
               this.addAnnotationOverlayTile(
@@ -915,21 +865,12 @@ export class D3HeatmapPlotComponent implements OnInit {
           }
           //categories not to display
           else if (this.categoryOptions[index].length > this.maximumCategoricalLevels || this.categoryOptions[index].length <= 1) {
-            let exceededMaxCats = this.categoryOptions[index].length > this.maximumCategoricalLevels;
-            let fewerThanOne = this.categoryOptions[index].length <= 1;
-            console.log('about to add to ignore...', exceededMaxCats, fewerThanOne);
-            console.log(this.categoryOptions[index])
-            console.log('isNumber: ', isNumber);
-            console.log('rm array:', this.removeOverlayArray);
-            this.categoryToIgnore.push(index.replace(/_/g, " "))
+            this.categoryToIgnore.push(index.replace(/_/g, " "));
+            catLegend.remove(); // we had created a "placeholder" title, etc. so we need to remove it.
           }
         }
       }
     }
-
-    selection
-      .exit()
-      .remove();
 
     if (this.showObsLabels || this.showFeatureLabels) {
       let axesContainer = svg.append('g');
@@ -1059,7 +1000,6 @@ export class D3HeatmapPlotComponent implements OnInit {
       return 0;
     }
 
-    this.xAxisArr = [];
     this.categoryOptionsArr = [];
     this.categoryOptions = {};
     for (let i = 0; i < this.resourceDataAnnotation.length; i++) {
@@ -1144,17 +1084,15 @@ export class D3HeatmapPlotComponent implements OnInit {
   }
 
   sendAlertMessage() {
-    console.log('in send alert...categoryToIgnore=', this.categoryToIgnore);
     let ignoreMessage = '';
     for (let i = 0; i < this.categoryToIgnore.length - 1; i++) {
-      console.log('in send alert, ', this.categoryToIgnore[i]);
       ignoreMessage += this.categoryToIgnore[i] + ", "
     }
     let lastIndex = this.categoryToIgnore.length - 1;
     ignoreMessage += this.categoryToIgnore.length > 1 ? "and " + this.categoryToIgnore[lastIndex] + "." : this.categoryToIgnore[lastIndex] + ".";
 
     let message = "These annotation categories will not be displayed because they are either too large or too small to effectively color code: " + ignoreMessage
-    this.notificationService.warn(message, 2000);
+    this.notificationService.warn(message, 10000);
   }
 
   scrollTo(htmlID) {

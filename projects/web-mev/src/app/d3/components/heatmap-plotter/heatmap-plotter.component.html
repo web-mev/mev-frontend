@@ -11,6 +11,16 @@
         <form [formGroup]="imgAdjustForm" (ngSubmit)="onSubmit()">
             <div class="options-outer">
                 <div class="options-inner">
+                    <div>
+                        <mat-radio-group class="" formControlName="imgOrientation">
+                            <mat-radio-button class="" [value]="samplesInRowsKey">
+                                {{samplesInRowsText}}
+                            </mat-radio-button>
+                            <mat-radio-button class="" [value]="samplesInColumnsKey">
+                                {{samplesInColumnsText}}
+                            </mat-radio-button>
+                        </mat-radio-group>
+                    </div>
                     <div class="section-item">
                         <div>
                             <mat-checkbox formControlName="imgObsLabels" [checked]="showObsLabels">Show

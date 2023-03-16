@@ -86,11 +86,20 @@ export class D3HeatmapPlotComponent implements OnInit {
   outerHeight;
   outerWidth;
   targetTileSize = 20; // a reasonable default tile size to aim for
-  minTileSize = 10; // originally set to 5
+  minTileSize = 2; // originally set to 5
   tooltipOffsetX = 10; // to position the tooltip on the right side of the triggering element
-  showObsLabels = true; //whether to label the obs
-  showFeatureLabels = false; //whether to label the features
-  logScale = false;
+
+  // defaults for the form
+  defaultObsLabels = true;
+  defaultFeatureLabels = false;
+  defaultSquareTiles = false;
+  defaultLogScale = false;
+
+
+
+  showObsLabels = this.defaultObsLabels; //whether to label the obs
+  showFeatureLabels = this.defaultFeatureLabels; //whether to label the features
+  logScale = this.defaultLogScale;
   categoryOptions = {};
   categoryOptionsArr = [];
   margin;
@@ -98,8 +107,20 @@ export class D3HeatmapPlotComponent implements OnInit {
   // for common reference when determining the orientation of the heatmap
   samplesInColumnsKey = '__SIC__';
   samplesInRowsKey = '__SIR__';
-  squareTiles = false; //if true, then the tiles will be squares
-  orientation;
+  samplesInColumnsText = 'Samples/observations in columns';
+  samplesInRowsText = 'Samples/observations in rows';
+  squareTiles = this.defaultSquareTiles; //if true, then the tiles will be squares
+  orientation; // the current orientation (e.g. samples in columns)
+
+  // the 'default' orientation (which makes the heatmap into portrait mode)
+  // We give a default value so that the 'adjustment form' has a value to work with.
+  // However, we quickly reset the value to be consistent with the data. This is just
+  // so the radio button in the form has *something* to work with.
+  naturalOrientation = this.samplesInColumnsKey;
+
+  // a key which indicates the user has not selected an orientation and
+  // that we should use the 'natural' orientation
+  orientationUnspecified = '__ORIENTATION_UNSPECIFIED__';
 
   colormapOptions = {
     'Brown-blue-green': d3.interpolateBrBG,
@@ -123,23 +144,22 @@ export class D3HeatmapPlotComponent implements OnInit {
     private metadataService: MetadataService,
     private formBuilder: FormBuilder,
     private readonly notificationService: NotificationService
-  ) { }
-
-  ngOnInit(): void {
-    this.windowWidth = window.innerWidth - 500;
-    this.windowHeight = window.innerHeight
-
-    //this.margin = this.marginMain;
-
-    this.customObservationSets = this.metadataService.getCustomObservationSets();
-
+  ) {
     this.imgAdjustForm = this.formBuilder.group({
       'imgAspectRatio': ['', ''],
       'imgObsLabels': [this.showObsLabels, ''],
       'imgFeatureLabels': [this.showFeatureLabels, ''],
       'logScale': [this.logScale, ''],
       'colormaps': [this.defaultColormap, ''],
+      'imgOrientation': [this.naturalOrientation, ''],
     })
+  }
+
+  ngOnInit(): void {
+    this.windowWidth = window.innerWidth - 500;
+    this.windowHeight = window.innerHeight
+
+    this.customObservationSets = this.metadataService.getCustomObservationSets();
 
     this.generateHeatmap(true);
   }
@@ -149,11 +169,35 @@ export class D3HeatmapPlotComponent implements OnInit {
     this.generateHeatmap(true);
   }
 
+  resetAdjustmentForm(){
+
+    // set the form fields
+    this.f['imgObsLabels'].setValue(true);
+    this.f['imgFeatureLabels'].setValue(false);
+    this.f['imgAspectRatio'].setValue(false);
+    this.f['logScale'].setValue(false);
+    this.f['colormaps'].setValue(this.defaultColormap);
+    this.f['imgOrientation'].setValue(this.naturalOrientation);
+
+    // set the variables back to their defaults:
+    this.showObsLabels = this.defaultObsLabels;
+    this.showFeatureLabels = this.defaultFeatureLabels;
+    this.squareTiles = this.defaultSquareTiles;
+    this.selectedColormap = this.defaultColormap;
+    this.orientation = this.orientationUnspecified;
+    this.logScale = this.defaultLogScale;
+  }
+
   generateHeatmap(fullRefresh) {
+
     //reset variables when changing resources
     if (this.hasResourceChanged && fullRefresh) {
       this.removeOverlayArray = [];
       this.annData = {};
+    }
+
+    if (fullRefresh){
+      this.resetAdjustmentForm();
     }
 
     if (this.resourceData.length > 0) {
@@ -179,6 +223,8 @@ export class D3HeatmapPlotComponent implements OnInit {
   }
 
   onSubmit() {
+
+    this.orientation = this.imgAdjustForm.value['imgOrientation'];
 
     if (this.imgAdjustForm.value['imgAspectRatio']) {
       this.squareTiles = true;
@@ -228,8 +274,9 @@ export class D3HeatmapPlotComponent implements OnInit {
       .selectAll('svg')
       .remove();
 
+    // reset some items:
     this.margin = { top: 0, right: 0, bottom: 0, left: 0 };
-    ;
+    
   }
 
   reformatData() {
@@ -381,6 +428,7 @@ export class D3HeatmapPlotComponent implements OnInit {
   }
 
   createHeatmap() {
+
     // before doing anything, get rid of anything that may have been there
     this.clearChart();
     if (this.heatmapData.length === 0) {
@@ -409,13 +457,27 @@ export class D3HeatmapPlotComponent implements OnInit {
       longestFeatureName = Math.max(...allFeatures.map(x => x.length));
     }
 
+    // get the default orientation of the heatmap-- users CAN override this.
     // by default, orient the heatmap such that it has a portrait
     // orientation. Vertical scrolls are fine, but horizontal makes 
     // other page elements look poor
     if (allFeatures.length >= orderedObservations.length) {
       // more features than observations. Hence, each row
       // corresponds to a feature and each column is a row
-      this.orientation = this.samplesInColumnsKey;
+      this.naturalOrientation = this.samplesInColumnsKey;
+    } else {
+      this.naturalOrientation = this.samplesInRowsKey;
+    }
+
+    if (this.orientation === this.orientationUnspecified) {
+      this.orientation = this.naturalOrientation;
+    }
+
+    this.f['imgOrientation'].setValue(this.orientation);
+
+    if (this.orientation === this.samplesInColumnsKey) {
+
+      //this.orientation = this.samplesInColumnsKey;
       this.margin.top = this.annotationPadding;
 
       // using the font size and longest labs, give a rough size for the 
@@ -429,7 +491,6 @@ export class D3HeatmapPlotComponent implements OnInit {
 
       // based on the screen dimensions and left margin, figure out how much room we have for
       // the heatmap and the annotation legend (if used)
-
       let tmpHeatmapWidth = this.outerWidth - this.margin.left - annotationLegendWidth;
 
       // given an estimated heatmap width, find the "default" tile width.
@@ -461,7 +522,6 @@ export class D3HeatmapPlotComponent implements OnInit {
       this.outerHeight = tmpTileHeight * allFeatures.length + this.margin.top + this.margin.bottom;
 
     } else {
-
       this.orientation = this.samplesInRowsKey;
       if (this.showFeatureLabels) {
         this.margin.bottom = this.tickLabelFontSize * longestFeatureName;
@@ -495,7 +555,6 @@ export class D3HeatmapPlotComponent implements OnInit {
       // can afford to scroll
       this.outerHeight = tmpTileHeight * orderedObservations.length + this.margin.top + this.margin.bottom;
       this.margin.right = this.outerWidth - tmpTileWidth * allFeatures.length - this.margin.left;
-
     }
 
     let totalLegendAllocation = this.calculateLegendAllocation(true);

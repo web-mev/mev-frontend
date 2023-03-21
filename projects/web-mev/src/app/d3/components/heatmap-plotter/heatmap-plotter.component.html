@@ -64,6 +64,11 @@
             </div>
         </form>
     </mat-expansion-panel>
+    <div id="ignored-categories-message" *ngIf="plotReady && (ignoredCategoriesWarningMessage.length > 0)">
+        <mat-card class="no-data-error">
+            {{this.ignoredCategoriesWarningMessage}}
+        </mat-card>
+    </div>
     <div>
         <div class="button-panel">
             <mev-download-button [containerId]="containerId" [imageName]="imageName"></mev-download-button>
@@ -83,4 +88,5 @@
         or features you are plotting, or increase the size of the plot.
     </mat-card>
 </div>
+
 <div #heatmap id="heatmap" class="chart" (window:resize)="onResize($event)"></div>

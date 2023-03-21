@@ -129,19 +129,24 @@ export class D3HeatmapPlotComponent implements OnInit {
     'Brown-blue-green': d3.interpolateBrBG,
     'Purple-green': d3.interpolatePRGn,
     'Purple-orange': d3.interpolatePuOr,
-    'Red-blue': d3.interpolateRdBu,
+    // note that we label it as Blue-red, even though it's Red-blue.
+    // Below, we manipulate the plotted values so that blue corresponds
+    // to low expression.
+    'Blue-red': d3.interpolateRdBu,
     'Red-yellow-blue': d3.interpolateRdYlBu,
     'Viridis': d3.interpolateViridis,
     'Ciridis': d3.interpolateCividis,
     'Lioness': d3.interpolateRgb("blue", "white", "red")
   }
   colormapList = Object.keys(this.colormapOptions);
-  defaultColormap = 'Red-blue';
+  defaultColormap = 'Blue-red';
   selectedColormap = '';
   annData = {};
   categoryToIgnore = [];
   removeOverlayArray = [];
   hideOverlay = false;
+
+  ignoredCategoriesWarningMessage = '';
 
   constructor(
     private metadataService: MetadataService,
@@ -279,6 +284,7 @@ export class D3HeatmapPlotComponent implements OnInit {
 
     // reset some items:
     this.margin = { top: 0, right: 0, bottom: 0, left: 0 };
+    this.ignoredCategoriesWarningMessage = '';
 
   }
 
@@ -690,9 +696,15 @@ export class D3HeatmapPlotComponent implements OnInit {
         // to represent the color. This way, the user can still see the true 
         // value of the data on the mouseover event
         let dataValue = this.logScale ? Math.log2(d['value'] + pseudocount) : d['value'];
-        return colormapInterpolator(
-          (dataValue - minVal) / (maxVal - minVal)
-        )
+        let scaledVal = (dataValue - minVal) / (maxVal - minVal);
+        // The 'Blue-red' colormap is actually a Red-blue map (which is made available by D3.js)
+        // However, high expression values of blue (and low for red) is unconventional since we
+        // typically associate "warm" colors with higher values. Thus, we use the "Red-blue" colormap
+        // and "flip" the value we plot.
+        if(this.selectedColormap === 'Blue-red'){
+          scaledVal = 1-scaledVal;
+        }
+        return colormapInterpolator(scaledVal)
 
         //for lioness
         //return lionessColor(dataValue)
@@ -1170,7 +1182,8 @@ export class D3HeatmapPlotComponent implements OnInit {
     ignoreMessage += this.categoryToIgnore.length > 1 ? "and " + this.categoryToIgnore[lastIndex] + "." : this.categoryToIgnore[lastIndex] + ".";
 
     let message = "These annotation categories will not be displayed because they are either too large or too small to effectively color code: " + ignoreMessage
-    this.notificationService.warn(message, 10000);
+    //this.notificationService.warn(message, 10000);
+    this.ignoredCategoriesWarningMessage = message;
   }
 
   scrollTo(htmlID) {

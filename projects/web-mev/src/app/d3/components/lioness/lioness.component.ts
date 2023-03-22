@@ -16,7 +16,7 @@ import { catchError } from 'rxjs/operators';
     changeDetection: ChangeDetectionStrategy.Default
 })
 export class LionComponent implements OnInit {
-    plotData = []; 
+
     workspaceId;
 
     @Input() outputs;
@@ -103,14 +103,15 @@ export class LionComponent implements OnInit {
                 let message = `Error: ${error.error.error}`;
                 throw message
             }))
-            .subscribe(data => {
-                for (let index in data) {
-                    this.plotData.push(data[index])
-                }
-
+            .subscribe((data: any[]) => {
                 this.isLoading = false;
                 this.xAxisArr = [];
                 this.yAxisArr = [];
+
+                // re-assign the min/max to the first item. Will then iterate through to find actual min/max
+                this.min = d3.min(Object.values(data[0]['values']));
+                this.max = d3.max(Object.values(data[0]['values']));
+
                 if (this.useYAxis) {
                     for (let i = 0; i < Object.keys(data).length; i++) {
                         this.yAxisArr.push(data[i].rowname)

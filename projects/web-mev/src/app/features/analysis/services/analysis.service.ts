@@ -215,4 +215,19 @@ export class AnalysesService {
       )
     );
   }
+
+  getResourceTransformQuery(resourceId: string,filters = {}): Observable<any>{
+    let params = new HttpParams();
+    for (const field in filters) {
+      if (filters.hasOwnProperty(field)) {
+        // TSLint rule
+        const expression = filters[field];
+        params = params.append(field, expression.toString());
+      }
+    }
+    return this.httpClient.get(
+      `${this.API_URL}/resources/${resourceId}/contents/transform/`,
+      { params: params }
+    );
+  }
 }

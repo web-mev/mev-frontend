@@ -5,24 +5,64 @@
 
         <mat-card-title>Lioness: {{ outputs?.job_name }}</mat-card-title>
     </mat-card-header>
-    <label id="example-radio-group-label">Select Axis for {{resourceType}}</label>
-    <br>
-    <mat-radio-group aria-label="Select an Axis" [(ngModel)]="resourceTypeAxis">
-        <mat-radio-button *ngFor="let options of radioButtonListAxis" [value]="options.name"
-            [checked]="resourceTypeAxis === options.name" (change)="onRadioChangeAxis2($event.value)">{{ options.name }}
-        </mat-radio-button>
-    </mat-radio-group>
-    <br>
-    <br>
-    <label id="example-radio-group-label">Select Resource Type</label>
-    <br>
-    <mat-radio-group aria-label="Select an Axis" [(ngModel)]="resourceType">
-        <mat-radio-button *ngFor="let options of radioButtonList" [value]="options.name"
-            [checked]="resourceType === options.name" (change)="onRadioChangeAxis($event.value)">{{ options.name }}
-        </mat-radio-button>
-    </mat-radio-group>
 
-    <mev-png-download-button [containerId]="containerId" [imageName]="imageName"></mev-png-download-button>
-    <div id="lioness"></div>
-
+    <p>
+        In LIONESS, we sequentially remove one sample at a time
+        and recalculate the inferred regulatory network using the PANDA algorithm. By examining the difference of the
+        networks with and without that
+        sample, we can estimate its "contribution" and thus infer the single-sample regulatory network. A single-sample
+        network is essentially a table of
+        edge weights between transcription factors and genes.
+    </p>
+    <p>
+        Below, we show the transcription factor or gene "targeting score" as a heatmap. The targeting score is the sum
+        of edge weights
+        for a given node. As an example, if we select "Genes" below, we will sum of all transcription factor weights
+        "touching" that gene. By
+        looking at large differences in targeting scores we can, for instance, see that particular genes are more or
+        less affected by transcription
+        factors under particular conditions or disease states.
+    </p>
+    <p>
+        Note that since we cannot display all genes or transcription factors, we limit
+        to the top {{featureCount}} genes/transcription factors as measured by their
+        maximum absolute deviation (MAD) across all samples.
+    </p>
+    <form id="lionessInputForm" *ngIf="inputForm && !formLoading" [formGroup]="inputForm" (ngSubmit)="onSubmit()">
+        <div class="label">
+            Data to plot:
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="Do we show the transcription factor or gene edge weights plotted against samples"
+                aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-radio-group aria-label="Select an Axis" formControlName="axisOption">
+            <mat-radio-button *ngFor="let options of radioButtonList" [value]="options.name"
+                [checked]="resourceType === options.name">{{ options.name }}
+            </mat-radio-button>
+        </mat-radio-group>
+        <div class="label">
+            Annotation File:
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="The annotation data will be used to display the category overlay."
+                aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <mat-select formControlName="ann">
+                <mat-option *ngFor="let file of ann_files" [value]="file.id">
+                    {{ file.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <div>
+            <button mat-raised-button color="accent" type="submit" (click)="createPlot()">Plot
+            </button>
+        </div>
+    </form>
+    <mat-divider [inset]="true"></mat-divider>
+    <d3-heatmap [resourceData]="lionessData" [resourceDataAnnotation]="annotationData" [useAnnotation]="showAnnotations"
+        [hasResourceChanged]="hasResourceChanged" [featureLabel]="axisOption === 'Genes' ? 'Gene': 'TF'"
+        [obsLabel]="'Sample'" [valueLabel]="'Edge weight'">
+    </d3-heatmap>
 </mat-card>

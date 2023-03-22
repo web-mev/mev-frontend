@@ -85,8 +85,8 @@
       </form>
     </div>
     <mat-divider [inset]="true"></mat-divider>
-    <d3-heatmap [resourceData]="plotData" [resourceDataAnnotation]="PlotDataAnnotation"
-      [useAnnotation]="useAnnotation" [hasResourceChanged]="hasResourceChanged">
+    <d3-heatmap [resourceData]="plotData" [resourceDataAnnotation]="PlotDataAnnotation" [useAnnotation]="useAnnotation"
+      [hasResourceChanged]="hasResourceChanged" [featureLabel]="'gene'" [obsLabel]="'Sample'" [valueLabel]="'Value'">
     </d3-heatmap>
   </mat-card-content>
 

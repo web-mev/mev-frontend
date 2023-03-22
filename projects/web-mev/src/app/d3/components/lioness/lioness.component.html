@@ -8,28 +8,34 @@
 
     <p>
         In LIONESS, we sequentially remove one sample at a time
-        and recalculate the inferred regulatory network using the PANDA algorithm. By examining the difference of the networks with and without that
-        sample, we can estimate its "contribution" and thus infer the single-sample regulatory network. A single-sample network is essentially a table of
-        edge weights between transcription factors and genes.  
+        and recalculate the inferred regulatory network using the PANDA algorithm. By examining the difference of the
+        networks with and without that
+        sample, we can estimate its "contribution" and thus infer the single-sample regulatory network. A single-sample
+        network is essentially a table of
+        edge weights between transcription factors and genes.
     </p>
     <p>
-        Below, we show the transcription factor or gene "targeting score" as a heatmap. The targeting score is the sum of edge weights
-        for a given node. As an example, if we select "Genes" below, we will sum of all transcription factor weights "touching" that gene. By 
-        looking at large differences in targeting scores we can, for instance, see that particular genes are more or less affected by transcription
-        factors under particular conditions or disease states. 
+        Below, we show the transcription factor or gene "targeting score" as a heatmap. The targeting score is the sum
+        of edge weights
+        for a given node. As an example, if we select "Genes" below, we will sum of all transcription factor weights
+        "touching" that gene. By
+        looking at large differences in targeting scores we can, for instance, see that particular genes are more or
+        less affected by transcription
+        factors under particular conditions or disease states.
     </p>
     <p>
         Note that since we cannot display all genes or transcription factors, we limit
-        to the top {{featureCount}} genes/transcription factors as measured by their 
+        to the top {{featureCount}} genes/transcription factors as measured by their
         maximum absolute deviation (MAD) across all samples.
     </p>
     <form id="lionessInputForm" *ngIf="inputForm && !formLoading" [formGroup]="inputForm" (ngSubmit)="onSubmit()">
         <div class="label">
             Data to plot:
             <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-              matTooltip="Do we show the transcription factor or gene edge weights plotted against samples" aria-label="Info tooltip about the field">info
+                matTooltip="Do we show the transcription factor or gene edge weights plotted against samples"
+                aria-label="Info tooltip about the field">info
             </mat-icon>
-          </div>
+        </div>
         <mat-radio-group aria-label="Select an Axis" formControlName="axisOption">
             <mat-radio-button *ngFor="let options of radioButtonList" [value]="options.name"
                 [checked]="resourceType === options.name">{{ options.name }}
@@ -56,6 +62,7 @@
     </form>
     <mat-divider [inset]="true"></mat-divider>
     <d3-heatmap [resourceData]="lionessData" [resourceDataAnnotation]="annotationData" [useAnnotation]="showAnnotations"
-        [hasResourceChanged]="hasResourceChanged">
+        [hasResourceChanged]="hasResourceChanged" [featureLabel]="axisOption === 'Genes' ? 'Gene': 'TF'"
+        [obsLabel]="'Sample'" [valueLabel]="'Edge weight'">
     </d3-heatmap>
 </mat-card>

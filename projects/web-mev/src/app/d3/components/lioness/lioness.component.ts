@@ -36,6 +36,7 @@ export class LionComponent implements OnInit {
     hasResourceChanged = false;
     submitted = false;
     featureCount = 100;
+    axisOption;
 
     constructor(
         private route: ActivatedRoute,
@@ -77,11 +78,11 @@ export class LionComponent implements OnInit {
         this.hasResourceChanged = true;
 
         // get the "axis" (transcription factor or gene) from the form:
-        let axisOption = this.inputForm.value['axisOption'];
+        this.axisOption = this.inputForm.value['axisOption'];
 
         let uuid_gene = this.outputs['mevLioness.lioness_gene_ts_tsv'];
         let uuid_tf = this.outputs['mevLioness.lioness_tf_ts_tsv'];
-        let uuid = axisOption === "Genes" ? uuid_gene : uuid_tf;
+        let uuid = this.axisOption === "Genes" ? uuid_gene : uuid_tf;
 
         const filters = {
             'mad_n': this.featureCount,

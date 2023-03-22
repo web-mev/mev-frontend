@@ -23,7 +23,10 @@ export class D3HeatmapPlotComponent implements OnInit {
   @Input() resourceData;
   @Input() resourceDataAnnotation;
   @Input() useAnnotation;
-  @Input() hasResourceChanged
+  @Input() hasResourceChanged;
+  @Input() featureLabel;
+  @Input() obsLabel;
+  @Input() valueLabel;
 
   @ViewChild('heatmap')
   svgElement: ElementRef;
@@ -630,9 +633,9 @@ export class D3HeatmapPlotComponent implements OnInit {
       .attr('class', 'd3-tip')
       .offset([-10, 0])
       .html((event, d) => {
-        let tipBox = `<div><div class="category">Genes:</div> ${d.featureId}</div>
-                      <div><div class="category">Sample: </div> ${d.obsId}</div>
-                      <div><div class="category">Value: </div>${d.value.toFixed(this.precision)}</div>`
+        let tipBox = `<div><div class="category">${this.featureLabel}:</div> ${d.featureId}</div>
+                      <div><div class="category">${this.obsLabel}: </div> ${d.obsId}</div>
+                      <div><div class="category">${this.valueLabel}: </div>${d.value.toFixed(this.precision)}</div>`
         return tipBox
       });
 

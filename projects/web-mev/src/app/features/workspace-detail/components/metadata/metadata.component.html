@@ -136,7 +136,7 @@
                 <button mat-icon-button color="accent" title="Delete" (click)="onDeleteCustomSet(element.name)">
                   <mat-icon aria-label="Delete">delete</mat-icon>
                 </button>
-                <button mat-icon-button color="accent" title="Edit" (click)="onEditCustomSet(element)">
+                <button mat-icon-button color="accent" title="Edit" (click)="onEditCustomSet(element)" [disabled]="setEditIsDisabled(element)">
                   <mat-icon aria-label="Edit">edit</mat-icon>
                 </button>
               </td>
@@ -154,7 +154,10 @@
             Your workspace has a conflict of metadata and we cannot fetch all available samples/observations for this
             visualization.
           </div>
-          <table *ngIf="customSetsViewMode.value === 'visMode' && !tooManyObservations && !obsSetFetchFailed" mat-table
+          <div *ngIf="customSetsViewMode.value === 'visMode' && (visObsDisplayedColumnsSetsOnly.length) === 0" class="too-many-obs">
+            Your workspace has not defined any custom observation sets
+          </div>
+          <table *ngIf="customSetsViewMode.value === 'visMode' && !tooManyObservations && !obsSetFetchFailed && (visObsDisplayedColumnsSetsOnly.length) > 0" mat-table
             [dataSource]="visObservationSetDS" class="visualization-table">
             <ng-container matColumnDef="id">
               <th mat-header-cell *matHeaderCellDef> Sample </th>

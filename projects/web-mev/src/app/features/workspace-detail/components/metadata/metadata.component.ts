@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, Subscription, of } from 'rxjs';
-import { takeUntil, switchMap, delay } from 'rxjs/operators';
+import { takeUntil, switchMap, delay, catchError } from 'rxjs/operators';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatAccordion } from '@angular/material/expansion';
 import { MatDialog } from '@angular/material/dialog';
@@ -156,6 +156,14 @@ export class MetadataComponent implements OnInit {
       .getWorkspaceMetadataObservations(this.workspaceId, this.maxObservations)
       .pipe(
         delay(500), // delay for spinner
+        catchError(err => {
+            // add a little more info so they can fix:
+            err += '. Removing or editing annotation files may resolve this conflict.'
+            this.metadataConflictError = err;
+            this.isWait = false;
+            this.obsSetFetchFailed = true;
+            return of();
+        }),
         switchMap(metadata => {
           this.observationCount = metadata['count']
           if(this.observationCount > this.maxObservations){
@@ -250,6 +258,8 @@ export class MetadataComponent implements OnInit {
         this.isWait = false;
         this.cd.markForCheck();
       });
+    } else {
+      this.visObservationSetDS = [];
     }
     this.isWait = false;
   }
@@ -320,6 +330,14 @@ export class MetadataComponent implements OnInit {
       .getWorkspaceMetadataObservations(this.workspaceId, this.maxObservations)
       .pipe(
         delay(500), // delay for spinner
+        catchError(err => {
+          // add a little more info so they can fix:
+          err += '. Removing or editing annotation files may resolve this conflict.'
+          this.metadataConflictError = err;
+          this.isWait = false;
+          this.obsSetFetchFailed = true;
+          return of();
+        }),
         switchMap(metadata => {
           if (metadata?.results) {
             if(metadata['count'] > this.maxObservations){
@@ -634,6 +652,13 @@ export class MetadataComponent implements OnInit {
         }
       );
     }
+  }
+
+  setEditIsDisabled(set) {
+    if (this.obsSetFetchFailed && (set.type === CustomSetType.ObservationSet)){
+      return true;
+    }
+    return false;
   }
 
 }

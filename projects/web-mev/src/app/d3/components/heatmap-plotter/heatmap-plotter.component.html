@@ -65,7 +65,7 @@
         </form>
     </mat-expansion-panel>
     <div id="ignored-categories-message" *ngIf="plotReady && (ignoredCategoriesWarningMessage.length > 0)">
-        <mat-card class="no-data-error">
+        <mat-card class="display-issue">
             {{this.ignoredCategoriesWarningMessage}}
         </mat-card>
     </div>
@@ -77,12 +77,12 @@
 </div>
 
 <div *ngIf="plotReady && (heatmapData.length === 0)">
-    <mat-card class="no-data-error">
+    <mat-card class="display-issue">
         No data to plot. Please check your input selections and retry.
     </mat-card>
 </div>
 <div *ngIf="plotReady && (tilesTooSmall)">
-    <mat-card class="no-data-error">
+    <mat-card class="display-issue">
         Given the current dimensions of the screen and data, the heatmap tiles
         are smaller than the permitted minimum size. Either decrease the number of observations
         or features you are plotting, or increase the size of the plot.

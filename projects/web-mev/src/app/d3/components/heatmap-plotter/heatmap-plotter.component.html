@@ -1,4 +1,4 @@
-<!-- <div *ngIf="(resourceData.length > 0)">
+<div *ngIf="(resourceData.length > 0)">
     <mat-expansion-panel #accordion (opened)="panelOpenState = true" (closed)="panelOpenState = false">
         <mat-expansion-panel-header>
             <mat-panel-title>
@@ -13,7 +13,6 @@
                 <div class="options-inner">
                     <div>
                         <mat-radio-group class="" formControlName="imgOrientation">
-                            <!~~ (change)="changeOrientation($event)"> ~~>
                             <mat-radio-button class="" [value]="samplesInRowsKey">
                                 {{samplesInRowsText}}
                             </mat-radio-button>
@@ -21,27 +20,6 @@
                                 {{samplesInColumnsText}}
                             </mat-radio-button>
                         </mat-radio-group>
-                    </div>
-
-                    <div id="obs-sets-wrapper">
-                        <div class="observation-list-section section-item">
-                            <div *ngIf="customObservationSets.length" class="option-header">Group observations by:</div>
-                            <ul *ngIf="customObservationSets.length">
-                                <li *ngFor="let set of customGroups.controls; let i=index">
-                                    <mat-checkbox [id]="customObservationSets[i].name"
-                                        (change)="onObservationCheck($event)" [formControl]="set">{{
-                                        customObservationSets[i].name }}</mat-checkbox>
-                                </li>
-                            </ul>
-                        </div>
-                        <span *ngIf="customObservationSetsToPlot.length">Drag and drop to reorder:</span>
-                        <mat-chip-list ordering-list class="obs-list" cdkDropList cdkDropListOrientation="horizontal"
-                            (cdkDropListDropped)="drop($event)">
-                            <mat-chip ordering-list-item class="obs-chip" cdkDrag
-                                *ngFor="let o of customObservationSetsToPlot">
-                                {{o.name}}
-                            </mat-chip>
-                        </mat-chip-list>
                     </div>
                     <div class="section-item">
                         <div>
@@ -68,44 +46,12 @@
                         </mat-form-field>
                     </div>
                     <div class="section-item">
-                        <!~~ <mat-checkbox (change)="changeAspectRatio($event)" [checked]="squareTiles">Equal-sized tiles?</mat-checkbox> ~~>
-                        <mat-checkbox formControlName="imgAspectRatio" [checked]="squareTiles">Equal-sized tiles?
+                        <mat-checkbox formControlName="imgAspectRatio" [checked]="squareTiles">Square tiles
                         </mat-checkbox>
                     </div>
                     <div class="section-item">
-                        <div class="option-header">Set a custom size <mat-icon class="info__icon"
-                                matTooltipClass="tooltip" fontSet="material-icons-outlined"
-                                matTooltip="Note that this is not an exact specification due to constraints imposed by other options and the layout configuration."
-                                aria-label="Info tooltip about the field">info
-                            </mat-icon>
-                        </div>
                         <div>
-                            <mat-form-field class="size-input-field">
-                                <mat-label>Width</mat-label>
-                                <input type="number" matInput formControlName="imgWidth"
-                                    placeholder="Enter the width in pixels, e.g. 1000">
-                            </mat-form-field>
-                            Current: {{this.finalWidth}}
-                        </div>
-                        <div>
-                            <mat-form-field class="size-input-field">
-                                <mat-label>Height</mat-label>
-                                <input type="number" matInput formControlName="imgHeight"
-                                    placeholder="Enter the height in pixels, e.g. 1000">
-                            </mat-form-field>
-                            Current: {{this.finalHeight}}
-                            <p class="info">
-
-                                <!~~ <mat-icon id="info-icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-                            aria-label="Info tooltip about the field">info
-                          </mat-icon> Note that this is not an exact specification due to constraints
-                          imposed by other options and the layout configuration. ~~>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="section-item">
-                        <div>
-                            <mat-checkbox formControlName="logScale" [checked]="logScale">Plot on log2 scale?
+                            <mat-checkbox formControlName="logScale" [checked]="logScale">Plot on log2 scale
                             </mat-checkbox>
                         </div>
                     </div>
@@ -118,17 +64,17 @@
             </div>
         </form>
     </mat-expansion-panel>
+    <div id="ignored-categories-message" *ngIf="plotReady && (ignoredCategoriesWarningMessage.length > 0)">
+        <mat-card class="no-data-error">
+            {{this.ignoredCategoriesWarningMessage}}
+        </mat-card>
+    </div>
     <div>
-        <div *ngIf="warnMsg.length > 0">
-            <mat-card class="warn">
-                {{warnMsg}}
-            </mat-card>
-        </div>
         <div class="button-panel">
             <mev-download-button [containerId]="containerId" [imageName]="imageName"></mev-download-button>
         </div>
     </div>
-</div> -->
+</div>
 
 <div *ngIf="plotReady && (heatmapData.length === 0)">
     <mat-card class="no-data-error">
@@ -142,4 +88,5 @@
         or features you are plotting, or increase the size of the plot.
     </mat-card>
 </div>
+
 <div #heatmap id="heatmap" class="chart" (window:resize)="onResize($event)"></div>

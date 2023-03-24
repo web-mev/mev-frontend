@@ -83,21 +83,26 @@ export class HeatmapFormComponent implements OnInit {
   createPlot() {
     this.isWaiting = true;
     const resourceId = this.inputForm.value['expMtx'];
-    this.hasResourceChanged = (resourceId !== this.savedResourceId) ? true : false;
+    // By commenting this and setting to true, users can regenerate their figure as
+    // originally drawn. Otherwise, annotations that were removed, etc. can't be 
+    // recovered (since the savedResourceId has not changed). 
+    //If, at a later date, we want to change this behavior, we could emit
+    // a signal from the heatmap component which will indicate something has changed.
+    //this.hasResourceChanged = (resourceId !== this.savedResourceId) ? true : false;
+    this.hasResourceChanged = true;
     this.savedResourceId = resourceId;
 
     const selectedFeatureSet = this.inputForm.value['featureSet'];
     const elements = selectedFeatureSet['elements'].map(obj => obj.id);
-    const filters = { '__rowname__': '[in]:' + elements.join(',') };
+    const filters = {
+      '__rowname__': '[in]:' + elements.join(','),
+      'transform-name': 'heatmap-cluster'
+    };
     this.apiService
-      .getResourceContent(
+      .getResourceTransformQuery(
         resourceId,
-        null,
-        null,
-        filters,
-        {}
+        filters
       )
-      //.pipe(finalize(() => this.loadingSubject.next(false)))
       .subscribe(features => {
         this.isWaiting = false;
         this.plotData = features;

@@ -63,12 +63,16 @@ export class MetadataComponent implements OnInit {
 
   observationCount;
 
+  obsSetFetchFailed = false;
+
   customSetDS; // use in MatDataTable to display the list of custom observation/feature sets created by user
   customSetsDisplayedColumns: string[] = ['select', 'name', 'type', 'size', 'actions']; // the list of columns for the Custom Sets table
 
   visObservationSetDS; // use in MatDataTable to display visualisation for custom observation sets
   visObsDisplayedColumns: string[];
   visObsDisplayedColumnsSetsOnly: string[];
+
+  metadataConflictError = '';
 
   globalObservationSets = []; // all samples from all resources
 
@@ -116,7 +120,10 @@ export class MetadataComponent implements OnInit {
         this.cd.markForCheck();
         this.selection.clear();
       });
+
   }
+
+
 
   ngAfterViewInit() {
     //this.observationSetDS.paginator = this.paginator;
@@ -244,6 +251,7 @@ export class MetadataComponent implements OnInit {
         this.cd.markForCheck();
       });
     }
+    this.isWait = false;
   }
 
   /**
@@ -406,7 +414,19 @@ export class MetadataComponent implements OnInit {
     const subject = new Subject<any>();
     this.service
       .getWorkspaceMetadataObservations(this.workspaceId, this.maxObservations)
-      .subscribe(metadata => {
+      .subscribe(
+        {
+        error: (err) => {
+          // add a little more info so they can fix:
+          err += '. Removing or editing annotation files may resolve this conflict.'
+          this.metadataConflictError = err;
+          this.isWait = false;
+          this.obsSetFetchFailed = true;
+          subject.next([]);
+        },
+        next: (metadata) => {
+        this.obsSetFetchFailed = false;
+        this.metadataConflictError = '';
         if (metadata?.results) {
           this.observationCount = metadata['count']
           if(this.observationCount > this.maxObservations){
@@ -418,8 +438,10 @@ export class MetadataComponent implements OnInit {
           }
         }
         subject.next(globalObservationSets);
-      });
+      }
+    });
     return subject.asObservable();
+        
   }
 
   /**
@@ -567,7 +589,6 @@ export class MetadataComponent implements OnInit {
 
   makeSetDifference(){   
     const setData = this.prepForSetOperations();
-    console.log(setData);
     if(setData) {
       const setType = setData.setType
       const tmpPayload = setData.payload;

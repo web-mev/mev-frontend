@@ -172,7 +172,6 @@ export class FileListComponent implements OnInit {
     // we are actively monitoring the upload
     this.countdownSubscription = interval(1000).subscribe(
       x => {
-        console.log('in countdown')
         this.countdown -= 1;
         this.ref.markForCheck();
       }

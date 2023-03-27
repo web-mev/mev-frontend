@@ -75,7 +75,6 @@ export class VolcanoComponent implements OnInit {
     let queryURL = `${this.API_URL}/resources/${deseqId}/contents/transform/?transform-name=volcano-subset&pval=${this.pValue}&lfc=${this.fcValue}&fraction=0.001`
     this.httpClient.get(queryURL).pipe(
       catchError(error => {
-        console.log("Error: ", error.message);
         let message = `Error: ${error.error.error}`;
         throw message
       }))

@@ -295,7 +295,6 @@ export class PublicDatasetsComponent implements OnInit {
     return this.httpClient.get(queryString)
       .pipe(
         catchError(error => {
-          console.log("Error: ", error);
           let message = `Error: ${error.error.error}`
           this.notificationService.warn(message)
           throw error;

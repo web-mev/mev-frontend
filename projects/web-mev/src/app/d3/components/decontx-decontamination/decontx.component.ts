@@ -67,8 +67,7 @@ export class DecontxComponent implements OnInit {
                 this.changeYAxis('log10')
                 this.isLoading = false
             },
-                error => {
-                    console.log("Error: ", error);
+                error => {  
                     let message = `Error: ${error.error.error}`
                     this.notificationService.warn(message);
                     throw error;

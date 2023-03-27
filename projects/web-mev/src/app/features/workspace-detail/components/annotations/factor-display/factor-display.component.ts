@@ -119,7 +119,6 @@ export class FactorDisplayComponent implements OnInit {
         this.yAxisLabelGrp = this.svg.append('g');
 
         this.maxY = d3.max(this.binCounts.map(d => d.count));
-        console.log(this.maxY);
         let xCats = this.binCounts.map(d => d.key)
         this.xScale = d3.scaleBand()
             .domain(xCats)
@@ -143,14 +142,11 @@ export class FactorDisplayComponent implements OnInit {
     }
 
     makeBarPlot() {
-        console.log(this.binCounts);
 
         const tip = d3Tip()
             .attr('class', 'd3-tip')
             .offset([-10, 0])
             .html((event, d) => {
-                console.log(event);
-                console.log(d);
                 return (
                     '<span>' + d.key + ':' + d.count + '</span>'
                 );
@@ -167,8 +163,6 @@ export class FactorDisplayComponent implements OnInit {
                 return (this.yScale(d.count))
             })
             .attr('height', d => {
-                console.log(d.count);
-                console.log(this.yScale(d.count))
                 return this.innerHeight - this.yScale(d.count);
             })
             .attr('width', this.bandwidth)

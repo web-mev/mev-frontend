@@ -63,7 +63,6 @@ export class LionComponent implements OnInit {
                 this.workspaceId
             )
             .subscribe(data => {
-                console.log('ann request: ', data)
                 this.ann_files = data;
                 this.ann_files.push({
                     'id': '',
@@ -94,7 +93,6 @@ export class LionComponent implements OnInit {
                 filters
             ).pipe(
                 catchError(error => {
-                    console.log("Error: ", error.message);
                     let message = `Error: ${error.error.error}`;
                     throw message
                 }))
@@ -113,7 +111,6 @@ export class LionComponent implements OnInit {
                 )
                 .subscribe(features => {
                     this.annotationData = features;
-                    console.log(this.annotationData)
                 });
         } else {
             this.showAnnotations = false;

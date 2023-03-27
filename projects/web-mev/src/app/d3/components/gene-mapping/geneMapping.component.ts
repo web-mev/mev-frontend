@@ -29,7 +29,6 @@ export class GeneMappingComponent implements OnChanges {
         return this.httpClient.get(endPoint)
             .pipe(
                 catchError(error => {
-                    console.log("Error: ", error);
                     throw error;
                 }))
     }

@@ -32,11 +32,8 @@ export class WorkareaComponent implements OnInit {
   }
 
   updateOps(){
-    this.analysesService.getAllNonWorkspaceExecOperations().pipe(
-      tap(ops => {
-        console.log(ops)
-      })
-    ).subscribe(
+    this.analysesService.getAllNonWorkspaceExecOperations()
+    .subscribe(
       (op_list:any) => {
         let ongoing_ops = false;
         for(var i in op_list){

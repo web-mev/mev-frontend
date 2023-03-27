@@ -142,7 +142,6 @@ export class PandaComponent implements AfterViewInit {
                 this.isLoading = false;
                 this.scrollTo('minimumEdgeWeight');
             }, error => {
-                console.log("Error: ", error)
                 let message = `Error: ${error.error.error}`
                 this.notificationService.warn(message)
                 this.isLoading = false;
@@ -219,7 +218,6 @@ export class PandaComponent implements AfterViewInit {
         return this.httpClient.get(endPoint)
             .pipe(
                 catchError(error => {
-                    console.log("Error: ", error);
                     let message = `Error: ${error.error.error}`
                     this.notificationService.warn(message)
                     this.isLoading = false;

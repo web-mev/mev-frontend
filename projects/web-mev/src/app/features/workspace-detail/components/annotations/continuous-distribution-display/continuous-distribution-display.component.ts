@@ -293,7 +293,6 @@ export class ContinuousDistributionDisplayComponent implements OnInit {
      * Called when a user clicks to remove a "pill"
      */
     remove(deletedRange) {
-        console.log(deletedRange);
         // compare the string representations of the ranges to 
         // find the item in the list
         const index = this.rangeSet.map(x => x.toString()).indexOf(deletedRange.toString());

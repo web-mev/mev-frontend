@@ -51,7 +51,6 @@ export class AmigoService {
     )
       .pipe(
         catchError(error => {
-          console.log("Error: ", error);
           throw error;
         }))
   }

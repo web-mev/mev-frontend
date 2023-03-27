@@ -32,7 +32,6 @@ export function handleBackendAuthResponse(response: any, storage: LclStorageServ
         // will return a link to the Globus file browser
         url = response['globus-browser-url'];
     } else {
-        console.log('Unexpected response from backend.');
         return '';
     }
     return url;

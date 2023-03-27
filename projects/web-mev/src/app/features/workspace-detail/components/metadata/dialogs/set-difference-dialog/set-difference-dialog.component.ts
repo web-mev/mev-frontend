@@ -35,7 +35,6 @@ export class SetDifferenceDialogComponent implements OnInit {
       setName: ['', Validators.required],
       setColor: ['#000000', Validators.required]
     });
-    console.log(this.data);
     this.sets = [this.data.setA, this.data.setB];
     this.setNames = [this.data.setAName, this.data.setBName];
   }

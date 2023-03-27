@@ -90,7 +90,6 @@ export class PlottingMenuComponent implements OnInit {
   }
 
   isNodeActive(name: string): boolean {
-    console.log('compare: ' + name + ', ' + this.currentPlotType);
     return name === this.currentPlotType
   }
 

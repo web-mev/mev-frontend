@@ -20,16 +20,13 @@ import {
       public dialogRef: MatDialogRef<WgcnaElbowDialogComponent>
     ) {}
   
-    ngOnInit(): void {
-      console.log('init dialog');
-    }
+    ngOnInit(): void {}
   
     /**
      * Function is triggered when user clicks the Cancel button
      *
      */
     onNoClick(): void {
-      console.log('about to close');
       this.dialogRef.close();
     }
   }

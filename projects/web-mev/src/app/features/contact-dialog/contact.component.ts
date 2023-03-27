@@ -32,7 +32,6 @@ export class ContactComponent {
   postData(url: string, postMessage: {}){
     return this.httpClient.post(url, postMessage).pipe(
       catchError(error => {
-          console.log("Error: ", error);
           let err_obj = error.error;
           let messages = err_obj.message;
           this.notificationService.error(`Error: ${messages.join()}`);

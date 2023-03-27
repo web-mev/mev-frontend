@@ -138,7 +138,6 @@ export class AuthenticationService {
    * backend will create a webmev JWT pair and return those. 
    */
   sendCode(provider: string, code: string, state: string, scope: string): Observable<any> {
-    console.log(`in send code with provider=${provider}`);
     let protocol = window.location.protocol;
     let host = window.location.host; 
     return this.http.post(

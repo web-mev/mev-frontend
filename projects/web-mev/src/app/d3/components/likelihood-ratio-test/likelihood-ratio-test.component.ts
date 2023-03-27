@@ -54,7 +54,6 @@ export class LikelihoodRatioTestComponent implements OnInit {
         this.boxplotData = [];
         this.httpClient.get(queryURL).pipe(
             catchError(error => {
-                console.log("Error: ", error.message);
                 let message = `Error: ${error.error.error}`;
                 throw message
             }))

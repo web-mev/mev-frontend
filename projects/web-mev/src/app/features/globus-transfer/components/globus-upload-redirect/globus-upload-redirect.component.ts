@@ -26,8 +26,6 @@ export class GlobusUploadRedirectComponent implements OnInit {
     this.activatedRoute.queryParamMap.pipe(
       switchMap(
         data => {
-          console.log('DATA');
-          console.log(data);
           // Data looks like:
           //  { 
           //     ​action: "http://localhost:4200/globus/redirect/"
@@ -44,8 +42,6 @@ export class GlobusUploadRedirectComponent implements OnInit {
       )
     ).subscribe(
       transfer_info => {
-        console.log('Transfer info:');
-        console.log(transfer_info);
         if (transfer_info['transfer_id'] === null){
           this.notificationService.warn('There was a problem submitting the transfer. An admin has been notified, but you may attempt the transfer again.',15000);
         }

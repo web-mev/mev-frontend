@@ -42,7 +42,10 @@ export class GlobusUploadRedirectComponent implements OnInit {
       )
     ).subscribe(
       transfer_info => {
-        if (transfer_info['transfer_id'] === null){
+        if ('error' in transfer_info){
+          this.notificationService.warn(transfer_info['error'],15000);
+
+        } else if (transfer_info['transfer_id'] === null){
           this.notificationService.warn('There was a problem submitting the transfer. An admin has been notified, but you may attempt the transfer again.',15000);
         }
         this.router.navigate(['/workarea']);

@@ -1,0 +1,59 @@
+<mev-spinner-overlay *ngIf="isWait"></mev-spinner-overlay>
+
+<form [formGroup]="igvForm" (ngSubmit)="onSubmit()" class="igv-container">
+    <ng-container>
+        <div class="label">
+            BAM File: <span class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="Select BAM file" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <mat-label>BAM</mat-label>
+            <mat-select formControlName=bam [(value)]="selectedBAMFileId" (selectionChange)="onSubmit()">
+                <mat-option *ngFor="let file of files" [value]="file.id">
+                    {{ file.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </ng-container>
+    <ng-container>
+        <div class="label">
+            BAI File: <span class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="Select BAM file" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <mat-label>BAI</mat-label>
+            <mat-select formControlName=bai [(value)]="selectedBAMFileId" (selectionChange)="onSubmit()">
+                <mat-option *ngFor="let file of files" [value]="file.id">
+                    {{ file.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </ng-container>
+    <ng-container>
+        <div class="label">
+            Genome: <span class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="Select BAM file" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <mat-label>Genome</mat-label>
+            <mat-select formControlName=genome [(value)]="selectedBAMFileId" (selectionChange)="onSubmit()">
+                <mat-option *ngFor="let file of files" [value]="file.id">
+                    {{ file.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </ng-container>
+    <div>
+        <button mat-raised-button color="accent" type="submit" (click)="onSubmit()">Submit
+        </button>
+    </div>
+</form>
+<br>
+
+<div #igvDiv></div>

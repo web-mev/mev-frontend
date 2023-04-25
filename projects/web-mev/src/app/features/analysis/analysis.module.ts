@@ -11,6 +11,8 @@ import { D3Module } from '@app/d3/d3.module';
 import { AnalysisFlowComponent } from './components/analysis-flow/analysis-flow.component';
 import { AnalysisPlottingResultComponent } from './components/analysis-plotting-result/analysis-plotting-result.component';
 import { PlottingMenuComponent } from './components/plotting-menu/plotting-menu.component';
+import { IGVComponent } from './components/igv/igv.component'
+
 @NgModule({
   declarations: [
     AnalysesComponent,
@@ -19,14 +21,16 @@ import { PlottingMenuComponent } from './components/plotting-menu/plotting-menu.
     AnalysisResultComponent,
     AnalysisFlowComponent,
     AnalysisPlottingResultComponent,
-    PlottingMenuComponent
+    PlottingMenuComponent,
+    IGVComponent
   ],
   exports: [
     OperationComponent,
     AnalysesComponent,
     ExecutedOperationComponent,
     AnalysisFlowComponent,
-    PlottingMenuComponent
+    PlottingMenuComponent,
+    IGVComponent
   ],
   imports: [
     CommonModule,
@@ -36,4 +40,4 @@ import { PlottingMenuComponent } from './components/plotting-menu/plotting-menu.
     AnalysisRoutingModule
   ]
 })
-export class AnalysisModule {}
+export class AnalysisModule { }

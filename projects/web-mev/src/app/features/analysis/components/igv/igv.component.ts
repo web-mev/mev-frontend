@@ -1,5 +1,6 @@
 import { Component, ViewChild, OnInit, Input } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { AnalysesService } from '@app/features/analysis/services/analysis.service';
 import igv from 'igv/dist/igv.esm.min.js';
 
 @Component({
@@ -10,9 +11,14 @@ import igv from 'igv/dist/igv.esm.min.js';
 export class IGVComponent implements OnInit {
   @Input() workspaceResources = [];
   @ViewChild('igvDiv', { static: true }) igvDiv;
-  selectedBAMFileId: string
+  selectedBAMFileId: string;
+  selectedBAIFileId: string;
+  selectedGenomeId: string;
   files = [];
+  filesByType = {};
+  genomeList = ['hg38', 'mm10', 'rn6', 'canFam3', 'dm6'];
   isWait = true;
+  showIGV = false;
 
   igvForm: FormGroup;
 
@@ -31,8 +37,10 @@ export class IGVComponent implements OnInit {
         }
       ]
     };
+
   constructor(
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private apiService: AnalysesService,
   ) { }
 
   ngOnInit(): void {
@@ -42,6 +50,14 @@ export class IGVComponent implements OnInit {
       genome: ['']
     });
     this.files = this.workspaceResources;
+    console.log("files: ", this.files)
+    for (let i of this.files) {
+      if (this.filesByType[i.resource_type] === undefined) {
+        this.filesByType[i.resource_type] = [];
+      }
+      this.filesByType[i.resource_type].push(i)
+    }
+
     this.isWait = false;
 
     igv.createBrowser(this.igvDiv.nativeElement, this.options)
@@ -50,7 +66,31 @@ export class IGVComponent implements OnInit {
       })
   }
 
-  onSubmit() {
+  onSelectBAM() {
+  }
 
+  onSelectBAI() {
+
+  }
+
+  onSelectGenome() {
+  }
+
+  // bamData = []
+
+  onSubmit() {
+    // this.showIGV = true;
+    console.log(this.selectedBAMFileId, this.igvForm)
+    // this.apiService
+    //   .getResourceContent(this.selectedBAMFileId)
+    //   .subscribe(features => {
+    //     this.bamData = features;
+    //     console.log(this.bamData)
+    //   });
+
+    igv.createBrowser(this.igvDiv.nativeElement, this.options)
+      .then(function (browser) {
+        console.log("Created IGV browser");
+      })
   }
 }

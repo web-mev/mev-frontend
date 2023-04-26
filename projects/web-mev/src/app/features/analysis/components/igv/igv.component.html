@@ -10,8 +10,8 @@
         </div>
         <mat-form-field class="form-control" color="accent">
             <mat-label>BAM</mat-label>
-            <mat-select formControlName=bam [(value)]="selectedBAMFileId" (selectionChange)="onSubmit()">
-                <mat-option *ngFor="let file of files" [value]="file.id">
+            <mat-select formControlName=bam [(value)]="selectedBAMFileId" (selectionChange)="onSelectBAM()">
+                <mat-option *ngFor="let file of filesByType['ALN']" [value]="file.id">
                     {{ file.name }}
                 </mat-option>
             </mat-select>
@@ -26,8 +26,8 @@
         </div>
         <mat-form-field class="form-control" color="accent">
             <mat-label>BAI</mat-label>
-            <mat-select formControlName=bai [(value)]="selectedBAMFileId" (selectionChange)="onSubmit()">
-                <mat-option *ngFor="let file of files" [value]="file.id">
+            <mat-select formControlName=bai [(value)]="selectedBAIFileId" (selectionChange)="onSelectBAI()">
+                <mat-option *ngFor="let file of filesByType['ALN']" [value]="file.id">
                     {{ file.name }}
                 </mat-option>
             </mat-select>
@@ -42,18 +42,19 @@
         </div>
         <mat-form-field class="form-control" color="accent">
             <mat-label>Genome</mat-label>
-            <mat-select formControlName=genome [(value)]="selectedBAMFileId" (selectionChange)="onSubmit()">
-                <mat-option *ngFor="let file of files" [value]="file.id">
-                    {{ file.name }}
+            <mat-select formControlName=genome [(value)]="selectedGenomeId" (selectionChange)="onSelectGenome()">
+                <mat-option *ngFor="let file of genomeList" [value]="file">
+                    {{ file }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
     </ng-container>
     <div>
-        <button mat-raised-button color="accent" type="submit" (click)="onSubmit()">Submit
+        <button mat-raised-button color="accent" type="submit" >Submit
         </button>
     </div>
 </form>
 <br>
-
-<div #igvDiv></div>
+<div>
+    <div #igvDiv></div>
+</div>

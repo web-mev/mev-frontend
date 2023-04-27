@@ -19,14 +19,14 @@
     </ng-container>
     <ng-container>
         <div class="label">
-            BAI File: <span class="redAsterisk">* </span>
+            Index File: <span class="redAsterisk">* </span>
             <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
                 matTooltip="Select BAM file" aria-label="Info tooltip about the field">info
             </mat-icon>
         </div>
         <mat-form-field class="form-control" color="accent">
-            <mat-label>BAI</mat-label>
-            <mat-select formControlName=bai [(value)]="selectedBAIFileId" (selectionChange)="onSelectBAI()">
+            <mat-label>Index</mat-label>
+            <mat-select formControlName=bai [(value)]="selectedIndexFileId" (selectionChange)="onSelectIndex()">
                 <mat-option *ngFor="let file of filesByType['ALN']" [value]="file.id">
                     {{ file.name }}
                 </mat-option>

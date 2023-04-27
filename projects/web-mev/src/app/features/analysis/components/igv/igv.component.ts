@@ -1,6 +1,8 @@
 import { Component, ViewChild, OnInit, Input } from '@angular/core';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { AnalysesService } from '@app/features/analysis/services/analysis.service';
+import { FileService } from '@app/features/file-manager/services/file-manager.service';
+import { HttpClient } from '@angular/common/http';
 import igv from 'igv/dist/igv.esm.min.js';
 
 @Component({
@@ -12,21 +14,77 @@ export class IGVComponent implements OnInit {
   @Input() workspaceResources = [];
   @ViewChild('igvDiv', { static: true }) igvDiv;
   selectedBAMFileId: string;
-  selectedBAIFileId: string;
+  selectedIndexFileId: string;
   selectedGenomeId: string;
   files = [];
   filesByType = {};
   genomeList = ['hg38', 'mm10', 'rn6', 'canFam3', 'dm6'];
-  isWait = true;
+  isWait: boolean = false;
   showIGV = false;
 
   igvForm: FormGroup;
 
-  bam_url = 'https://webmev-example-data.s3.us-east-2.amazonaws.com/xyz.bam'
-  bai_url = 'https://webmev-example-data.s3.us-east-2.amazonaws.com/xyz.bam.bai'
-  options =
+  // bam_url = 'https://webmev-example-data.s3.us-east-2.amazonaws.com/xyz.bam'
+  // bai_url = 'https://webmev-example-data.s3.us-east-2.amazonaws.com/xyz.bam.bai'
+  bam_url = '';
+  bai_url = '';
+  genome = '';
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private apiService: AnalysesService,
+    public fileService: FileService,
+    private httpClient: HttpClient,
+  ) { }
+
+  ngOnInit(): void {
+    this.igvForm = this.formBuilder.group({
+      bam: [''],
+      bai: [''],
+      genome: ['']
+    });
+
+    this.files = this.workspaceResources;
+
+    for (let i of this.files) {
+      if (this.filesByType[i.resource_type] === undefined) {
+        this.filesByType[i.resource_type] = [];
+      }
+      this.filesByType[i.resource_type].push(i)
+    }
+  }
+
+  onSelectBAM() {
+    this.httpClient.get(
+      `https://dev-mev-api.tm4.org/api/resources/${this.selectedBAMFileId}/`)
+      .subscribe((response) => {
+        this.bam_url = response['datafile']
+        console.log("res: ", response['datafile']);
+      }, (error) => {
+        console.error(error);
+      });
+  }
+
+  onSelectIndex() {
+    this.httpClient.get(
+      `https://dev-mev-api.tm4.org/api/resources/${this.selectedIndexFileId}/`)
+      .subscribe((response) => {
+        this.bai_url = response['datafile']
+        console.log("res: ", response['datafile']);
+
+      }, (error) => {
+        console.error(error);
+      });
+  }
+
+  onSelectGenome() {
+    this.genome = this.selectedGenomeId
+  }
+
+  onSubmit() {
+    let options =
     {
-      genome: "hg38",
+      genome: this.genome,
       locus: "chr1:10000-10600",
       tracks: [
         {
@@ -38,59 +96,12 @@ export class IGVComponent implements OnInit {
       ]
     };
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private apiService: AnalysesService,
-  ) { }
-
-  ngOnInit(): void {
-    this.igvForm = this.formBuilder.group({
-      bam: [''],
-      bai: [''],
-      genome: ['']
-    });
-    this.files = this.workspaceResources;
-    console.log("files: ", this.files)
-    for (let i of this.files) {
-      if (this.filesByType[i.resource_type] === undefined) {
-        this.filesByType[i.resource_type] = [];
-      }
-      this.filesByType[i.resource_type].push(i)
-    }
-
-    this.isWait = false;
-
-    igv.createBrowser(this.igvDiv.nativeElement, this.options)
+    igv.createBrowser(this.igvDiv.nativeElement, options)
       .then(function (browser) {
         console.log("Created IGV browser");
       })
-  }
-
-  onSelectBAM() {
-  }
-
-  onSelectBAI() {
-
-  }
-
-  onSelectGenome() {
-  }
-
-  // bamData = []
-
-  onSubmit() {
-    // this.showIGV = true;
-    console.log(this.selectedBAMFileId, this.igvForm)
-    // this.apiService
-    //   .getResourceContent(this.selectedBAMFileId)
-    //   .subscribe(features => {
-    //     this.bamData = features;
-    //     console.log(this.bamData)
-    //   });
-
-    igv.createBrowser(this.igvDiv.nativeElement, this.options)
-      .then(function (browser) {
-        console.log("Created IGV browser");
-      })
+      .catch(function (error) {
+        console.error("An error occurred:", error);
+      });
   }
 }

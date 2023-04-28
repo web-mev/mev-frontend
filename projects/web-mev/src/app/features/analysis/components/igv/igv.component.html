@@ -9,7 +9,6 @@
             </mat-icon>
         </div>
         <mat-form-field class="form-control" color="accent">
-            <mat-label>BAM</mat-label>
             <mat-select formControlName=bam [(value)]="selectedBAMFileId" (selectionChange)="onSelectBAM()">
                 <mat-option *ngFor="let file of filesByType['ALN']" [value]="file.id">
                     {{ file.name }}
@@ -25,7 +24,6 @@
             </mat-icon>
         </div>
         <mat-form-field class="form-control" color="accent">
-            <mat-label>Index</mat-label>
             <mat-select formControlName=bai [(value)]="selectedIndexFileId" (selectionChange)="onSelectIndex()">
                 <mat-option *ngFor="let file of filesByType['ALN']" [value]="file.id">
                     {{ file.name }}
@@ -41,7 +39,6 @@
             </mat-icon>
         </div>
         <mat-form-field class="form-control" color="accent">
-            <mat-label>Genome</mat-label>
             <mat-select formControlName=genome [(value)]="selectedGenomeId" (selectionChange)="onSelectGenome()">
                 <mat-option *ngFor="let file of genomeList" [value]="file">
                     {{ file }}
@@ -55,6 +52,6 @@
     </div>
 </form>
 <br>
-<div>
+<div id="igvDiv2">
     <div #igvDiv></div>
 </div>

@@ -24,8 +24,8 @@ export class IGVComponent implements OnInit {
 
   igvForm: FormGroup;
 
-  // bam_url = 'https://webmev-example-data.s3.us-east-2.amazonaws.com/xyz.bam'
-  // bai_url = 'https://webmev-example-data.s3.us-east-2.amazonaws.com/xyz.bam.bai'
+  // bam_url2 = 'https://webmev-example-data.s3.us-east-2.amazonaws.com/xyz.bam'
+  // bai_url2 = 'https://webmev-example-data.s3.us-east-2.amazonaws.com/xyz.bam.bai'
   bam_url = '';
   bai_url = '';
   genome = '';
@@ -99,9 +99,13 @@ export class IGVComponent implements OnInit {
     igv.createBrowser(this.igvDiv.nativeElement, options)
       .then(function (browser) {
         console.log("Created IGV browser");
+        const element = document.getElementById("igvDiv2") as HTMLElement;
+        element.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
       })
       .catch(function (error) {
         console.error("An error occurred:", error);
       });
+
+
   }
 }

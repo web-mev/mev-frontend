@@ -1,6 +1,5 @@
 import { Component, ViewChild, OnInit, Input } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import { AnalysesService } from '@app/features/analysis/services/analysis.service';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { FileService } from '@app/features/file-manager/services/file-manager.service';
 import { HttpClient } from '@angular/common/http';
 import igv from 'igv/dist/igv.esm.min.js';
@@ -27,21 +26,20 @@ export class IGVComponent implements OnInit {
   // bam_url2 = 'https://webmev-example-data.s3.us-east-2.amazonaws.com/xyz.bam'
   // bai_url2 = 'https://webmev-example-data.s3.us-east-2.amazonaws.com/xyz.bam.bai'
   bam_url = '';
-  bai_url = '';
+  index_url = '';
   genome = '';
 
   constructor(
     private formBuilder: FormBuilder,
-    private apiService: AnalysesService,
     public fileService: FileService,
     private httpClient: HttpClient,
   ) { }
 
   ngOnInit(): void {
     this.igvForm = this.formBuilder.group({
-      bam: [''],
-      bai: [''],
-      genome: ['']
+      bam: ['', Validators.required],
+      index: ['', Validators.required],
+      genome: ['', Validators.required]
     });
 
     this.files = this.workspaceResources;
@@ -69,7 +67,7 @@ export class IGVComponent implements OnInit {
     this.httpClient.get(
       `https://dev-mev-api.tm4.org/api/resources/${this.selectedIndexFileId}/`)
       .subscribe((response) => {
-        this.bai_url = response['datafile']
+        this.index_url = response['datafile']
         console.log("res: ", response['datafile']);
 
       }, (error) => {
@@ -82,6 +80,7 @@ export class IGVComponent implements OnInit {
   }
 
   onSubmit() {
+    this.isWait = true;
     let options =
     {
       genome: this.genome,
@@ -90,22 +89,20 @@ export class IGVComponent implements OnInit {
         {
           "name": "HG00103",
           "url": this.bam_url,
-          "indexURL": this.bai_url,
+          "indexURL": this.index_url,
           "format": "bam"
         }
       ]
     };
 
     igv.createBrowser(this.igvDiv.nativeElement, options)
-      .then(function (browser) {
-        console.log("Created IGV browser");
+      .then(browser => {
+        this.isWait = false;
         const element = document.getElementById("igvDiv2") as HTMLElement;
         element.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
       })
-      .catch(function (error) {
+      .catch(error => {
         console.error("An error occurred:", error);
       });
-
-
   }
 }

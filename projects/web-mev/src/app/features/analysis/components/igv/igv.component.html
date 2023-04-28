@@ -20,11 +20,11 @@
         <div class="label">
             Index File: <span class="redAsterisk">* </span>
             <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-                matTooltip="Select BAM file" aria-label="Info tooltip about the field">info
+                matTooltip="Select Index file" aria-label="Info tooltip about the field">info
             </mat-icon>
         </div>
         <mat-form-field class="form-control" color="accent">
-            <mat-select formControlName=bai [(value)]="selectedIndexFileId" (selectionChange)="onSelectIndex()">
+            <mat-select formControlName=index [(value)]="selectedIndexFileId" (selectionChange)="onSelectIndex()">
                 <mat-option *ngFor="let file of filesByType['ALN']" [value]="file.id">
                     {{ file.name }}
                 </mat-option>
@@ -35,7 +35,7 @@
         <div class="label">
             Genome: <span class="redAsterisk">* </span>
             <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-                matTooltip="Select BAM file" aria-label="Info tooltip about the field">info
+                matTooltip="Select Genome" aria-label="Info tooltip about the field">info
             </mat-icon>
         </div>
         <mat-form-field class="form-control" color="accent">
@@ -47,7 +47,7 @@
         </mat-form-field>
     </ng-container>
     <div>
-        <button mat-raised-button color="accent" type="submit" >Submit
+        <button mat-raised-button color="accent" type="submit" [disabled]="!igvForm.valid">Submit
         </button>
     </div>
 </form>

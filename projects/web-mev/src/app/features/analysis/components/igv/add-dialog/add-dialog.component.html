@@ -1,0 +1,35 @@
+<div class="container">
+  <span class="headerSpan">
+    <div class="dialogTitle">Add Track File(s)</div>
+    <button class="closeDialogButton" mat-dialog-close mat-icon-button type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </span>
+  <div mat-dialog-title class="dialogContent">Select one or more Track files from the list to use.
+    <br> Then click the Add button.
+  </div>
+  <form class="mat-dialog-content" (ngSubmit)="submit" #formControl="ngForm">
+    <div class="form">
+      <angular2-multiselect [data]="files" [(ngModel)]="selectedFiles" [settings]="dropdownSettings"
+        name="resource">
+        <c-item>
+          <ng-template let-item="item">
+            <span class="resource-label">{{ item.name }} </span>
+            <!-- <br>
+            <span class="resource-type-label">Type: {{ item.readable_resource_type || 'N/A' }}</span> -->
+          </ng-template>
+        </c-item>
+        <c-badge>
+          <ng-template let-item="item">
+            <label>{{ item.name }}</label>
+          </ng-template>
+        </c-badge>
+      </angular2-multiselect>
+    </div>
+    <div class="submitBtnContainer">
+      <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
+      <button mat-button [mat-dialog-close]="1" mat-raised-button color="accent" (click)="confirmAdd()">Add</button>
+    </div>
+
+  </form>
+</div>

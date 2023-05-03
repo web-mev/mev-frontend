@@ -11,7 +11,10 @@ import { D3Module } from '@app/d3/d3.module';
 import { AnalysisFlowComponent } from './components/analysis-flow/analysis-flow.component';
 import { AnalysisPlottingResultComponent } from './components/analysis-plotting-result/analysis-plotting-result.component';
 import { PlottingMenuComponent } from './components/plotting-menu/plotting-menu.component';
-import { IGVComponent } from './components/igv/igv.component'
+import { IGVComponent } from './components/igv/igv.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AddDialog2Component } from './components/igv/add-dialog/add-dialog.component'
+
 
 @NgModule({
   declarations: [
@@ -22,7 +25,8 @@ import { IGVComponent } from './components/igv/igv.component'
     AnalysisFlowComponent,
     AnalysisPlottingResultComponent,
     PlottingMenuComponent,
-    IGVComponent
+    IGVComponent,
+    AddDialog2Component
   ],
   exports: [
     OperationComponent,
@@ -30,14 +34,17 @@ import { IGVComponent } from './components/igv/igv.component'
     ExecutedOperationComponent,
     AnalysisFlowComponent,
     PlottingMenuComponent,
-    IGVComponent
+    IGVComponent,
+    AddDialog2Component
   ],
   imports: [
     CommonModule,
     SharedModule,
     AngularMultiSelectModule,
     D3Module,
-    AnalysisRoutingModule
+    AnalysisRoutingModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class AnalysisModule { }

@@ -8,13 +8,25 @@
                 matTooltip="Select BAM file" aria-label="Info tooltip about the field">info
             </mat-icon>
         </div>
-        <mat-form-field class="form-control" color="accent">
+        
+        <!-- <mat-form-field class="form-control" color="accent">
             <mat-select formControlName=bam [(value)]="selectedBAMFileId" (selectionChange)="onSelectBAM()">
                 <mat-option *ngFor="let file of filesByType['ALN']" [value]="file.id">
                     {{ file.name }}
                 </mat-option>
             </mat-select>
-        </mat-form-field>
+
+        </mat-form-field> -->
+        <br>
+        <div>Selected File: {{selectedBAMFileName}}</div>
+        <br>
+        <button mat-raised-button color="accent" (click)="addItem()">
+            <mat-icon aria-label="Add local data">add</mat-icon>
+            Select Track file
+        </button>
+
+        
+        <br>
     </ng-container>
     <ng-container>
         <div class="label">

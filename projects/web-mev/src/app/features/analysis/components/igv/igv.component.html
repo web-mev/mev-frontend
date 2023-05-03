@@ -1,73 +1,90 @@
 <mev-spinner-overlay *ngIf="isWait"></mev-spinner-overlay>
-<div class="igv-container">
-    <ng-container>
-        <div class="label">
-            Track File: <span class="redAsterisk">* </span>
-            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-                matTooltip="Select BAM file" aria-label="Info tooltip about the field">info
-            </mat-icon>
+<mat-accordion>
+    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [expanded]="expandState">
+        <mat-expansion-panel-header *ngIf="!expandState || !panelOpenState">
+            <mat-panel-title>
+                Select new files
+            </mat-panel-title>
+            <mat-panel-description>
+                Open to use new Tracks
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="igv-container">
+            <ng-container>
+                <div class="label">
+                    Track File: <span class="redAsterisk">* </span>
+                    <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                        matTooltip="Select BAM file" aria-label="Info tooltip about the field">info
+                    </mat-icon>
 
+                </div>
+                <div>{{selectedBAMFileName}}</div>
+
+                <!-- <mat-form-field class="form-control" color="accent">
+                    <mat-select formControlName=bam [(value)]="selectedBAMFileId" (selectionChange)="onSelectBAM()">
+                        <mat-option *ngFor="let file of filesByType['ALN']" [value]="file.id">
+                            {{ file.name }}
+                        </mat-option>
+                    </mat-select>
+            
+                </mat-form-field> -->
+                <!-- <br>
+                <div>Selected File: {{selectedBAMFileName}}</div> -->
+                <br>
+                <button mat-raised-button color="accent" (click)="addItem()">
+                    <mat-icon aria-label="Add local data">add</mat-icon>
+                    Select Track file
+                </button>
+
+
+                <br>
+            </ng-container>
         </div>
-        <div>{{selectedBAMFileName}}</div>
 
-        <!-- <mat-form-field class="form-control" color="accent">
-            <mat-select formControlName=bam [(value)]="selectedBAMFileId" (selectionChange)="onSelectBAM()">
-                <mat-option *ngFor="let file of filesByType['ALN']" [value]="file.id">
-                    {{ file.name }}
-                </mat-option>
-            </mat-select>
-    
-        </mat-form-field> -->
-        <!-- <br>
-        <div>Selected File: {{selectedBAMFileName}}</div> -->
-        <br>
-        <button mat-raised-button color="accent" (click)="addItem()">
-            <mat-icon aria-label="Add local data">add</mat-icon>
-            Select Track file
-        </button>
+        <form [formGroup]="igvForm" (ngSubmit)="onSubmit()" class="igv-container" novalidate>
+
+            <ng-container>
+                <div class="label">
+                    Index File: <span class="redAsterisk">* </span>
+                    <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                        matTooltip="Select Index file" aria-label="Info tooltip about the field">info
+                    </mat-icon>
+                </div>
+                <mat-form-field class="form-control" color="accent">
+                    <mat-select formControlName=index [(value)]="selectedIndexFileId"
+                        (selectionChange)="onSelectIndex()">
+                        <mat-option *ngFor="let file of filesByType['ALN']" [value]="file.id">
+                            {{ file.name }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </ng-container>
+            <ng-container>
+                <div class="label">
+                    Genome: <span class="redAsterisk">* </span>
+                    <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                        matTooltip="Select Genome" aria-label="Info tooltip about the field">info
+                    </mat-icon>
+                </div>
+                <mat-form-field class="form-control" color="accent">
+                    <mat-select formControlName=genome [(value)]="selectedGenomeId"
+                        (selectionChange)="onSelectGenome()">
+                        <mat-option *ngFor="let file of genomeList" [value]="file">
+                            {{ file }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </ng-container>
+            <div>
+                <button mat-raised-button color="accent" type="submit" [disabled]="!igvForm.valid">Submit
+                </button>
+            </div>
+        </form>
+    </mat-expansion-panel>
+</mat-accordion>
 
 
-        <br>
-    </ng-container>
-</div>
 
-<form [formGroup]="igvForm" (ngSubmit)="onSubmit()" class="igv-container" novalidate>
-
-    <ng-container>
-        <div class="label">
-            Index File: <span class="redAsterisk">* </span>
-            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-                matTooltip="Select Index file" aria-label="Info tooltip about the field">info
-            </mat-icon>
-        </div>
-        <mat-form-field class="form-control" color="accent">
-            <mat-select formControlName=index [(value)]="selectedIndexFileId" (selectionChange)="onSelectIndex()">
-                <mat-option *ngFor="let file of filesByType['ALN']" [value]="file.id">
-                    {{ file.name }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-    </ng-container>
-    <ng-container>
-        <div class="label">
-            Genome: <span class="redAsterisk">* </span>
-            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-                matTooltip="Select Genome" aria-label="Info tooltip about the field">info
-            </mat-icon>
-        </div>
-        <mat-form-field class="form-control" color="accent">
-            <mat-select formControlName=genome [(value)]="selectedGenomeId" (selectionChange)="onSelectGenome()">
-                <mat-option *ngFor="let file of genomeList" [value]="file">
-                    {{ file }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-    </ng-container>
-    <div>
-        <button mat-raised-button color="accent" type="submit" [disabled]="!igvForm.valid">Submit
-        </button>
-    </div>
-</form>
 <br>
 <div id="igvDiv2">
     <div #igvDiv></div>

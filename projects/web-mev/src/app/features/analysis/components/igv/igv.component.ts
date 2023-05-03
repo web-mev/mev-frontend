@@ -25,6 +25,7 @@ export class IGVComponent implements OnInit {
   isWait: boolean = false;
   showIGV = false;
   workspaceId
+  panelOpenState = true;
 
   igvForm: FormGroup;
 
@@ -117,8 +118,10 @@ export class IGVComponent implements OnInit {
   onSelectGenome() {
     this.genome = this.selectedGenomeId
   }
+  expandState = true;
 
   onSubmit() {
+    this.expandState = false;
     this.isWait = true;
     let tracksArr = [];
 

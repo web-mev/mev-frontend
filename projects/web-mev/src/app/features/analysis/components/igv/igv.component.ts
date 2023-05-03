@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import igv from 'igv/dist/igv.esm.min.js';
 import { MatDialog } from '@angular/material/dialog';
 import { AddDialog2Component } from './add-dialog/add-dialog.component';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'mev-igv',
@@ -72,12 +72,6 @@ export class IGVComponent implements OnInit {
   //     });
   // }
 
-  handleFilesAdded(files: any[]) {
-    // do something with the selected files
-    console.log("got files: ",files);
-  }
-
-  // selectedBAMFileName = '';
   selectedBAMData = [];
 
   addItem() {
@@ -90,7 +84,7 @@ export class IGVComponent implements OnInit {
       console.log(result); // This will log the selectedFiles array
       let selectedBAMFileArr = [];
       this.selectedBAMData = result;
-      for(let obj of result){
+      for (let obj of result) {
         selectedBAMFileArr.push(obj['name'])
       }
       this.selectedBAMFileName = selectedBAMFileArr.join(', ')
@@ -126,24 +120,23 @@ export class IGVComponent implements OnInit {
 
   onSubmit() {
     this.isWait = true;
+    let tracksArr = [];
+
+    for (let i = 0; i < this.selectedBAMData.length; i++) {
+      let test = {
+        "name": "HG00103",
+        "url": this.bam_url,
+        "indexURL": this.index_url,
+        "format": "bam"
+      }
+      tracksArr.push(test)
+    }
+    
     let options =
     {
       genome: this.genome,
       locus: "chr1:10000-10600",
-      tracks: [
-        {
-          "name": "HG00103",
-          "url": this.bam_url,
-          "indexURL": this.index_url,
-          "format": "bam"
-        },
-        {
-          "name": "HG00103",
-          "url": this.bam_url,
-          "indexURL": this.index_url,
-          "format": "bam"
-        }
-      ]
+      tracks: tracksArr
     };
 
     igv.createBrowser(this.igvDiv.nativeElement, options)

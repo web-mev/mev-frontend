@@ -1,35 +1,32 @@
 <div class="container">
+
   <span class="headerSpan">
-    <div class="dialogTitle">Add Track File(s)</div>
+    <div class="dialogTitle">Add Track File</div>
     <button class="closeDialogButton" mat-dialog-close mat-icon-button type="button">
       <mat-icon>close</mat-icon>
     </button>
   </span>
-  <div mat-dialog-title class="dialogContent">Select one or more Track files from the list to use.
-    <br> Then click the Add button.
+
+  <div mat-dialog-title class="dialogContent">Select a Track file from the list to use.
   </div>
-  <form class="mat-dialog-content" (ngSubmit)="submit" #formControl="ngForm">
-    <div class="form">
-      <angular2-multiselect [data]="files" [(ngModel)]="selectedFiles" [settings]="dropdownSettings"
-        name="resource">
-        <c-item>
-          <ng-template let-item="item">
-            <span class="resource-label">{{ item.name }} </span>
-            <!-- <br>
-            <span class="resource-type-label">Type: {{ item.readable_resource_type || 'N/A' }}</span> -->
-          </ng-template>
-        </c-item>
-        <c-badge>
-          <ng-template let-item="item">
-            <label>{{ item.name }}</label>
-          </ng-template>
-        </c-badge>
-      </angular2-multiselect>
-    </div>
+  <form class="mat-dialog-content">
+
+    <mat-form-field class="form">
+      <mat-select [(ngModel)]="selectedTrackFileId" name="track" placeholder="Track file"
+        (selectionChange)="onSelectTrack()">
+        <mat-option *ngFor="let file of trackFiles" [value]="file.id">{{file.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="form" *ngIf="currResourceType === 'ALN' ">
+      <mat-select [(ngModel)]="selectedIndexFileId" name="index" placeholder="Index file">
+        <mat-option *ngFor="let file of indexFiles" [value]="file.id">{{file.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
     <div class="submitBtnContainer">
       <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
       <button mat-button [mat-dialog-close]="1" mat-raised-button color="accent" (click)="confirmAdd()">Add</button>
     </div>
-
   </form>
 </div>

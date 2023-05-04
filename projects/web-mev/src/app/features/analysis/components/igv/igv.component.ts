@@ -48,7 +48,7 @@ export class IGVComponent implements OnInit {
     console.log("workspaceId: ", this.workspaceId)
     this.igvForm = this.formBuilder.group({
       // bam: ['', Validators.required],
-      index: ['', Validators.required],
+      // index: ['', Validators.required],
       genome: ['', Validators.required]
     });
 
@@ -82,38 +82,58 @@ export class IGVComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      console.log(result); // This will log the selectedFiles array
-      let selectedBAMFileArr = [];
-      this.selectedBAMData = result;
-      for (let obj of result) {
-        selectedBAMFileArr.push(obj['name'])
-      }
-      this.selectedBAMFileName = selectedBAMFileArr.join(', ')
-      this.selectedBAMFileId = result[0]['id']
+      console.log("closed results: ", result); // This will log the selectedFiles array
 
-      this.httpClient.get(
-        `https://dev-mev-api.tm4.org/api/resources/${this.selectedBAMFileId}/`)
-        .subscribe((response) => {
-          this.bam_url = response['datafile']
-          console.log("res: ", response['datafile']);
-        }, (error) => {
-          console.error(error);
-        });
+
+      // let selectedBAMFileArr = [];
+      // this.selectedBAMData = result;
+      // for (let obj of result) {
+      //   selectedBAMFileArr.push(obj['name'])
+      // }
+      // this.selectedBAMFileName = selectedBAMFileArr.join(', ')
+      // this.selectedBAMFileId = result[0]['id']
+
+      
+
+      //NEED TO HANDLE THIS AS AN ARRAY instead of doing just one
+      if (result != undefined) {
+        this.selectedBAMFileId = result['track']
+        this.httpClient.get(
+          `https://dev-mev-api.tm4.org/api/resources/${this.selectedBAMFileId}/`)
+          .subscribe((response) => {
+            this.bam_url = response['datafile']
+            console.log("res: ", response['datafile']);
+          }, (error) => {
+            console.error(error);
+          });
+
+        this.selectedIndexFileId = result['index'];
+        this.httpClient.get(
+          `https://dev-mev-api.tm4.org/api/resources/${this.selectedIndexFileId}/`)
+          .subscribe((response) => {
+            this.index_url = response['datafile']
+            console.log("res: ", response['datafile']);
+
+          }, (error) => {
+            console.error(error);
+          });
+      }
+
     });
   }
 
-  onSelectIndex() {
-    console.log("index: ", this.selectedIndexFileId)
-    this.httpClient.get(
-      `https://dev-mev-api.tm4.org/api/resources/${this.selectedIndexFileId}/`)
-      .subscribe((response) => {
-        this.index_url = response['datafile']
-        console.log("res: ", response['datafile']);
+  // onSelectIndex() {
+  //   console.log("index: ", this.selectedIndexFileId)
+  //   this.httpClient.get(
+  //     `https://dev-mev-api.tm4.org/api/resources/${this.selectedIndexFileId}/`)
+  //     .subscribe((response) => {
+  //       this.index_url = response['datafile']
+  //       console.log("res: ", response['datafile']);
 
-      }, (error) => {
-        console.error(error);
-      });
-  }
+  //     }, (error) => {
+  //       console.error(error);
+  //     });
+  // }
 
   onSelectGenome() {
     this.genome = this.selectedGenomeId
@@ -134,7 +154,7 @@ export class IGVComponent implements OnInit {
       }
       tracksArr.push(test)
     }
-    
+
     let options =
     {
       genome: this.genome,

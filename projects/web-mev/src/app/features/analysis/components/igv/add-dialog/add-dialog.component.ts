@@ -12,7 +12,6 @@ import { HttpClient } from '@angular/common/http';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddDialog2Component implements OnInit {
-  // @Output() filesAdded = new EventEmitter<any>();
   private readonly API_URL = environment.apiUrl;
   trackFiles = [];
   indexFiles = [];
@@ -75,40 +74,27 @@ export class AddDialog2Component implements OnInit {
    * Function is triggered when user clicks the Add button
    *
    */
+  selectTrackFileName = '';
   confirmAdd() {
-    // this.selectedFiles.forEach(file => {
-    //   this.apiService
-    //     .addResourceToWorkspace(file.id, this.data.workspaceId)
-    //     .subscribe();
-    // });
-    // this.filesAdded.emit(this.selectedFiles);
-    // console.log(this.filesAdded, this.selectedFiles)
-    console.log("selected file: ", this.selectedTrackFileId, this.resourceTypeDict[this.selectedTrackFileId]["resource_type"])
+    for(let i of this.trackFiles){
+      if(i.id ===this.selectedTrackFileId ){
+        console.log("got a match")
+        this.selectTrackFileName = i.name
+      }
+    }
     let temp = {
       track: this.selectedTrackFileId,
-      index: this.selectedIndexFileId
+      index: this.selectedIndexFileId,
+      name: this.selectTrackFileName,
+      type: this.currResourceType
     }
     this.dialogRef.close(temp);
   }
   currResourceType = ''
   onSelectTrack(){
-    console.log("selectedTrackFileId: ", this.selectedTrackFileId)
+    console.log("from popup: ", this.trackFiles)
     this.currResourceType = this.resourceTypeDict[this.selectedTrackFileId]["resource_type"]
 
   }
-  // filesByType = []
   selectedIndexFileId = '';
-  // index_url = '';
-
-  // onSelectIndex() {
-  //   this.httpClient.get(
-  //     `https://dev-mev-api.tm4.org/api/resources/${this.selectedIndexFileId}/`)
-  //     .subscribe((response) => {
-  //       this.index_url = response['datafile']
-  //       console.log("res: ", response['datafile']);
-
-  //     }, (error) => {
-  //       console.error(error);
-  //     });
-  // }
 }

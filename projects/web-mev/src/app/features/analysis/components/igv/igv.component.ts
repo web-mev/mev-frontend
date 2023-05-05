@@ -6,6 +6,7 @@ import igv from 'igv/dist/igv.esm.min.js';
 import { MatDialog } from '@angular/material/dialog';
 import { AddDialog2Component } from './add-dialog/add-dialog.component';
 import { ActivatedRoute } from '@angular/router';
+import { environment } from '@environments/environment';
 
 @Component({
   selector: 'mev-igv',
@@ -15,6 +16,7 @@ import { ActivatedRoute } from '@angular/router';
 export class IGVComponent implements OnInit {
   @Input() workspaceResources = [];
   @ViewChild('igvDiv', { static: true }) igvDiv;
+  private readonly API_URL = environment.apiUrl;
   workspaceId: string;
   selectedBAMFileName: string;
   selectedBAMFileId: string;
@@ -24,16 +26,17 @@ export class IGVComponent implements OnInit {
   filesByType = {};
   genomeList = ['hg38', 'mm10', 'rn6', 'canFam3', 'dm6'];
   isWait: boolean = false;
-  showIGV = false;
+  // showIGV = false;
   panelOpenState = true;
 
   igvForm: FormGroup;
 
-  // bam_url2 = 'https://webmev-example-data.s3.us-east-2.amazonaws.com/xyz.bam'
-  // bai_url2 = 'https://webmev-example-data.s3.us-east-2.amazonaws.com/xyz.bam.bai'
   bam_url = '';
   index_url = '';
   genome = 'hg38';
+
+  selectedBAMData = [];
+  trackNames = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -46,12 +49,11 @@ export class IGVComponent implements OnInit {
 
   ngOnInit(): void {
     this.workspaceId = this.route.snapshot.paramMap.get('workspaceId');
-    console.log("workspaceId: ", this.workspaceId)
-    this.igvForm = this.formBuilder.group({
-      // bam: ['', Validators.required],
-      // index: ['', Validators.required],
-      genome: ['', Validators.required]
-    });
+    // this.igvForm = this.formBuilder.group({
+    // // bam: ['', Validators.required],
+    // // index: ['', Validators.required],
+    // // genome: ['', Validators.required]
+    // });
 
     this.files = this.workspaceResources;
 
@@ -62,28 +64,15 @@ export class IGVComponent implements OnInit {
       this.filesByType[i.resource_type].push(i)
     }
 
-    let options =
-    {
-      genome: this.genome,
+    const options = {
+      genome: "hg38",
       locus: "chr1:10000-10600",
-      tracks: []
     };
 
-    this.createBrowser(options);
+    igv.createBrowser(this.igvDiv.nativeElement, options)
   }
 
-  // onSelectBAM() {
-  //   this.httpClient.get(
-  //     `https://dev-mev-api.tm4.org/api/resources/${this.selectedBAMFileId}/`)
-  //     .subscribe((response) => {
-  //       this.bam_url = response['datafile']
-  //       console.log("res: ", response['datafile']);
-  //     }, (error) => {
-  //       console.error(error);
-  //     });
-  // }
 
-  selectedBAMData = [];
 
   addItem() {
     const dialogRef = this.dialog.open(AddDialog2Component, {
@@ -91,84 +80,142 @@ export class IGVComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      console.log("closed results: ", result); // This will log the selectedFiles array
-
-
-      // let selectedBAMFileArr = [];
-      // this.selectedBAMData = result;
-      // for (let obj of result) {
-      //   selectedBAMFileArr.push(obj['name'])
-      // }
-      // this.selectedBAMFileName = selectedBAMFileArr.join(', ')
-      // this.selectedBAMFileId = result[0]['id']
-
-
-
-
-      //NEED TO HANDLE THIS AS AN ARRAY instead of doing just one
       if (result != undefined) {
         this.selectedBAMData.push(result);
       }
-
+      this.trackNames.push(result.name)
+      console.log("the arr: ", result, this.trackNames)
+      // this.selectedBAMFileName = this.selectedBAMData.toString()
     });
   }
-
-  // onSelectIndex() {
-  //   console.log("index: ", this.selectedIndexFileId)
-  //   this.httpClient.get(
-  //     `https://dev-mev-api.tm4.org/api/resources/${this.selectedIndexFileId}/`)
-  //     .subscribe((response) => {
-  //       this.index_url = response['datafile']
-  //       console.log("res: ", response['datafile']);
-
-  //     }, (error) => {
-  //       console.error(error);
-  //     });
-  // }
 
   onSelectGenome() {
     this.genome = this.selectedGenomeId
   }
   expandState = true;
 
-  onSubmit() {
-    const div = this.igvDiv.nativeElement;
-    this.renderer.setProperty(div, 'innerHTML', '');
+
+  // onSubmit() {
+  //   // const div = this.igvDiv.nativeElement;
+  //   // this.renderer.setProperty(div, 'innerHTML', '');
+  //   igv.removeAllBrowsers()
+
+  //   this.expandState = false;
+  //   this.isWait = true;
+  //   let tracksArr = [];
+
+  //   console.log("bamData: ", this.selectedBAMData)
+
+  //   for (let i = 0; i < this.selectedBAMData.length; i++) {
+  //     this.selectedBAMFileId = this.selectedBAMData[i]['track']
+  //     this.httpClient.get(`${this.API_URL}/resources/signed-url/${this.selectedBAMFileId}/`)
+  //       .subscribe((response) => {
+  //         this.bam_url = response['url'];
+
+  //         if (this.selectedBAMData[i]['type'] === 'ALN') {
+  //           this.selectedIndexFileId = this.selectedBAMData[i]['index'];
+  //           this.httpClient.get(`${this.API_URL}/resources/signed-url/${this.selectedIndexFileId}/`)
+  //             .subscribe((response) => {
+  //               this.index_url = response['url']
+  //               console.log("res index: ", this.index_url);
+
+  //               let test = {
+  //                 "name": "HG00103",
+  //                 "url": this.bam_url,
+  //                 "indexURL": this.index_url,
+  //                 "format": "bam"
+  //               }
+  //               tracksArr.push(test)
+
+  //             }, (error) => {
+  //               console.error(error);
+  //             });
+  //         }
+  //         else if (this.selectedBAMData[i]['type'] != 'ALN') {
+  //           let test = {
+  //             type: "wig",
+  //             name: "CTCF",
+  //             url: "https://www.encodeproject.org/files/ENCFF356YES/@@download/ENCFF356YES.bigWig",
+  //             min: "0",
+  //             max: "30",
+  //             color: "rgb(0, 0, 150)",
+  //             guideLines: [
+  //               { color: 'green', dotted: true, y: 25 },
+  //               { color: 'red', dotted: false, y: 5 }
+  //             ]
+  //           }
+  //           tracksArr.push(test)
+  //         }
+  //       }, (error) => {
+  //         console.error(error);
+  //       });
+
+  //   }
+
+  //   let options =
+  //   {
+  //     genome: this.genome,
+  //     locus: "chr1:10000-10600",
+  //     tracks: tracksArr
+  //   };
+  //   console.log("options: ", options)
+
+  //   setTimeout(() => {
+  //     this.createBrowser(options);
+  //   }, 5000);
+
+  // }
+
+  async onSubmit() {
+    // const div = this.igvDiv.nativeElement;
+    // this.renderer.setProperty(div, 'innerHTML', '');
+    igv.removeAllBrowsers()
 
     this.expandState = false;
     this.isWait = true;
     let tracksArr = [];
 
+    console.log("bamData: ", this.selectedBAMData)
+
     for (let i = 0; i < this.selectedBAMData.length; i++) {
       this.selectedBAMFileId = this.selectedBAMData[i]['track']
-      this.httpClient.get(
-        `https://dev-mev-api.tm4.org/api/resources/${this.selectedBAMFileId}/`)
-        .subscribe((response) => {
-          this.bam_url = response['datafile']
-          console.log("res: ", response['datafile']);
-        }, (error) => {
-          console.error(error);
-        });
+      try {
+        const response = await this.httpClient.get(`${this.API_URL}/resources/signed-url/${this.selectedBAMFileId}/`).toPromise();
+        this.bam_url = response['url'];
 
-      this.selectedIndexFileId = this.selectedBAMData[i]['index'];
-      this.httpClient.get(
-        `https://dev-mev-api.tm4.org/api/resources/${this.selectedIndexFileId}/`)
-        .subscribe((response) => {
-          this.index_url = response['datafile']
-          console.log("res: ", response['datafile']);
+        if (this.selectedBAMData[i]['type'] === 'ALN') {
+          this.selectedIndexFileId = this.selectedBAMData[i]['index'];
+          const response = await this.httpClient.get(`${this.API_URL}/resources/signed-url/${this.selectedIndexFileId}/`).toPromise();
+          this.index_url = response['url']
 
-        }, (error) => {
-          console.error(error);
-        });
-
-        let test = {
-          "name": "HG00103",
-          "url": this.bam_url,
-          "indexURL": this.index_url,
-          "format": "bam"
+          let test = {
+            "name": "HG00103",
+            "url": this.bam_url,
+            "indexURL": this.index_url,
+            "format": "bam"
+          }
+          tracksArr.push(test)
+        } else if (this.selectedBAMData[i]['type'] === 'WIG' || this.selectedBAMData[i]['type'] === 'BIGWIG' || this.selectedBAMData[i]['type'] === 'BEDGRAPH'){
+          //this is for types bed, bigwig, bedgraph only
+          this.index_url = response['url']
+          let test = {
+            type: "wig",
+            name: "CTCF",
+            url: this.index_url,
+            // url: "https://www.encodeproject.org/files/ENCFF356YES/@@download/ENCFF356YES.bigWig",
+            min: "0",
+            max: "30",
+            color: "rgb(0, 0, 150)",
+            guideLines: [
+              { color: 'green', dotted: true, y: 25 },
+              { color: 'red', dotted: false, y: 5 }
+            ]
+          }
+          tracksArr.push(test)
         }
-        tracksArr.push(test)
+      } catch (error) {
+        console.error(error);
+      }
     }
 
     let options =
@@ -177,25 +224,14 @@ export class IGVComponent implements OnInit {
       locus: "chr1:10000-10600",
       tracks: tracksArr
     };
+    console.log("options: ", options)
+    await this.createBrowser(options);
+}
 
-    this.createBrowser(options);
 
-    // igv.createBrowser(this.igvDiv.nativeElement, options)
-    //   .then(browser => {
-    //     console.log("options: ", options)
-    //     this.isWait = false;
-    //     const element = document.getElementById("igvDiv2") as HTMLElement;
-    //     element.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
-    //   })
-    //   .catch(error => {
-    //     console.error("An error occurred:", error);
-    //   });
-  }
-
-  createBrowser(options){
+  createBrowser(options) {
     igv.createBrowser(this.igvDiv.nativeElement, options)
       .then(browser => {
-        console.log("options: ", options)
         this.isWait = false;
         const element = document.getElementById("igvDiv2") as HTMLElement;
         element.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
@@ -203,5 +239,16 @@ export class IGVComponent implements OnInit {
       .catch(error => {
         console.error("An error occurred:", error);
       });
+  }
+
+  reset() {
+    this.genome = 'hg38';
+    this.trackNames = [];
+    this.selectedBAMData = [];
+
+    this.bam_url = '';
+    this.index_url = '';
+
+    // igv.removeAllBrowsers()
   }
 }

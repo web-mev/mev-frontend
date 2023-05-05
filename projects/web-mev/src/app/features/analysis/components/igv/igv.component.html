@@ -18,7 +18,7 @@
                     </mat-icon>
 
                 </div>
-                <div>{{selectedBAMFileName}}</div>
+                <div>{{trackNames.join(' ')}}</div>
 
                 <!-- <mat-form-field class="form-control" color="accent">
                     <mat-select formControlName=bam [(value)]="selectedBAMFileId" (selectionChange)="onSelectBAM()">
@@ -41,9 +41,9 @@
             </ng-container>
         </div>
 
-        <form [formGroup]="igvForm" (ngSubmit)="onSubmit()" class="igv-container" novalidate>
+        <!-- <form [formGroup]="igvForm" (ngSubmit)="onSubmit()" class="igv-container" novalidate> -->
 
-            <!-- <ng-container>
+        <!-- <ng-container>
                 <div class="label">
                     Index File: <span class="redAsterisk">* </span>
                     <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
@@ -59,7 +59,7 @@
                     </mat-select>
                 </mat-form-field>
             </ng-container> -->
-            <ng-container>
+        <!-- <ng-container>
                 <div class="label">
                     Genome: <span class="redAsterisk">* </span>
                     <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
@@ -74,12 +74,15 @@
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
-            </ng-container>
-            <div>
-                <button mat-raised-button color="accent" type="submit" [disabled]="!igvForm.valid">Submit
-                </button>
-            </div>
-        </form>
+            </ng-container> -->
+        <span class="btn-container">
+            <button mat-raised-button color="accent" type="submit" (click)="onSubmit()">Submit
+            </button>
+            <button mat-raised-button class="resetBtn" (click)="reset()">Reset
+            </button>
+        </span>
+
+        <!-- </form> -->
     </mat-expansion-panel>
 </mat-accordion>
 

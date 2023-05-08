@@ -34,7 +34,6 @@ export class AddDialog2Component implements OnInit {
   ngOnInit(): void {
     this.workspaceId = this.data.workspaceId;
     this.apiService.getAvailableResources().subscribe(data => {
-      console.log("data: ", data)
       let track_files = [];
       for (let f of data) {
         if (f.resource_type === 'ALN' || f.resource_type === 'WIG' || f.resource_type === 'BIGWIG' || f.resource_type === 'BEDGRAPH') {
@@ -78,7 +77,6 @@ export class AddDialog2Component implements OnInit {
   confirmAdd() {
     for(let i of this.trackFiles){
       if(i.id ===this.selectedTrackFileId ){
-        console.log("got a match")
         this.selectTrackFileName = i.name
       }
     }
@@ -92,7 +90,6 @@ export class AddDialog2Component implements OnInit {
   }
   currResourceType = ''
   onSelectTrack(){
-    console.log("from popup: ", this.trackFiles)
     this.currResourceType = this.resourceTypeDict[this.selectedTrackFileId]["resource_type"]
 
   }

@@ -49,12 +49,6 @@ export class IGVComponent implements OnInit {
 
   ngOnInit(): void {
     this.workspaceId = this.route.snapshot.paramMap.get('workspaceId');
-    // this.igvForm = this.formBuilder.group({
-    // // bam: ['', Validators.required],
-    // // index: ['', Validators.required],
-    // // genome: ['', Validators.required]
-    // });
-
     this.files = this.workspaceResources;
 
     for (let i of this.files) {
@@ -84,8 +78,6 @@ export class IGVComponent implements OnInit {
         this.selectedBAMData.push(result);
       }
       this.trackNames.push(result.name)
-      console.log("the arr: ", result, this.trackNames)
-      // this.selectedBAMFileName = this.selectedBAMData.toString()
     });
   }
 
@@ -93,78 +85,6 @@ export class IGVComponent implements OnInit {
     this.genome = this.selectedGenomeId
   }
   expandState = true;
-
-
-  // onSubmit() {
-  //   // const div = this.igvDiv.nativeElement;
-  //   // this.renderer.setProperty(div, 'innerHTML', '');
-  //   igv.removeAllBrowsers()
-
-  //   this.expandState = false;
-  //   this.isWait = true;
-  //   let tracksArr = [];
-
-  //   console.log("bamData: ", this.selectedBAMData)
-
-  //   for (let i = 0; i < this.selectedBAMData.length; i++) {
-  //     this.selectedBAMFileId = this.selectedBAMData[i]['track']
-  //     this.httpClient.get(`${this.API_URL}/resources/signed-url/${this.selectedBAMFileId}/`)
-  //       .subscribe((response) => {
-  //         this.bam_url = response['url'];
-
-  //         if (this.selectedBAMData[i]['type'] === 'ALN') {
-  //           this.selectedIndexFileId = this.selectedBAMData[i]['index'];
-  //           this.httpClient.get(`${this.API_URL}/resources/signed-url/${this.selectedIndexFileId}/`)
-  //             .subscribe((response) => {
-  //               this.index_url = response['url']
-  //               console.log("res index: ", this.index_url);
-
-  //               let test = {
-  //                 "name": "HG00103",
-  //                 "url": this.bam_url,
-  //                 "indexURL": this.index_url,
-  //                 "format": "bam"
-  //               }
-  //               tracksArr.push(test)
-
-  //             }, (error) => {
-  //               console.error(error);
-  //             });
-  //         }
-  //         else if (this.selectedBAMData[i]['type'] != 'ALN') {
-  //           let test = {
-  //             type: "wig",
-  //             name: "CTCF",
-  //             url: "https://www.encodeproject.org/files/ENCFF356YES/@@download/ENCFF356YES.bigWig",
-  //             min: "0",
-  //             max: "30",
-  //             color: "rgb(0, 0, 150)",
-  //             guideLines: [
-  //               { color: 'green', dotted: true, y: 25 },
-  //               { color: 'red', dotted: false, y: 5 }
-  //             ]
-  //           }
-  //           tracksArr.push(test)
-  //         }
-  //       }, (error) => {
-  //         console.error(error);
-  //       });
-
-  //   }
-
-  //   let options =
-  //   {
-  //     genome: this.genome,
-  //     locus: "chr1:10000-10600",
-  //     tracks: tracksArr
-  //   };
-  //   console.log("options: ", options)
-
-  //   setTimeout(() => {
-  //     this.createBrowser(options);
-  //   }, 5000);
-
-  // }
 
   async onSubmit() {
     // const div = this.igvDiv.nativeElement;
@@ -174,8 +94,6 @@ export class IGVComponent implements OnInit {
     this.expandState = false;
     this.isWait = true;
     let tracksArr = [];
-
-    console.log("bamData: ", this.selectedBAMData)
 
     for (let i = 0; i < this.selectedBAMData.length; i++) {
       this.selectedBAMFileId = this.selectedBAMData[i]['track']
@@ -187,9 +105,8 @@ export class IGVComponent implements OnInit {
           this.selectedIndexFileId = this.selectedBAMData[i]['index'];
           const response = await this.httpClient.get(`${this.API_URL}/resources/signed-url/${this.selectedIndexFileId}/`).toPromise();
           this.index_url = response['url']
-
           let test = {
-            "name": "HG00103",
+            "name": this.selectedBAMData[i]['name'],
             "url": this.bam_url,
             "indexURL": this.index_url,
             "format": "bam"
@@ -198,13 +115,16 @@ export class IGVComponent implements OnInit {
         } else if (this.selectedBAMData[i]['type'] === 'WIG' || this.selectedBAMData[i]['type'] === 'BIGWIG' || this.selectedBAMData[i]['type'] === 'BEDGRAPH'){
           //this is for types bed, bigwig, bedgraph only
           this.index_url = response['url']
+          let type = this.selectedBAMData[i]['type'].toLowerCase()
+          if(type === 'bigwig' || type === 'bedgraph' ){
+            type = 'wig'
+          }
           let test = {
-            type: "wig",
-            name: "CTCF",
+            type: type,
+            name: this.selectedBAMData[i]['name'],
             url: this.index_url,
-            // url: "https://www.encodeproject.org/files/ENCFF356YES/@@download/ENCFF356YES.bigWig",
             min: "0",
-            max: "30",
+            autoscale: true,
             color: "rgb(0, 0, 150)",
             guideLines: [
               { color: 'green', dotted: true, y: 25 },
@@ -224,7 +144,6 @@ export class IGVComponent implements OnInit {
       locus: "chr1:10000-10600",
       tracks: tracksArr
     };
-    console.log("options: ", options)
     await this.createBrowser(options);
 }
 

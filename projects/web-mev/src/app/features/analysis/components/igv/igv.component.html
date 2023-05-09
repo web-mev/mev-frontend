@@ -16,27 +16,28 @@
                     <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
                         matTooltip="Select BAM file" aria-label="Info tooltip about the field">info
                     </mat-icon>
-
                 </div>
                 <div>{{trackNames.join(' ')}}</div>
-
-                <!-- <mat-form-field class="form-control" color="accent">
-                    <mat-select formControlName=bam [(value)]="selectedBAMFileId" (selectionChange)="onSelectBAM()">
-                        <mat-option *ngFor="let file of filesByType['ALN']" [value]="file.id">
-                            {{ file.name }}
-                        </mat-option>
-                    </mat-select>
-            
-                </mat-form-field> -->
-                <!-- <br>
-                <div>Selected File: {{selectedBAMFileName}}</div> -->
                 <br>
-                <button mat-raised-button color="accent" (click)="addItem()">
+                <button mat-raised-button color="accent" (click)="addItem('track')">
                     <mat-icon aria-label="Add local data">add</mat-icon>
                     Select Track file
                 </button>
-
-
+                <br>
+            </ng-container>
+            <ng-container>
+                <div class="label">
+                    Genome: <span class="redAsterisk">* </span>
+                    <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                        matTooltip="Select a Genome" aria-label="Info tooltip about the field">info
+                    </mat-icon>
+                </div>
+                <div>{{genome}}</div>
+                <br>
+                <button mat-raised-button color="accent" (click)="addItem('genome')">
+                    <mat-icon aria-label="Add local data">add</mat-icon>
+                    Select Genome
+                </button>
                 <br>
             </ng-container>
         </div>
@@ -75,9 +76,13 @@
                     </mat-select>
                 </mat-form-field>
             </ng-container> -->
+        <br>
+        <br>
         <span class="btn-container">
             <button mat-raised-button color="accent" type="submit" (click)="onSubmit()">Submit
             </button>
+            <!-- <button mat-raised-button class="genomeBtn" (click)="selectGenome()">Select Genome
+            </button> -->
             <button mat-raised-button class="resetBtn" (click)="reset()">Reset
             </button>
         </span>

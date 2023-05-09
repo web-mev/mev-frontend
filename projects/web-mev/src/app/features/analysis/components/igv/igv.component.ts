@@ -66,11 +66,13 @@ export class IGVComponent implements OnInit {
     igv.createBrowser(this.igvDiv.nativeElement, options)
   }
 
-
-
-  addItem() {
+  addItem(type) {
     const dialogRef = this.dialog.open(AddDialog2Component, {
-      data: { workspaceId: this.workspaceId }
+      data: { 
+        workspaceId: this.workspaceId,
+        dialogType: type,
+        genome: this.genome
+       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -78,6 +80,7 @@ export class IGVComponent implements OnInit {
         this.selectedBAMData.push(result);
       }
       this.trackNames.push(result.name)
+      this.genome = result.genome
     });
   }
 
@@ -169,5 +172,9 @@ export class IGVComponent implements OnInit {
     this.index_url = '';
 
     // igv.removeAllBrowsers()
+  }
+
+  selectGenome(){
+
   }
 }

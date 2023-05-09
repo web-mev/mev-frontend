@@ -68,11 +68,11 @@ export class IGVComponent implements OnInit {
 
   addItem(type) {
     const dialogRef = this.dialog.open(AddDialog2Component, {
-      data: { 
+      data: {
         workspaceId: this.workspaceId,
         dialogType: type,
         genome: this.genome
-       }
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -115,11 +115,11 @@ export class IGVComponent implements OnInit {
             "format": "bam"
           }
           tracksArr.push(test)
-        } else if (this.selectedBAMData[i]['type'] === 'WIG' || this.selectedBAMData[i]['type'] === 'BIGWIG' || this.selectedBAMData[i]['type'] === 'BEDGRAPH'){
+        } else if (this.selectedBAMData[i]['type'] === 'WIG' || this.selectedBAMData[i]['type'] === 'BIGWIG' || this.selectedBAMData[i]['type'] === 'BEDGRAPH') {
           //this is for types bed, bigwig, bedgraph only
           this.index_url = response['url']
           let type = this.selectedBAMData[i]['type'].toLowerCase()
-          if(type === 'bigwig' || type === 'bedgraph' ){
+          if (type === 'bigwig' || type === 'bedgraph') {
             type = 'wig'
           }
           let test = {
@@ -148,7 +148,7 @@ export class IGVComponent implements OnInit {
       tracks: tracksArr
     };
     await this.createBrowser(options);
-}
+  }
 
 
   createBrowser(options) {
@@ -171,10 +171,16 @@ export class IGVComponent implements OnInit {
     this.bam_url = '';
     this.index_url = '';
 
-    // igv.removeAllBrowsers()
+    igv.removeAllBrowsers()
+    const options = {
+      genome: "hg38",
+      locus: "chr1:10000-10600",
+    };
+
+    igv.createBrowser(this.igvDiv.nativeElement, options)
   }
 
-  selectGenome(){
+  selectGenome() {
 
   }
 }

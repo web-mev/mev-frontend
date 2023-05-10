@@ -25,14 +25,20 @@ mat-checkbox {
     color: red;
 }
 
-.resetBtn{
-    margin: 0 5px;
+.btn{
+    margin: 10px 5px 5px 5px;
 }
+
+.btn:hover{
+    opacity: 0.8;
+}
+
 .genomeBtn{
     margin: 0 5px;
     background-color: tomato;
     color: white;
 }
+
 .btn-container{
     margin-left: 5%;
 }

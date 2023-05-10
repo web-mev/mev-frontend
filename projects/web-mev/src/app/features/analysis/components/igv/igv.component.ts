@@ -24,9 +24,8 @@ export class IGVComponent implements OnInit {
   selectedGenomeId: string;
   files = [];
   filesByType = {};
-  genomeList = ['hg38', 'mm10', 'rn6', 'canFam3', 'dm6'];
+  // genomeList = ['hg38', 'mm10', 'rn6', 'canFam3', 'dm6'];
   isWait: boolean = false;
-  // showIGV = false;
   panelOpenState = true;
 
   igvForm: FormGroup;
@@ -39,12 +38,12 @@ export class IGVComponent implements OnInit {
   trackNames = [];
 
   constructor(
-    private formBuilder: FormBuilder,
+    // private formBuilder: FormBuilder,
     public fileService: FileService,
     private httpClient: HttpClient,
     public dialog: MatDialog,
     private route: ActivatedRoute,
-    private renderer: Renderer2
+    // private renderer: Renderer2
   ) { }
 
   ngOnInit(): void {
@@ -59,7 +58,7 @@ export class IGVComponent implements OnInit {
     }
 
     const options = {
-      genome: "hg38",
+      genome: this.genome,
       locus: "chr1:10000-10600",
     };
 
@@ -79,8 +78,13 @@ export class IGVComponent implements OnInit {
       if (result != undefined) {
         this.selectedBAMData.push(result);
       }
-      this.trackNames.push(result.name)
+      if (result.name !== '') {
+        this.trackNames.push(result.name)
+      }
       this.genome = result.genome
+      if (this.trackNames.length > 0 && this.genome !== '') {
+        this.onSubmit();
+      }
     });
   }
 
@@ -90,8 +94,6 @@ export class IGVComponent implements OnInit {
   expandState = true;
 
   async onSubmit() {
-    // const div = this.igvDiv.nativeElement;
-    // this.renderer.setProperty(div, 'innerHTML', '');
     igv.removeAllBrowsers()
 
     this.expandState = false;
@@ -116,7 +118,6 @@ export class IGVComponent implements OnInit {
           }
           tracksArr.push(test)
         } else if (this.selectedBAMData[i]['type'] === 'WIG' || this.selectedBAMData[i]['type'] === 'BIGWIG' || this.selectedBAMData[i]['type'] === 'BEDGRAPH') {
-          //this is for types bed, bigwig, bedgraph only
           this.index_url = response['url']
           let type = this.selectedBAMData[i]['type'].toLowerCase()
           if (type === 'bigwig' || type === 'bedgraph') {
@@ -173,7 +174,7 @@ export class IGVComponent implements OnInit {
 
     igv.removeAllBrowsers()
     const options = {
-      genome: "hg38",
+      genome: this.genome,
       locus: "chr1:10000-10600",
     };
 

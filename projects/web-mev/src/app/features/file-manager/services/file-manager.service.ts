@@ -255,7 +255,7 @@ export class FileService {
    */
      fetchDownloadUrl(id: number | string): Observable<any> {
       return this.httpClient.get(
-        `${this.API_URL}/resources/download-url/${id}/`
+        `${this.API_URL}/resources/signed-url/${id}/`
       );
     }
 }

@@ -78,11 +78,11 @@ export class IGVComponent implements OnInit {
       if (result != undefined) {
         this.selectedBAMData.push(result);
       }
-      if (result.name !== '') {
+      if (result.name !== '' && result.name !== undefined) {
         this.trackNames.push(result.name)
       }
       this.genome = result.genome
-      if (this.trackNames.length > 0 && this.genome !== '') {
+      if (this.trackNames.length > 0 && this.genome !== '' && this.genome !== undefined) {
         this.onSubmit();
       }
     });
@@ -179,9 +179,5 @@ export class IGVComponent implements OnInit {
     };
 
     igv.createBrowser(this.igvDiv.nativeElement, options)
-  }
-
-  selectGenome() {
-
   }
 }

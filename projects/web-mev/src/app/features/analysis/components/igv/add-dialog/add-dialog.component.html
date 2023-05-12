@@ -32,7 +32,7 @@
     <div *ngIf="dialogType === 'genome'">
       <mat-form-field class="form">
         <mat-select [(ngModel)]="selectedGenome" name="genome" placeholder="Genome">
-          <mat-option *ngFor="let file of genomeList" [value]="file">{{file}}</mat-option>
+          <mat-option *ngFor="let file of genomeList" [value]="file.value">{{file.name}}</mat-option>
         </mat-select>
       </mat-form-field>
     </div>

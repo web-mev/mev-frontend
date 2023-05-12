@@ -75,23 +75,46 @@ export class IGVComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      console.log("res close: ", result)
       if (result != undefined) {
         this.selectedBAMData.push(result);
+
+        if (result.name !== '' && result.name !== undefined) {
+          this.trackNames.push(result.name)
+        }
+        this.genome = result.genome
+        if(result.dialogType === 'genome'){
+          this.onSubmitGenome()
+        }
+        else if(this.trackNames.length > 0 && this.genome !== '' && this.genome !== undefined){
+          this.onSubmit();
+        }
+        // if (this.trackNames.length > 0 && this.genome !== '' && this.genome !== undefined) {
+        //   this.onSubmit();
+        // }
       }
-      if (result.name !== '' && result.name !== undefined) {
-        this.trackNames.push(result.name)
-      }
-      this.genome = result.genome
-      if (this.trackNames.length > 0 && this.genome !== '' && this.genome !== undefined) {
-        this.onSubmit();
-      }
+
     });
   }
 
-  onSelectGenome() {
-    this.genome = this.selectedGenomeId
-  }
+  // onSelectGenome() {
+  //   this.genome = this.selectedGenomeId
+  // }
   expandState = true;
+
+  fullTracksArr = [];
+  onSubmitGenome(){
+    igv.removeAllBrowsers()
+
+    let options =
+    {
+      genome: this.genome,
+      locus: "chr1:10000-10600",
+      tracks: this.fullTracksArr
+    };
+
+    this.createBrowser(options);
+  }
 
   async onSubmit() {
     igv.removeAllBrowsers()
@@ -100,6 +123,7 @@ export class IGVComponent implements OnInit {
     this.isWait = true;
     let tracksArr = [];
 
+    console.log('bam data: ', this.selectedBAMData)
     for (let i = 0; i < this.selectedBAMData.length; i++) {
       this.selectedBAMFileId = this.selectedBAMData[i]['track']
       try {
@@ -141,6 +165,7 @@ export class IGVComponent implements OnInit {
         console.error(error);
       }
     }
+    this.fullTracksArr = tracksArr;
 
     let options =
     {
@@ -167,6 +192,7 @@ export class IGVComponent implements OnInit {
   reset() {
     this.genome = 'hg38';
     this.trackNames = [];
+    this.fullTracksArr = [];
     this.selectedBAMData = [];
 
     this.bam_url = '';

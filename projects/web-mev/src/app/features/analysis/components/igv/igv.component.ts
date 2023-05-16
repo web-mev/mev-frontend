@@ -1,5 +1,5 @@
-import { Component, ViewChild, OnInit, Input, Renderer2 } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Component, ViewChild, OnInit, Input } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { FileService } from '@app/features/file-manager/services/file-manager.service';
 import { HttpClient } from '@angular/common/http';
 import igv from 'igv/dist/igv.esm.min.js';
@@ -24,7 +24,6 @@ export class IGVComponent implements OnInit {
   selectedGenomeId: string;
   files = [];
   filesByType = {};
-  // genomeList = ['hg38', 'mm10', 'rn6', 'canFam3', 'dm6'];
   isWait: boolean = false;
   panelOpenState = true;
 
@@ -36,14 +35,14 @@ export class IGVComponent implements OnInit {
 
   selectedBAMData = [];
   trackNames = [];
+  expandState = true;
+  fullTracksArr = [];
 
   constructor(
-    // private formBuilder: FormBuilder,
     public fileService: FileService,
     private httpClient: HttpClient,
     public dialog: MatDialog,
     private route: ActivatedRoute,
-    // private renderer: Renderer2
   ) { }
 
   ngOnInit(): void {
@@ -75,7 +74,6 @@ export class IGVComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log("res close: ", result)
       if (result != undefined) {
         this.selectedBAMData.push(result);
 
@@ -89,20 +87,10 @@ export class IGVComponent implements OnInit {
         else if(this.trackNames.length > 0 && this.genome !== '' && this.genome !== undefined){
           this.onSubmit();
         }
-        // if (this.trackNames.length > 0 && this.genome !== '' && this.genome !== undefined) {
-        //   this.onSubmit();
-        // }
       }
-
     });
   }
 
-  // onSelectGenome() {
-  //   this.genome = this.selectedGenomeId
-  // }
-  expandState = true;
-
-  fullTracksArr = [];
   onSubmitGenome(){
     igv.removeAllBrowsers()
 
@@ -123,7 +111,6 @@ export class IGVComponent implements OnInit {
     this.isWait = true;
     let tracksArr = [];
 
-    console.log('bam data: ', this.selectedBAMData)
     for (let i = 0; i < this.selectedBAMData.length; i++) {
       this.selectedBAMFileId = this.selectedBAMData[i]['track']
       try {
@@ -175,7 +162,6 @@ export class IGVComponent implements OnInit {
     };
     await this.createBrowser(options);
   }
-
 
   createBrowser(options) {
     igv.createBrowser(this.igvDiv.nativeElement, options)

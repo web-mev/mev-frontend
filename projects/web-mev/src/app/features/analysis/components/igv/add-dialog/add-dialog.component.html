@@ -11,10 +11,7 @@
   <div mat-dialog-title class="dialogContent">{{dialogType === 'track' ? 'Select a Track file from the list to use.':
     'Select a Genome from the list to use.'}}
   </div>
-  <!-- <div mat-dialog-title class="dialogContent" *ngIf="dialogType === 'track'">Select a Track file from the list to use.
-  </div>
-  <div mat-dialog-title class="dialogContent" *ngIf="dialogType === 'genome'">Select a Genome from the list to use.
-  </div> -->
+
   <form class="mat-dialog-content">
     <div *ngIf="dialogType === 'track'">
       <mat-form-field class="form">
@@ -39,12 +36,19 @@
     </div>
     <br>
     <br>
+
     <div class="submitBtnContainer">
       <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
-      <button mat-button [mat-dialog-close]="1" mat-raised-button color="accent" (click)="confirmAdd()"
+      <button *ngIf="dialogType === 'track'" mat-button [mat-dialog-close]="1" mat-raised-button color="accent"
+        (click)="confirmAdd()"
         [disabled]="trackFiles.length === 0 || (currResourceType === 'ALN' && selectedIndexFileId === '')">
-        {{dialogType === 'track' ? 'Add' : 'Change'}}
+        Add
+      </button>
+      <button *ngIf="dialogType === 'genome'" mat-button [mat-dialog-close]="1" mat-raised-button color="accent"
+        (click)="confirmAdd()">
+        Change
       </button>
     </div>
+
   </form>
 </div>

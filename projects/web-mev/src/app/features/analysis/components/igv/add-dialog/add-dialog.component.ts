@@ -2,7 +2,6 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Component, OnInit, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { WorkspaceDetailService } from '@app/features/workspace-detail/services/workspace-detail.service';
 import { environment } from '@environments/environment';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'mev-add-dialog2',
@@ -15,7 +14,10 @@ export class AddDialog2Component implements OnInit {
   trackFiles = [];
   indexFiles = [];
   selectedTrackFileId = '';
+  selectedIndexFileId = '';
   selectedGenome = 'Mm10 (UCSC)';
+  selectTrackFileName = '';
+  currResourceType = '';
   dropdownSettings = {};
   workspaceId: string;
   dialogType: string;
@@ -52,14 +54,12 @@ export class AddDialog2Component implements OnInit {
     {
       name: 'Mm10 (UCSC)',
       value: 'mm10'
-    },
-
+    }
   ]
 
   constructor(
     public dialogRef: MatDialogRef<AddDialog2Component>,
     private apiService: WorkspaceDetailService,
-    private httpClient: HttpClient,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
@@ -103,54 +103,31 @@ export class AddDialog2Component implements OnInit {
   }
 
   onNoClick(): void {
-    // let temp = {
-    //   track: this.dialogType === 'track' ? '' : this.selectedTrackFileId,
-    //   index: this.dialogType === 'track' ? '' : this.selectedIndexFileId,
-    //   name: this.dialogType === 'track' ? '' : this.selectTrackFileName,
-    //   type: this.dialogType === 'track' ? '' : this.currResourceType,
-    //   genome: this.dialogType === 'track' ? this.selectedGenome : ''
-    // }
-    // console.log("onclose: ", temp)
     this.dialogRef.close();
   }
 
-  // submit(file) {
-  //   // empty stuff
-  // }
-
-  /**
-   * Function is triggered when user clicks the Add button
-   *
-   */
-  selectTrackFileName = '';
   confirmAdd() {
     for (let i of this.trackFiles) {
       if (i.id === this.selectedTrackFileId) {
         this.selectTrackFileName = i.name
       }
     }
-    // let temp = {}
-    // if(this.dialogType === 'track'){
-    let  temp = {
-        track: this.selectedTrackFileId,
-        index: this.selectedIndexFileId,
-        name: this.selectTrackFileName,
-        type: this.currResourceType,
-        genome: this.selectedGenome,
-        dialogType: this.dialogType
-      }
-    // }else{
-    //   temp = {
-    //     genome: this.selectedGenome
-    //   }
-    // }
     
+    let temp = {
+      track: this.selectedTrackFileId,
+      index: this.selectedIndexFileId,
+      name: this.selectTrackFileName,
+      type: this.currResourceType,
+      genome: this.selectedGenome,
+      dialogType: this.dialogType
+    }
+
     this.dialogRef.close(temp);
   }
-  currResourceType = ''
+
   onSelectTrack() {
-    this.currResourceType = this.resourceTypeDict[this.selectedTrackFileId]["resource_type"]
+    this.currResourceType = this.resourceTypeDict[this.selectedTrackFileId]["resource_type"];
 
   }
-  selectedIndexFileId = '';
+  
 }

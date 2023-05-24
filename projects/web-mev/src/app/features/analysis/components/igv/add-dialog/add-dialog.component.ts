@@ -68,23 +68,21 @@ export class AddDialog2Component implements OnInit {
     this.dialogType = this.data.dialogType;
     for (let i = 0; i < this.genomeList.length; i++) {
       if (this.genomeList[i]["value"] === this.data.genome) {
-        this.selectedGenome = this.genomeList[i]["value"]
+        this.selectedGenome = this.genomeList[i]["value"];
       }
     }
     if (this.dialogType === 'track') {
       this.apiService.getAvailableResources().subscribe(data => {
-
         let track_files = [];
         for (let f of data) {
-          if (f.resource_type === 'ALN' || f.resource_type === 'WIG' || f.resource_type === 'BIGWIG' || f.resource_type === 'BEDGRAPH') {
-            track_files.push(f)
-            let temp = {
+          if (f.resource_type === 'ALN' || f.resource_type === 'WIG' || f.resource_type === 'BIGWIG' || f.resource_type === 'BEDGRAPH' || f.resource_type === 'BED6') {
+            track_files.push(f);
+            let resourceType = {
               "resource_type": f.resource_type
             }
-            this.resourceTypeDict[f.id] = temp
-          }
-          if (f.resource_type === 'BAI') {
-            this.indexFiles.push(f)
+            this.resourceTypeDict[f.id] = resourceType;
+          } else if (f.resource_type === 'BAI') {
+            this.indexFiles.push(f);
           }
         }
         this.trackFiles = track_files;
@@ -109,11 +107,11 @@ export class AddDialog2Component implements OnInit {
   confirmAdd() {
     for (let i of this.trackFiles) {
       if (i.id === this.selectedTrackFileId) {
-        this.selectTrackFileName = i.name
+        this.selectTrackFileName = i.name;
       }
     }
-    
-    let temp = {
+
+    let filedata = {
       track: this.selectedTrackFileId,
       index: this.selectedIndexFileId,
       name: this.selectTrackFileName,
@@ -122,12 +120,10 @@ export class AddDialog2Component implements OnInit {
       dialogType: this.dialogType
     }
 
-    this.dialogRef.close(temp);
+    this.dialogRef.close(filedata);
   }
 
   onSelectTrack() {
     this.currResourceType = this.resourceTypeDict[this.selectedTrackFileId]["resource_type"];
-
   }
-  
 }

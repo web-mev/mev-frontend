@@ -53,7 +53,7 @@ export class IGVComponent implements OnInit {
       if (this.filesByType[i.resource_type] === undefined) {
         this.filesByType[i.resource_type] = [];
       }
-      this.filesByType[i.resource_type].push(i)
+      this.filesByType[i.resource_type].push(i);
     }
 
     const options = {
@@ -61,7 +61,7 @@ export class IGVComponent implements OnInit {
       locus: "chr1:10000-10600",
     };
 
-    igv.createBrowser(this.igvDiv.nativeElement, options)
+    igv.createBrowser(this.igvDiv.nativeElement, options);
   }
 
   addItem(type) {
@@ -76,26 +76,24 @@ export class IGVComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result != undefined) {
         this.selectedBAMData.push(result);
-
         if (result.name !== '' && result.name !== undefined) {
-          this.trackNames.push(result.name)
+          this.trackNames.push(result.name);
         }
         this.genome = result.genome
-        if(result.dialogType === 'genome'){
-          this.onSubmitGenome()
+        if (result.dialogType === 'genome') {
+          this.onSubmitGenome();
         }
-        else if(this.trackNames.length > 0 && this.genome !== '' && this.genome !== undefined){
+        else if (this.trackNames.length > 0 && this.genome !== '' && this.genome !== undefined) {
           this.onSubmit();
         }
       }
     });
   }
 
-  onSubmitGenome(){
-    igv.removeAllBrowsers()
+  onSubmitGenome() {
+    igv.removeAllBrowsers();
 
-    let options =
-    {
+    let options = {
       genome: this.genome,
       locus: "chr1:10000-10600",
       tracks: this.fullTracksArr
@@ -105,14 +103,14 @@ export class IGVComponent implements OnInit {
   }
 
   async onSubmit() {
-    igv.removeAllBrowsers()
+    igv.removeAllBrowsers();
 
     this.expandState = false;
     this.isWait = true;
     let tracksArr = [];
 
     for (let i = 0; i < this.selectedBAMData.length; i++) {
-      this.selectedBAMFileId = this.selectedBAMData[i]['track']
+      this.selectedBAMFileId = this.selectedBAMData[i]['track'];
       try {
         const response = await this.httpClient.get(`${this.API_URL}/resources/signed-url/${this.selectedBAMFileId}/`).toPromise();
         this.bam_url = response['url'];
@@ -120,21 +118,21 @@ export class IGVComponent implements OnInit {
         if (this.selectedBAMData[i]['type'] === 'ALN') {
           this.selectedIndexFileId = this.selectedBAMData[i]['index'];
           const response = await this.httpClient.get(`${this.API_URL}/resources/signed-url/${this.selectedIndexFileId}/`).toPromise();
-          this.index_url = response['url']
-          let test = {
+          this.index_url = response['url'];
+          let trackConfig = {
             "name": this.selectedBAMData[i]['name'],
             "url": this.bam_url,
             "indexURL": this.index_url,
             "format": "bam"
           }
-          tracksArr.push(test)
+          tracksArr.push(trackConfig);
         } else if (this.selectedBAMData[i]['type'] === 'WIG' || this.selectedBAMData[i]['type'] === 'BIGWIG' || this.selectedBAMData[i]['type'] === 'BEDGRAPH') {
-          this.index_url = response['url']
-          let type = this.selectedBAMData[i]['type'].toLowerCase()
+          this.index_url = response['url'];
+          let type = this.selectedBAMData[i]['type'].toLowerCase();
           if (type === 'bigwig' || type === 'bedgraph') {
             type = 'wig'
           }
-          let test = {
+          let trackConfig = {
             type: type,
             name: this.selectedBAMData[i]['name'],
             url: this.index_url,
@@ -146,7 +144,14 @@ export class IGVComponent implements OnInit {
               { color: 'red', dotted: false, y: 5 }
             ]
           }
-          tracksArr.push(test)
+          tracksArr.push(trackConfig);
+        } else if (this.selectedBAMData[i]['type'] === 'BED6') {
+          let trackConfig = {
+            name: this.selectedBAMData[i]['name'],
+            format: "bed",
+            url: this.bam_url,
+          }
+          tracksArr.push(trackConfig);
         }
       } catch (error) {
         console.error(error);
@@ -190,6 +195,6 @@ export class IGVComponent implements OnInit {
       locus: "chr1:10000-10600",
     };
 
-    igv.createBrowser(this.igvDiv.nativeElement, options)
+    igv.createBrowser(this.igvDiv.nativeElement, options);
   }
 }

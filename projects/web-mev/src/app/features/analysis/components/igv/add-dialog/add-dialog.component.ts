@@ -75,7 +75,7 @@ export class AddDialog2Component implements OnInit {
       this.apiService.getAvailableResources().subscribe(data => {
         let track_files = [];
         for (let f of data) {
-          if (f.resource_type === 'ALN' || f.resource_type === 'WIG' || f.resource_type === 'BIGWIG' || f.resource_type === 'BEDGRAPH' || f.resource_type === 'BED6') {
+          if (f.resource_type === 'ALN' || f.resource_type === 'WIG' || f.resource_type === 'BIGWIG' || f.resource_type === 'BEDGRAPH' || f.resource_type === 'BED6' || f.resource_type === 'BED3') {
             track_files.push(f);
             let resourceType = {
               "resource_type": f.resource_type

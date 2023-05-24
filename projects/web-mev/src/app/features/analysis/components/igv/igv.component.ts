@@ -145,7 +145,7 @@ export class IGVComponent implements OnInit {
             ]
           }
           tracksArr.push(trackConfig);
-        } else if (this.selectedBAMData[i]['type'] === 'BED6') {
+        } else if (this.selectedBAMData[i]['type'] === 'BED6' || this.selectedBAMData[i]['type'] === 'BED3') {
           let trackConfig = {
             name: this.selectedBAMData[i]['name'],
             format: "bed",

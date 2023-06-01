@@ -29,6 +29,7 @@ import { ViewInfoDialogComponent } from './components/metadata/dialogs/view-info
 import { SetDifferenceDialogComponent } from './components/metadata/dialogs/set-difference-dialog/set-difference-dialog.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
+
 @NgModule({
   declarations: [
     WorkspaceDetailComponent,

@@ -1,0 +1,82 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+}
+
+.mat-dialog-content {
+  min-height: 350px;
+  max-height: none;
+  position: relative;
+  overflow: visible;
+}
+
+.mat-dialog-title {
+  font-size: 16px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  padding-top: 6px;
+}
+
+.mat-dialog-actions {
+  position: absolute;
+  bottom: 0;
+}
+
+.resource-label {
+  font-size: 16px;
+  word-break: break-all;
+}
+
+.resource-type-label {
+  color: #666;
+  font-size: 12px;
+}
+
+::ng-deep {
+  .selected-list .c-list .c-token {
+    word-break: break-all;
+  }
+}
+
+///new styling
+.headerSpan {
+  display: flex;
+  background-color: #1DA1F2;
+  margin: -35px -40px 20px -40px;
+}
+
+.dialogTitle {
+  justify-content: flex-start;
+  width: 85%;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin: 20px 0 10px 30px;
+  color: white;
+  font-weight: bold;
+  font-size: 24px;
+}
+.dialogContent{
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(0,0,0,.6);
+  margin-top: 1em;
+}
+
+.closeDialogButton {
+  margin: 20px 10px 0 0;
+  color: white;
+}
+
+.closeDialogButton:hover{
+  opacity: .75;
+}
+
+.submitBtnContainer {
+  position: absolute;
+  bottom: 0;
+  right: 24px;
+}

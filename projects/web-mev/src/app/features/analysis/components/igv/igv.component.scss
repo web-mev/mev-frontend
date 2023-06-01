@@ -1,0 +1,44 @@
+.igv-container{
+    margin-top: 10px;
+    margin-left: 5%;
+}
+
+.label {
+    padding-right: 10px;
+    font-weight: bolder;
+    font-size: 12px;
+}
+
+.analyses-header__icon {
+    font-size: 14px;
+}
+
+.form-control {
+    width: 500px;
+    padding-bottom: 50px;
+}
+
+mat-checkbox {
+    padding-right: 10px;
+}
+.redAsterisk {
+    color: red;
+}
+
+.btn{
+    margin: 10px 5px 5px 5px;
+}
+
+.btn:hover{
+    opacity: 0.8;
+}
+
+.genomeBtn{
+    margin: 0 5px;
+    background-color: tomato;
+    color: white;
+}
+
+.btn-container{
+    margin-left: 5%;
+}

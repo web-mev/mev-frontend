@@ -1,0 +1,54 @@
+<div class="container">
+
+  <span class="headerSpan">
+    <div class="dialogTitle" *ngIf="dialogType === 'track'">Add Track File</div>
+    <div class="dialogTitle" *ngIf="dialogType === 'genome'">Select a Genome</div>
+    <button class="closeDialogButton" mat-dialog-close mat-icon-button type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </span>
+
+  <div mat-dialog-title class="dialogContent">{{dialogType === 'track' ? 'Select a Track file from the list to use.':
+    'Select a Genome from the list to use.'}}
+  </div>
+
+  <form class="mat-dialog-content">
+    <div *ngIf="dialogType === 'track'">
+      <mat-form-field class="form">
+        <mat-select [(ngModel)]="selectedTrackFileId" name="track" placeholder="Track file"
+          (selectionChange)="onSelectTrack()">
+          <mat-option *ngFor="let file of trackFiles" [value]="file.id">{{file.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="form" *ngIf="currResourceType === 'ALN' ">
+        <mat-select [(ngModel)]="selectedIndexFileId" name="index" placeholder="Index file">
+          <mat-option *ngFor="let file of indexFiles" [value]="file.id">{{file.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div *ngIf="dialogType === 'genome'">
+      <mat-form-field class="form">
+        <mat-select [(ngModel)]="selectedGenome" name="genome" placeholder="Genome">
+          <mat-option *ngFor="let file of genomeList" [value]="file.value">{{file.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <br>
+    <br>
+
+    <div class="submitBtnContainer">
+      <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
+      <button *ngIf="dialogType === 'track'" mat-button [mat-dialog-close]="1" mat-raised-button color="accent"
+        (click)="confirmAdd()"
+        [disabled]="trackFiles.length === 0 || (currResourceType === 'ALN' && selectedIndexFileId === '')">
+        Add
+      </button>
+      <button *ngIf="dialogType === 'genome'" mat-button [mat-dialog-close]="1" mat-raised-button color="accent"
+        (click)="confirmAdd()">
+        Change
+      </button>
+    </div>
+
+  </form>
+</div>

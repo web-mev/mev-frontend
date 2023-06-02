@@ -132,6 +132,7 @@ export class PandaComponent implements AfterViewInit {
             this.isLoading = false;
         } else if (type === 'topGenes') {
             this.getData(pandaMatrixId).subscribe(res => {
+                console.log("panda res: ", res, this.nodeSize)
                 this.changeToFitCytoscape(res, existingNode)
                 this.scrollTo('minimumEdgeWeight');
             })
@@ -195,6 +196,7 @@ export class PandaComponent implements AfterViewInit {
                 this.edgeArr.push(newEdge)
             }
         }
+        console.log("node/edge: ", this.nodesArr, this.edgeArr)
 
         this.copyNodesArr = this.nodesArr;
         this.copyEdgeArr = this.edgeArr;

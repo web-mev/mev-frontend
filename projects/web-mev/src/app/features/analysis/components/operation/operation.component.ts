@@ -48,6 +48,8 @@ export class OperationComponent implements OnChanges {
   observationFields = [];
   featureFields = [];
 
+  operationData;
+
   boxPlotData;
 
   constructor(
@@ -313,7 +315,7 @@ export class OperationComponent implements OnChanges {
             controlsConfig[key] = configTextField;
             break;
           }
-          case 'OptionString': {
+          case ['OptionString', 'IntegerOption', 'FloatOption'].find( x => x === field_type): {
             const optionField = {
               key: key,
               name: input.name,
@@ -361,9 +363,10 @@ export class OperationComponent implements OnChanges {
    * Load operation data before creating form controls
    */
   loadData() {
-      this.apiService.getOperation(this.operation.id).subscribe(data => {
-        this.createForm(data);
-      });
+    this.apiService.getOperation(this.operation.id).subscribe(data => {
+      this.createForm(data);
+      this.operationData = data;
+    });
   }
 
   onSubmit() {
@@ -386,34 +389,94 @@ export class OperationComponent implements OnChanges {
   }
 
   /**
+   * This modifies the form payload (which is ultimately
+   * sent to the server) to correctly represent input fields
+   * where we can accept multiple resources/files. 
+   * 
+   * In the case of a single resource, the input element 
+   * (a select) correctly sets the form value as the resource's
+   * primary key. When we use the multiselect element, there's no
+   * way to get a simple list of UUIDs for the files. Hence,
+   * we use this function to do that.
+   */
+  handleResourceMultiSelect(userInputData) {
+
+    // need the consult the operation specification:
+    const inputs = this.operationData.inputs;
+    let updatedInputData = {};
+
+    // iterate through the data obtained from the form.
+    // Note that the form can contain items that are not
+    // part of the operation spec (e.g. the job name)
+    for (const key in userInputData) {
+      if (userInputData.hasOwnProperty(key)) {
+
+        // if this element corresponds to an input from
+        // the operation specification, we need to dig deeper
+        if (inputs.hasOwnProperty(key)) {
+          const input = inputs[key];
+          const field_type = input.spec.attribute_type;
+
+          // if this particular input corresponds to a file AND allows
+          // multiple selections:
+          if (
+            (field_type === 'DataResource') || (field_type === 'VariableDataResource')
+            &&
+            (input.spec.many === true)
+          ) {
+            // iterate through the objects and extract out the primary
+            // key of the resource:
+            updatedInputData[key] = userInputData[key].map(
+              z => z['id']
+            );
+          }
+          else {
+            // the input was not file-related or only allowed a single
+            // file. simply copy over 
+            updatedInputData[key] = userInputData[key];
+          }
+        } else {
+          // if we are here, we have a form value that did NOT
+          // correspond to an input in the operation spec.
+          // Simply copy it over
+          updatedInputData[key] = userInputData[key];
+        }
+      }
+    }
+    return updatedInputData;
+  }
+
+  /**
    * Function is triggered when the user clicks the Run button
    * to start analysis
    */
   startAnalysis() {
-    const inputs = this.convertToFloatObj(this.analysesForm.value);
+    let inputs = this.convertToFloatObj(this.analysesForm.value);
+    inputs = this.handleResourceMultiSelect(inputs);
+
     this.apiService
       .executeOperation(this.operation.id, this.workspaceId, inputs)
       .subscribe(data => {
         this.executedOperationId.emit(data.executed_operation_id);
       },
-      error =>{
-        // One of the inputs was invalid-- parse the error and combine
-        // with the input information to give a reasonable description of the error
+        error => {
+          // One of the inputs was invalid-- parse the error and combine
+          // with the input information to give a reasonable description of the error
 
-        // This lets us tie the particular error to a "human-readable" input field.
-        // Otherwise the error text would be a bit cryptic for the end user.
-        let op_inputs = this.operation.inputs;
-        let err_obj = error.error;
-        let input_errors = err_obj.inputs;
-        let err_msg = '';
-        for(let input_key of Object.keys(input_errors)){
-          let s = input_errors[input_key];
-          let field_name = op_inputs[input_key].name;
-          err_msg += `${field_name} ${s}`;
-          err_msg += '\n'
-        }
-        this.notificationService.error(err_msg);
-      });
+          // This lets us tie the particular error to a "human-readable" input field.
+          // Otherwise the error text would be a bit cryptic for the end user.
+          let op_inputs = this.operation.inputs;
+          let err_obj = error.error;
+          let input_errors = err_obj.inputs;
+          let err_msg = '';
+          for (let input_key of Object.keys(input_errors)) {
+            let s = input_errors[input_key];
+            let field_name = op_inputs[input_key].name;
+            err_msg += `${field_name} ${s}`;
+            err_msg += '\n'
+          }
+          this.notificationService.error(err_msg);
+        });
   }
 
   /**

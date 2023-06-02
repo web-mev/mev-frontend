@@ -315,7 +315,7 @@ export class OperationComponent implements OnChanges {
             controlsConfig[key] = configTextField;
             break;
           }
-          case 'OptionString': {
+          case ['OptionString', 'IntegerOption', 'FloatOption'].find( x => x === field_type): {
             const optionField = {
               key: key,
               name: input.name,

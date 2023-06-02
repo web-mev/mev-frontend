@@ -209,6 +209,7 @@ export class AnalysesService {
  * we want to see the name of the file, etc.
  */
   getResourcesMetadata(resourceId: string): Observable<File> {
+    console.log("url: ", `${this.API_URL}/resources/${resourceId}`)
     return <Observable<File>>(
       this.httpClient.get<File>(`${this.API_URL}/resources/${resourceId}`).pipe(
         map(item => this.fileAdapter.adapt(item))

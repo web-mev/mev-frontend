@@ -1,0 +1,18 @@
+<mev-spinner-overlay *ngIf="isWait"></mev-spinner-overlay>
+
+<span class="btn-container">
+    <button mat-raised-button color="accent" class="btn" (click)="addItem('track')">
+        <mat-icon aria-label="Add local data">add</mat-icon>
+        Load Track
+    </button>
+    <button mat-raised-button color="accent" class="btn" (click)="addItem('genome')">
+        <mat-icon aria-label="Add local data">add</mat-icon>
+        Select Genome
+    </button>
+    <button mat-raised-button class="btn" (click)="reset()">Reset
+    </button>
+</span>
+<br>
+<div id="igvDiv2">
+    <div #igvDiv></div>
+</div>

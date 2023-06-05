@@ -69,7 +69,7 @@ export class SNFComponent implements OnInit {
             this.apiService.getResourceContent(snf_similarityId),
             this.apiService.getResourceContent(snf_clusteringId)
         ]).subscribe(([similarityData, clusterData]) => {
-
+            console.log("snf stuff: ", similarityData, clusterData)
             this.formatForCytoscape(similarityData, clusterData);
         });
     }

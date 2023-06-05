@@ -46,7 +46,8 @@ import { VolcanoComponent } from './components/volcano/volcano.component';
 import { LikelihoodRatioTestComponent } from './components/likelihood-ratio-test/likelihood-ratio-test.component';
 import { LikelihoodBoxPlotComponent } from './components/likelihood-ratio-test/likelihood-boxplot/box-plot.component'
 import { WigConversionComponent } from './components/wig-conversion/wigConversion.component';
-import { SNFComponent } from './components/snf/snf.component'
+import { SNFComponent } from './components/snf/snf.component';
+import { PumaComponent } from './components/puma/puma.component';
 
 @NgModule({
   declarations: [
@@ -93,7 +94,8 @@ import { SNFComponent } from './components/snf/snf.component'
     LikelihoodRatioTestComponent,
     LikelihoodBoxPlotComponent,
     WigConversionComponent,
-    SNFComponent
+    SNFComponent,
+    PumaComponent
   ],
   imports: [CommonModule, SharedModule, DragDropModule, MatBadgeModule],
   exports: [
@@ -130,7 +132,8 @@ import { SNFComponent } from './components/snf/snf.component'
     LikelihoodRatioTestComponent,
     LikelihoodBoxPlotComponent,
     WigConversionComponent,
-    SNFComponent
+    SNFComponent,
+    PumaComponent
   ]
 })
 export class D3Module { }

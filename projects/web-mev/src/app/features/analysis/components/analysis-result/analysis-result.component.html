@@ -102,6 +102,9 @@
     <ng-container *ngIf="operationName === 'SNF (Similarity Network Fusion).'">
         <mev-snf [outputs]="outputs"></mev-snf>
     </ng-container>
+    <ng-container *ngIf="operationName === 'PUMA (miRNA Regulatory Networks).'">
+        <mev-puma [outputs]="outputs"></mev-puma>
+    </ng-container>
 </div>
 
 <ng-template #error>

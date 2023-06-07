@@ -5,12 +5,15 @@ import fcose from 'cytoscape-fcose';
 import cola from 'cytoscape-cola';
 import coseBilkent from 'cytoscape-cose-bilkent';
 import cise from 'cytoscape-cise';
+// import layoutUtilities from 'cytoscape-layout-utilities';
 import { AnalysesService } from '@app/features/analysis/services/analysis.service';
 import { forkJoin } from 'rxjs';
 
 cytoscape.use(fcose);
+cytoscape.use(cola);
 cytoscape.use(coseBilkent);
 cytoscape.use(cise);
+// cytoscape.use(layoutUtilities);
 
 @Component({
     selector: 'mev-snf',
@@ -26,7 +29,9 @@ export class SNFComponent implements OnInit {
 
     cy: any;
 
-    layoutName: string = "fcose";
+    layoutName: string = "cise";
+    layoutList: string[] = ["Cose", "Cose-Bilkent", "FCose", "Cise", "Cola"];
+    currLayout: string = this.layoutList[3];
     nodeSize = {
         small: {
             height: 10,
@@ -50,12 +55,17 @@ export class SNFComponent implements OnInit {
             edgeWidth: [3, 8]
         }
     };
-    size = "small";
+    size = "medium";
     existingNode = {};
+    existingEdge = {};
     nodesArr = [];
     minEdgeWeight = 1000;
     maxEdgeWeight = 0;
     edgeArr = [];
+    edgeWeightArr = [];
+    clusterNodes = {};
+    edgeWeightFilter = 0;
+    // clusterInfo = [[], [], [], []];
 
     constructor(
         private apiService: AnalysesService,
@@ -69,32 +79,42 @@ export class SNFComponent implements OnInit {
             this.apiService.getResourceContent(snf_similarityId),
             this.apiService.getResourceContent(snf_clusteringId)
         ]).subscribe(([similarityData, clusterData]) => {
-            console.log("snf stuff: ", similarityData, clusterData)
             this.formatForCytoscape(similarityData, clusterData);
         });
     }
 
-    clusterNodes = {};
+    onRadioChangeLayout(layout) {
+        this.currLayout = layout;
+        this.layoutName = layout.toLowerCase();
+        if (this.nodesArr.length > 0) this.render();
+    }
+
     formatForCytoscape(similarityData, clusterData) {
         for (let j = 0; j < clusterData.length; j++) {
             let node = clusterData[j]['rowname'];
             let value = clusterData[j]['values']['cluster']
             this.clusterNodes[node] = value;
+            // this.clusterInfo[value].push(node)
         }
+
+        //this loop is to get the top 5% of edgeWeights
+        for (let i = 0; i < similarityData.length; i++) {
+            let nodeId = similarityData[i]['rowname'];
+            for (let key in similarityData[i]['values']) {
+                let childId = key;
+                let currEdgeWeight = similarityData[i]['values'][key];
+
+                if (nodeId !== childId) {
+                    this.edgeWeightArr.push(currEdgeWeight)
+                }
+            }
+        }
+        this.edgeWeightArr.sort((a, b) => b - a)
+        let filterValue = Math.round(this.edgeWeightArr.length * 0.1)
+        this.edgeWeightFilter = this.edgeWeightArr[filterValue]
 
         for (let i = 0; i < similarityData.length; i++) {
             let nodeId = similarityData[i]['rowname'];
-            if (!this.existingNode[nodeId]) {
-                let newNode = {
-                    "data": {
-                        "id": nodeId,
-                        "clusterID": this.clusterNodes[nodeId],
-                        // "parent": temp
-                    }
-                }
-                this.nodesArr.push(newNode);
-                this.existingNode[nodeId] = 1;
-            }
 
             for (let key in similarityData[i]['values']) {
                 let childId = key;
@@ -106,15 +126,52 @@ export class SNFComponent implements OnInit {
                         "id": nodeId + "_" + childId,
                         "source": nodeId,
                         "target": childId,
-                        // "interaction": node[nodeId].axis === 0 ? "pd" : "dp",
                         "edge_weight": currEdgeWeight
                     }
                 }
-                this.edgeArr.push(newEdge)
+
+                // if (nodeId !== childId) {
+                //     this.edgeWeightArr.push(currEdgeWeight)
+                // }
+
+
+                if (currEdgeWeight > this.edgeWeightFilter && nodeId !== childId) {
+                    if (!this.existingEdge[nodeId + '_' + childId]
+                        && !this.existingEdge[childId + '_' + nodeId]
+                        && nodeId !== childId) {
+                        this.edgeArr.push(newEdge);
+                        this.existingEdge[nodeId + '_' + childId] = 1;
+                        this.existingEdge[childId + '_' + nodeId] = 1;
+                    }
+
+                    if (!this.existingNode[nodeId]) {
+                        let newNode = {
+                            "data": {
+                                "id": nodeId,
+                                "clusterID": this.clusterNodes[nodeId]
+                            }
+                        }
+                        this.nodesArr.push(newNode);
+                        this.existingNode[nodeId] = 1;
+                    }
+
+                    if (!this.existingNode[childId]) {
+                        let newNode = {
+                            "data": {
+                                "id": childId,
+                                "clusterID": this.clusterNodes[childId]
+                            }
+                        }
+                        this.nodesArr.push(newNode);
+                        this.existingNode[childId] = 1;
+                    }
+                }
+
             }
         }
-        console.log("edge: ", this.nodesArr)
         this.isLoading = false;
+        console.log("cluster nodes: ", this.clusterNodes)
+        // console.log("cluster info: ", this.clusterInfo)
         this.render()
     }
 
@@ -124,17 +181,16 @@ export class SNFComponent implements OnInit {
             elements: {
                 // group: 'node[clusterID]',
                 nodes: this.nodesArr,
-                edges: this.edgeArr.slice(0, 300),
+                edges: this.edgeArr,
             },
             style: [
                 {
                     selector: 'node',
-                    // selector: 'node',
                     style: {
                         'background-color': "#1DA1F2",
                         'opacity': 0.95,
                         'label': 'data(id)',
-                        'shape': 'diamond',
+                        'shape': 'ellipse',
                         'text-wrap': 'wrap',
                         'text-max-width': '1000px',
                         'text-halign': 'center',
@@ -150,41 +206,46 @@ export class SNFComponent implements OnInit {
                     }
                 },
                 {
-                    selector: 'node[clusterID="2"]',
-                    style: {
-                        'background-color': "#D94A4A",
-                        'opacity': 0.95,
-                        'label': 'data(id)',
-                        'shape': 'round-rectangle',
-                        'text-wrap': 'wrap',
-                        'text-max-width': '1000px',
-                        'text-halign': 'center',
-                        'text-valign': 'center',
-                        'border-color': '#000',
-                        'border-opacity': 0.8,
-                        'color': 'white',
-                        'font-weight': 'bold',
-                        'height': this.nodeSize[this.size].height * 0.9,
-                        'width': this.nodeSize[this.size].width * 0.9,
-                        'font-size': this.nodeSize[this.size].fontSize,
-                        'border-width': this.nodeSize[this.size].borderWidth,
-                    }
-                },
-                {
                     selector: 'edge',
                     style: {
-                        'width': 1,
-                        // 'width': `mapData(edge_weight, ${this.minEdgeWeight}, ${this.maxEdgeWeight}, ${this.nodeSize[this.size].edgeWidth[0]}, ${this.nodeSize[this.size].edgeWidth[1]})`,
+                        'width': `mapData(edge_weight, ${this.minEdgeWeight}, ${this.maxEdgeWeight}, ${this.nodeSize[this.size].edgeWidth[0]}, ${this.nodeSize[this.size].edgeWidth[1]})`,
                         'line-color': "#848484",
                         'line-opacity': 0.5,
                     },
                 },
             ],
-            layout:
-            {
+            layout: {
                 name: this.layoutName,
             }
         })
+        if (this.layoutName === 'cise') {
+            this.cy.layout({
+                name: 'cise',
+                clusters: function(node) {
+                    return node['_private']['data']['clusterID'];
+                },
+                animate: true,
+                refresh: 10,
+                animationDuration: undefined,
+                animationEasing: undefined,
+                fit: true,
+                padding: 30,
+                nodeSeparation: 12.5,
+                idealInterClusterEdgeLengthCoefficient: 1.4,
+                allowNodesInsideCircle: true,
+                maxRatioOfNodesInsideCircle: 0.1,
+                springCoeff: 0.45,
+                nodeRepulsion: 4500,
+                gravity: 0.25,
+                gravityRange: 3.8,
+                nodeDimensionsIncludeLabels: true,
+                ready: function () { }, 
+                stop: function () { },
+            }).run();
+            console.log("cise ran!")
+        }
 
     }
+
+
 }

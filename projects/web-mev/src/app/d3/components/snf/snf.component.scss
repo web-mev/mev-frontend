@@ -3,3 +3,12 @@
     position: relative;
     top: -20px;
 }
+
+.mat-radio-button ~ .mat-radio-button {
+    margin-left: 16px;
+}
+
+#radio-group-axis {
+    display: block;
+    font-weight: 500;
+}

@@ -1,16 +1,29 @@
 <mev-spinner-overlay *ngIf="isLoading"></mev-spinner-overlay>
-<div class="analysis-card__content">
-    <!-- <p *ngIf="isLoading === true">Please wait... </p> -->
+<mat-card class="analysis-card">
     <mat-card-header>
         <div mat-card-avatar class="analysis-card__img"></div>
         <mat-card-title>SNF: {{ outputs?.job_name }}</mat-card-title>
     </mat-card-header>
+    <br>
     <label id="radio-group-axis">Select Layout: </label>
     <mat-radio-group aria-label="Select an Axis" [(ngModel)]="currLayout">
         <mat-radio-button *ngFor="let options of layoutList" [value]="options"
-            (change)="onRadioChangeLayout($event.value)">{{ options }}</mat-radio-button>
+            (change)="onRadioChangeLayout($event.value)">
+            {{ options }}</mat-radio-button>
     </mat-radio-group>
     <br>
     <br>
-    <div id="cy"></div>
-</div>
+    <div>
+        <label id="radio-group-axis">Similarity Threshold (%): </label>
+        {{1}}
+        <mat-slider thumbLabel tickInterval="1" step="1" min="1" max="10" aria-label="units"
+            (change)="updateSlider($event)" [(ngModel)]="sliderValue">
+        </mat-slider>
+        {{10}}
+        <button id="filterBtn" mat-raised-button color="accent" class="filterButton" (click)="filterThreshold()"
+            [disabled]="disableFilter">Filter</button>
+    </div>
+    <br>
+</mat-card>
+<br>
+<div id="cy"></div>

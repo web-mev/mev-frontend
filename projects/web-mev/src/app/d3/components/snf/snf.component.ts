@@ -45,7 +45,8 @@ export class SNFComponent implements OnInit {
             width: 20,
             fontSize: 4,
             borderWidth: 1,
-            edgeWidth: [1, 5]
+            // edgeWidth: [1, 5]
+            edgeWidth: [1, 10]
         },
         large: {
             height: 40,
@@ -65,7 +66,11 @@ export class SNFComponent implements OnInit {
     edgeWeightArr = [];
     clusterNodes = {};
     edgeWeightFilter = 0;
-    // clusterInfo = [[], [], [], []];
+    sliderValue: any = 5;
+    disableFilter: boolean = true;
+    similarityThreshold = this.sliderValue / 100;
+    currSimilarityData
+    currClusterData
 
     constructor(
         private apiService: AnalysesService,
@@ -79,14 +84,22 @@ export class SNFComponent implements OnInit {
             this.apiService.getResourceContent(snf_similarityId),
             this.apiService.getResourceContent(snf_clusteringId)
         ]).subscribe(([similarityData, clusterData]) => {
+            this.currSimilarityData = similarityData;
+            this.currClusterData = clusterData;
             this.formatForCytoscape(similarityData, clusterData);
         });
     }
 
     onRadioChangeLayout(layout) {
+        this.isLoading = true;
         this.currLayout = layout;
         this.layoutName = layout.toLowerCase();
-        if (this.nodesArr.length > 0) this.render();
+        if (this.nodesArr.length > 0) {
+            //Use a timer so that the loading animation can display before the screen freezes to load Cytoscape.
+            setTimeout(() => {
+                this.render();
+            }, 100);
+        }
     }
 
     formatForCytoscape(similarityData, clusterData) {
@@ -94,7 +107,6 @@ export class SNFComponent implements OnInit {
             let node = clusterData[j]['rowname'];
             let value = clusterData[j]['values']['cluster']
             this.clusterNodes[node] = value;
-            // this.clusterInfo[value].push(node)
         }
 
         //this loop is to get the top 5% of edgeWeights
@@ -110,7 +122,7 @@ export class SNFComponent implements OnInit {
             }
         }
         this.edgeWeightArr.sort((a, b) => b - a)
-        let filterValue = Math.round(this.edgeWeightArr.length * 0.1)
+        let filterValue = Math.round(this.edgeWeightArr.length * this.similarityThreshold)
         this.edgeWeightFilter = this.edgeWeightArr[filterValue]
 
         for (let i = 0; i < similarityData.length; i++) {
@@ -119,8 +131,6 @@ export class SNFComponent implements OnInit {
             for (let key in similarityData[i]['values']) {
                 let childId = key;
                 let currEdgeWeight = similarityData[i]['values'][key];
-                this.maxEdgeWeight = Math.max(this.maxEdgeWeight, currEdgeWeight);
-                this.minEdgeWeight = Math.min(this.minEdgeWeight, currEdgeWeight);
                 let newEdge = {
                     "data": {
                         "id": nodeId + "_" + childId,
@@ -130,12 +140,10 @@ export class SNFComponent implements OnInit {
                     }
                 }
 
-                // if (nodeId !== childId) {
-                //     this.edgeWeightArr.push(currEdgeWeight)
-                // }
-
-
                 if (currEdgeWeight > this.edgeWeightFilter && nodeId !== childId) {
+                    this.maxEdgeWeight = Math.max(this.maxEdgeWeight, currEdgeWeight);
+                    this.minEdgeWeight = Math.min(this.minEdgeWeight, currEdgeWeight);
+
                     if (!this.existingEdge[nodeId + '_' + childId]
                         && !this.existingEdge[childId + '_' + nodeId]
                         && nodeId !== childId) {
@@ -166,20 +174,44 @@ export class SNFComponent implements OnInit {
                         this.existingNode[childId] = 1;
                     }
                 }
-
             }
         }
-        this.isLoading = false;
-        console.log("cluster nodes: ", this.clusterNodes)
-        // console.log("cluster info: ", this.clusterInfo)
-        this.render()
+
+        if (this.nodesArr.length > 0) {
+            setTimeout(() => {
+                this.render();
+            }, 100);
+        }
+    }
+
+    updateSlider(input) {
+        this.sliderValue = input.value;
+        this.similarityThreshold = input.value / 100;
+        this.disableFilter = false;
+    }
+
+    resetVariables() {
+        this.nodesArr = [];
+        this.edgeArr = [];
+        this.existingNode = {};
+        this.existingEdge = {};
+        this.minEdgeWeight = 1000;
+        this.maxEdgeWeight = 0;
+    }
+
+    filterThreshold() {
+        this.isLoading = true;
+        this.disableFilter = true;
+        this.resetVariables();
+        setTimeout(() => {
+            this.formatForCytoscape(this.currSimilarityData, this.currClusterData);
+        }, 100);
     }
 
     render() {
         this.cy = cytoscape({
             container: document.getElementById('cy'),
             elements: {
-                // group: 'node[clusterID]',
                 nodes: this.nodesArr,
                 edges: this.edgeArr,
             },
@@ -209,22 +241,22 @@ export class SNFComponent implements OnInit {
                     selector: 'edge',
                     style: {
                         'width': `mapData(edge_weight, ${this.minEdgeWeight}, ${this.maxEdgeWeight}, ${this.nodeSize[this.size].edgeWidth[0]}, ${this.nodeSize[this.size].edgeWidth[1]})`,
-                        'line-color': "#848484",
-                        'line-opacity': 0.5,
+                        'line-color': "#A4A4A4",
                     },
                 },
             ],
             layout: {
                 name: this.layoutName,
+                ready: function () { this.isLoading = false }.bind(this),
             }
         })
         if (this.layoutName === 'cise') {
             this.cy.layout({
                 name: 'cise',
-                clusters: function(node) {
+                clusters: function (node) {
                     return node['_private']['data']['clusterID'];
                 },
-                animate: true,
+                animate: false,
                 refresh: 10,
                 animationDuration: undefined,
                 animationEasing: undefined,
@@ -239,12 +271,10 @@ export class SNFComponent implements OnInit {
                 gravity: 0.25,
                 gravityRange: 3.8,
                 nodeDimensionsIncludeLabels: true,
-                ready: function () { }, 
+                ready: function () { },
                 stop: function () { },
             }).run();
-            console.log("cise ran!")
         }
-
     }
 
 

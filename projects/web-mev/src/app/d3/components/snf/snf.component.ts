@@ -8,6 +8,12 @@ import cise from 'cytoscape-cise';
 // import layoutUtilities from 'cytoscape-layout-utilities';
 import { AnalysesService } from '@app/features/analysis/services/analysis.service';
 import { forkJoin } from 'rxjs';
+import { ClusterLabelerComponent } from '../dialogs/cluster-labeler/cluster-labeler.component';
+import { MatDialog } from '@angular/material/dialog';
+import { CustomSetType } from '@app/_models/metadata';
+import { Utils } from '@app/shared/utils/utils';
+import { MetadataService } from '@app/core/metadata/metadata.service';
+import { NotificationService } from '@app/core/core.module';
 
 cytoscape.use(fcose);
 cytoscape.use(cola);
@@ -71,12 +77,19 @@ export class SNFComponent implements OnInit {
     similarityThreshold = this.sliderValue / 100;
     currSimilarityData
     currClusterData
+    clustersResourceId;
+    clusterCount = 0;
 
     constructor(
         private apiService: AnalysesService,
+        public dialog: MatDialog,
+        private metadataService: MetadataService,
+        private readonly notificationService: NotificationService
     ) { }
 
     ngOnInit(): void {
+        this.clustersResourceId = this.outputs['snf_clustering']
+
         this.isLoading = true;
         let snf_similarityId = this.outputs['snf_similarity'];
         let snf_clusteringId = this.outputs['snf_clustering'];
@@ -84,6 +97,8 @@ export class SNFComponent implements OnInit {
             this.apiService.getResourceContent(snf_similarityId),
             this.apiService.getResourceContent(snf_clusteringId)
         ]).subscribe(([similarityData, clusterData]) => {
+            this.clusterCount = clusterData.length;
+
             this.currSimilarityData = similarityData;
             this.currClusterData = clusterData;
             this.formatForCytoscape(similarityData, clusterData);
@@ -219,7 +234,33 @@ export class SNFComponent implements OnInit {
                 {
                     selector: 'node',
                     style: {
-                        'background-color': "#1DA1F2",
+                        'background-color': (node) => {
+                            const clusterId = node['_private']['data']['clusterID'];
+                            switch (clusterId) {
+                                case 1:
+                                    return '#1DA1F2';
+                                case 2:
+                                    return '#FF4500';
+                                case 3:
+                                    return '#00CED1';
+                                case 4:
+                                    return '#993399';
+                                case 5:
+                                    return '#FFA500';
+                                case 6:
+                                    return '#8B4513';
+                                case 7:
+                                    return '#FF1493';
+                                case 8:
+                                    return '#FFFF00';
+                                case 9:
+                                    return '#FF00FF';
+                                case 10:
+                                    return '#222222';
+                                default:
+                                    return '#808080';
+                            }
+                        },
                         'opacity': 0.95,
                         'label': 'data(id)',
                         'shape': 'ellipse',
@@ -277,5 +318,62 @@ export class SNFComponent implements OnInit {
         }
     }
 
+    importClusters(): void {
+        const dialogRef = this.dialog.open(ClusterLabelerComponent);
 
+        dialogRef.afterClosed().subscribe(
+            data => {
+                const prefix = data.prefix;
+                // now run through the file contents and assign to the proper cluster
+                this.apiService
+                    .getResourceContent(this.clustersResourceId)
+                    .subscribe(response => {
+                        if (response.length) {
+                            let clusterList = {};
+                            for (let i = 0; i < response.length; i++) {
+                                let clusterName = response[i]['values']['cluster'];
+                                if (clusterList[clusterName] === undefined) {
+                                    clusterList[clusterName] = 1;
+                                }
+                            }
+
+                            // initialize a bunch of observation sets
+                            // that we will populate
+                            const customSets = {};
+                            Object.keys(clusterList).forEach(
+                                clusterID => {
+                                    customSets[clusterID] = {
+                                        name: prefix + '_' + clusterID,
+                                        type: CustomSetType.ObservationSet,
+                                        elements: [],
+                                        color: Utils.getRandomColor(),
+                                        multiple: true
+                                    };
+                                }
+                            );
+
+                            // now fill:
+                            response.forEach(obj => {
+                                const sampleId = obj.rowname;
+                                const assignedCluster = obj.values['cluster'];
+                                customSets[assignedCluster].elements.push(
+                                    {
+                                        id: sampleId,
+                                        attributes: {}
+                                    }
+                                )
+                            });
+
+                            // store using the metadata service
+                            for (let k of Object.keys(customSets)) {
+                                this.metadataService.addCustomSet(customSets[k], false);
+                            }
+                            this.notificationService.success(
+                                'Your SNF clusters have been added to your metadata.'
+                            );
+                        }
+                    });
+            }
+        )
+    }
 }

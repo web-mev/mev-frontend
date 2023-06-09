@@ -108,30 +108,6 @@ export class PumaComponent implements AfterViewInit {
         this.hasBeenInitialized = true;
     }
 
-    // ngOnInit(): void {
-    //     console.log("puma: ", this.outputs)
-    //     let pumaOutputMatrix = this.outputs['MevPuma.puma_output_matrix'];
-    //     this.getData(pumaOutputMatrix).subscribe(res => {
-    //         console.log("puma output matrix: ", res)
-    //     });
-    // }
-
-    // selectedLayers = 2;
-    // selectedChildren = 3;
-    // apiAxis = 0;
-
-    // getData(uuid) {
-    //     let endPoint = `${this.API_URL}/resources/${uuid}/contents/transform/?transform-name=pandasubset&maxdepth=${this.selectedLayers}&children=${this.selectedChildren}&axis=${this.apiAxis}`;
-    //     return this.httpClient.get(endPoint)
-    //         .pipe(
-    //             catchError(error => {
-    //                 let message = `Error: ${error.error.error}`
-    //                 // this.notificationService.warn(message)
-    //                 // this.isLoading = false;
-    //                 throw error;
-    //             }))
-    // }
-
     scrollTo(htmlID) {
         const element = document.getElementById(htmlID) as HTMLElement;
         element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
@@ -156,7 +132,6 @@ export class PumaComponent implements AfterViewInit {
             this.isLoading = false;
         } else if (type === 'topGenes') {
             this.getData(pandaMatrixId).subscribe(res => {
-                console.log("panda res: ", res, this.nodeSize)
                 this.changeToFitCytoscape(res, existingNode)
                 this.scrollTo('minimumEdgeWeight');
             })
@@ -220,7 +195,6 @@ export class PumaComponent implements AfterViewInit {
                 this.edgeArr.push(newEdge)
             }
         }
-        console.log("node/edge: ", this.nodesArr, this.edgeArr)
 
         this.copyNodesArr = this.nodesArr;
         this.copyEdgeArr = this.edgeArr;

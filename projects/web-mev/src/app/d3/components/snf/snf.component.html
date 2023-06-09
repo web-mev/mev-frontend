@@ -24,6 +24,11 @@
             [disabled]="disableFilter">Filter</button>
     </div>
     <br>
+    <button mat-raised-button color="accent" (click)="importClusters()" [disabled]="clusterCount === 0">
+        <mat-icon>add</mat-icon>
+        Add these clusters to your workspace metadata
+    </button>
+    <br>
 </mat-card>
 <br>
 <div id="cy"></div>

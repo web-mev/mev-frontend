@@ -5,7 +5,6 @@ import fcose from 'cytoscape-fcose';
 import cola from 'cytoscape-cola';
 import coseBilkent from 'cytoscape-cose-bilkent';
 import cise from 'cytoscape-cise';
-// import layoutUtilities from 'cytoscape-layout-utilities';
 import { AnalysesService } from '@app/features/analysis/services/analysis.service';
 import { forkJoin } from 'rxjs';
 import { ClusterLabelerComponent } from '../dialogs/cluster-labeler/cluster-labeler.component';
@@ -19,7 +18,6 @@ cytoscape.use(fcose);
 cytoscape.use(cola);
 cytoscape.use(coseBilkent);
 cytoscape.use(cise);
-// cytoscape.use(layoutUtilities);
 
 @Component({
     selector: 'mev-snf',
@@ -30,9 +28,7 @@ cytoscape.use(cise);
 export class SNFComponent implements OnInit {
     @Input() outputs;
     private readonly API_URL = environment.apiUrl;
-
     isLoading: boolean = false;
-
     cy: any;
 
     layoutName: string = "cise";
@@ -51,7 +47,6 @@ export class SNFComponent implements OnInit {
             width: 20,
             fontSize: 4,
             borderWidth: 1,
-            // edgeWidth: [1, 5]
             edgeWidth: [1, 10]
         },
         large: {
@@ -88,9 +83,8 @@ export class SNFComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.clustersResourceId = this.outputs['snf_clustering']
-
         this.isLoading = true;
+        this.clustersResourceId = this.outputs['snf_clustering']        
         let snf_similarityId = this.outputs['snf_similarity'];
         let snf_clusteringId = this.outputs['snf_clustering'];
         forkJoin([
@@ -98,7 +92,6 @@ export class SNFComponent implements OnInit {
             this.apiService.getResourceContent(snf_clusteringId)
         ]).subscribe(([similarityData, clusterData]) => {
             this.clusterCount = clusterData.length;
-
             this.currSimilarityData = similarityData;
             this.currClusterData = clusterData;
             this.formatForCytoscape(similarityData, clusterData);
@@ -238,27 +231,27 @@ export class SNFComponent implements OnInit {
                             const clusterId = node['_private']['data']['clusterID'];
                             switch (clusterId) {
                                 case 1:
-                                    return '#1DA1F2';
+                                    return '#E80538';
                                 case 2:
-                                    return '#FF4500';
+                                    return '#EBCD00';
                                 case 3:
-                                    return '#00CED1';
+                                    return '#00979D';
                                 case 4:
-                                    return '#993399';
+                                    return '#80408D';
                                 case 5:
-                                    return '#FFA500';
+                                    return '#E87D1E';
                                 case 6:
-                                    return '#8B4513';
+                                    return '#52A52E';
                                 case 7:
-                                    return '#FF1493';
+                                    return '#6578B4';
                                 case 8:
-                                    return '#FFFF00';
+                                    return '#C9006B';
                                 case 9:
-                                    return '#FF00FF';
+                                    return '#68666F';
                                 case 10:
                                     return '#222222';
                                 default:
-                                    return '#808080';
+                                    return '#D5D0CA';
                             }
                         },
                         'opacity': 0.95,

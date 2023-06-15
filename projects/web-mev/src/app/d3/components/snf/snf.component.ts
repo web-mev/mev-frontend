@@ -67,7 +67,7 @@ export class SNFComponent implements OnInit {
     edgeWeightArr = [];
     clusterNodes = {};
     edgeWeightFilter = 0;
-    sliderValue: any = 5;
+    sliderValue: any = 2.5;
     disableFilter: boolean = true;
     similarityThreshold = this.sliderValue / 100;
     currSimilarityData
@@ -84,7 +84,7 @@ export class SNFComponent implements OnInit {
 
     ngOnInit(): void {
         this.isLoading = true;
-        this.clustersResourceId = this.outputs['snf_clustering']        
+        this.clustersResourceId = this.outputs['snf_clustering']
         let snf_similarityId = this.outputs['snf_similarity'];
         let snf_clusteringId = this.outputs['snf_clustering'];
         forkJoin([
@@ -292,8 +292,6 @@ export class SNFComponent implements OnInit {
                 },
                 animate: false,
                 refresh: 10,
-                animationDuration: undefined,
-                animationEasing: undefined,
                 fit: true,
                 padding: 30,
                 nodeSeparation: 12.5,
@@ -305,8 +303,6 @@ export class SNFComponent implements OnInit {
                 gravity: 0.25,
                 gravityRange: 3.8,
                 nodeDimensionsIncludeLabels: true,
-                ready: function () { },
-                stop: function () { },
             }).run();
         }
     }

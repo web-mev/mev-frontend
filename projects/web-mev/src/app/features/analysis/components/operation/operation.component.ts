@@ -414,16 +414,15 @@ export class OperationComponent implements OnChanges {
         // if this element corresponds to an input from
         // the operation specification, we need to dig deeper
         if (inputs.hasOwnProperty(key)) {
-          const input = inputs[key];
-          const field_type = input.spec.attribute_type;
+          let input = inputs[key];
+          let field_type = input.spec.attribute_type;
 
           // if this particular input corresponds to a file AND allows
           // multiple selections:
-          if (
-            (field_type === 'DataResource') || (field_type === 'VariableDataResource')
-            &&
-            (input.spec.many === true)
-          ) {
+          let condition1 = (field_type === 'DataResource') || (field_type === 'VariableDataResource');
+          let condition2 = (input.spec.many === true)
+          let is_multiselect = (condition1 && condition2);
+          if (is_multiselect) {
             // iterate through the objects and extract out the primary
             // key of the resource:
             updatedInputData[key] = userInputData[key].map(

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit, Output } from '@angular/core';
 import { environment } from '@environments/environment';
 import * as cytoscape from 'cytoscape';
 import fcose from 'cytoscape-fcose';

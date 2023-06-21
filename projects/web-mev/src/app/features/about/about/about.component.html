@@ -70,7 +70,7 @@
               </p>
             </div>
 
-            <mat-accordion >
+            <mat-accordion>
               <mat-expansion-panel class="expansionPanel" [expanded]="!showResult" (opened)="showResult = false"
                 (closed)="showResult = true">
                 <mat-expansion-panel-header class="changeLogHeader">
@@ -82,6 +82,29 @@
                     Latest Release
                   </div>
                   <div class="versionDate">
+                    21 June 2023
+                  </div>
+                  <ul class="updates">
+                    <li>
+                      New file formats: In anticipation of future analysis tools featuring these file types, we now will
+                      accept BED, BED6, BED6+4 (narrowpeak), bedgraph, wig, and bigwig formats.
+                    </li>
+                    <li>
+                      IGV: We now have integrated the browser-based implementation igv.js into the WebMeV interface.
+                      This will allow you to load and visually inspect various BED-like and BAM file formats. The IGV
+                      viewer is available in your workspace(s).
+                    </li>
+                    <li>
+                      SNF: To enable patient/sample clustering using multiple data types (e.g. expression, methylation,
+                      miRNA), we have added Similarity Network Fusion. We will soon be adding public data sources for
+                      methylation data such as TCGA.
+                    </li>
+                    <li>
+                      PUMA: Another animal from the Quackenbush lab’s NetZoo project. This tool infers miRNA regulatory
+                      networks.
+                    </li>
+                  </ul>
+                  <div class="versionDate">
                     27 March 2023
                   </div>
                   <ul class="updates">
@@ -92,7 +115,8 @@
                       Improvements and bug-fixes for heatmaps.
                     </li>
                     <li>
-                      Addition of micro-RNA-seq data from the TCGA project. In an upcoming release, we will be adding tools
+                      Addition of micro-RNA-seq data from the TCGA project. In an upcoming release, we will be adding
+                      tools
                       to work with this data.
                     </li>
                     <li>
@@ -107,13 +131,15 @@
                       WebMeV is now hosted on AWS.
                     </li>
                     <li>
-                      We added a few new tools for single-cell RNA-seq such as the ability to color UMAP representations by selected genes.
+                      We added a few new tools for single-cell RNA-seq such as the ability to color UMAP representations
+                      by selected genes.
                     </li>
                     <li>
                       Heatmap improvements, including the ability to overlay annotations.
                     </li>
                     <li>
-                      Added a likelihood ratio test, which provides ANOVA-like differential expression testing for bulk RNA-seq.
+                      Added a likelihood ratio test, which provides ANOVA-like differential expression testing for bulk
+                      RNA-seq.
                     </li>
                     <li>
                       Bug fixes here and there.
@@ -124,12 +150,14 @@
                   </div>
                   <ul class="updates">
                     <li>
-                      We added our first network analysis, PANDA, from the NetZoo (<a href="https://github.com/netZoo/">https://github.com/netZoo/</a>) library
+                      We added our first network analysis, PANDA, from the NetZoo (<a
+                        href="https://github.com/netZoo/">https://github.com/netZoo/</a>) library
                       of tools. PANDA allows inference on regulatory networks. Note that this tool typically requires
                       many samples. Try it out on one of our public datasets such as TCGA.
                     </li>
                     <li>
-                      We added RNA-seq data from the GTEx repository (<a href="https://gtexportal.org/home/">https://gtexportal.org/home/</a>).
+                      We added RNA-seq data from the GTEx repository (<a
+                        href="https://gtexportal.org/home/">https://gtexportal.org/home/</a>).
                     </li>
                   </ul>
                   <div class="analysis-card__content">

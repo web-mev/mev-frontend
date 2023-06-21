@@ -1,0 +1,30 @@
+#cy {
+    height: 80vh;
+    position: relative;
+    top: -20px;
+}
+
+.mat-radio-button ~ .mat-radio-button {
+    margin-left: 16px;
+}
+
+#radio-group-axis {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.analysis-card__img {
+    background-image: url("~assets/icons/network_1.png");
+    background-size: 30px;
+    background-position: top center;
+    background-repeat: no-repeat;
+}
+
+mat-slider {
+    width: 350px;
+}
+
+.filterButton{
+    margin-left: 15px;
+}

@@ -1,0 +1,36 @@
+<mev-spinner-overlay *ngIf="isLoading"></mev-spinner-overlay>
+<mat-card class="analysis-card">
+    <mat-card-header>
+        <div mat-card-avatar class="analysis-card__img"></div>
+        <mat-card-title>SNF: {{ outputs?.job_name }}</mat-card-title>
+    </mat-card-header>
+    <br>
+    <label id="radio-group-axis">Select Layout: </label>
+    <mat-radio-group aria-label="Select an Axis" [(ngModel)]="currLayout">
+        <mat-radio-button *ngFor="let options of layoutList" [value]="options"
+            (change)="onRadioChangeLayout($event.value)">
+            {{ options }}</mat-radio-button>
+    </mat-radio-group>
+    <br>
+    <br>
+    <div>
+        <label id="radio-group-axis">Similarity Threshold (%): </label>
+        {{1}}
+        <mat-slider thumbLabel tickInterval="0.5" step="0.5" min="1" max="5" aria-label="units"
+            (change)="updateSlider($event)" [(ngModel)]="sliderValue">
+        </mat-slider>
+        {{5}}
+        <button id="filterBtn" mat-raised-button color="accent" class="filterButton" (click)="filterThreshold()"
+            [disabled]="disableFilter">Filter</button>
+    </div>
+    <br>
+    <button mat-raised-button color="accent" (click)="importClusters()" [disabled]="clusterCount === 0">
+        <mat-icon>add</mat-icon>
+        Add these clusters to your workspace metadata
+    </button>
+    <br>
+    <br>
+    <mat-divider [inset]="true"></mat-divider>
+    <br>
+    <div id="cy"></div>
+</mat-card>

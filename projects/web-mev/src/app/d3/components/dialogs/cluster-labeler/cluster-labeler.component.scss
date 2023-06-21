@@ -1,42 +1,54 @@
-.container {
-  display: flex;
-  flex-direction: column;
-  min-width: 450px;
-}
-
-.container > * {
-  width: 100%;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  padding-top: 6px;
-}
-
-.mat-form-field {
-  font-size: 16px;
-  flex-grow: 1;
-}
-
 .mat-dialog-content {
   max-height: none;
   overflow: visible;
   position: relative;
 }
 
-.form-control {
+.dialogContainer{
+  width: 33vw;
+  min-width: 450px;
+}
+
+.headerSpan {
+  display: flex;
+  background-color: #1DA1F2;
+  margin: -35px -30px 0 -30px;
+}
+
+.dialogTitle {
+  justify-content: flex-start;
+  width: 85%;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin: 20px 0 10px 30px;
+  color: white;
+  font-weight: bold;
+  font-size: 24px;
+}
+.dialogContent{
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(0,0,0,.6);
+  margin-top: 1em;
+}
+
+.closeDialogButton {
+  justify-content: flex-end;
+  margin: 10px 10px 0 0;
+  color: white;
+  padding: 10px;
+}
+
+.closeDialogButton:hover{
+  opacity: .75;
+}
+
+.inputField {
   width: 100%;
+  margin-top: 20px;
 }
 
-.mat-dialog-actions {
-  position: absolute;
-  bottom: 0;
-}
-
-.color-picker-input {
-  width: 40px;
-  height: 40px;
-  margin: 0;
-  padding: 0;
+.submitBtnContainer {
+  display: flex;
+  justify-content: flex-end;
 }

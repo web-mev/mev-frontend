@@ -26,10 +26,10 @@ export class AboutComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getData();
+    this.getNotificationData();
   }
 
-  getData() {
+  getNotificationData() {
     let queryURL = `${this.API_URL}/latest-message/`;
     this.httpClient.get(queryURL).pipe(
       catchError(error => {

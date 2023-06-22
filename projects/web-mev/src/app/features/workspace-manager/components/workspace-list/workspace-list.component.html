@@ -44,19 +44,6 @@
       <mat-cell *matCellDef="let row"> {{ row.created | date :'medium' }}</mat-cell>
     </ng-container>
 
-    <ng-container matColumnDef="accessed">
-      <mat-header-cell *matHeaderCellDef mat-sort-header class="workspace-table-header">Last accessed date
-      </mat-header-cell>
-      <mat-cell *matCellDef="let row"> {{ row.accessed | date :'medium' }}</mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="file_number">
-      <mat-header-cell *matHeaderCellDef mat-sort-header class="workspace-table-header">Number of files
-      </mat-header-cell>
-      <mat-cell *matCellDef="let row"> {{ row.file_number }}</mat-cell>
-    </ng-container>
-
-
     <!-- actions -->
     <ng-container matColumnDef="actions">
       <mat-header-cell *matHeaderCellDef class="workspace-table-header">Actions</mat-header-cell>

@@ -106,6 +106,9 @@
     <ng-container *ngIf="operationName === 'PUMA (miRNA Regulatory Networks)'">
         <mev-puma [showHeader]=true [outputs]="outputs"></mev-puma>
     </ng-container>
+    <ng-container *ngIf="operationName === 'PUMA (miRNA Regulatory Networks).'">
+        <mev-puma [showHeader]=true [outputs]="outputs"></mev-puma>
+    </ng-container>
 </div>
 
 <ng-template #error>

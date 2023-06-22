@@ -1,7 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-
 import { ROUTE_ANIMATIONS_ELEMENTS } from '../../../core/core.module';
-import { Router, NavigationEnd } from '@angular/router';
+import { environment } from '@environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 /**
  * About component
@@ -15,46 +17,32 @@ import { Router, NavigationEnd } from '@angular/router';
 })
 export class AboutComponent implements OnInit {
   routeAnimationsElements = ROUTE_ANIMATIONS_ELEMENTS;
-  private twitter: any;
+  private readonly API_URL = environment.apiUrl;
   showResult = true;
 
   constructor(
-    private _router: Router
+    private httpClient: HttpClient,
+    private _snackBar: MatSnackBar
   ) { }
 
-  /**
-   * Initialize twitter widget
-   */
   ngOnInit() {
-    this.initTwitterWidget();
+    this.getData();
   }
 
-  /**
-   * Initialize twitter widget
-   */
-  initTwitterWidget() {
-    this.twitter = this._router.events.subscribe(val => {
-      if (val instanceof NavigationEnd) {
-        (<any>window).twttr = (function (d, s, id) {
-          let js: any,
-            fjs = d.getElementsByTagName(s)[0],
-            t = (<any>window).twttr || {};
-          if (d.getElementById(id)) return t;
-          js = d.createElement(s);
-          js.id = id;
-          js.src = 'https://platform.twitter.com/widgets.js';
-          fjs.parentNode.insertBefore(js, fjs);
-
-          t._e = [];
-          t.ready = function (f: any) {
-            t._e.push(f);
-          };
-
-          return t;
-        })(document, 'script', 'twitter-wjs');
-
-        if ((<any>window).twttr.ready()) (<any>window).twttr.widgets.load();
-      }
-    });
+  getData() {
+    let queryURL = `${this.API_URL}/latest-message/`;
+    this.httpClient.get(queryURL).pipe(
+      catchError(error => {
+        let message = `Error: ${error.error.error}`;
+        throw message
+      }))
+      .subscribe(data => {
+        if (Object.keys(data).length !== 0) {
+          let message = data['message'];
+          this._snackBar.open(message, 'X', {
+            panelClass: 'warning-notification-overlay'
+          });
+        }
+      });
   }
 }

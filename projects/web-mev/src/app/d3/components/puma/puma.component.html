@@ -14,21 +14,22 @@
                     Visualize your PUMA regulatory network inference below.
                 </p>
                 <p class="analysis-card__instruction">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla iaculis euismod sem, vitae placerat
-                    felis suscipit sit amet. Sed vitae facilisis turpis. Fusce vel efficitur sem, eget pulvinar quam.
-                    Proin iaculis euismod elit eget aliquet. Morbi sed dignissim odio. Curabitur bibendum felis vel
-                    porttitor facilisis. Morbi dignissim sem id interdum vulputate. Integer volutpat rhoncus ex. Sed
-                    lobortis vulputate dui, at posuere tellus scelerisque eu. Phasellus erat mi, vestibulum et nisl ac,
-                    hendrerit ullamcorper arcu. Donec venenatis augue leo, sed luctus leo pharetra at.
+                    Note that visualizing the entire network is not feasible; PUMA generates an edge weight (a measure
+                    of the evidence for regulation) for each combination of gene and miRNA and data of
+                    that size is not easily visualized. Hence, we provide tools to subset the results and show the most
+                    strongly connected elements of the regulatory network. We do this by finding the genes with the
+                    greatest sum of the edge weights and selecting the "children" (miRNA) which have the largest edge
+                    weights. For each of those miRNAs, in turn, we find the genes with the greatest edge weights.
                 </p>
                 <p class="analysis-card__instruction">
-                    Aenean pellentesque mi odio, ac dictum felis gravida nec. Nullam rhoncus lorem at mollis
-                    condimentum. Suspendisse in malesuada nibh. Fusce vestibulum in lacus a malesuada. Nullam vel massa
-                    eget metus sagittis volutpat. Vivamus justo mi, tristique id augue quis, commodo pellentesque urna.
+                    The number of layers controls how many times we perform that process of switching between finding
+                    the top genes or miRNAs. The number of children determines the number of "top hits" we find at each
+                    level.
                 </p>
                 <p class="analysis-card__instruction">
-                    Nunc ut massa id nisl sodales mollis. Orci varius natoque penatibus et magnis dis parturient montes,
-                    nascetur ridiculus mus. Pellentesque pulvinar nulla in dignissim sodales. Aenean non consequat elit.
+                    Alternatively, if you have a gene or miRNA of interest, you can search on that to find networks
+                    based on that search term. Note, however, that a successful gene-based query may not have
+                    particularly significant edge weights.
                 </p>
                 <label id="radio-group-axis">Select an Axis: </label>
                 <mat-radio-group aria-label="Select an Axis" [(ngModel)]="apiAxis">
@@ -94,21 +95,22 @@
                 Visualize your PUMA regulatory network inference below.
             </p>
             <p class="analysis-card__instruction">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla iaculis euismod sem, vitae placerat
-                felis suscipit sit amet. Sed vitae facilisis turpis. Fusce vel efficitur sem, eget pulvinar quam.
-                Proin iaculis euismod elit eget aliquet. Morbi sed dignissim odio. Curabitur bibendum felis vel
-                porttitor facilisis. Morbi dignissim sem id interdum vulputate. Integer volutpat rhoncus ex. Sed
-                lobortis vulputate dui, at posuere tellus scelerisque eu. Phasellus erat mi, vestibulum et nisl ac,
-                hendrerit ullamcorper arcu. Donec venenatis augue leo, sed luctus leo pharetra at.
+                Note that visualizing the entire network is not feasible; PUMA generates an edge weight (a measure
+                of the evidence for regulation) for each combination of gene and miRNA and data of that
+                size is not easily visualized. Hence, we provide tools to subset the results and show the most strongly
+                connected elements of the regulatory network. We do this by finding the genes with the greatest sum
+                of the edge weights and selecting the "children" (miRNA) which have the largest edge
+                weights. For each of those miRNAs, in turn, we find the genes with the greatest edge weights.
             </p>
             <p class="analysis-card__instruction">
-                Aenean pellentesque mi odio, ac dictum felis gravida nec. Nullam rhoncus lorem at mollis
-                condimentum. Suspendisse in malesuada nibh. Fusce vestibulum in lacus a malesuada. Nullam vel massa
-                eget metus sagittis volutpat. Vivamus justo mi, tristique id augue quis, commodo pellentesque urna.
+                The number of layers controls how many times we perform that process of switching between finding
+                the top genes or miRNAs. The number of children determines the number of "top hits" we find at each
+                level.
             </p>
             <p class="analysis-card__instruction">
-                Nunc ut massa id nisl sodales mollis. Orci varius natoque penatibus et magnis dis parturient montes,
-                nascetur ridiculus mus. Pellentesque pulvinar nulla in dignissim sodales. Aenean non consequat elit.
+                Alternatively, if you have a gene or miRNA of interest, you can search on that to find networks based
+                on that search term. Note, however, that a successful gene-based query may not have particularly
+                significant edge weights.
             </p>
             <mat-form-field class="example-chip-list searchField" appearance="outline">
                 <mat-label>Search Terms</mat-label>
@@ -119,9 +121,9 @@
                             <mat-icon>cancel</mat-icon>
                         </button>
                     </mat-chip>
-                    <input [placeholder]="apiAxis === 0 ? 'Add genes...' : 'Add miRNA...'"
-                        [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                        [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="addSearchItem($event)">
+                    <input [placeholder]="apiAxis === 0 ? 'Add genes...' : 'Add miRNA...'" [matChipInputFor]="chipList"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+                        (matChipInputTokenEnd)="addSearchItem($event)">
                 </mat-chip-list>
             </mat-form-field>
             <label id="radio-group-axis">Select an Axis: </label>

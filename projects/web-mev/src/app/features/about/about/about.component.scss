@@ -109,6 +109,7 @@ h2 {
 
 .mev-section {
   margin: 30px auto 30px auto;
+  line-height: 1.4;
 }
 
 .mev-heading {
@@ -163,8 +164,8 @@ mat-card {
 .mat-expansion-panel-header {
   padding-left: 0 !important;
 }
-.mat-content{
-  flex: .7 !important;
+.mat-content {
+  flex: 0.7 !important;
 }
 
 .changeLogHeader {
@@ -190,13 +191,13 @@ mat-card {
   font-weight: 600;
 }
 
-.updates{
+.updates {
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
-  color: rgba(0,0,0,.8);
+  color: rgba(0, 0, 0, 0.8);
 }
-.expandIcon{
+.expandIcon {
   background-color: tomato;
   color: white;
   border-radius: 36px;
@@ -205,6 +206,9 @@ mat-card {
   top: 25%;
   position: absolute;
   z-index: 99;
+}
+.contentBody {
+  padding: 0 50px;
 }
 
 @media (max-width: map-get($grid-breakpoints, md)) {

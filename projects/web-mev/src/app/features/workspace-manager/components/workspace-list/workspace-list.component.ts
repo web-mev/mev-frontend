@@ -22,8 +22,8 @@ export class WorkspaceListComponent implements OnInit {
   displayedColumns = [
     'workspace_name',
     'created',
-    'accessed',
-    'file_number',
+    // 'accessed',
+    // 'file_number',
     'actions'
   ];
   dataSource: ExampleDataSource | null;

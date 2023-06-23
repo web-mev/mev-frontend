@@ -19,7 +19,7 @@ import { UserService } from '@app/core/user/user.service';
 export class PasswordChangeComponent implements OnInit {
   routeAnimationsElements = ROUTE_ANIMATIONS_ELEMENTS;
   changePasswordForm: FormGroup;
-  errorMessage: string = '';
+  errorMessage: string;
   successMessage: string;
   loading = false;
   submitted = false;
@@ -76,13 +76,8 @@ export class PasswordChangeComponent implements OnInit {
           this.loading = false;
         },
         err => {
-          if (err.error.current_password) {
-            this.errorMessage = err.error.current_password; 
-          } else {
-            this.errorMessage = 'Server Side Error';
-          }
+          this.errorMessage = err.error.current_password ? err.error.current_password : 'Server Side Error';
           this.successMessage = null;
-          // this.errorMessage = 'Server Side Error';
           this.loading = false;
           this.changeDetectorRef.detectChanges();
         }

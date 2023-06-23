@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ROUTE_ANIMATIONS_ELEMENTS } from '@app/core/core.module';
 import { RepeatPasswordValidator } from '@app/shared/validators/validators';
@@ -19,13 +19,16 @@ import { UserService } from '@app/core/user/user.service';
 export class PasswordChangeComponent implements OnInit {
   routeAnimationsElements = ROUTE_ANIMATIONS_ELEMENTS;
   changePasswordForm: FormGroup;
-  errorMessage: string;
+  errorMessage: string = '';
   successMessage: string;
   loading = false;
   submitted = false;
   isFormValid = true;
 
-  constructor(private userService: UserService, private fb: FormBuilder) {}
+  constructor(
+    private userService: UserService, 
+    private fb: FormBuilder,
+    private changeDetectorRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.changePasswordForm = this.fb.group(
@@ -73,9 +76,15 @@ export class PasswordChangeComponent implements OnInit {
           this.loading = false;
         },
         err => {
+          if (err.error.current_password) {
+            this.errorMessage = err.error.current_password; 
+          } else {
+            this.errorMessage = 'Server Side Error';
+          }
           this.successMessage = null;
-          this.errorMessage = 'Server Side Error';
+          // this.errorMessage = 'Server Side Error';
           this.loading = false;
+          this.changeDetectorRef.detectChanges();
         }
       );
     } else {

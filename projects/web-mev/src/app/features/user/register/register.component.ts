@@ -82,8 +82,9 @@ export class RegisterComponent implements OnInit {
             );
             this.router.navigate(['/login']);
           },
-          error => {
-            this.notificationService.error(error);
+          err => {
+            let errorMessage = err.error.email ? err.error.email : 'Server Side Error';
+            this.notificationService.error(errorMessage);
             this.loading = false;
           }
         );

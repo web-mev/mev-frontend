@@ -54,8 +54,8 @@ export class RequestPasswordResetComponent implements OnInit {
             }, 2000);
           },
           err => {
+            this.errorMessage = err.error.email ? err.error.email : 'Server Side Error';
             this.successMessage = null;
-            this.errorMessage = 'Server Side Error';
             this.loading = false;
           }
         );

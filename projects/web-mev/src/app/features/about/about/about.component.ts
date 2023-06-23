@@ -40,6 +40,7 @@ export class AboutComponent implements OnInit {
         if (Object.keys(data).length !== 0) {
           let message = data['message'];
           this._snackBar.open(message, 'X', {
+            duration: 15000,
             panelClass: 'warning-notification-overlay'
           });
         }

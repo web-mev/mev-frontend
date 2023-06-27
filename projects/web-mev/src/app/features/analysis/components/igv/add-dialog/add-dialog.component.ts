@@ -72,21 +72,23 @@ export class AddDialog2Component implements OnInit {
       }
     }
     if (this.dialogType === 'track') {
-      this.apiService.getAvailableResources().subscribe(data => {
+      this.apiService.getConnectedResources(this.workspaceId).subscribe(data => {
+        console.log("load track: ", data, this.workspaceId)
         let track_files = [];
         for (let f of data) {
-          if (f.resource_type === 'ALN' || f.resource_type === 'WIG' || f.resource_type === 'BIGWIG' || f.resource_type === 'BEDGRAPH' || f.resource_type === 'BED6' || f.resource_type === 'BED3') {
+          if (f.readable_resource_type === 'Alignment (SAM/BAM)' || f.readable_resource_type === 'WIG (wiggle) format' || f.readable_resource_type === 'BigWIG (compressed wiggle) format' || f.readable_resource_type === 'BedGraph format' || f.readable_resource_type === 'BED6-format file' || f.readable_resource_type === 'BED3-format file') {
             track_files.push(f);
             let resourceType = {
               "resource_type": f.resource_type
             }
             this.resourceTypeDict[f.id] = resourceType;
-          } else if (f.resource_type === 'BAI') {
+          } else if (f.readable_resource_type === 'BAM Index') {
             this.indexFiles.push(f);
           }
+          
         }
         this.trackFiles = track_files;
-      });
+      })
     }
 
     this.dropdownSettings = {

@@ -73,7 +73,6 @@ export class AddDialog2Component implements OnInit {
     }
     if (this.dialogType === 'track') {
       this.apiService.getConnectedResources(this.workspaceId).subscribe(data => {
-        console.log("load track: ", data, this.workspaceId)
         let track_files = [];
         for (let f of data) {
           if (f.readable_resource_type === 'Alignment (SAM/BAM)' || f.readable_resource_type === 'WIG (wiggle) format' || f.readable_resource_type === 'BigWIG (compressed wiggle) format' || f.readable_resource_type === 'BedGraph format' || f.readable_resource_type === 'BED6-format file' || f.readable_resource_type === 'BED3-format file') {

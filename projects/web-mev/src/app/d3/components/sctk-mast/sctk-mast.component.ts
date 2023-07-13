@@ -45,7 +45,7 @@ import {
       'name',
       'log2FoldChange',
       'pvalue',
-      'FDR'
+      'padj'
     ];
     operators = [
       { id: 'eq', name: ' = ' },
@@ -59,7 +59,7 @@ import {
   
     defaultPageIndex = 0;
     defaultPageSize = 10;
-    defaultSorting = { field: 'FDR', direction: 'asc' };
+    defaultSorting = { field: 'padj', direction: 'asc' };
   
     // Controls how large a custom FeatureSet can be.
     // Otherwise, clicking the 'add features set' button
@@ -70,7 +70,7 @@ import {
     /* Table filters */
     allowedFilters = {
       /*name: { defaultValue: '', hasOperator: false },*/
-      FDR: {
+      padj: {
         defaultValue: '',
         hasOperator: true,
         operatorDefaultValue: 'lte'
@@ -559,7 +559,7 @@ import {
     name: string;
     log2FoldChange: number;
     pvalue: number;
-    FDR: number;
+    padj: number;
   }
   
   export class FeaturesDataSource implements DataSource<SingleCellDGEFeature> {

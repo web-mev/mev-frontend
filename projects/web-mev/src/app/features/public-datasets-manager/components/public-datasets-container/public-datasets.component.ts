@@ -26,23 +26,29 @@ export class PublicDatasetsComponent implements OnInit {
 
   targetFields = ["ethnicity", "gender", "race", "vital_status", "cog_renal_stage", "morphology", "primary_diagnosis", "site_of_resection_or_biopsy", "dbgap_accession_number", "disease_type", "name", "primary_site", "project_id", "tissue_or_organ_of_origin"];
   tcgaFields = ["alcohol_history", "ethnicity", "gender", "race", "vital_status", "vital_status", "ajcc_pathologic_m", "ajcc_pathologic_n", "ajcc_pathologic_t", "ajcc_pathologic_stage", "ajcc_staging_system_edition", "icd_10_code", "morphology", "primary_diagnosis", "prior_malignancy", "prior_treatment", "site_of_resection_or_biopsy", "synchronous_malignancy", "disease_type", "name", "primary_site", "project_id", "tissue_or_organ_of_origin"]; //"ajcc_pathologic_stage",
-  tcgaMicroRnaseqFields = this.tcgaFields.concat(["Center_QC_failed","Item_flagged_DNU","Item_Flagged_Low_Quality"]);
+  tcgaMicroRnaseqFields = this.tcgaFields.concat(["Center_QC_failed", "Item_flagged_DNU", "Item_Flagged_Low_Quality"]);
   gtexFields = ["sex", "age_range", "hardy_scale_death", "nucleic_acid_isolation_batch", "expression_batch", "collection_site_code", "tissue"];
+  tcgaMethylationFields = ["alcohol_history", "ethnicity", "gender", "race", "vital_status", "vital_status", "ajcc_pathologic_m", "ajcc_pathologic_n", "ajcc_pathologic_t", "ajcc_pathologic_stage", "ajcc_staging_system_edition", "icd_10_code", "morphology", "primary_diagnosis", "prior_malignancy", "prior_treatment", "site_of_resection_or_biopsy", "synchronous_malignancy", "disease_type", "name", "primary_site", "project_id", "tissue_or_organ_of_origin"]; //"ajcc_pathologic_stage",
+
   targetRangeFields = ["age_at_diagnosis", "days_to_last_follow_up", "year_of_diagnosis"]; //"days_to_death", "days_to_birth"
   tcgaRangeFields = ["age_at_diagnosis", "age_at_index", "days_to_birth", "days_to_last_follow_up", "year_of_birth", "year_of_diagnosis"];
   gtexRangeFields = ["rna_rin"];
-  advanceFields = ["cog_renal_stage", "dbgap_accession_number", "morphology", "disease_type", "primary_site", "site_of_resection_or_biopsy", "days_to_last_follow_up", "ajcc_pathologic_m", "ajcc_pathologic_n", "ajcc_pathologic_t", "ajcc_staging_system_edition", "alcohol_history", "icd_10_code", "synchronous_malignancy", "age_at_index", "days_to_birth", "year_of_birth", "year_of_diagnosis", "nucleic_acid_isolation_batch", "expression_batch", "collection_site_code", "rna_rin", "Center_QC_failed","Item_flagged_DNU","Item_Flagged_Low_Quality"];
+  tcgaMethylationRangeFields = [];
+
+  advanceFields = ["cog_renal_stage", "dbgap_accession_number", "morphology", "disease_type", "primary_site", "site_of_resection_or_biopsy", "days_to_last_follow_up", "ajcc_pathologic_m", "ajcc_pathologic_n", "ajcc_pathologic_t", "ajcc_staging_system_edition", "alcohol_history", "icd_10_code", "synchronous_malignancy", "age_at_index", "days_to_birth", "year_of_birth", "year_of_diagnosis", "nucleic_acid_isolation_batch", "expression_batch", "collection_site_code", "rna_rin", "Center_QC_failed", "Item_flagged_DNU", "Item_Flagged_Low_Quality"];
   filterFields = {
     'target-rnaseq': this.targetFields,
     'tcga-rnaseq': this.tcgaFields,
     'tcga-micrornaseq': this.tcgaMicroRnaseqFields,
-    'gtex-rnaseq': this.gtexFields
+    'gtex-rnaseq': this.gtexFields,
+    'tcga-methylation': this.tcgaMethylationFields
   }
   filterRangeFields = {
     'target-rnaseq': this.targetRangeFields,
     'tcga-rnaseq': this.tcgaRangeFields,
     'tcga-micrornaseq': this.tcgaRangeFields,
-    'gtex-rnaseq': this.gtexRangeFields
+    'gtex-rnaseq': this.gtexRangeFields,
+    'tcga-methylation': this.tcgaMethylationRangeFields
   };
   sliderStorage = {
     'target-rnaseq': {
@@ -434,7 +440,12 @@ export class PublicDatasetsComponent implements OnInit {
       }
 
       rangeQuery = (missingRangeQuery.length === 0) ? `(${rangeQuery})` : `(${rangeQuery}) OR (${missingRangeQuery})`;
-      this.searchQueryResults = (newQueryString.length > 0) ? `${newQueryString} AND ${rangeQuery}` : rangeQuery;
+      if (this.filterRangeFields[dataset].length === 0) {
+        this.searchQueryResults = (newQueryString.length > 0) ? `${newQueryString}` : '';
+      } else {
+        this.searchQueryResults = (newQueryString.length > 0) ? `${newQueryString} AND ${rangeQuery}` : rangeQuery;
+      }
+      // console.log("searchQueryResults: ", this.searchQueryResults)
       let tempQuery = this.searchQueryResults.length === 0 ? '*' : this.searchQueryResults;
       let query = `${this.API_URL}/public-datasets/query/${dataset}/?q=${tempQuery}&facet=true`;
       query += "&facet.field=" + mainCat;
@@ -443,6 +454,8 @@ export class PublicDatasetsComponent implements OnInit {
         this.altStorage[dataset][mainCat] = {};
       }
       this.altStorage[dataset][mainCat]["altQuery"] = query;
+
+
     }
     for (let cat in this.altStorage[dataset]) {
       this.isLoading = true;
@@ -501,7 +514,14 @@ export class PublicDatasetsComponent implements OnInit {
       }
     }
     rangeQuery = `(${rangeQuery})`;
-    this.searchQueryResults = (newQueryString.length > 0) ? `${newQueryString} AND ${rangeQuery}` : rangeQuery;
+    //This deals with the case where for TCGA Methylation where there are no range filter
+    if (this.filterRangeFields[dataset].length === 0) {
+      this.searchQueryResults = (newQueryString.length > 0) ? `${newQueryString}` : '';
+
+    } else {
+      this.searchQueryResults = (newQueryString.length > 0) ? `${newQueryString} AND ${rangeQuery}` : rangeQuery;
+    }
+    console.log("searchqueryresults 2: ", this.searchQueryResults)
     let temp = this.addSearchQuery(this.currentDataset, this.searchQueryResults)
     this.updateFilterValues(temp, this.checkboxStatus[dataset], dataset, false)
   }

@@ -9,6 +9,7 @@ import { TargetRnaseqComponent } from './components/target-rnaseq/target-rnaseq.
 import { GtexRnaseqComponent } from './components/gtex-rnaseq/gtex-rnaseq.component';
 import { GtexComponent } from './components/gtex/gtex.component'
 import { TcgaMicroRnaseqComponent } from './components/tcga-micrornaseq/tcga-micrornaseq.component';
+import { TcgaMethylationComponent } from './components/tcga-methylation/tcga-methylation.component'
 
 import { SharedModule } from '@app/shared/shared.module';
 import { PublicDatasetsComponent } from './components/public-datasets-container/public-datasets.component'
@@ -26,6 +27,7 @@ import { HistogramComponent } from './components/public-datasets-container/histo
     TcgaRnaseqComponent,
     TcgaMicroRnaseqComponent,
     TargetRnaseqComponent,
+    TcgaMethylationComponent,
     GtexRnaseqComponent,
     GtexComponent,
     PublicDatasetExportNameDialogComponent,

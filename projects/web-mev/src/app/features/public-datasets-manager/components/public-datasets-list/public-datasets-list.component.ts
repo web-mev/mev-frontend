@@ -37,6 +37,7 @@ export class PublicDatasetsListComponent implements OnInit {
         let activeSets = this.publicDatasets.map(x => x.tag);
         this.publicDS.initializeFilterData(activeSets);
         this.cdRef.markForCheck();
+        console.log("public datasets list: ", this.publicDatasets)
       }
     );
   }

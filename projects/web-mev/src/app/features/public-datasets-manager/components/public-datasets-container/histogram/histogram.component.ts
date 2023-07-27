@@ -23,7 +23,8 @@ export class HistogramComponent implements OnChanges {
     'target-rnaseq': {},
     'tcga-rnaseq': {},
     'tcga-micrornaseq': {},
-    'gtex-rnaseq': {}
+    'gtex-rnaseq': {},
+    'tcga-methylation': {},
   }
   countArray = [];
   queryParams: string;

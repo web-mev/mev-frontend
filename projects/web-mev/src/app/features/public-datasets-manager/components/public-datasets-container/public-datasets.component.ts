@@ -1,10 +1,10 @@
-import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { catchError } from "rxjs/operators";
 import { NotificationService } from '@core/notifications/notification.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'mev-public-datasets',
@@ -33,8 +33,6 @@ export class PublicDatasetsComponent implements OnInit {
   targetRangeFields = ["age_at_diagnosis", "days_to_last_follow_up", "year_of_diagnosis"]; //"days_to_death", "days_to_birth"
   tcgaRangeFields = ["age_at_diagnosis", "age_at_index", "days_to_birth", "days_to_last_follow_up", "year_of_birth", "year_of_diagnosis"];
   gtexRangeFields = ["rna_rin"];
-  tcgaMethylationRangeFields = [];
-
   advanceFields = ["cog_renal_stage", "dbgap_accession_number", "morphology", "disease_type", "primary_site", "site_of_resection_or_biopsy", "days_to_last_follow_up", "ajcc_pathologic_m", "ajcc_pathologic_n", "ajcc_pathologic_t", "ajcc_staging_system_edition", "alcohol_history", "icd_10_code", "synchronous_malignancy", "age_at_index", "days_to_birth", "year_of_birth", "year_of_diagnosis", "nucleic_acid_isolation_batch", "expression_batch", "collection_site_code", "rna_rin", "Center_QC_failed", "Item_flagged_DNU", "Item_Flagged_Low_Quality"];
   filterFields = {
     'target-rnaseq': this.targetFields,
@@ -47,8 +45,8 @@ export class PublicDatasetsComponent implements OnInit {
     'target-rnaseq': this.targetRangeFields,
     'tcga-rnaseq': this.tcgaRangeFields,
     'tcga-micrornaseq': this.tcgaRangeFields,
+    'tcga-methylation': this.tcgaRangeFields,
     'gtex-rnaseq': this.gtexRangeFields,
-    'tcga-methylation': this.tcgaMethylationRangeFields
   };
   sliderStorage = {
     'target-rnaseq': {
@@ -187,6 +185,56 @@ export class PublicDatasetsComponent implements OnInit {
         "not_reported": true
       }
     },
+    'tcga-methylation': {
+      "age_at_diagnosis": {
+        "count": 0,
+        "floor": 5267,
+        "ceil": 32872,
+        "low": 5267,
+        "high": 32872,
+        "not_reported": true
+      },
+      "age_at_index": {
+        "count": 0,
+        "floor": 14,
+        "ceil": 90,
+        "low": 14,
+        "high": 90,
+        "not_reported": true
+      },
+      "days_to_birth": {
+        "count": 0,
+        "floor": -32872,
+        "ceil": -5267,
+        "low": -32872,
+        "high": -5267,
+        "not_reported": true
+      },
+      "days_to_last_follow_up": {
+        "count": 0,
+        "floor": -64,
+        "ceil": 11252,
+        "low": -64,
+        "high": 11252,
+        "not_reported": true
+      },
+      "year_of_birth": {
+        "count": 0,
+        "floor": 1902,
+        "ceil": 1997,
+        "low": 1902,
+        "high": 1997,
+        "not_reported": true
+      },
+      "year_of_diagnosis": {
+        "count": 0,
+        "floor": 1978,
+        "ceil": 2013,
+        "low": 1978,
+        "high": 2013,
+        "not_reported": true
+      }
+    },
   }
 
   storageDataSet = {};
@@ -262,6 +310,7 @@ export class PublicDatasetsComponent implements OnInit {
       query += "&facet.field=" + categoryArray[i];
     }
     let categoryArrayRange = this.filterRangeFields[dataset]
+
     let rangeQuery = '';
     for (let k = 0; k < categoryArrayRange.length; k++) {
       let category = categoryArrayRange[k];
@@ -286,7 +335,8 @@ export class PublicDatasetsComponent implements OnInit {
     }
 
     let categoryArray = this.filterFields[dataset]
-    let tempQuery = filterItems.length === 0 ? missingRangeQuery : `${filterItems}`;
+    // let tempQuery = filterItems.length === 0 ? missingRangeQuery : `${filterItems}`;
+    let tempQuery = filterItems.length === 0 ? (missingRangeQuery.length === 0 ? '*' : missingRangeQuery) : `${filterItems}`;
     let query = `${this.API_URL}/public-datasets/query/${dataset}/?q=${tempQuery}&facet=true`;
 
     for (let i = 0; i < categoryArray.length; i++) {
@@ -421,7 +471,6 @@ export class PublicDatasetsComponent implements OnInit {
       let rangeQuery = '';
       let missingRangeQuery = '';
       for (let cat in this.sliderStorage[dataset]) {
-
         let data = this.sliderStorage[dataset][cat]
         let temp = `${cat}:[${data["low"]} TO ${data["high"]}]`;
         if (rangeQuery.length > 0) {
@@ -445,7 +494,6 @@ export class PublicDatasetsComponent implements OnInit {
       } else {
         this.searchQueryResults = (newQueryString.length > 0) ? `${newQueryString} AND ${rangeQuery}` : rangeQuery;
       }
-      // console.log("searchQueryResults: ", this.searchQueryResults)
       let tempQuery = this.searchQueryResults.length === 0 ? '*' : this.searchQueryResults;
       let query = `${this.API_URL}/public-datasets/query/${dataset}/?q=${tempQuery}&facet=true`;
       query += "&facet.field=" + mainCat;
@@ -521,7 +569,6 @@ export class PublicDatasetsComponent implements OnInit {
     } else {
       this.searchQueryResults = (newQueryString.length > 0) ? `${newQueryString} AND ${rangeQuery}` : rangeQuery;
     }
-    console.log("searchqueryresults 2: ", this.searchQueryResults)
     let temp = this.addSearchQuery(this.currentDataset, this.searchQueryResults)
     this.updateFilterValues(temp, this.checkboxStatus[dataset], dataset, false)
   }

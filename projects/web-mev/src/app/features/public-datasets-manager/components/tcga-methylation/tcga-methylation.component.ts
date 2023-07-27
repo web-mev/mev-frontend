@@ -56,7 +56,6 @@ export class TcgaMethylationComponent extends GdcRnaseqComponent implements OnCh
 
     let originalTypeQueryURL = 'tcga-methylation/?q=*:*&facet=on&facet.field=project_id&rows=0&facet.gender.sort';
     this.types_url = (this.query.length === 0) ? originalTypeQueryURL : `${this.datasetTag}/?q=${this.query}&facet=on&facet.field=project_id&facet.gender.sort`;
-    // console.log("query: ", this.query, this.types_url)
     $observable_dict['solr_query'] = this.pdService.makeSolrQuery(this.types_url);
     $observable_dict['db_query'] = this.pdService.getPublicDatasetDetails(datasetTag);
     forkJoin($observable_dict).subscribe(
@@ -88,7 +87,6 @@ export class TcgaMethylationComponent extends GdcRnaseqComponent implements OnCh
 
     let originalTissueQueryURL = 'tcga-methylation/?q=*:*&facet=on&facet.field=tissue_or_organ_of_origin&rows=0&facet.gender.sort';
     this.tissue_types_url = (this.query.length === 0) ? originalTissueQueryURL : `${this.datasetTag}/?q=${this.query}&facet=on&facet.field=tissue_or_organ_of_origin&facet.gender.sort`;
-    // console.log("query 2: ", this.query)
     this.pdService.makeSolrQuery(this.tissue_types_url).subscribe(
       data => {
         let facet_list = [];
@@ -126,17 +124,14 @@ export class TcgaMethylationComponent extends GdcRnaseqComponent implements OnCh
     let url_suffix = '';
     // will have type (TCGA, TARGET, etc. identifier) (or tissue) addressing an Observable
     if (dataType === 'byType') {
-      // console.log("selectNames byType: ", this.selectedNames)
       for (let i in this.selectedNames) {
         let type_id = this.selectedNames[i];
         let count = this.type_count_dict[type_id];
         url_suffix = (this.query.length === 0) ? datasetTag + `?q=project_id:"${type_id}"&rows=${count}&fl=id` : datasetTag + `?q=project_id:"${type_id}" AND ${this.query}&rows=${count}&fl=id`;
-        console.log("url_suff: ", url_suffix)
         $observable_dict[type_id] = this.pdService.makeSolrQuery(url_suffix);
-        
+
       }
     } else if (dataType === 'byTissue') {
-      // console.log("selectNames byTissue: ", this.selectedNames)
       for (let i in this.selectedNames) {
         let tissue_name = this.selectedNames[i];
         let count = this.tissue_count_dict[tissue_name];

@@ -76,25 +76,24 @@
         </div>
 
         <ng-container *ngIf="currentDataset === 'tcga-rnaseq'">
-            <tcga-rnaseq-explorer [query]="searchQueryResults"></tcga-rnaseq-explorer>
+            <public-dataset-explorer [query]="searchQueryResults" datasetName="tcga-rnaseq"></public-dataset-explorer> 
         </ng-container>
 
         <ng-container *ngIf="currentDataset === 'tcga-micrornaseq'">
-            <tcga-micrornaseq-explorer [query]="searchQueryResults"></tcga-micrornaseq-explorer>
+            <public-dataset-explorer [query]="searchQueryResults" datasetName="tcga-micrornaseq"></public-dataset-explorer> 
+
         </ng-container>
 
         <ng-container *ngIf="currentDataset === 'target-rnaseq'">
-            <!-- <target-rnaseq-explorer [query]="searchQueryResults">
-            </target-rnaseq-explorer> -->
             <public-dataset-explorer [query]="searchQueryResults" datasetName="target-rnaseq"></public-dataset-explorer> 
         </ng-container>
 
         <ng-container *ngIf="currentDataset === 'gtex-rnaseq'">
-            <gtex-rnaseq-explorer [query]="searchQueryResults"></gtex-rnaseq-explorer>
+            <public-dataset-explorer [query]="searchQueryResults" datasetName="gtex-rnaseq"></public-dataset-explorer> 
+
         </ng-container>
 
         <ng-container *ngIf="currentDataset === 'tcga-methylation'">
-            <!-- <tcga-methylation-explorer [query]="searchQueryResults"></tcga-methylation-explorer> -->
             <public-dataset-explorer [query]="searchQueryResults" datasetName="tcga-methylation"></public-dataset-explorer> 
         </ng-container>
     </div>

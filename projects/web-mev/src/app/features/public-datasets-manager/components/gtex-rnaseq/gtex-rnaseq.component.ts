@@ -159,6 +159,7 @@ export class GtexRnaseqComponent extends GdcRnaseqComponent implements OnChanges
       }
     );
   }
+  
   checkboxSelectionGtex(event, name: string, category) {
     if (event['checked']) {
       this.selectedNames.push(name);

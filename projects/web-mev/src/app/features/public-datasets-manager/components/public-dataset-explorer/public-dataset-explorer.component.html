@@ -16,7 +16,7 @@
     <mat-button-toggle-group #viewMode="matButtonToggleGroup"
         [value]="datasetName === 'gtex-rnaseq' ? 'byTissue' : 'byType'" (change)="onTypeToggle(viewMode.value)">
         <div *ngIf="datasetName != 'gtex-rnaseq'">
-            <mat-button-toggle value="byType" aria-label="View by {{title}} type">
+            <mat-button-toggle class="typeButton" value="byType" aria-label="View by {{title}} type">
                 {{title}} types
             </mat-button-toggle>
         </div>

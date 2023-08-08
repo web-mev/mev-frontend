@@ -4,12 +4,12 @@ import { CommonModule } from '@angular/common';
 import { PublicDatasetsManagerRoutingModule } from './public-datasets-manager-routing.module';
 import { PublicDatasetsListComponent } from './components/public-datasets-list/public-datasets-list.component';
 import { PublicDatasetCardComponent } from './components/public-dataset-card/public-dataset-card.component';
-import { TcgaRnaseqComponent } from './components/tcga-rnaseq/tcga-rnaseq.component';
-import { TargetRnaseqComponent } from './components/target-rnaseq/target-rnaseq.component';
-import { GtexRnaseqComponent } from './components/gtex-rnaseq/gtex-rnaseq.component';
+// import { TcgaRnaseqComponent } from './components/tcga-rnaseq/tcga-rnaseq.component';
+// import { TargetRnaseqComponent } from './components/target-rnaseq/target-rnaseq.component';
+// import { GtexRnaseqComponent } from './components/gtex-rnaseq/gtex-rnaseq.component';
 import { GtexComponent } from './components/gtex/gtex.component'
-import { TcgaMicroRnaseqComponent } from './components/tcga-micrornaseq/tcga-micrornaseq.component';
-import { TcgaMethylationComponent } from './components/tcga-methylation/tcga-methylation.component';
+// import { TcgaMicroRnaseqComponent } from './components/tcga-micrornaseq/tcga-micrornaseq.component';
+// import { TcgaMethylationComponent } from './components/tcga-methylation/tcga-methylation.component';
 import { PublicDatasetExplorerComponent } from './components/public-dataset-explorer/public-dataset-explorer.component';
 
 import { SharedModule } from '@app/shared/shared.module';
@@ -25,11 +25,11 @@ import { HistogramComponent } from './components/public-datasets-container/histo
     PublicDatasetsComponent,
     PublicDatasetsListComponent,
     PublicDatasetCardComponent,
-    TcgaRnaseqComponent,
-    TcgaMicroRnaseqComponent,
-    TargetRnaseqComponent,
-    TcgaMethylationComponent,
-    GtexRnaseqComponent,
+    // TcgaRnaseqComponent,
+    // TcgaMicroRnaseqComponent,
+    // TargetRnaseqComponent,
+    // TcgaMethylationComponent,
+    // GtexRnaseqComponent,
     GtexComponent,
     PublicDatasetExportNameDialogComponent,
     CheckBoxComponent,

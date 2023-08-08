@@ -25,10 +25,10 @@ export class PublicDatasetsComponent implements OnInit {
   isLoading: boolean = false;
 
   targetFields = ["ethnicity", "gender", "race", "vital_status", "cog_renal_stage", "morphology", "primary_diagnosis", "site_of_resection_or_biopsy", "dbgap_accession_number", "disease_type", "name", "primary_site", "project_id", "tissue_or_organ_of_origin"];
-  tcgaFields = ["alcohol_history", "ethnicity", "gender", "race", "vital_status", "vital_status", "ajcc_pathologic_m", "ajcc_pathologic_n", "ajcc_pathologic_t", "ajcc_pathologic_stage", "ajcc_staging_system_edition", "icd_10_code", "morphology", "primary_diagnosis", "prior_malignancy", "prior_treatment", "site_of_resection_or_biopsy", "synchronous_malignancy", "disease_type", "name", "primary_site", "project_id", "tissue_or_organ_of_origin"]; //"ajcc_pathologic_stage",
+  tcgaFields = ["alcohol_history", "ethnicity", "gender", "race", "vital_status", "vital_status", "ajcc_pathologic_m", "ajcc_pathologic_n", "ajcc_pathologic_t", "ajcc_pathologic_stage", "ajcc_staging_system_edition", "icd_10_code", "morphology", "primary_diagnosis", "prior_malignancy", "prior_treatment", "site_of_resection_or_biopsy", "synchronous_malignancy", "disease_type", "name", "primary_site", "project_id", "tissue_or_organ_of_origin"];
   tcgaMicroRnaseqFields = this.tcgaFields.concat(["Center_QC_failed", "Item_flagged_DNU", "Item_Flagged_Low_Quality"]);
   gtexFields = ["sex", "age_range", "hardy_scale_death", "nucleic_acid_isolation_batch", "expression_batch", "collection_site_code", "tissue"];
-  tcgaMethylationFields = ["alcohol_history", "ethnicity", "gender", "race", "vital_status", "vital_status", "ajcc_pathologic_m", "ajcc_pathologic_n", "ajcc_pathologic_t", "ajcc_pathologic_stage", "ajcc_staging_system_edition", "icd_10_code", "morphology", "primary_diagnosis", "prior_malignancy", "prior_treatment", "site_of_resection_or_biopsy", "synchronous_malignancy", "disease_type", "name", "primary_site", "project_id", "tissue_or_organ_of_origin"]; //"ajcc_pathologic_stage",
+  tcgaMethylationFields = ["alcohol_history", "ethnicity", "gender", "race", "vital_status", "vital_status", "ajcc_pathologic_m", "ajcc_pathologic_n", "ajcc_pathologic_t", "ajcc_pathologic_stage", "ajcc_staging_system_edition", "icd_10_code", "morphology", "primary_diagnosis", "prior_malignancy", "prior_treatment", "site_of_resection_or_biopsy", "synchronous_malignancy", "disease_type", "name", "primary_site", "project_id", "tissue_or_organ_of_origin"]; 
 
   targetRangeFields = ["age_at_diagnosis", "days_to_last_follow_up", "year_of_diagnosis"]; //"days_to_death", "days_to_birth"
   tcgaRangeFields = ["age_at_diagnosis", "age_at_index", "days_to_birth", "days_to_last_follow_up", "year_of_birth", "year_of_diagnosis"];
@@ -334,8 +334,7 @@ export class PublicDatasetsComponent implements OnInit {
       missingRangeQuery += (missingRangeQuery.length === 0) ? `(* -${category}:*)` : ` OR (* -${category}:*)`;
     }
 
-    let categoryArray = this.filterFields[dataset]
-    // let tempQuery = filterItems.length === 0 ? missingRangeQuery : `${filterItems}`;
+    let categoryArray = this.filterFields[dataset];
     let tempQuery = filterItems.length === 0 ? (missingRangeQuery.length === 0 ? '*' : missingRangeQuery) : `${filterItems}`;
     let query = `${this.API_URL}/public-datasets/query/${dataset}/?q=${tempQuery}&facet=true`;
 

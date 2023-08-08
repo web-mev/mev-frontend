@@ -1,10 +1,10 @@
 <div class="header">
-    Browse and create TCGA RNA-seq data
+    Browse and create {{title}} RNA-seq data
 </div>
 <mev-spinner-overlay *ngIf="isWaiting"></mev-spinner-overlay>
 
 <p class="explain">
-    Select based on either the TCGA project or by tissue type.
+    Select based on either the {{title}} project or by tissue type.
 </p>
 
 <p>After selecting one or more
@@ -13,10 +13,14 @@
 </p>
 
 <div class="btn-panel">
-    <mat-button-toggle-group #viewMode="matButtonToggleGroup" value="byType" (change)="onTypeToggleTCGA(viewMode.value)">
-        <mat-button-toggle value="byType" aria-label="View by TCGA type">
-            TCGA types
-        </mat-button-toggle>
+    <mat-button-toggle-group #viewMode="matButtonToggleGroup"
+        [value]="datasetName === 'gtex-rnaseq' ? 'byTissue' : 'byType'" (change)="onTypeToggle(viewMode.value)">
+        <div *ngIf="datasetName != 'gtex-rnaseq'">
+            <mat-button-toggle class="typeButton" value="byType" aria-label="View by {{title}} type">
+                {{title}} types
+            </mat-button-toggle>
+        </div>
+
         <mat-button-toggle value="byTissue" aria-label="View by tissue">
             Tissues
         </mat-button-toggle>
@@ -41,7 +45,8 @@
             <div>Number of samples: {{t.count}}</div>
         </mat-card-content>
         <mat-card-footer class="checkBoxContainer">
-            <mat-checkbox (change)="checkboxSelectionTCGA($event, t.name, 'project_id')" [checked]="publicDataSetComponent.checkboxStatus['tcga-rnaseq']['project_id'][t.name]"></mat-checkbox>
+            <mat-checkbox (change)="checkboxSelection2($event, t.name, 'project_id')"
+                [checked]="publicDataSetComponent.checkboxStatus[datasetName]['project_id'][t.name]"></mat-checkbox>
         </mat-card-footer>
     </mat-card>
 </div>
@@ -54,7 +59,9 @@
             <div>Number of samples: {{t.count}}</div>
         </mat-card-content>
         <mat-card-footer class="checkBoxContainer">
-            <mat-checkbox (change)="checkboxSelectionTCGA($event, t.name, 'tissue_or_organ_of_origin')" [checked]="publicDataSetComponent.checkboxStatus['tcga-rnaseq']['tissue_or_organ_of_origin'][t.name]"></mat-checkbox>
+            <mat-checkbox (change)="checkboxSelection2($event, t.name, datasetName === 'gtex-rnaseq' ? 'tissue' : 'tissue_or_organ_of_origin')"
+                [checked]="publicDataSetComponent.checkboxStatus[datasetName][datasetName === 'gtex-rnaseq' ? 'tissue' : 'tissue_or_organ_of_origin'][t.name]">
+            </mat-checkbox>
         </mat-card-footer>
     </mat-card>
 </div>

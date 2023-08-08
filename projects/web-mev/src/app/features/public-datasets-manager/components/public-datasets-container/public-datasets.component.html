@@ -5,7 +5,8 @@
         <div class="sideContainer">
             <div class="filtersTitle">Filters</div>
             <div *ngFor="let item of storageDataSet[currentDataset] | keyvalue">
-                <div *ngIf="!advanceFields.includes(item.key) && item.key !== 'project_id' && item.key !== 'tissue_or_organ_of_origin' && item.key !=='tissue'">
+                <div
+                    *ngIf="!advanceFields.includes(item.key) && item.key !== 'project_id' && item.key !== 'tissue_or_organ_of_origin' && item.key !=='tissue'">
                     <mev-checkbox *ngIf="altStorage[currentDataset][item.key]['altQuery'] === ''; else elseBlock"
                         [info]='item' [alt]='altStorage[currentDataset]' [currentDataset]="currentDataset" version="1"
                         [displayDetails]="true" [showMoreStatus]="showMoreStorage">
@@ -75,20 +76,24 @@
         </div>
 
         <ng-container *ngIf="currentDataset === 'tcga-rnaseq'">
-            <tcga-rnaseq-explorer [query]="searchQueryResults"></tcga-rnaseq-explorer>
+            <public-dataset-explorer [query]="searchQueryResults" datasetName="tcga-rnaseq"></public-dataset-explorer> 
         </ng-container>
 
         <ng-container *ngIf="currentDataset === 'tcga-micrornaseq'">
-            <tcga-micrornaseq-explorer [query]="searchQueryResults"></tcga-micrornaseq-explorer>
+            <public-dataset-explorer [query]="searchQueryResults" datasetName="tcga-micrornaseq"></public-dataset-explorer> 
+
         </ng-container>
 
         <ng-container *ngIf="currentDataset === 'target-rnaseq'">
-            <target-rnaseq-explorer [query]="searchQueryResults">
-            </target-rnaseq-explorer>
+            <public-dataset-explorer [query]="searchQueryResults" datasetName="target-rnaseq"></public-dataset-explorer> 
         </ng-container>
 
         <ng-container *ngIf="currentDataset === 'gtex-rnaseq'">
-            <gtex-rnaseq-explorer [query]="searchQueryResults"></gtex-rnaseq-explorer>
+            <public-dataset-explorer [query]="searchQueryResults" datasetName="gtex-rnaseq"></public-dataset-explorer> 
+        </ng-container>
+
+        <ng-container *ngIf="currentDataset === 'tcga-methylation'">
+            <public-dataset-explorer [query]="searchQueryResults" datasetName="tcga-methylation"></public-dataset-explorer> 
         </ng-container>
     </div>
 </mat-drawer-container>

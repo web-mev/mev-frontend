@@ -9,17 +9,20 @@ import { PublicDatasetsComponent } from '../public-datasets-container/public-dat
 import { PublicDatasetExportNameDialogComponent } from '../export-name-dialog/export-name-dialog.component';
 
 @Component({
-  selector: 'tcga-micrornaseq-explorer',
-  templateUrl: './tcga-micrornaseq.component.html',
-  styleUrls: ['./tcga-micrornaseq.component.scss'],
+  selector: 'public-dataset-explorer',
+  templateUrl: './public-dataset-explorer.component.html',
+  styleUrls: ['./public-dataset-explorer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TcgaMicroRnaseqComponent extends GdcRnaseqComponent implements OnChanges, OnInit {
+export class PublicDatasetExplorerComponent extends GdcRnaseqComponent implements OnChanges {
   @Input() query: string = "";
-  datasetTag = 'tcga-micrornaseq';
-  name_map_key = 'tcga_type_to_name_map';
+  datasetTag = '';
+  name_map_key = '';
   tissue_types_url = '';
   types_url = '';
+  title = '';
+
+  @Input() datasetName: string = "";
 
   constructor(
     public cdRef: ChangeDetectorRef,
@@ -33,17 +36,38 @@ export class TcgaMicroRnaseqComponent extends GdcRnaseqComponent implements OnCh
   }
 
   ngOnChanges(): void {
-    this.fetchDataTCGA(this.datasetTag, this.name_map_key);
+    this.datasetTag = this.datasetName;
+
+    if (this.datasetName === 'target-rnaseq') {
+      this.name_map_key = 'target_type_to_name_map';
+      this.title = 'TARGET';
+    } else if (this.datasetName === 'tcga-methylation') {
+      this.name_map_key = 'tcga_type_to_name_map';
+      this.title = 'TCGA Methylation';
+    } else if (this.datasetName === 'tcga-micrornaseq') {
+      this.name_map_key = 'tcga_type_to_name_map';
+      this.title = 'TCGA MicroRNASeq';
+    } else if (this.datasetName === 'tcga-rnaseq') {
+      this.name_map_key = 'tcga_type_to_name_map';
+      this.title = 'TCGA RNASeq';
+    } else if (this.datasetName === 'gtex-rnaseq') {
+      this.name_map_key = 'gtex_type_to_name_map';
+      this.title = 'GTEX RNASeq';
+    }
+
+    this.fetchData(this.datasetTag, this.name_map_key);
   }
 
-  ngOnInit(): void { }
-
+  // ngOnInit(): void { }
 
   createDataset(dataType: string) {
-    this._createDatasetTCGA(dataType, this.datasetTag);
+    this._createDataset(dataType, this.datasetTag);
   }
 
-  fetchDataTCGA(datasetTag: string, name_map_key: string): void {
+  fetchData(datasetTag: string, name_map_key: string): void {
+    if (this.datasetName === 'gtex-rnaseq') {
+      this.viewMode = "byTissue";
+    }
     // this object ties together multiple requests so that all the data can be combined 
     // at once. The prepare the TCGA display we need two sources of info-
     // 1. the faceted results detailing how many samples are available in each cancer type
@@ -53,49 +77,69 @@ export class TcgaMicroRnaseqComponent extends GdcRnaseqComponent implements OnCh
     let $observable_dict = {};
     let facet_list = [];
 
-    let originalTypeQueryURL = 'tcga-micrornaseq/?q=*:*&facet=on&facet.field=project_id&rows=0&facet.gender.sort';
-    this.types_url = (this.query.length === 0) ? originalTypeQueryURL : `${this.datasetTag}/?q=${this.query}&facet=on&facet.field=project_id&facet.gender.sort`;
+    if (this.datasetName !== 'gtex-rnaseq') {
+      let originalTypeQueryURL = `${datasetTag}/?q=*:*&facet=on&facet.field=project_id&rows=0&facet.gender.sort`;
+      this.types_url = (this.query.length === 0) ? originalTypeQueryURL : `${datasetTag}/?q=${this.query}&facet=on&facet.field=project_id&facet.gender.sort`;
+      $observable_dict['solr_query'] = this.pdService.makeSolrQuery(this.types_url);
+      $observable_dict['db_query'] = this.pdService.getPublicDatasetDetails(datasetTag);
 
-    $observable_dict['solr_query'] = this.pdService.makeSolrQuery(this.types_url);
-    $observable_dict['db_query'] = this.pdService.getPublicDatasetDetails(datasetTag);
-    forkJoin($observable_dict).subscribe(
-      results => {
-        let name_mapping = results['db_query']['additional_metadata'][name_map_key];
+      forkJoin($observable_dict).subscribe(
+        results => {
+          let name_mapping = results['db_query']['additional_metadata'][name_map_key];
 
-        this.types_list = [];
-        this.type_count_dict = {}
+          this.types_list = [];
+          this.type_count_dict = {}
 
-        // solr returns a list with the facets interleaved with the 
-        // counts in a single list. Below, extract that out to a mapping
-        // of tcga type to the count of how many samples are in that type
-        facet_list = results['solr_query']['facet_counts']['facet_fields']['project_id'];
-        let n = Math.floor(facet_list.length / 2);
-        for (let i = 0; i < n; i++) {
-          let type_id = facet_list[2 * i];
-          let group_count = facet_list[2 * i + 1]
-          this.type_count_dict[type_id] = group_count;
-          this.types_list.push({
-            name: type_id,
-            count: group_count,
-            readable_name: name_mapping[type_id]
-          })
+          // solr returns a list with the facets interleaved with the 
+          // counts in a single list. Below, extract that out to a mapping
+          // of tcga type to the count of how many samples are in that type
+          facet_list = results['solr_query']['facet_counts']['facet_fields']['project_id'];
+          let n = Math.floor(facet_list.length / 2);
+          for (let i = 0; i < n; i++) {
+            let type_id = facet_list[2 * i];
+            let group_count = facet_list[2 * i + 1]
+            this.type_count_dict[type_id] = group_count;
+            this.types_list.push({
+              name: type_id,
+              count: group_count,
+              readable_name: name_mapping[type_id]
+            })
+          }
+          this.cdRef.markForCheck();
+          this.getCurrentCount();
         }
-        this.cdRef.markForCheck();
-        this.getCurrentCount();
-      }
-    );
+      );
+    }
 
-    let originalTissueQueryURL = 'tcga-micrornaseq/?q=*:*&facet=on&facet.field=tissue_or_organ_of_origin&rows=0&facet.gender.sort';
-    this.tissue_types_url = (this.query.length === 0) ? originalTissueQueryURL : `${this.datasetTag}/?q=${this.query}&facet=on&facet.field=tissue_or_organ_of_origin&facet.gender.sort`;
+    let facetField = '';
+    let originalTissueQueryURL = '';
+    let urlWithQuery = '';
 
+    if (this.datasetName === 'gtex-rnaseq') {
+      facetField = 'tissue';
+      originalTissueQueryURL = `${datasetTag}?q=*:*&facet=on&facet.field=tissue&rows=0&facet.age_range.sort`;
+      urlWithQuery = `${this.datasetTag}/?q=${this.query}&facet=on&facet.field=tissue&facet.age_range.sort`;
+    } else {
+      facetField = 'tissue_or_organ_of_origin';
+      originalTissueQueryURL = `${datasetTag}/?q=*:*&facet=on&facet.field=tissue_or_organ_of_origin&rows=0&facet.gender.sort`;
+      urlWithQuery = `${datasetTag}/?q=${this.query}&facet=on&facet.field=tissue_or_organ_of_origin&facet.gender.sort`;
+    }
+    this.tissue_types_url = (this.query.length === 0) ? originalTissueQueryURL : urlWithQuery;
+
+    $observable_dict['solr_query'] = this.pdService.makeSolrQuery(originalTissueQueryURL);
+    $observable_dict['db_query'] = this.pdService.getPublicDatasetDetails(datasetTag);
+
+    this.isWaiting = true;
     this.pdService.makeSolrQuery(this.tissue_types_url).subscribe(
       data => {
+        this.isWaiting = false;
         let facet_list = [];
         this.tissue_list = [];
         this.tissue_count_dict = {};
         // solr returns a list with the facets interleaved with the 
         // counts in a single list
-        facet_list = data['facet_counts']['facet_fields']['tissue_or_organ_of_origin'];
+        // facet_list = data['facet_counts']['facet_fields']['tissue_or_organ_of_origin'];
+        facet_list = data['facet_counts']['facet_fields'][facetField];
         let n = Math.floor(facet_list.length / 2);
         for (let i = 0; i < n; i++) {
           this.tissue_count_dict[facet_list[2 * i]] = facet_list[2 * i + 1];
@@ -111,7 +155,7 @@ export class TcgaMicroRnaseqComponent extends GdcRnaseqComponent implements OnCh
 
   }
 
-  _createDatasetTCGA(dataType: string, datasetTag: string) {
+  _createDataset(dataType: string, datasetTag: string) {
     let $observable_dict = {};
 
     const dialogRef = this.dialog.open(PublicDatasetExportNameDialogComponent, { disableClose: true });
@@ -139,7 +183,13 @@ export class TcgaMicroRnaseqComponent extends GdcRnaseqComponent implements OnCh
         // using the "cancer type" as the key, we need to also find out which 
         // "project" each of these tissues corresponds to. We get that by adding
         // to the fl=... param
-        url_suffix = (this.query.length === 0) ? datasetTag + `?q=tissue_or_organ_of_origin:"${tissue_name}"&rows=${count}&fl=id,project_id` : datasetTag + `?q=tissue_or_organ_of_origin:"${tissue_name}" AND ${this.query}&rows=${count}&fl=id,project_id`;
+
+        if (this.datasetName === 'gtex-rnaseq') {
+          url_suffix = (this.query.length === 0) ? datasetTag + `?q=tissue:"${tissue_name}"&rows=${count}&fl=sample_id` : datasetTag + `?q=tissue:"${tissue_name}" AND ${this.query}&rows=${count}&fl=sample_id`;
+
+        } else {
+          url_suffix = (this.query.length === 0) ? datasetTag + `?q=tissue_or_organ_of_origin:"${tissue_name}"&rows=${count}&fl=id,project_id` : datasetTag + `?q=tissue_or_organ_of_origin:"${tissue_name}" AND ${this.query}&rows=${count}&fl=id,project_id`;
+        }
         $observable_dict[tissue_name] = this.pdService.makeSolrQuery(url_suffix);
       }
     }
@@ -171,8 +221,18 @@ export class TcgaMicroRnaseqComponent extends GdcRnaseqComponent implements OnCh
             // rather than map the sample IDs via their tissue.
             for (let doc_idx in doc_list) {
               let doc = doc_list[doc_idx];
-              let id = doc['id'];
-              let project_id = doc['project_id'];
+
+              let id = '';
+              let project_id = '';
+
+              if (this.datasetName === 'gtex-rnaseq') {
+                id = doc['sample_id'];
+                project_id = key.toString();
+              } else {
+                id = doc['id'];
+                project_id = doc['project_id'];
+              }
+
               if (filter_payload.hasOwnProperty(project_id)) {
                 filter_payload[project_id].push(id);
               } else {
@@ -201,17 +261,16 @@ export class TcgaMicroRnaseqComponent extends GdcRnaseqComponent implements OnCh
     );
   }
 
-  checkboxSelectionTCGA(event, name: string, category) {
+  checkboxSelection2(event, name: string, category) {
     if (event['checked']) {
       this.selectedNames.push(name);
-      this.publicDataSetComponent.checkboxStatus['tcga-micrornaseq'][category][name] = true;
-
+      this.publicDataSetComponent.checkboxStatus[this.datasetTag][category][name] = true;
     } else {
       let index = this.selectedNames.indexOf(name);
       if (index > -1) {
         this.selectedNames.splice(index, 1);
       }
-      this.publicDataSetComponent.checkboxStatus['tcga-micrornaseq'][category][name] = false;
+      this.publicDataSetComponent.checkboxStatus[this.datasetTag][category][name] = false;
     }
     this.getCurrentCount();
   }
@@ -231,13 +290,15 @@ export class TcgaMicroRnaseqComponent extends GdcRnaseqComponent implements OnCh
         }
       }
     }
+
     this.totalSelectedSamples = sum;
   }
 
-  onTypeToggleTCGA(viewMode: string) {
+  onTypeToggle(viewMode: string) {
     this.viewMode = viewMode;
     this.selectedNames = [];
     this.totalSelectedSamples = 0;
     this.publicDataSetComponent.resetVariables();
   }
+
 }

@@ -1,0 +1,190 @@
+<mev-spinner-overlay *ngIf="isLoading"></mev-spinner-overlay>
+<mat-card class="analysis-card">
+    <mat-card-header *ngIf="showHeader === true">
+        <div mat-card-avatar class="analysis-card__img"></div>
+        <mat-card-title>DRAGON: {{ outputs?.job_name }}</mat-card-title>
+    </mat-card-header>
+
+    <mat-tab-group dynamicHeight (selectedTabChange)="tabChange()" animationDuration="0ms">
+        <mat-tab>
+            <ng-template mat-tab-label>Top Genes</ng-template>
+            <br>
+            <mat-card-content class="analysis-card__main">
+                <p class="analysis-card__instruction">
+                    Visualize your Dragon regulatory network inference below.
+                </p>
+                <p class="analysis-card__instruction">
+                    Note that visualizing the entire network is not feasible; Panda generates an edge weight (a measure
+                    of
+                    the evidence for regulation) for each combination of gene and transcription factor and data of that
+                    size
+                    is not easily visualized. Hence, we provide tools to subset the results and show the most strongly
+                    connected elements of the regulatory network. We do this by finding the genes with the greatest sum
+                    of
+                    the edge weights and selecting the "children" (transcription factors) which have the largest edge
+                    weights. For each of those TFs, in turn, we find the genes with the greatest edge weights.
+                </p>
+                <p class="analysis-card__instruction">
+                    The number of layers controls how many times we perform that process of switching between finding
+                    the
+                    top genes or TFs. The number of children determines the number of "top hits" we find at each level.
+                </p>
+                <p class="analysis-card__instruction">
+                    Alternatively, if you have a gene or TF of interest, you can search on that to find networks based
+                    on
+                    that search term. Note, however, that a successful gene-based query may not have particularly
+                    significant edge weights.
+                </p>
+
+                <label id="radio-group-axis">Select an Axis: </label>
+                <mat-radio-group aria-label="Select an Axis" [(ngModel)]="apiAxis">
+                    <mat-radio-button *ngFor="let options of radioButtonList" [value]="options.axis"
+                        (change)="onRadioChangeAxis($event.value)">{{ options.name }}</mat-radio-button>
+                </mat-radio-group>
+                <button mat-raised-button class="updateLabelButton" (click)="changeAxisLabels()">Update Axis Labels</button>
+                <br>
+                <br>
+                <mat-form-field appearance="outline">
+                    <mat-label>Number of Layers</mat-label>
+                    <mat-select [(value)]="selectedLayers" (selectionChange)="onDropDownChange($event.value, 'layers')">
+                        <mat-option [value]="option" *ngFor="let option of layersList">{{ option }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <br>
+                <mat-form-field appearance="outline">
+                    <mat-label>Number of Children</mat-label>
+                    <mat-select [(value)]="selectedChildren"
+                        (selectionChange)="onDropDownChange($event.value, 'children')">
+                        <mat-option [value]="option" *ngFor="let option of childrenList">{{ option }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <br>
+                <button mat-raised-button color="accent" (click)="requestData('topGenes')">Submit</button>
+                <br>
+                <br>
+                <mat-divider [inset]="true"></mat-divider>
+                <br>
+                <label id="radio-group-axis">Select Layout: </label>
+                <mat-radio-group aria-label="Select an Layout" [(ngModel)]="currLayout">
+                    <mat-radio-button *ngFor="let options of layoutList" [value]="options"
+                        (change)="onRadioChangeLayout($event.value)">{{ options }}</mat-radio-button>
+                </mat-radio-group>
+                <br>
+                <br>
+                <div id="minimumEdgeWeight">
+                    <label id="radio-group-axis">Minimum Edge Weight: </label>
+                    {{0}}
+                    <mat-slider thumbLabel tickInterval="2" step="1" min="0" max="20" aria-label="units"
+                        (change)="updateSlider($event)" [(ngModel)]="sliderValue">
+                    </mat-slider>
+                    {{20}}
+                    <button mat-raised-button color="accent" (click)="filterEdges()" [disabled]="disableFilter"
+                        class="filterButton">Filter</button>
+                </div>
+                <br>
+                <br>
+                <button *ngIf="displayGraph" id="downloadButton" mat-button (click)="onSaveImagePNG()">
+                    <mat-icon>save_alt</mat-icon>
+                </button>
+                <mat-divider [inset]="true"></mat-divider>
+                <div class="analysis-card__content">
+                    <p *ngIf="isLoading === true">Please wait... </p>
+                    <div *ngIf="displayGraph" id="cy"></div>
+                </div>
+            </mat-card-content>
+        </mat-tab>
+
+        <mat-tab>
+            <ng-template mat-tab-label>By Genes</ng-template>
+            <br>
+            <p class="analysis-card__instruction">
+                Visualize your Panda regulatory network inference below.
+            </p>
+            <p class="analysis-card__instruction">
+                Note that visualizing the entire network is not feasible; Panda generates an edge weight (a measure of
+                the evidence for regulation) for each combination of gene and transcription factor and data of that size
+                is not easily visualized. Hence, we provide tools to subset the results and show the most strongly
+                connected elements of the regulatory network. We do this by finding the genes with the greatest sum of
+                the edge weights and selecting the "children" (transcription factors) which have the largest edge
+                weights. For each of those TFs, in turn, we find the genes with the greatest edge weights.
+            </p>
+            <p class="analysis-card__instruction">
+                The number of layers controls how many times we perform that process of switching between finding the
+                top genes or TFs. The number of children determines the number of "top hits" we find at each level.
+            </p>
+            <p class="analysis-card__instruction">
+                Alternatively, if you have a gene or TF of interest, you can search on that to find networks based on
+                that search term. Note, however, that a successful gene-based query may not have particularly
+                significant edge weights.
+            </p>
+            <mat-form-field class="example-chip-list searchField" appearance="outline">
+                <mat-label>Search Terms</mat-label>
+                <mat-chip-list #chipList aria-label="Search terms">
+                    <mat-chip *ngFor="let gene of searchTerms" (removed)="removeSearchItem(gene)">
+                        {{gene}}
+                        <button matChipRemove>
+                            <mat-icon>cancel</mat-icon>
+                        </button>
+                    </mat-chip>
+                    <input [placeholder]="apiAxis === 0 ? 'Add genes...' : 'Add transcription factors...'"
+                        [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                        [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="addSearchItem($event)">
+                </mat-chip-list>
+            </mat-form-field>
+            <h1>what is this??</h1>
+            <label id="radio-group-axis">Select an Axis: </label>
+            <mat-radio-group aria-label="Select an Axis" [(ngModel)]="apiAxis">
+                <mat-radio-button *ngFor="let options of radioButtonList" [value]="options.axis"
+                    (change)="onRadioChangeAxis($event.value)">{{ options.name }}</mat-radio-button>
+            </mat-radio-group>
+            <button mat-raised-button class="updateLabelButton" (click)="changeAxisLabels()">Update Axis Labels</button>
+            <br>
+            <br>
+            <mat-form-field appearance="outline">
+                <mat-label>Number of Layers</mat-label>
+                <mat-select [(value)]="selectedLayers" (selectionChange)="onDropDownChange($event.value, 'layers')">
+                    <mat-option [value]="option" *ngFor="let option of layersList">{{ option }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <br>
+            <mat-form-field appearance="outline">
+                <mat-label>Number of Children</mat-label>
+                <mat-select [(value)]="selectedChildren" (selectionChange)="onDropDownChange($event.value, 'children')">
+                    <mat-option [value]="option" *ngFor="let option of childrenList">{{ option }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <br>
+            <button mat-raised-button color="accent" (click)="requestData('Search')">Submit</button>
+            <br>
+            <br>
+            <mat-divider [inset]="true"></mat-divider>
+            <br>
+            <label id="radio-group-axis">Select Layout: </label>
+            <mat-radio-group aria-label="Select an Layout" [(ngModel)]="currLayout">
+                <mat-radio-button *ngFor="let options of layoutList" [value]="options"
+                    (change)="onRadioChangeLayout($event.value)">{{ options }}</mat-radio-button>
+            </mat-radio-group>
+            <br>
+            <br>
+            <div id="minimumEdgeWeight">
+                <label id="radio-group-axis">Minimum Edge Weight: </label>
+                {{0}}
+                <mat-slider thumbLabel tickInterval="2" step="1" min="0" max="20" aria-label="units"
+                    (change)="updateSlider($event)" [(ngModel)]="sliderValue">
+                </mat-slider>
+                {{20}}
+                <button id="filterBtn" mat-raised-button color="accent" class="filterButton" (click)="filterEdges()"
+                    [disabled]="disableFilter">Filter</button>
+            </div>
+            <br>
+            <mat-divider [inset]="true"></mat-divider>
+            <button id="downloadButton" mat-button (click)="onSaveImagePNG()" title="Download PNG">
+                <mat-icon>save_alt</mat-icon>
+            </button>
+            <div class="analysis-card__content">
+                <p *ngIf="isLoading === true">Please wait... </p>
+                <div id="cy"></div>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</mat-card>

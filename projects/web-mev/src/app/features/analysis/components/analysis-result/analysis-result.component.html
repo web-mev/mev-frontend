@@ -109,7 +109,9 @@
 
     <ng-container *ngIf="operationName === 'DRAGON (multi-omic regulatory inference)'">
         <mev-dragon [showHeader]=true [outputs]="outputs"></mev-dragon>
-        <!-- <h1>dragon stuff should go here.</h1> -->
+    </ng-container>
+    <ng-container *ngIf="operationName === 'SCTK single-cell typing with singleR'">
+        <mev-singleR-cluster [outputs]="outputs"></mev-singleR-cluster>
     </ng-container>
 </div>
 

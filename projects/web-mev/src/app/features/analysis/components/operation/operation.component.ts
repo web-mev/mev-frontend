@@ -364,7 +364,7 @@ export class OperationComponent implements OnChanges {
    */
   loadData() {
     this.apiService.getOperation(this.operation.id).subscribe(data => {
-      console.log("load data: ", data)
+      // console.log("load data: ", data)
       this.createForm(data);
       this.operationData = data;
     });

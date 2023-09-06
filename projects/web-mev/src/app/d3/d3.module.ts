@@ -49,7 +49,8 @@ import { WigConversionComponent } from './components/wig-conversion/wigConversio
 import { SNFComponent } from './components/snf/snf.component';
 import { PumaComponent } from './components/puma/puma.component';
 import { DragonComponent } from './components/dragon/dragon.component';
-import { AxisLabelDialogComponent } from './components/dragon/axisLabelDialog/axisLabelDialog.component'
+import { AxisLabelDialogComponent } from './components/dragon/axisLabelDialog/axisLabelDialog.component';
+import { SctkSingleRComponent } from './components/sctk-singleR/sctk-singleR.component';
 
 @NgModule({
   declarations: [
@@ -99,7 +100,8 @@ import { AxisLabelDialogComponent } from './components/dragon/axisLabelDialog/ax
     SNFComponent,
     PumaComponent,
     DragonComponent,
-    AxisLabelDialogComponent
+    AxisLabelDialogComponent,
+    SctkSingleRComponent
   ],
   imports: [CommonModule, SharedModule, DragDropModule, MatBadgeModule],
   exports: [
@@ -139,7 +141,8 @@ import { AxisLabelDialogComponent } from './components/dragon/axisLabelDialog/ax
     SNFComponent,
     PumaComponent,
     DragonComponent,
-    AxisLabelDialogComponent
+    AxisLabelDialogComponent,
+    SctkSingleRComponent
   ]
 })
 export class D3Module { }

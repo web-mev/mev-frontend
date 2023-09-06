@@ -17,12 +17,12 @@ import * as d3 from 'd3';
 import d3Tip from 'd3-tip';
 
 @Component({
-  selector: 'mev-sctk-seurat-cluster',
-  templateUrl: './sctk-seurat-cluster.component.html',
-  styleUrls: ['./sctk-seurat-cluster.component.scss'],
+  selector: 'mev-singleR-cluster',
+  templateUrl: './sctk-singleR.component.html',
+  styleUrls: ['./sctk-singleR.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default
 })
-export class SctkSeuratClusterComponent implements OnInit {
+export class SctkSingleRComponent implements OnInit {
 
   @Input() outputs;
   @ViewChild('distPlot') svgElement: ElementRef;
@@ -61,22 +61,15 @@ export class SctkSeuratClusterComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.clustersResourceId = this.outputs['SctkSeuratCluster.seurat_output']
-    console.log("cluser resource id: ", this.clustersResourceId)
-    this.clustersDistId = this.outputs['SctkSeuratCluster.cluster_counts']
-
-    // console.log("serat output: ", this.outputs)
-    // console.log("resource id: ", this.clustersResourceId)
-    // console.log("dist ID: ", this.clustersDistId)
+    // this.clustersResourceId = this.outputs['SctkSingler.cell_assignments']
+    this.clustersDistId = this.outputs['SctkSingler.cell_assignments']
 
     this.apiService
       .getResourceContent(this.clustersDistId)
       .subscribe(response => {
-        console.log("distID res: ", response)
         this.distData = response
         this.reformatData();
         this.clusterCount = this.distData.length
-        console.log("distData serat: ", this.distData)
         this.createChart();
       });
   }
@@ -86,15 +79,29 @@ export class SctkSeuratClusterComponent implements OnInit {
    * cluster Ids pointing to their count ) into a list so D3
    * can handle it.
    */
+
+
   reformatData(): void {
     let reformattedData = [];
-    for (let k of Object.keys(this.distData)){
-      reformattedData.push({
+
+    for (let data of this.distData) {
+      let cellType = data.values.cell_types
+      let rowname = data.rowname
+
+      if (!reformattedData[cellType]) {
+        reformattedData[cellType] = [];
+      }
+      reformattedData[cellType].push(rowname)
+    }
+
+    let countData = []
+    for (let k of Object.keys(reformattedData)) {
+      countData.push({
         'clusterId': k,
-        'count': this.distData[k]
+        'count': reformattedData[k].length
       })
     }
-    this.distData = reformattedData;
+    this.distData = countData
   }
 
   onResize(event): void {
@@ -109,48 +116,51 @@ export class SctkSeuratClusterComponent implements OnInit {
         const prefix = data.prefix;
         // now run through the file contents and assign to the proper cluster
         this.apiService
-        .getResourceContent(this.clustersResourceId)
-        .subscribe(response => {
-          console.log("dialog ref seurat: ", response)
-          if (response.length) {
-            let fileContents = response;
-
-            // initialize a bunch of observation sets
-            // that we will populate
-            const customSets = {};
-            Object.keys(this.distData).forEach(
-              clusterID => {
-                customSets[clusterID] = {
-                  name: prefix + '_' + clusterID,
-                  type: CustomSetType.ObservationSet,
-                  elements: [],
-                  color: Utils.getRandomColor(),
-                  multiple: true
-                };
-              }
-            );
-
-            // now fill:
-            response.forEach(obj => {
-              const sampleId = obj.rowname;
-              const assignedCluster = obj.values['seurat_cluster'];
-              customSets[assignedCluster].elements.push(
-                {
+          .getResourceContent(this.clustersDistId)
+          .subscribe(response => {
+            if (response.length) {
+              // let fileContents = response;
+              // initialize a bunch of observation sets
+              // that we will populate
+              const customSets = {};
+              Object.keys(this.distData).forEach(
+                index => {
+                  let clusterID = this.distData[index]['clusterId']
+                  customSets[clusterID] = {
+                    name: prefix + '_' + clusterID,
+                    type: CustomSetType.ObservationSet,
+                    elements: [],
+                    color: Utils.getRandomColor(),
+                    multiple: true
+                  };
+                }
+              );
+              // now fill:
+              response.forEach(obj => {
+                const sampleId = obj.rowname;
+                const assignedCluster = obj.values['cell_types'];
+                let temp = {
                   id: sampleId,
                   attributes: {}
                 }
-              )
-            });
+                
+                customSets[assignedCluster].elements.push(
+                  {
+                    id: sampleId,
+                    attributes: {}
+                  }
+                )
+              });
 
-            // store using the metadata service
-            for (let k of Object.keys(customSets)) {
-              this.metadataService.addCustomSet(customSets[k], false);
+              // store using the metadata service
+              for (let k of Object.keys(customSets)) {
+                this.metadataService.addCustomSet(customSets[k], false);
+              }
+              this.notificationService.success(
+                'Your Single R clusters have been added to your metadata.'
+              );
             }
-            this.notificationService.success(
-              'Your Seurat clusters have been added to your metadata.'
-            );
-          }
-        });
+          });
       }
     )
   }
@@ -168,16 +178,16 @@ export class SctkSeuratClusterComponent implements OnInit {
       .remove();
 
     const svg = d3
-        .select(this.containerId)
-        .append('svg')
-        .attr('width', outerWidth)
-        .attr('height', outerHeight)
-        .append('g')
-        .attr(
-          'transform',
-          'translate(' + this.margin.left + ',' + this.margin.top + ')'
-        )
-        .style('fill', 'none');
+      .select(this.containerId)
+      .append('svg')
+      .attr('width', outerWidth)
+      .attr('height', outerHeight)
+      .append('g')
+      .attr(
+        'transform',
+        'translate(' + this.margin.left + ',' + this.margin.top + ')'
+      )
+      .style('fill', 'none');
 
     // Tooltip
     const tooltipOffsetX = this.tooltipOffsetX;
@@ -188,18 +198,14 @@ export class SctkSeuratClusterComponent implements OnInit {
       .offset([-10, 0])
       .html((event, d) => {
         return 'Cluster ' + d.clusterId + ': ' + d.count + ' cells';
-       });
+      });
     svg.call(tTip);
 
-    // let wrapper = svg
-    //   .append('rect')
-    //   .attr('width', width)
-    //   .attr('height', height)
-    //   .style('fill', 'transparent');
-
-    let clusterIds = Object.keys(this.distData);
-    console.log("cluster ids seurt: : ", clusterIds)
-    let maxCount = d3.max(this.distData, s=> +s['count']);
+    let clusterIds = [];
+    for( let obj of this.distData){
+      clusterIds.push(obj.clusterId)
+    }
+    let maxCount = d3.max(this.distData, s => +s['count']);
 
     let xScale = d3.scaleBand()
       .domain(clusterIds)
@@ -218,12 +224,12 @@ export class SctkSeuratClusterComponent implements OnInit {
       .call(d3.axisBottom(xScale))
       .selectAll('text')
       .attr('dx', '-.8em')
-      .attr('dy', '.15em')
+      .attr('dy', '.6em')
 
     svg.append('g')
       .attr("transform",
-            "translate(" + (width/2) + " ," +
-                           (height + this.margin.top - 20) + ")")
+        "translate(" + (width / 2) + " ," +
+        (height + this.margin.top) + ")")
       .append('text')
       .style("text-anchor", "middle")
       .style('fill', 'black') // don't know why, but won't appear unless we set fill
@@ -234,18 +240,18 @@ export class SctkSeuratClusterComponent implements OnInit {
       .call(d3.axisLeft(yScale));
 
     let boxesGroup = svg.append('g');
-    let boxWidth = (this.fillFraction*xStep)
+    let boxWidth = (this.fillFraction * xStep)
     boxesGroup.selectAll('rect')
       .data(this.distData)
       .enter()
       .append('rect')
       .classed('distbox', true)
-      .attr('x', d=> xScale(d['clusterId']))
-      .attr('y', d=> yScale(d['count']))
-      .attr('height', d=> height - yScale(d['count']))
-      .attr('width', boxWidth )
+      .attr('x', d => xScale(d['clusterId']))
+      .attr('y', d => yScale(d['count']))
+      .attr('height', d => height - yScale(d['count']))
+      .attr('width', boxWidth)
       .style('fill', '#ddebf2')
-      .on('mouseover', function(mouseEvent: any, d) {
+      .on('mouseover', function (mouseEvent: any, d) {
         tTip.show(mouseEvent, d, this);
         tTip.style('left', mouseEvent.x + tooltipOffsetX + 'px');
       })

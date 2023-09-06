@@ -13,7 +13,7 @@ import { AnalysisPlottingResultComponent } from './components/analysis-plotting-
 import { PlottingMenuComponent } from './components/plotting-menu/plotting-menu.component';
 import { IGVComponent } from './components/igv/igv.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AddDialog2Component } from './components/igv/add-dialog/add-dialog.component'
+import { AddDialog2Component } from './components/igv/add-dialog/add-dialog.component';
 
 
 @NgModule({

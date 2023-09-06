@@ -1,0 +1,28 @@
+<mat-card class="analysis-card">
+    <mat-card-header>
+        <div mat-card-avatar class="analysis-card__img"></div>
+        <mat-card-title>SCTK Single R: {{ outputs?.job_name }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="analysis-card__main">
+        <mat-divider [inset]="true"></mat-divider>
+        <div class="analysis-card__content">
+            <p> The Single R clustering algorithm identified <strong>{{clusterCount}}</strong> clusters </p>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin a lacus sed mauris fringilla vestibulum.
+                Mauris lobortis, magna vel volutpat dapibus, quam eros tristique tellus, ut ullamcorper ante dui in
+                nunc. Aenean sit amet diam purus. Aliquam sit amet nisi luctus, maximus odio vel, suscipit est. Cras non
+                ornare tortor.
+            </p>
+            <p>Curabitur malesuada, diam sed eleifend fermentum, tellus magna elementum lacus, vulputate dictum lorem
+                est eu ligula. Proin massa orci, luctus quis massa vitae, molestie sagittis nisi. Vivamus commodo lacus
+                nec purus dictum eleifend.
+            </p>
+            <button mat-raised-button color="accent" (click)="importClusters()" [disabled]="clusterCount === 0">
+                <mat-icon>add</mat-icon>
+                Add these clusters to your workspace metadata
+            </button>
+            <mev-download-button [containerId]="containerId" [imageName]="imageName"></mev-download-button>
+            <div #distPlot id="distPlot" class="chart" (window:resize)="onResize($event)"></div>
+        </div>
+    </mat-card-content>
+</mat-card>

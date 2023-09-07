@@ -6,16 +6,11 @@
     <mat-card-content class="analysis-card__main">
         <mat-divider [inset]="true"></mat-divider>
         <div class="analysis-card__content">
-            <p> The Single R clustering algorithm identified <strong>{{clusterCount}}</strong> clusters </p>
             <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin a lacus sed mauris fringilla vestibulum.
-                Mauris lobortis, magna vel volutpat dapibus, quam eros tristique tellus, ut ullamcorper ante dui in
-                nunc. Aenean sit amet diam purus. Aliquam sit amet nisi luctus, maximus odio vel, suscipit est. Cras non
-                ornare tortor.
-            </p>
-            <p>Curabitur malesuada, diam sed eleifend fermentum, tellus magna elementum lacus, vulputate dictum lorem
-                est eu ligula. Proin massa orci, luctus quis massa vitae, molestie sagittis nisi. Vivamus commodo lacus
-                nec purus dictum eleifend.
+                SingleR has assigned each cell to an annotated canonical cell type. Below, we summarize the distribution
+                of these assignments. You can also choose to export each annotated cell type as an “observation set”
+                which will allow you to overlay these annotations on plots such as the Seurat clustering or UMAP
+                representations.
             </p>
             <button mat-raised-button color="accent" (click)="importClusters()" [disabled]="clusterCount === 0">
                 <mat-icon>add</mat-icon>

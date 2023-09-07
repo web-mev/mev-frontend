@@ -259,7 +259,6 @@ export class PublicDatasetsComponent implements OnInit {
   ngOnInit(): void { }
 
   initializeFilterData(activeSets: string[]) {
-    console.log("from initalize filter data: ", activeSets)
     for (let dataset of activeSets) {
       this.createRangeDataStorage(dataset);
       //builds the initial query string
@@ -360,7 +359,6 @@ export class PublicDatasetsComponent implements OnInit {
   updateFilterValues(query, checkboxStatus, dataset, initializeCheckbox) {
     this.getQueryResults(query)
       .subscribe(res => {
-        console.log("update filter val: ", res['facet_counts']['facet_fields'], query)
         this.facetField = res['facet_counts']['facet_fields'];
         for (let category in this.facetField) {
           let arr = this.facetField[category]
@@ -413,8 +411,6 @@ export class PublicDatasetsComponent implements OnInit {
           let count = res["facet_counts"]['facet_queries'][item];
           this.sliderStorage[dataset][category]['count'] = count;
         }
-
-        console.log("storage dataset: ", this.storageDataSet)
       })
 
   }

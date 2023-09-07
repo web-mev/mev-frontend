@@ -62,21 +62,14 @@ export class SctkSeuratClusterComponent implements OnInit {
 
   ngOnInit(): void {
     this.clustersResourceId = this.outputs['SctkSeuratCluster.seurat_output']
-    console.log("cluser resource id: ", this.clustersResourceId)
     this.clustersDistId = this.outputs['SctkSeuratCluster.cluster_counts']
-
-    // console.log("serat output: ", this.outputs)
-    // console.log("resource id: ", this.clustersResourceId)
-    // console.log("dist ID: ", this.clustersDistId)
 
     this.apiService
       .getResourceContent(this.clustersDistId)
       .subscribe(response => {
-        console.log("distID res: ", response)
         this.distData = response
         this.reformatData();
         this.clusterCount = this.distData.length
-        console.log("distData serat: ", this.distData)
         this.createChart();
       });
   }
@@ -111,7 +104,6 @@ export class SctkSeuratClusterComponent implements OnInit {
         this.apiService
         .getResourceContent(this.clustersResourceId)
         .subscribe(response => {
-          console.log("dialog ref seurat: ", response)
           if (response.length) {
             let fileContents = response;
 
@@ -198,7 +190,6 @@ export class SctkSeuratClusterComponent implements OnInit {
     //   .style('fill', 'transparent');
 
     let clusterIds = Object.keys(this.distData);
-    console.log("cluster ids seurt: : ", clusterIds)
     let maxCount = d3.max(this.distData, s=> +s['count']);
 
     let xScale = d3.scaleBand()

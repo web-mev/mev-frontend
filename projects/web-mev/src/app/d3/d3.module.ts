@@ -48,6 +48,9 @@ import { LikelihoodBoxPlotComponent } from './components/likelihood-ratio-test/l
 import { WigConversionComponent } from './components/wig-conversion/wigConversion.component';
 import { SNFComponent } from './components/snf/snf.component';
 import { PumaComponent } from './components/puma/puma.component';
+import { DragonComponent } from './components/dragon/dragon.component';
+import { AxisLabelDialogComponent } from './components/dragon/axisLabelDialog/axisLabelDialog.component';
+import { SctkSingleRComponent } from './components/sctk-singleR/sctk-singleR.component';
 
 @NgModule({
   declarations: [
@@ -95,7 +98,10 @@ import { PumaComponent } from './components/puma/puma.component';
     LikelihoodBoxPlotComponent,
     WigConversionComponent,
     SNFComponent,
-    PumaComponent
+    PumaComponent,
+    DragonComponent,
+    AxisLabelDialogComponent,
+    SctkSingleRComponent
   ],
   imports: [CommonModule, SharedModule, DragDropModule, MatBadgeModule],
   exports: [
@@ -133,7 +139,10 @@ import { PumaComponent } from './components/puma/puma.component';
     LikelihoodBoxPlotComponent,
     WigConversionComponent,
     SNFComponent,
-    PumaComponent
+    PumaComponent,
+    DragonComponent,
+    AxisLabelDialogComponent,
+    SctkSingleRComponent
   ]
 })
 export class D3Module { }

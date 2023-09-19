@@ -1,0 +1,23 @@
+<mat-card class="analysis-card">
+    <mat-card-header>
+        <div mat-card-avatar class="analysis-card__img"></div>
+        <mat-card-title>SCTK Single R: {{ outputs?.job_name }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="analysis-card__main">
+        <mat-divider [inset]="true"></mat-divider>
+        <div class="analysis-card__content">
+            <p>
+                SingleR has assigned each cell to an annotated canonical cell type. Below, we summarize the distribution
+                of these assignments. You can also choose to export each annotated cell type as an “observation set”
+                which will allow you to overlay these annotations on plots such as the Seurat clustering or UMAP
+                representations.
+            </p>
+            <button mat-raised-button color="accent" (click)="importClusters()" [disabled]="clusterCount === 0">
+                <mat-icon>add</mat-icon>
+                Add these clusters to your workspace metadata
+            </button>
+            <mev-download-button [containerId]="containerId" [imageName]="imageName"></mev-download-button>
+            <div #distPlot id="distPlot" class="chart" (window:resize)="onResize($event)"></div>
+        </div>
+    </mat-card-content>
+</mat-card>

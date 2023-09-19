@@ -10,7 +10,7 @@ import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 })
 export class ClusterLabelerComponent {
   labelForm: FormGroup;
-
+ 
   constructor(
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<ClusterLabelerComponent>

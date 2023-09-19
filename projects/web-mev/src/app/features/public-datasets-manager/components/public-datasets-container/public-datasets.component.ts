@@ -411,7 +411,6 @@ export class PublicDatasetsComponent implements OnInit {
           let count = res["facet_counts"]['facet_queries'][item];
           this.sliderStorage[dataset][category]['count'] = count;
         }
-
       })
 
   }

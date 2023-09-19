@@ -1,0 +1,28 @@
+<div class="container">
+  <span class="headerSpan">
+    <div class="dialogTitle">Update Axis Label</div>
+    <button class="closeDialogButton" mat-dialog-close mat-icon-button type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </span>
+
+  <div class="form">
+    <mat-form-field class="inputField">
+      <mat-label>Node Type 1 Label</mat-label>
+      <input matInput [(ngModel)]="node1Value">
+    </mat-form-field>
+  </div>
+  <div class="form">
+    <mat-form-field class="inputField">
+      <mat-label>Node Type 2 Label</mat-label>
+      <input matInput [(ngModel)]="node2Value">
+    </mat-form-field>
+  </div>
+
+  <div class="submitBtnContainer">
+      <button mat-button mat-raised-button color="accent" (click)="updateLabel()" [type]="submit"
+        [mat-dialog-close]="1">Update</button>
+      <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
+    <br>
+  </div>
+</div>

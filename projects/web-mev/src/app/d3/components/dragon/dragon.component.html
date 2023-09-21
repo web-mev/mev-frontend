@@ -5,6 +5,8 @@
         <mat-card-title>DRAGON: {{ outputs?.job_name }}</mat-card-title>
     </mat-card-header>
 
+    <mev-input-info [outputs]="outputs"></mev-input-info>
+
     <mat-tab-group dynamicHeight (selectedTabChange)="tabChange()" animationDuration="0ms">
         <mat-tab>
             <ng-template mat-tab-label>Top Targets</ng-template>
@@ -131,7 +133,6 @@
                         [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="addSearchItem($event)">
                 </mat-chip-list>
             </mat-form-field>
-            <h1>what is this??</h1>
             <label id="radio-group-axis">Select an Axis: </label>
             <mat-radio-group aria-label="Select an Axis" [(ngModel)]="apiAxis">
                 <mat-radio-button *ngFor="let options of radioButtonList" [value]="options.axis"

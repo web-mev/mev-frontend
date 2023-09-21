@@ -1,0 +1,12 @@
+
+<div class="listTitle" (click)="showDetails = !showDetails">
+    <span class="expandObj">{{showDetails ? "-":"+"}}</span> {{showDetails ? 'Hide Input Data' : 'Show Input Data'}}
+</div>
+
+<div class="inputList" *ngIf="showDetails">
+    <div *ngFor="let item of inputList | keyvalue" class="list">
+        <div>
+            <div class="medium-bold">{{ item.key }}:</div> {{ item.value }}
+        </div>
+    </div>
+</div>

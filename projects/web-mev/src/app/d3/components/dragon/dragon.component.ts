@@ -14,6 +14,7 @@ import { COMMA, ENTER, SPACE } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatDialog } from '@angular/material/dialog';
 import { AxisLabelDialogComponent } from './axisLabelDialog/axisLabelDialog.component'
+import { AnalysesService } from '../../../features/analysis/services/analysis.service'
 
 cytoscape.use(fcose);
 cytoscape.use(cola);
@@ -107,12 +108,28 @@ export class DragonComponent implements AfterViewInit, OnChanges {
         private httpClient: HttpClient,
         private readonly notificationService: NotificationService,
         public dialog: MatDialog,
-        private cdr: ChangeDetectorRef
+        private cdr: ChangeDetectorRef,
     ) { }
 
+    getInputValues() {
+        //get these values from analysis-result and query the api for the name of the file
+        let input_matrix_a = "e85b5f38-f6a9-4ad2-a8d0-2b7cba1d4328"
+        let input_matrix_b = "1f8fb6e2-15f3-4dea-9b81-23f2f8dfce2b"
+        let sample_arrangement = "sample ID"
+        let query_a = `https://dev-mev-api.tm4.org/api/resources/${input_matrix_a}/`
+        let query_b = `https://dev-mev-api.tm4.org/api/resources/${input_matrix_b}/`
+        this.httpClient.get(query_a).subscribe(res => {
+            console.log("input_a: ", res['name'], res)
+        })
+        this.httpClient.get(query_b).subscribe(res => {
+            console.log("input_b: ", res['name'], sample_arrangement, res)
+        })
+    }
 
 
     ngOnChanges(changes: SimpleChanges): void {
+        // this.getInputValues();
+
         this.node1Value = localStorage.getItem('node1');
         this.node2Value = localStorage.getItem('node2');
 

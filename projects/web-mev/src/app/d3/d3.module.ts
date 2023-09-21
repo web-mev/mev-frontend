@@ -51,6 +51,7 @@ import { PumaComponent } from './components/puma/puma.component';
 import { DragonComponent } from './components/dragon/dragon.component';
 import { AxisLabelDialogComponent } from './components/dragon/axisLabelDialog/axisLabelDialog.component';
 import { SctkSingleRComponent } from './components/sctk-singleR/sctk-singleR.component';
+import { ResultInputInfoComponent} from './components/result-input-info/result-input-info.component'
 
 @NgModule({
   declarations: [
@@ -101,7 +102,8 @@ import { SctkSingleRComponent } from './components/sctk-singleR/sctk-singleR.com
     PumaComponent,
     DragonComponent,
     AxisLabelDialogComponent,
-    SctkSingleRComponent
+    SctkSingleRComponent,
+    ResultInputInfoComponent
   ],
   imports: [CommonModule, SharedModule, DragDropModule, MatBadgeModule],
   exports: [
@@ -142,7 +144,8 @@ import { SctkSingleRComponent } from './components/sctk-singleR/sctk-singleR.com
     PumaComponent,
     DragonComponent,
     AxisLabelDialogComponent,
-    SctkSingleRComponent
+    SctkSingleRComponent,
+    ResultInputInfoComponent
   ]
 })
 export class D3Module { }

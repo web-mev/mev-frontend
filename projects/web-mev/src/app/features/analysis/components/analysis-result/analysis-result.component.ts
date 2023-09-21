@@ -23,6 +23,8 @@ export class AnalysisResultComponent implements OnChanges {
   ngOnChanges(): void {
     this.outputs = { ...this.outputs };
     this.operationName = this.getOperationName();
+
+    console.log("analysis results: ", this.outputs)
   }
 
   /**

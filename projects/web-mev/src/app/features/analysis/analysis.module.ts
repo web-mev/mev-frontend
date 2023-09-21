@@ -26,7 +26,7 @@ import { AddDialog2Component } from './components/igv/add-dialog/add-dialog.comp
     AnalysisPlottingResultComponent,
     PlottingMenuComponent,
     IGVComponent,
-    AddDialog2Component
+    AddDialog2Component,
   ],
   exports: [
     OperationComponent,
@@ -35,7 +35,7 @@ import { AddDialog2Component } from './components/igv/add-dialog/add-dialog.comp
     AnalysisFlowComponent,
     PlottingMenuComponent,
     IGVComponent,
-    AddDialog2Component
+    AddDialog2Component,
   ],
   imports: [
     CommonModule,

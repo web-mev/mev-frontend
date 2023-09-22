@@ -4,9 +4,7 @@
         <div mat-card-avatar class="analysis-card__img"></div>
         <mat-card-title>DRAGON: {{ outputs?.job_name }}</mat-card-title>
     </mat-card-header>
-
     <mev-input-info [outputs]="outputs"></mev-input-info>
-
     <mat-tab-group dynamicHeight (selectedTabChange)="tabChange()" animationDuration="0ms">
         <mat-tab>
             <ng-template mat-tab-label>Top Targets</ng-template>

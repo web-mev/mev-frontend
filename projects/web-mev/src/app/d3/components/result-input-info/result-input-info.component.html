@@ -1,13 +1,17 @@
-<!-- <div class="listTitle" (click)="showDetails = !showDetails">
-    <span class="expandObj">{{showDetails ? "-":"+"}}</span> {{showDetails ? 'Hide Input Data' : 'Show Input Data'}}
-</div> -->
-
-<button mat-button (click)="showDetails = !showDetails"><i class="fa-regular fa-file-lines"></i> Input Details {{showDetails ? ">":"^"}}</button>
-
-<div class="inputList" *ngIf="showDetails">
-    <div *ngFor="let item of inputList | keyvalue" class="list">
-        <div>
-            <div class="medium-bold">{{ item.key }}:</div> {{ item.value }}
-        </div>
-    </div>
-</div>
+<mat-accordion>
+    <mat-expansion-panel class="expansionPanel" [expanded]="showDetails" (opened)="showDetails = true"
+        (closed)="showDetails = false">
+        <mat-expansion-panel-header class="inputHeader">
+            <div class="expansionTitle">Input Details</div>
+        </mat-expansion-panel-header>
+        <mat-card-content class="analysis-card__main">
+            <div class="inputList">
+                <div *ngFor="let item of inputList | keyvalue" class="list">
+                    <div>
+                        <div class="medium-bold">{{ item.key }}:</div> {{ item.value }}
+                    </div>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-expansion-panel>
+</mat-accordion>

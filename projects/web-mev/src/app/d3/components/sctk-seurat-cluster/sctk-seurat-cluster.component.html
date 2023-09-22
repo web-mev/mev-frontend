@@ -5,6 +5,7 @@
     </mat-card-header>
     <mat-card-content class="analysis-card__main">
         <mat-divider [inset]="true"></mat-divider>
+        <mev-input-info [outputs]="outputs"></mev-input-info>
         <div class="analysis-card__content">       
             <p> The Seurat clustering algorithm identified <strong>{{clusterCount}}</strong> clusters </p>
             <p>

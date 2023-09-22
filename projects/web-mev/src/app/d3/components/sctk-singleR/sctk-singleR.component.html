@@ -2,12 +2,15 @@
     <mat-card-header>
         <div mat-card-avatar class="analysis-card__img"></div>
         <mat-card-title>SCTK Single R: {{ outputs?.job_name }}</mat-card-title>
+        <!-- <mat-icon class="workspace-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined" matTooltip="Workspace: {{ outputs.job_name }} &#13;
+                          Created: {{ outputs.job_name }} &#13;
+                          Owner: {{ outputs.job_name }}" aria-label="Info tooltip about the workspace">info
+        </mat-icon> -->
     </mat-card-header>
 
-    <mev-input-info [outputs]="outputs"></mev-input-info>
-    
     <mat-card-content class="analysis-card__main">
         <mat-divider [inset]="true"></mat-divider>
+        <mev-input-info [outputs]="outputs"></mev-input-info>
         <div class="analysis-card__content">
             <p>
                 SingleR has assigned each cell to an annotated canonical cell type. Below, we summarize the distribution

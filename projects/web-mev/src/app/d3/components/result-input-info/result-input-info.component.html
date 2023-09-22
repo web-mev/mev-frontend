@@ -1,7 +1,8 @@
-
-<div class="listTitle" (click)="showDetails = !showDetails">
+<!-- <div class="listTitle" (click)="showDetails = !showDetails">
     <span class="expandObj">{{showDetails ? "-":"+"}}</span> {{showDetails ? 'Hide Input Data' : 'Show Input Data'}}
-</div>
+</div> -->
+
+<button mat-button (click)="showDetails = !showDetails"><i class="fa-regular fa-file-lines"></i> Input Details {{showDetails ? ">":"^"}}</button>
 
 <div class="inputList" *ngIf="showDetails">
     <div *ngFor="let item of inputList | keyvalue" class="list">

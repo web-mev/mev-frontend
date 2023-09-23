@@ -114,7 +114,6 @@ export class ExecutedOperationComponent implements OnInit {
       .getExecOperations(workspaceId)
       .pipe(
         tap(operations => {
-          console.log("executed operations: ", operations)
           this.execOperations = operations;
           operations.forEach(execOperation => {
             execOperation = { ...execOperation, name: execOperation.job_name };

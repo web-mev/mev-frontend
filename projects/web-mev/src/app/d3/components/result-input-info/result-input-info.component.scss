@@ -1,6 +1,7 @@
 .list {
-  font-size: 14px;
-  margin-top: 10px;
+  font-size: 12px;
+  margin-top: 8px;
+  line-height: 1.6;
 }
 
 .medium-bold {
@@ -8,19 +9,27 @@
 }
 
 .inputList {
-  margin: 20px 0px;
+  margin: 0px;
 }
 
 .mat-expansion-panel,
 .mat-expansion-panel:hover {
   box-shadow: none !important;
   background-color: transparent !important;
-  width: 30%;
-  min-width: 400px;
+  width: 40%;
+  min-width: 500px;
 }
 
 .mat-expansion-panel-header {
   padding-left: 0 !important;
+}
+
+.mat-expansion-panel-body {
+  padding-left: 16px;
+}
+
+.valueClass {
+  margin-left: 4px;
 }
 
 .mat-content {

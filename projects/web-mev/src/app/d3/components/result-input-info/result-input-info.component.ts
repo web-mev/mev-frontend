@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 
@@ -17,12 +17,12 @@ export class ResultInputInfoComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log("results input output: ", this.outputs)
     this.getInputValues()
-    
+
   }
 
   getInputValues() {
-    console.log("result input info: ", this.outputs)
     let excludeList = ['operation', 'job_name', 'error_messages']
 
     for (let key in this.outputs) {
@@ -45,29 +45,13 @@ export class ResultInputInfoComponent implements OnInit {
               console.error(`Error for ${key}: `, error);
               this.inputList[formattedText] = value
             }
+        } else if (value['name'] && value['name'] !== undefined) {
+          this.inputList[formattedText] = value['name']
         } else {
           this.inputList[formattedText] = value
         }
-
       }
-
     }
-    // this.updateTooltipContent()
   }
-
-  // tooltipContent = ''
-  // newString = 'hello '
-
-  // updateTooltipContent() {
-  //   console.log("input list: ", this.inputList)
-  //   // let newString = ''
-  //   for(let key in this.inputList){
-  //     let temp = `${key}: ${this.inputList[key]} `
-  //     this.newString = this.newString + temp + " &#13; "
-  //   }
-  //   this.tooltipContent = this.newString;
-  //   console.log("when finish: ", this.newString)
-  // }
-
 
 }

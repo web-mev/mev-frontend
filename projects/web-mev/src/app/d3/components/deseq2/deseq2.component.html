@@ -8,6 +8,7 @@
       <mat-card-title>{{analysisName}}: {{ outputs?.job_name }}</mat-card-title>
     </mat-card-header>
     <mat-card-content class="analysis-card__main">
+      <mev-input-info [outputs]="outputs"></mev-input-info>
       <p class="analysis-card__instruction">
         Use the table filters and sorting functionality to explore differentially expressed genes.
       </p>

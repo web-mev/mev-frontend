@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { MetadataService } from '@app/core/metadata/metadata.service';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -11,28 +13,34 @@ export class ResultInputInfoComponent implements OnInit {
   @Input() outputs;
   inputList = {}
   showDetails = false
+  customSetDS;
+  workspaceId: string;
 
   constructor(
     private httpClient: HttpClient,
+    private metadataService: MetadataService,
+    private route: ActivatedRoute,
   ) { }
 
   ngOnInit(): void {
-    console.log("results input output: ", this.outputs)
+    this.workspaceId = this.route.snapshot.paramMap.get('workspaceId');
     this.getInputValues()
-
   }
 
   getInputValues() {
     let excludeList = ['operation', 'job_name', 'error_messages']
 
+    const customSet = this.metadataService.getCustomSets();
+
     for (let key in this.outputs) {
       if (!excludeList.includes(key)) {
-
         const match = key.match(/\.(.+)/);
         let formattedText = ''
         if (match) {
           const capturedText = match[1];
           formattedText = capturedText.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        } else {
+          formattedText = key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
         }
 
         let value = this.outputs[key]
@@ -46,7 +54,14 @@ export class ResultInputInfoComponent implements OnInit {
               this.inputList[formattedText] = value
             }
         } else if (value['name'] && value['name'] !== undefined) {
-          this.inputList[formattedText] = value['name']
+          let customSetName = value['name']
+          const exists = customSet.some(item => item.name === customSetName);
+          if (exists) {
+            this.inputList[formattedText] = value['name'];
+          } else {
+            let replacementName = value['elements'].length + " Samples";
+            this.inputList[formattedText] = replacementName;
+          }
         } else {
           this.inputList[formattedText] = value
         }

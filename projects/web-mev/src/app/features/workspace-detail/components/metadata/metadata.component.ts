@@ -119,6 +119,7 @@ export class MetadataComponent implements OnInit {
         this.generateObservationSetsVisualization(); // generate custom observation visualization
         this.cd.markForCheck();
         this.selection.clear();
+        console.log("custom set DS: ", this.customSetDS, response)
       });
 
   }

@@ -1,0 +1,18 @@
+<div class="container">
+    <span class="headerSpan">
+        <div class="dialogTitle">Input Parameters</div>
+        <button class="closeDialogButton" mat-dialog-close mat-icon-button type="button">
+            <mat-icon>close</mat-icon>
+        </button>
+    </span>
+
+    <div class="dialogContent">
+        <div *ngFor="let item of data | keyvalue" class="list">
+            <div>
+                <div class="medium-bold">{{ item.key }}:</div>
+                <div class="valueClass">{{ item.value }}</div>
+            </div>
+        </div>
+    </div>
+    <br>
+</div>

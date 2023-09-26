@@ -9,7 +9,7 @@
     <br> Then click the Add button.
   </div>
   <form class="mat-dialog-content" (ngSubmit)="submit" #formControl="ngForm">
-    <div class="form">
+    <div class="form scrollableSection">
       <angular2-multiselect [data]="files | validFilesPipe" [(ngModel)]="selectedFiles" [settings]="dropdownSettings"
         name="resource">
         <c-item>
@@ -30,6 +30,6 @@
       <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
       <button mat-button [mat-dialog-close]="1" mat-raised-button color="accent" (click)="confirmAdd()">Add</button>
     </div>
-
   </form>
+
 </div>

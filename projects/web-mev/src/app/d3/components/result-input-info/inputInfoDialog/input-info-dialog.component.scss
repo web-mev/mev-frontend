@@ -1,9 +1,25 @@
+.medium-bold {
+  font-weight: 700;
+}
+
+.inputList {
+  margin: 0px;
+}
+
+.valueClass {
+  margin-left: 1em;
+}
+
+.dialogContent{
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(0,0,0,.6);
+}
+
 .container {
   display: flex;
   flex-direction: column;
   width: 500px;
-  max-height: 75vh;
-  position: relative;
 }
 
 .mat-dialog-content {
@@ -28,15 +44,20 @@
   bottom: 0;
 }
 
-.resource-label {
-  font-size: 16px;
-  word-break: break-all;
-}
+// .inputField {
+//   width: 100%;
+//   margin-top: 20px;
+// }
 
-.resource-type-label {
-  color: #666;
-  font-size: 12px;
-}
+// .resource-label {
+//   font-size: 16px;
+//   word-break: break-all;
+// }
+
+// .resource-type-label {
+//   color: #666;
+//   font-size: 12px;
+// }
 
 ::ng-deep {
   .selected-list .c-list .c-token {
@@ -65,7 +86,6 @@
   font-size: 14px;
   font-weight: 400;
   color: rgba(0,0,0,.6);
-  margin-top: 1em;
 }
 
 .closeDialogButton {
@@ -77,13 +97,6 @@
   opacity: .75;
 }
 
-.submitBtnContainer {
-  position: absolute;
-  bottom: 0;
-  right: 24px;
-  background-color: white;
-}
-
-.scrollableSection{
-  overflow-y: auto;
+.list {
+  margin-top: 10px;
 }

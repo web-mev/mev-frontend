@@ -1,17 +1,3 @@
-<mat-accordion>
-    <mat-expansion-panel class="expansionPanel" [expanded]="showDetails" (opened)="showDetails = true"
-        (closed)="showDetails = false">
-        <mat-expansion-panel-header class="inputHeader">
-            <div class="expansionTitle">Input Details</div>
-        </mat-expansion-panel-header>
-        <mat-card-content class="analysis-card__main">
-            <div class="inputList">
-                <div *ngFor="let item of inputList | keyvalue" class="list">
-                    <div>
-                        <div class="medium-bold">{{ item.key }}:</div><div class="valueClass">{{ item.value }}</div>
-                    </div>
-                </div>
-            </div>
-        </mat-card-content>
-    </mat-expansion-panel>
-</mat-accordion>
+<mat-icon class="infoIcon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+    matTooltip="View Input Parameters" (click)="openInputDetailsDialog()">info
+</mat-icon>

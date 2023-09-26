@@ -2,6 +2,9 @@ import { Component, OnInit, Input } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MetadataService } from '@app/core/metadata/metadata.service';
 import { ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { InputInfoDialogComponent } from './inputInfoDialog/input-info-dialog.component'
+
 
 
 @Component({
@@ -20,6 +23,7 @@ export class ResultInputInfoComponent implements OnInit {
     private httpClient: HttpClient,
     private metadataService: MetadataService,
     private route: ActivatedRoute,
+    public dialog: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -67,6 +71,12 @@ export class ResultInputInfoComponent implements OnInit {
         }
       }
     }
+  }
+
+  openInputDetailsDialog() {
+    const dialogRef = this.dialog.open(InputInfoDialogComponent, {
+      data: this.inputList
+    });
   }
 
 }

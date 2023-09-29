@@ -3,8 +3,8 @@
     <mat-card-header *ngIf="showHeader === true">
         <div mat-card-avatar class="analysis-card__img"></div>
         <mat-card-title>DRAGON: {{ outputs?.job_name }}</mat-card-title>
+        <mev-input-info [outputs]="outputs"></mev-input-info>
     </mat-card-header>
-
     <mat-tab-group dynamicHeight (selectedTabChange)="tabChange()" animationDuration="0ms">
         <mat-tab>
             <ng-template mat-tab-label>Top Targets</ng-template>
@@ -41,7 +41,8 @@
                     <mat-radio-button *ngFor="let options of radioButtonList" [value]="options.axis"
                         (change)="onRadioChangeAxis($event.value)">{{ options.name }}</mat-radio-button>
                 </mat-radio-group>
-                <button mat-raised-button class="updateLabelButton" (click)="changeAxisLabels()">Update Axis Labels</button>
+                <button mat-raised-button class="updateLabelButton" (click)="changeAxisLabels()">Update Axis
+                    Labels</button>
                 <br>
                 <br>
                 <mat-form-field appearance="outline">
@@ -131,7 +132,6 @@
                         [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="addSearchItem($event)">
                 </mat-chip-list>
             </mat-form-field>
-            <h1>what is this??</h1>
             <label id="radio-group-axis">Select an Axis: </label>
             <mat-radio-group aria-label="Select an Axis" [(ngModel)]="apiAxis">
                 <mat-radio-button *ngFor="let options of radioButtonList" [value]="options.axis"

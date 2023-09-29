@@ -132,6 +132,7 @@ const MatModules = [
 export class SharedModule {
   constructor(faIconLibrary: FaIconLibrary) {
     faIconLibrary.addIcons(
+      //@ts-ignore
       faGithub,
       faMediumM,
       faPlus,

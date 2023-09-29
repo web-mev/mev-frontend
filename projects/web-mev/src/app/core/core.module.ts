@@ -182,6 +182,7 @@ export class CoreModule {
       throw new Error('CoreModule is already loaded. Import only in AppModule');
     }
     faIconLibrary.addIcons(
+      //@ts-ignore
       faCog,
       faCogs,
       faInfo,
@@ -197,5 +198,6 @@ export class CoreModule {
       faInstagram,
       faYoutube
     );
+    
   }
 }

@@ -107,10 +107,8 @@ export class DragonComponent implements AfterViewInit, OnChanges {
         private httpClient: HttpClient,
         private readonly notificationService: NotificationService,
         public dialog: MatDialog,
-        private cdr: ChangeDetectorRef
+        private cdr: ChangeDetectorRef,
     ) { }
-
-
 
     ngOnChanges(changes: SimpleChanges): void {
         this.node1Value = localStorage.getItem('node1');

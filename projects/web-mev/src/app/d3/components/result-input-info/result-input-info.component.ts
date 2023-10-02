@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { MetadataService } from '@app/core/metadata/metadata.service';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { InputInfoDialogComponent } from './inputInfoDialog/input-info-dialog.component'
+import { InputInfoDialogComponent } from './inputInfoDialog/input-info-dialog.component';
+import { environment } from '@environments/environment';
 
 
 
@@ -18,6 +19,7 @@ export class ResultInputInfoComponent implements OnInit {
   showDetails = false
   customSetDS;
   workspaceId: string;
+  private readonly API_URL = environment.apiUrl;
 
   constructor(
     private httpClient: HttpClient,
@@ -49,7 +51,7 @@ export class ResultInputInfoComponent implements OnInit {
 
         let value = this.outputs[key]
         if (value.length === 36) {
-          let query = `https://dev-mev-api.tm4.org/api/resources/${value}/`
+          let query = `${this.API_URL}/resources/${value}/`
           this.httpClient.get(query).subscribe(res => {
             this.inputList[formattedText] = res['name']
           }),

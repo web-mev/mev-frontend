@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ScatterPlotComponent } from './components/scatter-plot/scatter-plot.component';
+import { PCAComponent } from './components/pca/pca.component';
 import { SharedModule } from '@app/shared/shared.module';
 import { AddSampleSetComponent } from './components/dialogs/add-sample-set/add-sample-set.component';
 import { ClusterLabelerComponent } from './components/dialogs/cluster-labeler/cluster-labeler.component';
@@ -56,7 +56,7 @@ import { InputInfoDialogComponent } from './components/result-input-info/inputIn
 
 @NgModule({
   declarations: [
-    ScatterPlotComponent,
+    PCAComponent,
     AddSampleSetComponent,
     ClusterLabelerComponent,
     Deseq2Component,
@@ -109,7 +109,7 @@ import { InputInfoDialogComponent } from './components/result-input-info/inputIn
   ],
   imports: [CommonModule, SharedModule, DragDropModule, MatBadgeModule],
   exports: [
-    ScatterPlotComponent,
+    PCAComponent,
     Deseq2Component,
     LimmaComponent,
     HclComponent,

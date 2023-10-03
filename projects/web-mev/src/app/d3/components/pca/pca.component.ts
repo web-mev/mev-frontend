@@ -20,12 +20,12 @@ import { CustomSetType, CustomSet } from '@app/_models/metadata';
  * Used for Principal Component Analyses (PCA)
  */
 @Component({
-  selector: 'mev-scatter-plot',
-  templateUrl: './scatter-plot.component.html',
-  styleUrls: ['./scatter-plot.component.scss'],
+  selector: 'mev-pca',
+  templateUrl: './pca.component.html',
+  styleUrls: ['./pca.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default
 })
-export class ScatterPlotComponent implements OnChanges {
+export class PCAComponent implements OnChanges {
   @Input() outputs;
   @ViewChild('scatterPlot') svgElement: ElementRef;
   pcaData;

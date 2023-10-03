@@ -1,6 +1,6 @@
 <div *ngIf="!outputs.error_messages?.length; else error">
     <ng-container *ngIf="operationName === 'Principal component analysis (PCA)'">
-        <mev-scatter-plot *ngIf="outputs" [outputs]="outputs"></mev-scatter-plot>
+        <mev-pca *ngIf="outputs" [outputs]="outputs"></mev-pca>
     </ng-container>
 
     <ng-container *ngIf="operationName === 'SCTK Doublet Finder'">

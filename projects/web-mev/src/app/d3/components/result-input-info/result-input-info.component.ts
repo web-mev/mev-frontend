@@ -6,8 +6,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { InputInfoDialogComponent } from './inputInfoDialog/input-info-dialog.component';
 import { environment } from '@environments/environment';
 
-
-
 @Component({
   selector: 'mev-input-info',
   templateUrl: './result-input-info.component.html',
@@ -30,16 +28,19 @@ export class ResultInputInfoComponent implements OnInit {
 
   ngOnInit(): void {
     this.workspaceId = this.route.snapshot.paramMap.get('workspaceId');
-    this.getInputValues()
+    this.getInputValues();
   }
 
   getInputValues() {
-    let excludeList = ['operation', 'job_name', 'error_messages']
-
     const customSet = this.metadataService.getCustomSets();
 
+    let validInputValues = [];
+    for (let key in this.outputs.operation.inputs) {
+      validInputValues.push(key)
+    }
+
     for (let key in this.outputs) {
-      if (!excludeList.includes(key)) {
+      if (validInputValues.includes(key)) {
         const match = key.match(/\.(.+)/);
         let formattedText = ''
         if (match) {
@@ -59,7 +60,7 @@ export class ResultInputInfoComponent implements OnInit {
               console.error(`Error for ${key}: `, error);
               this.inputList[formattedText] = value
             }
-        } else if (value['name'] && value['name'] !== undefined) {
+        } else if (value['name']) {
           let customSetName = value['name']
           const exists = customSet.some(item => item.name === customSetName);
           if (exists) {
@@ -71,6 +72,7 @@ export class ResultInputInfoComponent implements OnInit {
         } else {
           this.inputList[formattedText] = value
         }
+
       }
     }
   }

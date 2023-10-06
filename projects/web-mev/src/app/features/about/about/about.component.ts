@@ -37,7 +37,7 @@ export class AboutComponent implements OnInit {
         throw message
       }))
       .subscribe(data => {
-        if (Object.keys(data).length !== 0) {
+        if (data['message'] && data['message'].length !== 0) {
           let message = data['message'];
           this._snackBar.open(message, 'X', {
             duration: 15000,

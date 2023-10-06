@@ -2,9 +2,6 @@
 
 # build and deploy mev-frontend web app in Vagrant VM
 
-# Set NODE_OPTIONS to use the legacy OpenSSL provider
-# export NODE_OPTIONS=--openssl-legacy-provider
-
 # print commands and their expanded arguments
 set -x
 

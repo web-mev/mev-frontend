@@ -61,28 +61,6 @@ If you wish to use Google-based authentication on the development machine (inste
 
 **Also:** Note that due to high I/O during the provisioning of the VM, we perform a mount (see `vagrant/provision.sh` for details). If you halt or other stop the VM and do not force re-provisioning, you may find that the `/vagrant/node_modules` directory is empty and your project will not serve/build/etc. In that case, run the mount command `/usr/bin/mount --bind /home/vagrant/node_modules /vagrant/node_modules` again (after you SSH into the VM). The `/vagrant/node_modules` directory should contain a lot of files and subdirectories.
 
-## <a name="Deployment">**Deployment on GCP**</a>
-
-* To configure:
-  1. Install [Google Cloud SDK](https://cloud.google.com/sdk/docs/install) and [Terraform](https://www.terraform.io/downloads.html)
-  1. Add service account with Editor role for the project
-  1. Add and download service account key
-  1. `cd deployment/terraform`
-  1. `terraform init`
-  1. `cp terraform.tfvars.template terraform.tfvars`
-  1. edit `terraform.tfvars` to assign required configuration values 
-
-* To build mev-frontend infrastructure:
-  ```shell
-  terraform apply
-  ```
-  You can access the instance using the returned IP address
-
-* To delete mev-frontend infrastructure:
-  ```shell
-  terraform destroy
-  ```
-
 ## <a name="Settings">**Settings**</a>
 
 - File _app.component.ts_\

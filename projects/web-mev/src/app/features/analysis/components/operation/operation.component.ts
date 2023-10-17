@@ -44,6 +44,7 @@ export class OperationComponent implements OnChanges {
   multipleResourceFields = [];
   textFields = [];
   optionFields = [];
+  optionsFieldsMultiSelect = [];
   booleanFields = [];
   observationFields = [];
   featureFields = [];
@@ -86,8 +87,10 @@ export class OperationComponent implements OnChanges {
     this.textFields = [];
     this.booleanFields = [];
     this.optionFields = [];
+    this.optionsFieldsMultiSelect = [];
     this.observationFields = [];
     this.featureFields = [];
+
 
     for (const key in inputs) {
       if (inputs.hasOwnProperty(key)) {
@@ -315,16 +318,37 @@ export class OperationComponent implements OnChanges {
             controlsConfig[key] = configTextField;
             break;
           }
-          case ['OptionString', 'IntegerOption', 'FloatOption'].find( x => x === field_type): {
-            const optionField = {
-              key: key,
-              name: input.name,
-              desc: input.description,
-              required: input.required,
-              options: input.spec.options,
-              selectedOptions: []
-            };
-            this.optionFields.push(optionField);
+          case ['OptionString', 'IntegerOption', 'FloatOption'].find(x => x === field_type): {
+            if (field_type === 'OptionString' && input.spec.many === true) {
+              let filesList = []
+              for (let index in input.spec.options) {
+                let temp = {
+                  id: input.spec.options[index]
+                }
+                filesList.push(temp)
+              }
+              const optionFieldMultiSelect = {
+                key: key,
+                name: input.name,
+                desc: input.description,
+                required: input.required,
+                files: filesList,
+                selectedFiles: []
+              };
+              this.optionsFieldsMultiSelect.push(optionFieldMultiSelect);
+            } else {
+              const optionField = {
+                key: key,
+                name: input.name,
+                desc: input.description,
+                required: input.required,
+                options: input.spec.options,
+                selectedOptions: []
+              };
+              this.optionFields.push(optionField);
+            }
+
+
             const configOptionField = [
               input.spec.default_value,
               [...(input.required ? [Validators.required] : [])]
@@ -419,7 +443,7 @@ export class OperationComponent implements OnChanges {
 
           // if this particular input corresponds to a file AND allows
           // multiple selections:
-          let condition1 = (field_type === 'DataResource') || (field_type === 'VariableDataResource');
+          let condition1 = (field_type === 'DataResource') || (field_type === 'VariableDataResource') || (field_type === 'OptionString');
           let condition2 = (input.spec.many === true)
           let is_multiselect = (condition1 && condition2);
           if (is_multiselect) {

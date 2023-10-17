@@ -1,5 +1,6 @@
 <div class="header">
-    Browse and create {{title}} RNA-seq data
+    Browse and create {{title}} {{(title === 'TCGA MicroRNASeq' || title === 'TCGA RNASeq' || title === 'GTEX RNASeq') ?
+    '': 'RNA-seq'}} data
 </div>
 <mev-spinner-overlay *ngIf="isWaiting"></mev-spinner-overlay>
 
@@ -59,7 +60,8 @@
             <div>Number of samples: {{t.count}}</div>
         </mat-card-content>
         <mat-card-footer class="checkBoxContainer">
-            <mat-checkbox (change)="checkboxSelection2($event, t.name, datasetName === 'gtex-rnaseq' ? 'tissue' : 'tissue_or_organ_of_origin')"
+            <mat-checkbox
+                (change)="checkboxSelection2($event, t.name, datasetName === 'gtex-rnaseq' ? 'tissue' : 'tissue_or_organ_of_origin')"
                 [checked]="publicDataSetComponent.checkboxStatus[datasetName][datasetName === 'gtex-rnaseq' ? 'tissue' : 'tissue_or_organ_of_origin'][t.name]">
             </mat-checkbox>
         </mat-card-footer>

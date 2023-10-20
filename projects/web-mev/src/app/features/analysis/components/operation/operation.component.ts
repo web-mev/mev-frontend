@@ -64,7 +64,8 @@ export class OperationComponent implements OnChanges {
       text: '',
       selectAllText: 'Select All',
       unSelectAllText: 'Unselect All',
-      classes: 'resource-dropdown'
+      classes: 'resource-dropdown',
+      tagToBody: false
     };
   }
 

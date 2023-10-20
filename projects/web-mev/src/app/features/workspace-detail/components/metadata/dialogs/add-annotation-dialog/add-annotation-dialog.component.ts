@@ -51,7 +51,8 @@ export class AddAnnotationDialogComponent implements OnInit {
       text: 'Select custom observation sets to create',
       selectAllText: 'Select All',
       unSelectAllText: 'Unselect All',
-      classes: 'resource-dropdown'
+      classes: 'resource-dropdown',
+      tagToBody: false
     };
 
     this.files = this.data.workspaceResources;

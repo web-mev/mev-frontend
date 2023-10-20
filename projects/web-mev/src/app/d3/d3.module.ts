@@ -53,6 +53,7 @@ import { AxisLabelDialogComponent } from './components/dragon/axisLabelDialog/ax
 import { SctkSingleRComponent } from './components/sctk-singleR/sctk-singleR.component';
 import { ResultInputInfoComponent} from './components/result-input-info/result-input-info.component';
 import { InputInfoDialogComponent } from './components/result-input-info/inputInfoDialog/input-info-dialog.component';
+import { BasicOutputComponent } from './components/basic-output/basic-output.component'
 
 @NgModule({
   declarations: [
@@ -105,7 +106,8 @@ import { InputInfoDialogComponent } from './components/result-input-info/inputIn
     AxisLabelDialogComponent,
     SctkSingleRComponent,
     ResultInputInfoComponent,
-    InputInfoDialogComponent
+    InputInfoDialogComponent,
+    BasicOutputComponent
   ],
   imports: [CommonModule, SharedModule, DragDropModule, MatBadgeModule],
   exports: [
@@ -148,7 +150,8 @@ import { InputInfoDialogComponent } from './components/result-input-info/inputIn
     AxisLabelDialogComponent,
     SctkSingleRComponent,
     ResultInputInfoComponent,
-    InputInfoDialogComponent
+    InputInfoDialogComponent,
+    BasicOutputComponent
   ]
 })
 export class D3Module { }

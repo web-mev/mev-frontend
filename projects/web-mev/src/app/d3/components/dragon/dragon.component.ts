@@ -180,6 +180,7 @@ export class DragonComponent implements AfterViewInit, OnChanges {
     }
 
     changeToFitCytoscape(res, existingNode) {
+        console.log("res: ", res['nodes'])
         for (let node of res['nodes']) {
             let nodeId = Object.keys(node)[0];
             if (!existingNode[nodeId]) {
@@ -238,6 +239,8 @@ export class DragonComponent implements AfterViewInit, OnChanges {
         } else {
             this.size = "small";
         }
+
+        console.log("nodes/edges: ", this.nodesArr, this.edgeArr)
 
         let errorMessage = "The current number of genes is more than Cytoscape can handle. Please lower the number of Layers or Children and try again."
         this.nodesArr.length > 1000 ? this.tooManyNodes(errorMessage) : this.render();

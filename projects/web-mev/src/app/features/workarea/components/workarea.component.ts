@@ -35,6 +35,7 @@ export class WorkareaComponent implements OnInit {
     this.analysesService.getAllNonWorkspaceExecOperations()
     .subscribe(
       (op_list:any) => {
+        console.log("ops list: ", op_list)
         let ongoing_ops = false;
         for(var i in op_list){
           let x = op_list[i];

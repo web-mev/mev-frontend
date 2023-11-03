@@ -36,16 +36,16 @@
                     significant edge weights.
                 </p>
 
-                <label id="radio-group-axis">Select an Axis: </label>
-                <mat-radio-group aria-label="Select an Axis" [(ngModel)]="apiAxis">
-                    <mat-radio-button *ngFor="let options of radioButtonList" [value]="options.axis"
+                <label id="radio-group-axis">Select a Scheme: </label>
+                <mat-radio-group aria-label="Select a Scheme" [(ngModel)]="currScheme">
+                    <mat-radio-button *ngFor="let options of radioButtonList" [value]="options.name"
                         (change)="onRadioChangeAxis($event.value)">{{ options.name }}</mat-radio-button>
                 </mat-radio-group>
-                <button mat-raised-button class="updateLabelButton" (click)="changeAxisLabels()">Update Axis
-                    Labels</button>
+                <!-- <button mat-raised-button class="updateLabelButton" (click)="changeAxisLabels()">Update Axis
+                    Labels</button> -->
                 <br>
                 <br>
-                <mat-form-field appearance="outline">
+                <!-- <mat-form-field appearance="outline">
                     <mat-label>Number of Layers</mat-label>
                     <mat-select [(value)]="selectedLayers" (selectionChange)="onDropDownChange($event.value, 'layers')">
                         <mat-option [value]="option" *ngFor="let option of layersList">{{ option }}</mat-option>
@@ -58,6 +58,29 @@
                         (selectionChange)="onDropDownChange($event.value, 'children')">
                         <mat-option [value]="option" *ngFor="let option of childrenList">{{ option }}</mat-option>
                     </mat-select>
+                </mat-form-field> -->
+                <mat-form-field class="example-form-field" appearance="outline">
+                    <mat-label>Top N</mat-label>
+                    <input matInput type="text" [(ngModel)]="topNVal" required>
+                    <button *ngIf="topNVal" matSuffix mat-icon-button aria-label="Clear" (click)="topNVal=''">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+                <br>
+                <mat-form-field class="example-form-field" appearance="outline">
+                    <mat-label>Sig Threshold</mat-label>
+                    <input matInput type="text" [(ngModel)]="sigThresholdVal" required>
+                    <button *ngIf="sigThresholdVal" matSuffix mat-icon-button aria-label="Clear" (click)="sigThresholdVal=''">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+                <br>
+                <mat-form-field class="example-form-field" appearance="outline">
+                    <mat-label>Max Neighbors</mat-label>
+                    <input matInput type="text" [(ngModel)]="maxNeighborsVal" required>
+                    <button *ngIf="maxNeighborsVal" matSuffix mat-icon-button aria-label="Clear" (click)="maxNeighborsVal=''">
+                        <mat-icon>close</mat-icon>
+                    </button>
                 </mat-form-field>
                 <br>
                 <button mat-raised-button color="accent" (click)="requestData('topGenes')">Submit</button>
@@ -127,13 +150,13 @@
                             <mat-icon>cancel</mat-icon>
                         </button>
                     </mat-chip>
-                    <input [placeholder]="apiAxis === 0 ? 'Add genes...' : 'Add transcription factors...'"
+                    <input [placeholder]="currScheme === 'max_edges' ? 'Add genes...' : 'Add transcription factors...'"
                         [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                         [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="addSearchItem($event)">
                 </mat-chip-list>
             </mat-form-field>
             <label id="radio-group-axis">Select an Axis: </label>
-            <mat-radio-group aria-label="Select an Axis" [(ngModel)]="apiAxis">
+            <mat-radio-group aria-label="Select an Axis" [(ngModel)]="currScheme">
                 <mat-radio-button *ngFor="let options of radioButtonList" [value]="options.axis"
                     (change)="onRadioChangeAxis($event.value)">{{ options.name }}</mat-radio-button>
             </mat-radio-group>

@@ -400,7 +400,6 @@ export class DragonComponent implements AfterViewInit, OnChanges {
                         'background-color': "#D94A4A",
                         'opacity': 0.95,
                         'label': 'data(truncatedId)',
-                        // 'shape': 'round-rectangle',
                         'shape': 'ellipse',
                         'text-wrap': 'wrap',
                         'text-max-width': '1000px',
@@ -421,9 +420,15 @@ export class DragonComponent implements AfterViewInit, OnChanges {
                     style: {
                         'width': `mapData(edge_weight, ${this.minEdgeWeight}, ${this.maxEdgeWeight}, ${this.nodeSize[this.size].edgeWidth[0]}, ${this.nodeSize[this.size].edgeWidth[1]})`,
                         'line-color': (ele) => ele.data('direction') === 'POS' ? '#A41034' : '#1F51FF',
-                        'line-opacity': 0.8,
+                        'line-opacity': (ele) => {
+                            let pval = ele.data('pval')
+                            let sigNumber = parseFloat(this.sigThresholdVal)
+                            // Scales the opacity from Sig_threshold and Zero. So, if sig_thresold = 0.01, we can make 0.01 --> transparency of 10%. and 0 --> transparency of 100%
+                            let resultOpacity = (1 - pval / sigNumber) * .9 + .1 // sets a minimum of 10% opapcity
+                            console.log("resultOpacity: ", resultOpacity, pval)
+                            return resultOpacity
+                        }
 
-                        // 'line-opacity': `mapData(edge_weight, ${this.minEdgeWeight}, ${this.maxEdgeWeight}, 0, 1)`
                     },
                 },
             ],

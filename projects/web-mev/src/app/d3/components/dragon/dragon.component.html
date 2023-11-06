@@ -38,7 +38,7 @@
 
                 <label id="radio-group-axis">Select a Scheme: </label>
                 <mat-radio-group aria-label="Select a Scheme" [(ngModel)]="currScheme">
-                    <mat-radio-button *ngFor="let options of radioButtonList" [value]="options.name"
+                    <mat-radio-button *ngFor="let options of schemeList" [value]="options.name"
                         (change)="onRadioChangeAxis($event.value)">{{ options.name }}</mat-radio-button>
                 </mat-radio-group>
                 <!-- <button mat-raised-button class="updateLabelButton" (click)="changeAxisLabels()">Update Axis
@@ -61,27 +61,39 @@
                 </mat-form-field> -->
                 <mat-form-field class="example-form-field" appearance="outline">
                     <mat-label>Top N</mat-label>
-                    <input matInput type="text" [(ngModel)]="topNVal" required>
-                    <button *ngIf="topNVal" matSuffix mat-icon-button aria-label="Clear" (click)="topNVal=''">
+                    <input matInput type="number" [(ngModel)]="topNVal" required min="1" max="20">
+                    <button *ngIf="topNVal" matSuffix mat-icon-button aria-label="Clear" (click)="topNVal=null">
                         <mat-icon>close</mat-icon>
                     </button>
+                    <mat-error *ngIf="topNVal && (topNVal < 1 || topNVal > 20)">
+                        Top N must be between 1 and 20.
+                    </mat-error>
                 </mat-form-field>
                 <br>
                 <mat-form-field class="example-form-field" appearance="outline">
                     <mat-label>Sig Threshold</mat-label>
-                    <input matInput type="text" [(ngModel)]="sigThresholdVal" required>
-                    <button *ngIf="sigThresholdVal" matSuffix mat-icon-button aria-label="Clear" (click)="sigThresholdVal=''">
+                    <input matInput type="number" [(ngModel)]="sigThresholdVal" required min="0" max="1">
+                    <button *ngIf="sigThresholdVal" matSuffix mat-icon-button aria-label="Clear"
+                        (click)="sigThresholdVal=null">
                         <mat-icon>close</mat-icon>
                     </button>
+                    <mat-error *ngIf="sigThresholdVal && (sigThresholdVal < 0 || sigThresholdVal > 1)">
+                        Sig Threshold must be between 0 and 1.
+                    </mat-error>
                 </mat-form-field>
                 <br>
                 <mat-form-field class="example-form-field" appearance="outline">
                     <mat-label>Max Neighbors</mat-label>
-                    <input matInput type="text" [(ngModel)]="maxNeighborsVal" required>
-                    <button *ngIf="maxNeighborsVal" matSuffix mat-icon-button aria-label="Clear" (click)="maxNeighborsVal=''">
+                    <input matInput type="number" [(ngModel)]="maxNeighborsVal" required min="0" max="10">
+                    <button *ngIf="maxNeighborsVal" matSuffix mat-icon-button aria-label="Clear"
+                        (click)="maxNeighborsVal=null">
                         <mat-icon>close</mat-icon>
                     </button>
+                    <mat-error *ngIf="maxNeighborsVal && (maxNeighborsVal < 0 || maxNeighborsVal > 10)">
+                        Max Neighbors must be between 0 and 10.
+                    </mat-error>
                 </mat-form-field>
+                <br>
                 <br>
                 <button mat-raised-button color="accent" (click)="requestData('topGenes')">Submit</button>
                 <br>
@@ -155,7 +167,7 @@
                         [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="addSearchItem($event)">
                 </mat-chip-list>
             </mat-form-field>
-            <label id="radio-group-axis">Select an Axis: </label>
+            <!-- <label id="radio-group-axis">Select an Axis: </label>
             <mat-radio-group aria-label="Select an Axis" [(ngModel)]="currScheme">
                 <mat-radio-button *ngFor="let options of radioButtonList" [value]="options.axis"
                     (change)="onRadioChangeAxis($event.value)">{{ options.name }}</mat-radio-button>
@@ -175,6 +187,47 @@
                 <mat-select [(value)]="selectedChildren" (selectionChange)="onDropDownChange($event.value, 'children')">
                     <mat-option [value]="option" *ngFor="let option of childrenList">{{ option }}</mat-option>
                 </mat-select>
+            </mat-form-field> -->
+            <label id="radio-group-axis">Select a Scheme: </label>
+            <mat-radio-group aria-label="Select a Scheme" [(ngModel)]="currScheme">
+                <mat-radio-button *ngFor="let options of schemeList" [value]="options.name"
+                    (change)="onRadioChangeAxis($event.value)">{{ options.name }}</mat-radio-button>
+            </mat-radio-group>
+            <br>
+            <br>
+            <mat-form-field class="example-form-field" appearance="outline">
+                <mat-label>Top N</mat-label>
+                <input matInput type="number" [(ngModel)]="topNVal" required min="1" max="20">
+                <button *ngIf="topNVal" matSuffix mat-icon-button aria-label="Clear" (click)="topNVal=null">
+                    <mat-icon>close</mat-icon>
+                </button>
+                <mat-error *ngIf="topNVal && (topNVal < 1 || topNVal > 20)">
+                    Top N must be between 1 and 20.
+                </mat-error>
+            </mat-form-field>
+            <br>
+            <mat-form-field class="example-form-field" appearance="outline">
+                <mat-label>Sig Threshold</mat-label>
+                <input matInput type="number" [(ngModel)]="sigThresholdVal" required min="0" max="1">
+                <button *ngIf="sigThresholdVal" matSuffix mat-icon-button aria-label="Clear"
+                    (click)="sigThresholdVal=null">
+                    <mat-icon>close</mat-icon>
+                </button>
+                <mat-error *ngIf="sigThresholdVal && (sigThresholdVal < 0 || sigThresholdVal > 1)">
+                    Sig Threshold must be between 0 and 1.
+                </mat-error>
+            </mat-form-field>
+            <br>
+            <mat-form-field class="example-form-field" appearance="outline">
+                <mat-label>Max Neighbors</mat-label>
+                <input matInput type="number" [(ngModel)]="maxNeighborsVal" required min="0" max="10">
+                <button *ngIf="maxNeighborsVal" matSuffix mat-icon-button aria-label="Clear"
+                    (click)="maxNeighborsVal=null">
+                    <mat-icon>close</mat-icon>
+                </button>
+                <mat-error *ngIf="maxNeighborsVal && (maxNeighborsVal < 0 || maxNeighborsVal > 10)">
+                    Max Neighbors must be between 0 and 10.
+                </mat-error>
             </mat-form-field>
             <br>
             <button mat-raised-button color="accent" (click)="requestData('Search')">Submit</button>

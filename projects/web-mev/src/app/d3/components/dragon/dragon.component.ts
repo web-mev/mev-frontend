@@ -47,9 +47,9 @@ export class DragonComponent implements AfterViewInit, OnChanges {
     isLoading: boolean = false;
     containerId = '#dragon';
     imageName = 'DRAGON'; // file name for downloaded SVG image
-    selectedLayers: number = 2;
-    selectedChildren: number = 3;
-    radioButtonList = [
+    // selectedLayers: number = 2;
+    // selectedChildren: number = 3;
+    schemeList = [
         {
             name: "max_edges",
             // axis: "max_edges"
@@ -63,8 +63,8 @@ export class DragonComponent implements AfterViewInit, OnChanges {
             // axis: "node_list"
         }
     ];
-    layersList: number[] = [2, 3, 4, 5];
-    childrenList: number[] = [3, 4, 5, 6, 7, 8, 9, 10];
+    // layersList: number[] = [2, 3, 4, 5];
+    // childrenList: number[] = [3, 4, 5, 6, 7, 8, 9, 10];
     layoutList: string[] = ["Cose", "Cose-Bilkent", "FCose", "Cise", "Cola"];
     currLayout: string = this.layoutList[1];
     layoutName: string = "cose-bilkent";
@@ -114,9 +114,9 @@ export class DragonComponent implements AfterViewInit, OnChanges {
     workspaceId = '';
     uuid = '';
 
-    topNVal = '5';
-    sigThresholdVal = '0.01';
-    maxNeighborsVal = '2'
+    topNVal = 5;
+    sigThresholdVal = 0.01;
+    maxNeighborsVal = 2
 
     constructor(
         private route: ActivatedRoute,
@@ -189,15 +189,16 @@ export class DragonComponent implements AfterViewInit, OnChanges {
             })
 
         } else if (type === 'Search') {
-            // this.onSearch(dragonMatrixId).subscribe(res => {
-            //     this.changeToFitCytoscape(res, existingNode)
-            //     this.isLoading = false;
-            //     this.scrollTo('minimumEdgeWeight');
-            // }, error => {
-            //     let message = `Error: ${error.error.error}`
-            //     this.notificationService.warn(message)
-            //     this.isLoading = false;
-            // })
+            this.onSearch(dragonMatrixId).subscribe(res => {
+                console.log("from search: ", res)
+                this.changeToFitCytoscape(res, existingNode)
+                this.isLoading = false;
+                this.scrollTo('minimumEdgeWeight');
+            }, error => {
+                let message = `Error: ${error.error.error}`
+                this.notificationService.warn(message)
+                this.isLoading = false;
+            })
         }
     }
 
@@ -280,10 +281,10 @@ export class DragonComponent implements AfterViewInit, OnChanges {
         if (this.nodesArr.length > 0) this.render();
     }
 
-    onDropDownChange(value, dropdown) {
-        if (dropdown === 'layers') this.selectedLayers = value;
-        if (dropdown === 'children') this.selectedChildren = value;
-    }
+    // onDropDownChange(value, dropdown) {
+    //     if (dropdown === 'layers') this.selectedLayers = value;
+    //     if (dropdown === 'children') this.selectedChildren = value;
+    // }
 
     updateSlider(input) {
         this.sliderValue = input.value;
@@ -339,9 +340,10 @@ export class DragonComponent implements AfterViewInit, OnChanges {
     }
 
     onSearch(uuid) {
-        // let genes = this.searchTerms.join(",")
+        let genes = this.searchTerms.join(",")
         // let endPoint = `${this.API_URL}/resources/${uuid}/contents/transform/?transform-name=pandasubset&maxdepth=${this.selectedLayers}&children=${this.selectedChildren}&axis=${this.apiAxis}&initial_nodes=${genes}`;
-        // return this.httpClient.get(endPoint)
+        let endPoint = `${this.API_URL}/executed-operations/${this.uuid}/results-query/?transform-name=networksubset&weights=Dragon.edge_weights&pvals=Dragon.fdr_values&top_n=${this.topNVal}&max_neighbors=${this.maxNeighborsVal}&sig_threshold=${this.sigThresholdVal}&scheme=${this.currScheme}&initial_nodes=${genes}`;
+        return this.httpClient.get(endPoint)
     }
 
     addSearchItem(event: MatChipInputEvent): void {
@@ -367,12 +369,16 @@ export class DragonComponent implements AfterViewInit, OnChanges {
         //resets options on each tab change
         this.disableFilter = true;
         this.searchTerms = [];
-        this.selectedLayers = 2;
-        this.selectedChildren = 3;
-        this.currLayout = this.layoutList[1];
+        // this.selectedLayers = 2;
+        // this.selectedChildren = 3;
+        // this.currLayout = this.layoutList[1];
+        this.currScheme = this.schemeList[1].name;
+        this.topNVal = 5;
+        this.sigThresholdVal = 0.01;
+        this.maxNeighborsVal = 2;
+
         this.layoutName = "cose-bilkent";
-        // this.apiAxis = this.radioButtonList[0].axis;
-        this.currScheme = this.radioButtonList[0].name;
+        
         this.sliderValue = 0;
 
         this.currTab = (this.currTab === 'topGenes') ? 'searchGenes' : 'topGenes';
@@ -422,10 +428,10 @@ export class DragonComponent implements AfterViewInit, OnChanges {
                         'line-color': (ele) => ele.data('direction') === 'POS' ? '#A41034' : '#1F51FF',
                         'line-opacity': (ele) => {
                             let pval = ele.data('pval')
-                            let sigNumber = parseFloat(this.sigThresholdVal)
                             // Scales the opacity from Sig_threshold and Zero. So, if sig_thresold = 0.01, we can make 0.01 --> transparency of 10%. and 0 --> transparency of 100%
-                            let resultOpacity = (1 - pval / sigNumber) * .9 + .1 // sets a minimum of 10% opapcity
+                            let resultOpacity = (1 - pval / this.sigThresholdVal) * .9 + .1 // sets a minimum of 10% opapcity
                             console.log("resultOpacity: ", resultOpacity, pval)
+                            console.log("min/max edge weight: ", this.minEdgeWeight, this.maxEdgeWeight)
                             return resultOpacity
                         }
 
@@ -439,17 +445,17 @@ export class DragonComponent implements AfterViewInit, OnChanges {
         })
     }
 
-    changeAxisLabels() {
-        const dialogRef = this.dialog.open(AxisLabelDialogComponent);
+    // changeAxisLabels() {
+    //     const dialogRef = this.dialog.open(AxisLabelDialogComponent);
 
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                localStorage.setItem('node1', result['node1']);
-                localStorage.setItem('node2', result['node2']);
+    //     dialogRef.afterClosed().subscribe(result => {
+    //         if (result) {
+    //             localStorage.setItem('node1', result['node1']);
+    //             localStorage.setItem('node2', result['node2']);
 
-                this.radioButtonList[0]['name'] = result['node1'];
-                this.radioButtonList[1]['name'] = result['node2'];
-            }
-        });
-    }
+    //             this.schemeList[0]['name'] = result['node1'];
+    //             this.schemeList[1]['name'] = result['node2'];
+    //         }
+    //     });
+    // }
 }

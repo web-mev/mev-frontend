@@ -40,31 +40,28 @@ export class DragonComponent implements AfterViewInit, OnChanges {
     cy: any;
     nodesArr = [];
     edgeArr = [];
-    minEdgeWeight: number = 1000;
+    minEdgeWeight: number = 100;
     maxEdgeWeight: number = 0;
+    roundMaxEdgeWeight: number = 1;
     minPVal: number = 1000;
     maxPVal: number = 0;
     isLoading: boolean = false;
     containerId = '#dragon';
     imageName = 'DRAGON'; // file name for downloaded SVG image
-    // selectedLayers: number = 2;
-    // selectedChildren: number = 3;
     schemeList = [
         {
-            name: "max_edges",
-            // axis: "max_edges"
+            name: "Max Edges",
+            id: "max_edges"
         },
         {
-            name: "max_weight",
-            // axis: "max_weight"
+            name: "Max Weight",
+            id: "max_weight"
         },
         {
-            name: "node_list",
-            // axis: "node_list"
+            name: "Node List",
+            id: "node_list"
         }
     ];
-    // layersList: number[] = [2, 3, 4, 5];
-    // childrenList: number[] = [3, 4, 5, 6, 7, 8, 9, 10];
     layoutList: string[] = ["Cose", "Cose-Bilkent", "FCose", "Cise", "Cola"];
     currLayout: string = this.layoutList[1];
     layoutName: string = "cose-bilkent";
@@ -102,14 +99,11 @@ export class DragonComponent implements AfterViewInit, OnChanges {
     currTab: string = 'topGenes';
     addOnBlur: boolean = true;
     readonly separatorKeysCodes = [ENTER, COMMA, SPACE] as const;
-    searchTerms: string[] = [];
+    nodeList: string[] = [];
     hasBeenInitialized = false;
 
     newLabel = '';
     showSettingsPanel = true;
-
-    // node1Value = '';
-    // node2Value = '';
 
     workspaceId = '';
     uuid = '';
@@ -127,23 +121,7 @@ export class DragonComponent implements AfterViewInit, OnChanges {
         private cdr: ChangeDetectorRef,
     ) { }
 
-    ngOnChanges(changes: SimpleChanges): void {
-        // this.node1Value = localStorage.getItem('node1');
-        // this.node2Value = localStorage.getItem('node2');
-
-        // if (this.node1Value === null) {
-        //     this.node1Value = 'Node Type 1';
-        //     localStorage.setItem('node1', this.node1Value);
-        // }
-
-        // if (this.node2Value === null) {
-        //     this.node2Value = 'Node Type 2';
-        //     localStorage.setItem('node2', this.node2Value);
-        // }
-
-        // this.radioButtonList[0]['name'] = this.node1Value;
-        // this.radioButtonList[1]['name'] = this.node2Value;
-    }
+    ngOnChanges(changes: SimpleChanges): void { }
 
     ngAfterViewInit(): void {
         this.workspaceId = this.route.snapshot.paramMap.get('workspaceId');
@@ -164,42 +142,21 @@ export class DragonComponent implements AfterViewInit, OnChanges {
     }
 
     requestData(type: string) {
-        console.log("curr inputs:  ", this.currScheme, this.topNVal, this.sigThresholdVal, this.maxNeighborsVal)
         this.disableFilter = true;
         this.displayGraph = true;
         this.edgeArr = [];
         this.nodesArr = [];
         this.isLoading = true;
         this.sliderValue = 0;
-        let dragonMatrixId = (this.showHeader === false) ? this.outputs : this.outputs['Dragon.edge_weights'];
 
         let existingNode = {};
-        if (this.searchTerms.length === 0 && type === 'Search') {
-            let message = "Error: Please enter a search term and try again.";
-            this.notificationService.warn(message);
-            this.isLoading = false;
-        } else if (this.searchTerms.length > 10) {
-            let message = "Error: You have exceeded the search term limit of 10. Please remove some search terms and try again.";
-            this.notificationService.warn(message);
-            this.isLoading = false;
-        } else if (type === 'topGenes') {
+        if (type === 'topGenes') {
             this.getData().subscribe(res => {
                 this.changeToFitCytoscape(res, existingNode)
                 this.scrollTo('minimumEdgeWeight');
             })
 
-        } else if (type === 'Search') {
-            this.onSearch(dragonMatrixId).subscribe(res => {
-                console.log("from search: ", res)
-                this.changeToFitCytoscape(res, existingNode)
-                this.isLoading = false;
-                this.scrollTo('minimumEdgeWeight');
-            }, error => {
-                let message = `Error: ${error.error.error}`
-                this.notificationService.warn(message)
-                this.isLoading = false;
-            })
-        }
+        } 
     }
 
     changeToFitCytoscape(res, existingNode) {
@@ -216,7 +173,6 @@ export class DragonComponent implements AfterViewInit, OnChanges {
         }
 
         for (let edgeObj of res['edges']) {
-            console.log("edgeobj: ", edgeObj)
             let source = edgeObj['source']
             let target = edgeObj['target']
             let currEdgeWeight = edgeObj['weight']
@@ -241,6 +197,8 @@ export class DragonComponent implements AfterViewInit, OnChanges {
             this.maxPVal = Math.max(this.maxPVal, currPVal);
             this.minPVal = Math.min(this.minPVal, currPVal);
         }
+        this.roundMaxEdgeWeight = Math.ceil(this.maxEdgeWeight * 100) / 100;
+
         this.copyNodesArr = this.nodesArr;
         this.copyEdgeArr = this.edgeArr;
 
@@ -259,7 +217,21 @@ export class DragonComponent implements AfterViewInit, OnChanges {
     }
 
     getData() {
-        let endPoint = `${this.API_URL}/executed-operations/${this.uuid}/results-query/?transform-name=networksubset&weights=Dragon.edge_weights&pvals=Dragon.fdr_values&top_n=${this.topNVal}&max_neighbors=${this.maxNeighborsVal}&sig_threshold=${this.sigThresholdVal}&scheme=${this.currScheme}`;
+        let endPoint = ''
+        if(this.currScheme === 'node_list'){
+            let nodes = this.nodeList.join(",")
+            endPoint = `${this.API_URL}/executed-operations/${this.uuid}/results-query/?transform-name=networksubset&weights=Dragon.edge_weights&pvals=Dragon.fdr_values&sig_threshold=${this.sigThresholdVal}&scheme=${this.currScheme}&nodes=${nodes}`
+            if(this.maxNeighborsVal !== null){
+                let tempString = `&max_neighbors=${this.maxNeighborsVal}`
+                endPoint += tempString
+            } 
+        }else{
+            endPoint = `${this.API_URL}/executed-operations/${this.uuid}/results-query/?transform-name=networksubset&weights=Dragon.edge_weights&pvals=Dragon.fdr_values&sig_threshold=${this.sigThresholdVal}&scheme=${this.currScheme}&top_n=${this.topNVal}`
+            if(this.maxNeighborsVal !== null){
+                let tempString = `&max_neighbors=${this.maxNeighborsVal}`
+                endPoint += tempString
+            }
+        }
 
         return this.httpClient.get(endPoint)
             .pipe(
@@ -280,11 +252,6 @@ export class DragonComponent implements AfterViewInit, OnChanges {
         this.layoutName = layout.toLowerCase();
         if (this.nodesArr.length > 0) this.render();
     }
-
-    // onDropDownChange(value, dropdown) {
-    //     if (dropdown === 'layers') this.selectedLayers = value;
-    //     if (dropdown === 'children') this.selectedChildren = value;
-    // }
 
     updateSlider(input) {
         this.sliderValue = input.value;
@@ -339,56 +306,22 @@ export class DragonComponent implements AfterViewInit, OnChanges {
         saveAs(imgBlob, 'cytoscape.png');
     }
 
-    onSearch(uuid) {
-        let genes = this.searchTerms.join(",")
-        // let endPoint = `${this.API_URL}/resources/${uuid}/contents/transform/?transform-name=pandasubset&maxdepth=${this.selectedLayers}&children=${this.selectedChildren}&axis=${this.apiAxis}&initial_nodes=${genes}`;
-        let endPoint = `${this.API_URL}/executed-operations/${this.uuid}/results-query/?transform-name=networksubset&weights=Dragon.edge_weights&pvals=Dragon.fdr_values&top_n=${this.topNVal}&max_neighbors=${this.maxNeighborsVal}&sig_threshold=${this.sigThresholdVal}&scheme=${this.currScheme}&initial_nodes=${genes}`;
-        return this.httpClient.get(endPoint)
-    }
-
-    addSearchItem(event: MatChipInputEvent): void {
-        const value = (event.value || '').trim().toUpperCase();
-        let index = this.searchTerms.indexOf(value);
+    addNodeItem(event: MatChipInputEvent): void {
+        const value = (event.value || '').trim();
+        let index = this.nodeList.indexOf(value);
         if (index !== -1) {
             this.notificationService.warn(`Error: "${value}" has already been added to the search query.`);
         }
         if (value && index === -1) {
-            this.searchTerms.push(value);
+            this.nodeList.push(value);
         }
         event.chipInput!.clear();
     }
 
-    removeSearchItem(term): void {
-        const index = this.searchTerms.indexOf(term);
+    removeNodeItem(term): void {
+        const index = this.nodeList.indexOf(term);
         if (index >= 0) {
-            this.searchTerms.splice(index, 1);
-        }
-    }
-
-    tabChange() {
-        //resets options on each tab change
-        this.disableFilter = true;
-        this.searchTerms = [];
-        // this.selectedLayers = 2;
-        // this.selectedChildren = 3;
-        // this.currLayout = this.layoutList[1];
-        this.currScheme = this.schemeList[1].name;
-        this.topNVal = 5;
-        this.sigThresholdVal = 0.01;
-        this.maxNeighborsVal = 2;
-
-        this.layoutName = "cose-bilkent";
-        
-        this.sliderValue = 0;
-
-        this.currTab = (this.currTab === 'topGenes') ? 'searchGenes' : 'topGenes';
-        if (this.currTab === 'searchGenes') {
-            this.nodesArr = [];
-            this.displayGraph = false;
-            this.isLoading = false;
-            this.render()
-        } else if (this.currTab === 'topGenes') {
-            this.requestData('topGenes');
+            this.nodeList.splice(index, 1);
         }
     }
 
@@ -430,8 +363,6 @@ export class DragonComponent implements AfterViewInit, OnChanges {
                             let pval = ele.data('pval')
                             // Scales the opacity from Sig_threshold and Zero. So, if sig_thresold = 0.01, we can make 0.01 --> transparency of 10%. and 0 --> transparency of 100%
                             let resultOpacity = (1 - pval / this.sigThresholdVal) * .9 + .1 // sets a minimum of 10% opapcity
-                            console.log("resultOpacity: ", resultOpacity, pval)
-                            console.log("min/max edge weight: ", this.minEdgeWeight, this.maxEdgeWeight)
                             return resultOpacity
                         }
 
@@ -444,18 +375,4 @@ export class DragonComponent implements AfterViewInit, OnChanges {
             },
         })
     }
-
-    // changeAxisLabels() {
-    //     const dialogRef = this.dialog.open(AxisLabelDialogComponent);
-
-    //     dialogRef.afterClosed().subscribe(result => {
-    //         if (result) {
-    //             localStorage.setItem('node1', result['node1']);
-    //             localStorage.setItem('node2', result['node2']);
-
-    //             this.schemeList[0]['name'] = result['node1'];
-    //             this.schemeList[1]['name'] = result['node2'];
-    //         }
-    //     });
-    // }
 }

@@ -23,6 +23,7 @@
 #radio-group-axis {
     display: block;
     font-weight: 500;
+    margin-bottom: 6px;
 }
 
 mat-slider {
@@ -50,4 +51,8 @@ mat-slider {
     margin-left: 15px;
     background-color: #1769aa;
     color: white;
+}
+
+.paragraphList{
+    margin-bottom: 6px;
 }

@@ -47,12 +47,17 @@
                 <strong>Node list: </strong>This method starts from a user-supplied list of nodes.
             </li>
         </ul>
+        <p class="analysis-card__instruction">
+            Thicker lines indicate greater edge weights (partial correlations) and colors indicate the direction
+            (red=negative partial correlation, blue=positive partial correlation). Finally, the significance value of
+            the association is shown via the opacity of the edges.
+        </p>
         <mat-divider [inset]="true"></mat-divider>
         <br>
         <label id="radio-group-axis">Select a Scheme: </label>
         <mat-radio-group aria-label="Select a Scheme" [(ngModel)]="currScheme">
             <mat-radio-button *ngFor="let options of schemeList" [value]="options.id"
-                (change)="onRadioChangeAxis($event.value)">{{ options.name }}</mat-radio-button>
+                (change)="onRadioChangeScheme($event.value)">{{ options.name }}</mat-radio-button>
         </mat-radio-group>
         <br>
         <br>
@@ -121,7 +126,8 @@
             <label id="radio-group-axis">Minimum Edge Weight: </label>
             {{0}}
             <mat-slider thumbLabel [tickInterval]="roundMaxEdgeWeight/10" [step]="roundMaxEdgeWeight/10" min="0"
-                [max]="roundMaxEdgeWeight" aria-label="units" (change)="updateSlider($event)" [(ngModel)]="sliderValue">
+                [max]="roundMaxEdgeWeight" aria-label="units" (change)="updateMinEdgeWeightSlider($event)"
+                [(ngModel)]="sliderValue">
             </mat-slider>
             {{roundMaxEdgeWeight}}
             <button mat-raised-button color="accent" (click)="filterEdges()" [disabled]="disableFilter"

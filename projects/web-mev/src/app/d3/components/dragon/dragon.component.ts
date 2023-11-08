@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnChanges, Input, AfterViewInit, SimpleChanges, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError } from "rxjs/operators";
 import { environment } from '@environments/environment';
@@ -13,7 +13,6 @@ import { saveAs } from "file-saver";
 import { COMMA, ENTER, SPACE } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatDialog } from '@angular/material/dialog';
-import { AxisLabelDialogComponent } from './axisLabelDialog/axisLabelDialog.component';
 import { ActivatedRoute } from '@angular/router';
 import { AnalysesService } from '../../../features/analysis/services/analysis.service';
 
@@ -30,7 +29,7 @@ cytoscape.use(layoutUtilities);
     changeDetection: ChangeDetectionStrategy.Default
 })
 
-export class DragonComponent implements AfterViewInit, OnChanges {
+export class DragonComponent implements AfterViewInit {
     @Input() outputs;
     @Input() showHeader: boolean;
     @Input() startLoading: boolean;
@@ -96,14 +95,11 @@ export class DragonComponent implements AfterViewInit, OnChanges {
             edgeWidth: [3, 8]
         }
     };
-    currTab: string = 'topGenes';
+
     addOnBlur: boolean = true;
     readonly separatorKeysCodes = [ENTER, COMMA, SPACE] as const;
     nodeList: string[] = [];
     hasBeenInitialized = false;
-
-    newLabel = '';
-    showSettingsPanel = true;
 
     workspaceId = '';
     uuid = '';
@@ -118,16 +114,13 @@ export class DragonComponent implements AfterViewInit, OnChanges {
         private httpClient: HttpClient,
         private readonly notificationService: NotificationService,
         public dialog: MatDialog,
-        private cdr: ChangeDetectorRef,
     ) { }
-
-    ngOnChanges(changes: SimpleChanges): void { }
 
     ngAfterViewInit(): void {
         this.workspaceId = this.route.snapshot.paramMap.get('workspaceId');
         this.apiService.getExecOperations(this.workspaceId).subscribe(res => {
             this.uuid = res[0]['id']
-            if ((this.currTab === 'topGenes' && this.showHeader !== false) || (this.startLoading === true && this.showHeader === false)) {
+            if ((this.showHeader !== false) || (this.startLoading === true && this.showHeader === false)) {
                 this.displayGraph = true;
                 this.requestData('topGenes');
                 this.scrollTo('radio-group-axis');
@@ -149,17 +142,15 @@ export class DragonComponent implements AfterViewInit, OnChanges {
         this.isLoading = true;
         this.sliderValue = 0;
 
-        let existingNode = {};
         if (type === 'topGenes') {
             this.getData().subscribe(res => {
-                this.changeToFitCytoscape(res, existingNode)
+                this.changeToFitCytoscape(res)
                 this.scrollTo('minimumEdgeWeight');
             })
-
         } 
     }
 
-    changeToFitCytoscape(res, existingNode) {
+    changeToFitCytoscape(res) {
         for (let nodeObj of res['nodes']) {
             let nodeID = nodeObj['id']
             let newNode = {
@@ -212,7 +203,7 @@ export class DragonComponent implements AfterViewInit, OnChanges {
             this.size = "small";
         }
 
-        let errorMessage = "The current number of genes is more than Cytoscape can handle. Please lower the number of Layers or Children and try again."
+        let errorMessage = "The current number of nodes is more than Cytoscape can handle. Please adjust some of the filtering options and try again."
         this.nodesArr.length > 1000 ? this.tooManyNodes(errorMessage) : this.render();
     }
 
@@ -243,7 +234,7 @@ export class DragonComponent implements AfterViewInit, OnChanges {
                 }))
     }
 
-    onRadioChangeAxis(scheme) {
+    onRadioChangeScheme(scheme) {
         this.currScheme = scheme;
     }
 
@@ -253,7 +244,7 @@ export class DragonComponent implements AfterViewInit, OnChanges {
         if (this.nodesArr.length > 0) this.render();
     }
 
-    updateSlider(input) {
+    updateMinEdgeWeightSlider(input) {
         this.sliderValue = input.value;
     }
 
@@ -303,7 +294,7 @@ export class DragonComponent implements AfterViewInit, OnChanges {
         let b64key = 'base64,';
         let b64 = this.cy.png().substring(this.cy.png().indexOf(b64key) + b64key.length);
         let imgBlob = b64toBlob(b64, 'image/png');
-        saveAs(imgBlob, 'cytoscape.png');
+        saveAs(imgBlob, `${this.imageName}.png`);
     }
 
     addNodeItem(event: MatChipInputEvent): void {

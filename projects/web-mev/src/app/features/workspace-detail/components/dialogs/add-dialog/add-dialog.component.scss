@@ -47,8 +47,8 @@
 ///new styling
 .headerSpan {
   display: flex;
-  background-color: #1DA1F2;
-  margin: -35px -40px 20px -40px;
+  background-color: #1da1f2;
+  margin: -35px -40px 0px -40px;
 }
 
 .dialogTitle {
@@ -61,11 +61,12 @@
   font-weight: bold;
   font-size: 24px;
 }
-.dialogContent{
+.dialogContent {
   font-size: 14px;
   font-weight: 400;
-  color: rgba(0,0,0,.6);
-  margin-top: 1em;
+  color: rgba(0, 0, 0, 0.6);
+  margin-top: 1.25em;
+  line-height: 1.75;
 }
 
 .closeDialogButton {
@@ -73,8 +74,8 @@
   color: white;
 }
 
-.closeDialogButton:hover{
-  opacity: .75;
+.closeDialogButton:hover {
+  opacity: 0.75;
 }
 
 .submitBtnContainer {
@@ -82,8 +83,4 @@
   bottom: 0;
   right: 24px;
   background-color: white;
-}
-
-.scrollableSection{
-  overflow-y: auto;
 }

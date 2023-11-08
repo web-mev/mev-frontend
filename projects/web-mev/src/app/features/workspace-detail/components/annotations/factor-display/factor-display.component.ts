@@ -55,7 +55,8 @@ export class FactorDisplayComponent implements OnInit {
             text: 'Select custom observation sets to create',
             selectAllText: 'Select All',
             unSelectAllText: 'Unselect All',
-            classes: 'resource-dropdown'
+            classes: 'resource-dropdown',
+            tagToBody: false
         };
         this.createObsSetBtnDisabled = true;
         this.countBins();

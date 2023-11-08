@@ -9,7 +9,7 @@
     <br> Then click the Add button.
   </div>
   <form class="mat-dialog-content" (ngSubmit)="submit" #formControl="ngForm">
-    <div class="form scrollableSection">
+    <div class="form">
       <angular2-multiselect [data]="files | validFilesPipe" [(ngModel)]="selectedFiles" [settings]="dropdownSettings"
         name="resource">
         <c-item>

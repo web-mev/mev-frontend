@@ -56,7 +56,8 @@ export class AddDialogComponent implements OnInit {
       enableSearchFilter: true,
       searchBy: ['name', 'readable_resource_type'],
       lazyLoading: true,
-      classes: 'resource-dropdown'
+      classes: 'resource-dropdown',
+      tagToBody: false
     };
   }
 

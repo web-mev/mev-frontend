@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnChanges, Input, AfterViewInit, SimpleChanges, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError } from "rxjs/operators";
 import { environment } from '@environments/environment';
@@ -13,7 +13,8 @@ import { saveAs } from "file-saver";
 import { COMMA, ENTER, SPACE } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatDialog } from '@angular/material/dialog';
-import { AxisLabelDialogComponent } from './axisLabelDialog/axisLabelDialog.component'
+import { ActivatedRoute } from '@angular/router';
+import { AnalysesService } from '../../../features/analysis/services/analysis.service';
 
 cytoscape.use(fcose);
 cytoscape.use(cola);
@@ -28,7 +29,7 @@ cytoscape.use(layoutUtilities);
     changeDetection: ChangeDetectionStrategy.Default
 })
 
-export class DragonComponent implements AfterViewInit, OnChanges {
+export class DragonComponent implements AfterViewInit {
     @Input() outputs;
     @Input() showHeader: boolean;
     @Input() startLoading: boolean;
@@ -40,27 +41,30 @@ export class DragonComponent implements AfterViewInit, OnChanges {
     edgeArr = [];
     minEdgeWeight: number = 100;
     maxEdgeWeight: number = 0;
+    roundMaxEdgeWeight: number = 1;
+    minPVal: number = 1000;
+    maxPVal: number = 0;
     isLoading: boolean = false;
     containerId = '#dragon';
     imageName = 'DRAGON'; // file name for downloaded SVG image
-    selectedLayers: number = 2;
-    selectedChildren: number = 3;
-    radioButtonList = [
+    schemeList = [
         {
-            name: "",
-            axis: 0
+            name: "Max Edges",
+            id: "max_edges"
         },
         {
-            name: "",
-            axis: 1
+            name: "Max Weight",
+            id: "max_weight"
+        },
+        {
+            name: "Node List",
+            id: "node_list"
         }
     ];
-    layersList: number[] = [2, 3, 4, 5];
-    childrenList: number[] = [3, 4, 5, 6, 7, 8, 9, 10];
     layoutList: string[] = ["Cose", "Cose-Bilkent", "FCose", "Cise", "Cola"];
     currLayout: string = this.layoutList[1];
     layoutName: string = "cose-bilkent";
-    apiAxis = this.radioButtonList[0].axis;
+    currScheme = "max_weight"
     windowWidth: any;
     sliderValue: any = 0;
     copyNodesArr = [];
@@ -91,50 +95,38 @@ export class DragonComponent implements AfterViewInit, OnChanges {
             edgeWidth: [3, 8]
         }
     };
-    currTab: string = 'topGenes';
+
     addOnBlur: boolean = true;
     readonly separatorKeysCodes = [ENTER, COMMA, SPACE] as const;
-    searchTerms: string[] = [];
+    nodeList: string[] = [];
     hasBeenInitialized = false;
 
-    newLabel = '';
-    showSettingsPanel = true;
+    workspaceId = '';
+    uuid = '';
 
-    node1Value = '';
-    node2Value = '';
+    topNVal = 5;
+    sigThresholdVal = 0.01;
+    maxNeighborsVal = 2
 
     constructor(
+        private route: ActivatedRoute,
+        private apiService: AnalysesService,
         private httpClient: HttpClient,
         private readonly notificationService: NotificationService,
         public dialog: MatDialog,
-        private cdr: ChangeDetectorRef,
     ) { }
 
-    ngOnChanges(changes: SimpleChanges): void {
-        this.node1Value = localStorage.getItem('node1');
-        this.node2Value = localStorage.getItem('node2');
-
-        if (this.node1Value === null) {
-            this.node1Value = 'Node Type 1';
-            localStorage.setItem('node1', this.node1Value);
-        }
-
-        if (this.node2Value === null) {
-            this.node2Value = 'Node Type 2';
-            localStorage.setItem('node2', this.node2Value);
-        }
-
-        this.radioButtonList[0]['name'] = this.node1Value;
-        this.radioButtonList[1]['name'] = this.node2Value;
-    }
-
     ngAfterViewInit(): void {
-        if ((this.currTab === 'topGenes' && this.showHeader !== false) || (this.startLoading === true && this.showHeader === false)) {
-            this.displayGraph = true;
-            this.requestData('topGenes');
-            this.scrollTo('radio-group-axis');
-        }
-        this.hasBeenInitialized = true;
+        this.workspaceId = this.route.snapshot.paramMap.get('workspaceId');
+        this.apiService.getExecOperations(this.workspaceId).subscribe(res => {
+            this.uuid = res[0]['id']
+            if ((this.showHeader !== false) || (this.startLoading === true && this.showHeader === false)) {
+                this.displayGraph = true;
+                this.requestData('topGenes');
+                this.scrollTo('radio-group-axis');
+            }
+            this.hasBeenInitialized = true;
+        })
     }
 
     scrollTo(htmlID) {
@@ -149,82 +141,54 @@ export class DragonComponent implements AfterViewInit, OnChanges {
         this.nodesArr = [];
         this.isLoading = true;
         this.sliderValue = 0;
-        let dragonMatrixId = (this.showHeader === false) ? this.outputs : this.outputs['Dragon.edge_weights'];
 
-        let existingNode = {};
-        if (this.searchTerms.length === 0 && type === 'Search') {
-            let message = "Error: Please enter a search term and try again.";
-            this.notificationService.warn(message);
-            this.isLoading = false;
-        } else if (this.searchTerms.length > 10) {
-            let message = "Error: You have exceeded the search term limit of 10. Please remove some search terms and try again.";
-            this.notificationService.warn(message);
-            this.isLoading = false;
-        } else if (type === 'topGenes') {
-            this.getData(dragonMatrixId).subscribe(res => {
-                this.changeToFitCytoscape(res, existingNode)
+        if (type === 'topGenes') {
+            this.getData().subscribe(res => {
+                this.changeToFitCytoscape(res)
                 this.scrollTo('minimumEdgeWeight');
             })
-
-        } else if (type === 'Search') {
-            this.onSearch(dragonMatrixId).subscribe(res => {
-                this.changeToFitCytoscape(res, existingNode)
-                this.isLoading = false;
-                this.scrollTo('minimumEdgeWeight');
-            }, error => {
-                let message = `Error: ${error.error.error}`
-                this.notificationService.warn(message)
-                this.isLoading = false;
-            })
-        }
+        } 
     }
 
-    changeToFitCytoscape(res, existingNode) {
-        for (let node of res['nodes']) {
-            let nodeId = Object.keys(node)[0];
-            if (!existingNode[nodeId]) {
-                let newNode = {
-                    "data": {
-                        "id": nodeId,
-                        "interaction": node[nodeId].axis === 0 ? "pd" : "dp",
-                        "truncatedId": nodeId.length > 6 ? nodeId.slice(0, 5) + "\n" + nodeId.slice(5, 10) + "\n" + nodeId.slice(10) : nodeId
-                    }
+    changeToFitCytoscape(res) {
+        for (let nodeObj of res['nodes']) {
+            let nodeID = nodeObj['id']
+            let newNode = {
+                "data": {
+                    "id": nodeID,
+                    "interaction": 'test',
+                    "truncatedId": nodeID.length > 6 ? nodeID.slice(0, 5) + "\n" + nodeID.slice(5, 10) + "\n" + nodeID.slice(10) : nodeID
                 }
-                this.nodesArr.push(newNode);
-                existingNode[nodeId] = 1;
             }
-
-            for (let child of node[nodeId].children) {
-                let childId = Object.keys(child)[0];
-                if (!existingNode[childId]) {
-                    let newNode = {
-                        "data": {
-                            "id": childId,
-                            //Set to be opposite of its parent
-                            "interaction": node[nodeId].axis === 1 ? "pd" : "dp",
-                            "truncatedId": childId.length > 6 ? childId.slice(0, 5) + "\n" + childId.slice(5, 10) + "\n" + childId.slice(10) : childId
-                        }
-                    }
-                    this.nodesArr.push(newNode);
-                    existingNode[childId] = 1;
-                }
-
-                let currEdgeWeight = child[childId];
-                this.maxEdgeWeight = Math.max(this.maxEdgeWeight, currEdgeWeight);
-                this.minEdgeWeight = Math.min(this.minEdgeWeight, currEdgeWeight);
-
-                let newEdge = {
-                    "data": {
-                        "id": nodeId + "_" + childId,
-                        "source": nodeId,
-                        "target": childId,
-                        "interaction": node[nodeId].axis === 0 ? "pd" : "dp",
-                        "edge_weight": child[childId]
-                    }
-                }
-                this.edgeArr.push(newEdge)
-            }
+            this.nodesArr.push(newNode)
         }
+
+        for (let edgeObj of res['edges']) {
+            let source = edgeObj['source']
+            let target = edgeObj['target']
+            let currEdgeWeight = edgeObj['weight']
+            let currPVal = edgeObj['pval']
+            let currDirection = edgeObj['direction']
+            let newEdge = {
+                "data": {
+                    "id": source + "_" + target,
+                    "source": source,
+                    "target": target,
+                    "interaction": "test",
+                    "edge_weight": currEdgeWeight,
+                    "pval": currPVal,
+                    "direction": currDirection
+                }
+            }
+            this.edgeArr.push(newEdge)
+
+            this.maxEdgeWeight = Math.max(this.maxEdgeWeight, currEdgeWeight);
+            this.minEdgeWeight = Math.min(this.minEdgeWeight, currEdgeWeight);
+
+            this.maxPVal = Math.max(this.maxPVal, currPVal);
+            this.minPVal = Math.min(this.minPVal, currPVal);
+        }
+        this.roundMaxEdgeWeight = Math.ceil(this.maxEdgeWeight * 100) / 100;
 
         this.copyNodesArr = this.nodesArr;
         this.copyEdgeArr = this.edgeArr;
@@ -239,13 +203,27 @@ export class DragonComponent implements AfterViewInit, OnChanges {
             this.size = "small";
         }
 
-        let errorMessage = "The current number of genes is more than Cytoscape can handle. Please lower the number of Layers or Children and try again."
+        let errorMessage = "The current number of nodes is more than Cytoscape can handle. Please adjust some of the filtering options and try again."
         this.nodesArr.length > 1000 ? this.tooManyNodes(errorMessage) : this.render();
     }
 
-    getData(uuid) {
-        // let endPoint = `${this.API_URL}/resources/${uuid}/contents/transform/?transform-name=pandasubset&maxdepth=${this.selectedLayers}&children=${this.selectedChildren}&axis=${this.apiAxis}`;
-        let endPoint = `${this.API_URL}/resources/${uuid}/contents/transform/?transform-name=pandasubset&maxdepth=${this.selectedLayers}&children=${this.selectedChildren}&axis=${this.apiAxis}`;
+    getData() {
+        let endPoint = ''
+        if(this.currScheme === 'node_list'){
+            let nodes = this.nodeList.join(",")
+            endPoint = `${this.API_URL}/executed-operations/${this.uuid}/results-query/?transform-name=networksubset&weights=Dragon.edge_weights&pvals=Dragon.fdr_values&sig_threshold=${this.sigThresholdVal}&scheme=${this.currScheme}&nodes=${nodes}`
+            if(this.maxNeighborsVal !== null){
+                let tempString = `&max_neighbors=${this.maxNeighborsVal}`
+                endPoint += tempString
+            } 
+        }else{
+            endPoint = `${this.API_URL}/executed-operations/${this.uuid}/results-query/?transform-name=networksubset&weights=Dragon.edge_weights&pvals=Dragon.fdr_values&sig_threshold=${this.sigThresholdVal}&scheme=${this.currScheme}&top_n=${this.topNVal}`
+            if(this.maxNeighborsVal !== null){
+                let tempString = `&max_neighbors=${this.maxNeighborsVal}`
+                endPoint += tempString
+            }
+        }
+
         return this.httpClient.get(endPoint)
             .pipe(
                 catchError(error => {
@@ -256,8 +234,8 @@ export class DragonComponent implements AfterViewInit, OnChanges {
                 }))
     }
 
-    onRadioChangeAxis(axis) {
-        this.apiAxis = axis;
+    onRadioChangeScheme(scheme) {
+        this.currScheme = scheme;
     }
 
     onRadioChangeLayout(layout) {
@@ -266,12 +244,7 @@ export class DragonComponent implements AfterViewInit, OnChanges {
         if (this.nodesArr.length > 0) this.render();
     }
 
-    onDropDownChange(value, dropdown) {
-        if (dropdown === 'layers') this.selectedLayers = value;
-        if (dropdown === 'children') this.selectedChildren = value;
-    }
-
-    updateSlider(input) {
+    updateMinEdgeWeightSlider(input) {
         this.sliderValue = input.value;
     }
 
@@ -321,53 +294,25 @@ export class DragonComponent implements AfterViewInit, OnChanges {
         let b64key = 'base64,';
         let b64 = this.cy.png().substring(this.cy.png().indexOf(b64key) + b64key.length);
         let imgBlob = b64toBlob(b64, 'image/png');
-        saveAs(imgBlob, 'cytoscape.png');
+        saveAs(imgBlob, `${this.imageName}.png`);
     }
 
-    onSearch(uuid) {
-        let genes = this.searchTerms.join(",")
-        let endPoint = `${this.API_URL}/resources/${uuid}/contents/transform/?transform-name=pandasubset&maxdepth=${this.selectedLayers}&children=${this.selectedChildren}&axis=${this.apiAxis}&initial_nodes=${genes}`;
-        return this.httpClient.get(endPoint)
-    }
-
-    addSearchItem(event: MatChipInputEvent): void {
-        const value = (event.value || '').trim().toUpperCase();
-        let index = this.searchTerms.indexOf(value);
+    addNodeItem(event: MatChipInputEvent): void {
+        const value = (event.value || '').trim();
+        let index = this.nodeList.indexOf(value);
         if (index !== -1) {
             this.notificationService.warn(`Error: "${value}" has already been added to the search query.`);
         }
         if (value && index === -1) {
-            this.searchTerms.push(value);
+            this.nodeList.push(value);
         }
         event.chipInput!.clear();
     }
 
-    removeSearchItem(term): void {
-        const index = this.searchTerms.indexOf(term);
+    removeNodeItem(term): void {
+        const index = this.nodeList.indexOf(term);
         if (index >= 0) {
-            this.searchTerms.splice(index, 1);
-        }
-    }
-
-    tabChange() {
-        //resets options on each tab change
-        this.disableFilter = true;
-        this.searchTerms = [];
-        this.selectedLayers = 2;
-        this.selectedChildren = 3;
-        this.currLayout = this.layoutList[1];
-        this.layoutName = "cose-bilkent";
-        this.apiAxis = this.radioButtonList[0].axis;
-        this.sliderValue = 0;
-
-        this.currTab = (this.currTab === 'topGenes') ? 'searchGenes' : 'topGenes';
-        if (this.currTab === 'searchGenes') {
-            this.nodesArr = [];
-            this.displayGraph = false;
-            this.isLoading = false;
-            this.render()
-        } else if (this.currTab === 'topGenes') {
-            this.requestData('topGenes');
+            this.nodeList.splice(index, 1);
         }
     }
 
@@ -380,33 +325,12 @@ export class DragonComponent implements AfterViewInit, OnChanges {
             },
             style: [
                 {
-                    selector: 'node[interaction="dp"]',
-                    style: {
-                        'background-color': "#1DA1F2",
-                        'opacity': 0.95,
-                        'label': 'data(truncatedId)',
-                        'shape': 'diamond',
-                        'text-wrap': 'wrap',
-                        'text-max-width': '1000px',
-                        'text-halign': 'center',
-                        'text-valign': 'center',
-                        'border-color': '#000',
-                        'border-opacity': 0.8,
-                        'color': 'white',
-                        'font-weight': 'bold',
-                        'height': this.nodeSize[this.size].height,
-                        'width': this.nodeSize[this.size].width,
-                        'font-size': this.nodeSize[this.size].fontSize,
-                        'border-width': this.nodeSize[this.size].borderWidth,
-                    }
-                },
-                {
-                    selector: 'node[interaction="pd"]',
+                    selector: 'node',
                     style: {
                         'background-color': "#D94A4A",
                         'opacity': 0.95,
                         'label': 'data(truncatedId)',
-                        'shape': 'round-rectangle',
+                        'shape': 'ellipse',
                         'text-wrap': 'wrap',
                         'text-max-width': '1000px',
                         'text-halign': 'center',
@@ -425,8 +349,14 @@ export class DragonComponent implements AfterViewInit, OnChanges {
                     selector: 'edge',
                     style: {
                         'width': `mapData(edge_weight, ${this.minEdgeWeight}, ${this.maxEdgeWeight}, ${this.nodeSize[this.size].edgeWidth[0]}, ${this.nodeSize[this.size].edgeWidth[1]})`,
-                        'line-color': "#848484",
-                        'line-opacity': 0.8,
+                        'line-color': (ele) => ele.data('direction') === 'POS' ? '#A41034' : '#1F51FF',
+                        'line-opacity': (ele) => {
+                            let pval = ele.data('pval')
+                            // Scales the opacity from Sig_threshold and Zero. So, if sig_thresold = 0.01, we can make 0.01 --> transparency of 10%. and 0 --> transparency of 100%
+                            let resultOpacity = (1 - pval / this.sigThresholdVal) * .9 + .1 // sets a minimum of 10% opapcity
+                            return resultOpacity
+                        }
+
                     },
                 },
             ],
@@ -435,19 +365,5 @@ export class DragonComponent implements AfterViewInit, OnChanges {
                 name: this.layoutName,
             },
         })
-    }
-
-    changeAxisLabels() {
-        const dialogRef = this.dialog.open(AxisLabelDialogComponent);
-
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                localStorage.setItem('node1', result['node1']);
-                localStorage.setItem('node2', result['node2']);
-
-                this.radioButtonList[0]['name'] = result['node1'];
-                this.radioButtonList[1]['name'] = result['node2'];
-            }
-        });
     }
 }

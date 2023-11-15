@@ -126,11 +126,17 @@ export class EditSetDialogComponent implements OnInit {
     // Below, we use the this.setsUniverseDS (which is null if manual editing is disabled) to
     // guide whether we take the elements from the table (this.selection.selected) OR keep the original
     // elements, which is contained in this.data.selectedElements
+    let elements;
+    if(this.setsUniverseDS){
+      elements = this.selection.selected;
+    } else {
+      elements = this.data.selectedElements;
+    }
     const finalSet = {
       name: name,
       color: color,
       type: this.customSetType,
-      elements: this.selection.selected,
+      elements: elements,
       multiple: true
     };
 

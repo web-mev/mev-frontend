@@ -1,7 +1,6 @@
-import { MatDialogRef } from '@angular/material/dialog';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 /**
  * Modal dialog component which is used when the user wishes to create
@@ -20,9 +19,11 @@ export class PublicDatasetExportNameDialogComponent implements OnInit {
         with a letter or number';
     invalidName = false;
     exportNameFormControl: FormControl;
+    isUseCaseIDChecked: boolean = true;
 
     constructor(
         public dialogRef: MatDialogRef<PublicDatasetExportNameDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: any
     ) { }
 
     ngOnInit() {
@@ -48,7 +49,11 @@ export class PublicDatasetExportNameDialogComponent implements OnInit {
      * of the dataset export on the backend
      */
     useAutoname(): void {
-        this.dialogRef.close('');
+        let formData = {
+            "output_name": ' ',
+            "isUseCaseIDChecked": this.isUseCaseIDChecked
+        }
+        this.dialogRef.close(formData);
     }
 
     /**
@@ -56,7 +61,12 @@ export class PublicDatasetExportNameDialogComponent implements OnInit {
      * with that name
      */
     confirmExportName(): void {
-        this.dialogRef.close(this.exportNameFormControl.value);
+        let formData = {
+            "output_name": this.exportNameFormControl.value,
+            "isUseCaseIDChecked": this.isUseCaseIDChecked
+        }
+        this.dialogRef.close(formData);
+        // this.dialogRef.close(this.exportNameFormControl.value);
     }
 
     /**

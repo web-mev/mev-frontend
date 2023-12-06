@@ -1,8 +1,13 @@
 <div class="container">
-    <h3 mat-dialog-title>Please provide a name for this data export</h3>
+    <span class="headerSpan">
+        <div class="dialogTitle">Export Options</div>
+        <button class="closeDialogButton" mat-dialog-close mat-icon-button type="button" (click)="cancel()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </span>
+    <div class="dialogContent">Please provide a name for this data export</div>
 
     <form mat-dialog-content>
-
         <div class="form">
             <mat-form-field color="accent">
                 <input matInput [formControl]="exportNameFormControl" class="form-control" placeholder="Export name">
@@ -10,8 +15,20 @@
             </mat-form-field>
         </div>
 
-        <div mat-dialog-actions>
-            <button mat-raised-button color="accent" [disabled]="exportNameFormControl.errors" (click)="confirmExportName()">OK</button>
+        <section *ngIf="data.datasetName !== 'gtex-rnaseq'" class="dialogContent">
+            <mat-checkbox [(ngModel)]="isUseCaseIDChecked">Use Patient/Case ID</mat-checkbox>
+            <mat-icon class="infoIcon" matTooltipClass="my-tooltip" fontSet="material-icons-outlined" matTooltip="For GDC-based datasets, there can be multiple samples and aliquots derived from a single patient/case. By exporting your data with the patient ID, we are able to more easily combine multiple data types for multi-omic analyses since the patient ID is a unique/consistent identifier. If data is exported using the aliquot ID, multi-omic analyses would require an additional mapping to the common patient ID.
+            
+                To avoid ambiguity when exporting using the patient/case ID, we remove patients with multiple aliquots. Note that for most GDC-based data, there is a single aliquot for each patient/case so significant data loss is not expected. However, you should be aware of this limitation and ensure that this is acceptable for your work. If you require greater control over this behavior, you might have to resort to manually modifying the data exports or extracting data from the GDC portal directly.
+                
+                If you are not planning on performing multi-omic analyses, we suggest retaining the aliquot IDs.">info
+            </mat-icon>
+
+        </section>
+
+        <div mat-dialog-actions class="buttonRow">
+            <button mat-raised-button color="accent" [disabled]="exportNameFormControl.errors"
+                (click)="confirmExportName()">OK</button>
             <button mat-raised-button color="accent" (click)="useAutoname()" tabindex="-1">Skip custom name</button>
             <button mat-raised-button color="accent" (click)="cancel()" tabindex="-1">Cancel creation</button>
         </div>

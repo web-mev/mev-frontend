@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input, OnChanges } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input, OnChanges } from '@angular/core';
 import { FileService } from '@app/features/file-manager/services/file-manager.service';
 import { NotificationService } from '@core/notifications/notification.service';
 import { PublicDatasetService } from '../../services/public-datasets.service';
@@ -21,6 +21,8 @@ export class PublicDatasetExplorerComponent extends GdcRnaseqComponent implement
   tissue_types_url = '';
   types_url = '';
   title = '';
+  isUseCaseIDChecked: boolean = true;
+  output_name: string = '';
 
   @Input() datasetName: string = "";
 
@@ -57,8 +59,6 @@ export class PublicDatasetExplorerComponent extends GdcRnaseqComponent implement
 
     this.fetchData(this.datasetTag, this.name_map_key);
   }
-
-  // ngOnInit(): void { }
 
   createDataset(dataType: string) {
     this._createDataset(dataType, this.datasetTag);
@@ -158,107 +158,254 @@ export class PublicDatasetExplorerComponent extends GdcRnaseqComponent implement
   _createDataset(dataType: string, datasetTag: string) {
     let $observable_dict = {};
 
-    const dialogRef = this.dialog.open(PublicDatasetExportNameDialogComponent, { disableClose: true });
+    // const dialogRef = this.dialog.open(PublicDatasetExportNameDialogComponent, { disableClose: true });
+
+    const dialogRef = this.dialog.open(PublicDatasetExportNameDialogComponent,
+      {
+        disableClose: true,
+        data: {
+          "datasetName": this.datasetName
+        }
+      },
+    );
 
     // we add the observable returned by `afterClosed` so that we can simultaneously query the backend
     // for sample IDs corresponding to the users selection(s) PLUS get any custom name they provide
     // for this data export. By putting all these observables into an object, we can then use the forkJoin
     // method below to ensure everything is prepared to send the final request which will create the new file(s)
-    $observable_dict['output_name'] = dialogRef.afterClosed();
-    this.cdRef.markForCheck();
-    let url_suffix = '';
-    // will have type (TCGA, TARGET, etc. identifier) (or tissue) addressing an Observable
-    if (dataType === 'byType') {
-      for (let i in this.selectedNames) {
-        let type_id = this.selectedNames[i];
-        let count = this.type_count_dict[type_id];
-        url_suffix = (this.query.length === 0) ? datasetTag + `?q=project_id:"${type_id}"&rows=${count}&fl=id` : datasetTag + `?q=project_id:"${type_id}" AND ${this.query}&rows=${count}&fl=id`;
-        $observable_dict[type_id] = this.pdService.makeSolrQuery(url_suffix);
-      }
-    } else if (dataType === 'byTissue') {
-      for (let i in this.selectedNames) {
-        let tissue_name = this.selectedNames[i];
-        let count = this.tissue_count_dict[tissue_name];
-        // since the data is organized (on the backend) into a structured HDFS
-        // using the "cancer type" as the key, we need to also find out which 
-        // "project" each of these tissues corresponds to. We get that by adding
-        // to the fl=... param
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log("result: ", result)
+      if (result) {
+        $observable_dict['output_name'] = result.output_name;
+        this.output_name = result.output_name;
+        this.isUseCaseIDChecked = result.isUseCaseIDChecked;
 
-        if (this.datasetName === 'gtex-rnaseq') {
-          url_suffix = (this.query.length === 0) ? datasetTag + `?q=tissue:"${tissue_name}"&rows=${count}&fl=sample_id` : datasetTag + `?q=tissue:"${tissue_name}" AND ${this.query}&rows=${count}&fl=sample_id`;
-
-        } else {
-          url_suffix = (this.query.length === 0) ? datasetTag + `?q=tissue_or_organ_of_origin:"${tissue_name}"&rows=${count}&fl=id,project_id` : datasetTag + `?q=tissue_or_organ_of_origin:"${tissue_name}" AND ${this.query}&rows=${count}&fl=id,project_id`;
-        }
-        $observable_dict[tissue_name] = this.pdService.makeSolrQuery(url_suffix);
-      }
-    }
-    // forkJoin forces all the observables to complete and then takes
-    // their results. If we don't do this, the subsequent request to
-    // create the dataset can be 'waiting' for the list of sample IDs
-    // and hence the request for dataset creation will be incomplete/invalid.
-    forkJoin($observable_dict).subscribe(
-      results => {
-        let datasetName = results['output_name'];
-        delete results['output_name'];
-
-        // a value of `null` here is a signal that the user aborted
-        // creation of the dataset via the modal (the one which asks
-        // them to provide a custom name for the data export). Hence, we 
-        // bail if a null is encountered
-        if (datasetName === null) {
-          return;
-        }
-        let filter_payload = {};
-        let doc_list = [];
-        Object.keys(results).forEach(key => {
-          doc_list = results[key]['response']['docs'];
-          if (dataType === 'byType') {
-            filter_payload[key] = doc_list.map(doc => doc['id']);
-          } else {
-            // queried by tissue. To make a proper request to the endpoint, 
-            // we need to map the samples to their "types" (e.g. TCGA cancer type)
-            // rather than map the sample IDs via their tissue.
-            for (let doc_idx in doc_list) {
-              let doc = doc_list[doc_idx];
-
-              let id = '';
-              let project_id = '';
-
-              if (this.datasetName === 'gtex-rnaseq') {
-                id = doc['sample_id'];
-                project_id = key.toString();
-              } else {
-                id = doc['id'];
-                project_id = doc['project_id'];
-              }
-
-              if (filter_payload.hasOwnProperty(project_id)) {
-                filter_payload[project_id].push(id);
-              } else {
-                filter_payload[project_id] = [id];
-              }
-            }
-          }
-        });
-        let final_payload = {
-          'filters': filter_payload,
-          'output_name': datasetName
-        };
-        this.isWaiting = true;
         this.cdRef.markForCheck();
-        this.pdService.createDataset(datasetTag, final_payload).subscribe(
+        let url_suffix = '';
+        // will have type (TCGA, TARGET, etc. identifier) (or tissue) addressing an Observable
+        if (dataType === 'byType') {
+          for (let i in this.selectedNames) {
+            let type_id = this.selectedNames[i];
+            let count = this.type_count_dict[type_id];
+            url_suffix = (this.query.length === 0) ? datasetTag + `?q=project_id:"${type_id}"&rows=${count}&fl=id` : datasetTag + `?q=project_id:"${type_id}" AND ${this.query}&rows=${count}&fl=id`;
+            $observable_dict[type_id] = this.pdService.makeSolrQuery(url_suffix);
+          }
+        } else if (dataType === 'byTissue') {
+          for (let i in this.selectedNames) {
+            let tissue_name = this.selectedNames[i];
+            let count = this.tissue_count_dict[tissue_name];
+            // since the data is organized (on the backend) into a structured HDFS
+            // using the "cancer type" as the key, we need to also find out which 
+            // "project" each of these tissues corresponds to. We get that by adding
+            // to the fl=... param
+
+            if (this.datasetName === 'gtex-rnaseq') {
+              url_suffix = (this.query.length === 0) ? datasetTag + `?q=tissue:"${tissue_name}"&rows=${count}&fl=sample_id` : datasetTag + `?q=tissue:"${tissue_name}" AND ${this.query}&rows=${count}&fl=sample_id`;
+
+            } else {
+              url_suffix = (this.query.length === 0) ? datasetTag + `?q=tissue_or_organ_of_origin:"${tissue_name}"&rows=${count}&fl=id,project_id` : datasetTag + `?q=tissue_or_organ_of_origin:"${tissue_name}" AND ${this.query}&rows=${count}&fl=id,project_id`;
+            }
+            $observable_dict[tissue_name] = this.pdService.makeSolrQuery(url_suffix);
+          }
+        }
+        // forkJoin forces all the observables to complete and then takes
+        // their results. If we don't do this, the subsequent request to
+        // create the dataset can be 'waiting' for the list of sample IDs
+        // and hence the request for dataset creation will be incomplete/invalid.
+        forkJoin($observable_dict).subscribe(
           results => {
-            this.isWaiting = false;
+            let datasetTitle = this.output_name;
+            delete results['output_name'];
+
+            // a value of `null` here is a signal that the user aborted
+            // creation of the dataset via the modal (the one which asks
+            // them to provide a custom name for the data export). Hence, we 
+            // bail if a null is encountered
+            if (datasetTitle === null) {
+              return;
+            }
+            let filter_payload = {};
+            let doc_list = [];
+            Object.keys(results).forEach(key => {
+              doc_list = results[key]['response']['docs'];
+              if (dataType === 'byType') {
+                filter_payload[key] = doc_list.map(doc => doc['id']);
+              } else {
+                // queried by tissue. To make a proper request to the endpoint, 
+                // we need to map the samples to their "types" (e.g. TCGA cancer type)
+                // rather than map the sample IDs via their tissue.
+                for (let doc_idx in doc_list) {
+                  let doc = doc_list[doc_idx];
+
+                  let id = '';
+                  let project_id = '';
+
+                  if (this.datasetName === 'gtex-rnaseq') {
+                    id = doc['sample_id'];
+                    project_id = key.toString();
+                  } else {
+                    id = doc['id'];
+                    project_id = doc['project_id'];
+                  }
+
+                  if (filter_payload.hasOwnProperty(project_id)) {
+                    filter_payload[project_id].push(id);
+                  } else {
+                    filter_payload[project_id] = [id];
+                  }
+
+                }
+              }
+            });
+
+            let final_payload = {}
+            if (this.datasetName === 'gtex-rnaseq') {
+              final_payload = {
+                'filters': {
+                  'selections': filter_payload,
+                },
+                'output_name': datasetTitle,
+              };
+            } else {
+              final_payload = {
+                'filters': {
+                  'selections': filter_payload,
+                  'use_case_id': this.isUseCaseIDChecked
+                },
+                'output_name': datasetTitle,
+              };
+            }
+
+            this.isWaiting = true;
             this.cdRef.markForCheck();
-            this.fileService.getAllFilesPolled();
-            this.notificationService.success('Your files are being prepared.' +
-              ' You can check the status of these in the file browser.'
+            this.pdService.createDataset(datasetTag, final_payload).subscribe(
+              results => {
+                this.isWaiting = false;
+                this.cdRef.markForCheck();
+                this.fileService.getAllFilesPolled();
+                this.notificationService.success('Your files are being prepared.' +
+                  ' You can check the status of these in the file browser.'
+                );
+              }
             );
           }
         );
       }
-    );
+    });
+
+    // this.cdRef.markForCheck();
+    // let url_suffix = '';
+    // // will have type (TCGA, TARGET, etc. identifier) (or tissue) addressing an Observable
+    // if (dataType === 'byType') {
+    //   for (let i in this.selectedNames) {
+    //     let type_id = this.selectedNames[i];
+    //     let count = this.type_count_dict[type_id];
+    //     url_suffix = (this.query.length === 0) ? datasetTag + `?q=project_id:"${type_id}"&rows=${count}&fl=id` : datasetTag + `?q=project_id:"${type_id}" AND ${this.query}&rows=${count}&fl=id`;
+    //     $observable_dict[type_id] = this.pdService.makeSolrQuery(url_suffix);
+    //   }
+    // } else if (dataType === 'byTissue') {
+    //   for (let i in this.selectedNames) {
+    //     let tissue_name = this.selectedNames[i];
+    //     let count = this.tissue_count_dict[tissue_name];
+    //     // since the data is organized (on the backend) into a structured HDFS
+    //     // using the "cancer type" as the key, we need to also find out which 
+    //     // "project" each of these tissues corresponds to. We get that by adding
+    //     // to the fl=... param
+
+    //     if (this.datasetName === 'gtex-rnaseq') {
+    //       url_suffix = (this.query.length === 0) ? datasetTag + `?q=tissue:"${tissue_name}"&rows=${count}&fl=sample_id` : datasetTag + `?q=tissue:"${tissue_name}" AND ${this.query}&rows=${count}&fl=sample_id`;
+
+    //     } else {
+    //       url_suffix = (this.query.length === 0) ? datasetTag + `?q=tissue_or_organ_of_origin:"${tissue_name}"&rows=${count}&fl=id,project_id` : datasetTag + `?q=tissue_or_organ_of_origin:"${tissue_name}" AND ${this.query}&rows=${count}&fl=id,project_id`;
+    //     }
+    //     $observable_dict[tissue_name] = this.pdService.makeSolrQuery(url_suffix);
+    //   }
+    // }
+    // // forkJoin forces all the observables to complete and then takes
+    // // their results. If we don't do this, the subsequent request to
+    // // create the dataset can be 'waiting' for the list of sample IDs
+    // // and hence the request for dataset creation will be incomplete/invalid.
+    // forkJoin($observable_dict).subscribe(
+    //   results => {
+    //     let datasetName = results['output_name'];
+    //     delete results['output_name'];
+
+    //     // a value of `null` here is a signal that the user aborted
+    //     // creation of the dataset via the modal (the one which asks
+    //     // them to provide a custom name for the data export). Hence, we 
+    //     // bail if a null is encountered
+    //     if (datasetName === null) {
+    //       return;
+    //     }
+    //     let filter_payload = {};
+    //     let doc_list = [];
+    //     Object.keys(results).forEach(key => {
+    //       doc_list = results[key]['response']['docs'];
+    //       if (dataType === 'byType') {
+    //         filter_payload[key] = doc_list.map(doc => doc['id']);
+    //       } else {
+    //         // queried by tissue. To make a proper request to the endpoint, 
+    //         // we need to map the samples to their "types" (e.g. TCGA cancer type)
+    //         // rather than map the sample IDs via their tissue.
+    //         for (let doc_idx in doc_list) {
+    //           let doc = doc_list[doc_idx];
+
+    //           let id = '';
+    //           let project_id = '';
+
+    //           if (this.datasetName === 'gtex-rnaseq') {
+    //             id = doc['sample_id'];
+    //             project_id = key.toString();
+    //           } else {
+    //             id = doc['id'];
+    //             project_id = doc['project_id'];
+    //           }
+
+    //           if (filter_payload.hasOwnProperty(project_id)) {
+    //             filter_payload[project_id].push(id);
+    //           } else {
+    //             filter_payload[project_id] = [id];
+    //           }
+
+
+
+    //         }
+    //       }
+    //     });
+
+    //     let final_payload = {}
+    //     if (this.datasetName === 'gtex-rnaseq') {
+    //       final_payload = {
+    //         'filters': {
+    //           'selections': filter_payload,
+    //         },
+    //         'output_name': datasetName,
+    //       };
+    //     } else {
+    //       final_payload = {
+    //         'filters': {
+    //           'selections': filter_payload,
+    //           'use_case_id': true
+    //           // 'use_case_id': $observable_dict['isUseCaseIDChecked'], //make sure to check this condition is taken from the checkbox
+    //         },
+    //         'output_name': datasetName,
+    //       };
+    //     }
+
+    //     this.isWaiting = true;
+    //     this.cdRef.markForCheck();
+    //     this.pdService.createDataset(datasetTag, final_payload).subscribe(
+    //       results => {
+    //         this.isWaiting = false;
+    //         this.cdRef.markForCheck();
+    //         this.fileService.getAllFilesPolled();
+    //         this.notificationService.success('Your files are being prepared.' +
+    //           ' You can check the status of these in the file browser.'
+    //         );
+    //       }
+    //     );
+    //   }
+    // );
   }
 
   checkboxSelection2(event, name: string, category) {

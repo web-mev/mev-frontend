@@ -158,8 +158,6 @@ export class PublicDatasetExplorerComponent extends GdcRnaseqComponent implement
   _createDataset(dataType: string, datasetTag: string) {
     let $observable_dict = {};
 
-    // const dialogRef = this.dialog.open(PublicDatasetExportNameDialogComponent, { disableClose: true });
-
     const dialogRef = this.dialog.open(PublicDatasetExportNameDialogComponent,
       {
         disableClose: true,

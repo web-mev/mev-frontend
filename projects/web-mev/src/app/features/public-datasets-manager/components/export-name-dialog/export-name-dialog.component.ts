@@ -66,7 +66,6 @@ export class PublicDatasetExportNameDialogComponent implements OnInit {
             "isUseCaseIDChecked": this.isUseCaseIDChecked
         }
         this.dialogRef.close(formData);
-        // this.dialogRef.close(this.exportNameFormControl.value);
     }
 
     /**

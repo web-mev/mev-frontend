@@ -50,7 +50,7 @@ export class PublicDatasetExportNameDialogComponent implements OnInit {
      */
     useAutoname(): void {
         let formData = {
-            "output_name": ' ',
+            "output_name": '',
             "isUseCaseIDChecked": this.isUseCaseIDChecked
         }
         this.dialogRef.close(formData);

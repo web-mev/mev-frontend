@@ -23,12 +23,11 @@
                 
                 If you are not planning on performing multi-omic analyses, we suggest retaining the aliquot IDs.">info
             </mat-icon>
-
         </section>
 
         <div mat-dialog-actions class="buttonRow">
             <button mat-raised-button color="accent" [disabled]="exportNameFormControl.errors"
-                (click)="confirmExportName()">OK</button>
+                (click)="confirmExportName()" autofocus>OK</button>
             <button mat-raised-button color="accent" (click)="useAutoname()" tabindex="-1">Skip custom name</button>
             <button mat-raised-button color="accent" (click)="cancel()" tabindex="-1">Cancel creation</button>
         </div>

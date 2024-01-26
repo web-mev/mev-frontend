@@ -1,0 +1,10 @@
+<mev-spinner-overlay *ngIf="isLoading"></mev-spinner-overlay>
+<mat-card class="analysis-card">
+    <mat-card-header>
+        <div mat-card-avatar class="analysis-card__img"></div>
+        <mat-card-title>SpatialGE: {{ outputs?.job_name }}</mat-card-title>
+        <mev-input-info [outputs]="outputs"></mev-input-info>
+    </mat-card-header>
+    <div #scatter id="scatter"></div>
+
+</mat-card>

@@ -53,7 +53,8 @@ import { AxisLabelDialogComponent } from './components/dragon/axisLabelDialog/ax
 import { SctkSingleRComponent } from './components/sctk-singleR/sctk-singleR.component';
 import { ResultInputInfoComponent} from './components/result-input-info/result-input-info.component';
 import { InputInfoDialogComponent } from './components/result-input-info/inputInfoDialog/input-info-dialog.component';
-import { BasicOutputComponent } from './components/basic-output/basic-output.component'
+import { BasicOutputComponent } from './components/basic-output/basic-output.component';
+import { SpatialGEComponent } from './components/spatialGE/spatialGE.component'
 
 @NgModule({
   declarations: [
@@ -107,7 +108,8 @@ import { BasicOutputComponent } from './components/basic-output/basic-output.com
     SctkSingleRComponent,
     ResultInputInfoComponent,
     InputInfoDialogComponent,
-    BasicOutputComponent
+    BasicOutputComponent,
+    SpatialGEComponent
   ],
   imports: [CommonModule, SharedModule, DragDropModule, MatBadgeModule],
   exports: [
@@ -151,7 +153,8 @@ import { BasicOutputComponent } from './components/basic-output/basic-output.com
     SctkSingleRComponent,
     ResultInputInfoComponent,
     InputInfoDialogComponent,
-    BasicOutputComponent
+    BasicOutputComponent,
+    SpatialGEComponent
   ]
 })
 export class D3Module { }

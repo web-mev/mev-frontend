@@ -319,7 +319,7 @@ export class OperationComponent implements OnChanges {
             controlsConfig[key] = configTextField;
             break;
           }
-          case ['OptionString', 'IntegerOption', 'FloatOption'].find(x => x === field_type): {
+          case ['OptionString', 'IntegerOption', 'FloatOption', 'MixedOption'].find(x => x === field_type): {
             if (field_type === 'OptionString' && input.spec.many === true) {
               let filesList = []
               for (let index in input.spec.options) {

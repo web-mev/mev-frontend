@@ -221,17 +221,14 @@ export class FileService {
   /**
    * Preview file content
    *
-   * Display only the first 5 rows of file
+   * Display only the first N rows of file. N is set by the backend
+   * for the moment. TODO: potentially use a GET param to set this? Low priority...
    */
   getFilePreview(fileId: number | string): Observable<any> {
-    const params = {
-      params: new HttpParams().set('page', '1').set('page_size', '5')
-    };
+
     return <Observable<any>>(
       this.httpClient.get(
-        `${this.API_URL}/resources/${fileId}/contents/`,
-        params
-      )
+        `${this.API_URL}/resources/${fileId}/contents/preview`)
     );
   }
 

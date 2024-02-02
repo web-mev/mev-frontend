@@ -65,18 +65,15 @@ export class WorkspaceDetailService {
   }
 
   /**
-   * Preview workspace resource content. Display only the first 5 rows
-   *
+   * Preview workspace resource content. Display only the first N rows
+   * where N is set by the backend. TODO: possibly set N via a GET param?
+   * Low priority...
    */
   getResourcePreview(resourceId: number | string): Observable<any> {
-    const params = {
-      params: new HttpParams().set('page', '1').set('page_size', '5')
-    };
+
     return <Observable<any>>(
       this.httpClient.get(
-        `${this.API_URL}/resources/${resourceId}/contents/`,
-        params
-      )
+        `${this.API_URL}/resources/${resourceId}/contents/preview/`)
     );
   }
 

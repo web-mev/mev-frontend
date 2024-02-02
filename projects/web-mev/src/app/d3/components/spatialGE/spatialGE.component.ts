@@ -62,7 +62,7 @@ export class SpatialGEComponent implements OnInit {
 
     getData() {
         let uuid = this.outputs["normalized_expression"];
-        let gene = 'NOC2L';
+        let gene = 'VIM';
         this.httpClient.get(
             `${this.API_URL}/resources/${uuid}/contents/?__rowname__=[eq]:${gene}`).pipe(
                 catchError(error => {
@@ -109,7 +109,7 @@ export class SpatialGEComponent implements OnInit {
         for (let i in this.dataDict) {
             const parsedX = parseInt(this.dataDict[i]['xVal'])
             const parsedY = parseInt(this.dataDict[i]['yVal'])
-            const totalCounts = parseInt(this.dataDict[i]['count'])
+            const totalCounts = parseFloat(parseFloat(this.dataDict[i]['count']).toFixed(3));
 
             if (!isNaN(parsedX) && !isNaN(parsedY) && !isNaN(totalCounts)) {
                 let temp = {
@@ -151,7 +151,7 @@ export class SpatialGEComponent implements OnInit {
             .attr('class', 'd3-tip')
             .offset([-10, 0])
             .html((event: any, d: any) => {
-                let tipBox = `<div><div class="category">Count:</div> ${d.totalCounts.toLocaleString()}</div>`
+                let tipBox = `<div><div class="category">Normalized Count:</div> ${d.totalCounts}</div>`
                 return tipBox
             });
 
@@ -187,7 +187,7 @@ export class SpatialGEComponent implements OnInit {
             .append("circle")
             .attr("cx", function (d) { return x(d.xValue) })
             .attr("cy", function (d) { return height - y(d.yValue); })
-            .attr("r", 2.5)
+            .attr("r", 2)
             .attr("fill", function (d) {
                 return color(d.totalCounts)
             })

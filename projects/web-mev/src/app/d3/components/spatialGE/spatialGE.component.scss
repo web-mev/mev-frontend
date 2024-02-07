@@ -17,6 +17,7 @@
 .overlayDiv {
     margin-top: 10px;
     position: relative;
+    width: fit-content;
 }
 
 #radio-group-axis {
@@ -26,7 +27,7 @@
 }
 
 .displayValue {
-    font-weight: 100;
+    font-weight: 200;
 }
 
 mat-slider {
@@ -34,29 +35,22 @@ mat-slider {
 }
 
 .overlayPlots {
-    // position: absolute;
-    // // top: 0;
-    // top: 100px;
-    // left: 0;
-    margin-left: -289px; 
-    background-color: rgb(139, 25, 25, 0.4);
+    // background-color: rgb(139, 25, 25, 0.4);
 }
-.overlayPlotsImage {
-    // position: absolute;
-    // top: 100px;
-    // left: 0; 
+.displayImageSideBySide {
+    margin-left: 20px;
 }
 
 .displayPlotSideBySide {
-    position: absolute;
-    // top: 100px;
-    left: 550px;
+    position: relative;
+}
+.overlayImageContainer {
+    // margin-left: -289px;
+    // margin-left: -578px
 }
 
 .slider {
     position: absolute;
-    top: 500px;
-    // left: 100px;
 }
 
 #image {
@@ -119,10 +113,6 @@ mat-slider {
     }
 }
 
-// .imageContainer{
-//     z-index: 1;
-// }
-
 .custom-button {
     width: 36px;
     height: 36px;
@@ -130,3 +120,19 @@ mat-slider {
     padding: 0px !important;
     margin: 1px;
 }
+
+.drop-zone {
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    width: 400px;
+    height: 400px;
+    margin-left: 20px;
+}
+
+.drop-message {
+    color: #666;
+}
+

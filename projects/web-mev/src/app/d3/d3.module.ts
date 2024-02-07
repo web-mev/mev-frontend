@@ -55,7 +55,6 @@ import { ResultInputInfoComponent } from './components/result-input-info/result-
 import { InputInfoDialogComponent } from './components/result-input-info/inputInfoDialog/input-info-dialog.component';
 import { BasicOutputComponent } from './components/basic-output/basic-output.component';
 import { SpatialGEComponent } from './components/spatialGE/spatialGE.component';
-import { ImageCropperComponent } from './components/spatialGE/image-cropper/image-cropper.component'
 
 @NgModule({
   declarations: [
@@ -111,7 +110,6 @@ import { ImageCropperComponent } from './components/spatialGE/image-cropper/imag
     InputInfoDialogComponent,
     BasicOutputComponent,
     SpatialGEComponent,
-    ImageCropperComponent
   ],
   imports: [CommonModule, SharedModule, DragDropModule, MatBadgeModule],
   exports: [
@@ -157,7 +155,6 @@ import { ImageCropperComponent } from './components/spatialGE/image-cropper/imag
     InputInfoDialogComponent,
     BasicOutputComponent,
     SpatialGEComponent,
-    ImageCropperComponent
   ]
 })
 export class D3Module { }

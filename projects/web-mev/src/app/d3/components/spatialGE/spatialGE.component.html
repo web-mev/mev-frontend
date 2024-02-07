@@ -5,6 +5,86 @@
         <mat-card-title>SpatialGE: {{ outputs?.job_name }}</mat-card-title>
         <mev-input-info [outputs]="outputs"></mev-input-info>
     </mat-card-header>
-    <div #scatter id="scatter"></div>
+    <div class="overlayDiv">
+        <div *ngIf="displayImage" class="imageContainer" style="z-index: 2;">
+            <img class="overlayPlotsImage" [src]="parentImageUrl" style="height: 374px; "
+                [style.opacity]="imageOpacityValue">
+        </div>
+        <div #scatter id="scatter" [class]="overlayImage ? 'overlayPlots' : 'displayPlotSideBySide'"
+            [style.opacity]="displayPlot ? plotOpacityValue : 0"
+            [style]="!displayAlignment ? 'z-index: 1' : 'z-index: 3'">
+        </div>
+    </div>
+    <div class="slider">
+
+        <div *ngIf="displayAlignment">
+            <button mat-flat-button color="primary" class="downloadButton" (click)="captureAndDownloadImages()">Download
+                Combined Image</button>
+            <br>
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Left"
+                (click)="moveImage('left')">
+                <mat-icon>arrow_back</mat-icon>
+            </button>
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Right"
+                (click)="moveImage('right')">
+                <mat-icon>arrow_forward</mat-icon>
+            </button>
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Up"
+                (click)="moveImage('up')">
+                <mat-icon>arrow_upward</mat-icon>
+            </button>
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Down"
+                (click)="moveImage('down')">
+                <mat-icon>arrow_downward</mat-icon>
+            </button>
+        </div>
+
+        <label id="radio-group-axis">Plot Opacity: <span class="displayValue"> {{plotOpacityValue}}</span></label>
+        {{0}} %
+        <mat-slider min="0" max="1" step=".1" [(ngModel)]="plotOpacityValue"
+            (input)="updatePlotOpacity(plotOpacityValue)">
+        </mat-slider>
+        {{100}} %
+        <br>
+        <label id="radio-group-axis">Image Opacity: <span class="displayValue"> {{imageOpacityValue}}</span></label>
+        {{0}} %
+        <mat-slider min="0" max="1" step=".1" [(ngModel)]="imageOpacityValue"
+            (input)="updateImageOpacity(imageOpacityValue)">
+        </mat-slider>
+        {{100}} %
+        <br>
+        <mat-slide-toggle [(ngModel)]="overlayImage">Overlay Images</mat-slide-toggle>
+        <br>
+        <mat-slide-toggle [(ngModel)]="displayAlignment">Alignment Mode</mat-slide-toggle>
+        <br>
+        <mat-slide-toggle [(ngModel)]="displayPlot">Display Plot</mat-slide-toggle>
+        <br>
+        <mat-slide-toggle [(ngModel)]="displayImage">Display Image</mat-slide-toggle>
+        <br>
+
+        <br>
+        <label id="radio-group-axis">Plot Color: </label>
+        <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+            [(ngModel)]="selectedColor" (change)="onColorChange()">
+            <div *ngFor="let plotColor of colors" class="radio-container">
+                <mat-radio-button class="example-radio-button" [value]="plotColor">{{plotColor}}</mat-radio-button>
+            </div>
+        </mat-radio-group>
+        <br>
+        <br>
+        <label id="radio-group-axis">Scale Factor: <span class="displayValue"> ({{scaleFactor}})</span></label>
+        <div class="inputContainer">
+            <mat-form-field class="example-form-field container" appearance="outline">
+                <mat-label>Scale Factor</mat-label>
+                <input matInput type="search" name="search" [(ngModel)]="scaleFactorVal"
+                    (keyup.enter)="setScaleFactor()" class="smallerInput">
+                <button *ngIf="scaleFactorVal" matSuffix mat-icon-button aria-label="Clear"
+                    (click)="scaleFactorVal = ''">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+            <button mat-flat-button color="primary" class="searchButton" (click)="setScaleFactor()">Submit</button>
+        </div>
+    </div>
 
 </mat-card>

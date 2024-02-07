@@ -4,12 +4,15 @@ import { catchError } from "rxjs/operators";
 import { environment } from '@environments/environment';
 import * as d3 from 'd3';
 import d3Tip from 'd3-tip';
+// import Cropper from 'cropperjs';
+
+import html2canvas from 'html2canvas';
 
 interface ScatterData {
     xValue: number;
     yValue: number;
     totalCounts: number;
-  }
+}
 
 @Component({
     selector: 'mev-spatialGE',
@@ -24,7 +27,7 @@ export class SpatialGEComponent implements OnInit {
     containerId = '#scatter';
 
     isLoading = true;
-    
+
     scatterPlotData: ScatterData[] = [];
 
     dataDict = {}
@@ -38,19 +41,24 @@ export class SpatialGEComponent implements OnInit {
 
     totalCounts: any = {}
 
-    scaleFactor = 0.0836575;
+    scaleFactor = 0.01602821
 
     selectedColor: string = 'Red';
     colors: string[] = ['Red', 'Green']
 
-    plotOpacityValue = 1
+    plotOpacityValue = .7
     imageOpacityValue = .5
 
     overlayImage: boolean = false;
     displayPlot: boolean = true;
     displayImage: boolean = true;
 
-    displayCrop: boolean = false;
+    displayAlignment: boolean = false;
+
+    scaleFactorVal = '';
+    parentImageUrl = 'assets/images/tissue_lowres_image.png'
+
+    moveAmount = 1;
 
     constructor(
         private httpClient: HttpClient,
@@ -58,6 +66,31 @@ export class SpatialGEComponent implements OnInit {
 
     ngOnInit(): void {
         this.getData()
+    }
+
+    // receiveCroppedImageUrl(url: string) {
+    //     this.parentImageUrl = url;
+    // }
+
+    // receivedDisplayCrop(value: boolean) {
+    //     this.displayCrop = value
+    // }
+
+    setScaleFactor() {
+        this.scaleFactor = parseFloat(this.scaleFactorVal)
+        this.createScatterPlot()
+    }
+
+    onColorChange() {
+        this.createScatterPlot()
+    }
+
+    updatePlotOpacity(value: number): void {
+        this.plotOpacityValue = value;
+    }
+
+    updateImageOpacity(value: number): void {
+        this.imageOpacityValue = value;
     }
 
     getData() {
@@ -69,7 +102,6 @@ export class SpatialGEComponent implements OnInit {
                     throw error;
                 }))
             .subscribe(res => {
-                console.log("normalized expression: ", res[0])
                 for (let i in res[0]['values']) {
                     let key = i;
                     let count = res[0]['values'][i]
@@ -139,9 +171,10 @@ export class SpatialGEComponent implements OnInit {
     createScatterPlot() {
         //Margin right is the space allocated for the legend. 
         //The width needs to match with the width of the image (ie image width = 400px. so total plot width needs to be 400px after taking into account the margins)
-        var margin = { top: 0, right: 70, bottom: 0, left: 0 },
-            width = 470 - margin.left - margin.right,
-            height = 395 - margin.top - margin.bottom;
+        // var margin = { top: 7, right: 0, bottom: 0, left: 5 },
+        var margin = { top: 0, right: 0, bottom: 0, left: 0 },
+            width = 289 - margin.left - margin.right,
+            height = 374 - margin.top - margin.bottom;
 
         d3.select(this.containerId)
             .selectAll('svg')
@@ -187,7 +220,7 @@ export class SpatialGEComponent implements OnInit {
             .append("circle")
             .attr("cx", function (d) { return x(d.xValue) })
             .attr("cy", function (d) { return height - y(d.yValue); })
-            .attr("r", 2)
+            .attr("r", 1.75)
             .attr("fill", function (d) {
                 return color(d.totalCounts)
             })
@@ -253,5 +286,93 @@ export class SpatialGEComponent implements OnInit {
             .attr("font-size", "6px")
             .text(this.totalCountsMax.toLocaleString());
     }
+
+
+
+    // moveImage(direction) {
+    //     const topImage = document.querySelector('.overlayPlotsImage') as HTMLImageElement;
+    //     if (direction === 'left') {
+    //         const currentLeft = parseFloat(topImage.style.left || '0');
+    //         topImage.style.left = (currentLeft - this.moveAmount) + 'px';
+    //     } else if (direction === 'right') {
+    //         const currentLeft = parseFloat(topImage.style.left || '0');
+    //         topImage.style.left = (currentLeft + this.moveAmount) + 'px';
+    //     } else if (direction === 'up') {
+    //         const currentTop = parseFloat(topImage.style.top || '100');
+    //         topImage.style.top = (currentTop - this.moveAmount) + 'px';
+    //     } else if (direction === 'down') {
+    //         const currentTop = parseFloat(topImage.style.top || '100');
+    //         topImage.style.top = (currentTop + this.moveAmount) + 'px';
+    //     }
+
+    // }
+
+    // moveImage(direction) {
+    //     const topImage = document.querySelector('.overlayPlotsImage') as HTMLImageElement;
+    //     const currentLeft = parseFloat(topImage.style.left || '0');
+    //     const currentTop = parseFloat(topImage.style.top || '0');
+        
+    //     if (direction === 'left') {
+    //         topImage.style.transform = `translateX(${currentLeft - this.moveAmount}px) translateY(${currentTop}px)`;
+    //     } else if (direction === 'right') {
+    //         topImage.style.transform = `translateX(${currentLeft + this.moveAmount}px) translateY(${currentTop}px)`;
+    //     } else if (direction === 'up') {
+    //         topImage.style.transform = `translateX(${currentLeft}px) translateY(${currentTop - this.moveAmount}px)`;
+    //     } else if (direction === 'down') {
+    //         topImage.style.transform = `translateX(${currentLeft}px) translateY(${currentTop + this.moveAmount}px)`;
+    //     }
+    // }
+    // Define variables to store the current position of the image
+currentLeft = 0;
+currentTop = 0;
+
+moveImage(direction) {
+    const topImage = document.querySelector('.overlayPlotsImage') as HTMLImageElement;
+
+    if (direction === 'left') {
+        // Move the image to the left by subtracting the moveAmount from the current left position
+        topImage.style.transform = `translateX(${this.currentLeft - this.moveAmount}px) translateY(${this.currentTop}px)`;
+        this.currentLeft = this.currentLeft - this.moveAmount;
+    } else if (direction === 'right') {
+        // Move the image to the right by adding the moveAmount to the current left position
+        topImage.style.transform = `translateX(${this.currentLeft + this.moveAmount}px) translateY(${this.currentTop}px)`;
+        this.currentLeft = this.currentLeft + this.moveAmount;
+    } else if (direction === 'up') {
+        // Move the image up by subtracting the moveAmount from the current top position
+        topImage.style.transform = `translateX(${this.currentLeft}px) translateY(${this.currentTop - this.moveAmount}px)`;
+        this.currentTop = this.currentTop - this.moveAmount;
+    } else if (direction === 'down') {
+        // Move the image down by adding the moveAmount to the current top position
+        topImage.style.transform = `translateX(${this.currentLeft}px) translateY(${this.currentTop + this.moveAmount}px)`;
+        this.currentTop = this.currentTop + this.moveAmount;
+    }
+}
+
+
+    captureAndDownloadImages() {
+        setTimeout(() => {
+            // Select the HTML container element to capture
+            const containerToCapture = document.querySelector('.overlayDiv') as HTMLElement | null;
+
+            if (containerToCapture) {
+                // Use html2canvas to capture the HTML container
+                html2canvas(containerToCapture, {
+                    // Other options can be specified here
+                }).then(canvas => {
+                    // Convert the canvas to a data URL
+                    const dataURL = canvas.toDataURL();
+
+                    // Trigger download of the captured image
+                    const link = document.createElement('a');
+                    link.href = dataURL;
+                    link.download = 'captured_image.png';
+                    link.click();
+                });
+            } else {
+                console.error('Container element not found');
+            }
+        }, 500); // Adjust the delay time as needed
+    }
+
 
 }

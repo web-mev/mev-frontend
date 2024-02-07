@@ -51,10 +51,11 @@ import { PumaComponent } from './components/puma/puma.component';
 import { DragonComponent } from './components/dragon/dragon.component';
 import { AxisLabelDialogComponent } from './components/dragon/axisLabelDialog/axisLabelDialog.component';
 import { SctkSingleRComponent } from './components/sctk-singleR/sctk-singleR.component';
-import { ResultInputInfoComponent} from './components/result-input-info/result-input-info.component';
+import { ResultInputInfoComponent } from './components/result-input-info/result-input-info.component';
 import { InputInfoDialogComponent } from './components/result-input-info/inputInfoDialog/input-info-dialog.component';
 import { BasicOutputComponent } from './components/basic-output/basic-output.component';
-import { SpatialGEComponent } from './components/spatialGE/spatialGE.component'
+import { SpatialGEComponent } from './components/spatialGE/spatialGE.component';
+import { ImageCropperComponent } from './components/spatialGE/image-cropper/image-cropper.component'
 
 @NgModule({
   declarations: [
@@ -109,7 +110,8 @@ import { SpatialGEComponent } from './components/spatialGE/spatialGE.component'
     ResultInputInfoComponent,
     InputInfoDialogComponent,
     BasicOutputComponent,
-    SpatialGEComponent
+    SpatialGEComponent,
+    ImageCropperComponent
   ],
   imports: [CommonModule, SharedModule, DragDropModule, MatBadgeModule],
   exports: [
@@ -154,7 +156,8 @@ import { SpatialGEComponent } from './components/spatialGE/spatialGE.component'
     ResultInputInfoComponent,
     InputInfoDialogComponent,
     BasicOutputComponent,
-    SpatialGEComponent
+    SpatialGEComponent,
+    ImageCropperComponent
   ]
 })
 export class D3Module { }

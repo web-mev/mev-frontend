@@ -33,8 +33,7 @@
               "projects/web-mev/src/styles.scss",
               "projects/web-mev/src/angular2-multiselect-dropdow-default.theme.css"
             ],
-            "scripts": [],
-            "webWorkerTsConfig": "projects/web-mev/tsconfig.worker.json"
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -114,8 +113,7 @@
               "projects/web-mev/src/styles-app-loading.scss",
               "projects/web-mev/src/styles.scss"
             ],
-            "scripts": [],
-            "webWorkerTsConfig": "projects/web-mev/tsconfig.worker.json"
+            "scripts": []
           },
           "configurations": {
             "test": {

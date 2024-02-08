@@ -20,6 +20,12 @@
     width: fit-content;
 }
 
+.overlayContainer {
+    // width: 400px;
+    // height: 400px;
+    overflow: hidden;
+}
+
 #radio-group-axis {
     display: block;
     font-weight: bold;
@@ -127,12 +133,11 @@ mat-slider {
     padding: 20px;
     text-align: center;
     cursor: pointer;
-    width: 400px;
-    height: 400px;
+    width: 250px;
+    height: 350px;
     margin-left: 20px;
 }
 
 .drop-message {
     color: #666;
 }
-

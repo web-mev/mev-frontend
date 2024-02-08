@@ -5,39 +5,44 @@
         <mat-card-title>SpatialGE: {{ outputs?.job_name }}</mat-card-title>
         <mev-input-info [outputs]="outputs"></mev-input-info>
     </mat-card-header>
-    <div class="overlayDiv">
-        <div #scatter id="scatter" [class]="overlayImage ? 'overlayPlots' : 'displayPlotSideBySide'"
-            [style.opacity]="displayPlot ? plotOpacityValue : 0"
-            [style]="!displayAlignment ? 'z-index: 1' : 'z-index: 3'">
-        </div>
-        <div [class]="!droppedFile ? 'drop-zone' : (overlayImage ? '': 'displayImageSideBySide') "
-            (drop)="onDropFile($event)" (dragover)="onDragOver($event)"
-            [style.margin-left.px]="overlayImage ? -plotWidth : '20'">
-            <div *ngIf="!droppedFile" class="drop-message">
-                <p>Drop image file here</p>
+    <div class="overlayContainer" [style.height.px]="plotHeight"
+        [style.width.px]="overlayImage ? plotWidth: plotWidth*2">
+        <div class="overlayDiv">
+            <div #scatter id="scatter" [class]="overlayImage ? 'overlayPlots' : 'displayPlotSideBySide'"
+                [style.opacity]="displayPlot ? plotOpacityValue : 0"
+                [style]="!displayAlignment ? 'z-index: 1' : 'z-index: 3'" class="plotContainer">
             </div>
-            <div *ngIf="droppedFile && displayImage" style="z-index: 2;">
-                <img *ngIf="isImageType(droppedFile.type)" class="overlayPlotsImage" [src]="droppedFileURL"
-                    alt="Dropped Image" [style.height.px]="plotHeight" [style.opacity]="imageOpacityValue">
+            <div [class]="!droppedFile ? 'drop-zone' : (overlayImage ? '': 'displayImageSideBySide') "
+                (drop)="onDropFile($event)" (dragover)="onDragOver($event)"
+                [style.margin-left.px]="overlayImage ? -plotWidth : '20'" (click)="fileInput.click()" class="imageContainer">
+                <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;">
+                <div *ngIf="!droppedFile" class="drop-message">
+                    <p>Drop image file here or click to upload</p>
+                </div>
+                <div *ngIf="droppedFile && displayImage" style="z-index: 2;" >
+                    <img *ngIf="isImageType(droppedFile.type)" class="overlayPlotsImage" [src]="droppedFileURL"
+                        alt="Dropped Image" [style.height.px]="plotHeight" [style.opacity]="imageOpacityValue">
+                </div>
             </div>
         </div>
     </div>
+
     <div class="slider" [style.top.px]="plotHeight + 120">
         <div *ngIf="displayAlignment">
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Left"
-                (click)="moveImage('left')">
+                (click)="moveImage('left', 'align')">
                 <mat-icon>arrow_back</mat-icon>
             </button>
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Right"
-                (click)="moveImage('right')">
+                (click)="moveImage('right', 'align')">
                 <mat-icon>arrow_forward</mat-icon>
             </button>
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Up"
-                (click)="moveImage('up')">
+                (click)="moveImage('up', 'align')">
                 <mat-icon>arrow_upward</mat-icon>
             </button>
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Down"
-                (click)="moveImage('down')">
+                (click)="moveImage('down', 'align')">
                 <mat-icon>arrow_downward</mat-icon>
             </button>
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Download Image"
@@ -45,6 +50,35 @@
                 <mat-icon>download</mat-icon>
             </button>
 
+        </div>
+        <div *ngIf="displayZoom">
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Zoom In" (click)="zoomDiv('in')">
+                <mat-icon>zoom_in</mat-icon>
+            </button>
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Zoom Out"
+                (click)="zoomDiv('out')">
+                <mat-icon>zoom_out</mat-icon>
+            </button>
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Left"
+                (click)="moveImage('left', 'zoom')">
+                <mat-icon>arrow_back</mat-icon>
+            </button>
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Right"
+                (click)="moveImage('right', 'zoom')">
+                <mat-icon>arrow_forward</mat-icon>
+            </button>
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Up"
+                (click)="moveImage('up', 'zoom')">
+                <mat-icon>arrow_upward</mat-icon>
+            </button>
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Down"
+                (click)="moveImage('down', 'zoom')">
+                <mat-icon>arrow_downward</mat-icon>
+            </button>
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Download Image"
+                (click)="captureAndDownloadImages()">
+                <mat-icon>download</mat-icon>
+            </button>
         </div>
 
         <label id="radio-group-axis">Plot Opacity: <span class="displayValue"> {{plotOpacityValue}}</span></label>
@@ -64,6 +98,8 @@
         <mat-slide-toggle [(ngModel)]="overlayImage">Overlay Images</mat-slide-toggle>
         <br>
         <mat-slide-toggle [(ngModel)]="displayAlignment">Alignment Mode</mat-slide-toggle>
+        <br>
+        <mat-slide-toggle [(ngModel)]="displayZoom">Zoom Mode</mat-slide-toggle>
         <br>
         <mat-slide-toggle [(ngModel)]="displayPlot">Display Plot</mat-slide-toggle>
         <br>

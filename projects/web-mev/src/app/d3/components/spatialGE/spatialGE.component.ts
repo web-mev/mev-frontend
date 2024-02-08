@@ -5,7 +5,6 @@ import { environment } from '@environments/environment';
 import * as d3 from 'd3';
 import d3Tip from 'd3-tip';
 import { NotificationService } from '@core/core.module';
-
 import html2canvas from 'html2canvas';
 
 interface ScatterData {
@@ -54,15 +53,18 @@ export class SpatialGEComponent implements OnInit {
     displayImage: boolean = true;
 
     displayAlignment: boolean = false;
+    displayZoom: boolean = false;
 
     scaleFactorVal = '';
-    parentImageUrl = 'assets/images/tissue_lowres_image.png'
 
     moveAmount = 1;
     plotSizeMutiplier = 1;
 
     plotWidth = 500;
     plotHeight = 500;
+
+    currentLeft = 0;
+    currentTop = 0;
 
     constructor(
         private httpClient: HttpClient,
@@ -116,7 +118,7 @@ export class SpatialGEComponent implements OnInit {
         this.httpClient.get(
             `${this.API_URL}/resources/${coords_metadata_uuid}/contents/`).pipe(
                 catchError(error => {
-                    this.notificationService.error(`Error ${error.status}: Error from corrdinates metadata request.`);
+                    this.notificationService.error(`Error ${error.status}: Error from coordinates metadata request.`);
                     throw error;
                 }))
             .subscribe(res => {
@@ -162,20 +164,13 @@ export class SpatialGEComponent implements OnInit {
             }
         }
         this.plotWidth = (this.xMax - this.xMin) * this.plotSizeMutiplier / 100;
-        this.plotHeight = (this.yMax - this.yMin) * this.plotSizeMutiplier / 100
+        this.plotHeight = (this.yMax - this.yMin) * this.plotSizeMutiplier / 100;
 
         this.createScatterPlot()
         this.isLoading = false;
-        console.log("min/max: ", this.xMin, this.xMax, this.yMin, this.yMax, (this.xMax - this.xMin) / 100, (this.yMax - this.yMin) / 100)
     }
 
     createScatterPlot() {
-        //Margin right is the space allocated for the legend. 
-        //The width needs to match with the width of the image (ie image width = 400px. so total plot width needs to be 400px after taking into account the margins)
-        // var margin = { top: 7, right: 0, bottom: 0, left: 5 },
-        // var margin = { top: 0, right: 0, bottom: 0, left: 0 },
-        //     width = 289 - margin.left - margin.right,
-        //     height = 374 - margin.top - margin.bottom;
         var margin = { top: 0, right: 0, bottom: 0, left: 0 },
             width = this.plotWidth - margin.left - margin.right,
             height = this.plotHeight - margin.top - margin.bottom;
@@ -291,28 +286,36 @@ export class SpatialGEComponent implements OnInit {
             .text(this.totalCountsMax.toLocaleString());
     }
 
-    currentLeft = 0;
-    currentTop = 0;
+    moveImage(direction, mode) {
+        const topContainer = document.querySelector('.plotContainer') as HTMLImageElement;
+        const bottomContainer = document.querySelector('.imageContainer') as HTMLImageElement;
 
-    moveImage(direction) {
-        const topImage = document.querySelector('.overlayPlotsImage') as HTMLImageElement;
+        let transformValue;
 
-        if (direction === 'left') {
-            // Move the image to the left by subtracting the moveAmount from the current left position
-            topImage.style.transform = `translateX(${this.currentLeft - this.moveAmount}px) translateY(${this.currentTop}px)`;
-            this.currentLeft = this.currentLeft - this.moveAmount;
-        } else if (direction === 'right') {
-            // Move the image to the right by adding the moveAmount to the current left position
-            topImage.style.transform = `translateX(${this.currentLeft + this.moveAmount}px) translateY(${this.currentTop}px)`;
-            this.currentLeft = this.currentLeft + this.moveAmount;
-        } else if (direction === 'up') {
-            // Move the image up by subtracting the moveAmount from the current top position
-            topImage.style.transform = `translateX(${this.currentLeft}px) translateY(${this.currentTop - this.moveAmount}px)`;
-            this.currentTop = this.currentTop - this.moveAmount;
-        } else if (direction === 'down') {
-            // Move the image down by adding the moveAmount to the current top position
-            topImage.style.transform = `translateX(${this.currentLeft}px) translateY(${this.currentTop + this.moveAmount}px)`;
-            this.currentTop = this.currentTop + this.moveAmount;
+        switch (direction) {
+            case 'left':
+                this.currentLeft -= this.moveAmount;
+                break;
+            case 'right':
+                this.currentLeft += this.moveAmount;
+                break;
+            case 'up':
+                this.currentTop -= this.moveAmount;
+                break;
+            case 'down':
+                this.currentTop += this.moveAmount;
+                break;
+            default:
+                break;
+        }
+
+        transformValue = `translateX(${this.currentLeft}px) translateY(${this.currentTop}px) scale(${this.currentScaleFactor})`;
+
+        if (mode === 'align' || mode === 'zoom') {
+            topContainer.style.transform = transformValue;
+            if (mode === 'zoom') {
+                bottomContainer.style.transform = transformValue;
+            }
         }
     }
 
@@ -349,6 +352,27 @@ export class SpatialGEComponent implements OnInit {
 
     }
 
+    // captureAndDownloadImages() {
+    //     this.isLoading = true;
+
+    //     const worker = new Worker('../../../../app/spatialge-download-worker.worker', { type: 'module' });
+    //     worker.onmessage = ({ data }) => {
+    //         if (data) {
+    //             const link = document.createElement('a');
+    //             link.href = data;
+    //             link.download = 'captured_image.png';
+    //             link.click();
+    //         } else {
+    //             this.notificationService.error(`Error occurred when downloading the image.`);
+    //             console.error('Container element not found');
+    //         }
+    //         this.isLoading = false;
+    //         worker.terminate(); // Terminate the worker after use
+    //     };
+
+    //     worker.postMessage(null);
+    // }
+
     droppedFile: File | null = null;
     droppedFileURL: string | ArrayBuffer | null = null;
 
@@ -381,7 +405,45 @@ export class SpatialGEComponent implements OnInit {
         return fileType.startsWith('image/');
     }
 
+    onFileSelected(event: any): void {
+        const fileList: FileList = event.target.files;
+        if (fileList.length > 0) {
+            // const file: File = fileList[0];
+            this.droppedFile = fileList[0];
+
+            this.displayFile();
+            // this.handleFile(file);
+        }
+    }
 
 
+    currentScaleFactor = 1;
+    maxScaleFactor = 2;
+    minScaleFactor = 0.5;
 
+    zoomDiv(direction) {
+        if (direction === 'in') {
+            this.currentScaleFactor += 0.1;
+            if (this.currentScaleFactor > this.maxScaleFactor) {
+                this.currentScaleFactor = this.maxScaleFactor;
+            }
+            this.applyZoom();
+        } else if (direction === 'out') {
+            this.currentScaleFactor -= 0.1;
+            if (this.currentScaleFactor < this.minScaleFactor) {
+                this.currentScaleFactor = this.minScaleFactor;
+            }
+            this.applyZoom();
+        }
+    }
+
+    applyZoom() {
+        const plotContainer = document.querySelector('.plotContainer') as HTMLImageElement;
+        const imageContainer = document.querySelector('.imageContainer') as HTMLImageElement;
+        if (plotContainer || imageContainer) {
+            const transformValue = `translateX(${this.currentLeft}px) translateY(${this.currentTop}px) scale(${this.currentScaleFactor})`;
+            plotContainer.style.transform = transformValue;
+            imageContainer.style.transform = transformValue;
+        }
+    }
 }

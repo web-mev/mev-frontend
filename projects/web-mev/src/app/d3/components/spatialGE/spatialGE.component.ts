@@ -54,6 +54,7 @@ export class SpatialGEComponent implements OnInit {
 
     displayAlignment: boolean = false;
     displayZoom: boolean = false;
+    displayStretch: boolean = false;
 
     scaleFactorVal = '';
 
@@ -65,6 +66,20 @@ export class SpatialGEComponent implements OnInit {
 
     currentLeft = 0;
     currentTop = 0;
+
+    widthAdjustment = 0
+    heightAdjustment = 0
+
+    droppedFile: File | null = null;
+    droppedFileURL: string | ArrayBuffer | null = null;
+
+    imageAdjustedWidth = 0;
+    maxImageContainerWidthOverylay = this.plotWidth;
+    maxImageContainerWidthSidebySide = this.plotWidth * 2;
+
+    currentScaleFactor = 1;
+    maxScaleFactor = 2;
+    minScaleFactor = 0.5;
 
     constructor(
         private httpClient: HttpClient,
@@ -172,8 +187,8 @@ export class SpatialGEComponent implements OnInit {
 
     createScatterPlot() {
         var margin = { top: 0, right: 0, bottom: 0, left: 0 },
-            width = this.plotWidth - margin.left - margin.right,
-            height = this.plotHeight - margin.top - margin.bottom;
+            width = this.plotWidth - margin.left - margin.right + this.widthAdjustment,
+            height = this.plotHeight - margin.top - margin.bottom + this.heightAdjustment;
 
         d3.select(this.containerId)
             .selectAll('svg')
@@ -319,7 +334,6 @@ export class SpatialGEComponent implements OnInit {
         }
     }
 
-
     captureAndDownloadImages() {
         this.isLoading = true;
 
@@ -373,9 +387,6 @@ export class SpatialGEComponent implements OnInit {
     //     worker.postMessage(null);
     // }
 
-    droppedFile: File | null = null;
-    droppedFileURL: string | ArrayBuffer | null = null;
-
     onDropFile(event: DragEvent) {
         event.preventDefault();
         const files = event.dataTransfer?.files;
@@ -393,8 +404,17 @@ export class SpatialGEComponent implements OnInit {
         if (this.droppedFile) {
             if (this.isImageType(this.droppedFile.type)) {
                 const reader = new FileReader();
-                reader.onload = () => {
-                    this.droppedFileURL = reader.result;
+                reader.onload = (event) => {
+                    const image = new Image();
+                    image.onload = () => {
+                        const aspectRatio = image.width / image.height;
+                        this.imageAdjustedWidth = Math.ceil(this.plotHeight * aspectRatio);
+                        this.maxImageContainerWidthOverylay = Math.max(this.imageAdjustedWidth, (this.plotWidth + this.widthAdjustment))
+                        this.maxImageContainerWidthSidebySide = Math.max((this.plotWidth + this.widthAdjustment) * 2, (this.plotWidth + this.widthAdjustment + this.imageAdjustedWidth))
+
+                        this.droppedFileURL = reader.result as string;
+                    };
+                    image.src = event.target?.result as string;
                 };
                 reader.readAsDataURL(this.droppedFile);
             }
@@ -408,18 +428,11 @@ export class SpatialGEComponent implements OnInit {
     onFileSelected(event: any): void {
         const fileList: FileList = event.target.files;
         if (fileList.length > 0) {
-            // const file: File = fileList[0];
             this.droppedFile = fileList[0];
 
             this.displayFile();
-            // this.handleFile(file);
         }
     }
-
-
-    currentScaleFactor = 1;
-    maxScaleFactor = 2;
-    minScaleFactor = 0.5;
 
     zoomDiv(direction) {
         if (direction === 'in') {
@@ -445,5 +458,19 @@ export class SpatialGEComponent implements OnInit {
             plotContainer.style.transform = transformValue;
             imageContainer.style.transform = transformValue;
         }
+    }
+
+    stretchPlot(axis, direction) {
+        if (axis === 'x-axis' && direction === '+') {
+            this.widthAdjustment += 1;
+        } else if (axis === 'x-axis' && direction === '-') {
+            this.widthAdjustment -= 1;
+        } else if (axis === 'y-axis' && direction === '+') {
+            this.heightAdjustment += 1;
+        } else if (axis === 'y-axis' && direction === '-') {
+            this.heightAdjustment -= 1;
+        }
+
+        this.createScatterPlot()
     }
 }

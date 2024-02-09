@@ -1,5 +1,5 @@
 .analysis-card__img {
-    background-image: url("~assets/icons/histogram.png");
+    background-image: url("~assets/icons/ct-scan.png");
     background-size: 30px;
     background-position: top right;
     background-repeat: no-repeat;
@@ -21,15 +21,19 @@
 }
 
 .overlayContainer {
-    // width: 400px;
-    // height: 400px;
     overflow: hidden;
 }
 
 #radio-group-axis {
     display: block;
     font-weight: bold;
-    margin-bottom: 6px;
+    margin: 6px 0;
+}
+
+#modes-label {
+    display: block;
+    font-weight: bold;
+    margin: 6px 0;
 }
 
 .displayValue {

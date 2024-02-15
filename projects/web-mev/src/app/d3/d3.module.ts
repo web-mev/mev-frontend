@@ -54,7 +54,9 @@ import { SctkSingleRComponent } from './components/sctk-singleR/sctk-singleR.com
 import { ResultInputInfoComponent } from './components/result-input-info/result-input-info.component';
 import { InputInfoDialogComponent } from './components/result-input-info/inputInfoDialog/input-info-dialog.component';
 import { BasicOutputComponent } from './components/basic-output/basic-output.component';
-import { SpatialGEComponent } from './components/spatialGE/spatialGE.component';
+import { SpatialGENormalizationComponent } from './components/spatialge-normalization/spatialge-normalization.component';
+import { BaseSpatialgeComponent } from './components/base-spatialge/base-spatialge.component';
+import { SpatialGEClustersComponent } from './components/spatialge-clusters/spatialge-clusters.component';
 
 @NgModule({
   declarations: [
@@ -109,7 +111,9 @@ import { SpatialGEComponent } from './components/spatialGE/spatialGE.component';
     ResultInputInfoComponent,
     InputInfoDialogComponent,
     BasicOutputComponent,
-    SpatialGEComponent,
+    SpatialGENormalizationComponent,
+    BaseSpatialgeComponent,
+    SpatialGEClustersComponent
   ],
   imports: [CommonModule, SharedModule, DragDropModule, MatBadgeModule],
   exports: [
@@ -154,7 +158,9 @@ import { SpatialGEComponent } from './components/spatialGE/spatialGE.component';
     ResultInputInfoComponent,
     InputInfoDialogComponent,
     BasicOutputComponent,
-    SpatialGEComponent,
+    SpatialGENormalizationComponent,
+    BaseSpatialgeComponent,
+    SpatialGEClustersComponent
   ]
 })
 export class D3Module { }

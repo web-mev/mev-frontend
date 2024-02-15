@@ -1,0 +1,170 @@
+<mev-spinner-overlay *ngIf="isLoading"></mev-spinner-overlay>
+<mat-card class="analysis-card">
+    <mat-card-header>
+        <div mat-card-avatar class="analysis-card__img"></div>
+        <mat-card-title>SpatialGE: {{ outputs?.job_name }}</mat-card-title>
+        <mev-input-info [outputs]="outputs"></mev-input-info>
+    </mat-card-header>
+    <div class="overlayContainer" [style.height.px]="(plotHeight+heightAdjustment+100)"
+        [style.width.px]="overlayImage ? maxImageContainerWidthOverylay : maxImageContainerWidthSidebySide + 200">
+        <div class="searchContainer">
+            <label id="radio-group-axis">Gene Search: </label>
+            <div class="inputContainer">
+                <mat-form-field class="example-form-field container" appearance="outline">
+                    <mat-label>Gene Search</mat-label>
+                    <input matInput type="search" name="search" [(ngModel)]="geneSearchVal"
+                        (keyup.enter)="setGeneSearch()" class="smallerInput">
+                    <button *ngIf="geneSearchVal" matSuffix mat-icon-button aria-label="Clear"
+                        (click)="geneSearchVal = ''">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+                <button mat-flat-button color="primary" class="searchButton" (click)="setGeneSearch()">Submit</button>
+            </div>
+        </div>
+
+        <div class="overlayRow"
+            [style.width.px]="overlayImage ? maxImageContainerWidthOverylay + 150 : maxImageContainerWidthSidebySide + 150">
+            <button mat-button *ngIf="!isLoading" id="downloadButton" (click)="captureAndDownloadImages()"
+                matTooltip="Download Image" title="download something">
+                <mat-icon>save_alt</mat-icon>
+            </button>
+        </div>
+        <div class="overlayDiv">
+            <div #scatter id="scatter" [class]="overlayImage ? 'overlayPlots' : 'displayPlotSideBySide'"
+                [style.opacity]="displayPlot ? plotOpacityValue : 0"
+                [style]="!displayAlignment ? 'z-index: 1' : 'z-index: 3'" class="plotContainer">
+            </div>
+            <div [class]="!droppedFile ? 'drop-zone' : (overlayImage ? '': 'displayImageSideBySide') "
+                (drop)="onDropFile($event)" (dragover)="onDragOver($event)"
+                [style.margin-left.px]="overlayImage ? -(plotWidth + widthAdjustment + legendWidth) : '20'"
+                (click)="fileInput.click()" class="imageContainer">
+                <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;">
+                <div *ngIf="!droppedFile" class="drop-message">
+                    <p>Drop image file here or click to upload</p>
+                </div>
+                <div *ngIf="droppedFile && displayImage" style="z-index: 2;">
+                    <img *ngIf="isImageType(droppedFile.type)" class="overlayPlotsImage" [src]="droppedFileURL"
+                        alt="Dropped Image" [style.height.px]="plotHeight" [style.opacity]="imageOpacityValue">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slider" [style.top.px]="(plotHeight+heightAdjustment) + 100 + 100">
+        <div *ngIf="displayAlignment">
+            <label id="modes-label">Alignment: </label>
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Left"
+                (click)="moveImage('left', 'align')">
+                <mat-icon>arrow_back</mat-icon>
+            </button>
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Right"
+                (click)="moveImage('right', 'align')">
+                <mat-icon>arrow_forward</mat-icon>
+            </button>
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Up"
+                (click)="moveImage('up', 'align')">
+                <mat-icon>arrow_upward</mat-icon>
+            </button>
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Down"
+                (click)="moveImage('down', 'align')">
+                <mat-icon>arrow_downward</mat-icon>
+            </button>
+
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Expand Plot X-Axis"
+                (click)="stretchPlot('x-axis', '+')">
+                <mat-icon class="rotate-90">expand</mat-icon>
+            </button>
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Compress Plot X-Axis"
+                (click)="stretchPlot('x-axis', '-')">
+                <mat-icon class="rotate-90">compress</mat-icon>
+            </button>
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Expand Plot Y-Axis"
+                (click)="stretchPlot('y-axis', '+')">
+                <mat-icon>expand</mat-icon>
+            </button>
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Compress Plot Y-Axis"
+                (click)="stretchPlot('y-axis', '-')">
+                <mat-icon>compress</mat-icon>
+            </button>
+
+        </div>
+        <div *ngIf="displayZoom">
+            <label id="modes-label">Zoom: </label>
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Zoom In" (click)="zoomDiv('in')">
+                <mat-icon>zoom_in</mat-icon>
+            </button>
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Zoom Out"
+                (click)="zoomDiv('out')">
+                <mat-icon>zoom_out</mat-icon>
+            </button>
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Left"
+                (click)="moveImage('left', 'zoom')">
+                <mat-icon>arrow_back</mat-icon>
+            </button>
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Right"
+                (click)="moveImage('right', 'zoom')">
+                <mat-icon>arrow_forward</mat-icon>
+            </button>
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Up"
+                (click)="moveImage('up', 'zoom')">
+                <mat-icon>arrow_upward</mat-icon>
+            </button>
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Down"
+                (click)="moveImage('down', 'zoom')">
+                <mat-icon>arrow_downward</mat-icon>
+            </button>
+        </div>
+
+        <label id="radio-group-axis">Plot Opacity: <span class="displayValue"> {{plotOpacityValue}}</span></label>
+        {{0}} %
+        <mat-slider min="0" max="1" step=".1" [(ngModel)]="plotOpacityValue"
+            (input)="updatePlotOpacity(plotOpacityValue)">
+        </mat-slider>
+        {{100}} %
+        <br>
+        <label id="radio-group-axis">Image Opacity: <span class="displayValue"> {{imageOpacityValue}}</span></label>
+        {{0}} %
+        <mat-slider min="0" max="1" step=".1" [(ngModel)]="imageOpacityValue"
+            (input)="updateImageOpacity(imageOpacityValue)">
+        </mat-slider>
+        {{100}} %
+        <br>
+        <mat-slide-toggle [(ngModel)]="overlayImage">Overlay Images</mat-slide-toggle>
+        <br>
+        <mat-slide-toggle [(ngModel)]="displayAlignment" (change)="setAlignmentMode()">Alignment Mode</mat-slide-toggle>
+        <br>
+        <mat-slide-toggle [(ngModel)]="displayZoom" (change)="setZoomMode()">Zoom Mode</mat-slide-toggle>
+        <br>
+        <mat-slide-toggle [(ngModel)]="displayPlot">Display Plot</mat-slide-toggle>
+        <br>
+        <mat-slide-toggle [(ngModel)]="displayImage">Display Image</mat-slide-toggle>
+        <br>
+
+        <br>
+        <label id="radio-group-axis">Plot Color: </label>
+        <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+            [(ngModel)]="selectedColor" (change)="onColorChange()">
+            <div *ngFor="let plotColor of colors" class="radio-container">
+                <mat-radio-button class="example-radio-button" [value]="plotColor">{{plotColor}}</mat-radio-button>
+            </div>
+        </mat-radio-group>
+        <br>
+        <br>
+        <label id="radio-group-axis">Scale Factor:</label>
+        <div class="inputContainer">
+            <mat-form-field class="example-form-field container" appearance="outline">
+                <mat-label>Scale Factor</mat-label>
+                <input matInput type="search" name="search" [(ngModel)]="scaleFactorVal"
+                    (keyup.enter)="setScaleFactor()" class="smallerInput">
+                <button *ngIf="scaleFactorVal" matSuffix mat-icon-button aria-label="Clear"
+                    (click)="scaleFactorVal = ''">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+            <button mat-flat-button color="primary" class="searchButton" (click)="setScaleFactor()">Submit</button>
+        </div>
+
+    </div>
+
+</mat-card>

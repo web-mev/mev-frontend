@@ -24,6 +24,10 @@
     overflow: hidden;
 }
 
+.overlayRow {
+    position: absolute;
+}
+
 #radio-group-axis {
     display: block;
     font-weight: bold;
@@ -44,19 +48,12 @@ mat-slider {
     width: 250px;
 }
 
-.overlayPlots {
-    // background-color: rgb(139, 25, 25, 0.4);
-}
 .displayImageSideBySide {
     margin-left: 20px;
 }
 
 .displayPlotSideBySide {
     position: relative;
-}
-.overlayImageContainer {
-    // margin-left: -289px;
-    // margin-left: -578px
 }
 
 .slider {
@@ -144,4 +141,15 @@ mat-slider {
 
 .drop-message {
     color: #666;
+}
+
+#downloadButton {
+    height: fit-content;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.rotate-90 {
+    transform: rotate(90deg);
 }

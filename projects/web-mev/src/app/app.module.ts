@@ -78,7 +78,7 @@ import { ContactComponent } from './features/contact-dialog/contact.component';
     PasswordChangeComponent,
     ContactComponent,
     AuthRedirectComponent,
-    UserInfoComponent
+    UserInfoComponent,
   ],
   providers: [
     BnNgIdleService,

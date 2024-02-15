@@ -1,0 +1,159 @@
+.analysis-card__img {
+    background-image: url("~assets/icons/ct-scan.png");
+    background-size: 30px;
+    background-position: top right;
+    background-repeat: no-repeat;
+}
+
+.analysis-card__content {
+    padding-top: 1rem;
+}
+
+.overlayDiv,
+.sideBySideDiv {
+    display: flex;
+}
+
+.overlayDiv {
+    margin-top: 10px;
+    position: relative;
+    width: fit-content;
+}
+
+.overlayContainer {
+    overflow: hidden;
+}
+
+.overlayRow {
+    position: absolute;
+}
+
+#radio-group-axis {
+    display: block;
+    font-weight: bold;
+    margin: 6px 0;
+}
+
+#modes-label {
+    display: block;
+    font-weight: bold;
+    margin: 6px 0;
+}
+
+.displayValue {
+    font-weight: 200;
+}
+
+mat-slider {
+    width: 250px;
+}
+
+.displayImageSideBySide {
+    margin-left: 20px;
+}
+
+.displayPlotSideBySide {
+    position: relative;
+}
+
+.slider {
+    position: absolute;
+}
+
+#image {
+    display: block;
+
+    /* This rule is very important, please don't ignore this */
+    max-width: 100%;
+}
+
+.mat-mdc-radio-button ~ .mat-mdc-radio-button {
+    margin-left: 16px;
+}
+
+.example-radio-group {
+    display: flex;
+}
+
+.radio-container {
+    margin-right: 10px; /* Adjust margin as needed */
+}
+
+.inputContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+.searchButton {
+    margin: 8px;
+    height: 40px;
+    padding: 0px;
+}
+
+.smaller-input {
+    width: 500px; /* Adjust the width as needed */
+}
+
+::ng-deep {
+    .d3-tip {
+        margin: 1rem 0;
+        padding: 8px;
+        position: fixed;
+        z-index: 1000;
+        font-size: 11px;
+        border-radius: 3px;
+        box-shadow: 2px 2px 4px rgb(0 0 0 / 10%);
+        background-color: rgba(255, 255, 255, 0.7);
+        border: 1px solid #d9d9d9;
+        color: rgba(0, 0, 0, 0.9);
+    }
+
+    .d3-tip table th,
+    td {
+        padding: 5px 10px;
+    }
+
+    .category {
+        display: inline;
+        font-weight: 500;
+        color: rgba(0, 0, 0, 0.9);
+    }
+}
+
+.custom-button {
+    width: 36px;
+    height: 36px;
+    min-width: 38px !important;
+    padding: 0px !important;
+    margin: 1px;
+}
+
+.drop-zone {
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    width: 250px;
+    height: 350px;
+    margin-left: 20px;
+}
+
+.drop-message {
+    color: #666;
+}
+
+#downloadButton {
+    height: fit-content;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.searchContainer{
+    width: 400px;
+}
+
+.rotate-90 {
+    transform: rotate(90deg);
+}

@@ -119,7 +119,10 @@
         <mev-basic-output [outputs]="outputs"></mev-basic-output>
     </ng-container>
     <ng-container *ngIf="operationName === 'spatialGE normalization'">
-        <mev-spatialGE [outputs]="outputs"></mev-spatialGE>
+        <mev-spatialge-normalization [outputs]="outputs"></mev-spatialge-normalization>
+    </ng-container>
+    <ng-container *ngIf="operationName === 'spatialGE clustering'">
+        <mev-spatialge-clusters [outputs]="outputs"></mev-spatialge-clusters>
     </ng-container>
 </div>
 

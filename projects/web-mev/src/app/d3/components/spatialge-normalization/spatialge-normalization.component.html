@@ -6,7 +6,7 @@
         <mev-input-info [outputs]="outputs"></mev-input-info>
     </mat-card-header>
     <div class="overlayContainer" [style.height.px]="(plotHeight+heightAdjustment+100)"
-        [style.width.px]="overlayImage ? maxImageContainerWidthOverylay : maxImageContainerWidthSidebySide + 200">
+        [style.width.px]="overlayImage ? maxImageContainerWidthOverylay +200: maxImageContainerWidthSidebySide + 200">
         <div class="searchContainer">
             <label id="radio-group-axis">Gene Search: </label>
             <div class="inputContainer">

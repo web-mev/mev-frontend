@@ -16,7 +16,7 @@ interface ScatterDataNormailization {
 interface ScatterDataCluster {
   xValue: number;
   yValue: number;
-  clusterid: string;
+  clusterid: string
 }
 
 @Component({
@@ -62,7 +62,6 @@ export class BaseSpatialgeComponent {
 
   displayAlignment: boolean = false;
   displayZoom: boolean = false;
-  // displayStretch: boolean = false;
 
   scaleFactorVal = '0.01602821';
   geneSearchVal = 'VIM'
@@ -94,6 +93,9 @@ export class BaseSpatialgeComponent {
   useNormalization = false;
 
   legendWidth = 100;
+
+  clusterTypes = {}
+  clusterColors = ["#EBCD00", "#52A52E", "#00979D", "#6578B4", "#80408D", "#C9006B", "#68666F", "#E80538", "#E87D1E", "#EBCD00"]
 
   constructor(
     private httpClient: HttpClient,
@@ -147,7 +149,6 @@ export class BaseSpatialgeComponent {
 
   getDataNormalization() {
     this.useNormalization = true;
-    console.log("got to getdata in base")
     this.isLoading = true;
     this.scrollTo('scatter')
     this.resetVariables();
@@ -172,7 +173,6 @@ export class BaseSpatialgeComponent {
 
     forkJoin([normRequest, coordsMetadataRequest]).subscribe(([normRes, coordsMetadataRes]) => {
       this.isLoading = false;
-      console.log("normRes: ", normRes)
       for (let i in normRes[0]['values']) {
         let key = i;
         let count = normRes[0]['values'][i];
@@ -229,7 +229,6 @@ export class BaseSpatialgeComponent {
 
   getDataClusters() {
     this.useCluster = true;
-    console.log("got to getdata in base/clusters")
     this.isLoading = true;
     this.scrollTo('scatter')
     this.resetVariables();
@@ -256,14 +255,6 @@ export class BaseSpatialgeComponent {
       this.isLoading = false;
       console.log("cluster rews: ", clusterRes, coordsMetadataRes)
       for (let index in clusterRes) {
-
-        // console.log("i: ", clusterRes[index])
-        // let key = i;
-        // let count = clusterRes[0]['values'][i];
-        // this.dataDict[key] = {
-        //   ...this.dataDict[key],
-        //   count
-        // };
         let key = clusterRes[index]['rowname']
         let clusterid = clusterRes[index]['values']['clusterid']
         this.dataDict[key] = {
@@ -284,25 +275,32 @@ export class BaseSpatialgeComponent {
         };
       }
 
-
-      // next step, get min and max values. no need to do totalCounts.
-      // this.getMinMaxValues();
+      let colorLabels = {}
 
       for (let i in this.dataDict) {
         const parsedX = parseInt(this.dataDict[i]['xVal'])
         const parsedY = parseInt(this.dataDict[i]['yVal'])
-        // const totalCounts = parseFloat(parseFloat(this.dataDict[i]['count']).toFixed(3));
         const clusterid = this.dataDict[i]['clusterid']
 
         if (!isNaN(parsedX) && !isNaN(parsedY) && clusterid) {
+          let clusterName = "Cluster " + clusterid
           let temp = {
             "xValue": parsedX,
             "yValue": parsedY,
             "clusterid": clusterid
-            // "totalCounts": totalCounts
           }
-          // let keyName = parsedX + "_" + parsedY
-          // this.totalCounts[keyName] = totalCounts
+          //this allows for the colors to be repeated 
+          let clusterNumber = parseInt(clusterid)
+          if (!colorLabels[clusterNumber]) {
+            colorLabels[clusterNumber] = 1;
+            let remainder = clusterNumber % this.clusterColors.length - 1;
+            let colorObj = {
+              "label": clusterName,
+              "color": this.clusterColors[remainder]
+            }
+            this.clusterTypes[clusterName] = colorObj
+          }
+
           this.scatterPlotDataCluster.push(temp)
 
           this.xMin = Math.min(this.xMin, parsedX);
@@ -310,51 +308,15 @@ export class BaseSpatialgeComponent {
 
           this.yMin = Math.min(this.yMin, parsedY);
           this.yMax = Math.max(this.yMax, parsedY);
-
-          // this.totalCountsMax = Math.max(this.totalCountsMax, totalCounts)
-          // this.totalCountsMin = Math.min(this.totalCountsMin, totalCounts)
         }
       }
       this.plotWidth = (this.xMax - this.xMin) * this.plotSizeMutiplier / 100;
       this.plotHeight = (this.yMax - this.yMin) * this.plotSizeMutiplier / 100;
 
       this.createScatterPlot()
-      console.log("dataDict: ", this.dataDict)
 
     });
   }
-
-  // getMinMaxValues() {
-  //   for (let i in this.dataDict) {
-  //     const parsedX = parseInt(this.dataDict[i]['xVal'])
-  //     const parsedY = parseInt(this.dataDict[i]['yVal'])
-  //     const totalCounts = parseFloat(parseFloat(this.dataDict[i]['count']).toFixed(3));
-
-  //     if (!isNaN(parsedX) && !isNaN(parsedY) && !isNaN(totalCounts)) {
-  //       let temp = {
-  //         "xValue": parsedX,
-  //         "yValue": parsedY,
-  //         "totalCounts": totalCounts
-  //       }
-  //       let keyName = parsedX + "_" + parsedY
-  //       this.totalCounts[keyName] = totalCounts
-  //       this.scatterPlotData.push(temp)
-
-  //       this.xMin = Math.min(this.xMin, parsedX);
-  //       this.xMax = Math.max(this.xMax, parsedX);
-
-  //       this.yMin = Math.min(this.yMin, parsedY);
-  //       this.yMax = Math.max(this.yMax, parsedY);
-
-  //       this.totalCountsMax = Math.max(this.totalCountsMax, totalCounts)
-  //       this.totalCountsMin = Math.min(this.totalCountsMin, totalCounts)
-  //     }
-  //   }
-  //   this.plotWidth = (this.xMax - this.xMin) * this.plotSizeMutiplier / 100;
-  //   this.plotHeight = (this.yMax - this.yMin) * this.plotSizeMutiplier / 100;
-
-  //   this.createScatterPlot()
-  // }
 
   createScatterPlot() {
     var margin = { top: 0, right: this.legendWidth, bottom: 0, left: 0 },
@@ -390,7 +352,7 @@ export class BaseSpatialgeComponent {
 
     const colorScale = d3.scaleOrdinal<string>()
       .domain(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"])
-      .range(["#EBCD00", "#52A52E", "#00979D", "#6578B4", "#80408D", "#C9006B", "#68666F", "#E80538", "#E87D1E", "#EBCD00"]);
+      .range(this.clusterColors);
 
     var x = d3.scaleLinear()
       .domain([this.xMin * (this.scaleFactor), this.xMax * (1 + this.scaleFactor)])
@@ -485,6 +447,35 @@ export class BaseSpatialgeComponent {
         .attr("font-size", "6px")
         .attr("font-weight", "bold")
         .text("Counts");
+    } else if (this.useCluster) {
+      // Legend
+      const clusterColors = Object.keys(this.clusterTypes).map(key => ({
+        label: this.clusterTypes[key].label,
+        color: this.clusterTypes[key].color
+      }));
+      const legend = svg
+        .selectAll('.legend')
+        .data(clusterColors)
+        .enter()
+        .append('g')
+        .classed('legend', true)
+        .attr('transform', function (d, i) {
+          return 'translate(0,' + (i * 20 + 50) + ')';
+        });
+
+      legend
+        .append('circle')
+        .attr('r', 5)
+        .attr('cx', width + 10)
+        .attr('fill', d => d.color);
+
+      legend
+        .append('text')
+        .attr('x', width + 20)
+        .attr('dy', '.35em')
+        .style('fill', '#000')
+        .attr('class', 'legend-label')
+        .text(d => d.label);
     }
 
   }
@@ -634,11 +625,11 @@ export class BaseSpatialgeComponent {
     this.createScatterPlot()
   }
 
-  setAlignmentMode(){
+  setAlignmentMode() {
     this.displayZoom = false;
   }
 
-  setZoomMode(){
+  setZoomMode() {
     this.displayAlignment = false;
   }
 }

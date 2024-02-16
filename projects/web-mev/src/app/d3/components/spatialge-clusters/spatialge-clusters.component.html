@@ -6,9 +6,9 @@
         <mev-input-info [outputs]="outputs"></mev-input-info>
     </mat-card-header>
     <div class="overlayContainer" [style.height.px]="(plotHeight+heightAdjustment)"
-        [style.width.px]="overlayImage ? maxImageContainerWidthOverylay : maxImageContainerWidthSidebySide + 200">
+        [style.width.px]="overlayImage ? maxImageContainerWidthOverylay +200: maxImageContainerWidthSidebySide + 200">
         <div class="overlayRow"
-            [style.width.px]="overlayImage ? maxImageContainerWidthOverylay + 150 : maxImageContainerWidthSidebySide + 150">
+            [style.width.px]="overlayImage ? maxImageContainerWidthOverylay + 200 : maxImageContainerWidthSidebySide + 200">
             <button mat-button *ngIf="!isLoading" id="downloadButton" (click)="captureAndDownloadImages()"
                 matTooltip="Download Image" title="download something">
                 <mat-icon>save_alt</mat-icon>
@@ -148,7 +148,7 @@
             </mat-form-field>
             <button mat-flat-button color="primary" class="searchButton" (click)="setScaleFactor()">Submit</button>
         </div>
-        <label id="radio-group-axis">Gene Search: </label>
+        <!-- <label id="radio-group-axis">Gene Search: </label>
         <div class="inputContainer">
             <mat-form-field class="example-form-field container" appearance="outline">
                 <mat-label>Gene Search</mat-label>
@@ -159,7 +159,7 @@
                 </button>
             </mat-form-field>
             <button mat-flat-button color="primary" class="searchButton" (click)="setGeneSearch()">Submit</button>
-        </div>
+        </div> -->
     </div>
 
 </mat-card>

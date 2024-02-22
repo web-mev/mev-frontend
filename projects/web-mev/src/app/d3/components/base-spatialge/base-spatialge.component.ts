@@ -95,7 +95,7 @@ export class BaseSpatialgeComponent {
   legendWidth = 100;
 
   clusterTypes = {}
-  clusterColors = ["#EBCD00", "#52A52E", "#00979D", "#6578B4", "#80408D", "#C9006B", "#68666F", "#E80538", "#E87D1E", "#EBCD00"]
+  clusterColors = ["#EBCD00", "#52A52E", "#00979D", "#6578B4", "#80408D", "#C9006B", "#68666F", "#E80538", "#E87D1E"]
 
   constructor(
     private httpClient: HttpClient,
@@ -253,10 +253,10 @@ export class BaseSpatialgeComponent {
 
     forkJoin([clusterRequest, coordsMetadataRequest]).subscribe(([clusterRes, coordsMetadataRes]) => {
       this.isLoading = false;
-      console.log("cluster rews: ", clusterRes, coordsMetadataRes)
       for (let index in clusterRes) {
         let key = clusterRes[index]['rowname']
         let clusterid = clusterRes[index]['values']['clusterid']
+        // let clusterid = Math.floor(Math.random() * 20) + 1;
         this.dataDict[key] = {
           ...this.dataDict[key],
           clusterid
@@ -293,10 +293,11 @@ export class BaseSpatialgeComponent {
           let clusterNumber = parseInt(clusterid)
           if (!colorLabels[clusterNumber]) {
             colorLabels[clusterNumber] = 1;
-            let remainder = clusterNumber % this.clusterColors.length - 1;
+            let remainder = clusterNumber % this.clusterColors.length ;
+            console.log("remainder: ", clusterName, clusterNumber, remainder, this.clusterColors[remainder-1], this.clusterColors[this.clusterColors.length -1])
             let colorObj = {
               "label": clusterName,
-              "color": this.clusterColors[remainder]
+              "color": remainder === 0 ? this.clusterColors[this.clusterColors.length -1] : this.clusterColors[remainder -1]
             }
             this.clusterTypes[clusterName] = colorObj
           }
@@ -351,7 +352,7 @@ export class BaseSpatialgeComponent {
       .range(["rgb(255,255,224)", this.selectedColor]);
 
     const colorScale = d3.scaleOrdinal<string>()
-      .domain(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"])
+      .domain([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20])
       .range(this.clusterColors);
 
     var x = d3.scaleLinear()
@@ -375,6 +376,8 @@ export class BaseSpatialgeComponent {
       .attr("cy", function (d) { return height - y(d.yValue); })
       .attr("r", 1.75)
       .attr("fill", d => {
+        // console.log("clusterid: ", d.clusterid, colorScale(d.clusterid))
+
         return useNorm ? color(d.totalCounts) : colorScale(d.clusterid)
       })
       .on('mouseover', function (mouseEvent: any, d) {
@@ -449,10 +452,20 @@ export class BaseSpatialgeComponent {
         .text("Counts");
     } else if (this.useCluster) {
       // Legend
+      console.log("cluster types: ", this.clusterTypes)
       const clusterColors = Object.keys(this.clusterTypes).map(key => ({
         label: this.clusterTypes[key].label,
         color: this.clusterTypes[key].color
       }));
+      clusterColors.sort((a, b) => {
+        // Extracting the numerical part of the label
+        const numA = parseInt(a.label.split(' ')[1]);
+        const numB = parseInt(b.label.split(' ')[1]);
+        
+        // Comparing the numerical parts
+        return numA - numB;
+      });
+      console.log("cluster colors: ", clusterColors)
       const legend = svg
         .selectAll('.legend')
         .data(clusterColors)
@@ -460,12 +473,12 @@ export class BaseSpatialgeComponent {
         .append('g')
         .classed('legend', true)
         .attr('transform', function (d, i) {
-          return 'translate(0,' + (i * 20 + 50) + ')';
+          return 'translate(0,' + (i * 15 + 50) + ')';
         });
 
       legend
         .append('circle')
-        .attr('r', 5)
+        .attr('r', 4)
         .attr('cx', width + 10)
         .attr('fill', d => d.color);
 
@@ -474,6 +487,7 @@ export class BaseSpatialgeComponent {
         .attr('x', width + 20)
         .attr('dy', '.35em')
         .style('fill', '#000')
+        .style('font-size', '8px')
         .attr('class', 'legend-label')
         .text(d => d.label);
     }

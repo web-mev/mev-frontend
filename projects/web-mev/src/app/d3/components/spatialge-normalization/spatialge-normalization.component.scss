@@ -16,6 +16,7 @@
 
 .overlayDiv {
     margin-top: 10px;
+    // margin-right: 20px;
     position: relative;
     width: fit-content;
     overflow: hidden;
@@ -46,7 +47,7 @@
 }
 
 mat-slider {
-    width: 250px;
+    width: 100px;
 }
 
 .displayImageSideBySide {
@@ -175,9 +176,13 @@ mat-slider {
 }
 
 .overlayPlots {
-    background-color: rgb(139, 25, 25, 0.4);
+    // background-color: rgb(139, 25, 25, 0.4);
 }
 
 .displayOverlay123{
-    background-color: aquamarine;
+    // background-color: aquamarine;
+}
+
+.zoomContainer{
+    margin-left: 50px;
 }

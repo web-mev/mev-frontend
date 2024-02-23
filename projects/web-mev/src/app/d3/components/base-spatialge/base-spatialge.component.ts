@@ -668,4 +668,20 @@ export class BaseSpatialgeComponent {
     return value
     return Math.floor(value);
   }
+
+  minLeftValue(): number {
+    return -this.plotWidth * this.currentScaleFactor + this.plotWidth;
+}
+
+maxLeftValue(): number {
+    return this.plotWidth * this.currentScaleFactor - this.plotWidth;
+}
+
+minTopValue(): number {
+    return -this.plotHeight * this.currentScaleFactor + this.plotHeight;
+}
+
+maxTopValue(): number {
+    return this.plotHeight * this.currentScaleFactor - this.plotHeight;
+}
 }

@@ -22,7 +22,6 @@
                 <button mat-flat-button color="primary" class="searchButton" (click)="setGeneSearch()">Submit</button>
             </div>
         </div>
-
         <!-- <div>
             <img #imageElement (mousedown)="onMouseDown($event)" (mousemove)="onMouseMove($event)"
                 (mouseup)="onMouseUp($event)" [src]="droppedFileURL" style="position: relative;" [style.height.px]="plotHeight">
@@ -42,12 +41,12 @@
                 [style.opacity]="displayPlot ? plotOpacityValue : 0"
                 [style]="!displayAlignment ? 'z-index: 2' : 'z-index: 4'" class="plotContainer">
             </div>
-            <div [class]="!droppedFile ? 'drop-zone' : (overlayImage ? '': 'displayImageSideBySide') "
+            <div [class]="!droppedFile ? 'drop-zone' : (overlayImage ? 'displayOverlay123': 'displayImageSideBySide') "
                 (drop)="onDropFile($event)" (dragover)="onDragOver($event)"
-                [style.margin-left.px]="overlayImage ? -(plotWidth + widthAdjustment + legendWidth) : '20'"
+                [style.margin-left.px]="overlayImage ? -(plotWidth + widthAdjustment + legendWidth): '20'"
                 (click)="fileInput.click()" class="imageContainer">
                 <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;">
-                <div *ngIf="!droppedFile" class="drop-message">
+                <div *ngIf="!droppedFile && !displayZoom" class="drop-message">
                     <p>Drop image file here or click to upload</p>
                 </div>
                 <div *ngIf="droppedFile && displayImage" style="z-index: 3;">
@@ -55,24 +54,22 @@
                         alt="Dropped Image" [style.height.px]="plotHeight" [style.opacity]="imageOpacityValue"
                         #imageElement (mousedown)="onMouseDown($event)" (mousemove)="onMouseMove($event)"
                         (mouseup)="onMouseUp($event)"> -->
-                    <div [class]="boxZoom ? 'image-container' : ''" [style.width.px]="boxZoomContainerWidth"
-                        [style.height.px]="boxZoomContainerHeight">
-                        <img *ngIf="isImageType(droppedFile.type) && boxZoom" class="overlayPlotsImage" [src]="droppedFileURL"
-                            alt="Dropped Image" [style.height.px]="plotHeight" [style.opacity]="imageOpacityValue"
-                            [style.top.px]="boxZoomTopVal" [style.left.px]="boxZoomLeftVal"
-                            [style.width.px]="400*boxZoomLevel" [style.height.px]="600*boxZoomLevel">
+                    <!-- <div> -->
+                        <img *ngIf="isImageType(droppedFile.type)" class="overlayPlotsImage"
+                            [src]="droppedFileURL" alt="Dropped Image" [style.height.px]="plotHeight"
+                            [style.opacity]="imageOpacityValue">
 
 
-                        <img *ngIf="isImageType(droppedFile.type) && !boxZoom" class="overlayPlotsImage" [src]="droppedFileURL"
-                            alt="Dropped Image" [style.height.px]="plotHeight" [style.opacity]="imageOpacityValue"
-                            [style.top.px]="boxZoomTopVal" [style.left.px]="boxZoomLeftVal"
-                            >
-                    </div>
+                        <!-- <img *ngIf="isImageType(droppedFile.type) && !boxZoom" class="overlayPlotsImage"
+                            [src]="droppedFileURL" alt="Dropped Image" [style.height.px]="plotHeight"
+                            [style.opacity]="imageOpacityValue" [style.top.px]="boxZoomTopVal"
+                            [style.left.px]="boxZoomLeftVal"> -->
+                    <!-- </div> -->
 
-                    <div *ngIf="boxZoom && displayImage && droppedFile" [ngStyle]="selectionRectStyle"
+                    <!-- <div *ngIf="boxZoom && displayImage && droppedFile" [ngStyle]="selectionRectStyle"
                         style="z-index: 1;"
                         [style.margin-left.px]="overlayImage ? -(plotWidth + widthAdjustment + legendWidth) : '20'">
-                    </div>
+                    </div> -->
                 </div>
 
             </div>
@@ -118,35 +115,58 @@
 
         </div>
         <div *ngIf="displayZoom">
-            <label id="modes-label">Zoom: </label>
-            <button mat-flat-button color="primary" class="custom-button" matTooltip="Zoom In" (click)="zoomDiv('in')">
+            <label id="modes-label">Zoom Mode: </label>
+            <br>
+            <!-- <button mat-flat-button color="primary" class="custom-button" matTooltip="Zoom In" (click)="zoomDiv('in')">
                 <mat-icon>zoom_in</mat-icon>
-            </button>
-            <button mat-flat-button color="primary" class="custom-button" matTooltip="Zoom Out"
+            </button> -->
+            <!-- <button mat-flat-button color="primary" class="custom-button" matTooltip="Zoom Out"
                 (click)="zoomDiv('out')">
                 <mat-icon>zoom_out</mat-icon>
-            </button>
-            <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Left"
+            </button> -->
+            
+            <label id="radio-group-axis">Zoom In/Out: <span class="displayValue"> {{currentScaleFactor}}</span></label>
+            {{0.5}}
+            <mat-slider min=".5" max="5" step=".1" [(ngModel)]="currentScaleFactor"
+                (change)="applyZoom()">
+            </mat-slider>
+            {{5}}
+            <br>
+            <label id="radio-group-axis">Move Left/Right: <span class="displayValue"> {{ roundUp(currentLeft) }}</span></label>
+            {{roundDown(-plotWidth*currentScaleFactor + (plotWidth*currentScaleFactor)/2)}}
+            <mat-slider [min]="-plotWidth*currentScaleFactor +(plotWidth*currentScaleFactor)/2" [max]="plotWidth*currentScaleFactor -(plotWidth*currentScaleFactor)/2" step="10" [(ngModel)]="currentLeft"
+                (change)="moveImage('left', 'zoom')">
+            </mat-slider>
+            {{roundUp(plotWidth*currentScaleFactor - (plotWidth*currentScaleFactor)/2)}}
+            <br>
+            <label id="radio-group-axis">Move Up/Down: <span class="displayValue"> {{roundUp(currentTop)}}</span></label>
+            {{roundDown(-plotHeight*currentScaleFactor)}}
+            <mat-slider [min]="-plotHeight*currentScaleFactor" [max]="plotHeight*currentScaleFactor" step="10" [(ngModel)]="currentTop"
+                (change)="moveImage('left', 'zoom')">
+            </mat-slider>
+            {{roundUp(plotHeight*currentScaleFactor)}}
+            
+            <!-- <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Left"
                 (click)="moveImage('left', 'zoom')">
                 <mat-icon>arrow_back</mat-icon>
             </button>
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Right"
                 (click)="moveImage('right', 'zoom')">
                 <mat-icon>arrow_forward</mat-icon>
-            </button>
-            <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Up"
+            </button> -->
+            <!-- <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Up"
                 (click)="moveImage('up', 'zoom')">
                 <mat-icon>arrow_upward</mat-icon>
             </button>
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Down"
                 (click)="moveImage('down', 'zoom')">
                 <mat-icon>arrow_downward</mat-icon>
-            </button>
+            </button> -->
         </div>
 
-        <mat-slide-toggle [(ngModel)]="boxZoom">Rectangle Box Zoom</mat-slide-toggle>
-        <br>
-        <div *ngIf="boxZoom">
+        <!-- <mat-slide-toggle [(ngModel)]="boxZoom">Rectangle Box Zoom</mat-slide-toggle>
+        <br> -->
+        <!-- <div *ngIf="boxZoom">
             <mat-form-field class="example-form-field container" appearance="outline">
                 <mat-label>Box Zoom Left Value</mat-label>
                 <input matInput type="search" name="search" [(ngModel)]="boxZoomLeftVal" class="smallerInput">
@@ -189,7 +209,7 @@
                 </button>
             </mat-form-field>
             <br>
-        </div>
+        </div> -->
         <label id="radio-group-axis">Plot Opacity: <span class="displayValue"> {{plotOpacityValue}}</span></label>
         {{0}} %
         <mat-slider min="0" max="1" step=".1" [(ngModel)]="plotOpacityValue"
@@ -230,13 +250,13 @@
             <mat-form-field class="example-form-field container" appearance="outline">
                 <mat-label>Scale Factor</mat-label>
                 <input matInput type="search" name="search" [(ngModel)]="scaleFactorVal"
-                    (keyup.enter)="setScaleFactor()" class="smallerInput">
+                    (keyup.enter)="setScaleFactor($event)" class="smallerInput">
                 <button *ngIf="scaleFactorVal" matSuffix mat-icon-button aria-label="Clear"
                     (click)="scaleFactorVal = ''">
                     <mat-icon>close</mat-icon>
                 </button>
             </mat-form-field>
-            <button mat-flat-button color="primary" class="searchButton" (click)="setScaleFactor()">Submit</button>
+            <button mat-flat-button color="primary" class="searchButton" (click)="setScaleFactor($event)">Submit</button>
         </div>
 
     </div>

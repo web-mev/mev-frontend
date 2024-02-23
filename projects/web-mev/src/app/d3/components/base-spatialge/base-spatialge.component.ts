@@ -92,7 +92,8 @@ export class BaseSpatialgeComponent {
   useCluster = false;
   useNormalization = false;
 
-  legendWidth = 100;
+  // legendWidth = 100;
+  legendWidth = 0;
 
   clusterTypes = {}
   clusterColors = ["#EBCD00", "#52A52E", "#00979D", "#6578B4", "#80408D", "#C9006B", "#68666F", "#E80538", "#E87D1E"]
@@ -120,7 +121,8 @@ export class BaseSpatialgeComponent {
     this.plotHeight = 500;
   }
 
-  setScaleFactor() {
+  setScaleFactor(event: Event) {
+    event.preventDefault();
     this.scaleFactor = parseFloat(this.scaleFactorVal)
     this.createScatterPlot()
   }
@@ -293,11 +295,11 @@ export class BaseSpatialgeComponent {
           let clusterNumber = parseInt(clusterid)
           if (!colorLabels[clusterNumber]) {
             colorLabels[clusterNumber] = 1;
-            let remainder = clusterNumber % this.clusterColors.length ;
-            console.log("remainder: ", clusterName, clusterNumber, remainder, this.clusterColors[remainder-1], this.clusterColors[this.clusterColors.length -1])
+            let remainder = clusterNumber % this.clusterColors.length;
+            console.log("remainder: ", clusterName, clusterNumber, remainder, this.clusterColors[remainder - 1], this.clusterColors[this.clusterColors.length - 1])
             let colorObj = {
               "label": clusterName,
-              "color": remainder === 0 ? this.clusterColors[this.clusterColors.length -1] : this.clusterColors[remainder -1]
+              "color": remainder === 0 ? this.clusterColors[this.clusterColors.length - 1] : this.clusterColors[remainder - 1]
             }
             this.clusterTypes[clusterName] = colorObj
           }
@@ -320,6 +322,7 @@ export class BaseSpatialgeComponent {
   }
 
   createScatterPlot() {
+
     var margin = { top: 0, right: this.legendWidth, bottom: 0, left: 0 },
       width = this.plotWidth - margin.left + this.widthAdjustment,
       height = this.plotHeight - margin.top - margin.bottom + this.heightAdjustment;
@@ -327,6 +330,8 @@ export class BaseSpatialgeComponent {
     d3.select(this.containerId)
       .selectAll('svg')
       .remove();
+
+    console.log("plot width: ", this.plotWidth, width)
 
     const pointTip = d3Tip()
       .attr('class', 'd3-tip')
@@ -387,110 +392,114 @@ export class BaseSpatialgeComponent {
       .on('mouseout', pointTip.hide);
 
     //Add Legend
-    if (useNorm) {
-      const gradient = svg.append("defs")
-        .append("linearGradient")
-        .attr("id", "legendGradient")
-        .attr("x1", "0%")
-        .attr("y1", "0%")
-        .attr("x2", "100%")
-        .attr("y2", "0%");
+    if (!this.displayZoom) {
 
-      gradient.append("stop")
-        .attr("offset", "0%")
-        .attr("stop-color", "white");
+      if (useNorm) {
+        const gradient = svg.append("defs")
+          .append("linearGradient")
+          .attr("id", "legendGradient")
+          .attr("x1", "0%")
+          .attr("y1", "0%")
+          .attr("x2", "100%")
+          .attr("y2", "0%");
 
-      gradient.append("stop")
-        .attr("offset", "100%")
-        .attr("stop-color", this.selectedColor);
+        gradient.append("stop")
+          .attr("offset", "0%")
+          .attr("stop-color", "white");
 
-      const legendX = 300;
-      const legendY = this.legendWidth;
-      const borderWidth = 1;
-      const legendWidth = 50;
-      const legendHeight = 10;
+        gradient.append("stop")
+          .attr("offset", "100%")
+          .attr("stop-color", this.selectedColor);
 
-      svg.append("rect")
-        .attr("x", legendX - borderWidth)
-        .attr("y", legendY - borderWidth)
-        .attr("width", legendWidth + 2 * borderWidth)
-        .attr("height", legendHeight + 2 * borderWidth)
-        .style("stroke", "rgba(0, 0, 0, 0.3)")
-        .style("fill", "none");
+        const legendX = 300;
+        const legendY = this.legendWidth;
+        const borderWidth = 1;
+        const legendWidth = 50;
+        const legendHeight = 10;
 
-      // Create legend rectangle
-      svg.append("rect")
-        .attr("x", legendX)
-        .attr("y", legendY)
-        .attr("width", legendWidth)
-        .attr("height", legendHeight)
-        .style("fill", "url(#legendGradient)")
+        svg.append("rect")
+          .attr("x", legendX - borderWidth)
+          .attr("y", legendY - borderWidth)
+          .attr("width", legendWidth + 2 * borderWidth)
+          .attr("height", legendHeight + 2 * borderWidth)
+          .style("stroke", "rgba(0, 0, 0, 0.3)")
+          .style("fill", "none");
 
-      svg.append("text")
-        .attr("x", legendX)
-        .attr("y", 120)
-        .attr("text-anchor", "start")
-        .attr("font-size", "6px")
-        .text("0");
+        // Create legend rectangle
+        svg.append("rect")
+          .attr("x", legendX)
+          .attr("y", legendY)
+          .attr("width", legendWidth)
+          .attr("height", legendHeight)
+          .style("fill", "url(#legendGradient)")
 
-      const xmaxLabelWidth = this.totalCountsMax.toString().toLocaleString().length * 1;  // Adjust the font size multiplier as needed
-      const adjustedXmaxLabelX = legendX + 60 - xmaxLabelWidth;
+        svg.append("text")
+          .attr("x", legendX)
+          .attr("y", 120)
+          .attr("text-anchor", "start")
+          .attr("font-size", "6px")
+          .text("0");
 
-      svg.append("text")
-        .attr("x", adjustedXmaxLabelX)
-        .attr("y", 120)
-        .attr("text-anchor", "end")
-        .attr("font-size", "6px")
-        .text(this.totalCountsMax.toLocaleString());
+        const xmaxLabelWidth = this.totalCountsMax.toString().toLocaleString().length * 1;  // Adjust the font size multiplier as needed
+        const adjustedXmaxLabelX = legendX + 60 - xmaxLabelWidth;
 
-      svg.append("text")
-        .attr("x", legendX)
-        .attr("y", 60)
-        .attr("text-anchor", "start")
-        .attr("font-size", "6px")
-        .attr("font-weight", "bold")
-        .text("Counts");
-    } else if (this.useCluster) {
-      // Legend
-      console.log("cluster types: ", this.clusterTypes)
-      const clusterColors = Object.keys(this.clusterTypes).map(key => ({
-        label: this.clusterTypes[key].label,
-        color: this.clusterTypes[key].color
-      }));
-      clusterColors.sort((a, b) => {
-        // Extracting the numerical part of the label
-        const numA = parseInt(a.label.split(' ')[1]);
-        const numB = parseInt(b.label.split(' ')[1]);
-        
-        // Comparing the numerical parts
-        return numA - numB;
-      });
-      console.log("cluster colors: ", clusterColors)
-      const legend = svg
-        .selectAll('.legend')
-        .data(clusterColors)
-        .enter()
-        .append('g')
-        .classed('legend', true)
-        .attr('transform', function (d, i) {
-          return 'translate(0,' + (i * 15 + 50) + ')';
+        svg.append("text")
+          .attr("x", adjustedXmaxLabelX)
+          .attr("y", 120)
+          .attr("text-anchor", "end")
+          .attr("font-size", "6px")
+          .text(this.totalCountsMax.toLocaleString());
+
+        svg.append("text")
+          .attr("x", legendX)
+          .attr("y", 60)
+          .attr("text-anchor", "start")
+          .attr("font-size", "6px")
+          .attr("font-weight", "bold")
+          .text("Counts");
+      } else if (this.useCluster) {
+        // Legend
+        console.log("cluster types: ", this.clusterTypes)
+        const clusterColors = Object.keys(this.clusterTypes).map(key => ({
+          label: this.clusterTypes[key].label,
+          color: this.clusterTypes[key].color
+        }));
+        clusterColors.sort((a, b) => {
+          // Extracting the numerical part of the label
+          const numA = parseInt(a.label.split(' ')[1]);
+          const numB = parseInt(b.label.split(' ')[1]);
+
+          // Comparing the numerical parts
+          return numA - numB;
         });
+        console.log("cluster colors: ", clusterColors)
+        const legend = svg
+          .selectAll('.legend')
+          .data(clusterColors)
+          .enter()
+          .append('g')
+          .classed('legend', true)
+          .attr('transform', function (d, i) {
+            return 'translate(0,' + (i * 15 + 50) + ')';
+          });
 
-      legend
-        .append('circle')
-        .attr('r', 4)
-        .attr('cx', width + 10)
-        .attr('fill', d => d.color);
+        legend
+          .append('circle')
+          .attr('r', 4)
+          .attr('cx', width + 10)
+          .attr('fill', d => d.color);
 
-      legend
-        .append('text')
-        .attr('x', width + 20)
-        .attr('dy', '.35em')
-        .style('fill', '#000')
-        .style('font-size', '8px')
-        .attr('class', 'legend-label')
-        .text(d => d.label);
+        legend
+          .append('text')
+          .attr('x', width + 20)
+          .attr('dy', '.35em')
+          .style('fill', '#000')
+          .style('font-size', '8px')
+          .attr('class', 'legend-label')
+          .text(d => d.label);
+      }
     }
+
 
   }
 
@@ -500,22 +509,25 @@ export class BaseSpatialgeComponent {
 
     let transformValue;
 
-    switch (direction) {
-      case 'left':
-        this.currentLeft -= this.moveAmount;
-        break;
-      case 'right':
-        this.currentLeft += this.moveAmount;
-        break;
-      case 'up':
-        this.currentTop -= this.moveAmount;
-        break;
-      case 'down':
-        this.currentTop += this.moveAmount;
-        break;
-      default:
-        break;
+    if (mode === 'align') {
+      switch (direction) {
+        case 'left':
+          this.currentLeft -= this.moveAmount;
+          break;
+        case 'right':
+          this.currentLeft += this.moveAmount;
+          break;
+        case 'up':
+          this.currentTop -= this.moveAmount;
+          break;
+        case 'down':
+          this.currentTop += this.moveAmount;
+          break;
+        default:
+          break;
+      }
     }
+
 
     transformValue = `translateX(${this.currentLeft}px) translateY(${this.currentTop}px) scale(${this.currentScaleFactor})`;
 
@@ -599,21 +611,16 @@ export class BaseSpatialgeComponent {
     }
   }
 
-  zoomDiv(direction) {
-    if (direction === 'in') {
-      this.currentScaleFactor += 0.1;
-      if (this.currentScaleFactor > this.maxScaleFactor) {
-        this.currentScaleFactor = this.maxScaleFactor;
-      }
-      this.applyZoom();
-    } else if (direction === 'out') {
-      this.currentScaleFactor -= 0.1;
-      if (this.currentScaleFactor < this.minScaleFactor) {
-        this.currentScaleFactor = this.minScaleFactor;
-      }
-      this.applyZoom();
-    }
-  }
+  // zoomDiv(scale) {
+  //   console.log("from slider: ", this.currentScaleFactor, scale)
+  //   // setTimeout(() => {
+
+
+  //   // }, 5000)
+
+  //   this.applyZoom();
+
+  // }
 
   applyZoom() {
     const plotContainer = document.querySelector('.plotContainer') as HTMLImageElement;
@@ -622,7 +629,10 @@ export class BaseSpatialgeComponent {
       const transformValue = `translateX(${this.currentLeft}px) translateY(${this.currentTop}px) scale(${this.currentScaleFactor})`;
       plotContainer.style.transform = transformValue;
       imageContainer.style.transform = transformValue;
+
     }
+    this.createScatterPlot()
+
   }
 
   stretchPlot(axis, direction) {
@@ -641,9 +651,21 @@ export class BaseSpatialgeComponent {
 
   setAlignmentMode() {
     this.displayZoom = false;
+    this.createScatterPlot()
   }
 
   setZoomMode() {
     this.displayAlignment = false;
+    this.createScatterPlot()
+  }
+
+  roundUp(value: number): number {
+    return value
+    return Math.ceil(value);
+  }
+
+  roundDown(value: number): number {
+    return value
+    return Math.floor(value);
   }
 }

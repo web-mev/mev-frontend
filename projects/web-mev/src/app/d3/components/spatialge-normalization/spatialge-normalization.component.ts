@@ -26,25 +26,25 @@ export class SpatialGENormalizationComponent extends BaseSpatialgeComponent impl
     ngOnInit(): void {
         this.getDataNormalization()
 
-        this.selectionRectStyle = {
-            left: `${parseInt(this.boxZoomLeftVal) + this.plotWidth + this.legendWidth}px`,
-            top: `${this.boxZoomTopVal}px`,
-            width: `${parseInt(this.boxZoomContainerWidth)}px` ,
-            height: `${parseInt(this.boxZoomContainerHeight)}px`,
-            border: '2px solid #1DA1F2',
-            position: 'absolute',
-            // pointerEvents: 'none'
-        };
+        // this.selectionRectStyle = {
+        //     left: `${parseInt(this.boxZoomLeftVal) + this.plotWidth + this.legendWidth}px`,
+        //     top: `${this.boxZoomTopVal}px`,
+        //     width: `${parseInt(this.boxZoomContainerWidth)}px` ,
+        //     height: `${parseInt(this.boxZoomContainerHeight)}px`,
+        //     border: '2px solid #1DA1F2',
+        //     position: 'absolute',
+        //     // pointerEvents: 'none'
+        // };
 
-        console.log("rect: ", this.selectionRectStyle)
+        // console.log("rect: ", this.selectionRectStyle)
     }
 
-    boxZoom = false;
-    boxZoomLeftVal = '-10';
-    boxZoomTopVal = '50';
-    boxZoomContainerWidth = '200';
-    boxZoomContainerHeight = '300';
-    boxZoomLevel = 1
+    // boxZoom = false;
+    // boxZoomLeftVal = '-10';
+    // boxZoomTopVal = '50';
+    // boxZoomContainerWidth = '200';
+    // boxZoomContainerHeight = '300';
+    // boxZoomLevel = 1
 
 
     // constructor(

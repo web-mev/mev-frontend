@@ -18,6 +18,7 @@
     margin-top: 10px;
     position: relative;
     width: fit-content;
+    overflow: hidden;
 }
 
 .overlayContainer {
@@ -171,4 +172,12 @@ mat-slider {
     // top: 50px; 
     // width: 400px; 
     // height: 600px; 
+}
+
+.overlayPlots {
+    background-color: rgb(139, 25, 25, 0.4);
+}
+
+.displayOverlay123{
+    background-color: aquamarine;
 }

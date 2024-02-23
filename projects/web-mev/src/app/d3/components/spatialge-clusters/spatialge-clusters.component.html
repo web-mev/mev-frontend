@@ -74,12 +74,12 @@
 
         </div>
         <div *ngIf="displayZoom">
-            <label id="modes-label">Zoom: </label>
-            <button mat-flat-button color="primary" class="custom-button" matTooltip="Zoom In" (click)="zoomDiv('in')">
+            <!-- <label id="modes-label">Zoom: </label>
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Zoom In" (click)="zoomDiv()">
                 <mat-icon>zoom_in</mat-icon>
             </button>
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Zoom Out"
-                (click)="zoomDiv('out')">
+                (click)="zoomDiv()">
                 <mat-icon>zoom_out</mat-icon>
             </button>
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Left"
@@ -97,7 +97,7 @@
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Down"
                 (click)="moveImage('down', 'zoom')">
                 <mat-icon>arrow_downward</mat-icon>
-            </button>
+            </button> -->
         </div>
 
         <label id="radio-group-axis">Plot Opacity: <span class="displayValue"> {{plotOpacityValue}}</span></label>
@@ -140,13 +140,13 @@
             <mat-form-field class="example-form-field container" appearance="outline">
                 <mat-label>Scale Factor</mat-label>
                 <input matInput type="search" name="search" [(ngModel)]="scaleFactorVal"
-                    (keyup.enter)="setScaleFactor()" class="smallerInput">
+                    (keyup.enter)="setScaleFactor($event)" class="smallerInput">
                 <button *ngIf="scaleFactorVal" matSuffix mat-icon-button aria-label="Clear"
                     (click)="scaleFactorVal = ''">
                     <mat-icon>close</mat-icon>
                 </button>
             </mat-form-field>
-            <button mat-flat-button color="primary" class="searchButton" (click)="setScaleFactor()">Submit</button>
+            <button mat-flat-button color="primary" class="searchButton" (click)="setScaleFactor($event)">Submit</button>
         </div>
         <!-- <label id="radio-group-axis">Gene Search: </label>
         <div class="inputContainer">

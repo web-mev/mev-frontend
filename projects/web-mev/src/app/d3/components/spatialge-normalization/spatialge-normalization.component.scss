@@ -20,6 +20,8 @@
     position: relative;
     width: fit-content;
     overflow: hidden;
+    overflow-x: scroll;
+    overflow-y: scroll;
 }
 
 .overlayContainer {
@@ -161,28 +163,28 @@ mat-slider {
 }
 
 .image-container {
-    // width: 200px; 
-    // height: 300px; 
-    overflow: hidden; 
-    position: relative; 
+    // width: 200px;
+    // height: 300px;
+    overflow: hidden;
+    position: relative;
 }
 
 .image-container img {
     position: absolute; /* Position the image absolutely within the container */
-    // left: 0px; 
-    // top: 50px; 
-    // width: 400px; 
-    // height: 600px; 
+    // left: 0px;
+    // top: 50px;
+    // width: 400px;
+    // height: 600px;
 }
 
-.overlayPlots {
-    // background-color: rgb(139, 25, 25, 0.4);
-}
 
-.displayOverlay123{
-    // background-color: aquamarine;
-}
-
-.zoomContainer{
+.zoomContainer {
     margin-left: 50px;
+}
+
+.miniMapContainer {
+    position: absolute; /* Position it relative to the overlayDiv */
+
+    left: 600px;
+    bottom: 50px;
 }

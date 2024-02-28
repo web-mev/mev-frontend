@@ -25,12 +25,13 @@ export class SpatialGENormalizationComponent extends BaseSpatialgeComponent impl
 
     ngOnInit(): void {
         this.getDataNormalization()
+        console.log("minimap: ", this.plotWidth, this.plotHeight)
 
         // this.selectionRectStyle = {
-        //     left: `${parseInt(this.boxZoomLeftVal) + this.plotWidth + this.legendWidth}px`,
-        //     top: `${this.boxZoomTopVal}px`,
-        //     width: `${parseInt(this.boxZoomContainerWidth)}px` ,
-        //     height: `${parseInt(this.boxZoomContainerHeight)}px`,
+        //     // left: `${0}px`,
+        //     top: `${0}px`,
+        //     width: `${this.plotWidth/4}px` ,
+        //     height: `${this.plotHeight/4}px`,
         //     border: '2px solid #1DA1F2',
         //     position: 'absolute',
         //     // pointerEvents: 'none'
@@ -61,7 +62,7 @@ export class SpatialGENormalizationComponent extends BaseSpatialgeComponent impl
     // startY = 0;
     // endX = 0;
     // endY = 0;
-    selectionRectStyle = {};
+    // selectionRectStyle = {};
 
     // resetVariables(): void {
     //     this.startX = 0;

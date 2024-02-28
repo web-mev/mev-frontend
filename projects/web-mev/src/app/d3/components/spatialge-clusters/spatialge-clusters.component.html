@@ -1,41 +1,76 @@
-<!-- <mev-spinner-overlay *ngIf="isLoading"></mev-spinner-overlay>
+<!-- 
+
+<mev-spinner-overlay *ngIf="isLoading"></mev-spinner-overlay>
 <mat-card class="analysis-card">
     <mat-card-header>
         <div mat-card-avatar class="analysis-card__img"></div>
         <mat-card-title>SpatialGE: {{ outputs?.job_name }}</mat-card-title>
         <mev-input-info [outputs]="outputs"></mev-input-info>
     </mat-card-header>
-    <div class="overlayContainer" [style.height.px]="(plotHeight+heightAdjustment)"
+    <div class="overlayContainer" [style.height.px]="(plotHeight+heightAdjustment+100)"
         [style.width.px]="overlayImage ? maxImageContainerWidthOverylay +200: maxImageContainerWidthSidebySide + 200">
+     
+
+
         <div class="overlayRow"
-            [style.width.px]="overlayImage ? maxImageContainerWidthOverylay + 200 : maxImageContainerWidthSidebySide + 200">
+            [style.width.px]="overlayImage ? maxImageContainerWidthOverylay + 50 : maxImageContainerWidthSidebySide + 150">
             <button mat-button *ngIf="!isLoading" id="downloadButton" (click)="captureAndDownloadImages()"
                 matTooltip="Download Image" title="download something">
                 <mat-icon>save_alt</mat-icon>
             </button>
         </div>
-        <div class="overlayDiv">
-            <div #scatter id="scatter" [class]="overlayImage ? 'overlayPlots' : 'displayPlotSideBySide'"
-                [style.opacity]="displayPlot ? plotOpacityValue : 0"
-                [style]="!displayAlignment ? 'z-index: 1' : 'z-index: 3'" class="plotContainer">
-            </div>
-            <div [class]="!droppedFile ? 'drop-zone' : (overlayImage ? '': 'displayImageSideBySide') "
-                (drop)="onDropFile($event)" (dragover)="onDragOver($event)"
-                [style.margin-left.px]="overlayImage ? -(plotWidth + widthAdjustment + legendWidth) : '20'"
-                (click)="fileInput.click()" class="imageContainer">
-                <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;">
-                <div *ngIf="!droppedFile" class="drop-message">
-                    <p>Drop image file here or click to upload</p>
+        <span style="display: flex; width: 700px">
+            <div class="overlayDiv">
+                <div #scatter id="scatter" [class]="overlayImage ? 'overlayPlots' : 'displayPlotSideBySide'"
+                    [style.opacity]="displayPlot ? plotOpacityValue : 0"
+                    [style]="!displayAlignment ? 'z-index: 2' : 'z-index: 4'" class="plotContainer">
                 </div>
-                <div *ngIf="droppedFile && displayImage" style="z-index: 2;">
-                    <img *ngIf="isImageType(droppedFile.type)" class="overlayPlotsImage" [src]="droppedFileURL"
-                        alt="Dropped Image" [style.height.px]="plotHeight" [style.opacity]="imageOpacityValue">
+                <div [class]="!droppedFile ? 'drop-zone' : (overlayImage ? 'displayOverlay123': 'displayImageSideBySide') "
+                    (drop)="onDropFile($event)" (dragover)="onDragOver($event)"
+                    [style.margin-left.px]="overlayImage ? -(plotWidth + widthAdjustment + legendWidth): '20'"
+                    (click)="fileInput.click()" class="imageContainer">
+                    <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;">
+                    <div *ngIf="!droppedFile && !displayZoom" class="drop-message">
+                        <p>Drop image file here or click to upload</p>
+                    </div>
+                    <div *ngIf="droppedFile && displayImage" style="z-index: 3;">
+                        <img *ngIf="isImageType(droppedFile.type)" class="overlayPlotsImage" [src]="droppedFileURL"
+                            alt="Dropped Image" [style.height.px]="plotHeight" [style.opacity]="imageOpacityValue">
+                    </div>
+    
                 </div>
+                
             </div>
-        </div>
+            
+            <div *ngIf="displayZoom" class="zoomContainer">
+                <label id="radio-group-axis">Zoom In/Out: <span class="displayValue">
+                        {{currentScaleFactor}}</span></label>
+                {{1}}
+                <mat-slider min="1" max="5" step=".1" [(ngModel)]="currentScaleFactor" (change)="applyZoom()">
+                </mat-slider>
+                {{5}}
+                <br>
+                <label id="radio-group-axis">Move Left/Right: <span class="displayValue"> {{ roundUp(currentLeft)
+                        }}</span></label>
+                -
+                <mat-slider [min]="minLeftValue()"
+                    [max]="maxLeftValue()" step="10" [(ngModel)]="currentLeft"
+                    (change)="moveImage('left', 'zoom')">
+                </mat-slider>
+                +
+                <br>
+                <label id="radio-group-axis">Move Up/Down: <span class="displayValue">
+                        {{roundUp(currentTop)}}</span></label>
+                - <mat-slider [min]="minTopValue()"
+                [max]="maxTopValue()" step="10" [(ngModel)]="currentTop"
+                (change)="moveImage('left', 'zoom')">
+            </mat-slider> +
+            </div>
+        </span>
+        
     </div>
 
-    <div class="slider" [style.top.px]="(plotHeight+heightAdjustment) + 100">
+    <div class="slider" [style.top.px]="(plotHeight+heightAdjustment) + 100 + 100">
         <div *ngIf="displayAlignment">
             <label id="modes-label">Alignment: </label>
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Left"
@@ -73,8 +108,7 @@
             </button>
 
         </div>
-        <div *ngIf="displayZoom">
-        </div>
+       
 
         <label id="radio-group-axis">Plot Opacity: <span class="displayValue"> {{plotOpacityValue}}</span></label>
         {{0}} %
@@ -101,15 +135,7 @@
         <mat-slide-toggle [(ngModel)]="displayImage">Display Image</mat-slide-toggle>
         <br>
 
-        <br>
-        <label id="radio-group-axis">Plot Color: </label>
-        <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
-            [(ngModel)]="selectedColor" (change)="onColorChange()">
-            <div *ngFor="let plotColor of colors" class="radio-container">
-                <mat-radio-button class="example-radio-button" [value]="plotColor">{{plotColor}}</mat-radio-button>
-            </div>
-        </mat-radio-group>
-        <br>
+      
         <br>
         <label id="radio-group-axis">Scale Factor:</label>
         <div class="inputContainer">
@@ -122,9 +148,10 @@
                     <mat-icon>close</mat-icon>
                 </button>
             </mat-form-field>
-            <button mat-flat-button color="primary" class="searchButton" (click)="setScaleFactor($event)">Submit</button>
+            <button mat-flat-button color="primary" class="searchButton"
+                (click)="setScaleFactor($event)">Submit</button>
         </div>
-       
+
     </div>
 
 </mat-card> -->
@@ -173,8 +200,8 @@
                     [style.opacity]="displayPlot ? plotOpacityValue : 0"
                     [style]="!displayAlignment ? 'z-index: 2' : 'z-index: 4'" class="plotContainer">
                 </div>
-                <div [class]="!droppedFile ? 'drop-zone' : (overlayImage ? 'displayOverlay123': 'displayImageSideBySide') "
-                    (drop)="onDropFile($event)" (dragover)="onDragOver($event)"
+                <div [class]="!droppedFile ? 'drop-zone' : '' " (drop)="onDropFile($event)"
+                    (dragover)="onDragOver($event)"
                     [style.margin-left.px]="overlayImage ? -(plotWidth + widthAdjustment + legendWidth): '20'"
                     (click)="fileInput.click()" class="imageContainer">
                     <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;">
@@ -183,42 +210,60 @@
                     </div>
                     <div *ngIf="droppedFile && displayImage" style="z-index: 3;">
                         <img *ngIf="isImageType(droppedFile.type)" class="overlayPlotsImage" [src]="droppedFileURL"
-                            alt="Dropped Image" [style.height.px]="plotHeight" [style.opacity]="imageOpacityValue">
+                            alt="Dropped Image" [style.height.px]="plotHeight" [style.opacity]="imageOpacityValue"
+                            id="japan">
                     </div>
-    
+
                 </div>
-                
+
             </div>
-            <!-- <div class="overlayText">text in the overlaydiv</div> -->
-            
+
+            <div class="miniMapContainer">
+                <div #scatter id="scatter" [class]="overlayImage ? 'overlayPlots' : 'displayPlotSideBySide'"
+                    [style.opacity]="displayPlot ? plotOpacityValue : 0"
+                    [style]="!displayAlignment ? 'z-index: 2' : 'z-index: 4'" class="plotContainer">
+                </div>
+                <div class="miniSubContainer">
+                    <div [style.margin-left.px]="overlayImage ? '20': '20'">
+                        <div *ngIf="droppedFile && displayImage" style="z-index: 3;" class="imageContainer2">
+                            <img *ngIf="isImageType(droppedFile.type)" class="overlayPlotsImage" [src]="droppedFileURL"
+                                alt="Dropped Image" [style.height.px]="plotHeight/4"
+                                [style.opacity]="imageOpacityValue">
+                        </div>
+                        <div *ngIf="droppedFile && displayImage" [ngStyle]="selectionRectStyle" class="boxDiv"></div>
+
+                    </div>
+                </div>
+
+            </div>
+
+
             <div *ngIf="displayZoom" class="zoomContainer">
-                <!-- <label id="modes-label">Zoom Mode: </label> -->
                 <label id="radio-group-axis">Zoom In/Out: <span class="displayValue">
                         {{currentScaleFactor}}</span></label>
                 {{1}}
-                <mat-slider min="1" max="5" step=".1" [(ngModel)]="currentScaleFactor" (change)="applyZoom()">
+                <mat-slider min="1" max="5" step="1" [(ngModel)]="currentScaleFactor" (change)="applyZoom()">
                 </mat-slider>
                 {{5}}
                 <br>
-                <label id="radio-group-axis">Move Left/Right: <span class="displayValue"> {{ roundUp(currentLeft)
-                        }}</span></label>
+                <label id="radio-group-axis">Move Left/Right: </label>
+                <div>{{currentLeft.toFixed(2)}} {{plotWidth}}</div>
                 -
-                <mat-slider [min]="minLeftValue()"
-                    [max]="maxLeftValue()" step="10" [(ngModel)]="currentLeft"
+                <mat-slider [min]="minLeftValue()" [max]="maxLeftValue()" step="10" [(ngModel)]="currentLeft"
                     (change)="moveImage('left', 'zoom')">
                 </mat-slider>
                 +
                 <br>
-                <label id="radio-group-axis">Move Up/Down: <span class="displayValue">
-                        {{roundUp(currentTop)}}</span></label>
-                - <mat-slider [min]="minTopValue()"
-                [max]="maxTopValue()" step="10" [(ngModel)]="currentTop"
-                (change)="moveImage('left', 'zoom')">
-            </mat-slider> +
+                <label id="radio-group-axis">Move Up/Down: </label>
+                <div>{{currentTop.toFixed(2)}} {{plotHeight}}</div>
+                - <mat-slider [min]="minTopValue()" [max]="maxTopValue()" step="10" [(ngModel)]="currentTop"
+                    (change)="moveImage('left', 'zoom')">
+                </mat-slider> +
             </div>
         </span>
-        
+
     </div>
+
 
     <div class="slider" [style.top.px]="(plotHeight+heightAdjustment) + 100 + 100">
         <div *ngIf="displayAlignment">

@@ -67,7 +67,7 @@ export class BaseSpatialgeComponent {
   geneSearchVal = 'VIM'
 
   moveAmount = 1;
-  plotSizeMutiplier = 1;
+  // plotSizeMutiplier = 1;
 
   plotWidth = 300;
   plotHeight = 500;
@@ -98,14 +98,14 @@ export class BaseSpatialgeComponent {
   clusterTypes = {}
   clusterColors = ["#EBCD00", "#52A52E", "#00979D", "#6578B4", "#80408D", "#C9006B", "#68666F", "#E80538", "#E87D1E"]
 
+  selectionRectStyle = {};
+
   constructor(
     private httpClient: HttpClient,
     private readonly notificationService: NotificationService,
   ) { }
 
-  // ngOnInit(): void {
-  //     this.getData()
-  // }
+  // ngOnInit(): void {}
 
   resetVariables() {
     this.scatterPlotData = [];
@@ -149,6 +149,8 @@ export class BaseSpatialgeComponent {
     element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
   }
 
+  originalPlotWidth = 0;
+  originalPlotHeight = 0;
   getDataNormalization() {
     this.useNormalization = true;
     this.isLoading = true;
@@ -222,8 +224,22 @@ export class BaseSpatialgeComponent {
           this.totalCountsMin = Math.min(this.totalCountsMin, totalCounts)
         }
       }
-      this.plotWidth = (this.xMax - this.xMin) * this.plotSizeMutiplier / 100;
-      this.plotHeight = (this.yMax - this.yMin) * this.plotSizeMutiplier / 100;
+      this.plotWidth = (this.xMax - this.xMin) / 100;
+      this.plotHeight = (this.yMax - this.yMin) / 100;
+
+      if (this.originalPlotWidth === 0) {
+        this.originalPlotWidth = this.plotWidth;
+        this.originalPlotHeight = this.plotHeight;
+      }
+
+      this.selectionRectStyle = {
+        // left: `${0}px`,
+        top: `${0}px`,
+        width: `${this.originalPlotWidth / 4}px`,
+        height: `${this.originalPlotHeight / 4}px`,
+        border: '1px solid #1DA1F2',
+        position: 'absolute',
+      };
 
       this.createScatterPlot()
     });
@@ -258,7 +274,6 @@ export class BaseSpatialgeComponent {
       for (let index in clusterRes) {
         let key = clusterRes[index]['rowname']
         let clusterid = clusterRes[index]['values']['clusterid']
-        // let clusterid = Math.floor(Math.random() * 20) + 1;
         this.dataDict[key] = {
           ...this.dataDict[key],
           clusterid
@@ -296,7 +311,6 @@ export class BaseSpatialgeComponent {
           if (!colorLabels[clusterNumber]) {
             colorLabels[clusterNumber] = 1;
             let remainder = clusterNumber % this.clusterColors.length;
-            console.log("remainder: ", clusterName, clusterNumber, remainder, this.clusterColors[remainder - 1], this.clusterColors[this.clusterColors.length - 1])
             let colorObj = {
               "label": clusterName,
               "color": remainder === 0 ? this.clusterColors[this.clusterColors.length - 1] : this.clusterColors[remainder - 1]
@@ -313,8 +327,8 @@ export class BaseSpatialgeComponent {
           this.yMax = Math.max(this.yMax, parsedY);
         }
       }
-      this.plotWidth = (this.xMax - this.xMin) * this.plotSizeMutiplier / 100;
-      this.plotHeight = (this.yMax - this.yMin) * this.plotSizeMutiplier / 100;
+      this.plotWidth = (this.xMax - this.xMin) / 100;
+      this.plotHeight = (this.yMax - this.yMin) / 100;
 
       this.createScatterPlot()
 
@@ -330,8 +344,6 @@ export class BaseSpatialgeComponent {
     d3.select(this.containerId)
       .selectAll('svg')
       .remove();
-
-    console.log("plot width: ", this.plotWidth, width)
 
     const pointTip = d3Tip()
       .attr('class', 'd3-tip')
@@ -381,7 +393,6 @@ export class BaseSpatialgeComponent {
       .attr("cy", function (d) { return height - y(d.yValue); })
       .attr("r", 1.75)
       .attr("fill", d => {
-        // console.log("clusterid: ", d.clusterid, colorScale(d.clusterid))
 
         return useNorm ? color(d.totalCounts) : colorScale(d.clusterid)
       })
@@ -459,7 +470,6 @@ export class BaseSpatialgeComponent {
           .text("Counts");
       } else if (this.useCluster) {
         // Legend
-        console.log("cluster types: ", this.clusterTypes)
         const clusterColors = Object.keys(this.clusterTypes).map(key => ({
           label: this.clusterTypes[key].label,
           color: this.clusterTypes[key].color
@@ -472,7 +482,6 @@ export class BaseSpatialgeComponent {
           // Comparing the numerical parts
           return numA - numB;
         });
-        console.log("cluster colors: ", clusterColors)
         const legend = svg
           .selectAll('.legend')
           .data(clusterColors)
@@ -507,7 +516,10 @@ export class BaseSpatialgeComponent {
     const topContainer = document.querySelector('.plotContainer') as HTMLImageElement;
     const bottomContainer = document.querySelector('.imageContainer') as HTMLImageElement;
 
+    const miniBoxContainer = document.querySelector('.boxDiv') as HTMLImageElement;
+
     let transformValue;
+    let transformBoxValue;
 
     if (mode === 'align') {
       switch (direction) {
@@ -528,15 +540,27 @@ export class BaseSpatialgeComponent {
       }
     }
 
-
     transformValue = `translateX(${this.currentLeft}px) translateY(${this.currentTop}px) scale(${this.currentScaleFactor})`;
-
+    transformBoxValue = `translateX(${-this.currentLeft / (this.currentScaleFactor)}px) translateY(${-this.currentTop / (this.currentScaleFactor)}px) scale(${this.currentScaleFactor})`;
     if (mode === 'align' || mode === 'zoom') {
       topContainer.style.transform = transformValue;
       if (mode === 'zoom') {
         bottomContainer.style.transform = transformValue;
+        miniBoxContainer.style.transform = transformBoxValue;
+
       }
     }
+
+    this.selectionRectStyle = {
+      // left: `${this.currentLeft}px`,
+      top: `${0}px`,
+      width: `${this.plotWidth / (4 * this.currentScaleFactor)}px`,
+      height: `${this.plotHeight / (4 * this.currentScaleFactor)}px`,
+      border: '1px solid #1DA1F2',
+      position: 'absolute',
+    };
+
+    console.log("selection rect after move: ", this.selectionRectStyle, this.currentLeft, this.currentTop)
   }
 
   captureAndDownloadImages() {
@@ -611,26 +635,43 @@ export class BaseSpatialgeComponent {
     }
   }
 
-  // zoomDiv(scale) {
-  //   console.log("from slider: ", this.currentScaleFactor, scale)
-  //   // setTimeout(() => {
-
-
-  //   // }, 5000)
-
-  //   this.applyZoom();
-
-  // }
-
   applyZoom() {
     const plotContainer = document.querySelector('.plotContainer') as HTMLImageElement;
     const imageContainer = document.querySelector('.imageContainer') as HTMLImageElement;
+
+    const miniBottomContainer = document.querySelector('.imageContainer2') as HTMLImageElement;
+    const miniMapContainer = document.querySelector('.miniMapContainer') as HTMLImageElement;
+
+    this.currentLeft = 0;
+    this.currentTop = 0;
+
+    if (this.currentScaleFactor === 1) {
+      this.currentLeft = 0;
+      this.currentTop = 0;
+
+      this.selectionRectStyle = {
+        // left: `${this.currentLeft}px`,
+        top: `${0}px`,
+        width: `${this.plotWidth / (4 * this.currentScaleFactor)}px`,
+        height: `${this.plotHeight / (4 * this.currentScaleFactor)}px`,
+        border: '2px solid #1DA1F2',
+        position: 'absolute',
+      };
+    }
+
     if (plotContainer || imageContainer) {
       const transformValue = `translateX(${this.currentLeft}px) translateY(${this.currentTop}px) scale(${this.currentScaleFactor})`;
       plotContainer.style.transform = transformValue;
       imageContainer.style.transform = transformValue;
 
+      miniBottomContainer.style.transform = transformValue;
+
+      const transformMiniMapValue = `scale(${1 / this.currentScaleFactor})`;
+      miniMapContainer.style.transform = transformMiniMapValue
+
     }
+
+
     this.createScatterPlot()
 
   }
@@ -670,18 +711,19 @@ export class BaseSpatialgeComponent {
   }
 
   minLeftValue(): number {
-    return -this.plotWidth * this.currentScaleFactor + this.plotWidth;
-}
+    return -this.plotWidth * (this.currentScaleFactor - 1) / 2
+    // return -this.plotWidth * this.currentScaleFactor + this.plotWidth;
+  }
 
-maxLeftValue(): number {
-    return this.plotWidth * this.currentScaleFactor - this.plotWidth;
-}
+  maxLeftValue(): number {
+    return this.plotWidth * (this.currentScaleFactor - 1) / 2
+  }
 
-minTopValue(): number {
-    return -this.plotHeight * this.currentScaleFactor + this.plotHeight;
-}
+  minTopValue(): number {
+    return -this.plotHeight * (this.currentScaleFactor - 1) / 2
+  }
 
-maxTopValue(): number {
-    return this.plotHeight * this.currentScaleFactor - this.plotHeight;
-}
+  maxTopValue(): number {
+    return this.plotHeight * (this.currentScaleFactor - 1) / 2
+  }
 }

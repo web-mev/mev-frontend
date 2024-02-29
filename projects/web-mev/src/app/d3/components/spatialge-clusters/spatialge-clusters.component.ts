@@ -17,7 +17,6 @@ export class SpatialGEClustersComponent extends BaseSpatialgeComponent implement
 
 
     ngOnInit(): void {
-        console.log("got to the init from clusters")
         this.getDataClusters()
     }
 

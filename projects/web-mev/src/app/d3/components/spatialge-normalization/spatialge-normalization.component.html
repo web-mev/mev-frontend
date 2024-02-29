@@ -22,12 +22,6 @@
                 <button mat-flat-button color="primary" class="searchButton" (click)="setGeneSearch()">Submit</button>
             </div>
         </div>
-        <!-- <div>
-            <img #imageElement (mousedown)="onMouseDown($event)" (mousemove)="onMouseMove($event)"
-                (mouseup)="onMouseUp($event)" [src]="droppedFileURL" style="position: relative;" [style.height.px]="plotHeight">
-            <div [ngStyle]="selectionRectStyle"></div>
-        </div> -->
-
 
         <div class="overlayRow"
             [style.width.px]="overlayImage ? maxImageContainerWidthOverylay + 50 : maxImageContainerWidthSidebySide + 150">
@@ -55,9 +49,7 @@
                             alt="Dropped Image" [style.height.px]="plotHeight" [style.opacity]="imageOpacityValue"
                             id="japan">
                     </div>
-
                 </div>
-
             </div>
 
             <div class="miniMapContainer">
@@ -89,7 +81,7 @@
                 {{5}}
                 <br>
                 <label id="radio-group-axis">Move Left/Right: </label>
-                <div>{{currentLeft.toFixed(2)}} {{plotWidth}}</div>
+                <!-- <div>{{currentLeft.toFixed(2)}} {{plotWidth}}</div> -->
                 -
                 <mat-slider [min]="minLeftValue()" [max]="maxLeftValue()" step="10" [(ngModel)]="currentLeft"
                     (change)="moveImage('left', 'zoom')">
@@ -97,7 +89,7 @@
                 +
                 <br>
                 <label id="radio-group-axis">Move Up/Down: </label>
-                <div>{{currentTop.toFixed(2)}} {{plotHeight}}</div>
+                <!-- <div>{{currentTop.toFixed(2)}} {{plotHeight}}</div> -->
                 - <mat-slider [min]="minTopValue()" [max]="maxTopValue()" step="10" [(ngModel)]="currentTop"
                     (change)="moveImage('left', 'zoom')">
                 </mat-slider> +

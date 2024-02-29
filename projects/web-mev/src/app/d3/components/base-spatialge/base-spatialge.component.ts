@@ -67,7 +67,6 @@ export class BaseSpatialgeComponent {
   geneSearchVal = 'VIM'
 
   moveAmount = 1;
-  // plotSizeMutiplier = 1;
 
   plotWidth = 300;
   plotHeight = 500;
@@ -198,7 +197,6 @@ export class BaseSpatialgeComponent {
         };
       }
 
-      // this.getMinMaxValues();
       for (let i in this.dataDict) {
         const parsedX = parseInt(this.dataDict[i]['xVal'])
         const parsedY = parseInt(this.dataDict[i]['yVal'])
@@ -233,7 +231,6 @@ export class BaseSpatialgeComponent {
       }
 
       this.selectionRectStyle = {
-        // left: `${0}px`,
         top: `${0}px`,
         width: `${this.originalPlotWidth / 4}px`,
         height: `${this.originalPlotHeight / 4}px`,
@@ -329,6 +326,19 @@ export class BaseSpatialgeComponent {
       }
       this.plotWidth = (this.xMax - this.xMin) / 100;
       this.plotHeight = (this.yMax - this.yMin) / 100;
+
+      if (this.originalPlotWidth === 0) {
+        this.originalPlotWidth = this.plotWidth;
+        this.originalPlotHeight = this.plotHeight;
+      }
+
+      this.selectionRectStyle = {
+        top: `${0}px`,
+        width: `${this.originalPlotWidth / 4}px`,
+        height: `${this.originalPlotHeight / 4}px`,
+        border: '1px solid #1DA1F2',
+        position: 'absolute',
+      };
 
       this.createScatterPlot()
 
@@ -552,7 +562,6 @@ export class BaseSpatialgeComponent {
     }
 
     this.selectionRectStyle = {
-      // left: `${this.currentLeft}px`,
       top: `${0}px`,
       width: `${this.plotWidth / (4 * this.currentScaleFactor)}px`,
       height: `${this.plotHeight / (4 * this.currentScaleFactor)}px`,
@@ -560,7 +569,6 @@ export class BaseSpatialgeComponent {
       position: 'absolute',
     };
 
-    console.log("selection rect after move: ", this.selectionRectStyle, this.currentLeft, this.currentTop)
   }
 
   captureAndDownloadImages() {
@@ -650,7 +658,6 @@ export class BaseSpatialgeComponent {
       this.currentTop = 0;
 
       this.selectionRectStyle = {
-        // left: `${this.currentLeft}px`,
         top: `${0}px`,
         width: `${this.plotWidth / (4 * this.currentScaleFactor)}px`,
         height: `${this.plotHeight / (4 * this.currentScaleFactor)}px`,
@@ -698,16 +705,6 @@ export class BaseSpatialgeComponent {
   setZoomMode() {
     this.displayAlignment = false;
     this.createScatterPlot()
-  }
-
-  roundUp(value: number): number {
-    return value
-    return Math.ceil(value);
-  }
-
-  roundDown(value: number): number {
-    return value
-    return Math.floor(value);
   }
 
   minLeftValue(): number {

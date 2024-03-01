@@ -556,7 +556,7 @@ export class BaseSpatialgeComponent {
     let maxTop = (this.currentScaleFactor - 1) * this.plotHeight / 2;
 
     let scales = {
-      "1": [0,0],
+      "1": [0, 0],
       "2": [50, 150],
       "3": [200, 400],
       "4": [400, 800],
@@ -673,16 +673,6 @@ export class BaseSpatialgeComponent {
     if (this.currentScaleFactor === 1) {
       this.currentLeft = 0;
       this.currentTop = 0;
-
-      this.selectionRectStyle = {
-        top: `${0}px`,
-        width: `${this.originalPlotWidth / (4 * this.currentScaleFactor)}px`,
-        height: `${this.originalPlotHeight / (4 * this.currentScaleFactor)}px`,
-        border: '2px solid #1DA1F2',
-        position: 'absolute',
-      };
-      let transformBox = `translateX(${this.currentLeft}px) translateY(${this.currentTop}px) scale(${this.currentScaleFactor})`;
-      miniBoxContainer.style.transform = transformBox;
     }
 
     if (plotContainer || imageContainer) {
@@ -695,6 +685,16 @@ export class BaseSpatialgeComponent {
       const transformMiniMapValue = `scale(${1 / this.currentScaleFactor})`;
       miniMapContainer.style.transform = transformMiniMapValue
     }
+
+    this.selectionRectStyle = {
+      top: `${0}px`,
+      width: `${this.originalPlotWidth / (4 * this.currentScaleFactor)}px`,
+      height: `${this.originalPlotHeight / (4 * this.currentScaleFactor)}px`,
+      border: '2px solid #1DA1F2',
+      position: 'absolute',
+    };
+    let transformBox = `translateX(${this.currentLeft}px) translateY(${this.currentTop}px) scale(${this.currentScaleFactor})`;
+    miniBoxContainer.style.transform = transformBox;
 
 
     this.createScatterPlot()

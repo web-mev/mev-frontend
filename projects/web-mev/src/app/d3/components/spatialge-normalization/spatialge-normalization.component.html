@@ -59,7 +59,7 @@
                 </div>
                 <div class="miniSubContainer">
                     <div [style.margin-left.px]="overlayImage ? '20': '20'">
-                        <div *ngIf="droppedFile && displayImage" style="z-index: 3;" class="imageContainer2">
+                        <div *ngIf="droppedFile && displayImage" style="z-index: 3;" class="miniMapImageContainer">
                             <img *ngIf="isImageType(droppedFile.type)" class="overlayPlotsImage" [src]="droppedFileURL"
                                 alt="Dropped Image" [style.height.px]="plotHeight/4"
                                 [style.opacity]="imageOpacityValue">

@@ -234,7 +234,7 @@ export class BaseSpatialgeComponent {
         top: `${0}px`,
         width: `${this.originalPlotWidth / 4}px`,
         height: `${this.originalPlotHeight / 4}px`,
-        border: '1px solid #1DA1F2',
+        border: '2px solid #1DA1F2',
         position: 'absolute',
       };
 
@@ -336,7 +336,7 @@ export class BaseSpatialgeComponent {
         top: `${0}px`,
         width: `${this.originalPlotWidth / 4}px`,
         height: `${this.originalPlotHeight / 4}px`,
-        border: '1px solid #1DA1F2',
+        border: '2px solid #1DA1F2',
         position: 'absolute',
       };
 
@@ -526,10 +526,12 @@ export class BaseSpatialgeComponent {
     const topContainer = document.querySelector('.plotContainer') as HTMLImageElement;
     const bottomContainer = document.querySelector('.imageContainer') as HTMLImageElement;
 
+    const miniBottomContainer = document.querySelector('.miniMapImageContainer') as HTMLImageElement;
     const miniBoxContainer = document.querySelector('.boxDiv') as HTMLImageElement;
 
     let transformValue;
-    let transformBoxValue;
+    // let transformMiniMapValue;
+    let transformBox
 
     if (mode === 'align') {
       switch (direction) {
@@ -550,14 +552,27 @@ export class BaseSpatialgeComponent {
       }
     }
 
+    let maxLeft = (this.currentScaleFactor - 1) * this.plotWidth / 2;
+    let maxTop = (this.currentScaleFactor - 1) * this.plotHeight / 2;
+
+    let scales = {
+      "1": [0,0],
+      "2": [50, 150],
+      "3": [200, 400],
+      "4": [400, 800],
+      "5": [800, 1200]
+    }
+
+    let signLeft = this.currentLeft >= 0 ? 0 : 1
+    let signTop = this.currentTop >= 0 ? 0 : 1
+
     transformValue = `translateX(${this.currentLeft}px) translateY(${this.currentTop}px) scale(${this.currentScaleFactor})`;
-    transformBoxValue = `translateX(${-this.currentLeft / (this.currentScaleFactor)}px) translateY(${-this.currentTop / (this.currentScaleFactor)}px) scale(${this.currentScaleFactor})`;
+    transformBox = `translateX(${-scales[this.currentScaleFactor][signLeft] * this.currentLeft / maxLeft}%) translateY(${-scales[this.currentScaleFactor][signTop] * this.currentTop / maxTop}%) scale(${this.currentScaleFactor})`;
     if (mode === 'align' || mode === 'zoom') {
       topContainer.style.transform = transformValue;
       if (mode === 'zoom') {
         bottomContainer.style.transform = transformValue;
-        miniBoxContainer.style.transform = transformBoxValue;
-
+        miniBoxContainer.style.transform = transformBox;
       }
     }
 
@@ -565,7 +580,7 @@ export class BaseSpatialgeComponent {
       top: `${0}px`,
       width: `${this.plotWidth / (4 * this.currentScaleFactor)}px`,
       height: `${this.plotHeight / (4 * this.currentScaleFactor)}px`,
-      border: '1px solid #1DA1F2',
+      border: '2px solid #1DA1F2',
       position: 'absolute',
     };
 
@@ -647,8 +662,10 @@ export class BaseSpatialgeComponent {
     const plotContainer = document.querySelector('.plotContainer') as HTMLImageElement;
     const imageContainer = document.querySelector('.imageContainer') as HTMLImageElement;
 
-    const miniBottomContainer = document.querySelector('.imageContainer2') as HTMLImageElement;
+    const miniBottomContainer = document.querySelector('.miniMapImageContainer') as HTMLImageElement;
     const miniMapContainer = document.querySelector('.miniMapContainer') as HTMLImageElement;
+
+    const miniBoxContainer = document.querySelector('.boxDiv') as HTMLImageElement;
 
     this.currentLeft = 0;
     this.currentTop = 0;
@@ -659,11 +676,13 @@ export class BaseSpatialgeComponent {
 
       this.selectionRectStyle = {
         top: `${0}px`,
-        width: `${this.plotWidth / (4 * this.currentScaleFactor)}px`,
-        height: `${this.plotHeight / (4 * this.currentScaleFactor)}px`,
+        width: `${this.originalPlotWidth / (4 * this.currentScaleFactor)}px`,
+        height: `${this.originalPlotHeight / (4 * this.currentScaleFactor)}px`,
         border: '2px solid #1DA1F2',
         position: 'absolute',
       };
+      let transformBox = `translateX(${this.currentLeft}px) translateY(${this.currentTop}px) scale(${this.currentScaleFactor})`;
+      miniBoxContainer.style.transform = transformBox;
     }
 
     if (plotContainer || imageContainer) {
@@ -675,7 +694,6 @@ export class BaseSpatialgeComponent {
 
       const transformMiniMapValue = `scale(${1 / this.currentScaleFactor})`;
       miniMapContainer.style.transform = transformMiniMapValue
-
     }
 
 

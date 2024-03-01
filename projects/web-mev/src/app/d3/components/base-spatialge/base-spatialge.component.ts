@@ -57,8 +57,8 @@ export class BaseSpatialgeComponent {
   imageOpacityValue = .5
 
   overlayImage: boolean = false;
-  displayPlot: boolean = true;
-  displayImage: boolean = true;
+  displayPlot: boolean = false;
+  displayImage: boolean = false;
 
   displayAlignment: boolean = false;
   displayZoom: boolean = false;
@@ -346,7 +346,7 @@ export class BaseSpatialgeComponent {
   }
 
   createScatterPlot() {
-
+    this.displayPlot = true;
     var margin = { top: 0, right: this.legendWidth, bottom: 0, left: 0 },
       width = this.plotWidth - margin.left + this.widthAdjustment,
       height = this.plotHeight - margin.top - margin.bottom + this.heightAdjustment;
@@ -526,11 +526,10 @@ export class BaseSpatialgeComponent {
     const topContainer = document.querySelector('.plotContainer') as HTMLImageElement;
     const bottomContainer = document.querySelector('.imageContainer') as HTMLImageElement;
 
-    const miniBottomContainer = document.querySelector('.miniMapImageContainer') as HTMLImageElement;
-    const miniBoxContainer = document.querySelector('.boxDiv') as HTMLImageElement;
+    // const miniBottomContainer = document.querySelector('.miniMapImageContainer') as HTMLImageElement;
+    const miniBoxContainer = document.querySelector('.miniboxDiv') as HTMLImageElement;
 
     let transformValue;
-    // let transformMiniMapValue;
     let transformBox
 
     if (mode === 'align') {
@@ -552,6 +551,7 @@ export class BaseSpatialgeComponent {
       }
     }
 
+    //This is used move the viewbox around the minimap. Had to use some hardcoded numbers to keep the viewbox within the boundaries. Works for now but need a cleaner way of doing it in the future.
     let maxLeft = (this.currentScaleFactor - 1) * this.plotWidth / 2;
     let maxTop = (this.currentScaleFactor - 1) * this.plotHeight / 2;
 
@@ -613,6 +613,7 @@ export class BaseSpatialgeComponent {
 
   onDropFile(event: DragEvent) {
     event.preventDefault();
+    // this.displayImage = true;
     const files = event.dataTransfer?.files;
     if (files && files.length > 0) {
       this.droppedFile = files[0];
@@ -626,6 +627,7 @@ export class BaseSpatialgeComponent {
 
   displayFile() {
     if (this.droppedFile) {
+      this.displayImage = true;
       if (this.isImageType(this.droppedFile.type)) {
         const reader = new FileReader();
         reader.onload = (event) => {
@@ -696,9 +698,56 @@ export class BaseSpatialgeComponent {
     let transformBox = `translateX(${this.currentLeft}px) translateY(${this.currentTop}px) scale(${this.currentScaleFactor})`;
     miniBoxContainer.style.transform = transformBox;
 
-
     this.createScatterPlot()
+  }
 
+  zoomMin = 1;
+  zoomMax = 5;
+  applyZoomButton(type) {
+    if (type === '+') {
+      this.currentScaleFactor += 1
+    } else if (type === '-') {
+      this.currentScaleFactor -= 1
+    }
+    const plotContainer = document.querySelector('.plotContainer') as HTMLImageElement;
+    const imageContainer = document.querySelector('.imageContainer') as HTMLImageElement;
+
+    const miniBottomContainer = document.querySelector('.miniMapImageContainer') as HTMLImageElement;
+    const miniMapContainer = document.querySelector('.miniMapContainer') as HTMLImageElement;
+
+    const miniBoxContainer = document.querySelector('.miniboxDiv') as HTMLImageElement;
+
+    this.currentLeft = 0;
+    this.currentTop = 0;
+
+    if (this.currentScaleFactor === 1) {
+      this.currentLeft = 0;
+      this.currentTop = 0;
+    }
+
+    if (plotContainer || imageContainer) {
+      const transformValue = `translateX(${this.currentLeft}px) translateY(${this.currentTop}px) scale(${this.currentScaleFactor})`;
+      plotContainer.style.transform = transformValue;
+      imageContainer.style.transform = transformValue;
+
+      miniBottomContainer.style.transform = transformValue;
+
+      const transformMiniMapValue = `scale(${1 / this.currentScaleFactor})`;
+      miniMapContainer.style.transform = transformMiniMapValue
+    }
+
+    this.selectionRectStyle = {
+      top: `${0}px`,
+      width: `${this.originalPlotWidth / (4 * this.currentScaleFactor)}px`,
+      height: `${this.originalPlotHeight / (4 * this.currentScaleFactor)}px`,
+      border: '2px solid #1DA1F2',
+      position: 'absolute',
+    };
+    let transformBox = `translateX(${this.currentLeft}px) translateY(${this.currentTop}px) scale(${this.currentScaleFactor})`;
+    miniBoxContainer.style.transform = transformBox;
+
+    console.log("currentscale factor: ", this.currentScaleFactor)
+    this.createScatterPlot()
   }
 
   stretchPlot(axis, direction) {
@@ -726,19 +775,19 @@ export class BaseSpatialgeComponent {
   }
 
   minLeftValue(): number {
-    return -this.plotWidth * (this.currentScaleFactor - 1) / 2
-    // return -this.plotWidth * this.currentScaleFactor + this.plotWidth;
+    return -this.plotWidth * (this.currentScaleFactor - 1) / 2;
   }
 
   maxLeftValue(): number {
-    return this.plotWidth * (this.currentScaleFactor - 1) / 2
+    return this.plotWidth * (this.currentScaleFactor - 1) / 2;
   }
 
   minTopValue(): number {
-    return -this.plotHeight * (this.currentScaleFactor - 1) / 2
+    return -this.plotHeight * (this.currentScaleFactor - 1) / 2;
   }
 
   maxTopValue(): number {
-    return this.plotHeight * (this.currentScaleFactor - 1) / 2
+    return this.plotHeight * (this.currentScaleFactor - 1) / 2;
   }
+
 }

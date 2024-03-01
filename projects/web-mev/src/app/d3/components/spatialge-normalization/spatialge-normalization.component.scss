@@ -20,8 +20,8 @@
     position: relative;
     width: fit-content;
     overflow: hidden;
-    overflow-x: scroll;
-    overflow-y: scroll;
+    // overflow-x: scroll;
+    // overflow-y: scroll;
 }
 
 .overlayContainer {
@@ -61,7 +61,8 @@ mat-slider {
 }
 
 .slider {
-    position: absolute;
+    width: 50vw;
+    margin-top: 20px;
 }
 
 #image {
@@ -122,6 +123,38 @@ mat-slider {
         font-weight: 500;
         color: rgba(0, 0, 0, 0.9);
     }
+
+    .horizontalSliderContainer .mat-slider-thumb,
+    .verticalSliderContainer .mat-slider-thumb {
+        background-color: #68666f !important;
+        border-radius: 0% !important;
+    }
+
+    .verticalSliderContainer .mat-slider {
+        left: -20px !important;
+        width: 0px !important;
+    }
+
+    .horizontalSliderContainer .mat-slider {
+        left: 20px !important;
+        bottom: 15px !important;
+    }
+
+    .mat-slider-horizontal .mat-slider-wrapper {
+        height: 10px !important;
+    }
+
+    .mat-slider-horizontal .mat-slider-thumb {
+        top: -14px;
+    }
+
+    .mat-slider-vertical .mat-slider-wrapper {
+        width: 10px !important;
+    }
+
+    .mat-slider-vertical .mat-slider-thumb {
+        left: -14px;
+    }
 }
 
 .custom-button {
@@ -177,14 +210,48 @@ mat-slider {
     // height: 600px;
 }
 
-
 .zoomContainer {
     margin-left: 50px;
 }
 
 .miniMapContainer {
     position: absolute; /* Position it relative to the overlayDiv */
-
-    left: 600px;
-    bottom: 50px;
+    top: 450px;
+    left: 350px;
 }
+
+.zoomButtonContainer {
+    display: flex;
+    flex-direction: column;
+    transform: scale(0.5);
+    position: absolute;
+    right: 0;
+    bottom: 10px;
+    z-index: 100;
+}
+
+.zoomButton {
+    background-color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    margin: 1px;
+}
+
+.horizontalSliderContainer mat-slider {
+    width: 275px;
+}
+
+.verticalSliderContainer mat-slider {
+    height: 400px;
+}
+
+.disabled-label {
+    color: #999; /* Adjust to your desired disabled color */
+    pointer-events: none; /* Prevent interaction with the label */
+}
+

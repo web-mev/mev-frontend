@@ -525,6 +525,7 @@ export class BaseSpatialgeComponent {
   moveImage(direction, mode) {
     const topContainer = document.querySelector('.plotContainer') as HTMLImageElement;
     const bottomContainer = document.querySelector('.imageContainer') as HTMLImageElement;
+    const bottomContainer2 = document.querySelector('.imageContainer2') as HTMLImageElement;
 
     // const miniBottomContainer = document.querySelector('.miniMapImageContainer') as HTMLImageElement;
     const miniBoxContainer = document.querySelector('.miniboxDiv') as HTMLImageElement;
@@ -572,6 +573,7 @@ export class BaseSpatialgeComponent {
       topContainer.style.transform = transformValue;
       if (mode === 'zoom') {
         bottomContainer.style.transform = transformValue;
+        bottomContainer2.style.transform = transformValue;
         miniBoxContainer.style.transform = transformBox;
       }
     }
@@ -663,6 +665,7 @@ export class BaseSpatialgeComponent {
   applyZoom() {
     const plotContainer = document.querySelector('.plotContainer') as HTMLImageElement;
     const imageContainer = document.querySelector('.imageContainer') as HTMLImageElement;
+    const imageContainer2 = document.querySelector('.imageContainer2') as HTMLImageElement;
 
     const miniBottomContainer = document.querySelector('.miniMapImageContainer') as HTMLImageElement;
     const miniMapContainer = document.querySelector('.miniMapContainer') as HTMLImageElement;
@@ -681,6 +684,7 @@ export class BaseSpatialgeComponent {
       const transformValue = `translateX(${this.currentLeft}px) translateY(${this.currentTop}px) scale(${this.currentScaleFactor})`;
       plotContainer.style.transform = transformValue;
       imageContainer.style.transform = transformValue;
+      imageContainer2.style.transform = transformValue;
 
       miniBottomContainer.style.transform = transformValue;
 
@@ -711,6 +715,7 @@ export class BaseSpatialgeComponent {
     }
     const plotContainer = document.querySelector('.plotContainer') as HTMLImageElement;
     const imageContainer = document.querySelector('.imageContainer') as HTMLImageElement;
+    const imageContainer2 = document.querySelector('.imageContainer2') as HTMLImageElement;
 
     const miniBottomContainer = document.querySelector('.miniMapImageContainer') as HTMLImageElement;
     const miniMapContainer = document.querySelector('.miniMapContainer') as HTMLImageElement;
@@ -729,6 +734,7 @@ export class BaseSpatialgeComponent {
       const transformValue = `translateX(${this.currentLeft}px) translateY(${this.currentTop}px) scale(${this.currentScaleFactor})`;
       plotContainer.style.transform = transformValue;
       imageContainer.style.transform = transformValue;
+      imageContainer2.style.transform = transformValue;
 
       miniBottomContainer.style.transform = transformValue;
 

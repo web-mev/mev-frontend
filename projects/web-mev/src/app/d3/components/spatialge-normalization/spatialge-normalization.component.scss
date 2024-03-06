@@ -16,12 +16,10 @@
 
 .overlayDiv {
     margin-top: 10px;
-    // margin-right: 20px;
     position: relative;
     width: fit-content;
     overflow: hidden;
-    // overflow-x: scroll;
-    // overflow-y: scroll;
+    margin-right: 10px;
 }
 
 .overlayContainer {
@@ -217,7 +215,7 @@ mat-slider {
 .miniMapContainer {
     position: absolute; /* Position it relative to the overlayDiv */
     top: 450px;
-    left: 350px;
+    // left: 350px;
 }
 
 .zoomButtonContainer {
@@ -243,11 +241,11 @@ mat-slider {
 }
 
 .horizontalSliderContainer mat-slider {
-    width: 275px;
+    width: 290px;
 }
 
 .verticalSliderContainer mat-slider {
-    height: 400px;
+    height: 375px;
 }
 
 .disabled-label {
@@ -255,3 +253,11 @@ mat-slider {
     pointer-events: none; /* Prevent interaction with the label */
 }
 
+
+
+.cropthis {
+    margin-top: 10px;
+    // width: 290px;
+    // height: 375px;
+    overflow: hidden;
+}

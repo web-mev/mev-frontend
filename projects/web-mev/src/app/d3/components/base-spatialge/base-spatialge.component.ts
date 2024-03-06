@@ -61,7 +61,7 @@ export class BaseSpatialgeComponent {
   displayImage: boolean = false;
 
   displayAlignment: boolean = false;
-  displayZoom: boolean = false;
+  // displayZoom: boolean = false;
 
   scaleFactorVal = '0.01602821';
   geneSearchVal = 'VIM'
@@ -150,10 +150,12 @@ export class BaseSpatialgeComponent {
 
   originalPlotWidth = 0;
   originalPlotHeight = 0;
+  displayOverlayContainer = true;
+
   getDataNormalization() {
     this.useNormalization = true;
     this.isLoading = true;
-    this.scrollTo('scatter')
+    this.scrollTo('topOfPage')
     this.resetVariables();
     let normalization_uuid = this.outputs["normalized_expression"];
     let coords_metadata_uuid = this.outputs["coords_metadata"]
@@ -162,6 +164,7 @@ export class BaseSpatialgeComponent {
       catchError(error => {
         this.isLoading = false;
         this.notificationService.error(`Error ${error.status}: Error from normalized expression request.`);
+        console.log("some error message from norm: ", error)
         throw error;
       })
     );
@@ -170,82 +173,94 @@ export class BaseSpatialgeComponent {
       catchError(error => {
         this.isLoading = false;
         this.notificationService.error(`Error ${error.status}: Error from coordinates metadata request.`);
+        console.log("some error from coord: ", error)
         throw error;
       })
     );
 
     forkJoin([normRequest, coordsMetadataRequest]).subscribe(([normRes, coordsMetadataRes]) => {
+      console.log("res: ", normRes, coordsMetadataRes)
       this.isLoading = false;
-      for (let i in normRes[0]['values']) {
-        let key = i;
-        let count = normRes[0]['values'][i];
-        this.dataDict[key] = {
-          ...this.dataDict[key],
-          count
-        };
-      }
-
-      for (let i in coordsMetadataRes) {
-        let obj = coordsMetadataRes[i];
-        let key = obj['rowname'];
-        let xVal = obj['values']['pxl_col_in_fullres'];
-        let yVal = obj['values']['pxl_row_in_fullres'];
-        this.dataDict[key] = {
-          ...this.dataDict[key],
-          xVal,
-          yVal
-        };
-      }
-
-      for (let i in this.dataDict) {
-        const parsedX = parseInt(this.dataDict[i]['xVal'])
-        const parsedY = parseInt(this.dataDict[i]['yVal'])
-        const totalCounts = parseFloat(parseFloat(this.dataDict[i]['count']).toFixed(3));
-
-        if (!isNaN(parsedX) && !isNaN(parsedY) && !isNaN(totalCounts)) {
-          let temp = {
-            "xValue": parsedX,
-            "yValue": parsedY,
-            "totalCounts": totalCounts
-          }
-          let keyName = parsedX + "_" + parsedY
-          this.totalCounts[keyName] = totalCounts
-          this.scatterPlotData.push(temp)
-
-          this.xMin = Math.min(this.xMin, parsedX);
-          this.xMax = Math.max(this.xMax, parsedX);
-
-          this.yMin = Math.min(this.yMin, parsedY);
-          this.yMax = Math.max(this.yMax, parsedY);
-
-          this.totalCountsMax = Math.max(this.totalCountsMax, totalCounts)
-          this.totalCountsMin = Math.min(this.totalCountsMin, totalCounts)
+      if (Array.isArray(normRes) && normRes.length > 0 && normRes[0].hasOwnProperty('values')) {
+        this.displayOverlayContainer = true;
+        for (let i in normRes[0]['values']) {
+          let key = i;
+          let count = normRes[0]['values'][i];
+          this.dataDict[key] = {
+            ...this.dataDict[key],
+            count
+          };
         }
+
+        for (let i in coordsMetadataRes) {
+          let obj = coordsMetadataRes[i];
+          let key = obj['rowname'];
+          let xVal = obj['values']['pxl_col_in_fullres'];
+          let yVal = obj['values']['pxl_row_in_fullres'];
+          this.dataDict[key] = {
+            ...this.dataDict[key],
+            xVal,
+            yVal
+          };
+        }
+
+
+
+        for (let i in this.dataDict) {
+          const parsedX = parseInt(this.dataDict[i]['xVal'])
+          const parsedY = parseInt(this.dataDict[i]['yVal'])
+          const totalCounts = parseFloat(parseFloat(this.dataDict[i]['count']).toFixed(3));
+
+          if (!isNaN(parsedX) && !isNaN(parsedY) && !isNaN(totalCounts)) {
+            let temp = {
+              "xValue": parsedX,
+              "yValue": parsedY,
+              "totalCounts": totalCounts
+            }
+            let keyName = parsedX + "_" + parsedY
+            this.totalCounts[keyName] = totalCounts
+            this.scatterPlotData.push(temp)
+
+            this.xMin = Math.min(this.xMin, parsedX);
+            this.xMax = Math.max(this.xMax, parsedX);
+
+            this.yMin = Math.min(this.yMin, parsedY);
+            this.yMax = Math.max(this.yMax, parsedY);
+
+            this.totalCountsMax = Math.max(this.totalCountsMax, totalCounts)
+            this.totalCountsMin = Math.min(this.totalCountsMin, totalCounts)
+          }
+        }
+        this.plotWidth = (this.xMax - this.xMin) / 100;
+        this.plotHeight = (this.yMax - this.yMin) / 100;
+
+        if (this.originalPlotWidth === 0) {
+          this.originalPlotWidth = this.plotWidth;
+          this.originalPlotHeight = this.plotHeight;
+        }
+
+        this.selectionRectStyle = {
+          top: `${0}px`,
+          width: `${this.originalPlotWidth / 4}px`,
+          height: `${this.originalPlotHeight / 4}px`,
+          border: '2px solid #1DA1F2',
+          position: 'absolute',
+        };
+
+        this.createScatterPlot()
       }
-      this.plotWidth = (this.xMax - this.xMin) / 100;
-      this.plotHeight = (this.yMax - this.yMin) / 100;
 
-      if (this.originalPlotWidth === 0) {
-        this.originalPlotWidth = this.plotWidth;
-        this.originalPlotHeight = this.plotHeight;
+      else {
+        console.log('normRes is not an array, is empty, or does not contain "values"');
+        this.displayOverlayContainer = false;
       }
-
-      this.selectionRectStyle = {
-        top: `${0}px`,
-        width: `${this.originalPlotWidth / 4}px`,
-        height: `${this.originalPlotHeight / 4}px`,
-        border: '2px solid #1DA1F2',
-        position: 'absolute',
-      };
-
-      this.createScatterPlot()
     });
   }
 
   getDataClusters() {
     this.useCluster = true;
     this.isLoading = true;
-    this.scrollTo('scatter')
+    this.scrollTo('topOfPage')
     this.resetVariables();
     let clusters_uuid = this.outputs["clustered_positions"];
     let coords_metadata_uuid = this.outputs["coords_metadata"]
@@ -268,79 +283,85 @@ export class BaseSpatialgeComponent {
 
     forkJoin([clusterRequest, coordsMetadataRequest]).subscribe(([clusterRes, coordsMetadataRes]) => {
       this.isLoading = false;
-      for (let index in clusterRes) {
-        let key = clusterRes[index]['rowname']
-        let clusterid = clusterRes[index]['values']['clusterid']
-        this.dataDict[key] = {
-          ...this.dataDict[key],
-          clusterid
-        };
-      }
-
-      for (let i in coordsMetadataRes) {
-        let obj = coordsMetadataRes[i];
-        let key = obj['rowname'];
-        let xVal = obj['values']['pxl_col_in_fullres'];
-        let yVal = obj['values']['pxl_row_in_fullres'];
-        this.dataDict[key] = {
-          ...this.dataDict[key],
-          xVal,
-          yVal
-        };
-      }
-
-      let colorLabels = {}
-
-      for (let i in this.dataDict) {
-        const parsedX = parseInt(this.dataDict[i]['xVal'])
-        const parsedY = parseInt(this.dataDict[i]['yVal'])
-        const clusterid = this.dataDict[i]['clusterid']
-
-        if (!isNaN(parsedX) && !isNaN(parsedY) && clusterid) {
-          let clusterName = "Cluster " + clusterid
-          let temp = {
-            "xValue": parsedX,
-            "yValue": parsedY,
-            "clusterid": clusterid
-          }
-          //this allows for the colors to be repeated 
-          let clusterNumber = parseInt(clusterid)
-          if (!colorLabels[clusterNumber]) {
-            colorLabels[clusterNumber] = 1;
-            let remainder = clusterNumber % this.clusterColors.length;
-            let colorObj = {
-              "label": clusterName,
-              "color": remainder === 0 ? this.clusterColors[this.clusterColors.length - 1] : this.clusterColors[remainder - 1]
-            }
-            this.clusterTypes[clusterName] = colorObj
-          }
-
-          this.scatterPlotDataCluster.push(temp)
-
-          this.xMin = Math.min(this.xMin, parsedX);
-          this.xMax = Math.max(this.xMax, parsedX);
-
-          this.yMin = Math.min(this.yMin, parsedY);
-          this.yMax = Math.max(this.yMax, parsedY);
+      console.log("cluster res: ", clusterRes, coordsMetadataRes)
+      if (Array.isArray(clusterRes) && clusterRes.length > 0 && clusterRes[0].hasOwnProperty('rowname') && clusterRes[0].hasOwnProperty('values')) {
+        for (let index in clusterRes) {
+          let key = clusterRes[index]['rowname']
+          let clusterid = clusterRes[index]['values']['clusterid']
+          this.dataDict[key] = {
+            ...this.dataDict[key],
+            clusterid
+          };
         }
+
+        for (let i in coordsMetadataRes) {
+          let obj = coordsMetadataRes[i];
+          let key = obj['rowname'];
+          let xVal = obj['values']['pxl_col_in_fullres'];
+          let yVal = obj['values']['pxl_row_in_fullres'];
+          this.dataDict[key] = {
+            ...this.dataDict[key],
+            xVal,
+            yVal
+          };
+        }
+
+        let colorLabels = {}
+
+        for (let i in this.dataDict) {
+          const parsedX = parseInt(this.dataDict[i]['xVal'])
+          const parsedY = parseInt(this.dataDict[i]['yVal'])
+          const clusterid = this.dataDict[i]['clusterid']
+
+          if (!isNaN(parsedX) && !isNaN(parsedY) && clusterid) {
+            let clusterName = "Cluster " + clusterid
+            let temp = {
+              "xValue": parsedX,
+              "yValue": parsedY,
+              "clusterid": clusterid
+            }
+            //this allows for the colors to be repeated 
+            let clusterNumber = parseInt(clusterid)
+            if (!colorLabels[clusterNumber]) {
+              colorLabels[clusterNumber] = 1;
+              let remainder = clusterNumber % this.clusterColors.length;
+              let colorObj = {
+                "label": clusterName,
+                "color": remainder === 0 ? this.clusterColors[this.clusterColors.length - 1] : this.clusterColors[remainder - 1]
+              }
+              this.clusterTypes[clusterName] = colorObj
+            }
+
+            this.scatterPlotDataCluster.push(temp)
+
+            this.xMin = Math.min(this.xMin, parsedX);
+            this.xMax = Math.max(this.xMax, parsedX);
+
+            this.yMin = Math.min(this.yMin, parsedY);
+            this.yMax = Math.max(this.yMax, parsedY);
+          }
+        }
+        this.plotWidth = (this.xMax - this.xMin) / 100;
+        this.plotHeight = (this.yMax - this.yMin) / 100;
+
+        if (this.originalPlotWidth === 0) {
+          this.originalPlotWidth = this.plotWidth;
+          this.originalPlotHeight = this.plotHeight;
+        }
+
+        this.selectionRectStyle = {
+          top: `${0}px`,
+          width: `${this.originalPlotWidth / 4}px`,
+          height: `${this.originalPlotHeight / 4}px`,
+          border: '2px solid #1DA1F2',
+          position: 'absolute',
+        };
+
+        this.createScatterPlot()
+      } else {
+        console.log('Cluster Res is not an array, is empty, or does not contain "values"');
+        this.displayOverlayContainer = false;
       }
-      this.plotWidth = (this.xMax - this.xMin) / 100;
-      this.plotHeight = (this.yMax - this.yMin) / 100;
-
-      if (this.originalPlotWidth === 0) {
-        this.originalPlotWidth = this.plotWidth;
-        this.originalPlotHeight = this.plotHeight;
-      }
-
-      this.selectionRectStyle = {
-        top: `${0}px`,
-        width: `${this.originalPlotWidth / 4}px`,
-        height: `${this.originalPlotHeight / 4}px`,
-        border: '2px solid #1DA1F2',
-        position: 'absolute',
-      };
-
-      this.createScatterPlot()
 
     });
   }
@@ -413,113 +434,108 @@ export class BaseSpatialgeComponent {
       .on('mouseout', pointTip.hide);
 
     //Add Legend
-    if (!this.displayZoom) {
+    // if (useNorm) {
+    //   const gradient = svg.append("defs")
+    //     .append("linearGradient")
+    //     .attr("id", "legendGradient")
+    //     .attr("x1", "0%")
+    //     .attr("y1", "0%")
+    //     .attr("x2", "100%")
+    //     .attr("y2", "0%");
 
-      if (useNorm) {
-        const gradient = svg.append("defs")
-          .append("linearGradient")
-          .attr("id", "legendGradient")
-          .attr("x1", "0%")
-          .attr("y1", "0%")
-          .attr("x2", "100%")
-          .attr("y2", "0%");
+    //   gradient.append("stop")
+    //     .attr("offset", "0%")
+    //     .attr("stop-color", "white");
 
-        gradient.append("stop")
-          .attr("offset", "0%")
-          .attr("stop-color", "white");
+    //   gradient.append("stop")
+    //     .attr("offset", "100%")
+    //     .attr("stop-color", this.selectedColor);
 
-        gradient.append("stop")
-          .attr("offset", "100%")
-          .attr("stop-color", this.selectedColor);
+    //   const legendX = 300;
+    //   const legendY = this.legendWidth;
+    //   const borderWidth = 1;
+    //   const legendWidth = 50;
+    //   const legendHeight = 10;
 
-        const legendX = 300;
-        const legendY = this.legendWidth;
-        const borderWidth = 1;
-        const legendWidth = 50;
-        const legendHeight = 10;
+    //   svg.append("rect")
+    //     .attr("x", legendX - borderWidth)
+    //     .attr("y", legendY - borderWidth)
+    //     .attr("width", legendWidth + 2 * borderWidth)
+    //     .attr("height", legendHeight + 2 * borderWidth)
+    //     .style("stroke", "rgba(0, 0, 0, 0.3)")
+    //     .style("fill", "none");
 
-        svg.append("rect")
-          .attr("x", legendX - borderWidth)
-          .attr("y", legendY - borderWidth)
-          .attr("width", legendWidth + 2 * borderWidth)
-          .attr("height", legendHeight + 2 * borderWidth)
-          .style("stroke", "rgba(0, 0, 0, 0.3)")
-          .style("fill", "none");
+    //   // Create legend rectangle
+    //   svg.append("rect")
+    //     .attr("x", legendX)
+    //     .attr("y", legendY)
+    //     .attr("width", legendWidth)
+    //     .attr("height", legendHeight)
+    //     .style("fill", "url(#legendGradient)")
 
-        // Create legend rectangle
-        svg.append("rect")
-          .attr("x", legendX)
-          .attr("y", legendY)
-          .attr("width", legendWidth)
-          .attr("height", legendHeight)
-          .style("fill", "url(#legendGradient)")
+    //   svg.append("text")
+    //     .attr("x", legendX)
+    //     .attr("y", 120)
+    //     .attr("text-anchor", "start")
+    //     .attr("font-size", "6px")
+    //     .text("0");
 
-        svg.append("text")
-          .attr("x", legendX)
-          .attr("y", 120)
-          .attr("text-anchor", "start")
-          .attr("font-size", "6px")
-          .text("0");
+    //   const xmaxLabelWidth = this.totalCountsMax.toString().toLocaleString().length * 1;  // Adjust the font size multiplier as needed
+    //   const adjustedXmaxLabelX = legendX + 60 - xmaxLabelWidth;
 
-        const xmaxLabelWidth = this.totalCountsMax.toString().toLocaleString().length * 1;  // Adjust the font size multiplier as needed
-        const adjustedXmaxLabelX = legendX + 60 - xmaxLabelWidth;
+    //   svg.append("text")
+    //     .attr("x", adjustedXmaxLabelX)
+    //     .attr("y", 120)
+    //     .attr("text-anchor", "end")
+    //     .attr("font-size", "6px")
+    //     .text(this.totalCountsMax.toLocaleString());
 
-        svg.append("text")
-          .attr("x", adjustedXmaxLabelX)
-          .attr("y", 120)
-          .attr("text-anchor", "end")
-          .attr("font-size", "6px")
-          .text(this.totalCountsMax.toLocaleString());
+    //   svg.append("text")
+    //     .attr("x", legendX)
+    //     .attr("y", 60)
+    //     .attr("text-anchor", "start")
+    //     .attr("font-size", "6px")
+    //     .attr("font-weight", "bold")
+    //     .text("Counts");
+    // } else if (this.useCluster) {
+    //   // Legend
+    //   const clusterColors = Object.keys(this.clusterTypes).map(key => ({
+    //     label: this.clusterTypes[key].label,
+    //     color: this.clusterTypes[key].color
+    //   }));
+    //   clusterColors.sort((a, b) => {
+    //     // Extracting the numerical part of the label
+    //     const numA = parseInt(a.label.split(' ')[1]);
+    //     const numB = parseInt(b.label.split(' ')[1]);
 
-        svg.append("text")
-          .attr("x", legendX)
-          .attr("y", 60)
-          .attr("text-anchor", "start")
-          .attr("font-size", "6px")
-          .attr("font-weight", "bold")
-          .text("Counts");
-      } else if (this.useCluster) {
-        // Legend
-        const clusterColors = Object.keys(this.clusterTypes).map(key => ({
-          label: this.clusterTypes[key].label,
-          color: this.clusterTypes[key].color
-        }));
-        clusterColors.sort((a, b) => {
-          // Extracting the numerical part of the label
-          const numA = parseInt(a.label.split(' ')[1]);
-          const numB = parseInt(b.label.split(' ')[1]);
+    //     // Comparing the numerical parts
+    //     return numA - numB;
+    //   });
+    //   const legend = svg
+    //     .selectAll('.legend')
+    //     .data(clusterColors)
+    //     .enter()
+    //     .append('g')
+    //     .classed('legend', true)
+    //     .attr('transform', function (d, i) {
+    //       return 'translate(0,' + (i * 15 + 50) + ')';
+    //     });
 
-          // Comparing the numerical parts
-          return numA - numB;
-        });
-        const legend = svg
-          .selectAll('.legend')
-          .data(clusterColors)
-          .enter()
-          .append('g')
-          .classed('legend', true)
-          .attr('transform', function (d, i) {
-            return 'translate(0,' + (i * 15 + 50) + ')';
-          });
+    //   legend
+    //     .append('circle')
+    //     .attr('r', 4)
+    //     .attr('cx', width + 10)
+    //     .attr('fill', d => d.color);
 
-        legend
-          .append('circle')
-          .attr('r', 4)
-          .attr('cx', width + 10)
-          .attr('fill', d => d.color);
-
-        legend
-          .append('text')
-          .attr('x', width + 20)
-          .attr('dy', '.35em')
-          .style('fill', '#000')
-          .style('font-size', '8px')
-          .attr('class', 'legend-label')
-          .text(d => d.label);
-      }
-    }
-
-
+    //   legend
+    //     .append('text')
+    //     .attr('x', width + 20)
+    //     .attr('dy', '.35em')
+    //     .style('fill', '#000')
+    //     .style('font-size', '8px')
+    //     .attr('class', 'legend-label')
+    //     .text(d => d.label);
+    // }
   }
 
   moveImage(direction, mode) {
@@ -564,11 +580,11 @@ export class BaseSpatialgeComponent {
       "5": [800, 1200]
     }
 
-    let signLeft = this.currentLeft >= 0 ? 0 : 1
+    let signLeft = this.currentLeft >= 0 ? 1 : 0
     let signTop = this.currentTop >= 0 ? 0 : 1
 
-    transformValue = `translateX(${this.currentLeft}px) translateY(${this.currentTop}px) scale(${this.currentScaleFactor})`;
-    transformBox = `translateX(${-scales[this.currentScaleFactor][signLeft] * this.currentLeft / maxLeft}%) translateY(${-scales[this.currentScaleFactor][signTop] * this.currentTop / maxTop}%) scale(${this.currentScaleFactor})`;
+    transformValue = `translateX(${-this.currentLeft}px) translateY(${this.currentTop}px) scale(${this.currentScaleFactor})`;
+    transformBox = `translateX(${scales[this.currentScaleFactor][signLeft] * this.currentLeft / maxLeft}%) translateY(${-scales[this.currentScaleFactor][signTop] * this.currentTop / maxTop}%) scale(${this.currentScaleFactor})`;
     if (mode === 'align' || mode === 'zoom') {
       topContainer.style.transform = transformValue;
       if (mode === 'zoom') {
@@ -592,7 +608,16 @@ export class BaseSpatialgeComponent {
     this.isLoading = true;
 
     setTimeout(() => {
-      const containerToCapture = document.querySelector('.overlayDiv') as HTMLElement | null;
+      let captureContainer = ''
+      if (this.droppedFile && !this.overlayImage) {
+        captureContainer = '.fullOverlayDiv'
+      } else if (this.droppedFile && this.overlayImage) {
+        captureContainer = '.overlayDiv'
+      } else {
+        captureContainer = '#scatter'
+      }
+
+      const containerToCapture = document.querySelector(captureContainer) as HTMLElement | null;
 
       if (containerToCapture) {
         html2canvas(containerToCapture, {
@@ -615,7 +640,6 @@ export class BaseSpatialgeComponent {
 
   onDropFile(event: DragEvent) {
     event.preventDefault();
-    // this.displayImage = true;
     const files = event.dataTransfer?.files;
     if (files && files.length > 0) {
       this.droppedFile = files[0];
@@ -752,7 +776,6 @@ export class BaseSpatialgeComponent {
     let transformBox = `translateX(${this.currentLeft}px) translateY(${this.currentTop}px) scale(${this.currentScaleFactor})`;
     miniBoxContainer.style.transform = transformBox;
 
-    console.log("currentscale factor: ", this.currentScaleFactor)
     this.createScatterPlot()
   }
 
@@ -771,12 +794,10 @@ export class BaseSpatialgeComponent {
   }
 
   setAlignmentMode() {
-    this.displayZoom = false;
     this.createScatterPlot()
   }
 
   setZoomMode() {
-    this.displayAlignment = false;
     this.createScatterPlot()
   }
 

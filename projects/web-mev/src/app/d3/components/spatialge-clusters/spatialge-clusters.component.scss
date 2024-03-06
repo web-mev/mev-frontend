@@ -16,19 +16,17 @@
 
 .overlayDiv {
     margin-top: 10px;
-    // margin-right: 20px;
     position: relative;
     width: fit-content;
     overflow: hidden;
-    // overflow-x: scroll;
-    // overflow-y: scroll;
+    margin-right: 10px;
 }
 
 .overlayContainer {
     overflow: hidden;
 }
 
-.overlayRow {
+.downloadButtonContainer {
     position: absolute;
 }
 
@@ -124,10 +122,14 @@ mat-slider {
         color: rgba(0, 0, 0, 0.9);
     }
 
+    .horizontalSliderContainer,
+    .verticalSliderContainer {
+        z-index: 99;
+    }
     .horizontalSliderContainer .mat-slider-thumb,
     .verticalSliderContainer .mat-slider-thumb {
         background-color: #68666f !important;
-        border-radius: 0% !important;
+        // border-radius: 50% !important;
     }
 
     .verticalSliderContainer .mat-slider {
@@ -140,21 +142,21 @@ mat-slider {
         bottom: 15px !important;
     }
 
-    .mat-slider-horizontal .mat-slider-wrapper {
-        height: 10px !important;
-    }
+    // .mat-slider-horizontal .mat-slider-wrapper {
+    //     height: 10px !important;
+    // }
 
-    .mat-slider-horizontal .mat-slider-thumb {
-        top: -14px;
-    }
+    // .mat-slider-horizontal .mat-slider-thumb {
+    //     top: -14px;
+    // }
 
-    .mat-slider-vertical .mat-slider-wrapper {
-        width: 10px !important;
-    }
+    // .mat-slider-vertical .mat-slider-wrapper {
+    //     width: 10px !important;
+    // }
 
-    .mat-slider-vertical .mat-slider-thumb {
-        left: -14px;
-    }
+    // .mat-slider-vertical .mat-slider-thumb {
+    //     left: -14px;
+    // }
 }
 
 .custom-button {
@@ -216,8 +218,8 @@ mat-slider {
 
 .miniMapContainer {
     position: absolute; /* Position it relative to the overlayDiv */
-    top: 350px;
-    left: 350px;
+    top: 450px;
+    // left: 350px;
 }
 
 .zoomButtonContainer {
@@ -226,6 +228,16 @@ mat-slider {
     transform: scale(0.5);
     position: absolute;
     right: 0;
+    bottom: 10px;
+    z-index: 100;
+}
+
+.zoomButtonContainerNoImage {
+    display: flex;
+    flex-direction: column;
+    transform: scale(0.5);
+    position: absolute;
+    right: 210px;
     bottom: 10px;
     z-index: 100;
 }
@@ -243,15 +255,32 @@ mat-slider {
 }
 
 .horizontalSliderContainer mat-slider {
-    width: 275px;
+    width: 290px;
 }
 
 .verticalSliderContainer mat-slider {
-    height: 400px;
+    height: 375px;
 }
 
 .disabled-label {
-    color: #999; /* Adjust to your desired disabled color */
-    pointer-events: none; /* Prevent interaction with the label */
+    color: #999;
+    pointer-events: none;
 }
 
+.cropthis {
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+.substituteImage {
+    background-color: #7ad454;
+}
+
+.hiddenDiv {
+    display: none;
+}
+
+.noDataDiv {
+    margin: 40px 0 60px;
+    color: gray;
+}

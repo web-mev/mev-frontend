@@ -126,6 +126,7 @@ mat-slider {
     .verticalSliderContainer {
         z-index: 99;
     }
+
     .horizontalSliderContainer .mat-slider-thumb,
     .verticalSliderContainer .mat-slider-thumb {
         background-color: #68666f !important;
@@ -173,8 +174,8 @@ mat-slider {
     padding: 20px;
     text-align: center;
     cursor: pointer;
-    width: 250px;
-    height: 350px;
+    // width: 250px;
+    // height: 350px;
     margin-left: 20px;
 }
 
@@ -218,7 +219,7 @@ mat-slider {
 
 .miniMapContainer {
     position: absolute; /* Position it relative to the overlayDiv */
-    top: 450px;
+    // top: 450px;
     // left: 350px;
 }
 
@@ -254,13 +255,13 @@ mat-slider {
     margin: 1px;
 }
 
-.horizontalSliderContainer mat-slider {
-    width: 290px;
-}
+// .horizontalSliderContainer mat-slider {
+//     // width: 290px;
+// }
 
-.verticalSliderContainer mat-slider {
-    height: 375px;
-}
+// .verticalSliderContainer mat-slider {
+//     // height: 375px;
+// }
 
 .disabled-label {
     color: #999;
@@ -273,7 +274,7 @@ mat-slider {
 }
 
 .substituteImage {
-    background-color: #7ad454;
+    background-color: rgba(232, 125, 30, .25);
 }
 
 .hiddenDiv {

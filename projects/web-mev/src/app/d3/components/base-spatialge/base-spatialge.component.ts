@@ -38,12 +38,12 @@ export class BaseSpatialgeComponent {
 
   dataDict = {}
 
-  xMin = Infinity
-  xMax = -Infinity
-  yMin = Infinity
-  yMax = -Infinity
+  xMin = 100000000
+  xMax = 0
+  yMin = 100000000
+  yMax = 0
   totalCountsMax = 0;
-  totalCountsMin = Infinity;
+  totalCountsMin = 100000000;
 
   totalCounts: any = {}
 
@@ -63,7 +63,8 @@ export class BaseSpatialgeComponent {
   displayAlignment: boolean = false;
   // displayZoom: boolean = false;
 
-  scaleFactorVal = '0.01602821';
+  // scaleFactorVal = '0.01602821';
+  scaleFactorVal = '0';
   geneSearchVal = 'VIM'
 
   moveAmount = 1;
@@ -99,6 +100,8 @@ export class BaseSpatialgeComponent {
 
   selectionRectStyle = {};
 
+  geneSearchHeight = 100;
+
   constructor(
     private httpClient: HttpClient,
     private readonly notificationService: NotificationService,
@@ -108,12 +111,12 @@ export class BaseSpatialgeComponent {
 
   resetVariables() {
     this.scatterPlotData = [];
-    this.xMin = Infinity
-    this.xMax = -Infinity
-    this.yMin = Infinity
-    this.yMax = -Infinity
+    this.xMin = 100000000
+    this.xMax = 0
+    this.yMin = 100000000
+    this.yMax = 0
     this.totalCountsMax = 0;
-    this.totalCountsMin = Infinity;
+    this.totalCountsMin = 100000000;
 
     this.dataDict = {}
     this.plotWidth = 300;
@@ -153,6 +156,7 @@ export class BaseSpatialgeComponent {
   displayOverlayContainer = true;
 
   getDataNormalization() {
+    this.geneSearchHeight = 100;
     this.useNormalization = true;
     this.isLoading = true;
     this.scrollTo('topOfPage')
@@ -179,10 +183,8 @@ export class BaseSpatialgeComponent {
     );
 
     forkJoin([normRequest, coordsMetadataRequest]).subscribe(([normRes, coordsMetadataRes]) => {
-      console.log("res: ", normRes, coordsMetadataRes)
       this.isLoading = false;
       if (Array.isArray(normRes) && normRes.length > 0 && normRes[0].hasOwnProperty('values')) {
-        this.displayOverlayContainer = true;
         for (let i in normRes[0]['values']) {
           let key = i;
           let count = normRes[0]['values'][i];
@@ -195,8 +197,9 @@ export class BaseSpatialgeComponent {
         for (let i in coordsMetadataRes) {
           let obj = coordsMetadataRes[i];
           let key = obj['rowname'];
-          let xVal = obj['values']['pxl_col_in_fullres'];
+          let xVal = obj['values']['pxl_col_in_fullres'] === undefined ? obj['values']['pxl_col_in_full_res'] : obj['values']['pxl_col_in_fullres'];
           let yVal = obj['values']['pxl_row_in_fullres'];
+
           this.dataDict[key] = {
             ...this.dataDict[key],
             xVal,
@@ -204,14 +207,12 @@ export class BaseSpatialgeComponent {
           };
         }
 
-
-
         for (let i in this.dataDict) {
           const parsedX = parseInt(this.dataDict[i]['xVal'])
           const parsedY = parseInt(this.dataDict[i]['yVal'])
           const totalCounts = parseFloat(parseFloat(this.dataDict[i]['count']).toFixed(3));
 
-          if (!isNaN(parsedX) && !isNaN(parsedY) && !isNaN(totalCounts)) {
+          if (this.dataDict[i]['xVal'] !== undefined && this.dataDict[i]['yVal'] !== undefined && this.dataDict[i]['count'] !== undefined && !isNaN(parsedX) && !isNaN(parsedY) && !isNaN(totalCounts)) {
             let temp = {
               "xValue": parsedX,
               "yValue": parsedY,
@@ -231,8 +232,9 @@ export class BaseSpatialgeComponent {
             this.totalCountsMin = Math.min(this.totalCountsMin, totalCounts)
           }
         }
-        this.plotWidth = (this.xMax - this.xMin) / 100;
-        this.plotHeight = (this.yMax - this.yMin) / 100;
+        let normalizePlot = (this.xMax - this.xMin) / 300 // This will set the plot to a width of 300px
+        this.plotWidth = (this.xMax - this.xMin) / normalizePlot;
+        this.plotHeight = (this.yMax - this.yMin) / normalizePlot;
 
         if (this.originalPlotWidth === 0) {
           this.originalPlotWidth = this.plotWidth;
@@ -247,17 +249,21 @@ export class BaseSpatialgeComponent {
           position: 'absolute',
         };
 
-        this.createScatterPlot()
+        if (this.scatterPlotData.length > 0) {
+          this.displayOverlayContainer = true;
+          this.createScatterPlot()
+        }
+
       }
 
       else {
-        console.log('normRes is not an array, is empty, or does not contain "values"');
         this.displayOverlayContainer = false;
       }
     });
   }
 
   getDataClusters() {
+    this.geneSearchHeight = 0;
     this.useCluster = true;
     this.isLoading = true;
     this.scrollTo('topOfPage')
@@ -283,7 +289,6 @@ export class BaseSpatialgeComponent {
 
     forkJoin([clusterRequest, coordsMetadataRequest]).subscribe(([clusterRes, coordsMetadataRes]) => {
       this.isLoading = false;
-      console.log("cluster res: ", clusterRes, coordsMetadataRes)
       if (Array.isArray(clusterRes) && clusterRes.length > 0 && clusterRes[0].hasOwnProperty('rowname') && clusterRes[0].hasOwnProperty('values')) {
         for (let index in clusterRes) {
           let key = clusterRes[index]['rowname']
@@ -341,8 +346,10 @@ export class BaseSpatialgeComponent {
             this.yMax = Math.max(this.yMax, parsedY);
           }
         }
-        this.plotWidth = (this.xMax - this.xMin) / 100;
-        this.plotHeight = (this.yMax - this.yMin) / 100;
+
+        let normalizePlot = (this.xMax - this.xMin) / 300 // This will set the plot to a width of 300px
+        this.plotWidth = (this.xMax - this.xMin) / normalizePlot;
+        this.plotHeight = (this.yMax - this.yMin) / normalizePlot;
 
         if (this.originalPlotWidth === 0) {
           this.originalPlotWidth = this.plotWidth;
@@ -357,9 +364,12 @@ export class BaseSpatialgeComponent {
           position: 'absolute',
         };
 
-        this.createScatterPlot()
+        // this.createScatterPlot()
+        if (this.scatterPlotDataCluster.length > 0) {
+          this.displayOverlayContainer = true;
+          this.createScatterPlot()
+        }
       } else {
-        console.log('Cluster Res is not an array, is empty, or does not contain "values"');
         this.displayOverlayContainer = false;
       }
 
@@ -541,7 +551,7 @@ export class BaseSpatialgeComponent {
   moveImage(direction, mode) {
     const topContainer = document.querySelector('.plotContainer') as HTMLImageElement;
     const bottomContainer = document.querySelector('.imageContainer') as HTMLImageElement;
-    const bottomContainer2 = document.querySelector('.imageContainer2') as HTMLImageElement;
+    const bottomContainerMiniMap = document.querySelector('.imageContainerMiniMap') as HTMLImageElement;
 
     // const miniBottomContainer = document.querySelector('.miniMapImageContainer') as HTMLImageElement;
     const miniBoxContainer = document.querySelector('.miniboxDiv') as HTMLImageElement;
@@ -552,10 +562,10 @@ export class BaseSpatialgeComponent {
     if (mode === 'align') {
       switch (direction) {
         case 'left':
-          this.currentLeft -= this.moveAmount;
+          this.currentLeft += this.moveAmount;
           break;
         case 'right':
-          this.currentLeft += this.moveAmount;
+          this.currentLeft -= this.moveAmount;
           break;
         case 'up':
           this.currentTop -= this.moveAmount;
@@ -589,7 +599,7 @@ export class BaseSpatialgeComponent {
       topContainer.style.transform = transformValue;
       if (mode === 'zoom') {
         bottomContainer.style.transform = transformValue;
-        bottomContainer2.style.transform = transformValue;
+        bottomContainerMiniMap.style.transform = transformValue;
         miniBoxContainer.style.transform = transformBox;
       }
     }
@@ -689,7 +699,7 @@ export class BaseSpatialgeComponent {
   applyZoom() {
     const plotContainer = document.querySelector('.plotContainer') as HTMLImageElement;
     const imageContainer = document.querySelector('.imageContainer') as HTMLImageElement;
-    const imageContainer2 = document.querySelector('.imageContainer2') as HTMLImageElement;
+    const imageContainerMiniMap = document.querySelector('.imageContainerMiniMap') as HTMLImageElement;
 
     const miniBottomContainer = document.querySelector('.miniMapImageContainer') as HTMLImageElement;
     const miniMapContainer = document.querySelector('.miniMapContainer') as HTMLImageElement;
@@ -708,7 +718,7 @@ export class BaseSpatialgeComponent {
       const transformValue = `translateX(${this.currentLeft}px) translateY(${this.currentTop}px) scale(${this.currentScaleFactor})`;
       plotContainer.style.transform = transformValue;
       imageContainer.style.transform = transformValue;
-      imageContainer2.style.transform = transformValue;
+      imageContainerMiniMap.style.transform = transformValue;
 
       miniBottomContainer.style.transform = transformValue;
 
@@ -739,7 +749,7 @@ export class BaseSpatialgeComponent {
     }
     const plotContainer = document.querySelector('.plotContainer') as HTMLImageElement;
     const imageContainer = document.querySelector('.imageContainer') as HTMLImageElement;
-    const imageContainer2 = document.querySelector('.imageContainer2') as HTMLImageElement;
+    const imageContainerMiniMap = document.querySelector('.imageContainerMiniMap') as HTMLImageElement;
 
     const miniBottomContainer = document.querySelector('.miniMapImageContainer') as HTMLImageElement;
     const miniMapContainer = document.querySelector('.miniMapContainer') as HTMLImageElement;
@@ -758,7 +768,7 @@ export class BaseSpatialgeComponent {
       const transformValue = `translateX(${this.currentLeft}px) translateY(${this.currentTop}px) scale(${this.currentScaleFactor})`;
       plotContainer.style.transform = transformValue;
       imageContainer.style.transform = transformValue;
-      imageContainer2.style.transform = transformValue;
+      imageContainerMiniMap.style.transform = transformValue;
 
       miniBottomContainer.style.transform = transformValue;
 
@@ -815,6 +825,48 @@ export class BaseSpatialgeComponent {
 
   maxTopValue(): number {
     return this.plotHeight * (this.currentScaleFactor - 1) / 2;
+  }
+
+  currentDegree = 0;
+  scaleXCustom = 1;
+
+  rotateImage(direction) {
+    const imageContainer = document.querySelector('.imageContainer') as HTMLImageElement;
+    const imageContainerMiniMap = document.querySelector('.imageContainerMiniMap') as HTMLImageElement;
+
+    const increment = this.axisSwapped ? -1 : 1;
+
+    if (direction === "+") {
+      this.currentDegree += increment;
+    } else {
+      this.currentDegree -= increment;
+    }
+
+    let transformValue = `scaleX(${this.scaleXCustom}) rotate(${this.currentDegree}deg)`
+
+
+    imageContainer.style.transform = transformValue;
+    imageContainerMiniMap.style.transform = transformValue;
+  }
+
+  axisSwapped = false
+  swapAxis() {
+    const imageContainer = document.querySelector('.imageContainer') as HTMLImageElement;
+    const imageContainerMiniMap = document.querySelector('.imageContainerMiniMap') as HTMLImageElement;
+
+    this.axisSwapped = !this.axisSwapped;
+    if (this.axisSwapped === false) {
+      this.currentDegree -= 90
+    } else {
+      this.currentDegree += 90
+    }
+
+    this.scaleXCustom *= -1
+
+    let transformValue = `scaleX(${this.scaleXCustom}) rotate(${this.currentDegree}deg)`
+
+    imageContainer.style.transform = transformValue;
+    imageContainerMiniMap.style.transform = transformValue;
   }
 
 }

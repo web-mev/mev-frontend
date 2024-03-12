@@ -199,18 +199,12 @@ mat-slider {
 }
 
 .image-container {
-    // width: 200px;
-    // height: 300px;
     overflow: hidden;
     position: relative;
 }
 
 .image-container img {
-    position: absolute; /* Position the image absolutely within the container */
-    // left: 0px;
-    // top: 50px;
-    // width: 400px;
-    // height: 600px;
+    position: absolute;
 }
 
 .zoomContainer {

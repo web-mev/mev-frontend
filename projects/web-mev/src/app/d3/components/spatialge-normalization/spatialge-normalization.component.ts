@@ -24,6 +24,8 @@ interface ScatterData {
 export class SpatialGENormalizationComponent extends BaseSpatialgeComponent implements OnInit {
 
     ngOnInit(): void {
-        this.getDataNormalization()
+        this.analysisType = 'normalization'
+        this.getAxisColumnNames()
+        // this.getDataNormalization()
     }
 }

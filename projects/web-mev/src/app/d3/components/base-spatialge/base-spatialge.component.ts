@@ -102,6 +102,13 @@ export class BaseSpatialgeComponent {
 
   geneSearchHeight = 100;
 
+  analysisType = ''
+
+  xAxisValue = '';
+  yAxisValue = ''
+  xAxisValueList = []
+  yAxisValueList = []
+
   constructor(
     private httpClient: HttpClient,
     private readonly notificationService: NotificationService,
@@ -121,6 +128,8 @@ export class BaseSpatialgeComponent {
     this.dataDict = {}
     this.plotWidth = 300;
     this.plotHeight = 500;
+    this.originalPlotWidth = 0;
+    this.originalPlotHeight = 0;
   }
 
   setScaleFactor(event: Event) {
@@ -129,10 +138,10 @@ export class BaseSpatialgeComponent {
     this.createScatterPlot()
   }
 
-  setGeneSearch() {
-    this.geneSearch = this.geneSearchVal.split('').map(letter => letter.toUpperCase()).join('');
-    this.getDataNormalization()
-  }
+  // setGeneSearch() {
+  //   this.geneSearch = this.geneSearchVal.split('').map(letter => letter.toUpperCase()).join('');
+  //   this.getDataNormalization()
+  // }
 
   onColorChange() {
     this.createScatterPlot()
@@ -151,11 +160,34 @@ export class BaseSpatialgeComponent {
     element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
   }
 
+
+
+  getAxisColumnNames() {
+    this.isLoading = true
+    let coords_metadata_uuid = this.outputs["coords_metadata"]
+    this.httpClient.get(`${this.API_URL}/resources/${coords_metadata_uuid}/contents/?page=1&page_size=1`).pipe(
+      catchError(error => {
+        this.isLoading = false;
+        this.notificationService.error(`Error ${error.status}: Error from coordinates metadata request.`);
+        console.log("some error from coord: ", error)
+        throw error;
+      })
+    ).subscribe(res => {
+      this.isLoading = false;
+      let jsonObj = res['results'][0]['values']
+      const keys = Object.keys(jsonObj);
+      this.xAxisValueList = keys;
+      this.yAxisValueList = keys;
+    })
+  }
+
   originalPlotWidth = 0;
   originalPlotHeight = 0;
   displayOverlayContainer = true;
 
   getDataNormalization() {
+    this.geneSearch = this.geneSearchVal.split('').map(letter => letter.toUpperCase()).join('');
+
     this.geneSearchHeight = 100;
     this.useNormalization = true;
     this.isLoading = true;
@@ -197,8 +229,8 @@ export class BaseSpatialgeComponent {
         for (let i in coordsMetadataRes) {
           let obj = coordsMetadataRes[i];
           let key = obj['rowname'];
-          let xVal = obj['values']['pxl_col_in_fullres'] === undefined ? obj['values']['pxl_col_in_full_res'] : obj['values']['pxl_col_in_fullres'];
-          let yVal = obj['values']['pxl_row_in_fullres'];
+          let xVal = obj['values'][this.xAxisValue];
+          let yVal = obj['values'][this.yAxisValue];
 
           this.dataDict[key] = {
             ...this.dataDict[key],
@@ -302,8 +334,8 @@ export class BaseSpatialgeComponent {
         for (let i in coordsMetadataRes) {
           let obj = coordsMetadataRes[i];
           let key = obj['rowname'];
-          let xVal = obj['values']['pxl_col_in_fullres'];
-          let yVal = obj['values']['pxl_row_in_fullres'];
+          let xVal = obj['values'][this.xAxisValue]
+          let yVal = obj['values'][this.yAxisValue]
           this.dataDict[key] = {
             ...this.dataDict[key],
             xVal,
@@ -867,6 +899,34 @@ export class BaseSpatialgeComponent {
 
     imageContainer.style.transform = transformValue;
     imageContainerMiniMap.style.transform = transformValue;
+  }
+
+  xAxisFlipped = false;
+  yAxisFlipped = false;
+  flipAxis(axis) {
+    const imageContainer = document.querySelector('.imageContainer') as HTMLImageElement;
+    const imageContainerMiniMap = document.querySelector('.imageContainerMiniMap') as HTMLImageElement;
+    let flipX = 1;
+    let flipY = 1;
+    if (axis === 'horizontal') {
+      this.xAxisFlipped = !this.xAxisFlipped;
+      flipX = this.xAxisFlipped ? -1 : 1;
+    } else  {
+      this.yAxisFlipped = !this.yAxisFlipped;
+      flipY = this.yAxisFlipped ? -1 : 1;
+    }
+
+    
+    let transformValue = axis === 'vertical' ? `scaleY(${flipY})` : `scaleX(${flipX})`;
+    console.log("transform val: ", transformValue)
+
+    imageContainer.style.transform = transformValue;
+    imageContainerMiniMap.style.transform = transformValue;
+  }
+
+
+  onDropDownChange(event, axis) {
+    // console.log("event: ", event, this.xAxisValue)
   }
 
 }

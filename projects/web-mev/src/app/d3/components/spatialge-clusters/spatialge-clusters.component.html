@@ -5,22 +5,41 @@
         <mat-card-title>SpatialGE: {{ outputs?.job_name }}</mat-card-title>
         <mev-input-info [outputs]="outputs"></mev-input-info>
     </mat-card-header>
-    <div id="topOfPage"></div>
-    <!-- <div *ngIf="scatterPlotDataCluster.length > 0" class="searchContainer">
+
+    <!-- <div class="searchContainer">
         <label id="radio-group-axis">Gene Search: </label>
         <div class="inputContainer">
-            <mat-form-field class="example-form-field container" appearance="outline">
+            <mat-form-field class="example-form-field" appearance="outline">
                 <mat-label>Gene Search</mat-label>
-                <input matInput type="search" name="search" [(ngModel)]="geneSearchVal" (keyup.enter)="setGeneSearch()"
-                    class="smallerInput">
+                <input matInput type="search" name="search" [(ngModel)]="geneSearchVal" class="smallerInput">
                 <button *ngIf="geneSearchVal" matSuffix mat-icon-button aria-label="Clear" (click)="geneSearchVal = ''">
                     <mat-icon>close</mat-icon>
                 </button>
             </mat-form-field>
-            <button mat-flat-button color="primary" class="searchButton" (click)="setGeneSearch()">Submit</button>
         </div>
     </div> -->
 
+    <mat-form-field appearance="outline">
+        <mat-label>Select X-Axis Label</mat-label>
+        <mat-select [(value)]="xAxisValue" (selectionChange)="onDropDownChange($event.value, 'x-axis')">
+            <mat-option [value]="option" *ngFor="let option of xAxisValueList">{{ option }}</mat-option>
+        </mat-select>
+    </mat-form-field>
+    <br>
+    <mat-form-field appearance="outline">
+        <mat-label>Select Y-Axis Label</mat-label>
+        <mat-select [(value)]="yAxisValue" (selectionChange)="onDropDownChange($event.value, 'y-axis')">
+            <mat-option [value]="option" *ngFor="let option of yAxisValueList">{{ option }}</mat-option>
+        </mat-select>
+    </mat-form-field>
+    <br>
+    <button mat-flat-button color="primary" class="searchButton"
+        [disabled]="xAxisValue === '' || yAxisValue === '' "
+        (click)="analysisType === 'normalization' ? getDataNormalization(): getDataClusters() ">Submit</button>
+
+    <br>
+    <br>
+    <div id="topOfPage"></div>
     <div *ngIf="!displayOverlayContainer || scatterPlotDataCluster.length === 0" class="noDataDiv">No data found.</div>
     <div *ngIf="displayOverlayContainer" class="overlayContainer"
         [style.width.px]="overlayImage ? maxImageContainerWidthOverylay +100: maxImageContainerWidthSidebySide + 150">
@@ -33,7 +52,7 @@
         </div>
 
         <span class="fullOverlayDiv" style="display: flex; width: 700px; margin-left: 10px;">
-            <div *ngIf="currentScaleFactor != 1" class="verticalSliderContainer" >
+            <div *ngIf="currentScaleFactor != 1" class="verticalSliderContainer">
                 <mat-slider [min]="minTopValue()" [max]="maxTopValue()" step="10" [(ngModel)]="currentTop"
                     (change)="moveImage('left', 'zoom')" vertical [style.height.px]="plotHeight">
                 </mat-slider>
@@ -44,10 +63,12 @@
                     [style.opacity]="displayPlot ? plotOpacityValue : 0" [style.width.px]="originalPlotWidth"
                     [style]="!displayAlignment ? 'z-index: 2' : 'z-index: 4'" class="plotContainer">
                 </div>
-                <div *ngIf="scatterPlotDataCluster.length > 0" [class]="!droppedFile && currentScaleFactor == 1 ? 'drop-zone' : '' " (drop)="onDropFile($event)"
+                <div *ngIf="scatterPlotDataCluster.length > 0"
+                    [class]="!droppedFile && currentScaleFactor == 1 ? 'drop-zone' : '' " (drop)="onDropFile($event)"
                     (dragover)="onDragOver($event)"
                     [style.margin-left.px]="overlayImage ? -(plotWidth + widthAdjustment + legendWidth): 0"
-                    [style.height.px]="!droppedFile ? originalPlotHeight: ''" [style.width.px]="originalPlotWidth" (click)="fileInput.click()" class="imageContainer">
+                    [style.height.px]="!droppedFile ? originalPlotHeight: ''" [style.width.px]="originalPlotWidth"
+                    (click)="fileInput.click()" class="imageContainer">
                     <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;">
                     <div *ngIf="!droppedFile && currentScaleFactor == 1" class="drop-message">
                         <p>Drop image file here or click to upload</p>
@@ -83,7 +104,8 @@
             </div>
 
             <div *ngIf="displayPlot" class="miniMapContainer"
-                [style.left.px]="overlayImage || !droppedFile ? originalPlotWidth+50: originalPlotWidth*2+50" [style.top.px]="originalPlotHeight + geneSearchHeight">
+                [style.left.px]="overlayImage || !droppedFile ? originalPlotWidth+50: originalPlotWidth*2+50"
+                [style.top.px]="originalPlotHeight + geneSearchHeight">
                 <!-- <div #scatter id="scatter" [class]="overlayImage ? 'overlayPlots' : 'displayPlotSideBySide'"
                     [style.opacity]="displayPlot ? plotOpacityValue : 0"
                     [style]="!displayAlignment ? 'z-index: 2' : 'z-index: 4'" class="plotContainer">
@@ -114,7 +136,8 @@
         </div>
     </div>
 
-    <div *ngIf="scatterPlotDataCluster.length > 0" class="slider" [style.top.px]="(plotHeight+heightAdjustment) + geneSearchHeight + 100">
+    <div *ngIf="scatterPlotDataCluster.length > 0" class="slider"
+        [style.top.px]="(plotHeight+heightAdjustment) + geneSearchHeight + 100">
         <div *ngIf="displayAlignment">
             <label id="modes-label">Alignment: </label>
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Left"
@@ -186,8 +209,6 @@
         <mat-slide-toggle [(ngModel)]="displayAlignment" (change)="setAlignmentMode()" [disabled]="!droppedFile">
             Alignment Mode</mat-slide-toggle>
         <br>
-        <!-- <mat-slide-toggle [(ngModel)]="displayZoom" (change)="setZoomMode()">Zoom Mode</mat-slide-toggle> -->
-        <!-- <br> -->
         <mat-slide-toggle [(ngModel)]="displayPlot">Display Plot</mat-slide-toggle>
         <br>
         <mat-slide-toggle [(ngModel)]="displayImage" [disabled]="!droppedFile">Display Image</mat-slide-toggle>

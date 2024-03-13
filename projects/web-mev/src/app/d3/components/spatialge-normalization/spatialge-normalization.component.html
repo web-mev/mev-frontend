@@ -39,7 +39,8 @@
         (click)="analysisType === 'normalization' ? getDataNormalization(): getDataClusters() ">Submit</button>
 
     <div id="topOfPage"></div>
-    <div *ngIf="!displayOverlayContainer || scatterPlotData.length === 0" class="noDataDiv">No data found.</div>
+    <div *ngIf="!displayOverlayContainer || (scatterPlotData.length === 0 && (useNormalization || useCluster))"
+        class="noDataDiv">No data found.</div>
     <div *ngIf="displayOverlayContainer" class="overlayContainer"
         [style.width.px]="overlayImage ? maxImageContainerWidthOverylay +100: maxImageContainerWidthSidebySide + 150">
         <div *ngIf="scatterPlotData.length > 0" class="downloadButtonContainer"
@@ -109,6 +110,9 @@
                     [style.opacity]="displayPlot ? plotOpacityValue : 0"
                     [style]="!displayAlignment ? 'z-index: 2' : 'z-index: 4'" class="plotContainer">
                 </div> -->
+                <div #minimapId id='minimapId'>
+                    hello
+                </div>
                 <div
                     [class]="currentScaleFactor != 1 || droppedFile ? 'miniSubContainer' : 'hiddenDiv miniSubContainer'">
                     <div [style.margin-left.px]="20">
@@ -172,6 +176,7 @@
                 (click)="stretchPlot('y-axis', '-')">
                 <mat-icon>compress</mat-icon>
             </button>
+            <br>
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Rotate Left"
                 (click)="rotateImage('-')">
                 <mat-icon>rotate_left</mat-icon>

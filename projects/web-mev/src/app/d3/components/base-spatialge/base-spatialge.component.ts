@@ -30,6 +30,7 @@ export class BaseSpatialgeComponent {
   private readonly API_URL = environment.apiUrl;
 
   containerId = '#scatter';
+  minimapContainerId = '#minimapId'
 
   isLoading = false;
 
@@ -135,7 +136,7 @@ export class BaseSpatialgeComponent {
   setScaleFactor(event: Event) {
     event.preventDefault();
     this.scaleFactor = parseFloat(this.scaleFactorVal)
-    this.createScatterPlot()
+    this.createScatterPlot('normal')
   }
 
   // setGeneSearch() {
@@ -144,7 +145,7 @@ export class BaseSpatialgeComponent {
   // }
 
   onColorChange() {
-    this.createScatterPlot()
+    this.createScatterPlot('normal')
   }
 
   updatePlotOpacity(value: number): void {
@@ -159,8 +160,6 @@ export class BaseSpatialgeComponent {
     const element = document.getElementById(htmlID) as HTMLElement;
     element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
   }
-
-
 
   getAxisColumnNames() {
     this.isLoading = true
@@ -186,8 +185,8 @@ export class BaseSpatialgeComponent {
   displayOverlayContainer = true;
 
   getDataNormalization() {
+    console.log("x/y axisvalues at getdata: ", this.xAxisValue, this.yAxisValue)
     this.geneSearch = this.geneSearchVal.split('').map(letter => letter.toUpperCase()).join('');
-
     this.geneSearchHeight = 100;
     this.useNormalization = true;
     this.isLoading = true;
@@ -238,6 +237,7 @@ export class BaseSpatialgeComponent {
             yVal
           };
         }
+        console.log("datadict: ", this.dataDict)
 
         for (let i in this.dataDict) {
           const parsedX = parseInt(this.dataDict[i]['xVal'])
@@ -283,7 +283,8 @@ export class BaseSpatialgeComponent {
 
         if (this.scatterPlotData.length > 0) {
           this.displayOverlayContainer = true;
-          this.createScatterPlot()
+          this.createScatterPlot('normal')
+          this.createScatterPlot('minimap')
         }
 
       }
@@ -396,10 +397,9 @@ export class BaseSpatialgeComponent {
           position: 'absolute',
         };
 
-        // this.createScatterPlot()
         if (this.scatterPlotDataCluster.length > 0) {
           this.displayOverlayContainer = true;
-          this.createScatterPlot()
+          this.createScatterPlot('normal')
         }
       } else {
         this.displayOverlayContainer = false;
@@ -408,13 +408,14 @@ export class BaseSpatialgeComponent {
     });
   }
 
-  createScatterPlot() {
+  createScatterPlot(size) {
     this.displayPlot = true;
     var margin = { top: 0, right: this.legendWidth, bottom: 0, left: 0 },
       width = this.plotWidth - margin.left + this.widthAdjustment,
       height = this.plotHeight - margin.top - margin.bottom + this.heightAdjustment;
 
-    d3.select(this.containerId)
+    let scatterplotContainerId = size === 'normal' ? this.containerId : this.minimapContainerId 
+    d3.select(scatterplotContainerId)
       .selectAll('svg')
       .remove();
 
@@ -427,7 +428,7 @@ export class BaseSpatialgeComponent {
       });
 
     // append the svg object to the body of the page
-    var svg = d3.select(this.containerId)
+    var svg = d3.select(scatterplotContainerId)
       .append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
@@ -457,7 +458,8 @@ export class BaseSpatialgeComponent {
     let useNorm = this.useNormalization
 
     // Add dots
-    svg.append('g')
+
+    const circles = svg.append('g')
       .selectAll("dot")
       .data(useNorm ? this.scatterPlotData : this.scatterPlotDataCluster)
       .enter()
@@ -466,14 +468,19 @@ export class BaseSpatialgeComponent {
       .attr("cy", function (d) { return height - y(d.yValue); })
       .attr("r", 1.75)
       .attr("fill", d => {
-
         return useNorm ? color(d.totalCounts) : colorScale(d.clusterid)
       })
-      .on('mouseover', function (mouseEvent: any, d) {
+
+    if (size === 'normal') {
+      circles.on('mouseover', function (mouseEvent: any, d) {
         pointTip.show(mouseEvent, d, this);
         pointTip.style('left', mouseEvent.x + 10 + 'px');
       })
-      .on('mouseout', pointTip.hide);
+        .on('mouseout', pointTip.hide);
+    }
+
+
+
 
     //Add Legend
     // if (useNorm) {
@@ -768,7 +775,7 @@ export class BaseSpatialgeComponent {
     let transformBox = `translateX(${this.currentLeft}px) translateY(${this.currentTop}px) scale(${this.currentScaleFactor})`;
     miniBoxContainer.style.transform = transformBox;
 
-    this.createScatterPlot()
+    this.createScatterPlot('normal')
   }
 
   zoomMin = 1;
@@ -818,7 +825,7 @@ export class BaseSpatialgeComponent {
     let transformBox = `translateX(${this.currentLeft}px) translateY(${this.currentTop}px) scale(${this.currentScaleFactor})`;
     miniBoxContainer.style.transform = transformBox;
 
-    this.createScatterPlot()
+    this.createScatterPlot('normal')
   }
 
   stretchPlot(axis, direction) {
@@ -832,15 +839,15 @@ export class BaseSpatialgeComponent {
       this.heightAdjustment -= 1;
     }
 
-    this.createScatterPlot()
+    this.createScatterPlot('normal')
   }
 
   setAlignmentMode() {
-    this.createScatterPlot()
+    this.createScatterPlot('normal')
   }
 
   setZoomMode() {
-    this.createScatterPlot()
+    this.createScatterPlot('normal')
   }
 
   minLeftValue(): number {
@@ -911,12 +918,12 @@ export class BaseSpatialgeComponent {
     if (axis === 'horizontal') {
       this.xAxisFlipped = !this.xAxisFlipped;
       flipX = this.xAxisFlipped ? -1 : 1;
-    } else  {
+    } else {
       this.yAxisFlipped = !this.yAxisFlipped;
       flipY = this.yAxisFlipped ? -1 : 1;
     }
 
-    
+
     let transformValue = axis === 'vertical' ? `scaleY(${flipY})` : `scaleX(${flipX})`;
     console.log("transform val: ", transformValue)
 
@@ -926,7 +933,7 @@ export class BaseSpatialgeComponent {
 
 
   onDropDownChange(event, axis) {
-    // console.log("event: ", event, this.xAxisValue)
+    console.log("dropdown event: ", event, this.xAxisValue, this.yAxisValue, axis)
   }
 
 }

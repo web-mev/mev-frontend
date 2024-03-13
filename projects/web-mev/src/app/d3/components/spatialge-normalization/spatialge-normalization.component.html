@@ -16,7 +16,6 @@
                     <mat-icon>close</mat-icon>
                 </button>
             </mat-form-field>
-            <!-- <button mat-flat-button color="primary" class="searchButton" (click)="setGeneSearch()">Submit</button> -->
         </div>
     </div>
 
@@ -103,16 +102,16 @@
                 </div>
             </div>
 
-            <div *ngIf="displayPlot" class="miniMapContainer"
+
+            <!-- <div *ngIf="displayPlot" class="miniMapContainer" -->
+            <div class="miniMapContainer"
                 [style.left.px]="overlayImage || !droppedFile ? originalPlotWidth+50: originalPlotWidth*2+50"
                 [style.top.px]="originalPlotHeight + geneSearchHeight">
                 <!-- <div #scatter id="scatter" [class]="overlayImage ? 'overlayPlots' : 'displayPlotSideBySide'"
                     [style.opacity]="displayPlot ? plotOpacityValue : 0"
                     [style]="!displayAlignment ? 'z-index: 2' : 'z-index: 4'" class="plotContainer">
                 </div> -->
-                <div #minimapId id='minimapId'>
-                    hello
-                </div>
+                
                 <div
                     [class]="currentScaleFactor != 1 || droppedFile ? 'miniSubContainer' : 'hiddenDiv miniSubContainer'">
                     <div [style.margin-left.px]="20">
@@ -129,6 +128,9 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div #minimapId id='minimapId' [class]="currentScaleFactor != 1 || droppedFile ? 'minimapPlotContainer' : 'hiddenDiv minimapPlotContainer'" [style.opacity]="displayPlot ? plotOpacityValue : 0" [style.left.px]="overlayImage || !droppedFile ? originalPlotWidth+50+20: originalPlotWidth*2+50+20"
+            [style.top.px]="originalPlotHeight + geneSearchHeight">
             </div>
 
         </span>

@@ -137,6 +137,7 @@ export class BaseSpatialgeComponent {
     event.preventDefault();
     this.scaleFactor = parseFloat(this.scaleFactorVal)
     this.createScatterPlot('normal')
+    this.createScatterPlot('minimap')
   }
 
   // setGeneSearch() {
@@ -146,6 +147,7 @@ export class BaseSpatialgeComponent {
 
   onColorChange() {
     this.createScatterPlot('normal')
+    this.createScatterPlot('minimap')
   }
 
   updatePlotOpacity(value: number): void {
@@ -185,7 +187,6 @@ export class BaseSpatialgeComponent {
   displayOverlayContainer = true;
 
   getDataNormalization() {
-    console.log("x/y axisvalues at getdata: ", this.xAxisValue, this.yAxisValue)
     this.geneSearch = this.geneSearchVal.split('').map(letter => letter.toUpperCase()).join('');
     this.geneSearchHeight = 100;
     this.useNormalization = true;
@@ -237,7 +238,6 @@ export class BaseSpatialgeComponent {
             yVal
           };
         }
-        console.log("datadict: ", this.dataDict)
 
         for (let i in this.dataDict) {
           const parsedX = parseInt(this.dataDict[i]['xVal'])
@@ -400,6 +400,7 @@ export class BaseSpatialgeComponent {
         if (this.scatterPlotDataCluster.length > 0) {
           this.displayOverlayContainer = true;
           this.createScatterPlot('normal')
+          this.createScatterPlot('minimap')
         }
       } else {
         this.displayOverlayContainer = false;
@@ -411,10 +412,10 @@ export class BaseSpatialgeComponent {
   createScatterPlot(size) {
     this.displayPlot = true;
     var margin = { top: 0, right: this.legendWidth, bottom: 0, left: 0 },
-      width = this.plotWidth - margin.left + this.widthAdjustment,
-      height = this.plotHeight - margin.top - margin.bottom + this.heightAdjustment;
+      width = size === 'normal' ? this.plotWidth - margin.left + this.widthAdjustment : (this.plotWidth - margin.left + this.widthAdjustment) / 4,
+      height = size === 'normal' ? this.plotHeight - margin.top - margin.bottom + this.heightAdjustment : (this.plotHeight - margin.top - margin.bottom + this.heightAdjustment) / 4;
 
-    let scatterplotContainerId = size === 'normal' ? this.containerId : this.minimapContainerId 
+    let scatterplotContainerId = size === 'normal' ? this.containerId : this.minimapContainerId;
     d3.select(scatterplotContainerId)
       .selectAll('svg')
       .remove();
@@ -591,6 +592,7 @@ export class BaseSpatialgeComponent {
     const topContainer = document.querySelector('.plotContainer') as HTMLImageElement;
     const bottomContainer = document.querySelector('.imageContainer') as HTMLImageElement;
     const bottomContainerMiniMap = document.querySelector('.imageContainerMiniMap') as HTMLImageElement;
+    const minimapPlotContainer = document.querySelector('.minimapPlotContainer') as HTMLImageElement;
 
     // const miniBottomContainer = document.querySelector('.miniMapImageContainer') as HTMLImageElement;
     const miniBoxContainer = document.querySelector('.miniboxDiv') as HTMLImageElement;
@@ -639,6 +641,7 @@ export class BaseSpatialgeComponent {
       if (mode === 'zoom') {
         bottomContainer.style.transform = transformValue;
         bottomContainerMiniMap.style.transform = transformValue;
+        minimapPlotContainer.style.transform = transformValue;
         miniBoxContainer.style.transform = transformBox;
       }
     }
@@ -742,6 +745,8 @@ export class BaseSpatialgeComponent {
 
     const miniBottomContainer = document.querySelector('.miniMapImageContainer') as HTMLImageElement;
     const miniMapContainer = document.querySelector('.miniMapContainer') as HTMLImageElement;
+    const minimapPlotContainer = document.querySelector('.minimapPlotContainer') as HTMLImageElement;
+
 
     const miniBoxContainer = document.querySelector('.boxDiv') as HTMLImageElement;
 
@@ -760,9 +765,11 @@ export class BaseSpatialgeComponent {
       imageContainerMiniMap.style.transform = transformValue;
 
       miniBottomContainer.style.transform = transformValue;
+      minimapPlotContainer.style.transform = transformValue
 
       const transformMiniMapValue = `scale(${1 / this.currentScaleFactor})`;
       miniMapContainer.style.transform = transformMiniMapValue
+
     }
 
     this.selectionRectStyle = {
@@ -776,6 +783,7 @@ export class BaseSpatialgeComponent {
     miniBoxContainer.style.transform = transformBox;
 
     this.createScatterPlot('normal')
+    this.createScatterPlot('minimap')
   }
 
   zoomMin = 1;
@@ -826,6 +834,7 @@ export class BaseSpatialgeComponent {
     miniBoxContainer.style.transform = transformBox;
 
     this.createScatterPlot('normal')
+    this.createScatterPlot('minimap')
   }
 
   stretchPlot(axis, direction) {
@@ -840,14 +849,17 @@ export class BaseSpatialgeComponent {
     }
 
     this.createScatterPlot('normal')
+    this.createScatterPlot('minimap')
   }
 
   setAlignmentMode() {
     this.createScatterPlot('normal')
+    this.createScatterPlot('minimap')
   }
 
   setZoomMode() {
     this.createScatterPlot('normal')
+    this.createScatterPlot('minimap')
   }
 
   minLeftValue(): number {
@@ -925,7 +937,6 @@ export class BaseSpatialgeComponent {
 
 
     let transformValue = axis === 'vertical' ? `scaleY(${flipY})` : `scaleX(${flipX})`;
-    console.log("transform val: ", transformValue)
 
     imageContainer.style.transform = transformValue;
     imageContainerMiniMap.style.transform = transformValue;
@@ -933,7 +944,6 @@ export class BaseSpatialgeComponent {
 
 
   onDropDownChange(event, axis) {
-    console.log("dropdown event: ", event, this.xAxisValue, this.yAxisValue, axis)
   }
 
 }

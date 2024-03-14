@@ -19,6 +19,12 @@
         </div>
     </div>
 
+    <p class="instructions_text">
+        To plot your spatial data, we depend on the coordinate metadata you provided. Since different technologies can
+        label those files differently, we require you to specify which columns dictate the horiztonal and vertical
+        positions. Please set these using the dropdown menus below:
+    </p>
+
     <mat-form-field appearance="outline">
         <mat-label>Select X-Axis Label</mat-label>
         <mat-select [(value)]="xAxisValue" (selectionChange)="onDropDownChange($event.value, 'x-axis')">
@@ -111,7 +117,7 @@
                     [style.opacity]="displayPlot ? plotOpacityValue : 0"
                     [style]="!displayAlignment ? 'z-index: 2' : 'z-index: 4'" class="plotContainer">
                 </div> -->
-                
+
                 <div
                     [class]="currentScaleFactor != 1 || droppedFile ? 'miniSubContainer' : 'hiddenDiv miniSubContainer'">
                     <div [style.margin-left.px]="20">
@@ -123,15 +129,17 @@
                                 alt="Dropped Image" [style.height.px]="plotHeight/4"
                                 [style.opacity]="imageOpacityValue">
                         </div>
+                        <div #minimapId id='minimapId'
+                            [class]="currentScaleFactor != 1 || droppedFile ? 'minimapPlotContainer' : 'hiddenDiv minimapPlotContainer'"
+                            [style.opacity]="displayPlot ? plotOpacityValue : 0" [style.top.px]="0">
+                        </div>
                         <div *ngIf="droppedFile && displayImage || !droppedFile" [ngStyle]="selectionRectStyle"
                             class="miniboxDiv">
                         </div>
                     </div>
                 </div>
             </div>
-            <div #minimapId id='minimapId' [class]="currentScaleFactor != 1 || droppedFile ? 'minimapPlotContainer' : 'hiddenDiv minimapPlotContainer'" [style.opacity]="displayPlot ? plotOpacityValue : 0" [style.left.px]="overlayImage || !droppedFile ? originalPlotWidth+50+20: originalPlotWidth*2+50+20"
-            [style.top.px]="originalPlotHeight + geneSearchHeight">
-            </div>
+
 
         </span>
         <div *ngIf="currentScaleFactor != 1" class="horizontalSliderContainer">

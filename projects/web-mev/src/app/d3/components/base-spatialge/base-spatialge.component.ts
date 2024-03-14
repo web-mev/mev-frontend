@@ -273,6 +273,7 @@ export class BaseSpatialgeComponent {
           this.originalPlotHeight = this.plotHeight;
         }
 
+        console.log("original plotwidth/height: ", this.originalPlotWidth, this.originalPlotHeight)
         this.selectionRectStyle = {
           top: `${0}px`,
           width: `${this.originalPlotWidth / 4}px`,
@@ -641,7 +642,7 @@ export class BaseSpatialgeComponent {
       if (mode === 'zoom') {
         bottomContainer.style.transform = transformValue;
         bottomContainerMiniMap.style.transform = transformValue;
-        minimapPlotContainer.style.transform = transformValue;
+        // minimapPlotContainer.style.transform = transformValue;
         miniBoxContainer.style.transform = transformBox;
       }
     }
@@ -738,53 +739,53 @@ export class BaseSpatialgeComponent {
     }
   }
 
-  applyZoom() {
-    const plotContainer = document.querySelector('.plotContainer') as HTMLImageElement;
-    const imageContainer = document.querySelector('.imageContainer') as HTMLImageElement;
-    const imageContainerMiniMap = document.querySelector('.imageContainerMiniMap') as HTMLImageElement;
+  // applyZoom() {
+  //   const plotContainer = document.querySelector('.plotContainer') as HTMLImageElement;
+  //   const imageContainer = document.querySelector('.imageContainer') as HTMLImageElement;
+  //   const imageContainerMiniMap = document.querySelector('.imageContainerMiniMap') as HTMLImageElement;
 
-    const miniBottomContainer = document.querySelector('.miniMapImageContainer') as HTMLImageElement;
-    const miniMapContainer = document.querySelector('.miniMapContainer') as HTMLImageElement;
-    const minimapPlotContainer = document.querySelector('.minimapPlotContainer') as HTMLImageElement;
+  //   const miniBottomContainer = document.querySelector('.miniMapImageContainer') as HTMLImageElement;
+  //   const miniMapContainer = document.querySelector('.miniMapContainer') as HTMLImageElement;
+  //   const minimapPlotContainer = document.querySelector('.minimapPlotContainer') as HTMLImageElement;
 
 
-    const miniBoxContainer = document.querySelector('.boxDiv') as HTMLImageElement;
+  //   const miniBoxContainer = document.querySelector('.boxDiv') as HTMLImageElement;
 
-    this.currentLeft = 0;
-    this.currentTop = 0;
+  //   this.currentLeft = 0;
+  //   this.currentTop = 0;
 
-    if (this.currentScaleFactor === 1) {
-      this.currentLeft = 0;
-      this.currentTop = 0;
-    }
+  //   if (this.currentScaleFactor === 1) {
+  //     this.currentLeft = 0;
+  //     this.currentTop = 0;
+  //   }
 
-    if (plotContainer || imageContainer) {
-      const transformValue = `translateX(${this.currentLeft}px) translateY(${this.currentTop}px) scale(${this.currentScaleFactor})`;
-      plotContainer.style.transform = transformValue;
-      imageContainer.style.transform = transformValue;
-      imageContainerMiniMap.style.transform = transformValue;
+  //   if (plotContainer || imageContainer) {
+  //     const transformValue = `translateX(${this.currentLeft}px) translateY(${this.currentTop}px) scale(${this.currentScaleFactor})`;
+  //     plotContainer.style.transform = transformValue;
+  //     imageContainer.style.transform = transformValue;
+  //     imageContainerMiniMap.style.transform = transformValue;
 
-      miniBottomContainer.style.transform = transformValue;
-      minimapPlotContainer.style.transform = transformValue
+  //     miniBottomContainer.style.transform = transformValue;
+  //     minimapPlotContainer.style.transform = transformValue
 
-      const transformMiniMapValue = `scale(${1 / this.currentScaleFactor})`;
-      miniMapContainer.style.transform = transformMiniMapValue
+  //     const transformMiniMapValue = `scale(${1 / this.currentScaleFactor})`;
+  //     miniMapContainer.style.transform = transformMiniMapValue
 
-    }
+  //   }
 
-    this.selectionRectStyle = {
-      top: `${0}px`,
-      width: `${this.originalPlotWidth / (4 * this.currentScaleFactor)}px`,
-      height: `${this.originalPlotHeight / (4 * this.currentScaleFactor)}px`,
-      border: '2px solid #1DA1F2',
-      position: 'absolute',
-    };
-    let transformBox = `translateX(${this.currentLeft}px) translateY(${this.currentTop}px) scale(${this.currentScaleFactor})`;
-    miniBoxContainer.style.transform = transformBox;
+  //   this.selectionRectStyle = {
+  //     top: `${0}px`,
+  //     width: `${this.originalPlotWidth / (4 * this.currentScaleFactor)}px`,
+  //     height: `${this.originalPlotHeight / (4 * this.currentScaleFactor)}px`,
+  //     border: '2px solid #1DA1F2',
+  //     position: 'absolute',
+  //   };
+  //   let transformBox = `translateX(${this.currentLeft}px) translateY(${this.currentTop}px) scale(${this.currentScaleFactor})`;
+  //   miniBoxContainer.style.transform = transformBox;
 
-    this.createScatterPlot('normal')
-    this.createScatterPlot('minimap')
-  }
+  //   this.createScatterPlot('normal')
+  //   this.createScatterPlot('minimap')
+  // }
 
   zoomMin = 1;
   zoomMax = 5;
@@ -800,6 +801,7 @@ export class BaseSpatialgeComponent {
 
     const miniBottomContainer = document.querySelector('.miniMapImageContainer') as HTMLImageElement;
     const miniMapContainer = document.querySelector('.miniMapContainer') as HTMLImageElement;
+    const minimapPlotContainer = document.querySelector('.minimapPlotContainer') as HTMLImageElement;
 
     const miniBoxContainer = document.querySelector('.miniboxDiv') as HTMLImageElement;
 
@@ -818,6 +820,7 @@ export class BaseSpatialgeComponent {
       imageContainerMiniMap.style.transform = transformValue;
 
       miniBottomContainer.style.transform = transformValue;
+      minimapPlotContainer.style.transform = `translateX(${this.currentLeft}px) translateY(${this.currentTop}px) scale(${this.currentScaleFactor})`;
 
       const transformMiniMapValue = `scale(${1 / this.currentScaleFactor})`;
       miniMapContainer.style.transform = transformMiniMapValue

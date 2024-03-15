@@ -110,6 +110,8 @@ export class BaseSpatialgeComponent {
   xAxisValueList = []
   yAxisValueList = []
 
+  panelOpenState = true;
+
   constructor(
     private httpClient: HttpClient,
     private readonly notificationService: NotificationService,
@@ -164,7 +166,8 @@ export class BaseSpatialgeComponent {
   }
 
   getAxisColumnNames() {
-    this.isLoading = true
+    this.isLoading = true;
+    console.log("panel state: ", this.panelOpenState)
     let coords_metadata_uuid = this.outputs["coords_metadata"]
     this.httpClient.get(`${this.API_URL}/resources/${coords_metadata_uuid}/contents/?page=1&page_size=1`).pipe(
       catchError(error => {
@@ -191,6 +194,7 @@ export class BaseSpatialgeComponent {
     this.geneSearchHeight = 100;
     this.useNormalization = true;
     this.isLoading = true;
+    this.panelOpenState = false;
     this.scrollTo('topOfPage')
     this.resetVariables();
     let normalization_uuid = this.outputs["normalized_expression"];
@@ -300,6 +304,7 @@ export class BaseSpatialgeComponent {
     this.geneSearchHeight = 0;
     this.useCluster = true;
     this.isLoading = true;
+    this.panelOpenState = false;
     this.scrollTo('topOfPage')
     this.resetVariables();
     let clusters_uuid = this.outputs["clustered_positions"];
@@ -587,6 +592,14 @@ export class BaseSpatialgeComponent {
     //     .attr('class', 'legend-label')
     //     .text(d => d.label);
     // }
+  }
+
+  zoomScales = {
+    "1": [0, 0],
+    "2": [50, 150],
+    "3": [200, 400],
+    "4": [400, 800],
+    "5": [800, 1200]
   }
 
   moveImage(direction, mode) {

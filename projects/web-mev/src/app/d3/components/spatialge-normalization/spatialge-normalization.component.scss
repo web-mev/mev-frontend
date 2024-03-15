@@ -268,7 +268,7 @@ mat-slider {
 }
 
 .substituteImage {
-    background-color: rgba(232, 125, 30, .25);
+    background-color: rgba(232, 125, 30, 0.25);
 }
 
 .hiddenDiv {
@@ -280,11 +280,31 @@ mat-slider {
     color: gray;
 }
 
-.minimapPlotContainer{
+.minimapPlotContainer {
     position: absolute;
 }
 
-.instructions_text{
-    color: rgba(0,0,0,.8);
+.instructions_text {
+    color: rgba(0, 0, 0, 0.8);
     width: 50vw;
+}
+
+::ng-deep .mat-expansion-panel {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Optionally, you can remove the padding to reduce spacing */
+::ng-deep .mat-expansion-panel-body {
+    padding: 0 !important;
+}
+
+::ng-deep .default-theme .mat-expansion-panel {
+    margin-top: -15px;
+    margin-bottom: 50px;
+}
+
+::ng-deep .mat-expansion-panel-header {
+    margin: 0 !important;
+    font-weight: 400;
 }

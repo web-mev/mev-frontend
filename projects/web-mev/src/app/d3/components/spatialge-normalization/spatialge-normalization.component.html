@@ -27,6 +27,9 @@
             <mat-panel-title>
                 <span *ngIf="!panelOpenState" class="plot-options-header">Select X and Y Axis Labels</span>
             </mat-panel-title>
+            <!-- <mat-panel-title [ngClass]="{'hide-title': panelOpenState}">
+                <span class="plot-options-header">Select X and Y Axis Labels</span>
+            </mat-panel-title> -->
         </mat-expansion-panel-header>
         <p class="instructions_text">
             To plot your spatial data, we depend on the coordinate metadata you provided. Since different technologies

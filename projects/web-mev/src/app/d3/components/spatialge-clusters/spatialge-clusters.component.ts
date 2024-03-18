@@ -17,7 +17,6 @@ export class SpatialGEClustersComponent extends BaseSpatialgeComponent implement
 
 
     ngOnInit(): void {
-        // this.getDataClusters()
         this.analysisType = 'clusters'
         this.getAxisColumnNames()
     }

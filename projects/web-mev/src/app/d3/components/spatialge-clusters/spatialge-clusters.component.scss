@@ -126,6 +126,7 @@ mat-slider {
     .verticalSliderContainer {
         z-index: 99;
     }
+
     .horizontalSliderContainer .mat-slider-thumb,
     .verticalSliderContainer .mat-slider-thumb {
         background-color: #68666f !important;
@@ -173,8 +174,8 @@ mat-slider {
     padding: 20px;
     text-align: center;
     cursor: pointer;
-    width: 250px;
-    height: 350px;
+    // width: 250px;
+    // height: 350px;
     margin-left: 20px;
 }
 
@@ -198,18 +199,12 @@ mat-slider {
 }
 
 .image-container {
-    // width: 200px;
-    // height: 300px;
     overflow: hidden;
     position: relative;
 }
 
 .image-container img {
-    position: absolute; /* Position the image absolutely within the container */
-    // left: 0px;
-    // top: 50px;
-    // width: 400px;
-    // height: 600px;
+    position: absolute;
 }
 
 .zoomContainer {
@@ -218,7 +213,7 @@ mat-slider {
 
 .miniMapContainer {
     position: absolute; /* Position it relative to the overlayDiv */
-    top: 350px;
+    // top: 450px;
     // left: 350px;
 }
 
@@ -254,13 +249,13 @@ mat-slider {
     margin: 1px;
 }
 
-.horizontalSliderContainer mat-slider {
-    width: 290px;
-}
+// .horizontalSliderContainer mat-slider {
+//     // width: 290px;
+// }
 
-.verticalSliderContainer mat-slider {
-    height: 375px;
-}
+// .verticalSliderContainer mat-slider {
+//     // height: 375px;
+// }
 
 .disabled-label {
     color: #999;
@@ -273,7 +268,7 @@ mat-slider {
 }
 
 .substituteImage {
-    background-color: #7ad454;
+    background-color: rgba(232, 125, 30, 0.25);
 }
 
 .hiddenDiv {
@@ -283,4 +278,33 @@ mat-slider {
 .noDataDiv {
     margin: 40px 0 60px;
     color: gray;
+}
+
+.minimapPlotContainer {
+    position: absolute;
+}
+
+.instructions_text {
+    color: rgba(0, 0, 0, 0.8);
+    width: 50vw;
+}
+
+::ng-deep .mat-expansion-panel {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Optionally, you can remove the padding to reduce spacing */
+::ng-deep .mat-expansion-panel-body {
+    padding: 0 !important;
+}
+
+::ng-deep .default-theme .mat-expansion-panel {
+    margin-top: -15px;
+    margin-bottom: 50px;
+}
+
+::ng-deep .mat-expansion-panel-header {
+    margin: 0 !important;
+    font-weight: 400;
 }

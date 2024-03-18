@@ -16,31 +16,49 @@
                     <mat-icon>close</mat-icon>
                 </button>
             </mat-form-field>
+            <button *ngIf="!panelOpenState" mat-flat-button color="primary" class="searchButton"
+                [disabled]="xAxisValue === '' || yAxisValue === '' || geneSearchVal === ''"
+                (click)="analysisType === 'normalization' ? getDataNormalization(): getDataClusters() ">Submit</button>
         </div>
     </div> -->
 
-    <mat-form-field appearance="outline">
-        <mat-label>Select X-Axis Label</mat-label>
-        <mat-select [(value)]="xAxisValue" (selectionChange)="onDropDownChange($event.value, 'x-axis')">
-            <mat-option [value]="option" *ngFor="let option of xAxisValueList">{{ option }}</mat-option>
-        </mat-select>
-    </mat-form-field>
-    <br>
-    <mat-form-field appearance="outline">
-        <mat-label>Select Y-Axis Label</mat-label>
-        <mat-select [(value)]="yAxisValue" (selectionChange)="onDropDownChange($event.value, 'y-axis')">
-            <mat-option [value]="option" *ngFor="let option of yAxisValueList">{{ option }}</mat-option>
-        </mat-select>
-    </mat-form-field>
-    <br>
-    <button mat-flat-button color="primary" class="searchButton"
-        [disabled]="xAxisValue === '' || yAxisValue === '' "
-        (click)="analysisType === 'normalization' ? getDataNormalization(): getDataClusters() ">Submit</button>
+    <mat-expansion-panel #accordion [(expanded)]="panelOpenState">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                <span *ngIf="!panelOpenState" class="plot-options-header">Select X and Y Axis Labels</span>
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p class="instructions_text">
+            To plot your spatial data, we depend on the coordinate metadata you provided. Since different technologies
+            can
+            label those files differently, we require you to specify which columns dictate the horiztonal and vertical
+            positions. Please set these using the dropdown menus below:
+        </p>
 
-    <br>
-    <br>
+        <mat-form-field appearance="outline">
+            <mat-label>Select X-Axis Label</mat-label>
+            <mat-select [(value)]="xAxisValue" (selectionChange)="onDropDownChange($event.value, 'x-axis')">
+                <mat-option [value]="option" *ngFor="let option of xAxisValueList">{{ option }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <br>
+        <mat-form-field appearance="outline">
+            <mat-label>Select Y-Axis Label</mat-label>
+            <mat-select [(value)]="yAxisValue" (selectionChange)="onDropDownChange($event.value, 'y-axis')">
+                <mat-option [value]="option" *ngFor="let option of yAxisValueList">{{ option }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <br>
+        <button mat-flat-button color="primary" class="searchButton"
+            [disabled]="xAxisValue === '' || yAxisValue === '' || geneSearchVal === ''"
+            (click)="analysisType === 'normalization' ? getDataNormalization(): getDataClusters() ">Submit</button>
+    </mat-expansion-panel>
+
+
+
     <div id="topOfPage"></div>
-    <div *ngIf="!displayOverlayContainer || scatterPlotDataCluster.length === 0" class="noDataDiv">No data found.</div>
+    <div *ngIf="!displayOverlayContainer || (scatterPlotDataCluster.length === 0 && (useNormalization || useCluster))"
+        class="noDataDiv">No data found.</div>
     <div *ngIf="displayOverlayContainer" class="overlayContainer"
         [style.width.px]="overlayImage ? maxImageContainerWidthOverylay +100: maxImageContainerWidthSidebySide + 150">
         <div *ngIf="scatterPlotDataCluster.length > 0" class="downloadButtonContainer"
@@ -103,13 +121,9 @@
                 </div>
             </div>
 
-            <div *ngIf="displayPlot" class="miniMapContainer"
+            <div class="miniMapContainer"
                 [style.left.px]="overlayImage || !droppedFile ? originalPlotWidth+50: originalPlotWidth*2+50"
-                [style.top.px]="originalPlotHeight + geneSearchHeight">
-                <!-- <div #scatter id="scatter" [class]="overlayImage ? 'overlayPlots' : 'displayPlotSideBySide'"
-                    [style.opacity]="displayPlot ? plotOpacityValue : 0"
-                    [style]="!displayAlignment ? 'z-index: 2' : 'z-index: 4'" class="plotContainer">
-                </div> -->
+                [style.top.px]="originalPlotHeight + geneSearchHeight + 20">
                 <div
                     [class]="currentScaleFactor != 1 || droppedFile ? 'miniSubContainer' : 'hiddenDiv miniSubContainer'">
                     <div [style.margin-left.px]="20">
@@ -121,12 +135,17 @@
                                 alt="Dropped Image" [style.height.px]="plotHeight/4"
                                 [style.opacity]="imageOpacityValue">
                         </div>
+                        <div #minimapId id='minimapId'
+                            [class]="currentScaleFactor != 1 || droppedFile ? 'minimapPlotContainer' : 'hiddenDiv minimapPlotContainer'"
+                            [style.opacity]="displayPlot ? plotOpacityValue : 0" [style.top.px]="0">
+                        </div>
                         <div *ngIf="droppedFile && displayImage || !droppedFile" [ngStyle]="selectionRectStyle"
                             class="miniboxDiv">
                         </div>
                     </div>
                 </div>
             </div>
+
 
         </span>
         <div *ngIf="currentScaleFactor != 1" class="horizontalSliderContainer">
@@ -173,6 +192,7 @@
                 (click)="stretchPlot('y-axis', '-')">
                 <mat-icon>compress</mat-icon>
             </button>
+            <br>
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Rotate Left"
                 (click)="rotateImage('-')">
                 <mat-icon>rotate_left</mat-icon>
@@ -183,7 +203,15 @@
             </button>
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Swap X/Y Axis"
                 (click)="swapAxis()">
+                <mat-icon>pivot_table_chart</mat-icon>
+            </button>
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Flip Horizontal"
+                (click)="flipAxis('horizontal')">
                 <mat-icon>swap_horiz</mat-icon>
+            </button>
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Flip Vertical"
+                (click)="flipAxis('vertical')">
+                <mat-icon>swap_vert</mat-icon>
             </button>
         </div>
 

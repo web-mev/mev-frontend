@@ -26,6 +26,5 @@ export class SpatialGENormalizationComponent extends BaseSpatialgeComponent impl
     ngOnInit(): void {
         this.analysisType = 'normalization'
         this.getAxisColumnNames()
-        // this.getDataNormalization()
     }
 }

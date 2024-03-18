@@ -167,7 +167,6 @@ export class BaseSpatialgeComponent {
 
   getAxisColumnNames() {
     this.isLoading = true;
-    console.log("panel state: ", this.panelOpenState)
     let coords_metadata_uuid = this.outputs["coords_metadata"]
     this.httpClient.get(`${this.API_URL}/resources/${coords_metadata_uuid}/contents/?page=1&page_size=1`).pipe(
       catchError(error => {
@@ -277,7 +276,6 @@ export class BaseSpatialgeComponent {
           this.originalPlotHeight = this.plotHeight;
         }
 
-        console.log("original plotwidth/height: ", this.originalPlotWidth, this.originalPlotHeight)
         this.selectionRectStyle = {
           top: `${0}px`,
           width: `${this.originalPlotWidth / 4}px`,

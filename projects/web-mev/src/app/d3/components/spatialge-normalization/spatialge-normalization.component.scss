@@ -1,0 +1,318 @@
+.analysis-card__img {
+    background-image: url("~assets/icons/ct-scan.png");
+    background-size: 30px;
+    background-position: top right;
+    background-repeat: no-repeat;
+}
+
+.analysis-card__content {
+    padding-top: 1rem;
+}
+
+.overlayDiv,
+.sideBySideDiv {
+    display: flex;
+}
+
+.overlayDiv {
+    margin-top: 10px;
+    position: relative;
+    width: fit-content;
+    overflow: hidden;
+    margin-right: 10px;
+}
+
+.overlayContainer {
+    overflow: hidden;
+}
+
+.downloadButtonContainer {
+    position: absolute;
+}
+
+#radio-group-axis {
+    display: block;
+    font-weight: bold;
+    margin: 6px 0;
+}
+
+#modes-label {
+    display: block;
+    font-weight: bold;
+    margin: 6px 0;
+}
+
+.displayValue {
+    font-weight: 200;
+}
+
+mat-slider {
+    width: 100px;
+}
+
+.displayImageSideBySide {
+    margin-left: 20px;
+}
+
+.displayPlotSideBySide {
+    position: relative;
+}
+
+.slider {
+    width: 50vw;
+    margin-top: 20px;
+}
+
+#image {
+    display: block;
+
+    /* This rule is very important, please don't ignore this */
+    max-width: 100%;
+}
+
+.mat-mdc-radio-button ~ .mat-mdc-radio-button {
+    margin-left: 16px;
+}
+
+.example-radio-group {
+    display: flex;
+}
+
+.radio-container {
+    margin-right: 10px; /* Adjust margin as needed */
+}
+
+.inputContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+.searchButton {
+    margin: 8px;
+    height: 40px;
+    padding: 0px;
+}
+
+.smaller-input {
+    width: 500px; /* Adjust the width as needed */
+}
+
+::ng-deep {
+    .d3-tip {
+        margin: 1rem 0;
+        padding: 8px;
+        position: fixed;
+        z-index: 1000;
+        font-size: 11px;
+        border-radius: 3px;
+        box-shadow: 2px 2px 4px rgb(0 0 0 / 10%);
+        background-color: rgba(255, 255, 255, 0.7);
+        border: 1px solid #d9d9d9;
+        color: rgba(0, 0, 0, 0.9);
+    }
+
+    .d3-tip table th,
+    td {
+        padding: 5px 10px;
+    }
+
+    .category {
+        display: inline;
+        font-weight: 500;
+        color: rgba(0, 0, 0, 0.9);
+    }
+
+    .horizontalSliderContainer,
+    .verticalSliderContainer {
+        z-index: 99;
+    }
+
+    .horizontalSliderContainer .mat-slider-thumb,
+    .verticalSliderContainer .mat-slider-thumb {
+        background-color: #68666f !important;
+        // border-radius: 50% !important;
+    }
+
+    .verticalSliderContainer .mat-slider {
+        left: -20px !important;
+        width: 0px !important;
+    }
+
+    .horizontalSliderContainer .mat-slider {
+        left: 20px !important;
+        bottom: 15px !important;
+    }
+
+    // .mat-slider-horizontal .mat-slider-wrapper {
+    //     height: 10px !important;
+    // }
+
+    // .mat-slider-horizontal .mat-slider-thumb {
+    //     top: -14px;
+    // }
+
+    // .mat-slider-vertical .mat-slider-wrapper {
+    //     width: 10px !important;
+    // }
+
+    // .mat-slider-vertical .mat-slider-thumb {
+    //     left: -14px;
+    // }
+}
+
+.custom-button {
+    width: 36px;
+    height: 36px;
+    min-width: 38px !important;
+    padding: 0px !important;
+    margin: 1px;
+}
+
+.drop-zone {
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    // width: 250px;
+    // height: 350px;
+    margin-left: 20px;
+}
+
+.drop-message {
+    color: #666;
+}
+
+#downloadButton {
+    height: fit-content;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.searchContainer {
+    width: 400px;
+}
+
+.rotate-90 {
+    transform: rotate(90deg);
+}
+
+.image-container {
+    overflow: hidden;
+    position: relative;
+}
+
+.image-container img {
+    position: absolute;
+}
+
+.zoomContainer {
+    margin-left: 50px;
+}
+
+.miniMapContainer {
+    position: absolute; /* Position it relative to the overlayDiv */
+    // top: 450px;
+    // left: 350px;
+}
+
+.zoomButtonContainer {
+    display: flex;
+    flex-direction: column;
+    transform: scale(0.5);
+    position: absolute;
+    right: 0;
+    bottom: 10px;
+    z-index: 100;
+}
+
+.zoomButtonContainerNoImage {
+    display: flex;
+    flex-direction: column;
+    transform: scale(0.5);
+    position: absolute;
+    right: 210px;
+    bottom: 10px;
+    z-index: 100;
+}
+
+.zoomButton {
+    background-color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    margin: 1px;
+}
+
+// .horizontalSliderContainer mat-slider {
+//     // width: 290px;
+// }
+
+// .verticalSliderContainer mat-slider {
+//     // height: 375px;
+// }
+
+.disabled-label {
+    color: #999;
+    pointer-events: none;
+}
+
+.cropthis {
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+.substituteImage {
+    background-color: rgba(232, 125, 30, 0.25);
+}
+
+.hiddenDiv {
+    display: none;
+}
+
+.noDataDiv {
+    margin: 40px 0 60px;
+    color: gray;
+}
+
+.minimapPlotContainer {
+    position: absolute;
+}
+
+.instructions_text {
+    color: rgba(0, 0, 0, 0.8);
+    width: 50vw;
+}
+
+::ng-deep .mat-expansion-panel {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Optionally, you can remove the padding to reduce spacing */
+::ng-deep .mat-expansion-panel-body {
+    padding: 0 !important;
+}
+
+::ng-deep .default-theme .mat-expansion-panel {
+    margin-top: -15px;
+    margin-bottom: 50px;
+}
+
+::ng-deep .mat-expansion-panel-header {
+    margin: 0 !important;
+    font-weight: 400;
+}
+
+// .hide-title {
+//     display: none;
+// }
+
+mat-expansion-panel-header:hover {
+    background-color: white
+}

@@ -74,11 +74,11 @@
     <ng-container *ngIf="operationName === 'PANDA (Regulatory Networks)'">
         <mev-panda [showHeader]=true [outputs]="outputs"></mev-panda>
     </ng-container>
-    
+
     <ng-container *ngIf="operationName === 'Gene ID Mapping'">
         <mev-gene-mapping [outputs]="outputs"></mev-gene-mapping>
     </ng-container>
-    
+
     <ng-container *ngIf="operationName === 'SCTK DecontX decontamination'">
         <mev-decontx [outputs]="outputs"></mev-decontx>
     </ng-container>
@@ -102,7 +102,7 @@
     <ng-container *ngIf="operationName === 'SNF (Similarity Network Fusion)'">
         <mev-snf [outputs]="outputs"></mev-snf>
     </ng-container>
-    
+
     <ng-container *ngIf="operationName === 'PUMA (miRNA Regulatory Networks)'">
         <mev-puma [showHeader]=true [outputs]="outputs"></mev-puma>
     </ng-container>
@@ -110,7 +110,7 @@
     <ng-container *ngIf="operationName === 'DRAGON (multi-omic regulatory inference)'">
         <mev-dragon [showHeader]=true [outputs]="outputs"></mev-dragon>
     </ng-container>
-    
+
     <ng-container *ngIf="operationName === 'SCTK single-cell typing with singleR'">
         <mev-singleR-cluster [outputs]="outputs"></mev-singleR-cluster>
     </ng-container>
@@ -118,6 +118,12 @@
     <ng-container *ngIf="operationName === 'Methylation curation'">
         <mev-basic-output [outputs]="outputs"></mev-basic-output>
     </ng-container>
+    <!-- <ng-container *ngIf="operationName === 'spatialGE normalization'">
+        <mev-spatialge-normalization [outputs]="outputs"></mev-spatialge-normalization>
+    </ng-container>
+    <ng-container *ngIf="operationName === 'spatialGE clustering'">
+        <mev-spatialge-clusters [outputs]="outputs"></mev-spatialge-clusters>
+    </ng-container> -->
 </div>
 
 <ng-template #error>

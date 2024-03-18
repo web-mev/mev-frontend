@@ -51,9 +51,12 @@ import { PumaComponent } from './components/puma/puma.component';
 import { DragonComponent } from './components/dragon/dragon.component';
 import { AxisLabelDialogComponent } from './components/dragon/axisLabelDialog/axisLabelDialog.component';
 import { SctkSingleRComponent } from './components/sctk-singleR/sctk-singleR.component';
-import { ResultInputInfoComponent} from './components/result-input-info/result-input-info.component';
+import { ResultInputInfoComponent } from './components/result-input-info/result-input-info.component';
 import { InputInfoDialogComponent } from './components/result-input-info/inputInfoDialog/input-info-dialog.component';
-import { BasicOutputComponent } from './components/basic-output/basic-output.component'
+import { BasicOutputComponent } from './components/basic-output/basic-output.component';
+import { SpatialGENormalizationComponent } from './components/spatialge-normalization/spatialge-normalization.component';
+import { BaseSpatialgeComponent } from './components/base-spatialge/base-spatialge.component';
+import { SpatialGEClustersComponent } from './components/spatialge-clusters/spatialge-clusters.component';
 
 @NgModule({
   declarations: [
@@ -107,7 +110,10 @@ import { BasicOutputComponent } from './components/basic-output/basic-output.com
     SctkSingleRComponent,
     ResultInputInfoComponent,
     InputInfoDialogComponent,
-    BasicOutputComponent
+    BasicOutputComponent,
+    SpatialGENormalizationComponent,
+    BaseSpatialgeComponent,
+    SpatialGEClustersComponent
   ],
   imports: [CommonModule, SharedModule, DragDropModule, MatBadgeModule],
   exports: [
@@ -151,7 +157,10 @@ import { BasicOutputComponent } from './components/basic-output/basic-output.com
     SctkSingleRComponent,
     ResultInputInfoComponent,
     InputInfoDialogComponent,
-    BasicOutputComponent
+    BasicOutputComponent,
+    SpatialGENormalizationComponent,
+    BaseSpatialgeComponent,
+    SpatialGEClustersComponent
   ]
 })
 export class D3Module { }

@@ -36,4 +36,9 @@ export class AnalysisResultComponent implements OnChanges {
     }
     return this.outputs.operation?.operation_name;
   }
+
+  get errorMessages(): string[] {
+    const errorMessage = this.outputs.error_messages ? this.outputs.error_messages.toString() : '';
+    return errorMessage.split('\n\n').join('&&NEWLINE&&').split('\n').map(line => line.trim()).join('\n').split('&&NEWLINE&&');
+  }
 }

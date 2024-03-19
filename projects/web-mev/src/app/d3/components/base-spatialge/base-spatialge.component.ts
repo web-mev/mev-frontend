@@ -201,7 +201,7 @@ export class BaseSpatialgeComponent {
 
     const normRequest = this.httpClient.get(`${this.API_URL}/resources/${normalization_uuid}/contents/?__rowname__=[eq]:${this.geneSearch}`).pipe(
       catchError(error => {
-        this.isLoading = false;
+        this.isLoading = false; 
         this.notificationService.error(`Error ${error.status}: Error from normalized expression request.`);
         console.log("some error message from norm: ", error)
         throw error;
@@ -592,13 +592,14 @@ export class BaseSpatialgeComponent {
     // }
   }
 
-  zoomScales = {
-    "1": [0, 0],
-    "2": [50, 150],
-    "3": [200, 400],
-    "4": [400, 800],
-    "5": [800, 1200]
-  }
+  // zoomScales = {
+  //   "0.5": [0, 0],
+  //   "1": [0, 0],
+  //   "2": [50, 150],
+  //   "3": [200, 400],
+  //   "4": [400, 800],
+  //   "5": [800, 1200]
+  // }
 
   moveImage(direction, mode) {
     const topContainer = document.querySelector('.plotContainer') as HTMLImageElement;
@@ -636,6 +637,7 @@ export class BaseSpatialgeComponent {
     let maxTop = (this.currentScaleFactor - 1) * this.plotHeight / 2;
 
     let scales = {
+      "0.5": [0, 0],
       "1": [0, 0],
       "2": [50, 150],
       "3": [200, 400],
@@ -750,58 +752,15 @@ export class BaseSpatialgeComponent {
     }
   }
 
-  // applyZoom() {
-  //   const plotContainer = document.querySelector('.plotContainer') as HTMLImageElement;
-  //   const imageContainer = document.querySelector('.imageContainer') as HTMLImageElement;
-  //   const imageContainerMiniMap = document.querySelector('.imageContainerMiniMap') as HTMLImageElement;
-
-  //   const miniBottomContainer = document.querySelector('.miniMapImageContainer') as HTMLImageElement;
-  //   const miniMapContainer = document.querySelector('.miniMapContainer') as HTMLImageElement;
-  //   const minimapPlotContainer = document.querySelector('.minimapPlotContainer') as HTMLImageElement;
-
-
-  //   const miniBoxContainer = document.querySelector('.boxDiv') as HTMLImageElement;
-
-  //   this.currentLeft = 0;
-  //   this.currentTop = 0;
-
-  //   if (this.currentScaleFactor === 1) {
-  //     this.currentLeft = 0;
-  //     this.currentTop = 0;
-  //   }
-
-  //   if (plotContainer || imageContainer) {
-  //     const transformValue = `translateX(${this.currentLeft}px) translateY(${this.currentTop}px) scale(${this.currentScaleFactor})`;
-  //     plotContainer.style.transform = transformValue;
-  //     imageContainer.style.transform = transformValue;
-  //     imageContainerMiniMap.style.transform = transformValue;
-
-  //     miniBottomContainer.style.transform = transformValue;
-  //     minimapPlotContainer.style.transform = transformValue
-
-  //     const transformMiniMapValue = `scale(${1 / this.currentScaleFactor})`;
-  //     miniMapContainer.style.transform = transformMiniMapValue
-
-  //   }
-
-  //   this.selectionRectStyle = {
-  //     top: `${0}px`,
-  //     width: `${this.originalPlotWidth / (4 * this.currentScaleFactor)}px`,
-  //     height: `${this.originalPlotHeight / (4 * this.currentScaleFactor)}px`,
-  //     border: '2px solid #1DA1F2',
-  //     position: 'absolute',
-  //   };
-  //   let transformBox = `translateX(${this.currentLeft}px) translateY(${this.currentTop}px) scale(${this.currentScaleFactor})`;
-  //   miniBoxContainer.style.transform = transformBox;
-
-  //   this.createScatterPlot('normal')
-  //   this.createScatterPlot('minimap')
-  // }
-
-  zoomMin = 1;
+  zoomMin = 0.5;
   zoomMax = 5;
   applyZoomButton(type) {
-    if (type === '+') {
+    if (type === '-' && this.currentScaleFactor === 1) {
+      this.currentScaleFactor = 0.5;
+    } else if (type === '+' && this.currentScaleFactor === 0.5) {
+      this.currentScaleFactor = 1
+    }
+    else if (type === '+') {
       this.currentScaleFactor += 1
     } else if (type === '-') {
       this.currentScaleFactor -= 1
@@ -844,7 +803,7 @@ export class BaseSpatialgeComponent {
       border: '2px solid #1DA1F2',
       position: 'absolute',
     };
-    let transformBox = `translateX(${this.currentLeft}px) translateY(${this.currentTop}px) scale(${this.currentScaleFactor})`;
+    let transformBox = `translateX(${this.currentScaleFactor === 0.5 ? -40 : this.currentLeft}px) translateY(${this.currentScaleFactor === 0.5 ? -50 : this.currentTop}px) scale(${this.currentScaleFactor})`;
     miniBoxContainer.style.transform = transformBox;
 
     this.createScatterPlot('normal')
@@ -900,6 +859,7 @@ export class BaseSpatialgeComponent {
     const imageContainerMiniMap = document.querySelector('.imageContainerMiniMap') as HTMLImageElement;
 
     const increment = this.axisSwapped ? -1 : 1;
+    this.scaleXCustom = this.currentScaleFactor
 
     if (direction === "+") {
       this.currentDegree += increment;
@@ -907,7 +867,7 @@ export class BaseSpatialgeComponent {
       this.currentDegree -= increment;
     }
 
-    let transformValue = `scaleX(${this.scaleXCustom}) rotate(${this.currentDegree}deg)`
+    let transformValue = `scaleX(${this.scaleXCustom}) scaleY(${this.currentScaleFactor}) rotate(${this.currentDegree}deg)`
 
 
     imageContainer.style.transform = transformValue;
@@ -926,9 +886,12 @@ export class BaseSpatialgeComponent {
       this.currentDegree += 90
     }
 
+    if (this.scaleXCustom === 1) {
+      this.scaleXCustom = this.currentScaleFactor
+    }
     this.scaleXCustom *= -1
 
-    let transformValue = `scaleX(${this.scaleXCustom}) rotate(${this.currentDegree}deg)`
+    let transformValue = `scaleX(${this.scaleXCustom}) scaleY(${this.currentScaleFactor}) rotate(${this.currentDegree}deg)`
 
     imageContainer.style.transform = transformValue;
     imageContainerMiniMap.style.transform = transformValue;

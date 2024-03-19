@@ -130,7 +130,6 @@ mat-slider {
     .horizontalSliderContainer .mat-slider-thumb,
     .verticalSliderContainer .mat-slider-thumb {
         background-color: #68666f !important;
-        // border-radius: 50% !important;
     }
 
     .verticalSliderContainer .mat-slider {
@@ -142,22 +141,6 @@ mat-slider {
         left: 20px !important;
         bottom: 15px !important;
     }
-
-    // .mat-slider-horizontal .mat-slider-wrapper {
-    //     height: 10px !important;
-    // }
-
-    // .mat-slider-horizontal .mat-slider-thumb {
-    //     top: -14px;
-    // }
-
-    // .mat-slider-vertical .mat-slider-wrapper {
-    //     width: 10px !important;
-    // }
-
-    // .mat-slider-vertical .mat-slider-thumb {
-    //     left: -14px;
-    // }
 }
 
 .custom-button {
@@ -174,9 +157,7 @@ mat-slider {
     padding: 20px;
     text-align: center;
     cursor: pointer;
-    // width: 250px;
-    // height: 350px;
-    margin-left: 20px;
+    margin-top: 50px;
 }
 
 .drop-message {

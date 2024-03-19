@@ -118,16 +118,17 @@
     <ng-container *ngIf="operationName === 'Methylation curation'">
         <mev-basic-output [outputs]="outputs"></mev-basic-output>
     </ng-container>
-    <!-- <ng-container *ngIf="operationName === 'spatialGE normalization'">
+    <ng-container *ngIf="operationName === 'spatialGE normalization'">
         <mev-spatialge-normalization [outputs]="outputs"></mev-spatialge-normalization>
     </ng-container>
     <ng-container *ngIf="operationName === 'spatialGE clustering'">
         <mev-spatialge-clusters [outputs]="outputs"></mev-spatialge-clusters>
-    </ng-container> -->
+    </ng-container>
 </div>
 
 <ng-template #error>
-    <p class="error">The analysis result cannot be displayed. The error description:
-        <span class="error__description">{{ outputs.error_messages }}</span>
-    </p>
+    <p class="error">The analysis result cannot be displayed. The error description:</p>
+    <ng-container *ngFor="let line of errorMessages">
+        <div class="error__description">{{ line }}</div>
+    </ng-container>
 </ng-template>

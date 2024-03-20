@@ -201,7 +201,7 @@ export class BaseSpatialgeComponent {
 
     const normRequest = this.httpClient.get(`${this.API_URL}/resources/${normalization_uuid}/contents/?__rowname__=[eq]:${this.geneSearch}`).pipe(
       catchError(error => {
-        this.isLoading = false; 
+        this.isLoading = false;
         this.notificationService.error(`Error ${error.status}: Error from normalized expression request.`);
         console.log("some error message from norm: ", error)
         throw error;
@@ -592,28 +592,32 @@ export class BaseSpatialgeComponent {
     // }
   }
 
-  // zoomScales = {
-  //   "0.5": [0, 0],
-  //   "1": [0, 0],
-  //   "2": [50, 150],
-  //   "3": [200, 400],
-  //   "4": [400, 800],
-  //   "5": [800, 1200]
-  // }
+  zoomScales = {
+    "0.5": [0, 0],
+    "1": [0, 0],
+    "2": [50, 150],
+    "3": [200, 400],
+    "4": [400, 800],
+    "5": [800, 1200]
+  }
+  currentImageLeft = 0
+  currentImageTop = 0
 
-  moveImage(direction, mode) {
+  movePlot(direction, mode, container) {
     const topContainer = document.querySelector('.plotContainer') as HTMLImageElement;
     const bottomContainer = document.querySelector('.imageContainer') as HTMLImageElement;
-    const bottomContainerMiniMap = document.querySelector('.imageContainerMiniMap') as HTMLImageElement;
+    // const bottomContainerMiniMap = document.querySelector('.imageContainerMiniMap') as HTMLImageElement;
+    const bottomContainer2 = document.querySelector('.imageContainer2') as HTMLImageElement;
     const minimapPlotContainer = document.querySelector('.minimapPlotContainer') as HTMLImageElement;
 
     // const miniBottomContainer = document.querySelector('.miniMapImageContainer') as HTMLImageElement;
     const miniBoxContainer = document.querySelector('.miniboxDiv') as HTMLImageElement;
 
     let transformValue;
-    let transformBox
+    let transformBox;
+    let transformImageValue;
 
-    if (mode === 'align') {
+    if (mode === 'align' && container === 'plot') {
       switch (direction) {
         case 'left':
           this.currentLeft += this.moveAmount;
@@ -630,6 +634,24 @@ export class BaseSpatialgeComponent {
         default:
           break;
       }
+    } else if (mode === 'align' && container === 'image') {
+      switch (direction) {
+        case 'left':
+          this.currentImageLeft += this.moveAmount;
+          break;
+        case 'right':
+          this.currentImageLeft -= this.moveAmount;
+          break;
+        case 'up':
+          this.currentImageTop -= this.moveAmount;
+          break;
+        case 'down':
+          this.currentImageTop += this.moveAmount;
+          break;
+        default:
+          break;
+      }
+      console.log("move image amount: ", this.currentImageTop, this.currentImageLeft)
     }
 
     //This is used move the viewbox around the minimap. Had to use some hardcoded numbers to keep the viewbox within the boundaries. Works for now but need a cleaner way of doing it in the future.
@@ -649,12 +671,16 @@ export class BaseSpatialgeComponent {
     let signTop = this.currentTop >= 0 ? 0 : 1
 
     transformValue = `translateX(${-this.currentLeft}px) translateY(${this.currentTop}px) scale(${this.currentScaleFactor})`;
+    transformImageValue = `translateX(${-this.currentImageLeft}px) translateY(${this.currentImageTop}px) scale(${this.currentScaleFactor})`;
     transformBox = `translateX(${scales[this.currentScaleFactor][signLeft] * this.currentLeft / maxLeft}%) translateY(${-scales[this.currentScaleFactor][signTop] * this.currentTop / maxTop}%) scale(${this.currentScaleFactor})`;
     if (mode === 'align' || mode === 'zoom') {
       topContainer.style.transform = transformValue;
+      bottomContainer.style.transform = transformImageValue;
+      bottomContainer2.style.transform = transformImageValue;
+
       if (mode === 'zoom') {
-        bottomContainer.style.transform = transformValue;
-        bottomContainerMiniMap.style.transform = transformValue;
+        // bottomContainer.style.transform = transformValue;
+        // bottomContainer2.style.transform = transformValue;
         // minimapPlotContainer.style.transform = transformValue;
         miniBoxContainer.style.transform = transformBox;
       }
@@ -767,13 +793,14 @@ export class BaseSpatialgeComponent {
     }
     const plotContainer = document.querySelector('.plotContainer') as HTMLImageElement;
     const imageContainer = document.querySelector('.imageContainer') as HTMLImageElement;
-    const imageContainerMiniMap = document.querySelector('.imageContainerMiniMap') as HTMLImageElement;
+    const imageContainerMiniMap = document.querySelector('.imageContainer2') as HTMLImageElement;
 
     const miniBottomContainer = document.querySelector('.miniMapImageContainer') as HTMLImageElement;
     const miniMapContainer = document.querySelector('.miniMapContainer') as HTMLImageElement;
     const minimapPlotContainer = document.querySelector('.minimapPlotContainer') as HTMLImageElement;
 
     const miniBoxContainer = document.querySelector('.miniboxDiv') as HTMLImageElement;
+    const miniSubContainer = document.querySelector('.miniSubContainer') as HTMLImageElement;
 
     this.currentLeft = 0;
     this.currentTop = 0;
@@ -796,15 +823,31 @@ export class BaseSpatialgeComponent {
       miniMapContainer.style.transform = transformMiniMapValue
     }
 
+    let selectionRectWidth = this.originalPlotWidth / (4 * this.currentScaleFactor);
+    let selectionRectHeight = this.originalPlotHeight / (4 * this.currentScaleFactor);
+
     this.selectionRectStyle = {
       top: `${0}px`,
-      width: `${this.originalPlotWidth / (4 * this.currentScaleFactor)}px`,
-      height: `${this.originalPlotHeight / (4 * this.currentScaleFactor)}px`,
+      width: `${selectionRectWidth}px`,
+      height: `${selectionRectHeight}px`,
       border: '2px solid #1DA1F2',
       position: 'absolute',
     };
-    let transformBox = `translateX(${this.currentScaleFactor === 0.5 ? -40 : this.currentLeft}px) translateY(${this.currentScaleFactor === 0.5 ? -50 : this.currentTop}px) scale(${this.currentScaleFactor})`;
+
+    let centerAdjustmentWidth = this.currentScaleFactor === 1 ? 0 : selectionRectWidth / 2;
+    let centerAdjustmentHeight = this.currentScaleFactor === 1 ? 0 : selectionRectHeight / 2;
+    let transformBox = `translateX(${this.currentScaleFactor === 0.5 ? -40 : this.currentLeft + centerAdjustmentWidth}px) translateY(${this.currentScaleFactor === 0.5 ? -50 : this.currentTop + centerAdjustmentHeight}px) scale(${this.currentScaleFactor})`;
+
     miniBoxContainer.style.transform = transformBox;
+
+    // if (this.currentScaleFactor === 0.5) {
+    //   miniSubContainer.style.transform = `scale(${0.5})`
+    // }else{
+    //   miniSubContainer.style.transform = `scale(${1})`
+    // }
+
+    miniSubContainer.style.transform = `scale(${this.currentScaleFactor === 0.5 ? 0.5 : 1})`;
+
 
     this.createScatterPlot('normal')
     this.createScatterPlot('minimap')
@@ -856,7 +899,7 @@ export class BaseSpatialgeComponent {
 
   rotateImage(direction) {
     const imageContainer = document.querySelector('.imageContainer') as HTMLImageElement;
-    const imageContainerMiniMap = document.querySelector('.imageContainerMiniMap') as HTMLImageElement;
+    const imageContainerMiniMap = document.querySelector('.imageContainer2') as HTMLImageElement;
 
     const increment = this.axisSwapped ? -1 : 1;
     this.scaleXCustom = this.currentScaleFactor
@@ -877,7 +920,7 @@ export class BaseSpatialgeComponent {
   axisSwapped = false
   swapAxis() {
     const imageContainer = document.querySelector('.imageContainer') as HTMLImageElement;
-    const imageContainerMiniMap = document.querySelector('.imageContainerMiniMap') as HTMLImageElement;
+    const imageContainerMiniMap = document.querySelector('.imageContainer2') as HTMLImageElement;
 
     this.axisSwapped = !this.axisSwapped;
     if (this.axisSwapped === false) {
@@ -901,7 +944,7 @@ export class BaseSpatialgeComponent {
   yAxisFlipped = false;
   flipAxis(axis) {
     const imageContainer = document.querySelector('.imageContainer') as HTMLImageElement;
-    const imageContainerMiniMap = document.querySelector('.imageContainerMiniMap') as HTMLImageElement;
+    const imageContainerMiniMap = document.querySelector('.imageContainer2') as HTMLImageElement;
     let flipX = 1;
     let flipY = 1;
     if (axis === 'horizontal') {

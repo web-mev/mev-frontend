@@ -72,7 +72,7 @@
         <span class="fullOverlayDiv" style="display: flex; width: 700px; margin-left: 10px;">
             <div *ngIf="currentScaleFactor !== 1 && currentScaleFactor !== 0.5" class="verticalSliderContainer">
                 <mat-slider [min]="minTopValue()" [max]="maxTopValue()" step="10" [(ngModel)]="currentTop"
-                    (change)="moveImage('left', 'zoom')" vertical [style.height.px]="plotHeight">
+                    (change)="movePlot('left', 'zoom', 'plot')" vertical [style.height.px]="plotHeight">
                 </mat-slider>
             </div>
             <div class="overlayDiv" [style.height.px]="originalPlotHeight"
@@ -112,7 +112,7 @@
 
             </div>
             <div class="cropthis" [style.height.px]="originalPlotHeight" [style.width.px]="originalPlotWidth">
-                <div class="imageContainerMiniMap">
+                <div class="imageContainer2">
                     <div *ngIf="droppedFile && displayImage && !overlayImage" style="z-index: 3;">
                         <img *ngIf="isImageType(droppedFile.type)" class="overlayPlotsImage" [src]="droppedFileURL"
                             alt="Dropped Image"
@@ -150,7 +150,7 @@
         </span>
         <div *ngIf="currentScaleFactor !== 1 && currentScaleFactor !== 0.5" class="horizontalSliderContainer">
             <mat-slider [min]="minLeftValue()" [max]="maxLeftValue()" step="10" [(ngModel)]="currentLeft"
-                (change)="moveImage('left', 'zoom')" [style.width.px]="plotWidth">
+                (change)="movePlot('left', 'zoom', 'plot')" [style.width.px]="plotWidth">
             </mat-slider>
         </div>
     </div>
@@ -160,19 +160,19 @@
         <div *ngIf="displayAlignment">
             <label id="modes-label">Alignment: </label>
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Left"
-                (click)="moveImage('left', 'align')">
+                (click)="movePlot('left', 'align', 'plot')">
                 <mat-icon>arrow_back</mat-icon>
             </button>
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Right"
-                (click)="moveImage('right', 'align')">
+                (click)="movePlot('right', 'align', 'plot')">
                 <mat-icon>arrow_forward</mat-icon>
             </button>
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Up"
-                (click)="moveImage('up', 'align')">
+                (click)="movePlot('up', 'align', 'plot')">
                 <mat-icon>arrow_upward</mat-icon>
             </button>
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Down"
-                (click)="moveImage('down', 'align')">
+                (click)="movePlot('down', 'align', 'plot')">
                 <mat-icon>arrow_downward</mat-icon>
             </button>
 
@@ -212,6 +212,23 @@
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Flip Vertical"
                 (click)="flipAxis('vertical')">
                 <mat-icon>swap_vert</mat-icon>
+            </button>
+            <br>
+            <button mat-flat-button color="accent" class="custom-button" matTooltip="Move Left"
+                (click)="movePlot('left', 'align', 'image')">
+                <mat-icon>arrow_back</mat-icon>
+            </button>
+            <button mat-flat-button color="accent" class="custom-button" matTooltip="Move Right"
+                (click)="movePlot('right', 'align', 'image')">
+                <mat-icon>arrow_forward</mat-icon>
+            </button>
+            <button mat-flat-button color="accent" class="custom-button" matTooltip="Move Up"
+                (click)="movePlot('up', 'align', 'image')">
+                <mat-icon>arrow_upward</mat-icon>
+            </button>
+            <button mat-flat-button color="accent" class="custom-button" matTooltip="Move Down"
+                (click)="movePlot('down', 'align', 'image')">
+                <mat-icon>arrow_downward</mat-icon>
             </button>
         </div>
 

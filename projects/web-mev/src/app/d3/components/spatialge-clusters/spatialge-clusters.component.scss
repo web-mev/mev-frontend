@@ -243,7 +243,7 @@ mat-slider {
     pointer-events: none;
 }
 
-.cropthis {
+.nonOverlay {
     margin-top: 10px;
     overflow: hidden;
 }
@@ -289,10 +289,6 @@ mat-slider {
     margin: 0 !important;
     font-weight: 400;
 }
-
-// .hide-title {
-//     display: none;
-// }
 
 mat-expansion-panel-header:hover {
     background-color: white

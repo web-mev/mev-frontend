@@ -37,14 +37,14 @@
 
         <mat-form-field appearance="outline">
             <mat-label>Select X-Axis Label</mat-label>
-            <mat-select [(value)]="xAxisValue" (selectionChange)="onDropDownChange($event.value, 'x-axis')">
+            <mat-select [(value)]="xAxisValue">
                 <mat-option [value]="option" *ngFor="let option of xAxisValueList">{{ option }}</mat-option>
             </mat-select>
         </mat-form-field>
         <br>
         <mat-form-field appearance="outline">
             <mat-label>Select Y-Axis Label</mat-label>
-            <mat-select [(value)]="yAxisValue" (selectionChange)="onDropDownChange($event.value, 'y-axis')">
+            <mat-select [(value)]="yAxisValue">
                 <mat-option [value]="option" *ngFor="let option of yAxisValueList">{{ option }}</mat-option>
             </mat-select>
         </mat-form-field>
@@ -70,48 +70,51 @@
         </div>
 
         <span class="fullOverlayDiv" style="display: flex; width: 700px; margin-left: 10px;">
-            <div *ngIf="currentScaleFactor !== 1 && currentScaleFactor !== 0.5" class="verticalSliderContainer">
-                <mat-slider [min]="minTopValue()" [max]="maxTopValue()" step="10" [(ngModel)]="currentTop"
-                    (change)="movePlot('left', 'zoom', 'plot')" vertical [style.height.px]="plotHeight">
+            <div *ngIf="currentZoomScaleFactor !== 1 && currentZoomScaleFactor !== 0.5" class="verticalSliderContainer">
+                <mat-slider [min]="minTopValue()" [max]="maxTopValue()" step="10" [(ngModel)]="sliderTop"
+                    (change)="movePlot('left', 'slider', 'plot')" vertical [style.height.px]="plotHeight">
                 </mat-slider>
             </div>
             <div class="overlayDiv" [style.height.px]="originalPlotHeight"
-                [style.width.px]="overlayImage ? originalPlotWidth: !droppedFile ? currentScaleFactor != 1 ? originalPlotWidth : originalPlotWidth * 2 + 150: originalPlotWidth">
+                [style.width.px]="overlayImage ? originalPlotWidth: !droppedFile ? currentZoomScaleFactor != 1 ? originalPlotWidth : originalPlotWidth * 2 + 150: originalPlotWidth">
+
                 <div #scatter id="scatter" [class]="overlayImage ? 'overlayPlots' : 'displayPlotSideBySide'"
                     [style.opacity]="displayPlot ? plotOpacityValue : 0" [style.width.px]="originalPlotWidth"
                     [style]="!displayAlignment ? 'z-index: 2' : 'z-index: 4'" class="plotContainer">
                 </div>
                 <div *ngIf="scatterPlotData.length > 0"
-                    [class]="!droppedFile && currentScaleFactor == 1 ? 'drop-zone' : '' " (drop)="onDropFile($event)"
+                    [class]="!droppedFile && currentZoomScaleFactor == 1 ? 'drop-zone' : '' " (drop)="onDropFile($event)"
                     (dragover)="onDragOver($event)"
                     [style.margin-left.px]="overlayImage ? -(plotWidth + widthAdjustment + legendWidth): 0"
                     [style.height.px]="!droppedFile ? originalPlotHeight - 100: ''" [style.width.px]="originalPlotWidth"
                     (click)="fileInput.click()" class="imageContainer">
                     <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;">
-                    <div *ngIf="!droppedFile && currentScaleFactor == 1" class="drop-message">
+                    <div *ngIf="!droppedFile && currentZoomScaleFactor == 1" class="drop-message">
                         <p>Drop image file here or click to upload</p>
                     </div>
                     <div *ngIf="droppedFile && displayImage && overlayImage" style="z-index: 3;">
                         <img *ngIf="isImageType(droppedFile.type)" class="overlayPlotsImage" [src]="droppedFileURL"
                             alt="Dropped Image"
-                            [ngStyle]="{ 'height.px': (plotHeight > 200 ? plotHeight : 200), 'opacity': imageOpacityValue, 'margin-top.px': overlayImage && currentScaleFactor === 0.5 ? 50 : 0 }">
+                            [ngStyle]="{ 'height.px': (plotHeight > 200 ? plotHeight : 200), 'opacity': imageOpacityValue, 'margin-top.px': overlayImage && currentZoomScaleFactor === 0.5 ? 50 : 0 }">
                     </div>
                 </div>
 
+
+
                 <div *ngIf="scatterPlotData.length > 0"
-                    [class]="droppedFile || currentScaleFactor != 1 ? 'zoomButtonContainer': 'zoomButtonContainerNoImage'">
-                    <button class="zoomButton" matTooltip="Zoom In" (click)="applyZoomButton('+')"
-                        [disabled]="currentScaleFactor === zoomMax">
+                    [class]="droppedFile || currentZoomScaleFactor != 1 ? 'zoomButtonContainer': 'zoomButtonContainerNoImage'">
+                    <button class="zoomButton" matTooltip="Zoom In" (click)="applyZoom('+')"
+                        [disabled]="currentZoomScaleFactor === zoomMax">
                         <mat-icon>add</mat-icon>
                     </button>
-                    <button class="zoomButton" matTooltip="Zoom Out" (click)="applyZoomButton('-')"
-                        [disabled]="currentScaleFactor === zoomMin">
+                    <button class="zoomButton" matTooltip="Zoom Out" (click)="applyZoom('-')"
+                        [disabled]="currentZoomScaleFactor === zoomMin">
                         <mat-icon>remove</mat-icon>
                     </button>
                 </div>
 
             </div>
-            <div class="cropthis" [style.height.px]="originalPlotHeight" [style.width.px]="originalPlotWidth">
+            <div class="nonOverlay" [style.height.px]="originalPlotHeight" [style.width.px]="originalPlotWidth">
                 <div class="imageContainer2">
                     <div *ngIf="droppedFile && displayImage && !overlayImage" style="z-index: 3;">
                         <img *ngIf="isImageType(droppedFile.type)" class="overlayPlotsImage" [src]="droppedFileURL"
@@ -125,7 +128,7 @@
                 [style.left.px]="overlayImage || !droppedFile ? originalPlotWidth+50: originalPlotWidth*2+50"
                 [style.top.px]="originalPlotHeight + geneSearchHeight + 20">
                 <div
-                    [class]="currentScaleFactor != 1 || droppedFile ? 'miniSubContainer' : 'hiddenDiv miniSubContainer'">
+                    [class]="currentZoomScaleFactor != 1 || droppedFile ? 'miniSubContainer' : 'hiddenDiv miniSubContainer'">
                     <div [style.margin-left.px]="20">
                         <div *ngIf="!droppedFile" class="substituteImage miniMapImageContainer"
                             [style.height.px]="plotHeight/4" [style.width.px]="plotWidth/4"></div>
@@ -136,7 +139,7 @@
                                 [style.opacity]="imageOpacityValue">
                         </div>
                         <div #minimapId id='minimapId'
-                            [class]="currentScaleFactor != 1 || droppedFile ? 'minimapPlotContainer' : 'hiddenDiv minimapPlotContainer'"
+                            [class]="currentZoomScaleFactor != 1 || droppedFile ? 'minimapPlotContainer' : 'hiddenDiv minimapPlotContainer'"
                             [style.opacity]="displayPlot ? plotOpacityValue : 0" [style.top.px]="0">
                         </div>
                         <div *ngIf="droppedFile && displayImage || !droppedFile" [ngStyle]="selectionRectStyle"
@@ -148,9 +151,9 @@
 
 
         </span>
-        <div *ngIf="currentScaleFactor !== 1 && currentScaleFactor !== 0.5" class="horizontalSliderContainer">
-            <mat-slider [min]="minLeftValue()" [max]="maxLeftValue()" step="10" [(ngModel)]="currentLeft"
-                (change)="movePlot('left', 'zoom', 'plot')" [style.width.px]="plotWidth">
+        <div *ngIf="currentZoomScaleFactor !== 1 && currentZoomScaleFactor !== 0.5" class="horizontalSliderContainer">
+            <mat-slider [min]="minLeftValue()" [max]="maxLeftValue()" step="10" [(ngModel)]="sliderLeft"
+                (change)="movePlot('left', 'slider', 'plot')" [style.width.px]="plotWidth">
             </mat-slider>
         </div>
     </div>

@@ -230,14 +230,6 @@ mat-slider {
     margin: 1px;
 }
 
-// .horizontalSliderContainer mat-slider {
-//     // width: 290px;
-// }
-
-// .verticalSliderContainer mat-slider {
-//     // height: 375px;
-// }
-
 .disabled-label {
     color: #999;
     pointer-events: none;
@@ -248,9 +240,9 @@ mat-slider {
     overflow: hidden;
 }
 
-.substituteImage {
-    background-color: rgba(232, 125, 30, 0.25);
-}
+// .substituteImage {
+//     background-color: rgba(232, 125, 30, 0.25);
+// }
 
 .hiddenDiv {
     display: none;
@@ -290,6 +282,11 @@ mat-slider {
     font-weight: 400;
 }
 
-mat-expansion-panel-header:hover {
+.mat-expansion-panel-header:hover {
     background-color: white
+}
+.mat-expansion-panel-header{
+    padding: 0px !important;
+    font-weight: bold;
+    font-size: 14px !important;
 }

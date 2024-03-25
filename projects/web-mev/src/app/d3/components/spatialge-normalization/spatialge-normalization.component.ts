@@ -1,12 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { catchError } from "rxjs/operators";
-import { environment } from '@environments/environment';
-import * as d3 from 'd3';
-import d3Tip from 'd3-tip';
-import { NotificationService } from '@core/core.module';
-import html2canvas from 'html2canvas';
-import { forkJoin } from 'rxjs';
+import { Component, ChangeDetectionStrategy, OnInit} from '@angular/core';
 import { BaseSpatialgeComponent } from '../base-spatialge/base-spatialge.component'
 
 interface ScatterData {

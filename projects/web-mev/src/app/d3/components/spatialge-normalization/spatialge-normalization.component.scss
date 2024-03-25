@@ -193,9 +193,7 @@ mat-slider {
 }
 
 .miniMapContainer {
-    position: absolute; /* Position it relative to the overlayDiv */
-    // top: 450px;
-    // left: 350px;
+    position: absolute;
 }
 
 .zoomButtonContainer {
@@ -240,10 +238,6 @@ mat-slider {
     overflow: hidden;
 }
 
-// .substituteImage {
-//     background-color: rgba(232, 125, 30, 0.25);
-// }
-
 .hiddenDiv {
     display: none;
 }
@@ -267,7 +261,6 @@ mat-slider {
     box-shadow: none !important;
 }
 
-/* Optionally, you can remove the padding to reduce spacing */
 ::ng-deep .mat-expansion-panel-body {
     padding: 0 !important;
 }
@@ -283,9 +276,9 @@ mat-slider {
 }
 
 .mat-expansion-panel-header:hover {
-    background-color: white
+    background-color: white;
 }
-.mat-expansion-panel-header{
+.mat-expansion-panel-header {
     padding: 0px !important;
     font-weight: bold;
     font-size: 14px !important;

@@ -130,7 +130,6 @@ mat-slider {
     .horizontalSliderContainer .mat-slider-thumb,
     .verticalSliderContainer .mat-slider-thumb {
         background-color: #68666f !important;
-        // border-radius: 50% !important;
     }
 
     .verticalSliderContainer .mat-slider {
@@ -142,22 +141,6 @@ mat-slider {
         left: 20px !important;
         bottom: 15px !important;
     }
-
-    // .mat-slider-horizontal .mat-slider-wrapper {
-    //     height: 10px !important;
-    // }
-
-    // .mat-slider-horizontal .mat-slider-thumb {
-    //     top: -14px;
-    // }
-
-    // .mat-slider-vertical .mat-slider-wrapper {
-    //     width: 10px !important;
-    // }
-
-    // .mat-slider-vertical .mat-slider-thumb {
-    //     left: -14px;
-    // }
 }
 
 .custom-button {
@@ -174,9 +157,7 @@ mat-slider {
     padding: 20px;
     text-align: center;
     cursor: pointer;
-    // width: 250px;
-    // height: 350px;
-    margin-left: 20px;
+    margin-top: 50px;
 }
 
 .drop-message {
@@ -212,9 +193,7 @@ mat-slider {
 }
 
 .miniMapContainer {
-    position: absolute; /* Position it relative to the overlayDiv */
-    // top: 450px;
-    // left: 350px;
+    position: absolute;
 }
 
 .zoomButtonContainer {
@@ -249,26 +228,14 @@ mat-slider {
     margin: 1px;
 }
 
-// .horizontalSliderContainer mat-slider {
-//     // width: 290px;
-// }
-
-// .verticalSliderContainer mat-slider {
-//     // height: 375px;
-// }
-
 .disabled-label {
     color: #999;
     pointer-events: none;
 }
 
-.cropthis {
+.nonOverlay {
     margin-top: 10px;
     overflow: hidden;
-}
-
-.substituteImage {
-    background-color: rgba(232, 125, 30, 0.25);
 }
 
 .hiddenDiv {
@@ -294,7 +261,6 @@ mat-slider {
     box-shadow: none !important;
 }
 
-/* Optionally, you can remove the padding to reduce spacing */
 ::ng-deep .mat-expansion-panel-body {
     padding: 0 !important;
 }
@@ -309,10 +275,11 @@ mat-slider {
     font-weight: 400;
 }
 
-// .hide-title {
-//     display: none;
-// }
-
-mat-expansion-panel-header:hover {
-    background-color: white
+.mat-expansion-panel-header:hover {
+    background-color: white;
+}
+.mat-expansion-panel-header {
+    padding: 0px !important;
+    font-weight: bold;
+    font-size: 14px !important;
 }

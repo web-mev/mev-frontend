@@ -118,12 +118,12 @@
     <ng-container *ngIf="operationName === 'Methylation curation'">
         <mev-basic-output [outputs]="outputs"></mev-basic-output>
     </ng-container>
-    <!-- <ng-container *ngIf="operationName === 'spatialGE normalization'">
+    <ng-container *ngIf="operationName === 'spatialGE normalization'">
         <mev-spatialge-normalization [outputs]="outputs"></mev-spatialge-normalization>
     </ng-container>
     <ng-container *ngIf="operationName === 'spatialGE clustering'">
         <mev-spatialge-clusters [outputs]="outputs"></mev-spatialge-clusters>
-    </ng-container> -->
+    </ng-container>
 </div>
 
 <ng-template #error>

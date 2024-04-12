@@ -238,8 +238,6 @@ export class BaseSpatialgeComponent {
     let normalization_uuid = this.outputs["normalized_expression"];
     let coords_metadata_uuid = this.outputs["coords_metadata"];
 
-    console.log("after new search variables: ", this.currentZoomScaleFactor, this.currentImageLeft, this.currentImageTop, this.geneSearch)
-
     const normRequest = this.httpClient.get(`${this.API_URL}/resources/${normalization_uuid}/contents/?__rowname__=[eq]:${this.geneSearch}`).pipe(
       catchError(error => {
         this.isLoading = false;

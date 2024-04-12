@@ -113,12 +113,12 @@ export class BaseSpatialgeComponent {
   currentDegree = 0;
   scaleXCustom = 1;
 
+  showMiniMap = false;
+
   constructor(
     private httpClient: HttpClient,
     private readonly notificationService: NotificationService,
   ) { }
-
-  // ngOnInit(): void {}
 
   resetVariables() {
     this.scatterPlotData = [];
@@ -134,6 +134,48 @@ export class BaseSpatialgeComponent {
     this.plotHeight = 500;
     this.originalPlotWidth = 0;
     this.originalPlotHeight = 0;
+
+    this.currentZoomScaleFactor = 1;
+    this.scaleXCustom = 1;
+
+    this.currentImageLeft = 0
+    this.currentImageTop = 0
+    this.sliderLeft = 0
+    this.sliderTop = 0
+    this.overlayImage = false;
+    this.displayAlignment = false;
+    this.axisSwapped = false
+    this.xAxisFlipped = false;
+    this.yAxisFlipped = false;
+    this.showMiniMap = false;
+
+    const imageContainer = document.querySelector('.imageContainer') as HTMLImageElement;
+    const imageContainer2 = document.querySelector('.imageContainer2') as HTMLImageElement;
+    const plotContainer = document.querySelector('.plotContainer') as HTMLImageElement;
+
+    const miniBoxContainer = document.querySelector('.miniboxDiv') as HTMLImageElement;
+    const minimapImageContainer = document.querySelector('.miniMapImageContainer') as HTMLImageElement;
+    const minimapPlotContainer = document.querySelector('.minimapPlotContainer') as HTMLImageElement;
+
+    let transformImageValue = `translateX(${0}px) translateY(${0}px) scaleX(${1}) scaleY(${1}) rotate(${0}deg)`;
+    let transformMiniMapValue = `translateX(${0}px) translateY(${0}px) scaleX(${1}) scaleY(${1}) rotate(${0}deg)`;
+    let transformBox = `translateX(${0}px) translateY(${0}px) scaleX(${1}) scaleY(${1})`;
+
+    if (imageContainer) {
+      imageContainer.style.transform = transformImageValue;
+      imageContainer2.style.transform = transformImageValue;
+    }
+
+    if (plotContainer) {
+      plotContainer.style.transform = transformImageValue;
+    }
+
+    if(minimapPlotContainer){
+      miniBoxContainer.style.transform = transformBox;
+      minimapImageContainer.style.transform = transformMiniMapValue;
+      minimapPlotContainer.style.transform = transformMiniMapValue;
+    }
+    
   }
 
   setScaleFactor(event: Event) {
@@ -185,15 +227,16 @@ export class BaseSpatialgeComponent {
   displayOverlayContainer = true;
 
   getDataNormalization() {
+    this.showMiniMap = true;
     this.geneSearch = this.geneSearchVal.split('').map(letter => letter.toUpperCase()).join('');
     this.geneSearchHeight = 100;
     this.useNormalization = true;
     this.isLoading = true;
     this.panelOpenState = false;
-    this.scrollTo('topOfPage')
+    this.scrollTo('topOfPage');
     this.resetVariables();
     let normalization_uuid = this.outputs["normalized_expression"];
-    let coords_metadata_uuid = this.outputs["coords_metadata"]
+    let coords_metadata_uuid = this.outputs["coords_metadata"];
 
     const normRequest = this.httpClient.get(`${this.API_URL}/resources/${normalization_uuid}/contents/?__rowname__=[eq]:${this.geneSearch}`).pipe(
       catchError(error => {
@@ -295,6 +338,7 @@ export class BaseSpatialgeComponent {
   }
 
   getDataClusters() {
+    this.showMiniMap = true;
     this.geneSearchHeight = 0;
     this.useCluster = true;
     this.isLoading = true;

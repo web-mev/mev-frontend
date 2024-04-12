@@ -128,7 +128,7 @@
                 [style.left.px]="overlayImage || !droppedFile ? originalPlotWidth+50: originalPlotWidth*2+50"
                 [style.top.px]="originalPlotHeight + geneSearchHeight + 20">
                 <div
-                    [class]="currentZoomScaleFactor != 1 || droppedFile ? 'miniSubContainer' : 'hiddenDiv miniSubContainer'">
+                    [class]="currentZoomScaleFactor != 1 || (droppedFile && showMiniMap) ? 'miniSubContainer' : 'hiddenDiv miniSubContainer'">
                     <div [style.margin-left.px]="20">
                         <div *ngIf="!droppedFile" class="miniMapImageContainer"
                             [style.height.px]="plotHeight/4" [style.width.px]="plotWidth/4"></div>

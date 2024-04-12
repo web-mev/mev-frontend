@@ -120,8 +120,6 @@ export class BaseSpatialgeComponent {
     private readonly notificationService: NotificationService,
   ) { }
 
-  // ngOnInit(): void {}
-
   resetVariables() {
     this.scatterPlotData = [];
     this.xMin = 100000000
@@ -145,12 +143,11 @@ export class BaseSpatialgeComponent {
     this.sliderLeft = 0
     this.sliderTop = 0
     this.overlayImage = false;
+    this.displayAlignment = false;
     this.axisSwapped = false
     this.xAxisFlipped = false;
     this.yAxisFlipped = false;
     this.showMiniMap = false;
-
-    // this.droppedFile = null;
 
     const imageContainer = document.querySelector('.imageContainer') as HTMLImageElement;
     const imageContainer2 = document.querySelector('.imageContainer2') as HTMLImageElement;

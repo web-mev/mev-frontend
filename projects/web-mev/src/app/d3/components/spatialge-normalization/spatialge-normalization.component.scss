@@ -148,7 +148,8 @@ mat-slider {
     height: 36px;
     min-width: 38px !important;
     padding: 0px !important;
-    margin: 1px;
+    margin: -3px;
+    transform: scale(.75);
 }
 
 .drop-zone {

@@ -12,12 +12,12 @@
   <ng-template #defaultBlock>
     <span>Default input!</span>
     <default-operation-inputs [operationData]="operationData" [workspaceId]="workspaceId" [workspace$]="workspace$"
-      (executedOperationId)="showExecutedOperationResult($event)">
+      (formValid)="alterFormStatus($event)">
     </default-operation-inputs>
   </ng-template>
 
   <div>
-    <button mat-raised-button color="accent" type="submit"
+    <button mat-raised-button color="accent" type="submit" [disabled]="!formIsValid"
       (click)="startAnalysis()">Run
     </button>
   </div>

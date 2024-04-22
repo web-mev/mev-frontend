@@ -12,7 +12,8 @@ import { Workspace } from '@app/features/workspace-manager/models/workspace';
 import { Observable } from 'rxjs';
 import { Operation } from '../../models/operation';
 import { BaseOperationInput } from '../base-operation-inputs/base-operation-inputs';
-import { DefaultOperationComponent } from '../default-operation-inputs/default-operation-inputs.component';
+import { ContinuousDistributionDisplayComponent } from '@app/features/workspace-detail/components/annotations/continuous-distribution-display/continuous-distribution-display.component';
+
 /**
  * Operation Component
  * used for displaying the input parameters of an operation
@@ -25,6 +26,7 @@ import { DefaultOperationComponent } from '../default-operation-inputs/default-o
 })
 export class OperationComponent implements OnChanges {
   submitted = false;
+  formIsValid = false;
 
   @ViewChild(BaseOperationInput) opInput!: BaseOperationInput
 
@@ -42,6 +44,7 @@ export class OperationComponent implements OnChanges {
   ) {}
 
   ngOnChanges(): void {
+    console.log('in ngOnChanges of op.')
     this.loadData();
   }
 
@@ -60,11 +63,17 @@ export class OperationComponent implements OnChanges {
           console.log('set to false')
           this.customInput = false;
         }
+        this.formIsValid = false;
       });
     }
 
     public showExecutedOperationResult(data: any) {
       this.executedOperationId.emit(data);
+    }
+
+    public alterFormStatus(isValid: boolean){
+      console.log('in alterForm with data=')
+      this.formIsValid = isValid;
     }
 
     startAnalysis() {

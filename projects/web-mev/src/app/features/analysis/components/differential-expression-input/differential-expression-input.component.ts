@@ -6,6 +6,7 @@ import {
     EventEmitter,
     Input
   } from '@angular/core';
+  import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
 import { BaseOperationInput } from '../base-operation-inputs/base-operation-inputs';
   
@@ -21,7 +22,7 @@ import { BaseOperationInput } from '../base-operation-inputs/base-operation-inpu
     changeDetection: ChangeDetectionStrategy.Default
   })
   export class DifferentialExpressionInputComponent extends BaseOperationInput implements OnChanges{
-  
+    analysesForm: FormGroup;
     @Input() operationData: any;
 
     ngOnChanges(): void {

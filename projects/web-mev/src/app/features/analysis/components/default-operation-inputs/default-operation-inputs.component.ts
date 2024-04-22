@@ -10,6 +10,7 @@ import {
   import { Workspace } from '@app/features/workspace-manager/models/workspace';
   import { Observable } from 'rxjs';
   import { Operation } from '../../models/operation';
+  import { BaseOperationInput } from '../base-operation-inputs/base-operation-inputs';
   
   /**
    * Operation Component
@@ -19,9 +20,10 @@ import {
     selector: 'default-operation-inputs',
     templateUrl: './default-operation-inputs.component.html',
     styleUrls: ['./default-operation-inputs.component.scss'],
+    providers: [{provide: BaseOperationInput, useExisting: DefaultOperationComponent}],
     changeDetection: ChangeDetectionStrategy.Default
   })
-  export class DefaultOperationComponent implements OnChanges {
+  export class DefaultOperationComponent extends BaseOperationInput implements OnChanges {
     submitted = false;
   
     @Input() workspaceId: string;
@@ -29,10 +31,7 @@ import {
     @Input() operationData: any;
   
     @Output() executedOperationId: EventEmitter<any> = new EventEmitter<any>();
-    
-    constructor(
-      private apiService: AnalysesService,
-    ) {}
+
   
     ngOnChanges(): void {
       this.loadData();
@@ -42,11 +41,16 @@ import {
      * Load operation data before creating form controls
      */
        loadData() {
-        console.log('in default inputs')
+        console.log('in default inputs loadData')
       }
   
       public showExecutedOperationResult(data: any) {
         this.executedOperationId.emit(data);
+      }
+
+      getInputData(): any {
+          console.log('in getInputData of Default class')
+          return {'default_input': 'xyz'};
       }
     
   }

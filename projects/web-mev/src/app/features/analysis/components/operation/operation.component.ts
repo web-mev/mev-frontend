@@ -5,12 +5,14 @@ import {
   EventEmitter,
   Output,
   OnChanges,
+  ViewChild
 } from '@angular/core';
 import { AnalysesService } from '../../services/analysis.service';
 import { Workspace } from '@app/features/workspace-manager/models/workspace';
 import { Observable } from 'rxjs';
 import { Operation } from '../../models/operation';
-
+import { BaseOperationInput } from '../base-operation-inputs/base-operation-inputs';
+import { DefaultOperationComponent } from '../default-operation-inputs/default-operation-inputs.component';
 /**
  * Operation Component
  * used for displaying the input parameters of an operation
@@ -23,6 +25,8 @@ import { Operation } from '../../models/operation';
 })
 export class OperationComponent implements OnChanges {
   submitted = false;
+
+  @ViewChild(BaseOperationInput) opInput!: BaseOperationInput
 
   @Input() workspaceId: string;
   @Input() workspace$: Observable<Workspace>;
@@ -61,6 +65,12 @@ export class OperationComponent implements OnChanges {
 
     public showExecutedOperationResult(data: any) {
       this.executedOperationId.emit(data);
+    }
+
+    startAnalysis() {
+      console.log('clicked start analysis');
+      let data = this.opInput.getInputData();
+      console.log('Data is', data);
     }
   
 }

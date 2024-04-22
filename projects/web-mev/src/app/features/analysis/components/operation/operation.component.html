@@ -5,7 +5,7 @@
   <div *ngIf="customInput; else defaultBlock">
     <span>Custom input!</span>
     <div *ngIf="operationData.name == 'DESeq2'">
-      <differential-expression-input></differential-expression-input>
+      <differential-expression-input [operationData]="operationData"></differential-expression-input>
     </div>
   </div>
 
@@ -15,4 +15,10 @@
       (executedOperationId)="showExecutedOperationResult($event)">
     </default-operation-inputs>
   </ng-template>
+
+  <div>
+    <button mat-raised-button color="accent" type="submit"
+      (click)="startAnalysis()">Run
+    </button>
+  </div>
 </div>

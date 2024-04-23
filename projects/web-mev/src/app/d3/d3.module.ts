@@ -57,6 +57,7 @@ import { BasicOutputComponent } from './components/basic-output/basic-output.com
 import { SpatialGENormalizationComponent } from './components/spatialge-normalization/spatialge-normalization.component';
 import { BaseSpatialgeComponent } from './components/base-spatialge/base-spatialge.component';
 import { SpatialGEClustersComponent } from './components/spatialge-clusters/spatialge-clusters.component';
+import { SpatialGEPathwayEnrichmentComponent } from './components/spatialge-pathway-enrichment/spatialge-pathway-enrichment.component'
 
 @NgModule({
   declarations: [
@@ -113,7 +114,8 @@ import { SpatialGEClustersComponent } from './components/spatialge-clusters/spat
     BasicOutputComponent,
     SpatialGENormalizationComponent,
     BaseSpatialgeComponent,
-    SpatialGEClustersComponent
+    SpatialGEClustersComponent,
+    SpatialGEPathwayEnrichmentComponent
   ],
   imports: [CommonModule, SharedModule, DragDropModule, MatBadgeModule],
   exports: [
@@ -160,7 +162,8 @@ import { SpatialGEClustersComponent } from './components/spatialge-clusters/spat
     BasicOutputComponent,
     SpatialGENormalizationComponent,
     BaseSpatialgeComponent,
-    SpatialGEClustersComponent
+    SpatialGEClustersComponent,
+    SpatialGEPathwayEnrichmentComponent
   ]
 })
 export class D3Module { }

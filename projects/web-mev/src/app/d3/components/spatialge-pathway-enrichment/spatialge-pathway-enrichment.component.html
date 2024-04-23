@@ -1,0 +1,61 @@
+<mat-card class="analysis-card">
+    <mat-card-header>
+        <div mat-card-avatar class="analysis-card__img"></div>
+        <mat-card-title>{{analysisName}}: {{ outputs?.job_name }}</mat-card-title>
+        <mev-input-info [outputs]="outputs"></mev-input-info>
+    </mat-card-header>
+    <mat-card-content class="analysis-card__main">
+        <p class="analysis-card__instruction">
+            You can also define custom sets of genes for exploration with other tools. Custom set size is
+            limited to {{maxFeatureSetSize}} items.
+        </p>
+        <mat-divider [inset]="true"></mat-divider>
+        <div class="analysis-card__content">
+            <mev-spinner-overlay *ngIf="dataSource.loading$ | async"></mev-spinner-overlay>
+
+            <div class="mat-elevation-z8">
+                <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" class="table">
+                    <ng-container matColumnDef="pathway">
+                        <th mat-header-cell *matHeaderCellDef> Pathway </th>
+                        <td mat-cell *matCellDef="let element" class="word-wrap"> {{element.pathway}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="padj">
+                        <th mat-header-cell *matHeaderCellDef> Padj </th>
+                        <td mat-cell *matCellDef="let element" class="numericCols"> {{element.padj}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="pval">
+                        <th mat-header-cell *matHeaderCellDef> PVal </th>
+                        <td mat-cell *matCellDef="let element" class="numericCols"> {{element.pval}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="size">
+                        <th mat-header-cell *matHeaderCellDef> Size </th>
+                        <td mat-cell *matCellDef="let element" class="numericCols"> {{element.size}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+
+
+                <mat-paginator [length]="dataSource.featuresCount" [pageSize]="10" [pageSizeOptions]="[10, 25, 50]"
+                    (page)="loadFeaturesPage()">
+                </mat-paginator>
+            </div>
+            <br>
+            <br>
+            <div class="button-panel">
+                <button mat-raised-button color="accent" [disabled]="dataSource.featuresCount > maxFeatureSetSize"
+                    (click)="onCreateCustomFeatureSet()">
+                    <mat-icon>add</mat-icon>
+                    Save as a feature set
+                </button>
+            </div>
+
+        </div>
+
+    </mat-card-content>
+
+</mat-card>

@@ -129,7 +129,7 @@ export class AnalysesService {
         '[' + sortDirection + ']:' + sorting['sortField']
       ); // query param for sorting should have the format: ?sort_vals=[asc]:pvalue,[desc]:log2FoldChange
     }
-
+    
     return this.httpClient.get(
       `${this.API_URL}/resources/${resourceId}/contents/`,
       { params: params }

@@ -92,7 +92,7 @@ export class BaseSpatialgeComponent {
   useCluster: boolean = false;
   useNormalization: boolean = false;
 
-  legendWidth: number = 0;
+  legendWidth: number = 120;
 
   clusterTypes: Record<string, any> = {}
   clusterColors: string[] = ["#EBCD00", "#52A52E", "#00979D", "#6578B4", "#80408D", "#C9006B", "#68666F", "#E80538", "#E87D1E"]
@@ -475,8 +475,8 @@ export class BaseSpatialgeComponent {
 
   createScatterPlot(size) {
     this.displayPlot = true;
-    var margin = { top: 0, right: this.legendWidth, bottom: 0, left: 0 },
-      width = size === 'normal' ? this.plotWidth - margin.left - margin.right + this.widthAdjustment : (this.plotWidth - margin.left - margin.right + this.widthAdjustment) / 4,
+    var margin = { top: 0, right: 0, bottom: 0, left: size === 'normal' ? this.legendWidth : 0 },
+      width = size === 'normal' ? this.plotWidth - margin.left - margin.right + this.widthAdjustment + this.legendWidth : (this.plotWidth - margin.left - margin.right + this.widthAdjustment) / 4,
       height = size === 'normal' ? this.plotHeight - margin.top - margin.bottom + this.heightAdjustment : (this.plotHeight - margin.top - margin.bottom + this.heightAdjustment) / 4;
 
     let scatterplotContainerId = size === 'normal' ? this.containerId : this.minimapContainerId;
@@ -543,109 +543,113 @@ export class BaseSpatialgeComponent {
 
 
 
-    //Add Legend
-    // if (useNorm) {
-    //   const gradient = svg.append("defs")
-    //     .append("linearGradient")
-    //     .attr("id", "legendGradient")
-    //     .attr("x1", "0%")
-    //     .attr("y1", "0%")
-    //     .attr("x2", "100%")
-    //     .attr("y2", "0%");
+    // Add Legend
+    if (useNorm) {
+      const gradient = svg.append("defs")
+        .append("linearGradient")
+        .attr("id", "legendGradient")
+        .attr("x1", "0%")
+        .attr("y1", "0%")
+        .attr("x2", "100%")
+        .attr("y2", "0%");
 
-    //   gradient.append("stop")
-    //     .attr("offset", "0%")
-    //     .attr("stop-color", "white");
+      gradient.append("stop")
+        .attr("offset", "0%")
+        .attr("stop-color", "white");
 
-    //   gradient.append("stop")
-    //     .attr("offset", "100%")
-    //     .attr("stop-color", this.selectedColor);
+      gradient.append("stop")
+        .attr("offset", "100%")
+        .attr("stop-color", this.selectedColor);
 
-    //   const legendX = 300;
-    //   const legendY = this.legendWidth;
-    //   const borderWidth = 1;
-    //   const legendWidth = 50;
-    //   const legendHeight = 10;
+      // const legendX = 300;
+      const legendX = -this.legendWidth + 20;
+      const legendY = 60;
+      const borderWidth = 1;
+      const legendWidth = 50;
+      const legendHeight = 10;
 
-    //   svg.append("rect")
-    //     .attr("x", legendX - borderWidth)
-    //     .attr("y", legendY - borderWidth)
-    //     .attr("width", legendWidth + 2 * borderWidth)
-    //     .attr("height", legendHeight + 2 * borderWidth)
-    //     .style("stroke", "rgba(0, 0, 0, 0.3)")
-    //     .style("fill", "none");
+      svg.append("rect")
+        .attr("x", legendX - borderWidth)
+        .attr("y", legendY - borderWidth)
+        .attr("width", legendWidth + 2 * borderWidth)
+        .attr("height", legendHeight + 2 * borderWidth)
+        .style("stroke", "rgba(0, 0, 0, 0.3)")
+        .style("fill", "none");
 
-    //   // Create legend rectangle
-    //   svg.append("rect")
-    //     .attr("x", legendX)
-    //     .attr("y", legendY)
-    //     .attr("width", legendWidth)
-    //     .attr("height", legendHeight)
-    //     .style("fill", "url(#legendGradient)")
+      // Create legend rectangle
+      svg.append("rect")
+        .attr("x", legendX)
+        .attr("y", legendY)
+        .attr("width", legendWidth)
+        .attr("height", legendHeight)
+        .style("fill", "url(#legendGradient)")
 
-    //   svg.append("text")
-    //     .attr("x", legendX)
-    //     .attr("y", 120)
-    //     .attr("text-anchor", "start")
-    //     .attr("font-size", "6px")
-    //     .text("0");
+      svg.append("text")
+        .attr("x", legendX)
+        .attr("y", 80)
+        .attr("text-anchor", "start")
+        .attr("font-size", "6px")
+        .text("0");
 
-    //   const xmaxLabelWidth = this.totalCountsMax.toString().toLocaleString().length * 1;  // Adjust the font size multiplier as needed
-    //   const adjustedXmaxLabelX = legendX + 60 - xmaxLabelWidth;
+      const xmaxLabelWidth = this.totalCountsMax.toString().toLocaleString().length * 1;  // Adjust the font size multiplier as needed
+      const adjustedXmaxLabelX = legendX + 60 - xmaxLabelWidth;
 
-    //   svg.append("text")
-    //     .attr("x", adjustedXmaxLabelX)
-    //     .attr("y", 120)
-    //     .attr("text-anchor", "end")
-    //     .attr("font-size", "6px")
-    //     .text(this.totalCountsMax.toLocaleString());
+      svg.append("text")
+        .attr("x", adjustedXmaxLabelX)
+        .attr("y", 80)
+        .attr("text-anchor", "end")
+        .attr("font-size", "6px")
+        .text(this.totalCountsMax.toLocaleString());
 
-    //   svg.append("text")
-    //     .attr("x", legendX)
-    //     .attr("y", 60)
-    //     .attr("text-anchor", "start")
-    //     .attr("font-size", "6px")
-    //     .attr("font-weight", "bold")
-    //     .text("Counts");
-    // } else if (this.useCluster) {
-    //   // Legend
-    //   const clusterColors = Object.keys(this.clusterTypes).map(key => ({
-    //     label: this.clusterTypes[key].label,
-    //     color: this.clusterTypes[key].color
-    //   }));
-    //   clusterColors.sort((a, b) => {
-    //     // Extracting the numerical part of the label
-    //     const numA = parseInt(a.label.split(' ')[1]);
-    //     const numB = parseInt(b.label.split(' ')[1]);
+      svg.append("text")
+        .attr("x", legendX)
+        .attr("y", 50)
+        .attr("text-anchor", "start")
+        .attr("font-size", "6px")
+        .attr("font-weight", "bold")
+        .text("Counts");
+    } else if (this.useCluster) {
+      // Legend
+      const clusterColors = Object.keys(this.clusterTypes).map(key => ({
+        label: this.clusterTypes[key].label,
+        color: this.clusterTypes[key].color
+      }));
+      clusterColors.sort((a, b) => {
+        // Extracting the numerical part of the label
+        const numA = parseInt(a.label.split(' ')[1]);
+        const numB = parseInt(b.label.split(' ')[1]);
 
-    //     // Comparing the numerical parts
-    //     return numA - numB;
-    //   });
-    //   const legend = svg
-    //     .selectAll('.legend')
-    //     .data(clusterColors)
-    //     .enter()
-    //     .append('g')
-    //     .classed('legend', true)
-    //     .attr('transform', function (d, i) {
-    //       return 'translate(0,' + (i * 15 + 50) + ')';
-    //     });
+        // Comparing the numerical parts
+        return numA - numB;
+      });
+      const legendWidth = this.legendWidth;
 
-    //   legend
-    //     .append('circle')
-    //     .attr('r', 4)
-    //     .attr('cx', width + 10)
-    //     .attr('fill', d => d.color);
+      const legend = svg
+        .selectAll('.legend')
+        .data(clusterColors)
+        .enter()
+        .append('g')
+        .classed('legend', true)
+        .attr('transform', function (d, i) {
+          // return 'translate(0,' + (i * 15 + 50) + ')';
+          return `translate(-${legendWidth},${i * 15 + 50})`;
+        });
 
-    //   legend
-    //     .append('text')
-    //     .attr('x', width + 20)
-    //     .attr('dy', '.35em')
-    //     .style('fill', '#000')
-    //     .style('font-size', '8px')
-    //     .attr('class', 'legend-label')
-    //     .text(d => d.label);
-    // }
+      legend
+        .append('circle')
+        .attr('r', 4)
+        .attr('cx', 10)
+        .attr('fill', d => d.color);
+
+      legend
+        .append('text')
+        .attr('x', 20)
+        .attr('dy', '.35em')
+        .style('fill', '#000')
+        .style('font-size', '8px')
+        .attr('class', 'legend-label')
+        .text(d => d.label);
+    }
   }
 
   movePlot(direction, mode, container) {
@@ -706,7 +710,7 @@ export class BaseSpatialgeComponent {
     let signLeft = this.sliderLeft >= 0 ? 1 : 0;
     let signTop = this.sliderTop >= 0 ? 0 : 1;
 
-    transformPlotValue = `translateX(${-(this.currentLeft * this.currentZoomScaleFactor + this.sliderLeft)}px) translateY(${this.currentTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor})`;
+    transformPlotValue = `translateX(${-(this.currentLeft * this.currentZoomScaleFactor + this.sliderLeft + this.legendWidth * (this.currentZoomScaleFactor - 1))}px) translateY(${this.currentTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor})`;
     transformImageValue = `translateX(${-(this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft)}px) translateY(${this.currentImageTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor}) rotate(${this.currentDegree}deg)`;
 
     transformPlotMiniMapValue = `translateX(${-(this.currentLeft * this.currentZoomScaleFactor + this.sliderLeft) / 4}px) translateY(${(this.currentTop * this.currentZoomScaleFactor + this.sliderTop) / 4}px) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor})`;
@@ -841,7 +845,7 @@ export class BaseSpatialgeComponent {
     this.sliderTop = 0;
 
     if (plotContainer || imageContainer) {
-      const transformPlotValue = `translateX(${-this.currentLeft * this.currentZoomScaleFactor + this.sliderLeft}px) translateY(${this.currentTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor})`;
+      const transformPlotValue = `translateX(${-this.currentLeft * this.currentZoomScaleFactor + this.sliderLeft - this.legendWidth * (this.currentZoomScaleFactor - 1)}px) translateY(${this.currentTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor})`;
       const transformImageValue = `translateX(${-this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft}px) translateY(${this.currentImageTop * this.currentZoomScaleFactor + this.sliderTop}px) rotate(${this.currentDegree}deg) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor})`;
 
       plotContainer.style.transform = transformPlotValue;
@@ -906,11 +910,11 @@ export class BaseSpatialgeComponent {
   }
 
   minLeftValue(): number {
-    return -this.plotWidth * (this.currentZoomScaleFactor - 1) / 2;
+    return -(this.plotWidth-this.legendWidth) * (this.currentZoomScaleFactor - 1) / 2;
   }
 
   maxLeftValue(): number {
-    return this.plotWidth * (this.currentZoomScaleFactor - 1) / 2;
+    return (this.plotWidth-this.legendWidth) * (this.currentZoomScaleFactor - 1) / 2;
   }
 
   minTopValue(): number {

@@ -3,14 +3,12 @@
 
 <div>
   <div *ngIf="customInput; else defaultBlock">
-    <span>Custom input!</span>
     <div *ngIf="operationData.name == 'DESeq2'">
-      <differential-expression-input [operationData]="operationData"></differential-expression-input>
+      <differential-expression-input [operationData]="operationData" (formValid)="alterFormStatus($event)"></differential-expression-input>
     </div>
   </div>
 
   <ng-template #defaultBlock>
-    <span>Default input!</span>
     <default-operation-inputs [operationData]="operationData" [workspaceId]="workspaceId" [workspace$]="workspace$"
       (formValid)="alterFormStatus($event)">
     </default-operation-inputs>

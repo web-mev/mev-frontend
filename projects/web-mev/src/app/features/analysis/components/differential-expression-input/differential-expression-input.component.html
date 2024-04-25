@@ -1,1 +1,16 @@
-<p>DGE component!</p>
+<form *ngIf="analysesForm" [formGroup]="analysesForm" (ngSubmit)="onSubmit()">
+
+    <!-- OPERATION NAME -->
+    <ng-container *ngIf="operationData.mode !== 'client'">
+        <div class="label">
+            Operation name: <span class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="Type operation name" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <input matInput formControlName="job_name" name="job_name">
+        </mat-form-field>
+    </ng-container>
+
+</form>

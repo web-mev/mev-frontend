@@ -12,5 +12,24 @@
             <input matInput formControlName="job_name" name="job_name">
         </mat-form-field>
     </ng-container>
-
+    <div>
+        <div class="label">
+            {{ rawCountsField.name }} <span class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+              matTooltip="{{ rawCountsField.desc}}" aria-label="Info tooltip about the field">info
+            </mat-icon>
+          </div>
+        <mat-form-field class="form-control" color="accent">
+            <mat-select [formControlName]="rawCountsField.key">
+                <mat-option *ngFor="let file of rawCountsField.files" [value]="file.id">
+                    {{ file.name }}
+                </mat-option>
+            </mat-select>
+            <div *ngIf="submitted && f[rawCountsField.key].errors">
+                <mat-error *ngIf="f[rawCountsField.key].errors.required">
+                    This field is required
+                </mat-error>
+            </div>
+        </mat-form-field>
+    </div>
 </form>

@@ -28,7 +28,10 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
   analysesForm: FormGroup;
   submitted = false;
   @Input() operationData: any;
+  @Input() workspaceId: string;
   @Output() formValid: EventEmitter<any> = new EventEmitter<any>();
+
+  rawCountsField;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -41,19 +44,17 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
   }
 
   ngOnChanges(): void {
-    console.log('in dge component');
-    console.log(this.operationData);
-    if(this.operationData){
+    if (this.operationData) {
       this.createForm();
       this.analysesForm.statusChanges.subscribe(() => this.onFormValid());
-  }
+    }
   }
 
   getInputData(): any {
-    console.log('in getInputData of DGE class')
-    return { 'dge_input_a': 'abc' };
+    let inputs = this.convertToFloatObj(this.analysesForm.value);
+    return inputs;
   }
-  
+
   onSubmit() {
     this.submitted = true;
   }
@@ -62,11 +63,62 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
     this.formValid.emit(this.analysesForm.valid);
   }
 
-  createForm(){
+  createForm() {
     const controlsConfig = {};
+    let input;
+
+    // the job name field:
     controlsConfig['job_name'] = ['', [Validators.required]];
+
+    // the selection for the raw counts:
+    let key = "raw_counts"
+    input = this.operationData.inputs[key];
+    console.log(input);
+    this.rawCountsField = {
+      key: key,
+      name: input.name,
+      resource_types: input.spec.resource_types,
+      desc: input.description,
+      required: input.required,
+      files: [],
+      selectedFiles: []
+    };
+    this.apiService
+      .getWorkspaceResourcesByParam(
+        input.spec.resource_types,
+        this.workspaceId
+      )
+      .subscribe(data => {
+        this.rawCountsField.files = data;
+      });
+
+    const configResourceField = [
+      '',
+      [...(input.required ? [Validators.required] : [])]
+    ];
+    controlsConfig[key] = configResourceField;
     this.analysesForm = this.formBuilder.group(controlsConfig);
   }
 
-}
+  /**
+    * Convenience getter for easy access to form fields
+    */
+    get f() {
+    return this.analysesForm.controls;
+  }
 
+  /**
+    * Function is used to convert strings to floats for numeric values
+    * before sending the data to execute the operation
+    */
+  convertToFloatObj(obj) {
+      const res = {};
+      for (const key in obj) {
+          res[key] =
+              isNaN(obj[key]) || typeof obj[key] === 'boolean'
+                  ? obj[key]
+                  : parseFloat(obj[key]);
+      }
+      return res;
+  }
+}

@@ -77,7 +77,7 @@
                 </mat-slider>
             </div>
             <div class="overlayDiv" [style.height.px]="originalPlotHeight"
-                [style.width.px]="overlayImage ? originalPlotWidth+legendWidth: !droppedFile ? currentZoomScaleFactor != 1 ? originalPlotWidth+legendWidth : originalPlotWidth * 3 + 150 + legendWidth*3: originalPlotWidth+legendWidth">
+                [style.width.px]="overlayImage ? (currentZoomScaleFactor === 1 ? originalPlotWidth+legendWidth : originalPlotWidth) : !droppedFile ? (currentZoomScaleFactor != 1 ? originalPlotWidth+legendWidth : originalPlotWidth * 3 + 150 + legendWidth*3): originalPlotWidth+legendWidth">
 
                 <div #scatter id="scatter" [class]="overlayImage ? 'overlayPlots' : 'displayPlotSideBySide'"
                     [style.opacity]="displayPlot ? plotOpacityValue : 0" [style.width.px]="originalPlotWidth"
@@ -126,7 +126,7 @@
             </div>
 
             <div class="miniMapContainer"
-                [style.left.px]="overlayImage || !droppedFile ? originalPlotWidth+50 + legendWidth: originalPlotWidth*2+50 + legendWidth"
+                [style.left.px]="overlayImage || !droppedFile ? originalPlotWidth+50 : originalPlotWidth*2+50"
                 [style.top.px]="originalPlotHeight + geneSearchHeight + 20">
                 <div
                     [class]="currentZoomScaleFactor != 1 || (droppedFile && showMiniMap) ? 'miniSubContainer' : 'hiddenDiv miniSubContainer'">

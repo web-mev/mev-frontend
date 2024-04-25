@@ -544,112 +544,115 @@ export class BaseSpatialgeComponent {
 
 
     // Add Legend
-    if (useNorm) {
-      const gradient = svg.append("defs")
-        .append("linearGradient")
-        .attr("id", "legendGradient")
-        .attr("x1", "0%")
-        .attr("y1", "0%")
-        .attr("x2", "100%")
-        .attr("y2", "0%");
+    if (this.legendWidth !== 0) {
+      if (useNorm) {
+        const gradient = svg.append("defs")
+          .append("linearGradient")
+          .attr("id", "legendGradient")
+          .attr("x1", "0%")
+          .attr("y1", "0%")
+          .attr("x2", "100%")
+          .attr("y2", "0%");
 
-      gradient.append("stop")
-        .attr("offset", "0%")
-        .attr("stop-color", "white");
+        gradient.append("stop")
+          .attr("offset", "0%")
+          .attr("stop-color", "white");
 
-      gradient.append("stop")
-        .attr("offset", "100%")
-        .attr("stop-color", this.selectedColor);
+        gradient.append("stop")
+          .attr("offset", "100%")
+          .attr("stop-color", this.selectedColor);
 
-      // const legendX = 300;
-      const legendX = -this.legendWidth + 20;
-      const legendY = 60;
-      const borderWidth = 1;
-      const legendWidth = 50;
-      const legendHeight = 10;
+        // const legendX = 300;
+        const legendX = -this.legendWidth + 20;
+        const legendY = 60;
+        const borderWidth = 1;
+        const legendBarWidth = 50;
+        const legendBarHeight = 10;
 
-      svg.append("rect")
-        .attr("x", legendX - borderWidth)
-        .attr("y", legendY - borderWidth)
-        .attr("width", legendWidth + 2 * borderWidth)
-        .attr("height", legendHeight + 2 * borderWidth)
-        .style("stroke", "rgba(0, 0, 0, 0.3)")
-        .style("fill", "none");
+        svg.append("rect")
+          .attr("x", legendX - borderWidth)
+          .attr("y", legendY - borderWidth)
+          .attr("width", legendBarWidth + 2 * borderWidth)
+          .attr("height", legendBarHeight + 2 * borderWidth)
+          .style("stroke", "rgba(0, 0, 0, 0.3)")
+          .style("fill", "none");
 
-      // Create legend rectangle
-      svg.append("rect")
-        .attr("x", legendX)
-        .attr("y", legendY)
-        .attr("width", legendWidth)
-        .attr("height", legendHeight)
-        .style("fill", "url(#legendGradient)")
+        // Create legend rectangle
+        svg.append("rect")
+          .attr("x", legendX)
+          .attr("y", legendY)
+          .attr("width", legendBarWidth)
+          .attr("height", legendBarHeight)
+          .style("fill", "url(#legendGradient)")
 
-      svg.append("text")
-        .attr("x", legendX)
-        .attr("y", 80)
-        .attr("text-anchor", "start")
-        .attr("font-size", "6px")
-        .text("0");
+        svg.append("text")
+          .attr("x", legendX)
+          .attr("y", 80)
+          .attr("text-anchor", "start")
+          .attr("font-size", "6px")
+          .text("0");
 
-      const xmaxLabelWidth = this.totalCountsMax.toString().toLocaleString().length * 1;  // Adjust the font size multiplier as needed
-      const adjustedXmaxLabelX = legendX + 60 - xmaxLabelWidth;
+        const xmaxLabelWidth = this.totalCountsMax.toString().toLocaleString().length * 1;  // Adjust the font size multiplier as needed
+        const adjustedXmaxLabelX = legendX + 60 - xmaxLabelWidth;
 
-      svg.append("text")
-        .attr("x", adjustedXmaxLabelX)
-        .attr("y", 80)
-        .attr("text-anchor", "end")
-        .attr("font-size", "6px")
-        .text(this.totalCountsMax.toLocaleString());
+        svg.append("text")
+          .attr("x", adjustedXmaxLabelX)
+          .attr("y", 80)
+          .attr("text-anchor", "end")
+          .attr("font-size", "6px")
+          .text(this.totalCountsMax.toLocaleString());
 
-      svg.append("text")
-        .attr("x", legendX)
-        .attr("y", 50)
-        .attr("text-anchor", "start")
-        .attr("font-size", "6px")
-        .attr("font-weight", "bold")
-        .text("Counts");
-    } else if (this.useCluster) {
-      // Legend
-      const clusterColors = Object.keys(this.clusterTypes).map(key => ({
-        label: this.clusterTypes[key].label,
-        color: this.clusterTypes[key].color
-      }));
-      clusterColors.sort((a, b) => {
-        // Extracting the numerical part of the label
-        const numA = parseInt(a.label.split(' ')[1]);
-        const numB = parseInt(b.label.split(' ')[1]);
+        svg.append("text")
+          .attr("x", legendX)
+          .attr("y", 50)
+          .attr("text-anchor", "start")
+          .attr("font-size", "6px")
+          .attr("font-weight", "bold")
+          .text("Counts");
+      } else if (this.useCluster) {
+        // Legend
+        const clusterColors = Object.keys(this.clusterTypes).map(key => ({
+          label: this.clusterTypes[key].label,
+          color: this.clusterTypes[key].color
+        }));
+        clusterColors.sort((a, b) => {
+          // Extracting the numerical part of the label
+          const numA = parseInt(a.label.split(' ')[1]);
+          const numB = parseInt(b.label.split(' ')[1]);
 
-        // Comparing the numerical parts
-        return numA - numB;
-      });
-      const legendWidth = this.legendWidth;
-
-      const legend = svg
-        .selectAll('.legend')
-        .data(clusterColors)
-        .enter()
-        .append('g')
-        .classed('legend', true)
-        .attr('transform', function (d, i) {
-          // return 'translate(0,' + (i * 15 + 50) + ')';
-          return `translate(-${legendWidth},${i * 15 + 50})`;
+          // Comparing the numerical parts
+          return numA - numB;
         });
+        const legendWidth = this.legendWidth;
 
-      legend
-        .append('circle')
-        .attr('r', 4)
-        .attr('cx', 10)
-        .attr('fill', d => d.color);
+        const legend = svg
+          .selectAll('.legend')
+          .data(clusterColors)
+          .enter()
+          .append('g')
+          .classed('legend', true)
+          .attr('transform', function (d, i) {
+            // return 'translate(0,' + (i * 15 + 50) + ')';
+            return `translate(-${legendWidth},${i * 15 + 50})`;
+          });
 
-      legend
-        .append('text')
-        .attr('x', 20)
-        .attr('dy', '.35em')
-        .style('fill', '#000')
-        .style('font-size', '8px')
-        .attr('class', 'legend-label')
-        .text(d => d.label);
+        legend
+          .append('circle')
+          .attr('r', 4)
+          .attr('cx', 10)
+          .attr('fill', d => d.color);
+
+        legend
+          .append('text')
+          .attr('x', 20)
+          .attr('dy', '.35em')
+          .style('fill', '#000')
+          .style('font-size', '8px')
+          .attr('class', 'legend-label')
+          .text(d => d.label);
+      }
     }
+
   }
 
   movePlot(direction, mode, container) {
@@ -844,8 +847,14 @@ export class BaseSpatialgeComponent {
     this.sliderLeft = 0;
     this.sliderTop = 0;
 
+    if(this.currentZoomScaleFactor === 1){
+      this.legendWidth = 120
+    }else{
+      this.legendWidth = 0
+    }
+
     if (plotContainer || imageContainer) {
-      const transformPlotValue = `translateX(${-this.currentLeft * this.currentZoomScaleFactor + this.sliderLeft - this.legendWidth * (this.currentZoomScaleFactor - 1)}px) translateY(${this.currentTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor})`;
+      const transformPlotValue = `translateX(${-this.currentLeft * this.currentZoomScaleFactor + this.sliderLeft }px) translateY(${this.currentTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor})`;
       const transformImageValue = `translateX(${-this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft}px) translateY(${this.currentImageTop * this.currentZoomScaleFactor + this.sliderTop}px) rotate(${this.currentDegree}deg) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor})`;
 
       plotContainer.style.transform = transformPlotValue;
@@ -910,11 +919,11 @@ export class BaseSpatialgeComponent {
   }
 
   minLeftValue(): number {
-    return -(this.plotWidth-this.legendWidth) * (this.currentZoomScaleFactor - 1) / 2;
+    return -(this.plotWidth) * (this.currentZoomScaleFactor - 1) / 2;
   }
 
   maxLeftValue(): number {
-    return (this.plotWidth-this.legendWidth) * (this.currentZoomScaleFactor - 1) / 2;
+    return (this.plotWidth) * (this.currentZoomScaleFactor - 1) / 2;
   }
 
   minTopValue(): number {

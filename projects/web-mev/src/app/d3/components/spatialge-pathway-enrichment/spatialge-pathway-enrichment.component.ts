@@ -1,10 +1,10 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild, AfterViewInit, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ViewChild, Input } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { AnalysesService } from '@app/features/analysis/services/analysis.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { DataSource } from '@angular/cdk/table';
-import { CustomSetType, CustomSet } from '@app/_models/metadata';
+import { CustomSetType } from '@app/_models/metadata';
 import { MatDialog } from '@angular/material/dialog';
 import { AddSampleSetComponent } from '../dialogs/add-sample-set/add-sample-set.component';
 import { MetadataService } from '@app/core/metadata/metadata.service';
@@ -23,7 +23,7 @@ export class SpatialGEPathwayEnrichmentComponent implements OnInit {
     dataSource: FeaturesDataSource;
     resourceId;
     analysisName = 'SpatialGE Pathway Enrichment';
-    displayedColumns = ['pathway', 'padj', 'pval', 'size'];
+    displayedColumns = ['pathway', 'padj', 'pval', 'size', 'actions'];
     defaultPageIndex = 0;
     defaultPageSize = 10;
     maxFeatureSetSize = 500;
@@ -41,10 +41,6 @@ export class SpatialGEPathwayEnrichmentComponent implements OnInit {
         this.initializeFeatureResource();
     }
 
-    // ngAfterViewInit() {
-    //     this.loadFeaturesPage();
-    // }
-
     initializeFeatureResource(): void {
         this.resourceId = this.outputs['STEnrich.pathway_results'];
         this.dataSource.loadFeatures(
@@ -56,8 +52,8 @@ export class SpatialGEPathwayEnrichmentComponent implements OnInit {
         );
     }
 
-    onCreateCustomFeatureSet() {
-        const setSize = this.dataSource.featuresCount;
+    onCreateCustomFeatureSet(row) {
+        const setSize = row.size;
         if (setSize > this.maxFeatureSetSize) {
             const errorMessage = `The current size of 
           your set (${setSize}) is larger than the 
@@ -73,35 +69,24 @@ export class SpatialGEPathwayEnrichmentComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(customSetData => {
             if (customSetData) {
-                const filterValues = {};
-                this.analysesService
-                    .getResourceContent(
-                        this.resourceId,
-                        null,
-                        null,
-                        filterValues,
-                        {}
-                    )
-                    .subscribe(features => {
-                        const elements = [];
-                        for (let i of features) {
-                            for (let gene of i.genes) {
-                                let temp = { id: gene }
-                                elements.push(temp)
-                            }
-                        }
+                const elements = [];
+                    for (let gene of row.genes) {
+                        let temp = { id: gene }
+                        elements.push(temp)
+                    }
+                console.log("row: ", row, elements)
 
-                        const customSet = {
-                            name: customSetData.name,
-                            color: customSetData.color,
-                            type: CustomSetType.FeatureSet,
-                            elements: elements,
-                            multiple: true
-                        };
+                const customSet = {
+                    name: customSetData.name,
+                    color: customSetData.color,
+                    type: CustomSetType.FeatureSet,
+                    elements: elements,
+                    multiple: true
+                };
 
-                        this.metadataService.addCustomSet(customSet);
-                    });
+                this.metadataService.addCustomSet(customSet);
             }
+
         });
     }
 

@@ -16,9 +16,9 @@
         <div class="label">
             {{ rawCountsField.name }} <span class="redAsterisk">* </span>
             <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-              matTooltip="{{ rawCountsField.desc}}" aria-label="Info tooltip about the field">info
+                matTooltip="{{ rawCountsField.desc}}" aria-label="Info tooltip about the field">info
             </mat-icon>
-          </div>
+        </div>
         <mat-form-field class="form-control" color="accent">
             <mat-select [formControlName]="rawCountsField.key">
                 <mat-option *ngFor="let file of rawCountsField.files" [value]="file.id">
@@ -31,5 +31,76 @@
                 </mat-error>
             </div>
         </mat-form-field>
+    </div>
+    <div>
+        <div class="label">
+            {{ ctrlObsSetField.name }} <span class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="{{ ctrlObsSetField.desc}}" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <mat-select [formControlName]="ctrlObsSetField.key">
+                <mat-option *ngFor="let set of ctrlObsSetField.sets" [value]="set">
+                    {{ set.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div>
+        <div class="label">
+            {{ experimentalObsSetField.name }} <span class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="{{ experimentalObsSetField.desc}}" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <mat-select [formControlName]="experimentalObsSetField.key">
+                <mat-option *ngFor="let set of experimentalObsSetField.sets" [value]="set">
+                    {{ set.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div>
+        <div class="label">
+            {{ baseConditionNameField.name }}
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="{{ baseConditionNameField.desc}}" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <input matInput [formControlName]="baseConditionNameField.key" [name]="baseConditionNameField.key">
+        </mat-form-field>
+    </div>
+    <div>
+        <div class="label">
+            {{ experimentalConditionNameField.name }}
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="{{ experimentalConditionNameField.desc}}" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <input matInput [formControlName]="experimentalConditionNameField.key"
+                [name]="experimentalConditionNameField.key">
+        </mat-form-field>
+    </div>
+    <div *ngIf="analysesForm.errors &&
+      (analysesForm.touched || analysesForm.dirty)">
+        Problem:
+        <mat-error *ngIf="analysesForm.errors?.['sameName'] &&
+        (analysesForm.touched || analysesForm.dirty)">
+            You cannot choose the same set for both sets of samples
+        </mat-error>
+        <mat-error *ngIf="analysesForm.errors?.['intersection'] &&
+                (analysesForm.touched || analysesForm.dirty)">
+            The chosen sets cannot share samples. The following were
+            the same: {{analysesForm.errors?.['intersection']}}
+        </mat-error>
+        <mat-error *ngIf="analysesForm.errors?.['badSample'] &&
+            (analysesForm.touched || analysesForm.dirty)">
+            Mismatched samples!
+            {{analysesForm.errors?.['badSample']}}
+        </mat-error>
     </div>
 </form>

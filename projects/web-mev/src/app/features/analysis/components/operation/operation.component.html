@@ -3,7 +3,7 @@
 
 <div>
   <div *ngIf="customInput; else defaultBlock">
-    <div *ngIf="operationData.name == 'DESeq2'">
+    <div *ngIf="differentialExpressionTools.includes(operationData.name)">
       <differential-expression-input [operationData]="operationData" [workspaceId]="workspaceId" (formValid)="alterFormStatus($event)"></differential-expression-input>
     </div>
   </div>

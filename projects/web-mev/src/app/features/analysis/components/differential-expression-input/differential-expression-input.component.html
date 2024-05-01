@@ -34,7 +34,7 @@
             </mat-error>
         </mat-form-field>
     </div>
-    <div>
+    <div fxLayout>
         <div class="label">
             {{ ctrlObsSetField.name }} <span class="redAsterisk">* </span>
             <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
@@ -55,8 +55,7 @@
                 the same: {{analysesForm.errors?.['intersection']}}
             </mat-error>
         </mat-form-field>
-    </div>
-    <div>
+
         <div class="label">
             {{ experimentalObsSetField.name }} <span class="redAsterisk">* </span>
             <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"

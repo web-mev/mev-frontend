@@ -68,7 +68,6 @@ export class DefaultOperationComponent extends BaseOperationInput implements OnC
 
 
     createForm() {
-        console.log('in create form...');
 
         const inputs = this.operationData.inputs;
         const controlsConfig = {};
@@ -377,7 +376,6 @@ export class DefaultOperationComponent extends BaseOperationInput implements OnC
 
 
     ngOnChanges(): void {
-        console.log('in ngOnChanges of default compoment')
         if(this.operationData){
             this.createForm();
             this.analysesForm.statusChanges.subscribe(() => this.onFormValid());
@@ -468,7 +466,6 @@ export class DefaultOperationComponent extends BaseOperationInput implements OnC
     }
 
     getInputData(): any {
-        console.log('in getInputData of Default class')
         let inputs = this.convertToFloatObj(this.analysesForm.value);
         inputs = this.handleResourceMultiSelect(inputs);
         return inputs;

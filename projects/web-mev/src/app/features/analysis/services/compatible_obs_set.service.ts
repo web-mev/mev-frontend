@@ -38,13 +38,20 @@ export class CompatibleObsSetService {
                             }
                         }
                         if (bad_samples.length > 0) {
+                            exp_mtx_ctrl.setErrors({badSample: bad_samples});
+                            exp_mtx_ctrl.markAsTouched();
                             return { badSample: bad_samples }
                         } else {
+                            exp_mtx_ctrl.setErrors(null);
+                            exp_mtx_ctrl.markAsTouched();
                             return null
                         }
                     })
                 );
             } else {
+                exp_mtx_ctrl.setErrors(null);
+                obs_set_1_ctrl.setErrors(null);
+                obs_set_2_ctrl.setErrors(null);
                 return of(null)
             }
         }

@@ -25,11 +25,13 @@
                     {{ file.name }}
                 </mat-option>
             </mat-select>
-            <div *ngIf="submitted && f[rawCountsField.key].errors">
-                <mat-error *ngIf="f[rawCountsField.key].errors.required">
-                    This field is required
-                </mat-error>
-            </div>
+            <mat-error *ngIf="f[rawCountsField.key].errors?.required">
+                This field is required
+            </mat-error>
+            <mat-error *ngIf="f[rawCountsField.key].errors?.badSample">
+                The sample/observation groups chosen below do not match your input matrix. The invalid samples were:
+                {{analysesForm.errors?.['badSample']}}
+            </mat-error>
         </mat-form-field>
     </div>
     <div>
@@ -45,6 +47,13 @@
                     {{ set.name }}
                 </mat-option>
             </mat-select>
+            <mat-error *ngIf="f[ctrlObsSetField.key].errors?.sameName">
+                You cannot choose the same set for both sets of samples
+            </mat-error>
+            <mat-error *ngIf="f[ctrlObsSetField.key].errors?.intersection">
+                The chosen sets cannot share samples. The following were
+                the same: {{analysesForm.errors?.['intersection']}}
+            </mat-error>
         </mat-form-field>
     </div>
     <div>
@@ -60,6 +69,13 @@
                     {{ set.name }}
                 </mat-option>
             </mat-select>
+            <mat-error *ngIf="f[experimentalObsSetField.key].errors?.sameName">
+                You cannot choose the same set for both sets of samples
+            </mat-error>
+            <mat-error *ngIf="f[experimentalObsSetField.key].errors?.intersection">
+                The chosen sets cannot share samples. The following were
+                the same: {{analysesForm.errors?.['intersection']}}
+            </mat-error>
         </mat-form-field>
     </div>
     <div>
@@ -84,23 +100,5 @@
             <input matInput [formControlName]="experimentalConditionNameField.key"
                 [name]="experimentalConditionNameField.key">
         </mat-form-field>
-    </div>
-    <div *ngIf="analysesForm.errors &&
-      (analysesForm.touched || analysesForm.dirty)">
-        Problem:
-        <mat-error *ngIf="analysesForm.errors?.['sameName'] &&
-        (analysesForm.touched || analysesForm.dirty)">
-            You cannot choose the same set for both sets of samples
-        </mat-error>
-        <mat-error *ngIf="analysesForm.errors?.['intersection'] &&
-                (analysesForm.touched || analysesForm.dirty)">
-            The chosen sets cannot share samples. The following were
-            the same: {{analysesForm.errors?.['intersection']}}
-        </mat-error>
-        <mat-error *ngIf="analysesForm.errors?.['badSample'] &&
-            (analysesForm.touched || analysesForm.dirty)">
-            Mismatched samples!
-            {{analysesForm.errors?.['badSample']}}
-        </mat-error>
     </div>
 </form>

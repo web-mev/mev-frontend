@@ -17,13 +17,21 @@ import { CompatibleObsSetService } from '../../services/compatible_obs_set.servi
 
 // checks that the chosen observation sets are 1) not the same and 2) have no intersection
 const intersectingObservationSetsValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    const exp_mtx_ctrl = control.get('raw_counts');
     const obs_set_1_ctrl = control.get('base_condition_samples');
     const obs_set_2_ctrl = control.get('experimental_condition_samples');
     const obs_set_1 = obs_set_1_ctrl.value;
     const obs_set_2 = obs_set_2_ctrl.value;
     if (obs_set_1 && obs_set_2) {
+        exp_mtx_ctrl.markAsTouched();
 
         if (obs_set_1.name === obs_set_2.name) {
+            obs_set_1_ctrl.setErrors({sameName: true});
+            obs_set_2_ctrl.setErrors({sameName: true});
+            exp_mtx_ctrl.setErrors(null);
+            obs_set_1_ctrl.markAsTouched();
+            obs_set_2_ctrl.markAsTouched();
+            exp_mtx_ctrl.markAsTouched();
             return { sameName: true }
         }
 
@@ -42,11 +50,25 @@ const intersectingObservationSetsValidator: ValidatorFn = (control: AbstractCont
             }
         }
         if (intersection.length > 0) {
+            obs_set_1_ctrl.setErrors({intersection: true});
+            obs_set_2_ctrl.setErrors({intersection: true});
+            obs_set_1_ctrl.markAsTouched();
+            obs_set_2_ctrl.markAsTouched();
             return { intersection: intersection }
         } else {
+            obs_set_1_ctrl.setErrors(null);
+            obs_set_2_ctrl.setErrors(null);
+            exp_mtx_ctrl.setErrors(null);
+            obs_set_1_ctrl.markAsTouched();
+            obs_set_2_ctrl.markAsTouched();
+            exp_mtx_ctrl.markAsTouched();
             return null;
         }
     } else {
+        obs_set_1_ctrl.setErrors(null);
+        obs_set_2_ctrl.setErrors(null);
+        obs_set_1_ctrl.markAsTouched();
+        obs_set_2_ctrl.markAsTouched();
         return null;
     }
 };
@@ -116,7 +138,6 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
         // the selection for the raw counts:
         let key = "raw_counts"
         input = this.operationData.inputs[key];
-        console.log(input);
         this.rawCountsField = {
             key: key,
             name: input.name,
@@ -138,7 +159,7 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
 
         const configResourceField = [
             '',
-            [Validators.required]
+            []
         ];
         controlsConfig[key] = configResourceField;
 
@@ -214,7 +235,8 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
         this.analysesForm = this.formBuilder.group(controlsConfig,
             {
                 validators: [intersectingObservationSetsValidator],
-                asyncValidators: [this.obsSetService.validate()]
+                asyncValidators: [this.obsSetService.validate()],
+                updateOn: 'change'
             } as AbstractControlOptions
         );
     }

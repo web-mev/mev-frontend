@@ -72,7 +72,6 @@ export class OperationComponent implements OnChanges {
     }
 
     public alterFormStatus(isValid: boolean){
-      console.log('in alterForm with data=')
       this.formIsValid = isValid;
     }
 

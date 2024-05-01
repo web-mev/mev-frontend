@@ -63,8 +63,8 @@ export class BaseSpatialgeComponent {
 
   displayAlignment: boolean = false;
 
-  // scaleFactorVal = '0.01602821';
-  scaleFactorVal: string = '0';
+  scaleFactorVal = '0.01602821';
+  // scaleFactorVal: string = '0';
   geneSearchVal: string = 'VIM'
 
   moveAmount: number = 1;
@@ -511,11 +511,12 @@ export class BaseSpatialgeComponent {
       .range(this.clusterColors);
 
     var x = d3.scaleLinear()
-      .domain([this.xMin * (this.scaleFactor), this.xMax * (1 + this.scaleFactor)])
+      // .domain([this.xMin * (this.scaleFactor), this.xMax * (1 + this.scaleFactor)])
+      .domain([this.xMin - (this.xMax - this.xMin) * this.scaleFactor, this.xMax + (this.xMax - this.xMin) * this.scaleFactor])
       .range([0, width]);
 
     var y = d3.scaleLinear()
-      .domain([this.yMin * this.scaleFactor, this.yMax * (1 + this.scaleFactor)])
+      .domain([this.yMin - (this.yMax - this.yMin) * this.scaleFactor, this.yMax + (this.yMax - this.yMin) * this.scaleFactor])
       .range([height, 0]);
 
     let useNorm = this.useNormalization
@@ -847,14 +848,14 @@ export class BaseSpatialgeComponent {
     this.sliderLeft = 0;
     this.sliderTop = 0;
 
-    if(this.currentZoomScaleFactor === 1){
+    if (this.currentZoomScaleFactor === 1) {
       this.legendWidth = 120
-    }else{
+    } else {
       this.legendWidth = 0
     }
 
     if (plotContainer || imageContainer) {
-      const transformPlotValue = `translateX(${-this.currentLeft * this.currentZoomScaleFactor + this.sliderLeft }px) translateY(${this.currentTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor})`;
+      const transformPlotValue = `translateX(${-this.currentLeft * this.currentZoomScaleFactor + this.sliderLeft}px) translateY(${this.currentTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor})`;
       const transformImageValue = `translateX(${-this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft}px) translateY(${this.currentImageTop * this.currentZoomScaleFactor + this.sliderTop}px) rotate(${this.currentDegree}deg) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor})`;
 
       plotContainer.style.transform = transformPlotValue;

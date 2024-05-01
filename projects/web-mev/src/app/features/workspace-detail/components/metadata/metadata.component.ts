@@ -55,7 +55,7 @@ export class MetadataComponent implements OnInit {
 
   // if we have more than this amount of observations, we disable various 
   // options since making a UI that is responsive, etc. is cumbersome
-  maxObservations = 500;
+  maxObservations = 7500;
 
   // a boolean which tracks whether we have exceeded the number of permitted observations.
   // Used to enable/disable certain parts of the UI so it doesn't grind to a halt.
@@ -165,6 +165,7 @@ export class MetadataComponent implements OnInit {
             return of();
         }),
         switchMap(metadata => {
+          console.log("metadata: ", metadata)
           this.observationCount = metadata['count']
           if(this.observationCount > this.maxObservations){
             let msg = `Your workspace has greater than ${this.maxObservations} observations/samples

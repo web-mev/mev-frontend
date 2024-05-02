@@ -74,7 +74,6 @@ export class SpatialGEPathwayEnrichmentComponent implements OnInit {
                         let temp = { id: gene }
                         elements.push(temp)
                     }
-                console.log("row: ", row, elements)
 
                 const customSet = {
                     name: customSetData.name,

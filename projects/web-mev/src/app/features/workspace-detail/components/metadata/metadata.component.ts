@@ -165,7 +165,6 @@ export class MetadataComponent implements OnInit {
             return of();
         }),
         switchMap(metadata => {
-          console.log("metadata: ", metadata)
           this.observationCount = metadata['count']
           if(this.observationCount > this.maxObservations){
             let msg = `Your workspace has greater than ${this.maxObservations} observations/samples

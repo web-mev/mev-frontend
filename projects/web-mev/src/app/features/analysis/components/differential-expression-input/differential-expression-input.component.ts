@@ -242,19 +242,13 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
 
         this.analysesForm.get('experimental_condition_samples').valueChanges.subscribe(
             (val) => {
-                let currentName = this.analysesForm.get('experimental_condition_name').value;
-                if(currentName === ''){
-                    this.analysesForm.get('experimental_condition_name').setValue(val.name);
-                }
+                this.analysesForm.get('experimental_condition_name').setValue(val.name);
             }
         );
 
         this.analysesForm.get('base_condition_samples').valueChanges.subscribe(
             (val) => {
-                let currentName = this.analysesForm.get('base_condition_name').value;
-                if(currentName === ''){
-                    this.analysesForm.get('base_condition_name').setValue(val.name);
-                }
+                this.analysesForm.get('base_condition_name').setValue(val.name);
             }
         );
     }

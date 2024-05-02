@@ -1,0 +1,103 @@
+<form *ngIf="analysesForm" [formGroup]="analysesForm" (ngSubmit)="onSubmit()">
+
+    <!-- OPERATION NAME -->
+    <ng-container *ngIf="operationData.mode !== 'client'">
+        <div class="label">
+            Operation name: <span class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="Type operation name" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <input matInput formControlName="job_name" name="job_name">
+        </mat-form-field>
+    </ng-container>
+    <div>
+        <div class="label">
+            {{ rawCountsField.name }} <span class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="{{ rawCountsField.desc}}" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <mat-select [formControlName]="rawCountsField.key">
+                <mat-option *ngFor="let file of rawCountsField.files" [value]="file.id">
+                    {{ file.name }}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="f[rawCountsField.key].errors?.required">
+                This field is required
+            </mat-error>
+            <mat-error *ngIf="f[rawCountsField.key].errors?.badSample">
+                The sample/observation groups chosen below do not match your input matrix. The invalid samples were:
+                {{analysesForm.errors?.['badSample']}}
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div fxLayout>
+        <div class="label">
+            {{ ctrlObsSetField.name }} <span class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="{{ ctrlObsSetField.desc}}" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <mat-select [formControlName]="ctrlObsSetField.key">
+                <mat-option *ngFor="let set of ctrlObsSetField.sets" [value]="set">
+                    {{ set.name }}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="f[ctrlObsSetField.key].errors?.sameName">
+                You cannot choose the same set for both sets of samples
+            </mat-error>
+            <mat-error *ngIf="f[ctrlObsSetField.key].errors?.intersection">
+                The chosen sets cannot share samples. The following were
+                the same: {{analysesForm.errors?.['intersection']}}
+            </mat-error>
+        </mat-form-field>
+
+        <div class="label">
+            {{ experimentalObsSetField.name }} <span class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="{{ experimentalObsSetField.desc}}" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <mat-select [formControlName]="experimentalObsSetField.key">
+                <mat-option *ngFor="let set of experimentalObsSetField.sets" [value]="set">
+                    {{ set.name }}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="f[experimentalObsSetField.key].errors?.sameName">
+                You cannot choose the same set for both sets of samples
+            </mat-error>
+            <mat-error *ngIf="f[experimentalObsSetField.key].errors?.intersection">
+                The chosen sets cannot share samples. The following were
+                the same: {{analysesForm.errors?.['intersection']}}
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div>
+        <div class="label">
+            {{ baseConditionNameField.name }}
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="{{ baseConditionNameField.desc}}" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <input matInput [formControlName]="baseConditionNameField.key" [name]="baseConditionNameField.key">
+        </mat-form-field>
+    </div>
+    <div>
+        <div class="label">
+            {{ experimentalConditionNameField.name }}
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="{{ experimentalConditionNameField.desc}}" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <input matInput [formControlName]="experimentalConditionNameField.key"
+                [name]="experimentalConditionNameField.key">
+        </mat-form-field>
+    </div>
+</form>

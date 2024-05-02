@@ -14,7 +14,8 @@ import { PlottingMenuComponent } from './components/plotting-menu/plotting-menu.
 import { IGVComponent } from './components/igv/igv.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AddDialog2Component } from './components/igv/add-dialog/add-dialog.component';
-
+import { DefaultOperationComponent } from './components/default-operation-inputs/default-operation-inputs.component';
+import { DifferentialExpressionInputComponent } from './components/differential-expression-input/differential-expression-input.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,8 @@ import { AddDialog2Component } from './components/igv/add-dialog/add-dialog.comp
     PlottingMenuComponent,
     IGVComponent,
     AddDialog2Component,
+    DefaultOperationComponent,
+    DifferentialExpressionInputComponent
   ],
   exports: [
     OperationComponent,

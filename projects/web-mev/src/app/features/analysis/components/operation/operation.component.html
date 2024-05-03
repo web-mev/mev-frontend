@@ -12,6 +12,12 @@
       <kmeans-input [operationData]="operationData" [workspaceId]="workspaceId"
         (formValid)="alterFormStatus($event)"></kmeans-input>
     </div>
+
+    <div *ngIf="operationData.name === 'ComBat-seq'">
+      <combatseq-input [operationData]="operationData" [workspaceId]="workspaceId"
+        (formValid)="alterFormStatus($event)"></combatseq-input>
+    </div>
+    
   </div>
 
   <ng-template #defaultBlock>

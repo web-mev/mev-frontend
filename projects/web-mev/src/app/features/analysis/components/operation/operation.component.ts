@@ -44,7 +44,7 @@ export class OperationComponent implements OnChanges {
 
   // a master list of the tools which have a custom implementation (not using the default form generator)
   // These are identified by the operation's name
-  customTools = [...this.differentialExpressionTools, 'K-means'];
+  customTools = [...this.differentialExpressionTools, 'K-means', 'ComBat-seq'];
 
   constructor(
     private apiService: AnalysesService,

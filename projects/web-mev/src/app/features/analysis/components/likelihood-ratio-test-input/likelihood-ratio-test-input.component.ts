@@ -31,13 +31,13 @@ const observationSetsValidator: ValidatorFn = (control: AbstractControl): Valida
 
 
 @Component({
-    selector: 'kmeans-input',
-    templateUrl: './kmeans-input.component.html',
-    styleUrls: ['./kmeans-input.component.scss'],
-    providers: [{ provide: BaseOperationInput, useExisting: KmeansInputComponent }],
+    selector: 'likelihood-ratio-test-input',
+    templateUrl: './likelihood-ratio-test-input.component.html',
+    styleUrls: ['./likelihood-ratio-test-input.component.scss'],
+    providers: [{ provide: BaseOperationInput, useExisting: LikelihoodRatioTestInputComponent }],
     changeDetection: ChangeDetectionStrategy.Default
 })
-export class KmeansInputComponent extends BaseOperationInput implements OnChanges {
+export class LikelihoodRatioTestInputComponent extends BaseOperationInput implements OnChanges {
     analysesForm: FormGroup;
     submitted = false;
 

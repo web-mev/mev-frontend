@@ -44,7 +44,7 @@ export class OperationComponent implements OnChanges {
 
   // a master list of the tools which have a custom implementation (not using the default form generator)
   // These are identified by the operation's name
-  customTools = [...this.differentialExpressionTools, 'K-means'];
+  customTools = [...this.differentialExpressionTools, 'K-means', 'Likelihood ratio test'];
 
   constructor(
     private apiService: AnalysesService,
@@ -61,6 +61,7 @@ export class OperationComponent implements OnChanges {
   loadData() {
     this.apiService.getOperation(this.operation.id).subscribe(data => {
       this.operationData = data;
+      console.log("operation data: ", this.operationData)
       if (this.customTools.includes(this.operationData.name)) {
         this.customInput = true;
       } else {

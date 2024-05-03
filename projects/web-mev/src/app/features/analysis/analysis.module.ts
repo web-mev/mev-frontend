@@ -17,6 +17,7 @@ import { AddDialog2Component } from './components/igv/add-dialog/add-dialog.comp
 import { DefaultOperationComponent } from './components/default-operation-inputs/default-operation-inputs.component';
 import { DifferentialExpressionInputComponent } from './components/differential-expression-input/differential-expression-input.component';
 import { KmeansInputComponent } from './components/kmeans-input/kmeans-input.component';
+import { LikelihoodRatioTestInputComponent } from './components/likelihood-ratio-test-input/likelihood-ratio-test-input.component'
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { KmeansInputComponent } from './components/kmeans-input/kmeans-input.com
     AddDialog2Component,
     DefaultOperationComponent,
     DifferentialExpressionInputComponent,
-    KmeansInputComponent
+    KmeansInputComponent,
+    LikelihoodRatioTestInputComponent
   ],
   exports: [
     OperationComponent,

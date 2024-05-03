@@ -6,7 +6,7 @@ import {
   Output,
   OnChanges
 } from '@angular/core';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder, FormControl, FormControlName } from '@angular/forms';
 import { AnalysesService } from '../../services/analysis.service';
 import { Workspace } from '@app/features/workspace-manager/models/workspace';
 import { Observable } from 'rxjs';
@@ -482,11 +482,13 @@ export class OperationComponent implements OnChanges {
     let inputs = this.convertToFloatObj(this.analysesForm.value);
     inputs = this.handleResourceMultiSelect(inputs);
 
-    console.log("got to start of analysis: ", inputs, this.operation)
-
     if (this.operation.name === 'K-means') {
       this.handleKMeansOperations(inputs)
-    } else {
+    } 
+    // else if (this.operation.name === 'Likelihood ratio test') {
+    //   // this.handleLRTOperations(inputs)
+    // } 
+    else {
       this.apiService
         .executeOperation(this.operation.id, this.workspaceId, inputs)
         .subscribe(data => {
@@ -556,6 +558,19 @@ export class OperationComponent implements OnChanges {
       }
   }
 
+  selectionChangeLRT(){
+    let inputs = this.convertToFloatObj(this.analysesForm.value);
+    inputs = this.handleResourceMultiSelect(inputs);
+
+    let uuid = inputs['annotations'];
+    let query = `${this.API_URL}/resources/${uuid}/contents/preview/`;
+
+    this.httpClient.get(query).subscribe(res => {
+      this.analysesForm.patchValue({
+        covariate: Object.keys(res[0].values)[0]
+      });
+    })    
+  }
 
   /**
    * Function is triggered when the user clicks the Show button

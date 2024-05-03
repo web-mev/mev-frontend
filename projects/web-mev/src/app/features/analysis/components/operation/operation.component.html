@@ -26,7 +26,7 @@
         </mat-icon>
       </div>
       <mat-form-field class="form-control" color="accent">
-        <mat-select [formControlName]="resourceField.key">
+        <mat-select [formControlName]="resourceField.key" (selectionChange)="operation.name === 'Likelihood ratio test' && resourceField.name === 'Annotations:' ? selectionChangeLRT() : null">
           <mat-option *ngFor="let file of resourceField.files" [value]="file.id">
             {{ file.name }}
           </mat-option>
@@ -71,7 +71,7 @@
   <div *ngFor="let numField of numFields">
     <div *ngIf="numField.required">
       <div class="label">
-        {{ numField.name }}<span>*</span>
+        {{ numField.name }}<span>* </span>
         <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
           matTooltip="{{ numField.desc}}" aria-label="Info tooltip about the field">info
         </mat-icon>

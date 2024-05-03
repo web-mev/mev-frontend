@@ -14,14 +14,12 @@
     </div>
 
     <div *ngIf="operationData.name === 'Likelihood ratio test'">
-      <h1>got here</h1>
       <likelihood-ratio-test-input [operationData]="operationData" [workspaceId]="workspaceId"
         (formValid)="alterFormStatus($event)"></likelihood-ratio-test-input>
     </div>
   </div>
 
   <ng-template #defaultBlock>
-    <p>default block</p>
     <default-operation-inputs [operationData]="operationData" [workspaceId]="workspaceId" [workspace$]="workspace$"
       (formValid)="alterFormStatus($event)">
     </default-operation-inputs>

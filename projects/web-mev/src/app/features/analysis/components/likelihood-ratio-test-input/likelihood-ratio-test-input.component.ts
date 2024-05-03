@@ -81,8 +81,10 @@ export class LikelihoodRatioTestInputComponent extends BaseOperationInput implem
         controlsConfig['job_name'] = ['', [Validators.required]];
 
         // the selection for the raw counts:
-        let key = "input_matrix"
+        let key = "raw_counts"
         input = this.operationData.inputs[key];
+        console.log("operation data: ", this.operationData)
+
         this.inputMatrixField = {
             key: key,
             name: input.name,

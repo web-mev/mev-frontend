@@ -16,6 +16,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AddDialog2Component } from './components/igv/add-dialog/add-dialog.component';
 import { DefaultOperationComponent } from './components/default-operation-inputs/default-operation-inputs.component';
 import { DifferentialExpressionInputComponent } from './components/differential-expression-input/differential-expression-input.component';
+import { KmeansInputComponent } from './components/kmeans-input/kmeans-input.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { DifferentialExpressionInputComponent } from './components/differential-
     IGVComponent,
     AddDialog2Component,
     DefaultOperationComponent,
-    DifferentialExpressionInputComponent
+    DifferentialExpressionInputComponent,
+    KmeansInputComponent
   ],
   exports: [
     OperationComponent,

@@ -44,7 +44,7 @@ export class OperationComponent implements OnChanges {
 
   // a master list of the tools which have a custom implementation (not using the default form generator)
   // These are identified by the operation's name
-  customTools = [...this.differentialExpressionTools];
+  customTools = [...this.differentialExpressionTools, 'K-means'];
 
   constructor(
     private apiService: AnalysesService,
@@ -78,8 +78,24 @@ export class OperationComponent implements OnChanges {
     this.formIsValid = isValid;
   }
 
+  /**
+  * Function is used to convert strings to floats for numeric values
+  * before sending the data to execute the operation
+  */
+  convertToFloatObj(obj) {
+    const res = {};
+    for (const key in obj) {
+      res[key] =
+        isNaN(obj[key]) || typeof obj[key] === 'boolean'
+          ? obj[key]
+          : parseFloat(obj[key]);
+    }
+    return res;
+  }
+
   startAnalysis() {
     let inputs = this.opInput.getInputData();
+    inputs = this.convertToFloatObj(inputs);
 
     this.apiService
       .executeOperation(this.operation.id, this.workspaceId, inputs)

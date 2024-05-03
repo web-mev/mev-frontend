@@ -6,7 +6,6 @@ import {
     EventEmitter,
     Input
 } from '@angular/core';
-import { Observable, of } from 'rxjs';
 import { FormGroup, Validators, FormBuilder, AbstractControl, AbstractControlOptions, ValidationErrors, ValidatorFn, AsyncValidatorFn } from '@angular/forms';
 import { AnalysesService } from '../../services/analysis.service';
 import { MetadataService } from '@app/core/metadata/metadata.service';
@@ -116,8 +115,7 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
     }
 
     getInputData(): any {
-        let inputs = this.convertToFloatObj(this.analysesForm.value);
-        return inputs;
+        return this.analysesForm.value;
     }
 
     onSubmit() {
@@ -235,7 +233,7 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
         this.analysesForm = this.formBuilder.group(controlsConfig,
             {
                 validators: [intersectingObservationSetsValidator],
-                asyncValidators: [this.obsSetService.validate()],
+                asyncValidators: [this.obsSetService.validate_for_dge()],
                 updateOn: 'change'
             } as AbstractControlOptions
         );
@@ -258,20 +256,5 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
       */
     get f() {
         return this.analysesForm.controls;
-    }
-
-    /**
-      * Function is used to convert strings to floats for numeric values
-      * before sending the data to execute the operation
-      */
-    convertToFloatObj(obj) {
-        const res = {};
-        for (const key in obj) {
-            res[key] =
-                isNaN(obj[key]) || typeof obj[key] === 'boolean'
-                    ? obj[key]
-                    : parseFloat(obj[key]);
-        }
-        return res;
     }
 }

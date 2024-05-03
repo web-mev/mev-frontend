@@ -11,7 +11,7 @@ export class CompatibleObsSetService {
 
     constructor(private fileService: FileService) { }
 
-    validate(): AsyncValidatorFn {
+    validate_for_dge(): AsyncValidatorFn {
         return (control: AbstractControl): Observable<ValidationErrors | null> => {
             const obs_set_1_ctrl = control.get('base_condition_samples');
             const obs_set_2_ctrl = control.get('experimental_condition_samples');
@@ -38,7 +38,7 @@ export class CompatibleObsSetService {
                             }
                         }
                         if (bad_samples.length > 0) {
-                            exp_mtx_ctrl.setErrors({badSample: bad_samples});
+                            exp_mtx_ctrl.setErrors({ badSample: bad_samples });
                             exp_mtx_ctrl.markAsTouched();
                             return { badSample: bad_samples }
                         } else {
@@ -52,6 +52,66 @@ export class CompatibleObsSetService {
                 exp_mtx_ctrl.setErrors(null);
                 obs_set_1_ctrl.setErrors(null);
                 obs_set_2_ctrl.setErrors(null);
+                return of(null)
+            }
+        }
+    }
+
+    validate_for_single_obs_set(): AsyncValidatorFn {
+        return (control: AbstractControl): Observable<ValidationErrors | null> => {
+
+            const obs_set_ctrl = control.get('samples');
+            const mtx_ctrl = control.get('input_matrix');
+            const num_clusters_ctrl = control.get('num_clusters')
+            const obs_set = obs_set_ctrl.value;
+            const mtx = mtx_ctrl.value;
+            const num_clusters = num_clusters_ctrl.value;
+            if (mtx && num_clusters) {
+                return this.fileService.getFilePreview(mtx).pipe(
+                    map(data => {
+                        const firstRow = Object.keys(data[0].values);
+
+                        let requested_samples
+                        if (obs_set) {
+                            requested_samples = obs_set.elements.map(item => {
+                                return item.id;
+                            });
+                        } else {
+                            requested_samples = firstRow;
+                        }
+
+                        // if the number of clusters is greater than either
+                        // the number of samples in the matrix or the requested
+                        // number of samples, then clustering doesn't make sense
+                        if ((num_clusters >= firstRow.length) || (num_clusters >= requested_samples.length)) {
+                            num_clusters_ctrl.setErrors({ bad_cluster_num: true });
+                            return { bad_cluster_num: true }
+                        } else {
+                            num_clusters_ctrl.setErrors(null);
+                        }
+
+                        let bad_samples = [];
+                        for (const v of requested_samples) {
+                            if (!firstRow.includes(v)) {
+                                bad_samples.push(v);
+                            }
+                        }
+                        if (bad_samples.length > 0) {
+                            mtx_ctrl.setErrors({ badSample: bad_samples });
+                            mtx_ctrl.markAsTouched();
+                            return { badSample: bad_samples }
+                        } else {
+                            mtx_ctrl.setErrors(null);
+                            mtx_ctrl.markAsTouched();
+                            return null
+                        }
+                    })
+                );
+            }
+            else {
+                mtx_ctrl.setErrors(null);
+                obs_set_ctrl.setErrors(null);
+                num_clusters_ctrl.setErrors(null);
                 return of(null)
             }
         }

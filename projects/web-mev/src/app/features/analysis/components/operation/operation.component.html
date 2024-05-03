@@ -4,7 +4,13 @@
 <div>
   <div *ngIf="customInput; else defaultBlock">
     <div *ngIf="differentialExpressionTools.includes(operationData.name)">
-      <differential-expression-input [operationData]="operationData" [workspaceId]="workspaceId" (formValid)="alterFormStatus($event)"></differential-expression-input>
+      <differential-expression-input [operationData]="operationData" [workspaceId]="workspaceId"
+        (formValid)="alterFormStatus($event)"></differential-expression-input>
+    </div>
+
+    <div *ngIf="operationData.name === 'K-means'">
+      <kmeans-input [operationData]="operationData" [workspaceId]="workspaceId"
+        (formValid)="alterFormStatus($event)"></kmeans-input>
     </div>
   </div>
 
@@ -15,8 +21,7 @@
   </ng-template>
 
   <div>
-    <button mat-raised-button color="accent" type="submit" [disabled]="!formIsValid"
-      (click)="startAnalysis()">Run
+    <button mat-raised-button color="accent" type="submit" [disabled]="!formIsValid" (click)="startAnalysis()">Run
     </button>
   </div>
 </div>

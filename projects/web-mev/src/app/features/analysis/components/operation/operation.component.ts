@@ -484,11 +484,7 @@ export class OperationComponent implements OnChanges {
 
     if (this.operation.name === 'K-means') {
       this.handleKMeansOperations(inputs)
-    } 
-    // else if (this.operation.name === 'Likelihood ratio test') {
-    //   // this.handleLRTOperations(inputs)
-    // } 
-    else {
+    } else {
       this.apiService
         .executeOperation(this.operation.id, this.workspaceId, inputs)
         .subscribe(data => {

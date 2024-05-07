@@ -18,6 +18,7 @@ import { DefaultOperationComponent } from './components/default-operation-inputs
 import { DifferentialExpressionInputComponent } from './components/differential-expression-input/differential-expression-input.component';
 import { KmeansInputComponent } from './components/kmeans-input/kmeans-input.component';
 import { CombatseqInputComponent } from './components/combatseq-input/combatseq-input.component';
+import { SnfInputComponent } from './components/snf-input/snf-input.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { CombatseqInputComponent } from './components/combatseq-input/combatseq-
     DefaultOperationComponent,
     DifferentialExpressionInputComponent,
     KmeansInputComponent,
-    CombatseqInputComponent
+    CombatseqInputComponent,
+    SnfInputComponent
   ],
   exports: [
     OperationComponent,

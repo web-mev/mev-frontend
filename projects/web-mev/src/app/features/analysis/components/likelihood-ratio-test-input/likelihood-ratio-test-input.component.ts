@@ -6,28 +6,11 @@ import {
     EventEmitter,
     Input
 } from '@angular/core';
-import { FormGroup, Validators, FormBuilder, AbstractControl, AbstractControlOptions, ValidationErrors, ValidatorFn, AsyncValidatorFn } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder, AbstractControlOptions } from '@angular/forms';
 import { AnalysesService } from '../../services/analysis.service';
 import { BaseOperationInput } from '../base-operation-inputs/base-operation-inputs';
-import { MetadataService } from '@app/core/metadata/metadata.service';
-import { CompatibleObsSetService } from '../../services/compatible_obs_set.service';
-import { FileService } from '@file-manager/services/file-manager.service';
-
-
-const observationSetsValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const mtx_ctrl = control.get('input_matrix');
-    const obs_set_ctrl = control.get('samples');
-    const num_clusters_ctrl = control.get('num_clusters');
-    console.log("num_clusters_ctrl: ", num_clusters_ctrl)
-    const obs_set = obs_set_ctrl.value;
-    if (obs_set) {
-        mtx_ctrl.setErrors(null);
-        mtx_ctrl.markAsTouched();
-        num_clusters_ctrl.setErrors(null);
-        num_clusters_ctrl.markAsTouched();
-    }
-    return null;
-}
+import { HttpClient } from '@angular/common/http';
+import { environment } from '@environments/environment';
 
 
 @Component({
@@ -44,6 +27,7 @@ export class LikelihoodRatioTestInputComponent extends BaseOperationInput implem
     @Input() operationData: any;
     @Input() workspaceId: string;
     @Output() formValid: EventEmitter<any> = new EventEmitter<any>();
+    private readonly API_URL = environment.apiUrl;
 
     inputMatrixField;
     numClustersField;
@@ -52,16 +36,18 @@ export class LikelihoodRatioTestInputComponent extends BaseOperationInput implem
     obsSetField;
     featureSetField;
     matrixSamples = [];
+    textFields = [];
+    covariateValues = []
+    covariateDetails = {}
 
     constructor(
         private apiService: AnalysesService,
         private formBuilder: FormBuilder,
-        private metadataService: MetadataService,
-        private obsSetService: CompatibleObsSetService,
-        private fileService: FileService
+        private httpClient: HttpClient,
     ) {
         super();
     }
+
     ngOnChanges(): void {
         if (this.operationData) {
             this.createForm();
@@ -75,153 +61,84 @@ export class LikelihoodRatioTestInputComponent extends BaseOperationInput implem
 
     createForm() {
         const controlsConfig = {};
-        let input;
-
-        // the job name field:
         controlsConfig['job_name'] = ['', [Validators.required]];
 
-        // the selection for the raw counts:
-        let key = "raw_counts"
-        input = this.operationData.inputs[key];
-        console.log("operation data: ", this.operationData)
+        let key_counts = "raw_counts"
+        let input_counts = this.operationData.inputs[key_counts];
 
-        this.inputMatrixField = {
-            key: key,
-            name: input.name,
-            resource_types: input.spec.resource_types,
-            desc: input.description,
-            required: input.required,
+        let inputField_counts = {
+
+            key: key_counts,
+            name: input_counts.name,
+            resource_types: input_counts.spec.resource_types,
+            desc: input_counts.description,
+            required: input_counts.required,
             files: [],
             selectedFiles: []
         };
+        this.matrixSamples.push(inputField_counts)
 
         this.apiService
             .getWorkspaceResourcesByParam(
-                input.spec.resource_types,
+                input_counts.spec.resource_types,
                 this.workspaceId
             )
             .subscribe(data => {
-                this.inputMatrixField.files = data;
+                inputField_counts.files = data;
             });
 
         const configResourceField = [
             '',
             []
         ];
-        controlsConfig[key] = configResourceField;
+        controlsConfig['raw_counts'] = configResourceField;
 
-        key = 'num_clusters';
-        input = this.operationData.inputs[key];
-        this.numClustersField = {
-            key: key,
-            name: input.name,
-            min: 1,
-            desc: input.description,
-            required: input.required
+        let key_ann = "annotations"
+        let input_ann = this.operationData.inputs[key_ann];
+        let inputField_ann = {
+            key: key_ann,
+            name: input_ann.name,
+            resource_types: input_ann.spec.resource_types,
+            desc: input_ann.description,
+            required: input_ann.required,
+            files: [],
+            selectedFiles: []
         };
+        this.matrixSamples.push(inputField_ann)
 
-        console.log("numClustersField: ", this.numClustersField)
-
-        const configNumClustersField = [
-            input.spec.default_value,
-            [
-                ...(input.required ? [Validators.required] : []),
-                Validators.min(2),
-                Validators.pattern(/^[1-9]\d*$/)
-            ]
-        ];
-        controlsConfig[key] = configNumClustersField;
-
-        console.log("controlsconfig: ", controlsConfig)
-
-        key = 'num_iter';
-        input = this.operationData.inputs[key];
-        this.numIterField = {
-            key: key,
-            name: input.name,
-            min: 1,
-            desc: input.description,
-            required: input.required
-        };
-
-        const configNumIterField = [
-            input.spec.default_value,
-            [
-                ...(input.required ? [Validators.required] : []),
-                Validators.min(100),
-                Validators.pattern(/^[1-9]\d*$/)
-            ]
-        ];
-        controlsConfig[key] = configNumIterField;
-
-        key = 'dimension';
-        input = this.operationData.inputs[key];
-        this.dimensionField = {
-            key: key,
-            name: input.name,
-            desc: input.description,
-            required: input.required,
-            options: input.spec.options,
-            selectedOptions: []
-        };
-        const configDimensionField = [
-            input.spec.default_value,
-            [...(input.required ? [Validators.required] : [])]
-        ];
-        controlsConfig[key] = configDimensionField;
-
-        const availableObsSets = this.metadataService.getCustomObservationSets().map(set => {
-            const newSet = set.elements.map(elem => {
-                const o = { id: elem.id };
-                return o;
+        this.apiService
+            .getWorkspaceResourcesByParam(
+                input_ann.spec.resource_type,
+                this.workspaceId
+            )
+            .subscribe(data => {
+                inputField_ann.files = data;
             });
-            return { ...set, elements: newSet };
-        });
-        key = 'samples'
-        input = this.operationData.inputs[key];
-        this.obsSetField = {
-            key: key,
-            name: input.name,
-            desc: input.description,
-            required: input.required,
-            sets: availableObsSets
-        };
-        const configObsSetsField = [
-            undefined,
-            [...(input.required ? [Validators.required] : [])]
-        ];
-        controlsConfig[key] = configObsSetsField;
 
-        const availableFeatureSets = this.metadataService.getCustomFeatureSets().map(set => {
-            const newSet = set.elements.map(elem => {
-                const o = { id: elem.id };
-                return o;
-            });
-            return { ...set, elements: newSet };
-        });
-        key = 'features'
-        input = this.operationData.inputs[key];
-        this.featureSetField = {
-            key: key,
-            name: input.name,
-            desc: input.description,
-            required: input.required,
-            sets: availableFeatureSets
-        };
-        const configFeatureSetsField = [
-            undefined,
-            [...(input.required ? [Validators.required] : [])]
+        const configResourceField2 = [
+            '',
+            []
         ];
-        controlsConfig[key] = configFeatureSetsField;
+        controlsConfig['annotations'] = configResourceField2;
+
+        let key_cov = 'covariate';
+        let input_cov = this.operationData.inputs[key_cov];
+        const textField = {
+            key: key_cov,
+            name: input_cov.name,
+            desc: input_cov.description,
+            required: input_cov.required
+        };
+        this.textFields.push(textField);
+        this.covariateDetails = textField
+        controlsConfig[key_cov] = [];
 
         this.analysesForm = this.formBuilder.group(controlsConfig,
             {
-                validators: [observationSetsValidator],
-                asyncValidators: [this.obsSetService.validate_for_single_obs_set()],
+                validators: [],
+                asyncValidators: [],
                 updateOn: 'change'
             } as AbstractControlOptions);
-
-        console.log("analyses form: ", this.analysesForm)
     }
 
     getInputData(): any {
@@ -237,6 +154,21 @@ export class LikelihoodRatioTestInputComponent extends BaseOperationInput implem
 
     onSubmit() {
         this.submitted = true;
+    }
+
+    selectionChangeLRT() {
+        let uuid = this.analysesForm.value['annotations'];
+        let query = `${this.API_URL}/resources/${uuid}/contents/preview/`;
+
+        this.httpClient.get(query).subscribe(res => {
+            let obj = res[0]['values'];
+            for (let key in obj) {
+                let temp = {
+                    name: key
+                }
+                this.covariateValues.push(temp);
+            }
+        })
     }
 
 }

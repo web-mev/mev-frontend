@@ -54,6 +54,10 @@
                 The chosen sets cannot share samples. The following were
                 the same: {{analysesForm.errors?.['intersection']}}
             </mat-error>
+            <mat-error *ngIf="f[ctrlObsSetField.key].errors?.tooFewSamples">
+                The chosen set has too few samples. To perform differential expression, we
+                need a minimum of two samples.
+            </mat-error>
         </mat-form-field>
 
         <div class="label">
@@ -74,6 +78,10 @@
             <mat-error *ngIf="f[experimentalObsSetField.key].errors?.intersection">
                 The chosen sets cannot share samples. The following were
                 the same: {{analysesForm.errors?.['intersection']}}
+            </mat-error>
+            <mat-error *ngIf="f[experimentalObsSetField.key].errors?.tooFewSamples">
+                The chosen set has too few samples. To perform differential expression, we
+                need a minimum of two samples.
             </mat-error>
         </mat-form-field>
     </div>

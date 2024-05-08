@@ -14,7 +14,7 @@ import { BaseOperationInput } from '../base-operation-inputs/base-operation-inpu
 import { CompatibleObsSetService } from '../../services/compatible_obs_set.service';
 
 
-// checks that the chosen observation sets are 1) not the same and 2) have no intersection
+// checks that the chosen observation sets are 1) not the same, 2) have no intersection, and 3)  have at least two elements
 const intersectingObservationSetsValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const exp_mtx_ctrl = control.get('raw_counts');
     const obs_set_1_ctrl = control.get('base_condition_samples');
@@ -40,6 +40,20 @@ const intersectingObservationSetsValidator: ValidatorFn = (control: AbstractCont
         const v2 = obs_set_2.elements.map(item => {
             return item.id;
         })
+
+        let tooFewSamples = false;
+        if(v1.length < 2){
+            obs_set_1_ctrl.setErrors({tooFewSamples: true});
+            tooFewSamples = true;
+        }
+        if(v2.length < 2){
+            obs_set_2_ctrl.setErrors({tooFewSamples: true});
+            tooFewSamples = true;
+        }
+        if(tooFewSamples){
+            return {tooFewSamples: true}
+        }
+
         const elements_1 = new Set(v1);
         const elements_2 = new Set(v2);
         let intersection = [];
@@ -96,6 +110,7 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
     baseConditionNameField;
     experimentalConditionNameField;
     rawCountsSamples = [];
+    availableObsSets = [];
 
     constructor(
         private formBuilder: FormBuilder,
@@ -165,7 +180,7 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
         // a non-null intersection.
 
         // get all the available obs sets
-        const availableObsSets = this.metadataService.getCustomObservationSets().map(set => {
+        this.availableObsSets = this.metadataService.getCustomObservationSets().map(set => {
             const newSet = set.elements.map(elem => {
                 const o = { id: elem.id };
                 return o;
@@ -179,7 +194,7 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
             name: input.name,
             desc: input.description,
             required: input.required,
-            sets: availableObsSets
+            sets: this.availableObsSets
         };
         const configBaseObservationSetsField = [
             undefined,
@@ -194,7 +209,7 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
             name: input.name,
             desc: input.description,
             required: input.required,
-            sets: availableObsSets
+            sets: this.availableObsSets
         };
         const configExpObservationSetsField = [
             undefined,
@@ -240,15 +255,32 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
 
         this.analysesForm.get('experimental_condition_samples').valueChanges.subscribe(
             (val) => {
-                this.analysesForm.get('experimental_condition_name').setValue(val.name);
+                // since an obs set has been chosen, remove it from the other
+                let obsSetName = val.name;
+                let obsSetArr = this.handleObsSetSelection(obsSetName)
+                this.ctrlObsSetField.sets = obsSetArr;
+                this.analysesForm.get('experimental_condition_name').setValue(obsSetName);
             }
         );
 
         this.analysesForm.get('base_condition_samples').valueChanges.subscribe(
             (val) => {
-                this.analysesForm.get('base_condition_name').setValue(val.name);
+                let obsSetName = val.name;
+                let obsSetArr = this.handleObsSetSelection(obsSetName)
+                this.experimentalObsSetField.sets = obsSetArr;
+                this.analysesForm.get('base_condition_name').setValue(obsSetName);
             }
         );
+    }
+
+    handleObsSetSelection(obsSetName) {
+        let obsSetArr = [...this.availableObsSets]; //copy so we don't lose track of the universe of sets
+        let setNames = obsSetArr.map((x) => x.name);
+        let index = setNames.indexOf(obsSetName);
+        if (index > -1) {
+            obsSetArr.splice(index, 1);
+        }
+        return obsSetArr;
     }
 
     /**

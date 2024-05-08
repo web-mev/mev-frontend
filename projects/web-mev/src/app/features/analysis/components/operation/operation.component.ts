@@ -482,9 +482,9 @@ export class OperationComponent implements OnChanges {
     let inputs = this.convertToFloatObj(this.analysesForm.value);
     inputs = this.handleResourceMultiSelect(inputs);
 
-    if (this.operation.name === 'K-means') {
-      this.handleKMeansOperations(inputs)
-    } else {
+    // if (this.operation.name === 'K-means') {
+    //   this.handleKMeansOperations(inputs)
+    // } else {
       this.apiService
         .executeOperation(this.operation.id, this.workspaceId, inputs)
         .subscribe(data => {
@@ -508,65 +508,65 @@ export class OperationComponent implements OnChanges {
             }
             this.notificationService.error(err_msg);
           });
-    }
+    // }
   }
 
-  handleKMeansOperations(inputs) {
-    let uuid = inputs['input_matrix'];
-    let query = `${this.API_URL}/resources/${uuid}/contents/preview/`;
-    let sampleLength = 0;
+  // handleKMeansOperations(inputs) {
+  //   let uuid = inputs['input_matrix'];
+  //   let query = `${this.API_URL}/resources/${uuid}/contents/preview/`;
+  //   let sampleLength = 0;
 
-    this.httpClient.get(query).subscribe(res => {
-      sampleLength = Object.keys(res).length
+  //   this.httpClient.get(query).subscribe(res => {
+  //     sampleLength = Object.keys(res).length
 
-      if (inputs['dimension'] === 'Samples/observations' && ((Number.isNaN(inputs['samples']) && inputs['num_clusters'] >= sampleLength) || (!Number.isNaN(inputs['samples']) && inputs['num_clusters'] >= inputs['samples']['elements'].length))) {
-        let sampleNumber = Number.isNaN(inputs['samples']) ? sampleLength : inputs['samples']['elements'].length;
-        let err_msg = `You are attempting to cluster ${sampleNumber} items into ${inputs['num_clusters']} clusters. The number of samples should be greater than the number of clusters. Otherwise, each item would just cluster by itself.`;
-        this.notificationService.error(err_msg);
-      } else {
-        this.apiService
-          .executeOperation(this.operation.id, this.workspaceId, inputs)
-          .subscribe(data => {
-            this.executedOperationId.emit(data.executed_operation_id);
-          },
-            error => {
-              // One of the inputs was invalid-- parse the error and combine
-              // with the input information to give a reasonable description of the error
+  //     if (inputs['dimension'] === 'Samples/observations' && ((Number.isNaN(inputs['samples']) && inputs['num_clusters'] >= sampleLength) || (!Number.isNaN(inputs['samples']) && inputs['num_clusters'] >= inputs['samples']['elements'].length))) {
+  //       let sampleNumber = Number.isNaN(inputs['samples']) ? sampleLength : inputs['samples']['elements'].length;
+  //       let err_msg = `You are attempting to cluster ${sampleNumber} items into ${inputs['num_clusters']} clusters. The number of samples should be greater than the number of clusters. Otherwise, each item would just cluster by itself.`;
+  //       this.notificationService.error(err_msg);
+  //     } else {
+  //       this.apiService
+  //         .executeOperation(this.operation.id, this.workspaceId, inputs)
+  //         .subscribe(data => {
+  //           this.executedOperationId.emit(data.executed_operation_id);
+  //         },
+  //           error => {
+  //             // One of the inputs was invalid-- parse the error and combine
+  //             // with the input information to give a reasonable description of the error
 
-              // This lets us tie the particular error to a "human-readable" input field.
-              // Otherwise the error text would be a bit cryptic for the end user.
-              let op_inputs = this.operation.inputs;
-              let err_obj = error.error;
-              let input_errors = err_obj.inputs;
-              let err_msg = '';
-              for (let input_key of Object.keys(input_errors)) {
-                let s = input_errors[input_key];
-                let field_name = op_inputs[input_key].name;
-                err_msg += `${field_name} ${s}`;
-                err_msg += '\n'
-              }
-              this.notificationService.error(err_msg);
-            });
-      }
-    }),
-      error => {
-        console.log("error: ", error)
-      }
-  }
+  //             // This lets us tie the particular error to a "human-readable" input field.
+  //             // Otherwise the error text would be a bit cryptic for the end user.
+  //             let op_inputs = this.operation.inputs;
+  //             let err_obj = error.error;
+  //             let input_errors = err_obj.inputs;
+  //             let err_msg = '';
+  //             for (let input_key of Object.keys(input_errors)) {
+  //               let s = input_errors[input_key];
+  //               let field_name = op_inputs[input_key].name;
+  //               err_msg += `${field_name} ${s}`;
+  //               err_msg += '\n'
+  //             }
+  //             this.notificationService.error(err_msg);
+  //           });
+  //     }
+  //   }),
+  //     error => {
+  //       console.log("error: ", error)
+  //     }
+  // }
 
-  selectionChangeLRT(){
-    let inputs = this.convertToFloatObj(this.analysesForm.value);
-    inputs = this.handleResourceMultiSelect(inputs);
+  // selectionChangeLRT(){
+  //   let inputs = this.convertToFloatObj(this.analysesForm.value);
+  //   inputs = this.handleResourceMultiSelect(inputs);
 
-    let uuid = inputs['annotations'];
-    let query = `${this.API_URL}/resources/${uuid}/contents/preview/`;
+  //   let uuid = inputs['annotations'];
+  //   let query = `${this.API_URL}/resources/${uuid}/contents/preview/`;
 
-    this.httpClient.get(query).subscribe(res => {
-      this.analysesForm.patchValue({
-        covariate: Object.keys(res[0].values)[0]
-      });
-    })    
-  }
+  //   this.httpClient.get(query).subscribe(res => {
+  //     this.analysesForm.patchValue({
+  //       covariate: Object.keys(res[0].values)[0]
+  //     });
+  //   })    
+  // }
 
   /**
    * Function is triggered when the user clicks the Show button

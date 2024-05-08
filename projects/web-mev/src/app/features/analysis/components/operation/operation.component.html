@@ -26,7 +26,7 @@
         </mat-icon>
       </div>
       <mat-form-field class="form-control" color="accent">
-        <mat-select [formControlName]="resourceField.key" (selectionChange)="operation.name === 'Likelihood ratio test' && resourceField.name === 'Annotations:' ? selectionChangeLRT() : null">
+        <mat-select [formControlName]="resourceField.key">
           <mat-option *ngFor="let file of resourceField.files" [value]="file.id">
             {{ file.name }}
           </mat-option>

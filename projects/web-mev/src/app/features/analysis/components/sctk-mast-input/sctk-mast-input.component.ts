@@ -30,13 +30,13 @@ const observationSetsValidator: ValidatorFn = (control: AbstractControl): Valida
 
 
 @Component({
-    selector: 'kmeans-input',
-    templateUrl: './kmeans-input.component.html',
-    styleUrls: ['./kmeans-input.component.scss'],
-    providers: [{ provide: BaseOperationInput, useExisting: KmeansInputComponent }],
+    selector: 'sctk-mast-input',
+    templateUrl: './sctk-mast-input.component.html',
+    styleUrls: ['./sctk-mast-input.component.scss'],
+    providers: [{ provide: BaseOperationInput, useExisting: SCTKMastInputComponent }],
     changeDetection: ChangeDetectionStrategy.Default
 })
-export class KmeansInputComponent extends BaseOperationInput implements OnChanges {
+export class SCTKMastInputComponent extends BaseOperationInput implements OnChanges {
     analysesForm: FormGroup;
     submitted = false;
 

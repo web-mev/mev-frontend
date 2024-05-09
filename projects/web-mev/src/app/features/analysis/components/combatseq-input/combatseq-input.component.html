@@ -63,4 +63,27 @@
             </mat-select>
         </mat-form-field>
     </div>
+
+    <div class="form-control form-control--multiselect">
+        <div class="label">
+          {{ otherCovarsChoiceField.name }}
+          <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+            matTooltip="{{ otherCovarsChoiceField.desc}}" aria-label="Info tooltip about the field">info
+          </mat-icon>
+        </div>
+        <angular2-multiselect [formControlName]="otherCovarsChoiceField.key" [data]="otherCovarsChoiceField.options"
+          [(ngModel)]="otherCovarsChoiceField.selectedOptions" [settings]="multipleResourcesDropdownSettings">
+          <c-item>
+            <ng-template let-item="item">
+              <label>{{ item.name }}</label>
+            </ng-template>
+          </c-item>
+          <c-badge>
+            <ng-template let-item="item">
+              <label>{{ item.name }}</label>
+            </ng-template>
+          </c-badge>
+        </angular2-multiselect>
+      </div>
+
 </form>

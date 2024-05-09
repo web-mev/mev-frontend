@@ -30,7 +30,12 @@ export class CombatseqInputComponent extends BaseOperationInput implements OnCha
     inputMatrixField;
     annField;
     batchChoiceField;
+    otherCovarsChoiceField;
+
     batchVariableChoiceOptions = [];
+    allCovarChoiceOptions = [];
+
+    multipleResourcesDropdownSettings = {};
 
     constructor(
         private apiService: AnalysesService,
@@ -38,6 +43,13 @@ export class CombatseqInputComponent extends BaseOperationInput implements OnCha
         private fileService: FileService
     ) {
         super();
+        this.multipleResourcesDropdownSettings = {
+            text: '',
+            selectAllText: 'Select All',
+            unSelectAllText: 'Unselect All',
+            classes: 'resource-dropdown',
+            tagToBody: false
+        };
     }
     ngOnChanges(): void {
         if (this.operationData) {
@@ -51,7 +63,6 @@ export class CombatseqInputComponent extends BaseOperationInput implements OnCha
     }
 
     createForm() {
-        console.log('in createform', this.operationData)
         const controlsConfig = {};
         let input;
 
@@ -61,7 +72,6 @@ export class CombatseqInputComponent extends BaseOperationInput implements OnCha
         // the selection for the raw counts:
         let key = "raw_counts"
         input = this.operationData.inputs[key];
-        console.log('raw counts input: ',input)
         this.inputMatrixField = {
             key: key,
             name: input.name,
@@ -115,10 +125,11 @@ export class CombatseqInputComponent extends BaseOperationInput implements OnCha
         controlsConfig[key] = configAnnField;
 
         key = 'batch_variable_choice';
+        input = this.operationData.inputs[key];
         this.batchChoiceField = {
             key: key,
-            name: 'Batching variable:',
-            desc: 'The variable (found in the selected annotation file) which is used to indicate the batch for each sample.',
+            name: input.name,
+            desc: input.description
         };
         const configBatchChoiceField = [
             '',
@@ -126,24 +137,63 @@ export class CombatseqInputComponent extends BaseOperationInput implements OnCha
         ];
         controlsConfig[key] = configBatchChoiceField;
 
+        key = 'other_covariates'
+        //input = this.operationData.inputs[key];
+        this.otherCovarsChoiceField = {
+            key: key,
+            name: 'other covars',
+            desc: 'something',
+            options: [],
+            selectedOptions: []
+        };
+        const configOtherCovarsChoiceField = [
+            null,
+            []
+        ];
+        controlsConfig[key] = configOtherCovarsChoiceField;
+
         this.analysesForm = this.formBuilder.group(controlsConfig);
 
         this.analysesForm.get('annotations').valueChanges.subscribe(
             (val) => {
                 // if this is not reset, then any prior-selected value can persist.
                 this.analysesForm.get('batch_variable_choice').setValue('');
+
                 this.fileService.getFilePreview(val).subscribe(
                     (data) => {
                         const available_columns = Object.keys(data[0].values);
+                        let items = [];
+                        for(let c in available_columns){
+                            items.push({'id': c, 'name': available_columns[c]});
+                        }
                         this.batchVariableChoiceOptions = available_columns;
+                        this.allCovarChoiceOptions = items;
+                        this.otherCovarsChoiceField.options = items;
                     }
                 );
+            }
+        );
+
+        this.analysesForm.get('batch_variable_choice').valueChanges.subscribe(
+            (val) => {
+                let xxx = [...this.allCovarChoiceOptions]
+                let name_list = xxx.map((x) => x.name);
+                let idx = name_list.indexOf(val);
+                if (idx > -1) {
+                    xxx.splice(idx, 1);
+                }
+                this.otherCovarsChoiceField.options = [...xxx];
             }
         );
     }
 
     getInputData(): any {
-        return this.analysesForm.value;
+        // the 'other_covariates' is an array of objects. We only need
+        // the string 'name' part:
+        let inputs = this.analysesForm.value;
+        let other_covariates = inputs['other_covariates'].map((item) => item.name);
+        inputs['other_covariates'] = other_covariates
+        return inputs;
     }
 
     /**

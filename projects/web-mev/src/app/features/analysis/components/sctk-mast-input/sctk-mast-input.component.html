@@ -1,6 +1,4 @@
 <form *ngIf="analysesForm" [formGroup]="analysesForm" (ngSubmit)="onSubmit()">
-
-    <!-- OPERATION NAME -->
     <ng-container *ngIf="operationData.mode !== 'client'">
         <div class="label">
             Operation name: <span class="redAsterisk">* </span>
@@ -12,20 +10,22 @@
             <input matInput formControlName="job_name" name="job_name">
         </mat-form-field>
     </ng-container>
+
     <div>
         <div class="label">
-            {{ inputMatrixField.name }} <span class="redAsterisk">* </span>
+            {{ countMatrixField.name }}
+            <span *ngIf="countMatrixField.required" class="redAsterisk">* </span>
             <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-                matTooltip="{{ inputMatrixField.desc}}" aria-label="Info tooltip about the field">info
+                matTooltip="{{ countMatrixField.desc}}" aria-label="Info tooltip about the field">info
             </mat-icon>
         </div>
         <mat-form-field class="form-control" color="accent">
-            <mat-select [formControlName]="inputMatrixField.key">
-                <mat-option *ngFor="let file of inputMatrixField.files" [value]="file.id">
+            <mat-select [formControlName]="countMatrixField.key">
+                <mat-option *ngFor="let file of countMatrixField.files" [value]="file.id">
                     {{ file.name }}
                 </mat-option>
             </mat-select>
-            <mat-error *ngIf="f[inputMatrixField.key].errors?.required">
+            <mat-error *ngIf="f[countMatrixField.key].errors?.required">
                 This field is required
             </mat-error>
             <mat-error *ngIf="analysesForm.errors?.badSample">
@@ -35,45 +35,53 @@
         </mat-form-field>
     </div>
 
+    <div class="label">Analysis Type: <span class="redAsterisk">* </span></div>
+    <br>
+    <mat-button-toggle-group formControlName="analysisType" (change)="analysisTypeChange()">
+        <mat-button-toggle value="direct_comparison">Direct comparison</mat-button-toggle>
+        <mat-button-toggle value="biomarker_detection">Biomarker detection</mat-button-toggle>
+    </mat-button-toggle-group>
+    <br>
+    <br>
+    <br>
+
     <div class="label">
-        {{ numClustersField.name }} <span class="redAsterisk">* </span>
+        {{ expGroupNameField.name }}
+        <span *ngIf="expGroupNameField.required" class="redAsterisk">* </span>
         <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-            matTooltip="{{ numClustersField.desc}}" aria-label="Info tooltip about the field">info
+            matTooltip="{{ expGroupNameField.desc}}" aria-label="Info tooltip about the field">info
         </mat-icon>
     </div>
     <mat-form-field class="form-control" color="accent">
-        <input matInput [formControlName]="numClustersField.key" [name]="numClustersField.key">
-        <div *ngIf="f[numClustersField.key].value && f[numClustersField.key].errors">
-            <mat-error *ngIf="f[numClustersField.key].errors.required">
-                This field is required
-            </mat-error>
-            <mat-error *ngIf="f[numClustersField.key].errors.pattern">
-                The value should be an integer.
-            </mat-error>
-            <mat-error *ngIf="f[numClustersField.key].errors.min">
-                The value should be an integer greater than or equal to {{ numClustersField.min }}
-            </mat-error>
-            <mat-error *ngIf="f[numClustersField.key].errors?.bad_cluster_num">
-                The number of clusters must be less than the number of samples.
+        <input matInput [formControlName]="expGroupNameField.key" [name]="expGroupNameField.key">
+        <div *ngIf="f[expGroupNameField.key].value === '' && f[expGroupNameField.key].errors">
+            <mat-error *ngIf="f[expGroupNameField.key].errors.required">
+                This field is required.
             </mat-error>
         </div>
     </mat-form-field>
-    <div class="label">
-        {{ dimensionField.name }} <span class="redAsterisk">* </span>
-        <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-            matTooltip="{{ dimensionField.desc}}" aria-label="Info tooltip about the field">info
-        </mat-icon>
+    <!-- <div *ngIf="analysesForm.get('analysisType').value === 'direct_comparison'"> -->
+    <div [hidden]="analysesForm.get('analysisType').value !== 'direct_comparison'" >
+        <div class="label">
+            {{ baseGroupNameField.name }}
+            <span *ngIf="baseGroupNameField.required" class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="{{ baseGroupNameField.desc}}" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <input matInput [formControlName]="baseGroupNameField.key" [name]="baseGroupNameField.key">
+            <div *ngIf="f[baseGroupNameField.key].value === '' && f[baseGroupNameField.key].errors">
+                <mat-error *ngIf="f[baseGroupNameField.key].errors.required">
+                    This field is required.
+                </mat-error>
+            </div>
+        </mat-form-field>
     </div>
-    <mat-form-field class="form-control" color="accent">
-        <mat-select [formControlName]="dimensionField.key">
-            <mat-option *ngFor="let option of dimensionField.options" [value]="option">
-                {{ option }}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
 
     <div class="label">
         {{ obsSetField.name }}
+        <span *ngIf="obsSetField.required" class="redAsterisk">* </span>
         <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
             matTooltip="{{ obsSetField.desc}}" aria-label="Info tooltip about the field">info
         </mat-icon>
@@ -85,41 +93,20 @@
             </mat-option>
         </mat-select>
     </mat-form-field>
-
-    <div class="label">
-        {{ featureSetField.name }}
-        <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-            matTooltip="{{ featureSetField.desc}}" aria-label="Info tooltip about the field">info
-        </mat-icon>
-    </div>
-    <mat-form-field class="form-control" color="accent">
-        <mat-select [formControlName]="featureSetField.key">
-            <mat-option *ngFor="let set of featureSetField.sets" [value]="set">
-                {{ set.name }}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
-
-    <div class="label">
-        {{ numIterField.name }}
-        <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-            matTooltip="{{ numIterField.desc}}" aria-label="Info tooltip about the field">info
-        </mat-icon>
-    </div>
-    <mat-form-field class="form-control" color="accent">
-        <input matInput [formControlName]="numIterField.key" [name]="numIterField.key">
-        <div *ngIf="f[numIterField.key].value && f[numIterField.key].errors">
-            <mat-error *ngIf="f[numIterField.key].errors.required">
-                This field is required
-            </mat-error>
-            <mat-error *ngIf="f[numIterField.key].errors.pattern">
-                The value should be an integer.
-            </mat-error>
-            <mat-error *ngIf="f[numIterField.key].errors.min">
-                The value should be an integer greater than or equal to {{ numIterField.min }}
-            </mat-error>
+    <div *ngIf="analysesForm.get('analysisType').value === 'direct_comparison'">
+        <div class="label">
+            {{ obsSetField2.name }}
+            <span *ngIf="obsSetField2.required" class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="{{ obsSetField2.desc}}" aria-label="Info tooltip about the field">info
+            </mat-icon>
         </div>
-    </mat-form-field>
-
-
+        <mat-form-field class="form-control" color="accent">
+            <mat-select [formControlName]="obsSetField2.key">
+                <mat-option *ngFor="let set of obsSetField2.sets" [value]="set">
+                    {{ set.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
 </form>

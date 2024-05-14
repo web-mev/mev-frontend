@@ -17,6 +17,11 @@
       <likelihood-ratio-test-input [operationData]="operationData" [workspaceId]="workspaceId"
         (formValid)="alterFormStatus($event)"></likelihood-ratio-test-input>
     </div>
+
+    <div *ngIf="operationData.name === 'MAST Single-cell differential expression'">
+      <sctk-mast-input [operationData]="operationData" [workspaceId]="workspaceId"
+        (formValid)="alterFormStatus($event)"></sctk-mast-input>
+    </div>
   </div>
 
   <ng-template #defaultBlock>

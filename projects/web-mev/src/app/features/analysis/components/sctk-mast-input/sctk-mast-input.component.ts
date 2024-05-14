@@ -1,11 +1,4 @@
-import {
-    Component,
-    ChangeDetectionStrategy,
-    OnChanges,
-    Output,
-    EventEmitter,
-    Input
-} from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnChanges, Output, EventEmitter, Input } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, AbstractControl, AbstractControlOptions, ValidationErrors, ValidatorFn, AsyncValidatorFn } from '@angular/forms';
 import { AnalysesService } from '../../services/analysis.service';
 import { BaseOperationInput } from '../base-operation-inputs/base-operation-inputs';
@@ -15,15 +8,36 @@ import { FileService } from '@file-manager/services/file-manager.service';
 
 
 const observationSetsValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const mtx_ctrl = control.get('input_matrix');
-    const obs_set_ctrl = control.get('samples');
-    const num_clusters_ctrl = control.get('num_clusters');
+    const raw_counts_ctrl = control.get('raw_counts');
+    const obs_set_ctrl = control.get('expSamples');
+    const obs_set_ctrl2 = control.get('baseSamples');
+    const expGroupName_ctrl = control.get('expGroupName');
+    const baseGroupName_ctrl = control.get('baseGroupName');
+    const obs_set = obs_set_ctrl.value;
+    const obs_set2 = obs_set_ctrl2.value;
+    if (obs_set) {
+        raw_counts_ctrl.setErrors(null);
+        raw_counts_ctrl.markAsTouched();
+        expGroupName_ctrl.setErrors(expGroupName_ctrl.errors);
+        expGroupName_ctrl.markAsTouched();
+    }
+    if (obs_set2) {
+        baseGroupName_ctrl.setErrors(baseGroupName_ctrl.errors);
+        baseGroupName_ctrl.markAsTouched();
+    }
+    return null;
+}
+
+const observationSetsValidatorBiomarker: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    const raw_counts_ctrl = control.get('raw_counts');
+    const obs_set_ctrl = control.get('expSamples');
+    const expGroupName_ctrl = control.get('expGroupName');
     const obs_set = obs_set_ctrl.value;
     if (obs_set) {
-        mtx_ctrl.setErrors(null);
-        mtx_ctrl.markAsTouched();
-        num_clusters_ctrl.setErrors(null);
-        num_clusters_ctrl.markAsTouched();
+        raw_counts_ctrl.setErrors(null);
+        raw_counts_ctrl.markAsTouched();
+        expGroupName_ctrl.setErrors(expGroupName_ctrl.errors);
+        expGroupName_ctrl.markAsTouched();
     }
     return null;
 }
@@ -38,33 +52,39 @@ const observationSetsValidator: ValidatorFn = (control: AbstractControl): Valida
 })
 export class SCTKMastInputComponent extends BaseOperationInput implements OnChanges {
     analysesForm: FormGroup;
+    analysesForm2: FormGroup;
     submitted = false;
 
     @Input() operationData: any;
     @Input() workspaceId: string;
     @Output() formValid: EventEmitter<any> = new EventEmitter<any>();
 
-    inputMatrixField;
-    numClustersField;
-    numIterField;
-    dimensionField;
+    countMatrixField;
+    expGroupNameField;
+    baseGroupNameField;
     obsSetField;
-    featureSetField;
+    obsSetField2;
     matrixSamples = [];
+
+    analysisType: string = 'direct_comparison';
+    controlsConfig = {};
+    controlsConfig2 = {};
 
     constructor(
         private apiService: AnalysesService,
         private formBuilder: FormBuilder,
         private metadataService: MetadataService,
-        private obsSetService: CompatibleObsSetService,
-        private fileService: FileService
+        private obsSetService: CompatibleObsSetService
     ) {
         super();
     }
     ngOnChanges(): void {
         if (this.operationData) {
+            // this.controlsConfig = {};
             this.createForm();
-            this.analysesForm.statusChanges.subscribe(() => this.onFormValid());
+            this.analysesForm.statusChanges.subscribe(() => {
+                this.onFormValid()
+            });
         }
     }
 
@@ -73,16 +93,16 @@ export class SCTKMastInputComponent extends BaseOperationInput implements OnChan
     }
 
     createForm() {
-        const controlsConfig = {};
+        let controlsConfigDefault = {};
+        controlsConfigDefault = this.analysisType === 'direct_comparison' ? this.controlsConfig : this.controlsConfig2
         let input;
 
-        // the job name field:
-        controlsConfig['job_name'] = ['', [Validators.required]];
+        controlsConfigDefault['job_name'] = ['', [Validators.required]];
+        controlsConfigDefault['analysisType'] = [this.analysisType, []];
 
-        // the selection for the raw counts:
-        let key = "input_matrix"
+        let key = "raw_counts"
         input = this.operationData.inputs[key];
-        this.inputMatrixField = {
+        this.countMatrixField = {
             key: key,
             name: input.name,
             resource_types: input.spec.resource_types,
@@ -98,18 +118,15 @@ export class SCTKMastInputComponent extends BaseOperationInput implements OnChan
                 this.workspaceId
             )
             .subscribe(data => {
-                this.inputMatrixField.files = data;
+                this.countMatrixField.files = data;
             });
 
-        const configResourceField = [
-            '',
-            []
-        ];
-        controlsConfig[key] = configResourceField;
+        const configResourceField = ['', []];
+        controlsConfigDefault[key] = configResourceField;
 
-        key = 'num_clusters';
+        key = 'expGroupName';
         input = this.operationData.inputs[key];
-        this.numClustersField = {
+        this.expGroupNameField = {
             key: key,
             name: input.name,
             min: 1,
@@ -117,51 +134,37 @@ export class SCTKMastInputComponent extends BaseOperationInput implements OnChan
             required: input.required
         };
 
-        const configNumClustersField = [
+        const configExpGroupNameField = [
             input.spec.default_value,
             [
                 ...(input.required ? [Validators.required] : []),
-                Validators.min(2),
-                Validators.pattern(/^[1-9]\d*$/)
+                Validators.min(1),
             ]
         ];
-        controlsConfig[key] = configNumClustersField;
+        controlsConfigDefault[key] = configExpGroupNameField;
 
-        key = 'num_iter';
+        key = 'baseGroupName';
         input = this.operationData.inputs[key];
-        this.numIterField = {
+        this.baseGroupNameField = {
             key: key,
             name: input.name,
-            min: 1,
+            // min: 1,
             desc: input.description,
-            required: input.required
+            // required: input.required
+            required: false
         };
-
-        const configNumIterField = [
-            input.spec.default_value,
-            [
-                ...(input.required ? [Validators.required] : []),
-                Validators.min(100),
-                Validators.pattern(/^[1-9]\d*$/)
-            ]
+        console.log("base name: ", this.baseGroupNameField, input)
+        const baseGroupDefaultValue = this.analysisType === 'direct_comparison' ? input.spec.default_value : null;
+        const configBaseGroupNameField = [baseGroupDefaultValue,
+            [...(input.required && this.analysisType === 'direct_comparison' ? [Validators.required] : []),
+            // Validators.min(1)
+        ]
         ];
-        controlsConfig[key] = configNumIterField;
-
-        key = 'dimension';
-        input = this.operationData.inputs[key];
-        this.dimensionField = {
-            key: key,
-            name: input.name,
-            desc: input.description,
-            required: input.required,
-            options: input.spec.options,
-            selectedOptions: []
-        };
-        const configDimensionField = [
-            input.spec.default_value,
-            [...(input.required ? [Validators.required] : [])]
-        ];
-        controlsConfig[key] = configDimensionField;
+        // if (this.analysisType === 'direct_comparison') {
+            controlsConfigDefault[key] = configBaseGroupNameField;
+        // }
+        // this.analysesForm.value[key] = ' ';
+        
 
         const availableObsSets = this.metadataService.getCustomObservationSets().map(set => {
             const newSet = set.elements.map(elem => {
@@ -170,7 +173,7 @@ export class SCTKMastInputComponent extends BaseOperationInput implements OnChan
             });
             return { ...set, elements: newSet };
         });
-        key = 'samples'
+        key = 'expSamples'
         input = this.operationData.inputs[key];
         this.obsSetField = {
             key: key,
@@ -183,37 +186,36 @@ export class SCTKMastInputComponent extends BaseOperationInput implements OnChan
             undefined,
             [...(input.required ? [Validators.required] : [])]
         ];
-        controlsConfig[key] = configObsSetsField;
+        controlsConfigDefault[key] = configObsSetsField;
 
-        const availableFeatureSets = this.metadataService.getCustomFeatureSets().map(set => {
-            const newSet = set.elements.map(elem => {
-                const o = { id: elem.id };
-                return o;
-            });
-            return { ...set, elements: newSet };
-        });
-        key = 'features'
+        key = 'baseSamples'
         input = this.operationData.inputs[key];
-        this.featureSetField = {
+        this.obsSetField2 = {
             key: key,
             name: input.name,
             desc: input.description,
-            required: input.required,
-            sets: availableFeatureSets
+            required: this.analysisType === 'direct_comparison' ? input.required : false,
+            sets: availableObsSets
         };
-        const configFeatureSetsField = [
+        const configObsSetsField2 = [
             undefined,
-            [...(input.required ? [Validators.required] : [])]
+            [...(input.required && this.analysisType === 'direct_comparison' ? [Validators.required] : [])]
         ];
-        controlsConfig[key] = configFeatureSetsField;
 
-        this.analysesForm = this.formBuilder.group(controlsConfig,
+        if (this.analysisType === 'direct_comparison') {
+            controlsConfigDefault[key] = configObsSetsField2;
+        }
+
+        console.log("control: ", controlsConfigDefault)
+
+        this.analysesForm = this.formBuilder.group(controlsConfigDefault,
             {
-                validators: [observationSetsValidator],
-                asyncValidators: [this.obsSetService.validate_for_single_obs_set()],
+                validators: this.analysisType === 'direct_comparison' ? [observationSetsValidator] : [observationSetsValidatorBiomarker],
+                asyncValidators: this.analysisType === 'direct_comparison' ? [this.obsSetService.validate_for_sctk_mast('direct_comparison')] : [this.obsSetService.validate_for_sctk_mast('biomarker_detection')],
                 updateOn: 'change'
             } as AbstractControlOptions);
 
+        console.log("analysis form: ", this.analysesForm)
     }
 
     getInputData(): any {
@@ -231,4 +233,12 @@ export class SCTKMastInputComponent extends BaseOperationInput implements OnChan
         this.submitted = true;
     }
 
+
+    analysisTypeChange() {
+        this.analysisType = this.analysesForm.value.analysisType
+        this.createForm();
+        this.analysesForm.statusChanges.subscribe(() => {
+            this.onFormValid()
+        });
+    }
 }

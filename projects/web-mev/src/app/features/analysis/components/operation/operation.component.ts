@@ -44,7 +44,7 @@ export class OperationComponent implements OnChanges {
 
   // a master list of the tools which have a custom implementation (not using the default form generator)
   // These are identified by the operation's name
-  customTools = [...this.differentialExpressionTools, 'K-means', 'Likelihood ratio test'];
+  customTools = [...this.differentialExpressionTools, 'K-means', 'Likelihood ratio test', 'MAST Single-cell differential expression'];
 
   constructor(
     private apiService: AnalysesService,
@@ -76,6 +76,7 @@ export class OperationComponent implements OnChanges {
   }
 
   public alterFormStatus(isValid: boolean) {
+    // console.log("alter form status form is valid: ", this.formIsValid, isValid)
     this.formIsValid = isValid;
   }
 
@@ -98,12 +99,15 @@ export class OperationComponent implements OnChanges {
     let inputs = this.opInput.getInputData();
     inputs = this.convertToFloatObj(inputs);
 
+    console.log("inputs: ", inputs)
+    // inputs.baseGroupName = "anything"
     this.apiService
       .executeOperation(this.operation.id, this.workspaceId, inputs)
       .subscribe(data => {
         this.executedOperationId.emit(data.executed_operation_id);
       },
         error => {
+          console.log("error from startAnalysis: ", error)
           // One of the inputs was invalid-- parse the error and combine
           // with the input information to give a reasonable description of the error
 

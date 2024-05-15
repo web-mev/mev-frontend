@@ -234,6 +234,29 @@
                 (click)="flipAxis('vertical')">
                 <mat-icon>swap_vert</mat-icon>
             </button>
+
+            <br>
+            <br>
+            <label class="labelTitle">Step Size: </label>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="Adjust the increments size for alignment of the plot or image."
+                aria-label="Info tooltip about the step size for alignment">
+                info
+            </mat-icon>
+
+            <div class="inputContainer">
+                <mat-form-field class="example-form-field container" appearance="outline">
+                    <mat-label>Step Size</mat-label>
+                    <input matInput type="search" name="search" [(ngModel)]="moveAmountVal"
+                        (keyup.enter)="setScaleFactor($event)" class="smallerInput">
+                    <button *ngIf="moveAmountVal" matSuffix mat-icon-button aria-label="Clear"
+                        (click)="moveAmountVal = ''">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+                <button mat-flat-button color="primary" class="searchButton"
+                    (click)="setMoveAmount($event)">Submit</button>
+            </div>
         </div>
 
         <label id="radio-group-axis">Plot Opacity: <span class="displayValue"> {{plotOpacityValue}}</span></label>

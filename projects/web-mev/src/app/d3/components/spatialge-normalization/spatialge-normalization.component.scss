@@ -35,6 +35,10 @@
     font-weight: bold;
     margin: 6px 0;
 }
+.labelTitle {
+    font-weight: bold;
+    margin: 6px 0;
+}
 
 #modes-label {
     display: block;
@@ -79,12 +83,13 @@ mat-slider {
 }
 
 .radio-container {
-    margin-right: 10px; /* Adjust margin as needed */
+    margin-right: 10px; 
 }
 
 .inputContainer {
     display: flex;
     flex-direction: row;
+    width: 250px;
 }
 
 .searchButton {
@@ -94,7 +99,7 @@ mat-slider {
 }
 
 .smaller-input {
-    width: 500px; /* Adjust the width as needed */
+    width: 500px; 
 }
 
 ::ng-deep {
@@ -284,3 +289,7 @@ mat-slider {
     font-weight: bold;
     font-size: 14px !important;
 }
+
+.analyses-header__icon {
+    font-size: 14px;
+  }

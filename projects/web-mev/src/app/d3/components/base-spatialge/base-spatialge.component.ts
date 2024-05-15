@@ -68,6 +68,7 @@ export class BaseSpatialgeComponent {
   geneSearchVal: string = 'VIM'
 
   moveAmount: number = 1;
+  moveAmountVal: string = '1';
 
   plotWidth: number = 300;
   plotHeight: number = 500;
@@ -208,6 +209,15 @@ export class BaseSpatialgeComponent {
   setScaleFactor(event: Event) {
     event.preventDefault();
     this.scaleFactor = parseFloat(this.scaleFactorVal)
+    this.notificationService.success(`Scale Factor updated to ${this.scaleFactor}.`);
+    this.createScatterPlot('normal')
+    this.createScatterPlot('minimap')
+  }
+
+  setMoveAmount(event: Event){
+    event.preventDefault();
+    this.moveAmount = parseFloat(this.moveAmountVal)
+    this.notificationService.success(`Alignment step size updated to ${this.moveAmount}.`);
     this.createScatterPlot('normal')
     this.createScatterPlot('minimap')
   }

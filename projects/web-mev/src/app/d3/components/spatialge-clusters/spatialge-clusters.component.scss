@@ -85,6 +85,7 @@ mat-slider {
 .inputContainer {
     display: flex;
     flex-direction: row;
+    width: 250px;
 }
 
 .searchButton {
@@ -282,4 +283,13 @@ mat-slider {
     padding: 0px !important;
     font-weight: bold;
     font-size: 14px !important;
+}
+
+.analyses-header__icon {
+    font-size: 14px;
+}
+
+.labelTitle {
+    font-weight: bold;
+    margin: 6px 0;
 }

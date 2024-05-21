@@ -4,7 +4,6 @@ import { AnalysesService } from '../../services/analysis.service';
 import { BaseOperationInput } from '../base-operation-inputs/base-operation-inputs';
 import { MetadataService } from '@app/core/metadata/metadata.service';
 import { CompatibleObsSetService } from '../../services/compatible_obs_set.service';
-import { FileService } from '@file-manager/services/file-manager.service';
 
 const observationSetsValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const mtx_ctrl = control.get('input_matrix');

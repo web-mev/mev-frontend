@@ -22,6 +22,16 @@
       <sctk-mast-input [operationData]="operationData" [workspaceId]="workspaceId"
         (formValid)="alterFormStatus($event)"></sctk-mast-input>
     </div>
+
+    <div *ngIf="operationData.name === 'ComBat-seq'">
+      <combatseq-input [operationData]="operationData" [workspaceId]="workspaceId"
+        (formValid)="alterFormStatus($event)"></combatseq-input>
+    </div>
+
+    <div *ngIf="operationData.name === 'SNF (Similarity Network Fusion)'">
+      <snf-input [operationData]="operationData" [workspaceId]="workspaceId"
+        (formValid)="alterFormStatus($event)"></snf-input>
+    </div>
   </div>
 
   <ng-template #defaultBlock>

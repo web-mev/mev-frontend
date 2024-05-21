@@ -19,6 +19,8 @@ import { DifferentialExpressionInputComponent } from './components/differential-
 import { KmeansInputComponent } from './components/kmeans-input/kmeans-input.component';
 import { LikelihoodRatioTestInputComponent } from './components/likelihood-ratio-test-input/likelihood-ratio-test-input.component';
 import { SCTKMastInputComponent } from './components/sctk-mast-input/sctk-mast-input.component';
+import { CombatseqInputComponent } from './components/combatseq-input/combatseq-input.component';
+import { SnfInputComponent } from './components/snf-input/snf-input.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +38,8 @@ import { SCTKMastInputComponent } from './components/sctk-mast-input/sctk-mast-i
     KmeansInputComponent,
     LikelihoodRatioTestInputComponent,
     SCTKMastInputComponent,
+    CombatseqInputComponent,
+    SnfInputComponent
   ],
   exports: [
     OperationComponent,

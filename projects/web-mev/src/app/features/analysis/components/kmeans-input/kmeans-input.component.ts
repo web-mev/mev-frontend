@@ -14,6 +14,8 @@ const observationSetsValidator: ValidatorFn = (control: AbstractControl): Valida
     if (obs_set) {
         mtx_ctrl.setErrors(null);
         mtx_ctrl.markAsTouched();
+        // without this, the number of clusters field can 
+        // get stuck with an error following a change.
         num_clusters_ctrl.setErrors(null);
         num_clusters_ctrl.markAsTouched();
     }
@@ -47,8 +49,7 @@ export class KmeansInputComponent extends BaseOperationInput implements OnChange
         private apiService: AnalysesService,
         private formBuilder: FormBuilder,
         private metadataService: MetadataService,
-        private obsSetService: CompatibleObsSetService,
-        private fileService: FileService
+        private obsSetService: CompatibleObsSetService
     ) {
         super();
     }

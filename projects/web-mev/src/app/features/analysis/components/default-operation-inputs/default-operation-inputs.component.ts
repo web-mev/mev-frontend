@@ -385,9 +385,7 @@ export class DefaultOperationComponent extends BaseOperationInput implements OnC
     /**
    * Load operation data before creating form controls
    */
-    loadData() {
-        console.log('in default inputs loadData')
-    }
+    loadData() {}
 
     public onFormValid() {
         this.formValid.emit(this.analysesForm.valid);

@@ -1,6 +1,4 @@
 <form *ngIf="analysesForm" [formGroup]="analysesForm" (ngSubmit)="onSubmit()">
-
-    <!-- OPERATION NAME -->
     <ng-container *ngIf="operationData.mode !== 'client'">
         <div class="label">
             Operation name: <span class="redAsterisk">* </span>
@@ -120,6 +118,4 @@
             </mat-error>
         </div>
     </mat-form-field>
-
-
 </form>

@@ -1,5 +1,4 @@
 <form *ngIf="analysesForm" [formGroup]="analysesForm" (ngSubmit)="onSubmit()">
-    <!-- OPERATION NAME -->
     <ng-container *ngIf="operationData.mode !== 'client'">
         <div class="label">
             Operation name: <span class="redAsterisk">* </span>
@@ -57,7 +56,6 @@
 
     </ng-container>
     <ng-template #noAnnotationValues>
-
         <div *ngFor="let textField of textFields">
             <div *ngIf="textField.required">
                 <div class="label">
@@ -76,8 +74,6 @@
                 </mat-form-field>
             </div>
         </div>
-
     </ng-template>
-
 
 </form>

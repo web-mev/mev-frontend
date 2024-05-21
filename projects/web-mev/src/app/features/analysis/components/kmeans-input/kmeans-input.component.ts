@@ -1,18 +1,10 @@
-import {
-    Component,
-    ChangeDetectionStrategy,
-    OnChanges,
-    Output,
-    EventEmitter,
-    Input
-} from '@angular/core';
-import { FormGroup, Validators, FormBuilder, AbstractControl, AbstractControlOptions, ValidationErrors, ValidatorFn, AsyncValidatorFn } from '@angular/forms';
+import { Component, ChangeDetectionStrategy, OnChanges, Output, EventEmitter, Input } from '@angular/core';
+import { FormGroup, Validators, FormBuilder, AbstractControl, AbstractControlOptions, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { AnalysesService } from '../../services/analysis.service';
 import { BaseOperationInput } from '../base-operation-inputs/base-operation-inputs';
 import { MetadataService } from '@app/core/metadata/metadata.service';
 import { CompatibleObsSetService } from '../../services/compatible_obs_set.service';
 import { FileService } from '@file-manager/services/file-manager.service';
-
 
 const observationSetsValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const mtx_ctrl = control.get('input_matrix');
@@ -27,7 +19,6 @@ const observationSetsValidator: ValidatorFn = (control: AbstractControl): Valida
     }
     return null;
 }
-
 
 @Component({
     selector: 'kmeans-input',
@@ -61,6 +52,7 @@ export class KmeansInputComponent extends BaseOperationInput implements OnChange
     ) {
         super();
     }
+
     ngOnChanges(): void {
         if (this.operationData) {
             this.createForm();
@@ -76,7 +68,6 @@ export class KmeansInputComponent extends BaseOperationInput implements OnChange
         const controlsConfig = {};
         let input;
 
-        // the job name field:
         controlsConfig['job_name'] = ['', [Validators.required]];
 
         // the selection for the raw counts:

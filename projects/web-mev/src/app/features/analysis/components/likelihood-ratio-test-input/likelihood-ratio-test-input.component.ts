@@ -1,11 +1,4 @@
-import {
-    Component,
-    ChangeDetectionStrategy,
-    OnChanges,
-    Output,
-    EventEmitter,
-    Input
-} from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnChanges, Output, EventEmitter, Input } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, AbstractControlOptions } from '@angular/forms';
 import { AnalysesService } from '../../services/analysis.service';
 import { BaseOperationInput } from '../base-operation-inputs/base-operation-inputs';

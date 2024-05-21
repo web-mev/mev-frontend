@@ -127,6 +127,9 @@
     <ng-container *ngIf="operationName === 'spatialGE pathway enrichment'">
         <mev-spatialge-pathway-enrichment [outputs]="outputs"></mev-spatialge-pathway-enrichment>
     </ng-container>
+    <ng-container *ngIf="operationName === 'SPOTlight'">
+        <mev-spotlight [outputs]="outputs"></mev-spotlight>
+    </ng-container>
 </div>
 
 <ng-template #error>

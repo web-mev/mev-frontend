@@ -211,7 +211,7 @@ export class SpotlightComponent implements OnInit {
     scaleFactor: number = 0.0530973;
 
     displayAlignment: boolean = false;
-    plotOpacityValue: number = .7
+    plotOpacityValue: number = .9
     imageOpacityValue: number = .5
 
     createScatterplotWithPieCharts(size: string): void {

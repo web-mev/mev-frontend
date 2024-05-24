@@ -85,20 +85,17 @@ export class SpotlightComponent implements OnInit {
             for (let index in coordsMetadataRes) {
                 let gene = coordsMetadataRes[index]
                 let key = gene.rowname
-                let x = gene.values["pxl_x"]
-                let y = gene.values["pxl_y"]
+                let x = gene.values["pxl_y"]
+                let y = gene.values["pxl_x"]
                 this.xMin = Math.min(this.xMin, x)
                 this.xMax = Math.max(this.xMax, x)
                 this.yMin = Math.min(this.yMin, y)
                 this.yMax = Math.max(this.yMax, y)
 
-
-
                 this.plotData[key] = {
                     x,
                     y
                 }
-
 
                 let normalizePlot = (this.xMax - this.xMin) / 500 // This will set the plot to a width of 500px
                 this.plotWidth = (this.xMax - this.xMin) / normalizePlot;

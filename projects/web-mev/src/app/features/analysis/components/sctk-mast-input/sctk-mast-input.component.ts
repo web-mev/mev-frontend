@@ -1,9 +1,8 @@
-import { Component, ChangeDetectionStrategy, OnChanges, Output, EventEmitter, Input, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, AbstractControl, AbstractControlOptions, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { AnalysesService } from '../../services/analysis.service';
 import { BaseOperationInput } from '../base-operation-inputs/base-operation-inputs';
 import { MetadataService } from '@app/core/metadata/metadata.service';
-import { CompatibleObsSetService } from '../../services/compatible_obs_set.service';
 
 
 const observationSetsValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -48,7 +47,7 @@ const observationSetsValidatorBiomarker: ValidatorFn = (control: AbstractControl
     providers: [{ provide: BaseOperationInput, useExisting: SCTKMastInputComponent }],
     changeDetection: ChangeDetectionStrategy.Default
 })
-export class SCTKMastInputComponent extends BaseOperationInput implements OnChanges {
+export class SCTKMastInputComponent extends BaseOperationInput implements OnInit {
     analysesForm: FormGroup;
     submitted = false;
 
@@ -66,17 +65,17 @@ export class SCTKMastInputComponent extends BaseOperationInput implements OnChan
     analysisType: string = 'direct_comparison';
     controlsConfig = {};
     controlsConfig2 = {};
+    controlsConfigDefault = {};
 
     constructor(
         private apiService: AnalysesService,
         private formBuilder: FormBuilder,
-        private metadataService: MetadataService,
-        private obsSetService: CompatibleObsSetService
+        private metadataService: MetadataService
     ) {
         super();
     }
 
-    ngOnChanges(): void {
+    ngOnInit(): void {
         if (this.operationData) {
             this.createForm();
             this.analysesForm.statusChanges.subscribe(() => {
@@ -89,7 +88,6 @@ export class SCTKMastInputComponent extends BaseOperationInput implements OnChan
         this.formValid.emit(this.analysesForm.valid);
     }
 
-    controlsConfigDefault = {};
     createForm() {
         let controlsConfigDefault = {};
         controlsConfigDefault = this.analysisType === 'direct_comparison' ? this.controlsConfig : this.controlsConfig2
@@ -197,14 +195,15 @@ export class SCTKMastInputComponent extends BaseOperationInput implements OnChan
             controlsConfigDefault[key] = configObsSetsField2;
         }
         console.log("control: ", controlsConfigDefault)
-        
+
         this.analysesForm = this.formBuilder.group(controlsConfigDefault,
             {
                 validators: this.analysisType === 'direct_comparison' ? [observationSetsValidator] : [observationSetsValidatorBiomarker],
-                // asyncValidators: this.analysisType === 'direct_comparison' ? [this.obsSetService.validate_for_sctk_mast('direct_comparison')] : [this.obsSetService.validate_for_sctk_mast('biomarker_detection')],
                 updateOn: 'change'
             } as AbstractControlOptions);
+
     }
+
 
     getInputData(): any {
         return this.analysesForm.value;

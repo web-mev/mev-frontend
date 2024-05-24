@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnChanges, Output, EventEmitter, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnChanges, Output, EventEmitter, Input, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, AbstractControl, AbstractControlOptions, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { AnalysesService } from '../../services/analysis.service';
 import { BaseOperationInput } from '../base-operation-inputs/base-operation-inputs';
@@ -89,12 +89,13 @@ export class SCTKMastInputComponent extends BaseOperationInput implements OnChan
         this.formValid.emit(this.analysesForm.valid);
     }
 
+    controlsConfigDefault = {};
     createForm() {
         let controlsConfigDefault = {};
         controlsConfigDefault = this.analysisType === 'direct_comparison' ? this.controlsConfig : this.controlsConfig2
         let input;
 
-        controlsConfigDefault['job_name'] = ['', [Validators.required]];
+        controlsConfigDefault['job_name'] = [(this.analysesForm !== undefined && this.analysesForm.value['job_name'] ? this.analysesForm.value['job_name'] : ''), [Validators.required]];
         controlsConfigDefault['analysisType'] = [this.analysisType, []];
 
         let key = "raw_counts"
@@ -118,7 +119,7 @@ export class SCTKMastInputComponent extends BaseOperationInput implements OnChan
                 this.countMatrixField.files = data;
             });
 
-        const configResourceField = ['', []];
+        const configResourceField = [(this.analysesForm !== undefined && this.analysesForm.value[key] ? this.analysesForm.value[key] : ''), []];
         controlsConfigDefault[key] = configResourceField;
 
         key = 'expGroupName';
@@ -132,7 +133,7 @@ export class SCTKMastInputComponent extends BaseOperationInput implements OnChan
         };
 
         const configExpGroupNameField = [
-            input.spec.default_value,
+            (this.analysesForm !== undefined && this.analysesForm.value[key] ? this.analysesForm.value[key] : input.spec.default_value),
             [
                 ...(input.required ? [Validators.required] : []),
                 Validators.min(1),
@@ -146,9 +147,9 @@ export class SCTKMastInputComponent extends BaseOperationInput implements OnChan
             key: key,
             name: input.name,
             desc: input.description,
-            required: this.analysisType === 'direct_comparison' ? input.required  : false
+            required: this.analysisType === 'direct_comparison' ? input.required : false
         };
-        const baseGroupDefaultValue = this.analysisType === 'direct_comparison' ? input.spec.default_value : 'na';
+        const baseGroupDefaultValue = this.analysisType === 'direct_comparison' ? (this.analysesForm === undefined ? input.spec.default_value : (this.analysesForm.value.baseGroupName === 'na' ? ' ' : this.analysesForm.value.baseGroupName)) : 'na';
         const configBaseGroupNameField = [baseGroupDefaultValue,
             [...(this.baseGroupNameField.required && this.analysisType === 'direct_comparison' ? [Validators.required] : []),
             ]
@@ -186,6 +187,7 @@ export class SCTKMastInputComponent extends BaseOperationInput implements OnChan
             required: this.analysisType === 'direct_comparison' ? input.required : false,
             sets: availableObsSets
         };
+
         const configObsSetsField2 = [
             undefined,
             [...(input.required && this.analysisType === 'direct_comparison' ? [Validators.required] : [])]
@@ -194,11 +196,12 @@ export class SCTKMastInputComponent extends BaseOperationInput implements OnChan
         if (this.analysisType === 'direct_comparison') {
             controlsConfigDefault[key] = configObsSetsField2;
         }
-
+        console.log("control: ", controlsConfigDefault)
+        
         this.analysesForm = this.formBuilder.group(controlsConfigDefault,
             {
                 validators: this.analysisType === 'direct_comparison' ? [observationSetsValidator] : [observationSetsValidatorBiomarker],
-                asyncValidators: this.analysisType === 'direct_comparison' ? [this.obsSetService.validate_for_sctk_mast('direct_comparison')] : [this.obsSetService.validate_for_sctk_mast('biomarker_detection')],
+                // asyncValidators: this.analysisType === 'direct_comparison' ? [this.obsSetService.validate_for_sctk_mast('direct_comparison')] : [this.obsSetService.validate_for_sctk_mast('biomarker_detection')],
                 updateOn: 'change'
             } as AbstractControlOptions);
     }
@@ -220,6 +223,8 @@ export class SCTKMastInputComponent extends BaseOperationInput implements OnChan
 
     analysisTypeChange() {
         this.analysisType = this.analysesForm.value.analysisType
+        console.log("analysesForm: ", this.analysesForm)
+
         this.createForm();
         this.onFormValid();
         this.analysesForm.statusChanges.subscribe(() => {

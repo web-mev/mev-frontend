@@ -152,6 +152,7 @@ export class LikelihoodRatioTestInputComponent extends BaseOperationInput implem
     selectionChangeLRT() {
         let uuid = this.analysesForm.value['annotations'];
         let query = `${this.API_URL}/resources/${uuid}/contents/preview/`;
+        this.covariateValues = [];
 
         this.httpClient.get(query).subscribe(res => {
             let obj = res[0]['values'];

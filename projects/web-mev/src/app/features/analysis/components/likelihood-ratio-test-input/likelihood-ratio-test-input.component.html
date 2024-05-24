@@ -34,25 +34,22 @@
         </mat-form-field>
     </div>
     <ng-container *ngIf="covariateValues.length > 0; else noAnnotationValues">
-
-        <div *ngFor="let inputField of covariateValues">
-            <div class="label">
-                {{covariateDetails['name']}} <span class="redAsterisk">* </span>
-                <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-                    [matTooltip]="covariateDetails['desc']" aria-label="Info tooltip about the field">info
-                </mat-icon>
-            </div>
-            <mat-form-field class="form-control" color="accent">
-                <mat-select [formControlName]="covariateDetails['key']">
-                    <mat-option *ngFor="let file of covariateValues" [value]="file.name">
-                        {{ file.name }}
-                    </mat-option>
-                </mat-select>
-                <mat-error *ngIf="f[covariateDetails['key']].errors?.required">
-                    This field is required
-                </mat-error>
-            </mat-form-field>
+        <div class="label">
+            {{covariateDetails['name']}} <span class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                [matTooltip]="covariateDetails['desc']" aria-label="Info tooltip about the field">info
+            </mat-icon>
         </div>
+        <mat-form-field class="form-control" color="accent">
+            <mat-select [formControlName]="covariateDetails['key']">
+                <mat-option *ngFor="let file of covariateValues" [value]="file.name">
+                    {{ file.name }}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="f[covariateDetails['key']].errors?.required">
+                This field is required
+            </mat-error>
+        </mat-form-field>
 
     </ng-container>
     <ng-template #noAnnotationValues>

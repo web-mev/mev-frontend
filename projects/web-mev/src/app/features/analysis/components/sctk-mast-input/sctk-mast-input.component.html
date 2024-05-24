@@ -11,30 +11,6 @@
         </mat-form-field>
     </ng-container>
 
-    <div>
-        <div class="label">
-            {{ countMatrixField.name }}
-            <span *ngIf="countMatrixField.required" class="redAsterisk">* </span>
-            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-                matTooltip="{{ countMatrixField.desc}}" aria-label="Info tooltip about the field">info
-            </mat-icon>
-        </div>
-        <mat-form-field class="form-control" color="accent">
-            <mat-select [formControlName]="countMatrixField.key">
-                <mat-option *ngFor="let file of countMatrixField.files" [value]="file.id">
-                    {{ file.name }}
-                </mat-option>
-            </mat-select>
-            <mat-error *ngIf="f[countMatrixField.key].errors?.required">
-                This field is required
-            </mat-error>
-            <mat-error *ngIf="analysesForm.errors?.badSample">
-                The sample/observation groups chosen below do not match your input matrix. The invalid samples were:
-                {{analysesForm.errors?.['badSample']}}
-            </mat-error>
-        </mat-form-field>
-    </div>
-
     <div class="label">Analysis Type: <span class="redAsterisk">* </span></div>
     <br>
     <mat-button-toggle-group formControlName="analysisType" (change)="analysisTypeChange()">
@@ -44,6 +20,30 @@
     <br>
     <br>
     <br>
+
+
+    <div class="label">
+        {{ countMatrixField.name }}
+        <span *ngIf="countMatrixField.required" class="redAsterisk">* </span>
+        <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+            matTooltip="{{ countMatrixField.desc}}" aria-label="Info tooltip about the field">info
+        </mat-icon>
+    </div>
+    <mat-form-field class="form-control" color="accent">
+        <mat-select [formControlName]="countMatrixField.key">
+            <mat-option *ngFor="let file of countMatrixField.files" [value]="file.id">
+                {{ file.name }}
+            </mat-option>
+        </mat-select>
+        <mat-error *ngIf="f[countMatrixField.key].errors?.required">
+            This field is required
+        </mat-error>
+        <mat-error *ngIf="analysesForm.errors?.badSample">
+            The sample/observation groups chosen below do not match your input matrix. The invalid samples were:
+            {{analysesForm.errors?.['badSample']}}
+        </mat-error>
+    </mat-form-field>
+
 
     <div class="label">
         {{ expGroupNameField.name }}
@@ -60,7 +60,8 @@
             </mat-error>
         </div>
     </mat-form-field>
-    <div [hidden]="analysesForm.get('analysisType').value !== 'direct_comparison'" >
+
+    <div [hidden]="analysesForm.get('analysisType').value !== 'direct_comparison'">
         <div class="label">
             {{ baseGroupNameField.name }}
             <span *ngIf="baseGroupNameField.required" class="redAsterisk">* </span>

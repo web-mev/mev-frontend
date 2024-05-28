@@ -8,6 +8,16 @@ import { NotificationService } from '@core/core.module';
 import html2canvas from 'html2canvas';
 import { forkJoin } from 'rxjs';
 
+// interface ScatterDataNormailization {
+//     xValue: number;
+//     yValue: number;
+//     totalCounts: number;
+// }
+// interface ScatterDataCluster {
+//     xValue: number;
+//     yValue: number;
+//     clusterid: string
+// }
 
 
 @Component({
@@ -45,6 +55,117 @@ export class SpotlightComponent implements OnInit {
         "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5"
     ];
 
+    // isLoading: boolean = false;
+
+    // scatterPlotData: ScatterDataNormailization[] = [];
+    // scatterPlotDataCluster: ScatterDataCluster[] = [];
+
+    dataDict: Record<string, any> = {}
+
+    // xMin: number = 100000000
+    // xMax: number = 0
+    // yMin: number = 100000000
+    // yMax: number = 0
+    totalCountsMax: number = 0;
+    totalCountsMin: number = 100000000;
+
+    totalCounts: Record<string, any> = {}
+
+    // scaleFactor: number = 0.01602821;
+    // geneSearch: string = 'VIM'
+
+    selectedColor: string = 'Green';
+    colors: string[] = ['Red', 'Green']
+
+    // plotOpacityValue: number = .7
+    // imageOpacityValue: number = .5
+
+    // overlayImage: boolean = false;
+    // displayPlot: boolean = false;
+    // displayImage: boolean = false;
+
+    // displayAlignment: boolean = false;
+
+    scaleFactorVal = '0.01602821';
+    // scaleFactorVal: string = '0';
+    geneSearchVal: string = 'VIM'
+
+    moveAmount: number = 1;
+    moveAmountVal: string = '1';
+
+    // plotWidth: number = 300;
+    // plotHeight: number = 500;
+
+    currentLeft: number = 0;
+    currentTop: number = 0;
+
+    // widthAdjustment: number = 0
+    // heightAdjustment: number = 0
+
+    droppedFile: File | null = null;
+    droppedFileURL: string | ArrayBuffer | null = null;
+
+    imageAdjustedWidth: number = 0;
+    maxImageContainerWidthOverylay: number = this.plotWidth;
+    maxImageContainerWidthSidebySide: number = this.plotWidth * 2;
+
+    currentZoomScaleFactor: number = 1;
+    maxScaleFactor: number = 2;
+    minScaleFactor: number = 0.5;
+
+    useCluster: boolean = false;
+    useNormalization: boolean = false;
+
+    // legendWidth: number = 120;
+
+    clusterTypes: Record<string, any> = {}
+    clusterColors: string[] = ["#EBCD00", "#52A52E", "#00979D", "#6578B4", "#80408D", "#C9006B", "#68666F", "#E80538", "#E87D1E"]
+
+    selectionRectStyle: Record<string, any> = {};
+
+    geneSearchHeight: number = 100;
+
+    analysisType: string = ''
+
+    xAxisValue: string = '';
+    yAxisValue: string = ''
+    xAxisValueList: string[] = []
+    yAxisValueList: string[] = []
+
+    // panelOpenState: boolean = true;
+
+    currentDegree: number = 0;
+    scaleXCustom: number = 1;
+
+    showMiniMap = false;
+
+    zoomMin: number = 0.5;
+    zoomMax: number = 5;
+
+    // originalPlotWidth: number = 0;
+    // originalPlotHeight: number = 0;
+    displayOverlayContainer: boolean = true;
+
+    scales: Record<string, number[]> = {
+        "0.5": [0, 0],
+        "1": [0, 0],
+        "2": [50, 150],
+        "3": [200, 400],
+        "4": [400, 800],
+        "5": [800, 1200]
+    }
+    currentImageLeft: number = 0;
+    currentImageTop: number = 0;
+    sliderLeft: number = 0;
+    sliderTop: number = 0;
+
+    xAxisFlipped: boolean = false;
+    yAxisFlipped: boolean = false;
+    axisSwapped: boolean = false;
+
+    flipX = 1;
+    flipY = 1;
+
     constructor(
         private httpClient: HttpClient,
         private readonly notificationService: NotificationService,
@@ -56,6 +177,7 @@ export class SpotlightComponent implements OnInit {
     }
 
     getData() {
+        this.isLoading = true;
         let deconvoluted_outputs_uuid = this.outputs["deconvoluted_output"];
         let coords_metadata_uuid = this.outputs["coords_metadata"];
 
@@ -80,6 +202,7 @@ export class SpotlightComponent implements OnInit {
 
 
         forkJoin([spotlightRequest, coordsMetadataRequest]).subscribe(([spotlightRes, coordsMetadataRes]) => {
+            this.isLoading = false;
             console.log("coor res: ", coordsMetadataRes)
 
             for (let index in coordsMetadataRes) {
@@ -107,6 +230,8 @@ export class SpotlightComponent implements OnInit {
                 this.originalPlotWidth = this.plotWidth;
                 this.originalPlotHeight = this.plotHeight;
             }
+            this.maxImageContainerWidthSidebySide = this.plotWidth * 2;
+            console.log("plotwidth: ", this.plotWidth, this.originalPlotWidth)
 
             console.log("coor results: ", coordsMetadataRes)
             console.log("spotlightRes: ", spotlightRes)
@@ -353,6 +478,159 @@ export class SpotlightComponent implements OnInit {
             .style('font-size', '8px')
             .attr('class', 'legend-label')
             .text(d => d.label);
+
+    }
+
+    captureAndDownloadImages() {
+        this.isLoading = true;
+
+        setTimeout(() => {
+            let captureContainer = ''
+            if (this.droppedFile && !this.overlayImage) {
+                captureContainer = '.fullOverlayDiv'
+            } else if (this.droppedFile && this.overlayImage) {
+                captureContainer = '.overlayDiv'
+            } else {
+                captureContainer = '#scatter'
+            }
+
+            const containerToCapture = document.querySelector(captureContainer) as HTMLElement | null;
+
+            if (containerToCapture) {
+                html2canvas(containerToCapture, {
+                }).then(canvas => {
+                    const dataURL = canvas.toDataURL();
+                    const link = document.createElement('a');
+                    link.href = dataURL;
+                    link.download = 'spatialGE.png';
+                    link.click();
+
+                    this.isLoading = false;
+                });
+            } else {
+                this.isLoading = false;
+                this.notificationService.error(`Error occurred when downloading the image.`);
+                console.error('Container element not found');
+            }
+        }, 500)
+    }
+
+    onDropFile(event: DragEvent) {
+        event.preventDefault();
+        const files = event.dataTransfer?.files;
+        if (files && files.length > 0) {
+            this.droppedFile = files[0];
+            this.displayFile();
+        }
+    }
+
+    onDragOver(event: DragEvent) {
+        event.preventDefault();
+    }
+
+    displayFile() {
+        if (this.droppedFile) {
+            this.displayImage = true;
+            if (this.isImageType(this.droppedFile.type)) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const image = new Image();
+                    image.onload = () => {
+                        const aspectRatio = image.width / image.height;
+                        this.imageAdjustedWidth = Math.ceil(this.plotHeight * aspectRatio);
+                        this.maxImageContainerWidthOverylay = Math.max(this.imageAdjustedWidth, (this.plotWidth + this.widthAdjustment))
+                        this.maxImageContainerWidthSidebySide = Math.max((this.plotWidth + this.widthAdjustment) * 2, (this.plotWidth + this.widthAdjustment + this.imageAdjustedWidth))
+
+                        this.droppedFileURL = reader.result as string;
+                    };
+                    image.src = event.target?.result as string;
+                };
+                reader.readAsDataURL(this.droppedFile);
+            }
+        }
+    }
+
+    isImageType(fileType: string): boolean {
+        return fileType.startsWith('image/');
+    }
+
+    onFileSelected(event: any): void {
+        const fileList: FileList = event.target.files;
+        if (fileList.length > 0) {
+            this.droppedFile = fileList[0];
+            this.displayFile();
+        }
+    }
+
+    applyZoom(type) {
+        if (type === '-' && this.currentZoomScaleFactor === 1) {
+            this.currentZoomScaleFactor = 0.5;
+        } else if (type === '+' && this.currentZoomScaleFactor === 0.5) {
+            this.currentZoomScaleFactor = 1
+        } else if (type === '+') {
+            this.currentZoomScaleFactor += 1
+        } else if (type === '-') {
+            this.currentZoomScaleFactor -= 1
+        }
+        const plotContainer = document.querySelector('.plotContainer') as HTMLImageElement;
+        const imageContainer = document.querySelector('.imageContainer') as HTMLImageElement;
+        const imageContainer2 = document.querySelector('.imageContainer2') as HTMLImageElement;
+
+        const miniMapContainer = document.querySelector('.miniMapContainer') as HTMLImageElement;
+        const miniSubContainer = document.querySelector('.miniSubContainer') as HTMLImageElement;
+        const minimapImageContainer = document.querySelector('.miniMapImageContainer') as HTMLImageElement;
+        const minimapPlotContainer = document.querySelector('.minimapPlotContainer') as HTMLImageElement;
+
+        const miniBoxContainer = document.querySelector('.miniboxDiv') as HTMLImageElement;
+
+        this.sliderLeft = 0;
+        this.sliderTop = 0;
+
+        if (this.currentZoomScaleFactor === 1) {
+            this.legendWidth = 120
+        } else {
+            this.legendWidth = 0
+        }
+
+        if (plotContainer || imageContainer) {
+            const transformPlotValue = `translateX(${-this.currentLeft * this.currentZoomScaleFactor + this.sliderLeft}px) translateY(${this.currentTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor})`;
+            const transformImageValue = `translateX(${-this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft}px) translateY(${this.currentImageTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
+
+            plotContainer.style.transform = transformPlotValue;
+            imageContainer.style.transform = transformImageValue;
+            imageContainer2.style.transform = transformImageValue;
+
+            const minimapPlotTransformValue = `translateX(${-(this.currentLeft * this.currentZoomScaleFactor + this.sliderLeft) / 4}px) translateY(${(this.currentTop * this.currentZoomScaleFactor + this.sliderTop) / 4}px) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor})`;
+            const minimapImageTransformValue = `translateX(${-(this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft) / 4}px) translateY(${(this.currentImageTop * this.currentZoomScaleFactor + this.sliderTop) / 4}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
+
+            minimapImageContainer.style.transform = minimapImageTransformValue;
+            minimapPlotContainer.style.transform = minimapPlotTransformValue;
+
+            const transformMiniMapValue = `scaleX(${1 / this.currentZoomScaleFactor}) scaleY(${1 / this.currentZoomScaleFactor})`;
+            miniMapContainer.style.transform = transformMiniMapValue
+        }
+
+        let selectionRectWidth = this.originalPlotWidth / (4 * this.currentZoomScaleFactor);
+        let selectionRectHeight = this.originalPlotHeight / (4 * this.currentZoomScaleFactor);
+
+        this.selectionRectStyle = {
+            top: `${0}px`,
+            width: `${selectionRectWidth}px`,
+            height: `${selectionRectHeight}px`,
+            border: '2px solid #1DA1F2',
+            position: 'absolute',
+        };
+
+        let centerAdjustmentWidth = this.currentZoomScaleFactor === 1 ? 0 : selectionRectWidth / 2;
+        let centerAdjustmentHeight = this.currentZoomScaleFactor === 1 ? 0 : selectionRectHeight / 2;
+        let transformBox = `translateX(${this.currentZoomScaleFactor === 0.5 ? -40 : this.currentLeft + centerAdjustmentWidth}px) translateY(${this.currentZoomScaleFactor === 0.5 ? -50 : this.currentTop + centerAdjustmentHeight}px) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor})`;
+
+        miniBoxContainer.style.transform = transformBox;
+        miniSubContainer.style.transform = `scale(${this.currentZoomScaleFactor === 0.5 ? 0.5 : 1})`;
+
+        this.createScatterplotWithPieCharts('normal')
+        this.createScatterplotWithPieCharts('minimap')
+
 
     }
 }

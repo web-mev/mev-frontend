@@ -356,6 +356,8 @@ export class BaseSpatialgeComponent {
           position: 'absolute',
         };
 
+        console.log("plotwidth: ", this.plotWidth, this.originalPlotWidth)
+
         if (this.scatterPlotData.length > 0) {
           this.displayOverlayContainer = true;
           this.createScatterPlot('normal')
@@ -473,6 +475,8 @@ export class BaseSpatialgeComponent {
           border: '2px solid #1DA1F2',
           position: 'absolute',
         };
+
+        console.log("plotwidth: ", this.plotWidth)
 
         if (this.scatterPlotDataCluster.length > 0) {
           this.displayOverlayContainer = true;

@@ -62,21 +62,22 @@
     <div *ngIf="displayOverlayContainer" class="overlayContainer"
         [style.width.px]="overlayImage ? maxImageContainerWidthOverylay +100 + legendWidth: maxImageContainerWidthSidebySide + 150">
         <div *ngIf="scatterPlotData.length > 0" class="downloadButtonContainer"
-            [style.width.px]="overlayImage ? maxImageContainerWidthOverylay + 100 + legendWidth: maxImageContainerWidthSidebySide + 150">
+            [style.width.px]="overlayImage ? maxImageContainerWidthOverylay + 100 + legendWidth: maxImageContainerWidthSidebySide + 200">
             <button mat-button *ngIf="!isLoading" id="downloadButton" (click)="captureAndDownloadImages()"
                 matTooltip="Download Image" title="download something">
                 <mat-icon>save_alt</mat-icon>
             </button>
         </div>
 
-        <span class="fullOverlayDiv" style="display: flex; width: 700px; margin-left: 10px;">
+        <span class="fullOverlayDiv"
+            [style.width.px]="currentZoomScaleFactor !== 1 ? (plotWidth+legendWidth)*2:(plotWidth+legendWidth)*2 -100">
             <div *ngIf="currentZoomScaleFactor !== 1 && currentZoomScaleFactor !== 0.5" class="verticalSliderContainer">
                 <mat-slider [min]="minTopValue()" [max]="maxTopValue()" step="10" [(ngModel)]="sliderTop"
                     (change)="movePlot('left', 'slider', 'plot')" vertical [style.height.px]="plotHeight">
                 </mat-slider>
             </div>
             <div class="overlayDiv" [style.height.px]="originalPlotHeight"
-                [style.width.px]="overlayImage ? (currentZoomScaleFactor === 1 ? originalPlotWidth+legendWidth : originalPlotWidth) : !droppedFile ? (currentZoomScaleFactor != 1 ? originalPlotWidth+legendWidth : originalPlotWidth * 3 + 150 + legendWidth*3): originalPlotWidth+legendWidth">
+                [style.width.px]="overlayImage ? originalPlotWidth+legendWidth : !droppedFile ? (currentZoomScaleFactor != 1 ? originalPlotWidth+legendWidth : originalPlotWidth * 3 + 150 + legendWidth*3): originalPlotWidth+legendWidth">
 
                 <div #scatter id="scatter" [class]="overlayImage ? 'overlayPlots' : 'displayPlotSideBySide'"
                     [style.opacity]="displayPlot ? plotOpacityValue : 0" [style.width.px]="originalPlotWidth"
@@ -101,8 +102,8 @@
 
 
 
-                <div *ngIf="scatterPlotData.length > 0"
-                    [class]="droppedFile || currentZoomScaleFactor != 1 ? 'zoomButtonContainer': 'zoomButtonContainerNoImage'">
+                <div *ngIf="scatterPlotData.length > 0" class="zoomButtonContainer"
+                    [style.left.px]="currentZoomScaleFactor === 1 ? plotWidth + legendWidth - 40 : plotWidth + legendWidth - 50">
                     <button class="zoomButton" matTooltip="Zoom In" (click)="applyZoom('+')"
                         [disabled]="currentZoomScaleFactor === zoomMax">
                         <mat-icon>add</mat-icon>
@@ -114,7 +115,8 @@
                 </div>
 
             </div>
-            <div class="nonOverlay" [style.height.px]="originalPlotHeight" [style.width.px]="originalPlotWidth">
+            <div class="nonOverlay" [style.height.px]="originalPlotHeight"
+                [style.width.px]="droppedFile && displayImage && !overlayImage ? originalPlotWidth: 0">
                 <div class="imageContainer2">
                     <div *ngIf="droppedFile && displayImage && !overlayImage" style="z-index: 3;">
                         <img *ngIf="isImageType(droppedFile.type)" class="overlayPlotsImage" [src]="droppedFileURL"

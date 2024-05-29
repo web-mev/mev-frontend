@@ -35,6 +35,10 @@
     font-weight: bold;
     margin: 6px 0;
 }
+.labelTitle {
+    font-weight: bold;
+    margin: 6px 0;
+}
 
 #modes-label {
     display: block;
@@ -79,7 +83,7 @@ mat-slider {
 }
 
 .radio-container {
-    margin-right: 10px; /* Adjust margin as needed */
+    margin-right: 10px;
 }
 
 .inputContainer {
@@ -95,7 +99,7 @@ mat-slider {
 }
 
 .smaller-input {
-    width: 500px; /* Adjust the width as needed */
+    width: 500px;
 }
 
 ::ng-deep {
@@ -149,7 +153,8 @@ mat-slider {
     height: 36px;
     min-width: 38px !important;
     padding: 0px !important;
-    margin: 1px;
+    margin: -3px;
+    transform: scale(0.75);
 }
 
 .drop-zone {
@@ -202,17 +207,6 @@ mat-slider {
     flex-direction: column;
     transform: scale(0.5);
     position: absolute;
-    right: 0;
-    bottom: 10px;
-    z-index: 100;
-}
-
-.zoomButtonContainerNoImage {
-    display: flex;
-    flex-direction: column;
-    transform: scale(0.5);
-    position: absolute;
-    right: 210px;
     bottom: 10px;
     z-index: 100;
 }
@@ -289,7 +283,7 @@ mat-slider {
     font-size: 14px;
 }
 
-.labelTitle {
-    font-weight: bold;
-    margin: 6px 0;
+.fullOverlayDiv {
+    display: flex;
+    margin-left: 10px;
 }

@@ -1,26 +1,8 @@
-
-<!-- <mev-spinner-overlay *ngIf="isLoading"></mev-spinner-overlay>
-<mat-card class="analysis-card">
-    <mat-card-header>
-        <div mat-card-avatar class="analysis-card__img"></div>
-        <mat-card-title>Spotlight: {{ outputs?.job_name }}</mat-card-title>
-        <mev-input-info [outputs]="outputs"></mev-input-info>
-    </mat-card-header>
-
-
-    <div #scatter id="scatter" [class]="overlayImage ? 'overlayPlots' : 'displayPlotSideBySide'"
-        [style.opacity]="displayPlot ? plotOpacityValue : 0" [style.width.px]="originalPlotWidth"
-        [style]="!displayAlignment ? 'z-index: 2' : 'z-index: 4'" class="plotContainer">
-    </div>
-    
-
-</mat-card> -->
-
 <mev-spinner-overlay *ngIf="isLoading"></mev-spinner-overlay>
 <mat-card class="analysis-card">
     <mat-card-header>
         <div mat-card-avatar class="analysis-card__img"></div>
-        <mat-card-title>Spotlight: {{ outputs?.job_name }}</mat-card-title>
+        <mat-card-title>SpatialGE: {{ outputs?.job_name }}</mat-card-title>
         <mev-input-info [outputs]="outputs"></mev-input-info>
     </mat-card-header>
 
@@ -38,9 +20,9 @@
                 [disabled]="xAxisValue === '' || yAxisValue === '' || geneSearchVal === ''"
                 (click)="analysisType === 'normalization' ? getDataNormalization(): getDataClusters() ">Submit</button>
         </div>
-    </div> -->
+    </div>
 
-    <!-- <mat-expansion-panel #accordion [(expanded)]="panelOpenState">
+    <mat-expansion-panel #accordion [(expanded)]="panelOpenState">
         <mat-expansion-panel-header>
             <mat-panel-title>
                 <span class="plot-options-header">Select X and Y Axis Labels: </span>
@@ -80,27 +62,27 @@
     <div *ngIf="displayOverlayContainer" class="overlayContainer"
         [style.width.px]="overlayImage ? maxImageContainerWidthOverylay +100 + legendWidth: maxImageContainerWidthSidebySide + 150">
         <div *ngIf="scatterPlotData.length > 0" class="downloadButtonContainer"
-            [style.width.px]="overlayImage ? maxImageContainerWidthOverylay + 100 + legendWidth: maxImageContainerWidthSidebySide + 150">
+            [style.width.px]="overlayImage ? maxImageContainerWidthOverylay + 100 + legendWidth: maxImageContainerWidthSidebySide + 200">
             <button mat-button *ngIf="!isLoading" id="downloadButton" (click)="captureAndDownloadImages()"
                 matTooltip="Download Image" title="download something">
                 <mat-icon>save_alt</mat-icon>
             </button>
         </div>
 
-        <span class="fullOverlayDiv" style="display: flex; width: (700+120)px; margin-left: 10px;">
-            <!-- <div *ngIf="currentZoomScaleFactor !== 1 && currentZoomScaleFactor !== 0.5" class="verticalSliderContainer">
+        <span class="fullOverlayDiv"
+            [style.width.px]="currentZoomScaleFactor !== 1 ? (plotWidth+legendWidth)*2:(plotWidth+legendWidth)*2">
+            <div *ngIf="currentZoomScaleFactor !== 1 && currentZoomScaleFactor !== 0.5" class="verticalSliderContainer">
                 <mat-slider [min]="minTopValue()" [max]="maxTopValue()" step="10" [(ngModel)]="sliderTop"
                     (change)="movePlot('left', 'slider', 'plot')" vertical [style.height.px]="plotHeight">
                 </mat-slider>
-            </div> -->
+            </div>
             <div class="overlayDiv" [style.height.px]="originalPlotHeight"
-                [style.width.px]="overlayImage ? (currentZoomScaleFactor === 1 ? originalPlotWidth+legendWidth : originalPlotWidth) : !droppedFile ? (currentZoomScaleFactor != 1 ? originalPlotWidth+legendWidth : originalPlotWidth * 3 + 150 + legendWidth*3): originalPlotWidth+legendWidth">
+                [style.width.px]="overlayImage ? originalPlotWidth+legendWidth : !droppedFile ? (currentZoomScaleFactor != 1 ? originalPlotWidth+legendWidth : originalPlotWidth * 3 + 150 + legendWidth*3): originalPlotWidth+legendWidth">
 
                 <div #scatter id="scatter" [class]="overlayImage ? 'overlayPlots' : 'displayPlotSideBySide'"
                     [style.opacity]="displayPlot ? plotOpacityValue : 0" [style.width.px]="originalPlotWidth"
                     [style]="!displayAlignment ? 'z-index: 2' : 'z-index: 4'" class="plotContainer">
                 </div>
-                
                 <div *ngIf="scatterPlotData.length > 0"
                     [class]="!droppedFile && currentZoomScaleFactor == 1 ? 'drop-zone' : '' "
                     (drop)="onDropFile($event)" (dragover)="onDragOver($event)"
@@ -120,8 +102,8 @@
 
 
 
-                <div *ngIf="scatterPlotData.length > 0"
-                    [class]="droppedFile || currentZoomScaleFactor != 1 ? 'zoomButtonContainer': 'zoomButtonContainerNoImage'">
+                <div *ngIf="scatterPlotData.length > 0" class="zoomButtonContainer"
+                    [style.left.px]="currentZoomScaleFactor === 1 ? plotWidth + legendWidth - 40 : plotWidth + legendWidth - 50">
                     <button class="zoomButton" matTooltip="Zoom In" (click)="applyZoom('+')"
                         [disabled]="currentZoomScaleFactor === zoomMax">
                         <mat-icon>add</mat-icon>
@@ -133,10 +115,9 @@
                 </div>
 
             </div>
-            <div class="nonOverlay" [style.height.px]="originalPlotHeight" [style.width.px]="originalPlotWidth">
-                
+            <div class="nonOverlay" [style.height.px]="originalPlotHeight"
+                [style.width.px]="droppedFile && displayImage && !overlayImage ? originalPlotWidth: 0">
                 <div class="imageContainer2">
-                    <p>non overlay div</p>
                     <div *ngIf="droppedFile && displayImage && !overlayImage" style="z-index: 3;">
                         <img *ngIf="isImageType(droppedFile.type)" class="overlayPlotsImage" [src]="droppedFileURL"
                             alt="Dropped Image"
@@ -172,14 +153,14 @@
 
 
         </span>
-        <!-- <div *ngIf="currentZoomScaleFactor !== 1 && currentZoomScaleFactor !== 0.5" class="horizontalSliderContainer">
+        <div *ngIf="currentZoomScaleFactor !== 1 && currentZoomScaleFactor !== 0.5" class="horizontalSliderContainer">
             <mat-slider [min]="minLeftValue()" [max]="maxLeftValue()" step="10" [(ngModel)]="sliderLeft"
                 (change)="movePlot('left', 'slider', 'plot')" [style.width.px]="plotWidth">
             </mat-slider>
-        </div> -->
+        </div>
     </div>
 
-    <!-- <div *ngIf="scatterPlotData.length > 0" class="slider"
+    <div *ngIf="scatterPlotData.length > 0" class="slider"
         [style.top.px]="(plotHeight+heightAdjustment) + geneSearchHeight + 100">
         <div *ngIf="displayAlignment">
             <label id="modes-label">Alignment: </label>
@@ -303,7 +284,7 @@
         <mat-slide-toggle [(ngModel)]="displayPlot">Display Plot</mat-slide-toggle>
         <br>
         <mat-slide-toggle [(ngModel)]="displayImage" [disabled]="!droppedFile">Display Image</mat-slide-toggle>
-        <br>
+        <!-- <br>
 
         <br>
         <label id="radio-group-axis">Plot Color: </label>
@@ -312,7 +293,7 @@
             <div *ngFor="let plotColor of colors" class="radio-container">
                 <mat-radio-button class="example-radio-button" [value]="plotColor">{{plotColor}}</mat-radio-button>
             </div>
-        </mat-radio-group>
+        </mat-radio-group> -->
         <br>
         <br>
         <label id="radio-group-axis">Scale Factor:</label>
@@ -330,6 +311,6 @@
                 (click)="setScaleFactor($event)">Submit</button>
         </div>
 
-    </div> -->
+    </div>
 
 </mat-card>

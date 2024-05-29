@@ -562,6 +562,95 @@ export class SpotlightComponent implements OnInit {
         }
     }
 
+
+
+    movePlot(direction, mode, container) {
+        const plotContainer = document.querySelector('.plotContainer') as HTMLImageElement;
+        const imageContainer = document.querySelector('.imageContainer') as HTMLImageElement;
+        const imageContainer2 = document.querySelector('.imageContainer2') as HTMLImageElement;
+
+        const miniBoxContainer = document.querySelector('.miniboxDiv') as HTMLImageElement;
+        const minimapImageContainer = document.querySelector('.miniMapImageContainer') as HTMLImageElement;
+        const minimapPlotContainer = document.querySelector('.minimapPlotContainer') as HTMLImageElement;
+
+        let transformPlotValue;
+        let transformBox;
+        let transformImageValue;
+        let transformImageMiniMapValue;
+        let transformPlotMiniMapValue;
+
+        if (mode === 'align' && container === 'plot') {
+            switch (direction) {
+                case 'left':
+                    this.currentLeft += this.moveAmount / (this.currentZoomScaleFactor + 1);
+                    break;
+                case 'right':
+                    this.currentLeft -= this.moveAmount / (this.currentZoomScaleFactor + 1);
+                    break;
+                case 'up':
+                    this.currentTop -= this.moveAmount / (this.currentZoomScaleFactor + 1);
+                    break;
+                case 'down':
+                    this.currentTop += this.moveAmount / (this.currentZoomScaleFactor + 1);
+                    break;
+                default:
+                    break;
+            }
+        } else if (mode === 'align' && container === 'image') {
+            switch (direction) {
+                case 'left':
+                    this.currentImageLeft += this.moveAmount / (this.currentZoomScaleFactor + 1);
+                    break;
+                case 'right':
+                    this.currentImageLeft -= this.moveAmount / (this.currentZoomScaleFactor + 1);
+                    break;
+                case 'up':
+                    this.currentImageTop -= this.moveAmount / (this.currentZoomScaleFactor + 1);
+                    break;
+                case 'down':
+                    this.currentImageTop += this.moveAmount / (this.currentZoomScaleFactor + 1);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        //This is used move the viewbox around the minimap. Had to use some hardcoded numbers to keep the viewbox within the boundaries. Works for now but need a cleaner way of doing it in the future.
+        let maxLeft = (this.currentZoomScaleFactor - 1) * this.plotWidth / 2;
+        let maxTop = (this.currentZoomScaleFactor - 1) * this.plotHeight / 2;
+
+        let signLeft = this.sliderLeft >= 0 ? 1 : 0;
+        let signTop = this.sliderTop >= 0 ? 0 : 1;
+
+        transformPlotValue = `translateX(${-(this.currentLeft * this.currentZoomScaleFactor + this.sliderLeft + this.legendWidth * (this.currentZoomScaleFactor - 1))}px) translateY(${this.currentTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor})`;
+        transformImageValue = `translateX(${-(this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft)}px) translateY(${this.currentImageTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
+
+        transformPlotMiniMapValue = `translateX(${-(this.currentLeft * this.currentZoomScaleFactor + this.sliderLeft) / 4}px) translateY(${(this.currentTop * this.currentZoomScaleFactor + this.sliderTop) / 4}px) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor})`;
+        transformImageMiniMapValue = `translateX(${-(this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft) / 4}px) translateY(${(this.currentImageTop * this.currentZoomScaleFactor + this.sliderTop) / 4}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
+
+        transformBox = `translateX(${this.scales[this.currentZoomScaleFactor][signLeft] * this.sliderLeft / maxLeft}%) translateY(${-this.scales[this.currentZoomScaleFactor][signTop] * this.sliderTop / maxTop}%) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor})`;
+        if (mode === 'align' || mode === 'zoom' || mode === 'slider') {
+            plotContainer.style.transform = transformPlotValue;
+            imageContainer.style.transform = transformImageValue;
+            imageContainer2.style.transform = transformImageValue;
+            minimapImageContainer.style.transform = transformImageMiniMapValue;
+            minimapPlotContainer.style.transform = transformPlotMiniMapValue;
+
+            if (mode === 'zoom') {
+                miniBoxContainer.style.transform = transformBox;
+            }
+        }
+
+        this.selectionRectStyle = {
+            top: `${0}px`,
+            width: `${this.plotWidth / (4 * this.currentZoomScaleFactor)}px`,
+            height: `${this.plotHeight / (4 * this.currentZoomScaleFactor)}px`,
+            border: '2px solid #1DA1F2',
+            position: 'absolute',
+        };
+
+    }
+
     applyZoom(type) {
         if (type === '-' && this.currentZoomScaleFactor === 1) {
             this.currentZoomScaleFactor = 0.5;
@@ -633,4 +722,144 @@ export class SpotlightComponent implements OnInit {
 
 
     }
+
+    stretchPlot(axis, direction) {
+        if (axis === 'x-axis' && direction === '+') {
+            this.widthAdjustment += 1;
+        } else if (axis === 'x-axis' && direction === '-') {
+            this.widthAdjustment -= 1;
+        } else if (axis === 'y-axis' && direction === '+') {
+            this.heightAdjustment += 1;
+        } else if (axis === 'y-axis' && direction === '-') {
+            this.heightAdjustment -= 1;
+        }
+
+        this.createScatterplotWithPieCharts('normal')
+        this.createScatterplotWithPieCharts('minimap')
+    }
+
+    setAlignmentMode() {
+        this.createScatterplotWithPieCharts('normal')
+        this.createScatterplotWithPieCharts('minimap')
+    }
+
+    setZoomMode() {
+        this.createScatterplotWithPieCharts('normal')
+        this.createScatterplotWithPieCharts('minimap')
+    }
+
+    minLeftValue(): number {
+        return -(this.plotWidth) * (this.currentZoomScaleFactor - 1) / 2;
+    }
+
+    maxLeftValue(): number {
+        return (this.plotWidth) * (this.currentZoomScaleFactor - 1) / 2;
+    }
+
+    minTopValue(): number {
+        return -this.plotHeight * (this.currentZoomScaleFactor - 1) / 2;
+    }
+
+    maxTopValue(): number {
+        return this.plotHeight * (this.currentZoomScaleFactor - 1) / 2;
+    }
+
+    rotateImage(direction) {
+        const imageContainer = document.querySelector('.imageContainer') as HTMLImageElement;
+        const imageContainer2 = document.querySelector('.imageContainer2') as HTMLImageElement;
+        const minimapImageContainer = document.querySelector('.miniMapImageContainer') as HTMLImageElement;
+
+        const increment = this.axisSwapped ? -1 : 1;
+        // this.scaleXCustom = this.currentZoomScaleFactor
+
+        if (direction === "+") {
+            this.currentDegree += increment;
+        } else {
+            this.currentDegree -= increment;
+        }
+
+        let transformImageValue = `translateX(${-(this.currentImageLeft + this.sliderLeft)}px) translateY(${this.currentImageTop + this.sliderTop}px) scaleX(${this.scaleXCustom * this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
+        let transformMiniMapValue = `translateX(${-(this.currentImageLeft + this.sliderLeft) / 4}px) translateY(${(this.currentImageTop + this.sliderTop) / 4}px) scaleX(${this.scaleXCustom * this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
+
+        imageContainer.style.transform = transformImageValue;
+        imageContainer2.style.transform = transformImageValue;
+        minimapImageContainer.style.transform = transformMiniMapValue
+    }
+
+    swapAxis() {
+        const imageContainer = document.querySelector('.imageContainer') as HTMLImageElement;
+        const imageContainer2 = document.querySelector('.imageContainer2') as HTMLImageElement;
+        const minimapImageContainer = document.querySelector('.miniMapImageContainer') as HTMLImageElement;
+
+        this.axisSwapped = !this.axisSwapped;
+        if (this.axisSwapped === false) {
+            this.currentDegree -= 90
+        } else {
+            this.currentDegree += 90
+        }
+
+        this.scaleXCustom *= -1
+
+        let transformImageValue = `translateX(${-(this.currentImageLeft + this.sliderLeft)}px) translateY(${this.currentImageTop + this.sliderTop}px)  scaleX(${this.scaleXCustom * this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
+        let transformMiniMapValue = `translateX(${-(this.currentImageLeft + this.sliderLeft) / 4}px) translateY(${(this.currentImageTop + this.sliderTop) / 4}px)  scaleX(${this.scaleXCustom * this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
+
+        imageContainer.style.transform = transformImageValue;
+        imageContainer2.style.transform = transformImageValue;
+        minimapImageContainer.style.transform = transformMiniMapValue;
+    }
+
+    flipAxis(axis) {
+        const imageContainer = document.querySelector('.imageContainer') as HTMLImageElement;
+        const imageContainer2 = document.querySelector('.imageContainer2') as HTMLImageElement;
+        const minimapImageContainer = document.querySelector('.miniMapImageContainer') as HTMLImageElement;
+
+        if (axis === 'horizontal') {
+            this.xAxisFlipped = !this.xAxisFlipped;
+            this.flipX = this.xAxisFlipped ? -1 : 1;
+        } else {
+            this.yAxisFlipped = !this.yAxisFlipped;
+            this.flipY = this.yAxisFlipped ? -1 : 1;
+        }
+
+        let verticalImageTransform = `translateX(${-(this.currentImageLeft + this.sliderLeft)}px) translateY(${this.currentImageTop + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
+        let horizontalImageTransform = `translateX(${-(this.currentImageLeft + this.sliderLeft)}px) translateY(${this.currentImageTop + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
+        let transformImageValue = axis === 'vertical' ? verticalImageTransform : horizontalImageTransform;
+
+        let verticalMiniMapTransform = `translateX(${-((this.currentLeft + this.sliderLeft) / 4)}px) translateY(${(this.currentTop + this.sliderTop) / 4}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
+        let horizontalMiniMapTransform = `translateX(${-((this.currentLeft + this.sliderLeft) / 4)}px) translateY(${(this.currentTop + this.sliderTop) / 4}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
+        let transformMiniMapImageValue = axis === 'vertical' ? verticalMiniMapTransform : horizontalMiniMapTransform;
+
+        imageContainer.style.transform = transformImageValue;
+        imageContainer2.style.transform = transformImageValue;
+        minimapImageContainer.style.transform = transformMiniMapImageValue;
+    }
+    setMoveAmount(event: Event) {
+        event.preventDefault();
+        this.moveAmount = parseFloat(this.moveAmountVal)
+        this.notificationService.success(`Alignment step size updated to ${this.moveAmount}.`);
+        this.createScatterplotWithPieCharts('normal')
+        this.createScatterplotWithPieCharts('minimap')
+    }
+
+    onColorChange() {
+        this.createScatterplotWithPieCharts('normal')
+        this.createScatterplotWithPieCharts('minimap')
+    }
+
+    updatePlotOpacity(value: number): void {
+        this.plotOpacityValue = value;
+    }
+
+    updateImageOpacity(value: number): void {
+        this.imageOpacityValue = value;
+    }
+
+    setScaleFactor(event: Event) {
+        event.preventDefault();
+        this.scaleFactor = parseFloat(this.scaleFactorVal)
+        this.notificationService.success(`Scale Factor updated to ${this.scaleFactor}.`);
+        this.createScatterplotWithPieCharts('normal')
+        this.createScatterplotWithPieCharts('minimap')
+    }
+
 }

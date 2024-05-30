@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError } from "rxjs/operators";
 import { environment } from '@environments/environment';
@@ -27,10 +27,12 @@ interface ScatterDataCluster {
 })
 export class BaseSpatialgeComponent {
   @Input() outputs;
-  private readonly API_URL = environment.apiUrl;
+  protected readonly API_URL = environment.apiUrl;
+  onActionSpotlight = new EventEmitter<void>();
 
   containerId: string = '#scatter';
-  minimapContainerId: string = '#minimapId'
+  minimapContainerId: string = '#minimapId';
+  operationName = '';
 
   isLoading: boolean = false;
 
@@ -144,8 +146,8 @@ export class BaseSpatialgeComponent {
   flipY = 1;
 
   constructor(
-    private httpClient: HttpClient,
-    private readonly notificationService: NotificationService,
+    protected httpClient: HttpClient,
+    protected readonly notificationService: NotificationService,
   ) { }
 
   resetVariables() {
@@ -210,21 +212,24 @@ export class BaseSpatialgeComponent {
     event.preventDefault();
     this.scaleFactor = parseFloat(this.scaleFactorVal)
     this.notificationService.success(`Scale Factor updated to ${this.scaleFactor}.`);
-    this.createScatterPlot('normal')
-    this.createScatterPlot('minimap')
+    // this.createScatterPlot('normal')
+    // this.createScatterPlot('minimap')
+    this.callCreateScatterPlot();
   }
 
-  setMoveAmount(event: Event){
+  setMoveAmount(event: Event) {
     event.preventDefault();
     this.moveAmount = parseFloat(this.moveAmountVal)
     this.notificationService.success(`Alignment step size updated to ${this.moveAmount}.`);
-    this.createScatterPlot('normal')
-    this.createScatterPlot('minimap')
+    // this.createScatterPlot('normal')
+    // this.createScatterPlot('minimap')
+    this.callCreateScatterPlot();
   }
 
   onColorChange() {
-    this.createScatterPlot('normal')
-    this.createScatterPlot('minimap')
+    // this.createScatterPlot('normal')
+    // this.createScatterPlot('minimap')
+    this.callCreateScatterPlot();
   }
 
   updatePlotOpacity(value: number): void {
@@ -356,12 +361,11 @@ export class BaseSpatialgeComponent {
           position: 'absolute',
         };
 
-        console.log("plotwidth: ", this.plotWidth, this.originalPlotWidth)
-
         if (this.scatterPlotData.length > 0) {
           this.displayOverlayContainer = true;
-          this.createScatterPlot('normal')
-          this.createScatterPlot('minimap')
+          // this.createScatterPlot('normal')
+          // this.createScatterPlot('minimap')
+          this.callCreateScatterPlot();
         }
 
       }
@@ -476,12 +480,11 @@ export class BaseSpatialgeComponent {
           position: 'absolute',
         };
 
-        console.log("plotwidth: ", this.plotWidth)
-
         if (this.scatterPlotDataCluster.length > 0) {
           this.displayOverlayContainer = true;
-          this.createScatterPlot('normal')
-          this.createScatterPlot('minimap')
+          // this.createScatterPlot('normal')
+          // this.createScatterPlot('minimap')
+          this.callCreateScatterPlot();
         }
       } else {
         this.displayOverlayContainer = false;
@@ -901,10 +904,17 @@ export class BaseSpatialgeComponent {
     miniBoxContainer.style.transform = transformBox;
     miniSubContainer.style.transform = `scale(${this.currentZoomScaleFactor === 0.5 ? 0.5 : 1})`;
 
-    this.createScatterPlot('normal')
-    this.createScatterPlot('minimap')
 
+    this.callCreateScatterPlot();
+  }
 
+  callCreateScatterPlot() {
+    if (this.operationName === 'SPOTlight') {
+      this.onActionSpotlight.emit();
+    } else {
+      this.createScatterPlot('normal')
+      this.createScatterPlot('minimap')
+    }
   }
 
   stretchPlot(axis, direction) {
@@ -918,18 +928,21 @@ export class BaseSpatialgeComponent {
       this.heightAdjustment -= 1;
     }
 
-    this.createScatterPlot('normal')
-    this.createScatterPlot('minimap')
+    // this.createScatterPlot('normal')
+    // this.createScatterPlot('minimap')
+    this.callCreateScatterPlot();
   }
 
   setAlignmentMode() {
-    this.createScatterPlot('normal')
-    this.createScatterPlot('minimap')
+    // this.createScatterPlot('normal')
+    // this.createScatterPlot('minimap')
+    this.callCreateScatterPlot();
   }
 
   setZoomMode() {
-    this.createScatterPlot('normal')
-    this.createScatterPlot('minimap')
+    // this.createScatterPlot('normal')
+    // this.createScatterPlot('minimap')
+    this.callCreateScatterPlot();
   }
 
   minLeftValue(): number {

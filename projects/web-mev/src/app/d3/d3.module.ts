@@ -58,7 +58,7 @@ import { SpatialGENormalizationComponent } from './components/spatialge-normaliz
 import { BaseSpatialgeComponent } from './components/base-spatialge/base-spatialge.component';
 import { SpatialGEClustersComponent } from './components/spatialge-clusters/spatialge-clusters.component';
 import { SpatialGEPathwayEnrichmentComponent } from './components/spatialge-pathway-enrichment/spatialge-pathway-enrichment.component';
-import { SpotlightComponent } from './components/spotlight/spotlight.component'
+import { SpotlightComponent } from './components/spotlight/spotlight.component';
 
 @NgModule({
   declarations: [
@@ -117,7 +117,7 @@ import { SpotlightComponent } from './components/spotlight/spotlight.component'
     BaseSpatialgeComponent,
     SpatialGEClustersComponent,
     SpatialGEPathwayEnrichmentComponent,
-    SpotlightComponent,
+    SpotlightComponent
   ],
   imports: [CommonModule, SharedModule, DragDropModule, MatBadgeModule],
   exports: [
@@ -166,7 +166,7 @@ import { SpotlightComponent } from './components/spotlight/spotlight.component'
     BaseSpatialgeComponent,
     SpatialGEClustersComponent,
     SpatialGEPathwayEnrichmentComponent,
-    SpotlightComponent,
+    SpotlightComponent
   ]
 })
 export class D3Module { }

@@ -15,8 +15,6 @@ import { BaseSpatialgeComponent } from '../base-spatialge/base-spatialge.compone
 export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit {
     @Input() outputs;
 
-    // isLoading = false;
-
     limit = 0.1
 
     plotData = {};
@@ -32,9 +30,12 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
         "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f",
         "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5"
     ];
+    low_res_scalefactor = '0.0218635';
 
     ngOnInit(): void {
-        this.operationName = this.outputs.operation.operation_name
+        this.scaleFactorVal = this.low_res_scalefactor;
+        this.scaleFactor = parseFloat(this.low_res_scalefactor);
+        this.operationName = this.outputs.operation.operation_name;
         this.onActionSpotlight.subscribe(() => {
             this.createScatterplotSpotlight('normal')
             this.createScatterplotSpotlight('minimap')
@@ -47,6 +48,7 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
         this.isLoading = true;
         this.scrollTo('topOfPage');
         this.resetVariables();
+        this.geneSearchHeight = -100;
         let deconvoluted_outputs_uuid = this.outputs["deconvoluted_output"];
         let coords_metadata_uuid = this.outputs["coords_metadata"];
 
@@ -71,7 +73,6 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
 
         forkJoin([spotlightRequest, coordsMetadataRequest]).subscribe(([spotlightRes, coordsMetadataRes]) => {
             this.isLoading = false;
-            console.log("coor res: ", coordsMetadataRes)
 
             for (let index in coordsMetadataRes) {
                 let gene = coordsMetadataRes[index]
@@ -188,7 +189,6 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
             .attr('class', 'd3-tip')
             .offset([-10, 0])
             .html((event: any, d: any) => {
-                // let tipBox = `<div>${d.data.name}</div><div><div class="category">${d.data.label}: ${Math.round(d.data.value)} %</div>`
                 let tipBox = `<div class="tipHeader">${d.data.name}</div>`;
                 for (let key in this.geneDict[d.data.name]) {
                     tipBox += `<div><div class="tipKey">${this.geneDict[d.data.name][key].label}:</div> ${Math.round(this.geneDict[d.data.name][key].value)}%</div>`
@@ -207,12 +207,11 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
         svg.call(pointTip);
 
         const x = d3.scaleLinear()
-            .domain([this.xMin - 2000, this.xMax + 2000])
+            .domain([this.xMin - (this.xMax - this.xMin) * this.scaleFactor, this.xMax + (this.xMax - this.xMin) * this.scaleFactor])
             .range([0, width]);
 
         const y = d3.scaleLinear()
-            // .domain([this.yMin * (1 - this.scaleFactor), this.yMax * (1 + this.scaleFactor)])
-            .domain([this.yMin - 3000, this.yMax])
+            .domain([this.yMin - (this.yMax - this.yMin) * this.scaleFactor, this.yMax + (this.yMax - this.yMin) * this.scaleFactor])
             .range([0, height]);
 
         // Add pie charts for each data point
@@ -246,9 +245,7 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
                         pointTip.style('left', mouseEvent.x + 10 + 'px');
                     })
                     .on('mouseout', pointTip.hide);
-
             }
-
         });
 
         // Add Legend
@@ -271,7 +268,7 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
             .append('g')
             .classed('legend', true)
             .attr('transform', function (d, i) {
-                return `translate(${-(width + 130)}, ${i * 15 + 50})`;
+                return `translate(${-(width + 130)}, ${i * 20 + 50})`;
             });
 
         legend
@@ -287,6 +284,41 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
             .style('fill', '#000')
             .style('font-size', '8px')
             .attr('class', 'legend-label')
-            .text(d => d.label);
+            .text(d => d.label)
+            .call(this.wrap, this.legendWidth - 5);
+
+    }
+
+    wrap(text, width) {
+        text.each(function () {
+            var text = d3.select(this),
+                words = text.text().split(/\s+/).reverse(),
+                word,
+                line = [],
+                lineNumber = 0,
+                lineHeight = 1.1, // ems
+                x = text.attr("x"),
+                y = text.attr("y"),
+                dy = 0, //parseFloat(text.attr("dy")),
+                tspan = text.text(null)
+                    .append("tspan")
+                    .attr("x", x)
+                    .attr("y", y + 2)
+                    .attr("dy", dy + "em");
+            while (word = words.pop()) {
+                line.push(word);
+                tspan.text(line.join(" "));
+                if (tspan.node().getComputedTextLength() > width) {
+                    line.pop();
+                    tspan.text(line.join(" "));
+                    line = [word];
+                    tspan = text.append("tspan")
+                        .attr("x", x)
+                        .attr("y", y)
+                        .attr("dy", ++lineNumber * lineHeight + dy + "em")
+                        .text(word);
+                }
+            }
+        });
     }
 }

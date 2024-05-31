@@ -70,7 +70,7 @@
         </div>
 
         <span class="fullOverlayDiv"
-            [style.width.px]="currentZoomScaleFactor !== 1 ? (plotWidth+legendWidth)*2:(plotWidth+legendWidth)*2">
+            [style.width.px]="currentZoomScaleFactor !== 1 ? (plotWidth+legendWidth)*2:(plotWidth+legendWidth)*2 -100">
             <div *ngIf="currentZoomScaleFactor !== 1 && currentZoomScaleFactor !== 0.5" class="verticalSliderContainer">
                 <mat-slider [min]="minTopValue()" [max]="maxTopValue()" step="10" [(ngModel)]="sliderTop"
                     (change)="movePlot('left', 'slider', 'plot')" vertical [style.height.px]="plotHeight">
@@ -86,7 +86,7 @@
                 <div *ngIf="scatterPlotData.length > 0"
                     [class]="!droppedFile && currentZoomScaleFactor == 1 ? 'drop-zone' : '' "
                     (drop)="onDropFile($event)" (dragover)="onDragOver($event)"
-                    [style.margin-left.px]="overlayImage ? -(plotWidth + widthAdjustment)+legendWidth: legendWidth"
+                    [style.margin-left.px]="overlayImage ? (currentZoomScaleFactor === 1 ? -(plotWidth + widthAdjustment*currentZoomScaleFactor)+legendWidth : -(plotWidth + widthAdjustment*currentZoomScaleFactor) - (currentZoomScaleFactor-1)*50): legendWidth"
                     [style.height.px]="!droppedFile ? originalPlotHeight - 100: originalPlotHeight"
                     [style.width.px]="originalPlotWidth * 0.66" (click)="fileInput.click()" class="imageContainer">
                     <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;">
@@ -248,7 +248,7 @@
                 <mat-form-field class="example-form-field container" appearance="outline">
                     <mat-label>Step Size</mat-label>
                     <input matInput type="search" name="search" [(ngModel)]="moveAmountVal"
-                        (keyup.enter)="setScaleFactor($event)" class="smallerInput">
+                        (keyup.enter)="setMoveAmount($event)" class="smallerInput">
                     <button *ngIf="moveAmountVal" matSuffix mat-icon-button aria-label="Clear"
                         (click)="moveAmountVal = ''">
                         <mat-icon>close</mat-icon>

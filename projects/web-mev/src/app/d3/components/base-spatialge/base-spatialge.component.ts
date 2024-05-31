@@ -212,8 +212,6 @@ export class BaseSpatialgeComponent {
     event.preventDefault();
     this.scaleFactor = parseFloat(this.scaleFactorVal)
     this.notificationService.success(`Scale Factor updated to ${this.scaleFactor}.`);
-    // this.createScatterPlot('normal')
-    // this.createScatterPlot('minimap')
     this.callCreateScatterPlot();
   }
 
@@ -221,14 +219,10 @@ export class BaseSpatialgeComponent {
     event.preventDefault();
     this.moveAmount = parseFloat(this.moveAmountVal)
     this.notificationService.success(`Alignment step size updated to ${this.moveAmount}.`);
-    // this.createScatterPlot('normal')
-    // this.createScatterPlot('minimap')
     this.callCreateScatterPlot();
   }
 
   onColorChange() {
-    // this.createScatterPlot('normal')
-    // this.createScatterPlot('minimap')
     this.callCreateScatterPlot();
   }
 
@@ -363,8 +357,6 @@ export class BaseSpatialgeComponent {
 
         if (this.scatterPlotData.length > 0) {
           this.displayOverlayContainer = true;
-          // this.createScatterPlot('normal')
-          // this.createScatterPlot('minimap')
           this.callCreateScatterPlot();
         }
 
@@ -482,8 +474,6 @@ export class BaseSpatialgeComponent {
 
         if (this.scatterPlotDataCluster.length > 0) {
           this.displayOverlayContainer = true;
-          // this.createScatterPlot('normal')
-          // this.createScatterPlot('minimap')
           this.callCreateScatterPlot();
         }
       } else {
@@ -561,7 +551,7 @@ export class BaseSpatialgeComponent {
     }
 
     // Add Legend
-    if (this.legendWidth !== 0) {
+    if (this.legendWidth !== 0 && size !== 'minimap') {
       if (useNorm) {
         const gradient = svg.append("defs")
           .append("linearGradient")
@@ -863,13 +853,13 @@ export class BaseSpatialgeComponent {
     this.sliderTop = 0;
 
     if (this.currentZoomScaleFactor === 1) {
-      this.legendWidth = 120
+      this.legendWidth = 120;
     } else {
       this.legendWidth = 0
     }
 
     if (plotContainer || imageContainer) {
-      const transformPlotValue = `translateX(${-this.currentLeft * this.currentZoomScaleFactor + this.sliderLeft}px) translateY(${this.currentTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor})`;
+      const transformPlotValue = `translateX(${-this.currentLeft * this.currentZoomScaleFactor + this.sliderLeft - this.legendWidth * (this.currentZoomScaleFactor - 1)}px) translateY(${this.currentTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor})`;
       const transformImageValue = `translateX(${-this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft}px) translateY(${this.currentImageTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
 
       plotContainer.style.transform = transformPlotValue;
@@ -904,7 +894,7 @@ export class BaseSpatialgeComponent {
     miniBoxContainer.style.transform = transformBox;
     miniSubContainer.style.transform = `scale(${this.currentZoomScaleFactor === 0.5 ? 0.5 : 1})`;
 
-
+    console.log("image-left: ", this.currentLeft, this.currentImageLeft)
     this.callCreateScatterPlot();
   }
 
@@ -919,29 +909,23 @@ export class BaseSpatialgeComponent {
 
   stretchPlot(axis, direction) {
     if (axis === 'x-axis' && direction === '+') {
-      this.widthAdjustment += 1;
+      this.widthAdjustment += this.moveAmount;
     } else if (axis === 'x-axis' && direction === '-') {
-      this.widthAdjustment -= 1;
+      this.widthAdjustment -= this.moveAmount;
     } else if (axis === 'y-axis' && direction === '+') {
-      this.heightAdjustment += 1;
+      this.heightAdjustment += this.moveAmount;
     } else if (axis === 'y-axis' && direction === '-') {
-      this.heightAdjustment -= 1;
+      this.heightAdjustment -= this.moveAmount;
     }
-
-    // this.createScatterPlot('normal')
-    // this.createScatterPlot('minimap')
+    console.log("width adjustment: ", this.widthAdjustment)
     this.callCreateScatterPlot();
   }
 
   setAlignmentMode() {
-    // this.createScatterPlot('normal')
-    // this.createScatterPlot('minimap')
     this.callCreateScatterPlot();
   }
 
   setZoomMode() {
-    // this.createScatterPlot('normal')
-    // this.createScatterPlot('minimap')
     this.callCreateScatterPlot();
   }
 

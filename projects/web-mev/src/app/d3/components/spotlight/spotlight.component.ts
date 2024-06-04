@@ -189,9 +189,9 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
             .attr('class', 'd3-tip')
             .offset([-10, 0])
             .html((event: any, d: any) => {
-                let tipBox = `<div class="tipHeader">${d.data.name}</div>`;
+                let tipBox = `<div style="font-weight: bold;">${d.data.name}</div>`;
                 for (let key in this.geneDict[d.data.name]) {
-                    tipBox += `<div><div class="tipKey">${this.geneDict[d.data.name][key].label}:</div> ${Math.round(this.geneDict[d.data.name][key].value)}%</div>`
+                    tipBox += `<div style="display: inline-block;><div style="font-weight: bold;">${this.geneDict[d.data.name][key].label}:</div> ${Math.round(this.geneDict[d.data.name][key].value)}%</div><br>`
                 }
                 return tipBox
             });
@@ -222,7 +222,7 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
             // @ts-ignore
             const arc = d3.arc()
                 .innerRadius(0)
-                .outerRadius(2) as d3.ValueFn<SVGPathElement, d3.PieArcDatum<any>, string | null>
+                .outerRadius(2.5) as d3.ValueFn<SVGPathElement, d3.PieArcDatum<any>, string | null>
 
             if (d.pieData2) {
                 const pieData = pie(d.pieData2);

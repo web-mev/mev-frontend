@@ -32,9 +32,10 @@ export class BaseSpatialgeComponent {
 
   containerId: string = '#scatter';
   minimapContainerId: string = '#minimapId';
-  operationName = '';
+  operationName: string = '';
 
   isLoading: boolean = false;
+  displayOverlayContainer: boolean = true;
 
   scatterPlotData: ScatterDataNormailization[] = [];
   scatterPlotDataCluster: ScatterDataCluster[] = [];
@@ -50,68 +51,76 @@ export class BaseSpatialgeComponent {
 
   totalCounts: Record<string, any> = {}
 
-  scaleFactor: number = 0.01602821;
-  geneSearch: string = 'VIM'
-
-  selectedColor: string = 'Green';
-  colors: string[] = ['Red', 'Green']
-
-  plotOpacityValue: number = .7
-  imageOpacityValue: number = .5
-
-  overlayImage: boolean = false;
-  displayPlot: boolean = false;
-  displayImage: boolean = false;
-
-  displayAlignment: boolean = false;
-
-  scaleFactorVal = '0.01602821';
-  // scaleFactorVal: string = '0';
-  geneSearchVal: string = 'VIM'
-
-  moveAmount: number = 1;
-  moveAmountVal: string = '1';
-
   plotWidth: number = 300;
   plotHeight: number = 500;
+  originalPlotWidth: number = 0;
+  originalPlotHeight: number = 0;
+  legendWidth: number = 120;
+  originalLegendWidth: number = 0;
+
+  xAxisValue: string = '';
+  yAxisValue: string = ''
+  xAxisValueList: string[] = [];
+  yAxisValueList: string[] = [];
 
   currentLeft: number = 0;
   currentTop: number = 0;
 
-  widthAdjustment: number = 0
-  heightAdjustment: number = 0
-
-  droppedFile: File | null = null;
-  droppedFileURL: string | ArrayBuffer | null = null;
+  widthAdjustment: number = 0;
+  heightAdjustment: number = 0;
 
   imageAdjustedWidth: number = 0;
   maxImageContainerWidthOverylay: number = this.plotWidth;
   maxImageContainerWidthSidebySide: number = this.plotWidth * 2;
 
+  geneSearch: string = 'VIM';
+  geneSearchVal: string = 'VIM';
+  geneSearchHeight: number = 100;
+
+  panelOpenState: boolean = true;
+
+  scaleFactor: number = 0.01602821;
+  scaleFactorVal = '0.01602821';
+
+  overlayImage: boolean = false;
+  displayPlot: boolean = false;
+  displayImage: boolean = false;
+  displayAlignment: boolean = false;
+
   currentZoomScaleFactor: number = 1;
-  maxScaleFactor: number = 2;
-  minScaleFactor: number = 0.5;
+  // maxScaleFactor: number = 2;
+  // minScaleFactor: number = 0.5;
+
+  plotOpacityValue: number = .7
+  imageOpacityValue: number = .5
+
+  selectedColor: string = 'Green';
+  colors: string[] = ['Red', 'Green'];
+
+  clusterTypes: Record<string, any> = {};
+  clusterColors: string[] = ["#EBCD00", "#52A52E", "#00979D", "#6578B4", "#80408D", "#C9006B", "#68666F", "#E80538", "#E87D1E"];
+
+  moveAmount: number = 1;
+  moveAmountVal: string = '1';
+
+  droppedFile: File | null = null;
+  droppedFileURL: string | ArrayBuffer | null = null;
 
   useCluster: boolean = false;
   useNormalization: boolean = false;
 
-  legendWidth: number = 120;
-
-  clusterTypes: Record<string, any> = {}
-  clusterColors: string[] = ["#EBCD00", "#52A52E", "#00979D", "#6578B4", "#80408D", "#C9006B", "#68666F", "#E80538", "#E87D1E"]
-
-  selectionRectStyle: Record<string, any> = {};
-
-  geneSearchHeight: number = 100;
+  selectionRectStyle: Record<string, any> = {
+    top: '',
+    width: '',
+    height: '',
+    border: '',
+    position: '',
+  };
 
   analysisType: string = ''
 
-  xAxisValue: string = '';
-  yAxisValue: string = ''
-  xAxisValueList: string[] = []
-  yAxisValueList: string[] = []
 
-  panelOpenState: boolean = true;
+  //separate the alignment variables here
 
   currentDegree: number = 0;
   scaleXCustom: number = 1;
@@ -120,10 +129,6 @@ export class BaseSpatialgeComponent {
 
   zoomMin: number = 0.5;
   zoomMax: number = 5;
-
-  originalPlotWidth: number = 0;
-  originalPlotHeight: number = 0;
-  displayOverlayContainer: boolean = true;
 
   scales: Record<string, number[]> = {
     "0.5": [0, 0],
@@ -152,6 +157,7 @@ export class BaseSpatialgeComponent {
 
   resetVariables() {
     this.scatterPlotData = [];
+    this.scatterPlotDataCluster = [];
     this.xMin = 100000000
     this.xMax = 0
     this.yMin = 100000000
@@ -172,12 +178,28 @@ export class BaseSpatialgeComponent {
     this.currentImageTop = 0
     this.sliderLeft = 0
     this.sliderTop = 0
+
     this.overlayImage = false;
     this.displayAlignment = false;
     this.axisSwapped = false
     this.xAxisFlipped = false;
     this.yAxisFlipped = false;
     this.showMiniMap = false;
+
+    this.legendWidth = 120;
+    this.originalLegendWidth = this.legendWidth -20; //check later where this 20 value comes from
+    this.currentLeft = 0;
+    this.currentTop = 0;
+    this.flipX = 1;
+    this.flipY = 1;
+    this.currentDegree = 0;
+    this.moveAmount = 1;
+    this.moveAmountVal = '1';
+    this.widthAdjustment = 0;
+    this.heightAdjustment = 0;
+
+
+
 
     const imageContainer = document.querySelector('.imageContainer') as HTMLImageElement;
     const imageContainer2 = document.querySelector('.imageContainer2') as HTMLImageElement;
@@ -205,38 +227,6 @@ export class BaseSpatialgeComponent {
       minimapImageContainer.style.transform = transformMiniMapValue;
       minimapPlotContainer.style.transform = transformMiniMapValue;
     }
-
-  }
-
-  setScaleFactor(event: Event) {
-    event.preventDefault();
-    this.scaleFactor = parseFloat(this.scaleFactorVal)
-    this.notificationService.success(`Scale Factor updated to ${this.scaleFactor}.`);
-    this.callCreateScatterPlot();
-  }
-
-  setMoveAmount(event: Event) {
-    event.preventDefault();
-    this.moveAmount = parseFloat(this.moveAmountVal)
-    this.notificationService.success(`Alignment step size updated to ${this.moveAmount}.`);
-    this.callCreateScatterPlot();
-  }
-
-  onColorChange() {
-    this.callCreateScatterPlot();
-  }
-
-  updatePlotOpacity(value: number): void {
-    this.plotOpacityValue = value;
-  }
-
-  updateImageOpacity(value: number): void {
-    this.imageOpacityValue = value;
-  }
-
-  scrollTo(htmlID) {
-    const element = document.getElementById(htmlID) as HTMLElement;
-    element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
   }
 
   getAxisColumnNames() {
@@ -622,11 +612,8 @@ export class BaseSpatialgeComponent {
           color: this.clusterTypes[key].color
         }));
         clusterColors.sort((a, b) => {
-          // Extracting the numerical part of the label
           const numA = parseInt(a.label.split(' ')[1]);
           const numB = parseInt(b.label.split(' ')[1]);
-
-          // Comparing the numerical parts
           return numA - numB;
         });
         const legendWidth = this.legendWidth;
@@ -660,92 +647,12 @@ export class BaseSpatialgeComponent {
 
   }
 
-  movePlot(direction, mode, container) {
-    const plotContainer = document.querySelector('.plotContainer') as HTMLImageElement;
-    const imageContainer = document.querySelector('.imageContainer') as HTMLImageElement;
-    const imageContainer2 = document.querySelector('.imageContainer2') as HTMLImageElement;
-
-    const miniBoxContainer = document.querySelector('.miniboxDiv') as HTMLImageElement;
-    const minimapImageContainer = document.querySelector('.miniMapImageContainer') as HTMLImageElement;
-    const minimapPlotContainer = document.querySelector('.minimapPlotContainer') as HTMLImageElement;
-
-    let transformPlotValue;
-    let transformBox;
-    let transformImageValue;
-    let transformImageMiniMapValue;
-    let transformPlotMiniMapValue;
-
-    if (mode === 'align' && container === 'plot') {
-      switch (direction) {
-        case 'left':
-          this.currentLeft += this.moveAmount / (this.currentZoomScaleFactor + 1);
-          break;
-        case 'right':
-          this.currentLeft -= this.moveAmount / (this.currentZoomScaleFactor + 1);
-          break;
-        case 'up':
-          this.currentTop -= this.moveAmount / (this.currentZoomScaleFactor + 1);
-          break;
-        case 'down':
-          this.currentTop += this.moveAmount / (this.currentZoomScaleFactor + 1);
-          break;
-        default:
-          break;
-      }
-    } else if (mode === 'align' && container === 'image') {
-      switch (direction) {
-        case 'left':
-          this.currentImageLeft += this.moveAmount / (this.currentZoomScaleFactor + 1);
-          break;
-        case 'right':
-          this.currentImageLeft -= this.moveAmount / (this.currentZoomScaleFactor + 1);
-          break;
-        case 'up':
-          this.currentImageTop -= this.moveAmount / (this.currentZoomScaleFactor + 1);
-          break;
-        case 'down':
-          this.currentImageTop += this.moveAmount / (this.currentZoomScaleFactor + 1);
-          break;
-        default:
-          break;
-      }
-    }
-
-    //This is used move the viewbox around the minimap. Had to use some hardcoded numbers to keep the viewbox within the boundaries. Works for now but need a cleaner way of doing it in the future.
-    let maxLeft = (this.currentZoomScaleFactor - 1) * this.plotWidth / 2;
-    let maxTop = (this.currentZoomScaleFactor - 1) * this.plotHeight / 2;
-
-    let signLeft = this.sliderLeft >= 0 ? 1 : 0;
-    let signTop = this.sliderTop >= 0 ? 0 : 1;
-
-    transformPlotValue = `translateX(${-(this.currentLeft * this.currentZoomScaleFactor + this.sliderLeft + this.legendWidth * (this.currentZoomScaleFactor - 1))}px) translateY(${this.currentTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor})`;
-    transformImageValue = `translateX(${-(this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft)}px) translateY(${this.currentImageTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
-
-    transformPlotMiniMapValue = `translateX(${-(this.currentLeft * this.currentZoomScaleFactor + this.sliderLeft) / 4}px) translateY(${(this.currentTop * this.currentZoomScaleFactor + this.sliderTop) / 4}px) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor})`;
-    transformImageMiniMapValue = `translateX(${-(this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft) / 4}px) translateY(${(this.currentImageTop * this.currentZoomScaleFactor + this.sliderTop) / 4}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
-
-    transformBox = `translateX(${this.scales[this.currentZoomScaleFactor][signLeft] * this.sliderLeft / maxLeft}%) translateY(${-this.scales[this.currentZoomScaleFactor][signTop] * this.sliderTop / maxTop}%) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor})`;
-    if (mode === 'align' || mode === 'zoom' || mode === 'slider') {
-      plotContainer.style.transform = transformPlotValue;
-      imageContainer.style.transform = transformImageValue;
-      imageContainer2.style.transform = transformImageValue;
-      minimapImageContainer.style.transform = transformImageMiniMapValue;
-      minimapPlotContainer.style.transform = transformPlotMiniMapValue;
-
-      if (mode === 'zoom') {
-        miniBoxContainer.style.transform = transformBox;
-      }
-    }
-
-    this.selectionRectStyle = {
-      top: `${0}px`,
-      width: `${this.plotWidth / (4 * this.currentZoomScaleFactor)}px`,
-      height: `${this.plotHeight / (4 * this.currentZoomScaleFactor)}px`,
-      border: '2px solid #1DA1F2',
-      position: 'absolute',
-    };
-
+  scrollTo(htmlID) {
+    const element = document.getElementById(htmlID) as HTMLElement;
+    element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
   }
+
+  //These functions are for Downloading the plots and images
 
   captureAndDownloadImages() {
     this.isLoading = true;
@@ -828,6 +735,41 @@ export class BaseSpatialgeComponent {
     }
   }
 
+  callCreateScatterPlot() {
+    if (this.operationName === 'SPOTlight') {
+      this.onActionSpotlight.emit();
+    } else {
+      this.createScatterPlot('normal')
+      this.createScatterPlot('minimap')
+    }
+  }
+
+  updatePlotOpacity(value: number): void {
+    this.plotOpacityValue = value;
+  }
+
+  updateImageOpacity(value: number): void {
+    this.imageOpacityValue = value;
+  }
+
+  setScaleFactor(event: Event) {
+    event.preventDefault();
+    this.scaleFactor = parseFloat(this.scaleFactorVal)
+    this.notificationService.success(`Scale Factor updated to ${this.scaleFactor}.`);
+    this.callCreateScatterPlot();
+  }
+
+  onColorChange() {
+    this.callCreateScatterPlot();
+  }
+
+  setMoveAmount(event: Event) {
+    event.preventDefault();
+    this.moveAmount = parseFloat(this.moveAmountVal)
+    this.notificationService.success(`Alignment step size updated to ${this.moveAmount}.`);
+    this.callCreateScatterPlot();
+  }
+
   applyZoom(type) {
     if (type === '-' && this.currentZoomScaleFactor === 1) {
       this.currentZoomScaleFactor = 0.5;
@@ -860,7 +802,7 @@ export class BaseSpatialgeComponent {
 
     if (plotContainer || imageContainer) {
       const transformPlotValue = `translateX(${-this.currentLeft * this.currentZoomScaleFactor + this.sliderLeft - this.legendWidth * (this.currentZoomScaleFactor - 1)}px) translateY(${this.currentTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor})`;
-      const transformImageValue = `translateX(${-this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft}px) translateY(${this.currentImageTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
+      const transformImageValue = `translateX(${this.flipX === 1 ? -(this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft) : -(this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft) + this.originalLegendWidth * this.currentZoomScaleFactor}px) translateY(${this.currentImageTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
 
       plotContainer.style.transform = transformPlotValue;
       imageContainer.style.transform = transformImageValue;
@@ -894,17 +836,99 @@ export class BaseSpatialgeComponent {
     miniBoxContainer.style.transform = transformBox;
     miniSubContainer.style.transform = `scale(${this.currentZoomScaleFactor === 0.5 ? 0.5 : 1})`;
 
-    console.log("image-left: ", this.currentLeft, this.currentImageLeft)
     this.callCreateScatterPlot();
   }
 
-  callCreateScatterPlot() {
-    if (this.operationName === 'SPOTlight') {
-      this.onActionSpotlight.emit();
-    } else {
-      this.createScatterPlot('normal')
-      this.createScatterPlot('minimap')
+  //Alignment functions
+  setAlignmentMode() {
+    this.callCreateScatterPlot();
+  }
+
+  movePlot(direction, mode, container) {
+    const plotContainer = document.querySelector('.plotContainer') as HTMLImageElement;
+    const imageContainer = document.querySelector('.imageContainer') as HTMLImageElement;
+    const imageContainer2 = document.querySelector('.imageContainer2') as HTMLImageElement;
+
+    const miniBoxContainer = document.querySelector('.miniboxDiv') as HTMLImageElement;
+    const minimapImageContainer = document.querySelector('.miniMapImageContainer') as HTMLImageElement;
+    const minimapPlotContainer = document.querySelector('.minimapPlotContainer') as HTMLImageElement;
+
+    let transformPlotValue;
+    let transformBox;
+    let transformImageValue;
+    let transformImageMiniMapValue;
+    let transformPlotMiniMapValue;
+
+    if (mode === 'align' && container === 'plot') {
+      switch (direction) {
+        case 'left':
+          this.currentLeft += this.moveAmount / (this.currentZoomScaleFactor + 1);
+          break;
+        case 'right':
+          this.currentLeft -= this.moveAmount / (this.currentZoomScaleFactor + 1);
+          break;
+        case 'up':
+          this.currentTop -= this.moveAmount / (this.currentZoomScaleFactor + 1);
+          break;
+        case 'down':
+          this.currentTop += this.moveAmount / (this.currentZoomScaleFactor + 1);
+          break;
+        default:
+          break;
+      }
+    } else if (mode === 'align' && container === 'image') {
+      switch (direction) {
+        case 'left':
+          this.currentImageLeft += this.moveAmount / (this.currentZoomScaleFactor + 1);
+          break;
+        case 'right':
+          this.currentImageLeft -= this.moveAmount / (this.currentZoomScaleFactor + 1);
+          break;
+        case 'up':
+          this.currentImageTop -= this.moveAmount / (this.currentZoomScaleFactor + 1);
+          break;
+        case 'down':
+          this.currentImageTop += this.moveAmount / (this.currentZoomScaleFactor + 1);
+          break;
+        default:
+          break;
+      }
     }
+
+    //This is used move the viewbox around the minimap. Had to use some hardcoded numbers to keep the viewbox within the boundaries. Works for now but need a cleaner way of doing it in the future.
+    let maxLeft = (this.currentZoomScaleFactor - 1) * this.plotWidth / 2;
+    let maxTop = (this.currentZoomScaleFactor - 1) * this.plotHeight / 2;
+
+    let signLeft = this.sliderLeft >= 0 ? 1 : 0;
+    let signTop = this.sliderTop >= 0 ? 0 : 1;
+
+    transformPlotValue = `translateX(${-(this.currentLeft * this.currentZoomScaleFactor + this.sliderLeft + this.legendWidth * (this.currentZoomScaleFactor - 1))}px) translateY(${this.currentTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor})`;
+    transformImageValue = `translateX(${this.flipX === 1 ? -(this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft) : -(this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft) + this.originalLegendWidth * this.currentZoomScaleFactor}px) translateY(${this.currentImageTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
+
+    transformPlotMiniMapValue = `translateX(${-(this.currentLeft * this.currentZoomScaleFactor + this.sliderLeft) / 4}px) translateY(${(this.currentTop * this.currentZoomScaleFactor + this.sliderTop) / 4}px) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor})`;
+    transformImageMiniMapValue = `translateX(${-(this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft) / 4}px) translateY(${(this.currentImageTop * this.currentZoomScaleFactor + this.sliderTop) / 4}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
+
+    transformBox = `translateX(${this.scales[this.currentZoomScaleFactor][signLeft] * this.sliderLeft / maxLeft}%) translateY(${-this.scales[this.currentZoomScaleFactor][signTop] * this.sliderTop / maxTop}%) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor})`;
+    if (mode === 'align' || mode === 'zoom' || mode === 'slider') {
+      plotContainer.style.transform = transformPlotValue;
+      imageContainer.style.transform = transformImageValue;
+      imageContainer2.style.transform = transformImageValue;
+      minimapImageContainer.style.transform = transformImageMiniMapValue;
+      minimapPlotContainer.style.transform = transformPlotMiniMapValue;
+
+      if (mode === 'zoom') {
+        miniBoxContainer.style.transform = transformBox;
+      }
+    }
+
+    this.selectionRectStyle = {
+      top: `${0}px`,
+      width: `${this.plotWidth / (4 * this.currentZoomScaleFactor)}px`,
+      height: `${this.plotHeight / (4 * this.currentZoomScaleFactor)}px`,
+      border: '2px solid #1DA1F2',
+      position: 'absolute',
+    };
+
   }
 
   stretchPlot(axis, direction) {
@@ -917,11 +941,6 @@ export class BaseSpatialgeComponent {
     } else if (axis === 'y-axis' && direction === '-') {
       this.heightAdjustment -= this.moveAmount;
     }
-    console.log("width adjustment: ", this.widthAdjustment)
-    this.callCreateScatterPlot();
-  }
-
-  setAlignmentMode() {
     this.callCreateScatterPlot();
   }
 
@@ -929,19 +948,19 @@ export class BaseSpatialgeComponent {
     this.callCreateScatterPlot();
   }
 
-  minLeftValue(): number {
+  minSliderLeftValue(): number {
     return -(this.plotWidth) * (this.currentZoomScaleFactor - 1) / 2;
   }
 
-  maxLeftValue(): number {
+  maxSliderLeftValue(): number {
     return (this.plotWidth) * (this.currentZoomScaleFactor - 1) / 2;
   }
 
-  minTopValue(): number {
+  minSliderTopValue(): number {
     return -this.plotHeight * (this.currentZoomScaleFactor - 1) / 2;
   }
 
-  maxTopValue(): number {
+  maxSliderTopValue(): number {
     return this.plotHeight * (this.currentZoomScaleFactor - 1) / 2;
   }
 
@@ -951,7 +970,6 @@ export class BaseSpatialgeComponent {
     const minimapImageContainer = document.querySelector('.miniMapImageContainer') as HTMLImageElement;
 
     const increment = this.axisSwapped ? -1 : 1;
-    // this.scaleXCustom = this.currentZoomScaleFactor
 
     if (direction === "+") {
       this.currentDegree += increment;
@@ -959,7 +977,7 @@ export class BaseSpatialgeComponent {
       this.currentDegree -= increment;
     }
 
-    let transformImageValue = `translateX(${-(this.currentImageLeft + this.sliderLeft)}px) translateY(${this.currentImageTop + this.sliderTop}px) scaleX(${this.scaleXCustom * this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
+    let transformImageValue = `translateX(${this.flipX === 1 ? -(this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft) : -(this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft) + this.originalLegendWidth * this.currentZoomScaleFactor}px) translateY(${this.currentImageTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.scaleXCustom * this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
     let transformMiniMapValue = `translateX(${-(this.currentImageLeft + this.sliderLeft) / 4}px) translateY(${(this.currentImageTop + this.sliderTop) / 4}px) scaleX(${this.scaleXCustom * this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
 
     imageContainer.style.transform = transformImageValue;
@@ -980,8 +998,8 @@ export class BaseSpatialgeComponent {
     }
 
     this.scaleXCustom *= -1
-
-    let transformImageValue = `translateX(${-(this.currentImageLeft + this.sliderLeft)}px) translateY(${this.currentImageTop + this.sliderTop}px)  scaleX(${this.scaleXCustom * this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
+    // translateX(${this.flipX === 1 ? -(this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft) : -(this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft) + this.originalLegendWidth * this.currentZoomScaleFactor}px)
+    let transformImageValue = `translateX(${this.flipX === 1 ? -(this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft) : -(this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft) + this.originalLegendWidth * this.currentZoomScaleFactor}px) translateY(${this.currentImageTop * this.currentZoomScaleFactor + this.sliderTop}px)  scaleX(${this.scaleXCustom * this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
     let transformMiniMapValue = `translateX(${-(this.currentImageLeft + this.sliderLeft) / 4}px) translateY(${(this.currentImageTop + this.sliderTop) / 4}px)  scaleX(${this.scaleXCustom * this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
 
     imageContainer.style.transform = transformImageValue;
@@ -1002,14 +1020,20 @@ export class BaseSpatialgeComponent {
       this.flipY = this.yAxisFlipped ? -1 : 1;
     }
 
-    let verticalImageTransform = `translateX(${-(this.currentImageLeft + this.sliderLeft)}px) translateY(${this.currentImageTop + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
-    let horizontalImageTransform = `translateX(${-(this.currentImageLeft + this.sliderLeft)}px) translateY(${this.currentImageTop + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
+    // transformImageValue = `translateX(${-(this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft)}px) translateY(${this.currentImageTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
+    //original
+    // let verticalImageTransform = `translateX(${-(this.currentImageLeft + this.sliderLeft)}px) translateY(${this.currentImageTop + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
+
+
+    let verticalImageTransform = `translateX(${-(this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft)}px) translateY(${this.currentImageTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
+    let horizontalImageTransform = `translateX(${this.flipX === 1 ? -(this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft) : -(this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft) + this.originalLegendWidth * this.currentZoomScaleFactor}px) translateY(${this.currentImageTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
     let transformImageValue = axis === 'vertical' ? verticalImageTransform : horizontalImageTransform;
 
-    let verticalMiniMapTransform = `translateX(${-((this.currentLeft + this.sliderLeft) / 4)}px) translateY(${(this.currentTop + this.sliderTop) / 4}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
-    let horizontalMiniMapTransform = `translateX(${-((this.currentLeft + this.sliderLeft) / 4)}px) translateY(${(this.currentTop + this.sliderTop) / 4}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
+    let verticalMiniMapTransform = `translateX(${-((this.currentLeft * this.currentZoomScaleFactor + this.sliderLeft) / 4)}px) translateY(${(this.currentTop * this.currentZoomScaleFactor + this.sliderTop) / 4}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
+    let horizontalMiniMapTransform = `translateX(${-((this.currentLeft * this.currentZoomScaleFactor + this.sliderLeft) / 4)}px) translateY(${(this.currentTop * this.currentZoomScaleFactor + this.sliderTop) / 4}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
     let transformMiniMapImageValue = axis === 'vertical' ? verticalMiniMapTransform : horizontalMiniMapTransform;
 
+    console.log("transformImageValue: ", transformImageValue, this.currentZoomScaleFactor, this.legendWidth)
     imageContainer.style.transform = transformImageValue;
     imageContainer2.style.transform = transformImageValue;
     minimapImageContainer.style.transform = transformMiniMapImageValue;

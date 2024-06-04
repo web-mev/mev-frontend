@@ -72,7 +72,7 @@
         <span class="fullOverlayDiv"
             [style.width.px]="currentZoomScaleFactor !== 1 ? (plotWidth+legendWidth)*2:(plotWidth+legendWidth)*2 -100">
             <div *ngIf="currentZoomScaleFactor !== 1 && currentZoomScaleFactor !== 0.5" class="verticalSliderContainer">
-                <mat-slider [min]="minTopValue()" [max]="maxTopValue()" step="10" [(ngModel)]="sliderTop"
+                <mat-slider [min]="minSliderTopValue()" [max]="maxSliderTopValue()" step="10" [(ngModel)]="sliderTop"
                     (change)="movePlot('left', 'slider', 'plot')" vertical [style.height.px]="plotHeight">
                 </mat-slider>
             </div>
@@ -154,7 +154,7 @@
 
         </span>
         <div *ngIf="currentZoomScaleFactor !== 1 && currentZoomScaleFactor !== 0.5" class="horizontalSliderContainer">
-            <mat-slider [min]="minLeftValue()" [max]="maxLeftValue()" step="10" [(ngModel)]="sliderLeft"
+            <mat-slider [min]="minSliderLeftValue()" [max]="maxSliderLeftValue()" step="10" [(ngModel)]="sliderLeft"
                 (change)="movePlot('left', 'slider', 'plot')" [style.width.px]="plotWidth">
             </mat-slider>
         </div>

@@ -6,7 +6,7 @@
         <mev-input-info [outputs]="outputs"></mev-input-info>
     </mat-card-header>
 
-    <!-- <div class="searchContainer">
+    <div class="searchContainer">
         <label id="radio-group-axis">Gene Search: </label>
         <div class="inputContainer">
             <mat-form-field class="example-form-field" appearance="outline">
@@ -18,9 +18,9 @@
             </mat-form-field>
             <button *ngIf="!panelOpenState" mat-flat-button color="primary" class="searchButton"
                 [disabled]="xAxisValue === '' || yAxisValue === '' || geneSearchVal === ''"
-                (click)="analysisType === 'normalization' ? getDataNormalization(): getDataClusters() ">Submit</button>
+                (click)="getDataClusters()">Submit</button>
         </div>
-    </div> -->
+    </div>
 
     <mat-expansion-panel #accordion [(expanded)]="panelOpenState">
         <mat-expansion-panel-header>
@@ -76,8 +76,9 @@
                     (change)="movePlot('left', 'slider', 'plot')" vertical [style.height.px]="plotHeight">
                 </mat-slider>
             </div>
-            <div class="overlayDiv" [style.height.px]="originalPlotHeight"
-                [style.width.px]="overlayImage ? originalPlotWidth+legendWidth : !droppedFile ? (currentZoomScaleFactor != 1 ? originalPlotWidth+legendWidth : originalPlotWidth * 3 + 150 + legendWidth*3): originalPlotWidth+legendWidth">
+            <div class="overlayDiv"
+                [style.height.px]="currentZoomScaleFactor == 1 ? originalPlotHeight+heightAdjustment: originalPlotHeight"
+                [style.width.px]="overlayImage ? (currentZoomScaleFactor == 1 ? originalPlotWidth+legendWidth+widthAdjustment: originalPlotWidth) : !droppedFile ? (currentZoomScaleFactor != 1 ? originalPlotWidth+legendWidth : originalPlotWidth * 3 + 150 + legendWidth*3): originalPlotWidth+legendWidth">
 
                 <div #scatter id="scatter" [class]="overlayImage ? 'overlayPlots' : 'displayPlotSideBySide'"
                     [style.opacity]="displayPlot ? plotOpacityValue : 0" [style.width.px]="originalPlotWidth"
@@ -103,7 +104,7 @@
 
 
                 <div *ngIf="scatterPlotDataCluster.length > 0" class="zoomButtonContainer"
-                    [style.left.px]="currentZoomScaleFactor === 1 ? plotWidth + legendWidth - 40 : plotWidth + legendWidth - 50">
+                    [style.left.px]="currentZoomScaleFactor === 1 ? plotWidth + legendWidth - 40 + widthAdjustment : (overlayImage ? plotWidth - 40: plotWidth - 50)">
                     <button class="zoomButton" matTooltip="Zoom In" (click)="applyZoom('+')"
                         [disabled]="currentZoomScaleFactor === zoomMax">
                         <mat-icon>add</mat-icon>
@@ -144,8 +145,7 @@
                             [class]="currentZoomScaleFactor != 1 || droppedFile ? 'minimapPlotContainer' : 'hiddenDiv minimapPlotContainer'"
                             [style.opacity]="displayPlot ? plotOpacityValue : 0" [style.top.px]="0">
                         </div>
-                        <div *ngIf="droppedFile && displayImage || !droppedFile" [ngStyle]="selectionRectStyle"
-                            class="miniboxDiv">
+                        <div *ngIf="droppedFile || !droppedFile" [ngStyle]="selectionRectStyle" class="miniboxDiv">
                         </div>
                     </div>
                 </div>
@@ -284,7 +284,7 @@
         <mat-slide-toggle [(ngModel)]="displayPlot">Display Plot</mat-slide-toggle>
         <br>
         <mat-slide-toggle [(ngModel)]="displayImage" [disabled]="!droppedFile">Display Image</mat-slide-toggle>
-        <!-- <br>
+        <br>
 
         <br>
         <label id="radio-group-axis">Plot Color: </label>
@@ -293,7 +293,7 @@
             <div *ngFor="let plotColor of colors" class="radio-container">
                 <mat-radio-button class="example-radio-button" [value]="plotColor">{{plotColor}}</mat-radio-button>
             </div>
-        </mat-radio-group> -->
+        </mat-radio-group>
         <br>
         <br>
         <label id="radio-group-axis">Scale Factor:</label>

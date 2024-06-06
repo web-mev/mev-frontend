@@ -76,8 +76,9 @@
                     (change)="movePlot('left', 'slider', 'plot')" vertical [style.height.px]="plotHeight">
                 </mat-slider>
             </div>
-            <div class="overlayDiv" [style.height.px]="originalPlotHeight"
-                [style.width.px]="overlayImage ? originalPlotWidth+legendWidth : !droppedFile ? (currentZoomScaleFactor != 1 ? originalPlotWidth+legendWidth : originalPlotWidth * 3 + 150 + legendWidth*3): originalPlotWidth+legendWidth">
+            <div class="overlayDiv"
+                [style.height.px]="currentZoomScaleFactor == 1 ? originalPlotHeight+heightAdjustment: originalPlotHeight"
+                [style.width.px]="overlayImage ? (currentZoomScaleFactor == 1 ? originalPlotWidth+legendWidth+widthAdjustment: originalPlotWidth) : !droppedFile ? (currentZoomScaleFactor != 1 ? originalPlotWidth+legendWidth : originalPlotWidth * 3 + 150 + legendWidth*3): originalPlotWidth+legendWidth">
 
                 <div #scatter id="scatter" [class]="overlayImage ? 'overlayPlots' : 'displayPlotSideBySide'"
                     [style.opacity]="displayPlot ? plotOpacityValue : 0" [style.width.px]="originalPlotWidth"
@@ -103,7 +104,7 @@
 
 
                 <div *ngIf="scatterPlotData.length > 0" class="zoomButtonContainer"
-                    [style.left.px]="currentZoomScaleFactor === 1 ? plotWidth + legendWidth - 40 : plotWidth + legendWidth - 50">
+                    [style.left.px]="currentZoomScaleFactor === 1 ? plotWidth + legendWidth - 40 + widthAdjustment : (overlayImage ? plotWidth - 40: plotWidth - 50)">
                     <button class="zoomButton" matTooltip="Zoom In" (click)="applyZoom('+')"
                         [disabled]="currentZoomScaleFactor === zoomMax">
                         <mat-icon>add</mat-icon>
@@ -144,8 +145,7 @@
                             [class]="currentZoomScaleFactor != 1 || droppedFile ? 'minimapPlotContainer' : 'hiddenDiv minimapPlotContainer'"
                             [style.opacity]="displayPlot ? plotOpacityValue : 0" [style.top.px]="0">
                         </div>
-                        <div *ngIf="droppedFile && displayImage || !droppedFile" [ngStyle]="selectionRectStyle"
-                            class="miniboxDiv">
+                        <div *ngIf="droppedFile || !droppedFile" [ngStyle]="selectionRectStyle" class="miniboxDiv">
                         </div>
                     </div>
                 </div>

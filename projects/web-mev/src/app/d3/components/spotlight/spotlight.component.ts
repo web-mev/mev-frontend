@@ -19,7 +19,6 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
 
     plotData = {};
     plot_width_in_pixels = 300; //sets the width of the plot in pixels
-    scatterPlotData: any = [];
     geneDict: any = {};
 
     pieChartColors: any = {};
@@ -39,8 +38,17 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
         this.onActionSpotlight.subscribe(() => {
             this.createScatterplotSpotlight('normal')
             this.createScatterplotSpotlight('minimap')
+            console.log("scale factor from spot: ", this.scaleFactor)
         })
+        
         this.getData()
+    }
+
+    resetSpotlightVariables() {
+        this.plotData = {};
+        this.geneDict = {};
+        this.pieChartColors = {};
+        this.colorIndex = 0;
     }
 
     getData() {
@@ -48,6 +56,16 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
         this.isLoading = true;
         this.scrollTo('topOfPage');
         this.resetVariables();
+        this.resetSpotlightVariables();
+
+        console.log("calling get data")
+        // this.currentImageLeft = 182.5
+        // this.currentImageTop = 15
+        // this.currentLeft = 80 
+        // this.currentTop = 180
+        // this.heightAdjustment = -100
+        // this.widthAdjustment = -100
+
         this.geneSearchHeight = -100;
         let deconvoluted_outputs_uuid = this.outputs["deconvoluted_output"];
         let coords_metadata_uuid = this.outputs["coords_metadata"];
@@ -97,6 +115,19 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
                 this.originalPlotWidth = this.plotWidth;
                 this.originalPlotHeight = this.plotHeight;
             }
+
+            let selectionRectWidth = (this.plotWidth + this.widthAdjustment) / (4 * this.currentZoomScaleFactor);
+            let selectionRectHeight = (this.plotHeight + this.heightAdjustment) / (4 * this.currentZoomScaleFactor);
+
+            this.selectionRectStyle = {
+                top: `-${this.currentTop}px`,
+                left: `-${this.currentLeft}px`,
+                width: `${selectionRectWidth}px`,
+                height: `${selectionRectHeight}px`,
+                border: '2px solid #1DA1F2',
+                position: 'absolute',
+            };
+
             this.maxImageContainerWidthSidebySide = this.plotWidth * 2;
 
             for (let index in spotlightRes) {
@@ -172,11 +203,28 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
     }
 
     createScatterplotSpotlight(size: string): void {
+        let adjObj = {
+            current_left: this.currentLeft,
+            current_top: this.currentTop,
+            current_image_left: this.currentImageLeft,
+            current_image_top: this.currentImageTop,
+            width_adjustment: this.widthAdjustment,
+            height_adjustment: this.heightAdjustment,
+            zoom_scale_factor: this.currentZoomScaleFactor,
+            legend_width: this.legendWidth,
+            plot_height: this.plotHeight,
+            plot_width: this.plotWidth,
+            size,
+
+
+        }
+        console.log("adjustment data: ", size, adjObj)
+
         this.displayPlot = true;
         let scatterplotContainerId = size === 'normal' ? this.containerId : this.minimapContainerId;
         const data = this.scatterPlotData
 
-        var margin = { top: 10, right: 10, bottom: 10, left: size === 'normal' ? this.legendWidth : 0 },
+        var margin = { top: 0, right: 0, bottom: 0, left: size === 'normal' ? this.legendWidth : 0 },
             width = size === 'normal' ? this.plotWidth - margin.left - margin.right + this.widthAdjustment + this.legendWidth : (this.plotWidth - margin.left - margin.right + this.widthAdjustment) / 4,
             height = size === 'normal' ? this.plotHeight - margin.top - margin.bottom + this.heightAdjustment : (this.plotHeight - margin.top - margin.bottom + this.heightAdjustment) / 4;
 
@@ -222,7 +270,7 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
             // @ts-ignore
             const arc = d3.arc()
                 .innerRadius(0)
-                .outerRadius(2.5) as d3.ValueFn<SVGPathElement, d3.PieArcDatum<any>, string | null>
+                .outerRadius(size === 'normal' ? 2.5 : 1) as d3.ValueFn<SVGPathElement, d3.PieArcDatum<any>, string | null>
 
             if (d.pieData2) {
                 const pieData = pie(d.pieData2);
@@ -238,54 +286,57 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
                         return this.pieChartColors[p.data.label]; // Assuming each data point has a 'key' property
                     });
 
-                pieGroup
-                    .data(pieData)
-                    .on('mouseover', function (mouseEvent: any, d) {
-                        pointTip.show(mouseEvent, d, this);
-                        pointTip.style('left', mouseEvent.x + 10 + 'px');
-                    })
-                    .on('mouseout', pointTip.hide);
+                if (size === 'normal') {
+                    pieGroup
+                        .data(pieData)
+                        .on('mouseover', function (mouseEvent: any, d) {
+                            pointTip.show(mouseEvent, d, this);
+                            pointTip.style('left', mouseEvent.x + 10 + 'px');
+                        })
+                        .on('mouseout', pointTip.hide);
+                }
             }
         });
+        if (this.legendWidth !== 0 && size !== 'minimap') {
+            // Add Legend
+            const clusterColors = Object.keys(this.pieChartColors).map(key => ({
+                label: key,
+                color: this.pieChartColors[key]
+            }));
+            clusterColors.sort((a, b) => {
+                // Extracting the numerical part of the label
+                const numA = parseInt(a.label.split(' ')[1]);
+                const numB = parseInt(b.label.split(' ')[1]);
 
-        // Add Legend
-        const clusterColors = Object.keys(this.pieChartColors).map(key => ({
-            label: key,
-            color: this.pieChartColors[key]
-        }));
-        clusterColors.sort((a, b) => {
-            // Extracting the numerical part of the label
-            const numA = parseInt(a.label.split(' ')[1]);
-            const numB = parseInt(b.label.split(' ')[1]);
-
-            // Comparing the numerical parts
-            return numA - numB;
-        });
-        const legend = svg
-            .selectAll('.legend')
-            .data(clusterColors)
-            .enter()
-            .append('g')
-            .classed('legend', true)
-            .attr('transform', function (d, i) {
-                return `translate(${-(width + 130)}, ${i * 20 + 50})`;
+                // Comparing the numerical parts
+                return numA - numB;
             });
+            const legend = svg
+                .selectAll('.legend')
+                .data(clusterColors)
+                .enter()
+                .append('g')
+                .classed('legend', true)
+                .attr('transform', function (d, i) {
+                    return `translate(${-(width + 130)}, ${i * 20 + 50})`;
+                });
 
-        legend
-            .append('circle')
-            .attr('r', 4)
-            .attr('cx', width + 20)
-            .attr('fill', d => d.color);
+            legend
+                .append('circle')
+                .attr('r', 4)
+                .attr('cx', width + 20)
+                .attr('fill', d => d.color);
 
-        legend
-            .append('text')
-            .attr('x', width + 30)
-            .attr('dy', '.35em')
-            .style('fill', '#000')
-            .style('font-size', '8px')
-            .attr('class', 'legend-label')
-            .text(d => d.label)
-            .call(this.wrap, this.legendWidth - 5);
+            legend
+                .append('text')
+                .attr('x', width + 30)
+                .attr('dy', '.35em')
+                .style('fill', '#000')
+                .style('font-size', '8px')
+                .attr('class', 'legend-label')
+                .text(d => d.label)
+                .call(this.wrap, this.legendWidth - 5);
+        }
 
     }
 

@@ -286,6 +286,7 @@ mat-slider {
 .fullOverlayDiv {
     display: flex;
     margin-left: 10px;
+    margin-bottom: 10px;
 }
 
 .tipHeader{
@@ -295,4 +296,8 @@ mat-slider {
 .plotContainer{
     margin-left: 0px;
     margin-top: 0px;
+}
+
+.overlayPlotsImageClip {
+    clip: rect(50px, 50px, 50px, 50px);
 }

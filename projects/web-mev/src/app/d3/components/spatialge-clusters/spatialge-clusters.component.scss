@@ -296,3 +296,7 @@ mat-slider {
     margin-left: 0px;
     margin-top: 0px;
 }
+
+.resized-canvas {
+    width: auto; /* Maintain aspect ratio */
+}

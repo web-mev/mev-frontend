@@ -38,8 +38,9 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
         this.onActionSpotlight.subscribe(() => {
             this.createScatterplotSpotlight('normal')
             this.createScatterplotSpotlight('minimap')
-            console.log("scale factor from spot: ", this.scaleFactor)
         })
+
+        this.hideMinimapImage = true; 
         
         this.getData()
     }

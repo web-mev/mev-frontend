@@ -6,7 +6,7 @@
         <mev-input-info [outputs]="outputs"></mev-input-info>
     </mat-card-header>
 
-    <div class="searchContainer">
+    <div *ngIf="useNormalization" class="searchContainer">
         <label id="radio-group-axis">Gene Search: </label>
         <div class="inputContainer">
             <mat-form-field class="example-form-field" appearance="outline">
@@ -18,7 +18,7 @@
             </mat-form-field>
             <button *ngIf="!panelOpenState" mat-flat-button color="primary" class="searchButton"
                 [disabled]="xAxisValue === '' || yAxisValue === '' || geneSearchVal === ''"
-                (click)="getDataClusters()">Submit</button>
+                (click)="getDataNormalization()">Submit</button>
         </div>
     </div>
 
@@ -87,7 +87,7 @@
                 <div *ngIf="scatterPlotData.length > 0"
                     [class]="!droppedFile && currentZoomScaleFactor == 1 ? 'drop-zone' : '' "
                     (drop)="onDropFile($event)" (dragover)="onDragOver($event)"
-                    [style.margin-left.px]="overlayImage ? (currentZoomScaleFactor === 1 ? -(plotWidth + widthAdjustment*currentZoomScaleFactor)+legendWidth : -(plotWidth + widthAdjustment*currentZoomScaleFactor) - (currentZoomScaleFactor-1)*50): legendWidth"
+                    [style.margin-left.px]="overlayImage ? (currentZoomScaleFactor === 1 ? -(plotWidth + widthAdjustment*currentZoomScaleFactor)+legendWidth : -(plotWidth + widthAdjustment*currentZoomScaleFactor) - (currentZoomScaleFactor-1)*50): legendWidth+20"
                     [style.height.px]="!droppedFile ? originalPlotHeight - 100: originalPlotHeight"
                     [style.width.px]="originalPlotWidth * 0.66" (click)="fileInput.click()" class="imageContainer">
                     <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;">
@@ -97,7 +97,7 @@
                     <div *ngIf="droppedFile && displayImage && overlayImage" style="z-index: 3;">
                         <img *ngIf="isImageType(droppedFile.type)" class="overlayPlotsImage" [src]="droppedFileURL"
                             alt="Dropped Image"
-                            [ngStyle]="{ 'height.px': (originalPlotHeight > 200 ? originalPlotHeight : 300), 'opacity': imageOpacityValue }">
+                            [ngStyle]="{ 'height.px': (originalPlotHeight > 200 ? originalPlotHeight : 300), 'opacity': imageOpacityValue}">
                     </div>
                 </div>
 
@@ -119,20 +119,22 @@
             <div class="nonOverlay" [style.height.px]="originalPlotHeight"
                 [style.width.px]="droppedFile && displayImage && !overlayImage ? originalPlotWidth: 0">
                 <div class="imageContainer2">
-                    <div *ngIf="droppedFile && displayImage && !overlayImage" style="z-index: 3;">
+                    <!-- <div *ngIf="droppedFile && displayImage && !overlayImage" style="z-index: 3;">
                         <img *ngIf="isImageType(droppedFile.type)" class="overlayPlotsImage" [src]="droppedFileURL"
                             alt="Dropped Image"
                             [ngStyle]="{ 'height.px': (originalPlotHeight > 200 ? originalPlotHeight : 300), 'opacity': imageOpacityValue }">
-                    </div>
+                    </div> -->
+                    <canvas #canvasElement [width]="croppedWidth" [height]="croppedHeight"></canvas>
                 </div>
             </div>
 
+
             <div class="miniMapContainer"
-                [style.left.px]="overlayImage || !droppedFile ? originalPlotWidth+50 : originalPlotWidth*2+50"
+                [style.left.px]="overlayImage || !droppedFile ? originalPlotWidth+plotWidth/4 : originalPlotWidth*2+50"
                 [style.top.px]="originalPlotHeight + geneSearchHeight + 20">
                 <div
                     [class]="currentZoomScaleFactor != 1 || (droppedFile && showMiniMap) ? 'miniSubContainer' : 'hiddenDiv miniSubContainer'">
-                    <div [style.margin-left.px]="20">
+                    <div>
                         <div *ngIf="!droppedFile" class="miniMapImageContainer" [style.height.px]="plotHeight/4"
                             [style.width.px]="plotWidth/4"></div>
 
@@ -284,16 +286,19 @@
         <mat-slide-toggle [(ngModel)]="displayPlot">Display Plot</mat-slide-toggle>
         <br>
         <mat-slide-toggle [(ngModel)]="displayImage" [disabled]="!droppedFile">Display Image</mat-slide-toggle>
-        <br>
 
-        <br>
-        <label id="radio-group-axis">Plot Color: </label>
-        <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
-            [(ngModel)]="selectedColor" (change)="onColorChange()">
-            <div *ngFor="let plotColor of colors" class="radio-container">
-                <mat-radio-button class="example-radio-button" [value]="plotColor">{{plotColor}}</mat-radio-button>
-            </div>
-        </mat-radio-group>
+        <div *ngIf="useNormalization">
+            <br>
+            <br>
+            <label id="radio-group-axis">Plot Color: </label>
+            <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+                [(ngModel)]="selectedColor" (change)="onColorChange()">
+                <div *ngFor="let plotColor of colors" class="radio-container">
+                    <mat-radio-button class="example-radio-button" [value]="plotColor">{{plotColor}}</mat-radio-button>
+                </div>
+            </mat-radio-group>
+        </div>
+
         <br>
         <br>
         <label id="radio-group-axis">Scale Factor:</label>

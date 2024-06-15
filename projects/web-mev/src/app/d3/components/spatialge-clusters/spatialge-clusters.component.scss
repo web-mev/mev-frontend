@@ -288,15 +288,20 @@ mat-slider {
     margin-left: 10px;
 }
 
-.tipHeader{
+.tipHeader {
     font-weight: bold;
 }
 
-.plotContainer{
+.plotContainer {
     margin-left: 0px;
     margin-top: 0px;
 }
 
 .resized-canvas {
     width: auto; /* Maintain aspect ratio */
+}
+
+.scalefactor-group {
+    font-weight: bold;
+    margin: 6px 0;
 }

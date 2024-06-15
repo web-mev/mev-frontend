@@ -17,8 +17,7 @@
                 </button>
             </mat-form-field>
             <button *ngIf="!panelOpenState" mat-flat-button color="primary" class="searchButton"
-                [disabled]="xAxisValue === '' || yAxisValue === '' || geneSearchVal === ''"
-                (click)="getDataNormalization()">Submit</button>
+                [disabled]="geneSearchVal === ''" (click)="getDataNormalization()">Submit</button>
         </div>
     </div>
 
@@ -70,7 +69,7 @@
         </div>
 
         <span class="fullOverlayDiv"
-            [style.width.px]="currentZoomScaleFactor !== 1 ? (plotWidth+legendWidth)*2:(plotWidth+legendWidth)*2 -100">
+            [style.width.px]="currentZoomScaleFactor !== 1 ? (plotHeight*aspectRatio + legendWidth)*2:(plotHeight*aspectRatio + legendWidth)*2">
             <div *ngIf="currentZoomScaleFactor !== 1 && currentZoomScaleFactor !== 0.5" class="verticalSliderContainer">
                 <mat-slider [min]="minSliderTopValue()" [max]="maxSliderTopValue()" step="10" [(ngModel)]="sliderTop"
                     (change)="movePlot('left', 'slider', 'plot')" vertical [style.height.px]="plotHeight">
@@ -87,18 +86,22 @@
                 <div *ngIf="scatterPlotData.length > 0"
                     [class]="!droppedFile && currentZoomScaleFactor == 1 ? 'drop-zone' : '' "
                     (drop)="onDropFile($event)" (dragover)="onDragOver($event)"
-                    [style.margin-left.px]="overlayImage ? (currentZoomScaleFactor === 1 ? -(plotWidth + widthAdjustment*currentZoomScaleFactor)+legendWidth : -(plotWidth + widthAdjustment*currentZoomScaleFactor) - (currentZoomScaleFactor-1)*50): legendWidth+20"
+                    [style.margin-left.px]="overlayImage ? (currentZoomScaleFactor === 1 ? -(plotHeight*aspectRatio + widthAdjustment*currentZoomScaleFactor)+legendWidth : -(plotHeight*aspectRatio + widthAdjustment*currentZoomScaleFactor)): legendWidth+20"
                     [style.height.px]="!droppedFile ? originalPlotHeight - 100: originalPlotHeight"
-                    [style.width.px]="originalPlotWidth * 0.66" (click)="fileInput.click()" class="imageContainer">
+                    [style.width.px]="!overlayImage && !droppedFile ? originalPlotHeight*aspectRatio - 100 : originalPlotHeight*aspectRatio"
+                    (click)="fileInput.click()" class="imageContainer" [style.opacity]="imageOpacityValue">
                     <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;">
                     <div *ngIf="!droppedFile && currentZoomScaleFactor == 1" class="drop-message">
                         <p>Drop image file here or click to upload</p>
                     </div>
-                    <div *ngIf="droppedFile && displayImage && overlayImage" style="z-index: 3;">
-                        <img *ngIf="isImageType(droppedFile.type)" class="overlayPlotsImage" [src]="droppedFileURL"
+                    <!-- <div *ngIf="droppedFile && displayImage && overlayImage" style="z-index: 3;"> -->
+                    <canvas #canvasElement1 [width]="croppedWidth" [height]="croppedHeight"></canvas>
+                    <!-- <img *ngIf="isImageType(droppedFile.type)" class="overlayPlotsImage" [src]="droppedFileURL"
                             alt="Dropped Image"
-                            [ngStyle]="{ 'height.px': (originalPlotHeight > 200 ? originalPlotHeight : 300), 'opacity': imageOpacityValue}">
-                    </div>
+                            [ngStyle]="{ 'height.px': (originalPlotHeight > 200 ? originalPlotHeight : 300), 'opacity': imageOpacityValue }"> -->
+                    <!-- </div> -->
+
+
                 </div>
 
 
@@ -116,18 +119,28 @@
                 </div>
 
             </div>
-            <div class="nonOverlay" [style.height.px]="originalPlotHeight"
+            <!-- <div class="nonOverlay" [style.height.px]="originalPlotHeight"
                 [style.width.px]="droppedFile && displayImage && !overlayImage ? originalPlotWidth: 0">
                 <div class="imageContainer2">
-                    <!-- <div *ngIf="droppedFile && displayImage && !overlayImage" style="z-index: 3;">
+                    <div *ngIf="droppedFile && displayImage && !overlayImage" style="z-index: 3;">
                         <img *ngIf="isImageType(droppedFile.type)" class="overlayPlotsImage" [src]="droppedFileURL"
                             alt="Dropped Image"
                             [ngStyle]="{ 'height.px': (originalPlotHeight > 200 ? originalPlotHeight : 300), 'opacity': imageOpacityValue }">
+                    </div>
+                </div>
+            </div> -->
+            <div class="nonOverlay" [style.height.px]="originalPlotHeight"
+                [style.width.px]="droppedFile && displayImage && !overlayImage ? originalPlotHeight*aspectRatio : 0"
+                [style.opacity]="imageOpacityValue">
+                <div class="imageContainer2">
+                    <!-- <img *ngIf="scaleFactor === 1" class="overlayPlotsImage" [src]="droppedFileURL" alt="Dropped Image"
+                        [ngStyle]="{ 'height.px': (originalPlotHeight > 200 ? originalPlotHeight : 300), 'opacity': imageOpacityValue }">
+                    <div *ngIf="scaleFactor !== 1">
+                        <canvas #canvasElement2 [width]="croppedWidth" [height]="croppedHeight"></canvas>
                     </div> -->
-                    <canvas #canvasElement [width]="croppedWidth" [height]="croppedHeight"></canvas>
+                    <canvas #canvasElement2 [width]="croppedWidth" [height]="croppedHeight"></canvas>
                 </div>
             </div>
-
 
             <div class="miniMapContainer"
                 [style.left.px]="overlayImage || !droppedFile ? originalPlotWidth+plotWidth/4 : originalPlotWidth*2+50"
@@ -139,9 +152,10 @@
                             [style.width.px]="plotWidth/4"></div>
 
                         <div *ngIf="droppedFile && displayImage" style="z-index: 3;" class="miniMapImageContainer">
-                            <img *ngIf="isImageType(droppedFile.type)" class="overlayPlotsImage" [src]="droppedFileURL"
+                            <!-- <img *ngIf="isImageType(droppedFile.type)" class="overlayPlotsImage" [src]="droppedFileURL"
                                 alt="Dropped Image" [style.height.px]="plotHeight/4"
-                                [style.opacity]="imageOpacityValue">
+                                [style.opacity]="imageOpacityValue"> -->
+                                <!-- <canvas #canvasElement3 [width]="croppedWidth" [height]="croppedHeight" [style.height.px]="plotHeight" [style.opacity]="imageOpacityValue"></canvas> -->
                         </div>
                         <div #minimapId id='minimapId'
                             [class]="currentZoomScaleFactor != 1 || droppedFile ? 'minimapPlotContainer' : 'hiddenDiv minimapPlotContainer'"
@@ -166,7 +180,7 @@
         [style.top.px]="(plotHeight+heightAdjustment) + geneSearchHeight + 100">
         <div *ngIf="displayAlignment">
             <label id="modes-label">Alignment: </label>
-            <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Plot Left"
+            <!-- <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Plot Left"
                 (click)="movePlot('left', 'align', 'plot')">
                 <mat-icon>arrow_back</mat-icon>
             </button>
@@ -181,7 +195,7 @@
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Plot Down"
                 (click)="movePlot('down', 'align', 'plot')">
                 <mat-icon>arrow_downward</mat-icon>
-            </button>
+            </button> -->
 
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Expand Plot X-Axis"
                 (click)="stretchPlot('x-axis', '+')">
@@ -301,7 +315,12 @@
 
         <br>
         <br>
-        <label id="radio-group-axis">Scale Factor:</label>
+        <label class="scalefactor-group">Scale Factor:</label>
+        <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+            matTooltip="Scale factor determines how to scale the histopathology image to approximately align with the summary plot. This is typically provided in a JSON-format file by 10X Genomics (Visium). If the value is not known or does not appear to align that well, you can manually adjust."
+            aria-label="Info tooltip about the Scale Factor">
+            info
+        </mat-icon>
         <div class="inputContainer">
             <mat-form-field class="example-form-field container" appearance="outline">
                 <mat-label>Scale Factor</mat-label>

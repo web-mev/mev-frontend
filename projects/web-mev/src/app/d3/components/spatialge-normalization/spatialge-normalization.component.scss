@@ -298,6 +298,6 @@ mat-slider {
     margin-top: 0px;
 }
 
-.overlayPlotsImageClip {
-    clip: rect(50px, 50px, 50px, 50px);
+.resized-canvas {
+    width: auto; /* Maintain aspect ratio */
 }

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, EventEmitter, ElementRef, ViewChild } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, EventEmitter, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError } from "rxjs/operators";
 import { environment } from '@environments/environment';
@@ -82,8 +82,8 @@ export class BaseSpatialgeComponent {
 
   panelOpenState: boolean = true;
 
-  scaleFactor: number = 0.07287833;
-  scaleFactorVal = '0.07287833';
+  scaleFactor: number = 1;
+  scaleFactorVal = '1';
 
   overlayImage: boolean = false;
   displayPlot: boolean = false;
@@ -91,8 +91,6 @@ export class BaseSpatialgeComponent {
   displayAlignment: boolean = false;
 
   currentZoomScaleFactor: number = 1;
-  // maxScaleFactor: number = 2;
-  // minScaleFactor: number = 0.5;
 
   plotOpacityValue: number = .7
   imageOpacityValue: number = .5
@@ -159,6 +157,7 @@ export class BaseSpatialgeComponent {
   constructor(
     protected httpClient: HttpClient,
     protected readonly notificationService: NotificationService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   resetVariables() {
@@ -203,7 +202,6 @@ export class BaseSpatialgeComponent {
     this.moveAmountVal = '5';
     this.widthAdjustment = 0;
     this.heightAdjustment = 0;
-
 
     const imageContainer = document.querySelector('.imageContainer') as HTMLImageElement;
     const imageContainer2 = document.querySelector('.imageContainer2') as HTMLImageElement;
@@ -253,18 +251,24 @@ export class BaseSpatialgeComponent {
   }
 
   getDataNormalization() {
+    this.displayOverlayContainer = true;
+
     this.showMiniMap = true;
     this.geneSearch = this.geneSearchVal.split('').map(letter => letter.toUpperCase()).join('');
     this.geneSearchHeight = 100;
     this.useNormalization = true;
+    this.useCluster = false;
     this.isLoading = true;
     this.panelOpenState = false;
     this.scrollTo('topOfPage');
     this.resetVariables();
+
     let normalization_uuid = this.outputs["normalized_expression"];
     let coords_metadata_uuid = this.outputs["coords_metadata"];
+    let normUrl = `${this.API_URL}/resources/${normalization_uuid}/contents/?__rowname__=[eq]:${this.geneSearch}`
+    console.log("normUrl: ", normUrl)
 
-    const normRequest = this.httpClient.get(`${this.API_URL}/resources/${normalization_uuid}/contents/?__rowname__=[eq]:${this.geneSearch}`).pipe(
+    const normRequest = this.httpClient.get(normUrl).pipe(
       catchError(error => {
         this.isLoading = false;
         this.notificationService.error(`Error ${error.status}: Error from normalized expression request.`);
@@ -273,7 +277,9 @@ export class BaseSpatialgeComponent {
       })
     );
 
-    const coordsMetadataRequest = this.httpClient.get(`${this.API_URL}/resources/${coords_metadata_uuid}/contents/`).pipe(
+    let coordMetaUrl = `${this.API_URL}/resources/${coords_metadata_uuid}/contents/`
+    console.log("coordUrl: ", coordMetaUrl)
+    const coordsMetadataRequest = this.httpClient.get(coordMetaUrl).pipe(
       catchError(error => {
         this.isLoading = false;
         this.notificationService.error(`Error ${error.status}: Error from coordinates metadata request.`);
@@ -283,6 +289,7 @@ export class BaseSpatialgeComponent {
     );
 
     forkJoin([normRequest, coordsMetadataRequest]).subscribe(([normRes, coordsMetadataRes]) => {
+      console.log("norm res: ", normRes, coordsMetadataRes)
       this.isLoading = false;
       if (Array.isArray(normRes) && normRes.length > 0 && normRes[0].hasOwnProperty('values')) {
         for (let i in normRes[0]['values']) {
@@ -354,7 +361,10 @@ export class BaseSpatialgeComponent {
         };
 
         if (this.scatterPlotData.length > 0) {
+          console.log("found some data: ", this.scatterPlotData)
           this.displayOverlayContainer = true;
+          // this.croppedWidth = (this.xMax - this.xMin) * this.scaleFactor;
+          // this.croppedHeight = (this.yMax - this.yMin) * this.scaleFactor;
           this.callCreateScatterPlot();
         }
 
@@ -367,6 +377,7 @@ export class BaseSpatialgeComponent {
   }
 
   getDataClusters() {
+
     this.showMiniMap = true;
     this.geneSearchHeight = 0;
     this.useCluster = true;
@@ -473,8 +484,6 @@ export class BaseSpatialgeComponent {
           border: '2px solid #1DA1F2',
           position: 'absolute',
         };
-        console.log("xmin/max: ", this.xMin, this.xMax)
-        console.log("ymin/max: ", this.yMin, this.yMax)
 
         if (this.scatterPlotDataCluster.length > 0) {
           this.displayOverlayContainer = true;
@@ -510,7 +519,7 @@ export class BaseSpatialgeComponent {
       .append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
-      .style("background", "pink")
+      // .style("background", "pink")
       .append("g")
       .attr("transform",
         "translate(" + margin.left + "," + margin.top + ")");
@@ -527,12 +536,10 @@ export class BaseSpatialgeComponent {
 
     var x = d3.scaleLinear()
       .domain([this.xMin, this.xMax])
-      // .domain([this.xMin - (this.xMax - this.xMin) * this.scaleFactor, this.xMax + (this.xMax - this.xMin) * this.scaleFactor])
       .range([0, width]);
 
     var y = d3.scaleLinear()
       .domain([this.yMin, this.yMax])
-      // .domain([this.yMin - (this.yMax - this.yMin) * this.scaleFactor, this.yMax + (this.yMax - this.yMin) * this.scaleFactor])
       .range([height, 0]);
 
     let useNorm = this.useNormalization
@@ -544,7 +551,7 @@ export class BaseSpatialgeComponent {
       .append("circle")
       .attr("cx", function (d) { return x(d.xValue) })
       .attr("cy", function (d) { return height - y(d.yValue); })
-      .attr("r", 1.75)
+      .attr("r", size === 'normal' ? 1.75 : .5)
       .attr("fill", d => {
         return useNorm ? color(d.totalCounts) : colorScale(d.clusterid)
       })
@@ -723,27 +730,6 @@ export class BaseSpatialgeComponent {
     event.preventDefault();
   }
 
-  // displayFile() {
-  //   if (this.droppedFile) {
-  //     this.displayImage = true;
-  //     if (this.isImageType(this.droppedFile.type)) {
-  //       const reader = new FileReader();
-  //       reader.onload = (event) => {
-  //         const image = new Image();
-  //         image.onload = () => {
-  //           const aspectRatio = image.width / image.height;
-  //           this.imageAdjustedWidth = Math.ceil(this.plotHeight * aspectRatio);
-  //           this.maxImageContainerWidthOverylay = Math.max(this.imageAdjustedWidth, (this.plotWidth + this.widthAdjustment))
-  //           this.maxImageContainerWidthSidebySide = Math.max((this.plotWidth + this.widthAdjustment) * 2, (this.plotWidth + this.widthAdjustment + this.imageAdjustedWidth))
-  //           this.droppedFileURL = reader.result as string;
-  //         };
-  //         image.src = event.target?.result as string;
-  //       };
-  //       reader.readAsDataURL(this.droppedFile);
-  //     }
-  //   }
-  // }
-
   displayFile() {
     if (this.droppedFile) {
       this.displayImage = true;
@@ -753,13 +739,14 @@ export class BaseSpatialgeComponent {
           const image = new Image();
           image.onload = () => {
             const aspectRatio = image.width / image.height;
-            console.log("from onload: ", image.width, image.height)
             this.imageAdjustedWidth = Math.ceil(this.plotHeight * aspectRatio);
             this.maxImageContainerWidthOverylay = Math.max(this.imageAdjustedWidth, (this.plotWidth + this.widthAdjustment));
             this.maxImageContainerWidthSidebySide = Math.max((this.plotWidth + this.widthAdjustment) * 2, (this.plotWidth + this.widthAdjustment + this.imageAdjustedWidth));
 
             this.droppedFileURL = reader.result as string;
             this.loadImageAndCrop(image);  // Call the cropping function with the loaded image
+            this.cdr.detectChanges();
+
           };
           image.src = event.target?.result as string;
         };
@@ -768,36 +755,57 @@ export class BaseSpatialgeComponent {
     }
   }
 
+  aspectRatio = 1;
+
   loadImageAndCrop(image: HTMLImageElement) {
+    this.isLoading = false;
     const canvas1 = this.canvasElement1.nativeElement;
     const canvas2 = this.canvasElement2.nativeElement;
     const ctx1 = canvas1.getContext('2d');
     const ctx2 = canvas2.getContext('2d');
-    // const cropX = 521; // X coordinate of the top-left corner of the cropping rectangle
-    // const cropY = 262; // Y coordinate of the top-left corner of the cropping rectangle
-    // const cropWidth = 1205; // Width of the cropping rectangle
-    // const cropHeight = 1288; // Height of the cropping rectangle
-    const cropX = this.xMin * this.scaleFactor; // X coordinate of the top-left corner of the cropping rectangle
-    const cropY = this.yMin * this.scaleFactor; // Y coordinate of the top-left corner of the cropping rectangle
-    const cropWidth = (this.xMax - this.xMin) * this.scaleFactor; // Width of the cropping rectangle
-    const cropHeight = (this.yMax - this.yMin) * this.scaleFactor; // Height of the cropping rectangle
 
-    // console.log("crop variable: ", cropX, cropX_test, cropY, cropY_test, cropWidth, cropWidth_test, cropHeight, cropHeight_test)
-    // this.croppedWidth = cropWidth;
-    // this.croppedHeight = cropHeight;
+    if (this.scaleFactor === 1) {
+      ctx1.clearRect(0, 0, canvas2.width, canvas2.height);
+      ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
 
-    // Draw the cropped image on the canvas
-    ctx1.clearRect(0, 0, canvas1.width, canvas1.height); // Clear the canvas
-    ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
-    // ctx.drawImage(image, cropX, cropY, cropWidth, cropHeight, 0, 0, this.croppedWidth, this.croppedHeight);
-    ctx1.drawImage(image, Math.round(cropX), Math.round(cropY), Math.round(cropWidth), Math.round(cropHeight), 0, 0, Math.round(this.croppedWidth), Math.round(this.croppedHeight));
-    ctx2.drawImage(image, Math.round(cropX), Math.round(cropY), Math.round(cropWidth), Math.round(cropHeight), 0, 0, Math.round(this.croppedWidth), Math.round(this.croppedHeight));
+      this.aspectRatio = image.width / image.height;
+      let imageAdjustedWidth = Math.ceil(this.plotHeight * this.aspectRatio);
 
+      console.log("canvas width/height: ", image.width, image.height, imageAdjustedWidth, this.plotHeight, this.plotWidth)
+      
+      ctx1.drawImage(image, 0, 0, imageAdjustedWidth, this.plotHeight);
+      ctx2.drawImage(image, 0, 0, imageAdjustedWidth, this.plotHeight);
+    } else {
+      const cropX = this.xMin * this.scaleFactor; // X coordinate of the top-left corner of the cropping rectangle
+      const cropY = this.yMin * this.scaleFactor; // Y coordinate of the top-left corner of the cropping rectangle
+      const cropWidth = (this.xMax - this.xMin) * this.scaleFactor; // Width of the cropping rectangle
+      const cropHeight = (this.yMax - this.yMin) * this.scaleFactor; // Height of the cropping rectangle
+
+      this.croppedWidth = Math.round(cropWidth);
+      this.croppedHeight = Math.round(cropHeight);
+
+      this.aspectRatio = cropWidth / cropHeight
+      let imageAdjustedWidth = Math.ceil(this.plotHeight * this.aspectRatio);
+      ctx1.clearRect(0, 0, canvas1.width, canvas1.height); // Clear the canvas
+      ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
+
+      ctx1.drawImage(image, Math.round(cropX), Math.round(cropY), Math.round(cropWidth), Math.round(cropHeight), 0, 0, imageAdjustedWidth, this.plotHeight);
+      ctx2.drawImage(image, Math.round(cropX), Math.round(cropY), Math.round(cropWidth), Math.round(cropHeight), 0, 0, imageAdjustedWidth, this.plotHeight);
+    }
+
+
+    //image isn't displayed on the canvas on the first try. fix this tomorrow.
+    //add change in SCALEFACTOR will allow reload of image
+    if (!this.reloadImage) {
+      this.reloadImage = true;
+      this.displayFile()
+    }
   }
 
+  reloadImage = false
 
-  croppedWidth = 1205;  // Define the width of the cropped area
-  croppedHeight = 1288;
+  croppedWidth = 800;  // Define the width of the cropped area
+  croppedHeight = 800;
 
 
   isImageType(fileType: string): boolean {
@@ -833,7 +841,8 @@ export class BaseSpatialgeComponent {
     event.preventDefault();
     this.scaleFactor = parseFloat(this.scaleFactorVal)
     this.notificationService.success(`Scale Factor updated to ${this.scaleFactor}.`);
-    this.callCreateScatterPlot();
+    this.reloadImage = false;
+    this.displayFile();
   }
 
   onColorChange() {

@@ -95,7 +95,10 @@
                         <p>Drop image file here or click to upload</p>
                     </div>
                     <!-- <div *ngIf="droppedFile && displayImage && overlayImage" style="z-index: 3;"> -->
-                    <canvas #canvasElement1 [width]="croppedWidth" [height]="croppedHeight"></canvas>
+                    <div [class]="droppedFile && displayImage && overlayImage ? '':'hiddenDiv'">
+                        <canvas #canvasElement1 [width]="croppedWidth" [height]="croppedHeight"></canvas>
+                    </div>
+
                     <!-- <img *ngIf="isImageType(droppedFile.type)" class="overlayPlotsImage" [src]="droppedFileURL"
                             alt="Dropped Image"
                             [ngStyle]="{ 'height.px': (originalPlotHeight > 200 ? originalPlotHeight : 300), 'opacity': imageOpacityValue }"> -->
@@ -107,7 +110,7 @@
 
 
                 <div *ngIf="scatterPlotDataCluster.length > 0" class="zoomButtonContainer"
-                    [style.left.px]="currentZoomScaleFactor === 1 ? plotWidth + legendWidth - 40 + widthAdjustment : (overlayImage ? plotWidth - 40: plotWidth - 50)">
+                    [style.left.px]="currentZoomScaleFactor === 1 ? plotWidth + legendWidth - 40 + widthAdjustment : (overlayImage ? plotWidth - 40: plotWidth - 100)">
                     <button class="zoomButton" matTooltip="Zoom In" (click)="applyZoom('+')"
                         [disabled]="currentZoomScaleFactor === zoomMax">
                         <mat-icon>add</mat-icon>
@@ -129,15 +132,9 @@
                     </div>
                 </div>
             </div> -->
-            <div class="nonOverlay" [style.height.px]="originalPlotHeight"
-                [style.width.px]="droppedFile && displayImage && !overlayImage ? originalPlotHeight*aspectRatio : 0"
-                [style.opacity]="imageOpacityValue">
-                <div class="imageContainer2">
-                    <!-- <img *ngIf="scaleFactor === 1" class="overlayPlotsImage" [src]="droppedFileURL" alt="Dropped Image"
-                        [ngStyle]="{ 'height.px': (originalPlotHeight > 200 ? originalPlotHeight : 300), 'opacity': imageOpacityValue }">
-                    <div *ngIf="scaleFactor !== 1">
-                        <canvas #canvasElement2 [width]="croppedWidth" [height]="croppedHeight"></canvas>
-                    </div> -->
+            <div class="nonOverlay" [style.opacity]="imageOpacityValue" [style.height.px]="originalPlotHeight"
+                [style.width.px]="droppedFile && displayImage && !overlayImage ? originalPlotWidth : 0">
+                <div class="imageContainer2" [style.height.px]="originalPlotHeight">
                     <canvas #canvasElement2 [width]="croppedWidth" [height]="croppedHeight"></canvas>
                 </div>
             </div>
@@ -155,7 +152,7 @@
                             <!-- <img *ngIf="isImageType(droppedFile.type)" class="overlayPlotsImage" [src]="droppedFileURL"
                                 alt="Dropped Image" [style.height.px]="plotHeight/4"
                                 [style.opacity]="imageOpacityValue"> -->
-                                <!-- <canvas #canvasElement3 [width]="croppedWidth" [height]="croppedHeight" [style.height.px]="plotHeight" [style.opacity]="imageOpacityValue"></canvas> -->
+                            <!-- <canvas #canvasElement3 [width]="croppedWidth" [height]="croppedHeight" [style.height.px]="plotHeight" [style.opacity]="imageOpacityValue"></canvas> -->
                         </div>
                         <div #minimapId id='minimapId'
                             [class]="currentZoomScaleFactor != 1 || droppedFile ? 'minimapPlotContainer' : 'hiddenDiv minimapPlotContainer'"
@@ -169,9 +166,9 @@
 
 
         </span>
-        <div *ngIf="currentZoomScaleFactor !== 1 && currentZoomScaleFactor !== 0.5" class="horizontalSliderContainer">
+        <div *ngIf="currentZoomScaleFactor !== 1 && currentZoomScaleFactor !== 0.5" class="horizontalSliderContainer" [style.width.px]="overlayImage  ? originalPlotWidth : originalPlotWidth - 50">
             <mat-slider [min]="minSliderLeftValue()" [max]="maxSliderLeftValue()" step="10" [(ngModel)]="sliderLeft"
-                (change)="movePlot('left', 'slider', 'plot')" [style.width.px]="plotWidth">
+                (change)="movePlot('left', 'slider', 'plot')" [style.width.px]="overlayImage  ? originalPlotWidth : originalPlotWidth - 50">
             </mat-slider>
         </div>
     </div>

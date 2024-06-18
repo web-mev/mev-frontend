@@ -11,19 +11,19 @@ import { MetadataService } from '@app/core/metadata/metadata.service';
 import { NotificationService } from '../../../core/core.module';
 
 @Component({
-    selector: 'mev-spatialge-pathway-enrichment',
-    templateUrl: './spatialge-pathway-enrichment.component.html',
-    styleUrls: ['./spatialge-pathway-enrichment.component.scss'],
+    selector: 'mev-spatialge-spatial-autocorrelation-sthet',
+    templateUrl: './spatialge-spatial-autocorrelation-sthet.component.html',
+    styleUrls: ['./spatialge-spatial-autocorrelation-sthet.component.scss'],
     changeDetection: ChangeDetectionStrategy.Default
 })
-export class SpatialGEPathwayEnrichmentComponent implements OnInit {
+export class SpatialGESpatialAutocorrelationSthetComponent implements OnInit {
     @Input() outputs;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
     dataSource: FeaturesDataSource;
     resourceId;
-    analysisName = 'SpatialGE Pathway Enrichment';
-    displayedColumns = ['pathway', 'padj', 'pval', 'size', 'actions'];
+    analysisName = 'SpatialGE Spatial Autocorrelation (STHET)';
+    displayedColumns = ['sample_gene','gene_mean', 'gene_stdevs', 'moran_i', 'geary_c'];
     defaultPageIndex = 0;
     defaultPageSize = 10;
     maxFeatureSetSize = 500;
@@ -38,11 +38,12 @@ export class SpatialGEPathwayEnrichmentComponent implements OnInit {
     }
 
     ngOnInit() {
+        console.log("outputs: ", this.outputs)
         this.initializeFeatureResource();
     }
 
     initializeFeatureResource(): void {
-        this.resourceId = this.outputs['STEnrich.pathway_results'];
+        this.resourceId = this.outputs['SThet_results'];
         this.dataSource.loadFeatures(
             this.resourceId,
             {},
@@ -50,45 +51,46 @@ export class SpatialGEPathwayEnrichmentComponent implements OnInit {
             this.defaultPageIndex,
             this.defaultPageSize
         );
-        console.log("enrich datasource: ", this.dataSource)
+        console.log("datasource2: ", this.dataSource)
+        
     }
 
-    onCreateCustomFeatureSet(row) {
-        const setSize = row.size;
-        if (setSize > this.maxFeatureSetSize) {
-            const errorMessage = `The current size of 
-          your set (${setSize}) is larger than the 
-          maximum allowable size (${this.maxFeatureSetSize}).
-          Please filter the table further to reduce the size.`
-            this.notificationService.error(errorMessage);
-            return;
-        }
+    // onCreateCustomFeatureSet(row) {
+    //     const setSize = row.size;
+    //     if (setSize > this.maxFeatureSetSize) {
+    //         const errorMessage = `The current size of 
+    //       your set (${setSize}) is larger than the 
+    //       maximum allowable size (${this.maxFeatureSetSize}).
+    //       Please filter the table further to reduce the size.`
+    //         this.notificationService.error(errorMessage);
+    //         return;
+    //     }
 
-        const dialogRef = this.dialog.open(AddSampleSetComponent, {
-            data: { type: CustomSetType.FeatureSet }
-        });
+    //     const dialogRef = this.dialog.open(AddSampleSetComponent, {
+    //         data: { type: CustomSetType.FeatureSet }
+    //     });
 
-        dialogRef.afterClosed().subscribe(customSetData => {
-            if (customSetData) {
-                const elements = [];
-                    for (let gene of row.genes) {
-                        let temp = { id: gene }
-                        elements.push(temp)
-                    }
+    //     dialogRef.afterClosed().subscribe(customSetData => {
+    //         if (customSetData) {
+    //             const elements = [];
+    //                 for (let gene of row.genes) {
+    //                     let temp = { id: gene }
+    //                     elements.push(temp)
+    //                 }
 
-                const customSet = {
-                    name: customSetData.name,
-                    color: customSetData.color,
-                    type: CustomSetType.FeatureSet,
-                    elements: elements,
-                    multiple: true
-                };
+    //             const customSet = {
+    //                 name: customSetData.name,
+    //                 color: customSetData.color,
+    //                 type: CustomSetType.FeatureSet,
+    //                 elements: elements,
+    //                 multiple: true
+    //             };
 
-                this.metadataService.addCustomSet(customSet);
-            }
+    //             this.metadataService.addCustomSet(customSet);
+    //         }
 
-        });
-    }
+    //     });
+    // }
 
     loadFeaturesPage() {
         this.dataSource.loadFeatures(
@@ -102,10 +104,11 @@ export class SpatialGEPathwayEnrichmentComponent implements OnInit {
 }
 
 export interface SPEFeature {
-    pathway: string;
-    padj: number;
-    pval: number;
-    size: number;
+    sample_gene: string;
+    gene_mean: number;
+    gene_stdevs: number;
+    moran_i: number;
+    geary_c: number;
 }
 
 export class FeaturesDataSource implements DataSource<SPEFeature> {

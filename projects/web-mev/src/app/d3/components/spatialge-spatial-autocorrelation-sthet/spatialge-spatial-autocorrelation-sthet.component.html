@@ -1,0 +1,61 @@
+<mat-card class="analysis-card">
+    <mat-card-header>
+        <div mat-card-avatar class="analysis-card__img"></div>
+        <mat-card-title>{{analysisName}}: {{ outputs?.job_name }}</mat-card-title>
+        <mev-input-info [outputs]="outputs"></mev-input-info>
+    </mat-card-header>
+    <mat-card-content class="analysis-card__main">
+        <!-- <p class="instructions_text">STenrich is a spatially informed pathway analysis algorithm for
+            transcriptomics. It identifies enriched
+            pathways that are spatially clustered. Through a permutation process, STenrich identifies whether enriched
+            pathways are closer in coordinate distance than randomly selected background.</p>
+        <p class="instructions_text">
+            You can also define custom sets of genes for exploration with other tools. Custom set size is
+            limited to {{maxFeatureSetSize}} items.
+        </p> -->
+        <mat-divider [inset]="true"></mat-divider>
+        <div class="analysis-card__content">
+            <mev-spinner-overlay *ngIf="dataSource.loading$ | async"></mev-spinner-overlay>
+
+            <div class="mat-elevation-z8">
+                <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" class="table">
+                    <ng-container matColumnDef="sample_gene">
+                        <th mat-header-cell *matHeaderCellDef> Sample Gene </th>
+                        <td mat-cell *matCellDef="let element" class="word-wrap"> {{element.rowname}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="gene_mean">
+                        <th mat-header-cell *matHeaderCellDef> Gene Mean </th>
+                        <td mat-cell *matCellDef="let element" class="numericCols"> {{element.values.gene_mean}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="gene_stdevs">
+                        <th mat-header-cell *matHeaderCellDef> Gene Stdevs </th>
+                        <td mat-cell *matCellDef="let element" class="numericCols"> {{element.values.gene_stdevs}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="moran_i">
+                        <th mat-header-cell *matHeaderCellDef> Moran I </th>
+                        <td mat-cell *matCellDef="let element" class="numericCols"> {{element.values.moran_i}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="geary_c">
+                        <th mat-header-cell *matHeaderCellDef> Geary C </th>
+                        <td mat-cell *matCellDef="let element" class="numericCols"> {{element.values.geary_c ?
+                            element.values.geary_c : 'NA'}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+
+                <mat-paginator [length]="dataSource.featuresCount" [pageSize]="10" [pageSizeOptions]="[10, 25, 50]"
+                    (page)="loadFeaturesPage()">
+                </mat-paginator>
+            </div>
+        </div>
+        <br>
+        <button mat-raised-button color="accent" title="button that does nothing">
+            Button to do something later
+        </button>
+    </mat-card-content>
+</mat-card>

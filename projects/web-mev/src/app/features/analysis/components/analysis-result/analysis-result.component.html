@@ -130,6 +130,9 @@
     <ng-container *ngIf="operationName === 'SPOTlight'">
         <mev-spotlight [outputs]="outputs"></mev-spotlight>
     </ng-container>
+    <ng-container *ngIf="operationName === 'spatialGE Spatial Autocorrelation (SThet)'">
+        <mev-spatialge-spatial-autocorrelation-sthet [outputs]="outputs"></mev-spatialge-spatial-autocorrelation-sthet>
+    </ng-container>
 </div>
 
 <ng-template #error>

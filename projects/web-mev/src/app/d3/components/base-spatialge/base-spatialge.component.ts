@@ -72,7 +72,7 @@ export class BaseSpatialgeComponent {
   widthAdjustment: number = 0;
   heightAdjustment: number = 0;
 
-  imageAdjustedWidth: number = 0;
+  imageAdjustedWidth: number = 600;
   maxImageContainerWidthOverylay: number = this.plotWidth;
   maxImageContainerWidthSidebySide: number = this.plotWidth * 2;
 
@@ -155,11 +155,20 @@ export class BaseSpatialgeComponent {
 
   hideMinimapImage = false;
 
+  normalizePlotWidth = 400;
+  imageOverlayOffset = 220;
+
+  // marginLeftScales = [0, -this.imageOverlayOffset, -200, 400, 1120, 1630]
+
   constructor(
     protected httpClient: HttpClient,
     protected readonly notificationService: NotificationService,
     private cdr: ChangeDetectorRef
   ) { }
+
+  // getMarginLeft(zoom: number) {
+  //   return this.marginLeftScales[zoom]
+  // }
 
   resetVariables() {
     this.scatterPlotData = [];
@@ -266,8 +275,7 @@ export class BaseSpatialgeComponent {
 
     let normalization_uuid = this.outputs["normalized_expression"];
     let coords_metadata_uuid = this.outputs["coords_metadata"];
-    let normUrl = `${this.API_URL}/resources/${normalization_uuid}/contents/?__rowname__=[eq]:${this.geneSearch}`
-    console.log("normUrl: ", normUrl)
+    let normUrl = `${this.API_URL}/resources/${normalization_uuid}/contents/?__rowname__=[eq]:${this.geneSearch}`;
 
     const normRequest = this.httpClient.get(normUrl).pipe(
       catchError(error => {
@@ -278,8 +286,7 @@ export class BaseSpatialgeComponent {
       })
     );
 
-    let coordMetaUrl = `${this.API_URL}/resources/${coords_metadata_uuid}/contents/`
-    console.log("coordUrl: ", coordMetaUrl)
+    let coordMetaUrl = `${this.API_URL}/resources/${coords_metadata_uuid}/contents/`;
     const coordsMetadataRequest = this.httpClient.get(coordMetaUrl).pipe(
       catchError(error => {
         this.isLoading = false;
@@ -290,7 +297,6 @@ export class BaseSpatialgeComponent {
     );
 
     forkJoin([normRequest, coordsMetadataRequest]).subscribe(([normRes, coordsMetadataRes]) => {
-      console.log("norm res: ", normRes, coordsMetadataRes)
       this.isLoading = false;
       if (Array.isArray(normRes) && normRes.length > 0 && normRes[0].hasOwnProperty('values')) {
         for (let i in normRes[0]['values']) {
@@ -340,9 +346,13 @@ export class BaseSpatialgeComponent {
             this.totalCountsMin = Math.min(this.totalCountsMin, totalCounts)
           }
         }
-        let normalizePlot = (this.xMax - this.xMin) / 300 // This will set the plot to a width of 300px
+        // let normalizePlot = (this.xMax - this.xMin) > (this.yMax - this.yMin) ? (this.xMax - this.xMin) / this.normalizePlotWidth : (this.yMax - this.yMin) / this.normalizePlotWidth
+
+        let normalizePlot = (this.xMax - this.xMin) / this.normalizePlotWidth // This will set the plot to a width of 300px
         this.plotWidth = (this.xMax - this.xMin) / normalizePlot;
         this.plotHeight = (this.yMax - this.yMin) / normalizePlot;
+
+        this.imageOverlayOffset = this.plotWidth - this.legendWidth
 
         if (this.originalPlotWidth === 0) {
           this.originalPlotWidth = this.plotWidth;
@@ -362,7 +372,6 @@ export class BaseSpatialgeComponent {
         };
 
         if (this.scatterPlotData.length > 0) {
-          console.log("found some data: ", this.scatterPlotData)
           this.displayOverlayContainer = true;
           // this.croppedWidth = (this.xMax - this.xMin) * this.scaleFactor;
           // this.croppedHeight = (this.yMax - this.yMin) * this.scaleFactor;
@@ -465,9 +474,12 @@ export class BaseSpatialgeComponent {
           }
         }
 
-        let normalizePlot = (this.xMax - this.xMin) / 300 // This will set the plot to a width of 300px
+        // let normalizePlot = (this.xMax - this.xMin) > (this.yMax - this.yMin) ? (this.xMax - this.xMin) / this.normalizePlotWidth : (this.yMax - this.yMin) / this.normalizePlotWidth
+        let normalizePlot = (this.xMax - this.xMin) / this.normalizePlotWidth // This will set the plot to a width of 300px
         this.plotWidth = (this.xMax - this.xMin) / normalizePlot;
         this.plotHeight = (this.yMax - this.yMin) / normalizePlot;
+
+        this.imageOverlayOffset = this.plotWidth - this.legendWidth
 
         if (this.originalPlotWidth === 0) {
           this.originalPlotWidth = this.plotWidth;
@@ -520,7 +532,7 @@ export class BaseSpatialgeComponent {
       .append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
-      // .style("background", "pink")
+      .style("background", "pink")
       .append("g")
       .attr("transform",
         "translate(" + margin.left + "," + margin.top + ")");
@@ -772,8 +784,10 @@ export class BaseSpatialgeComponent {
       this.aspectRatio = image.width / image.height;
       let imageAdjustedWidth = Math.ceil(this.plotHeight * this.aspectRatio);
 
-      console.log("canvas width/height: ", image.width, image.height, imageAdjustedWidth, this.plotHeight, this.plotWidth)
-      
+      console.log("originalplotwidth: ", this.originalPlotWidth, this.plotWidth)
+      console.log("normalized plot width: ", this.normalizePlotWidth)
+      console.log("image adjustwidth: ", this.imageAdjustedWidth, this.plotHeight)
+
       ctx1.drawImage(image, 0, 0, imageAdjustedWidth, this.plotHeight);
       ctx2.drawImage(image, 0, 0, imageAdjustedWidth, this.plotHeight);
     } else {
@@ -805,8 +819,8 @@ export class BaseSpatialgeComponent {
 
   reloadImage = false
 
-  croppedWidth = this.plotWidth;  // Define the width of the cropped area
-  croppedHeight = this.plotHeight;
+  croppedWidth = this.imageAdjustedWidth;  // Define the width of the cropped area
+  croppedHeight = this.plotHeight * 1.5
 
 
   isImageType(fileType: string): boolean {
@@ -889,7 +903,7 @@ export class BaseSpatialgeComponent {
 
     if (plotContainer || imageContainer) {
       const transformPlotValue = `translateX(${-(this.currentLeft * this.currentZoomScaleFactor + this.sliderLeft + this.legendWidth * (this.currentZoomScaleFactor - 1))}px) translateY(${this.currentTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor})`;
-      const transformImageValue = `translateX(${-(this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft)}px) translateY(${this.currentImageTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
+      const transformImageValue = `translateX(${-(this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft + this.widthAdjustment * this.currentZoomScaleFactor)}px) translateY(${this.currentImageTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
 
       plotContainer.style.transform = transformPlotValue;
       imageContainer.style.transform = transformImageValue;
@@ -927,6 +941,8 @@ export class BaseSpatialgeComponent {
     miniSubContainer.style.transform = `scale(${this.currentZoomScaleFactor === 0.5 ? 0.5 : 1})`;
 
     this.callCreateScatterPlot();
+
+    console.log("plot width from zoom: ", this.plotWidth, this.plotHeight*this.aspectRatio, this.currentZoomScaleFactor)
   }
 
   //Alignment functions
@@ -991,10 +1007,13 @@ export class BaseSpatialgeComponent {
 
     let signLeft = this.sliderLeft >= 0 ? 1 : 0;
     let signTop = this.sliderTop >= 0 ? 0 : 1;
-    console.log("slider: ", this.sliderLeft, this.sliderTop)
 
-    transformPlotValue = `translateX(${-(this.currentLeft * this.currentZoomScaleFactor + this.sliderLeft + this.legendWidth * (this.currentZoomScaleFactor - 1) + this.widthAdjustment * this.currentZoomScaleFactor)}px) translateY(${this.currentTop * this.currentZoomScaleFactor + this.sliderTop + this.heightAdjustment * this.currentZoomScaleFactor}px) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor})`;
-    transformImageValue = `translateX(${-(this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft)}px) translateY(${this.currentImageTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
+    // const transformPlotValue = `translateX(${-(this.currentLeft * this.currentZoomScaleFactor + this.sliderLeft + this.legendWidth * (this.currentZoomScaleFactor - 1))}px) translateY(${this.currentTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor})`;
+    // const transformImageValue = `translateX(${-(this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft)}px) translateY(${this.currentImageTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
+
+
+    transformPlotValue = `translateX(${-(this.currentLeft * this.currentZoomScaleFactor + this.sliderLeft + this.legendWidth * (this.currentZoomScaleFactor - 1))}px) translateY(${this.currentTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor})`;
+    transformImageValue = `translateX(${-(this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft - this.widthAdjustment * this.currentZoomScaleFactor)}px) translateY(${this.currentImageTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
 
     transformPlotMiniMapValue = `translateX(${-(this.currentLeft * this.currentZoomScaleFactor + this.sliderLeft + this.widthAdjustment * this.currentZoomScaleFactor) / 4}px) translateY(${(this.currentTop * this.currentZoomScaleFactor + this.sliderTop + this.heightAdjustment * this.currentZoomScaleFactor) / 4}px) scaleX(${this.currentZoomScaleFactor}) scaleY(${this.currentZoomScaleFactor})`;
     transformImageMiniMapValue = `translateX(${-(this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft) / 4}px) translateY(${(this.currentImageTop * this.currentZoomScaleFactor + this.sliderTop) / 4}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
@@ -1023,9 +1042,9 @@ export class BaseSpatialgeComponent {
       border: '2px solid #1DA1F2',
       position: 'absolute',
     };
-
-    console.log("selectionRect: ", selectionRectWidth, selectionRectHeight)
-
+    console.log("width/height adj: ", this.widthAdjustment, this.heightAdjustment)
+    console.log("from moveplot image: ", this.currentImageLeft, this.currentImageTop, this.legendWidth)
+    console.log("from moveplot plot: ", this.currentLeft, this.currentTop)
   }
 
   stretchPlot(axis, direction) {
@@ -1120,14 +1139,13 @@ export class BaseSpatialgeComponent {
       this.yAxisFlipped = !this.yAxisFlipped;
       this.flipY = this.yAxisFlipped ? -1 : 1;
     }
-    console.log("flip axis: ", this.flipX, this.flipY, this.croppedWidth, this.croppedHeight)
 
     // transformImageValue = `translateX(${-(this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft)}px) translateY(${this.currentImageTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
     //original
     // let verticalImageTransform = `translateX(${-(this.currentImageLeft + this.sliderLeft)}px) translateY(${this.currentImageTop + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
 
     let verticalImageTransform = `translateX(${-(this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft)}px) translateY(${this.currentImageTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
-    let horizontalImageTransform = `translateX(${-(this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft) }px) translateY(${this.currentImageTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
+    let horizontalImageTransform = `translateX(${-(this.currentImageLeft * this.currentZoomScaleFactor + this.sliderLeft)}px) translateY(${this.currentImageTop * this.currentZoomScaleFactor + this.sliderTop}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;
     let transformImageValue = axis === 'vertical' ? verticalImageTransform : horizontalImageTransform;
 
     let verticalMiniMapTransform = `translateX(${-((this.currentLeft * this.currentZoomScaleFactor + this.sliderLeft) / 4)}px) translateY(${(this.currentTop * this.currentZoomScaleFactor + this.sliderTop) / 4}px) scaleX(${this.currentZoomScaleFactor * this.flipX}) scaleY(${this.currentZoomScaleFactor * this.flipY}) rotate(${this.currentDegree}deg)`;

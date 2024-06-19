@@ -86,9 +86,9 @@
                 <div *ngIf="scatterPlotData.length > 0"
                     [class]="!droppedFile && currentZoomScaleFactor == 1 ? 'drop-zone' : '' "
                     (drop)="onDropFile($event)" (dragover)="onDragOver($event)"
-                    [style.margin-left.px]="overlayImage ? (currentZoomScaleFactor === 1 ? -(plotHeight*aspectRatio + widthAdjustment*currentZoomScaleFactor)+legendWidth : -(plotHeight*aspectRatio + widthAdjustment*currentZoomScaleFactor)): legendWidth+20"
+                    [style.margin-left.px]="overlayImage ? (currentZoomScaleFactor === 1 ? -imageOverlayOffset : -(plotHeight * aspectRatio + widthAdjustment*currentZoomScaleFactor)): legendWidth+20"
                     [style.height.px]="!droppedFile ? originalPlotHeight - 100: originalPlotHeight"
-                    [style.width.px]="!overlayImage && !droppedFile ? originalPlotHeight*aspectRatio - 100 : originalPlotHeight*aspectRatio"
+                    [style.width.px]="!overlayImage && !droppedFile ? normalizePlotWidth - 200 : originalPlotWidth "
                     (click)="fileInput.click()" class="imageContainer" [style.opacity]="imageOpacityValue">
                     <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;">
                     <div *ngIf="!droppedFile && currentZoomScaleFactor == 1" class="drop-message">
@@ -166,9 +166,11 @@
 
 
         </span>
-        <div *ngIf="currentZoomScaleFactor !== 1 && currentZoomScaleFactor !== 0.5" class="horizontalSliderContainer" [style.width.px]="overlayImage  ? originalPlotWidth : originalPlotWidth - 50">
+        <div *ngIf="currentZoomScaleFactor !== 1 && currentZoomScaleFactor !== 0.5" class="horizontalSliderContainer"
+            [style.width.px]="overlayImage  ? originalPlotWidth : originalPlotWidth - 50">
             <mat-slider [min]="minSliderLeftValue()" [max]="maxSliderLeftValue()" step="10" [(ngModel)]="sliderLeft"
-                (change)="movePlot('left', 'slider', 'plot')" [style.width.px]="overlayImage  ? originalPlotWidth : originalPlotWidth - 50">
+                (change)="movePlot('left', 'slider', 'plot')"
+                [style.width.px]="overlayImage  ? originalPlotWidth : originalPlotWidth - 50">
             </mat-slider>
         </div>
     </div>
@@ -177,7 +179,7 @@
         [style.top.px]="(plotHeight+heightAdjustment) + geneSearchHeight + 100">
         <div *ngIf="displayAlignment">
             <label id="modes-label">Alignment: </label>
-            <!-- <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Plot Left"
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Plot Left"
                 (click)="movePlot('left', 'align', 'plot')">
                 <mat-icon>arrow_back</mat-icon>
             </button>
@@ -192,7 +194,7 @@
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Plot Down"
                 (click)="movePlot('down', 'align', 'plot')">
                 <mat-icon>arrow_downward</mat-icon>
-            </button> -->
+            </button>
 
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Expand Plot X-Axis"
                 (click)="stretchPlot('x-axis', '+')">

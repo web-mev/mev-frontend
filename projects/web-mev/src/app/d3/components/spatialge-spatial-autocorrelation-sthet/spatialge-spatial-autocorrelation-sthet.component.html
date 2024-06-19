@@ -35,7 +35,7 @@
 
                     <ng-container matColumnDef="moran_i">
                         <th mat-header-cell *matHeaderCellDef> Moran I </th>
-                        <td mat-cell *matCellDef="let element" class="numericCols"> {{element.values.moran_i}} </td>
+                        <td mat-cell *matCellDef="let element" class="numericCols"> {{element.values.moran_i ? element.values.moran_i : 'NA'}} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="geary_c">

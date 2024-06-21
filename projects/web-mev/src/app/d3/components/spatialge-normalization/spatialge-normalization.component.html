@@ -75,8 +75,7 @@
                     (change)="movePlot('left', 'slider', 'plot')" vertical [style.height.px]="plotHeight">
                 </mat-slider>
             </div>
-            <div class="overlayDiv"
-                [style.height.px]="currentZoomVal == 1 ? originalPlotHeight: originalPlotHeight"
+            <div class="overlayDiv" [style.height.px]="currentZoomVal == 1 ? originalPlotHeight: originalPlotHeight"
                 [style.width.px]="overlayImage ? (currentZoomVal == 1 ? originalPlotWidth+legendWidth: originalPlotWidth) : !droppedFile ? (currentZoomVal != 1 ? originalPlotWidth+legendWidth : originalPlotWidth * 3 + 150 + legendWidth*3): originalPlotWidth+legendWidth">
 
                 <div #scatter id="scatter" [class]="overlayImage ? 'overlayPlots' : 'displayPlotSideBySide'"
@@ -84,8 +83,8 @@
                     [style]="!displayAlignment ? 'z-index: 2' : 'z-index: 4'" class="plotContainer">
                 </div>
                 <div *ngIf="scatterPlotData.length > 0"
-                    [class]="!droppedFile && currentZoomVal == 1 ? 'drop-zone' : '' "
-                    (drop)="onDropFile($event)" (dragover)="onDragOver($event)"
+                    [class]="!droppedFile && currentZoomVal == 1 ? 'drop-zone' : '' " (drop)="onDropFile($event)"
+                    (dragover)="onDragOver($event)"
                     [style.margin-left.px]="overlayImage ? (currentZoomVal === 1 ? -imageOverlayOffset : -(originalPlotWidth)): legendWidth+20"
                     [style.height.px]="!droppedFile ? originalPlotHeight - 100: originalPlotHeight"
                     [style.width.px]="!overlayImage && !droppedFile ? normalizePlotWidth - 200 : originalPlotWidth"
@@ -107,10 +106,8 @@
 
                 </div>
 
-
-
                 <div *ngIf="scatterPlotData.length > 0" class="zoomButtonContainer"
-                    [style.left.px]="currentZoomVal === 1 ? plotWidth + legendWidth - 40 : (overlayImage ? plotWidth - 40: plotWidth - 100)">
+                    [style.left.px]="currentZoomVal === 1 ? plotWidth + legendWidth - 60 : (overlayImage ? plotWidth - 40: plotWidth - 100)">
                     <button class="zoomButton" matTooltip="Zoom In" (click)="applyZoom('+')"
                         [disabled]="currentZoomVal === zoomMax">
                         <mat-icon>add</mat-icon>
@@ -143,7 +140,7 @@
                 [style.left.px]="overlayImage || !droppedFile ? originalPlotWidth+plotWidth/4 : originalPlotWidth*2+50"
                 [style.top.px]="originalPlotHeight + geneSearchHeight + 20">
                 <div
-                    [class]="currentZoomVal != 1 || (droppedFile && showMiniMap) ? 'miniSubContainer' : 'hiddenDiv miniSubContainer'">
+                    [class]="(currentZoomVal != 1 && currentZoomVal != 0.5) || (droppedFile && showMiniMap) ? 'miniSubContainer' : 'hiddenDiv miniSubContainer'">
                     <div>
                         <div *ngIf="!droppedFile" class="miniMapImageContainer" [style.height.px]="plotHeight/4"
                             [style.width.px]="plotWidth/4"></div>
@@ -152,7 +149,10 @@
                             <!-- <img *ngIf="isImageType(droppedFile.type)" class="overlayPlotsImage" [src]="droppedFileURL"
                                 alt="Dropped Image" [style.height.px]="plotHeight/4"
                                 [style.opacity]="imageOpacityValue"> -->
-                            <!-- <canvas #canvasElement3 [width]="croppedWidth" [height]="croppedHeight" [style.height.px]="plotHeight" [style.opacity]="imageOpacityValue"></canvas> -->
+                            <div class="canvasContainer hiddenDiv">
+                                <canvas #canvasElement3 [width]="croppedWidth" [height]="croppedHeight"
+                                    [style.height.px]="croppedHeight" [style.opacity]="imageOpacityValue"></canvas>
+                            </div>
                         </div>
                         <div #minimapId id='minimapId'
                             [class]="currentZoomVal != 1 || droppedFile ? 'minimapPlotContainer' : 'hiddenDiv minimapPlotContainer'"
@@ -195,24 +195,6 @@
                 (click)="movePlot('down', 'align', 'plot')">
                 <mat-icon>arrow_downward</mat-icon>
             </button> -->
-
-            <button mat-flat-button color="primary" class="custom-button" matTooltip="Expand Image X-Axis"
-                (click)="stretchPlot('x-axis', '+')">
-                <mat-icon class="rotate-90">expand</mat-icon>
-            </button>
-            <button mat-flat-button color="primary" class="custom-button" matTooltip="Compress Image X-Axis"
-                (click)="stretchPlot('x-axis', '-')">
-                <mat-icon class="rotate-90">compress</mat-icon>
-            </button>
-            <button mat-flat-button color="primary" class="custom-button" matTooltip="Expand Image Y-Axis"
-                (click)="stretchPlot('y-axis', '+')">
-                <mat-icon>expand</mat-icon>
-            </button>
-            <button mat-flat-button color="primary" class="custom-button" matTooltip="Compress Image Y-Axis"
-                (click)="stretchPlot('y-axis', '-')">
-                <mat-icon>compress</mat-icon>
-            </button>
-            <br>
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Image Left"
                 (click)="movePlot('left', 'align', 'image')">
                 <mat-icon>arrow_back</mat-icon>
@@ -229,6 +211,23 @@
                 (click)="movePlot('down', 'align', 'image')">
                 <mat-icon>arrow_downward</mat-icon>
             </button>
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Expand Image X-Axis"
+                (click)="stretchPlot('x-axis', '+')">
+                <mat-icon class="rotate-90">expand</mat-icon>
+            </button>
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Compress Image X-Axis"
+                (click)="stretchPlot('x-axis', '-')">
+                <mat-icon class="rotate-90">compress</mat-icon>
+            </button>
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Expand Image Y-Axis"
+                (click)="stretchPlot('y-axis', '+')">
+                <mat-icon>expand</mat-icon>
+            </button>
+            <button mat-flat-button color="primary" class="custom-button" matTooltip="Compress Image Y-Axis"
+                (click)="stretchPlot('y-axis', '-')">
+                <mat-icon>compress</mat-icon>
+            </button>
+
 
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Rotate Image Left"
                 (click)="rotateImage('-')">

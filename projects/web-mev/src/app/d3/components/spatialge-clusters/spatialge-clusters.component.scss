@@ -19,7 +19,6 @@
     position: relative;
     width: fit-content;
     overflow: hidden;
-    margin-right: 10px;
 }
 
 .overlayContainer {
@@ -289,11 +288,11 @@ mat-slider {
     margin-bottom: 10px;
 }
 
-.tipHeader{
+.tipHeader {
     font-weight: bold;
 }
 
-.plotContainer{
+.plotContainer {
     margin-left: 0px;
     margin-top: 0px;
 }
@@ -306,3 +305,12 @@ mat-slider {
     font-weight: bold;
     margin: 6px 0;
 }
+
+// .miniMapImageContainer {
+//     position: relative;
+// }
+
+// .canvasContainer {
+//     top: 66px;
+//     left: 76px;
+// }

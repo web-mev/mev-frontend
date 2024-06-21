@@ -117,8 +117,8 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
                 this.originalPlotHeight = this.plotHeight;
             }
 
-            let selectionRectWidth = (this.plotWidth + this.widthAdjustment) / (4 * this.currentZoomScaleFactor);
-            let selectionRectHeight = (this.plotHeight + this.heightAdjustment) / (4 * this.currentZoomScaleFactor);
+            let selectionRectWidth = (this.plotWidth + this.widthAdjustment) / (4 * this.currentZoomVal);
+            let selectionRectHeight = (this.plotHeight + this.heightAdjustment) / (4 * this.currentZoomVal);
 
             this.selectionRectStyle = {
                 top: `-${this.currentTop}px`,
@@ -211,7 +211,7 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
             current_image_top: this.currentImageTop,
             width_adjustment: this.widthAdjustment,
             height_adjustment: this.heightAdjustment,
-            zoom_scale_factor: this.currentZoomScaleFactor,
+            zoom_scale_factor: this.currentZoomVal,
             legend_width: this.legendWidth,
             plot_height: this.plotHeight,
             plot_width: this.plotWidth,

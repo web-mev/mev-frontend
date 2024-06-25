@@ -230,6 +230,8 @@ mat-slider {
 .nonOverlay {
     margin-top: 10px;
     overflow: hidden;
+
+    position: relative;
 }
 
 .hiddenDiv {
@@ -306,11 +308,15 @@ mat-slider {
     margin: 6px 0;
 }
 
-// .miniMapImageContainer {
-//     position: relative;
-// }
+.imageContainer, .imageContainer2{
+    position: relative;
+}
 
-// .canvasContainer {
-//     top: 66px;
-//     left: 76px;
-// }
+.closeButtonContainer{
+    position: absolute;
+    top: 0px;
+}
+
+.imageContainer2:hover .closeButton {
+    opacity: 1; 
+}

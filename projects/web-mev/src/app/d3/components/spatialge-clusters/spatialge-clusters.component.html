@@ -69,7 +69,7 @@
         </div>
 
         <span class="fullOverlayDiv"
-            [style.width.px]="currentZoomVal !== 1 ? (plotHeight*aspectRatio + legendWidth)*2:(plotHeight*aspectRatio + legendWidth)*2">
+            [style.width.px]="currentZoomVal !== 1 ? (plotWidth + legendWidth)*2:(plotWidth + legendWidth)*2">
             <div *ngIf="currentZoomVal !== 1 && currentZoomVal !== 0.5" class="verticalSliderContainer">
                 <mat-slider [min]="minSliderTopValue()" [max]="maxSliderTopValue()" step="10" [(ngModel)]="sliderTop"
                     (change)="movePlot('left', 'slider', 'plot')" vertical [style.height.px]="plotHeight">
@@ -107,7 +107,7 @@
                 </div>
 
                 <div *ngIf="scatterPlotDataCluster.length > 0" class="zoomButtonContainer"
-                    [style.left.px]="currentZoomVal === 1 ? plotWidth + legendWidth - 60 : (overlayImage ? plotWidth - 40: plotWidth - 100)">
+                    [style.left.px]="currentZoomVal === 1 ? plotWidth + legendWidth - 60 : (overlayImage ? plotWidth - 40: plotWidth - 60)">
                     <button class="zoomButton" matTooltip="Zoom In" (click)="applyZoom('+')"
                         [disabled]="currentZoomVal === zoomMax">
                         <mat-icon>add</mat-icon>
@@ -129,15 +129,20 @@
                     </div>
                 </div>
             </div> -->
-            <div class="nonOverlay" [style.opacity]="imageOpacityValue" [style.height.px]="originalPlotHeight"
-                [style.width.px]="droppedFile && displayImage && !overlayImage ? originalPlotWidth : 0">
-                <div class="imageContainer2" [style.height.px]="originalPlotHeight">
+            <div class="nonOverlay" [style.opacity]="imageOpacityValue" [style.height.px]="plotHeight"
+                [style.width.px]="droppedFile && displayImage && !overlayImage ? (currentZoomVal === 1 ? plotHeight*aspectRatio : plotWidth) : 0">
+                <div class="imageContainer2" [style.height.px]="plotHeight">
                     <canvas #canvasElement2 [width]="croppedWidth" [height]="croppedHeight"></canvas>
+                </div>
+                <div *ngIf="currentZoomVal === 1" class="closeButtonContainer" [style.left.px]="currentZoomVal === 1 ? plotHeight*aspectRatio - 40 : plotWidth - 40">
+                    <button matSuffix mat-icon-button aria-label="Clear" (click)="removeImage()">
+                        <mat-icon>close</mat-icon>
+                    </button>
                 </div>
             </div>
 
             <div class="miniMapContainer"
-                [style.left.px]="overlayImage || !droppedFile ? originalPlotWidth+plotWidth/4 : originalPlotWidth*2+50"
+                [style.left.px]="overlayImage || !droppedFile ? originalPlotWidth+plotWidth/4 + 10 : originalPlotWidth*2 + 100"
                 [style.top.px]="originalPlotHeight + geneSearchHeight + 20">
                 <div
                     [class]="(currentZoomVal != 1 && currentZoomVal != 0.5) || (droppedFile && showMiniMap) ? 'miniSubContainer' : 'hiddenDiv miniSubContainer'">
@@ -145,15 +150,12 @@
                         <div *ngIf="!droppedFile" class="miniMapImageContainer" [style.height.px]="plotHeight/4"
                             [style.width.px]="plotWidth/4"></div>
 
-                        <div *ngIf="droppedFile && displayImage" style="z-index: 3;" class="miniMapImageContainer">
-                            <!-- <img *ngIf="isImageType(droppedFile.type)" class="overlayPlotsImage" [src]="droppedFileURL"
-                                alt="Dropped Image" [style.height.px]="plotHeight/4"
-                                [style.opacity]="imageOpacityValue"> -->
+                        <!-- <div *ngIf="droppedFile && displayImage" style="z-index: 3;" class="miniMapImageContainer">
                             <div class="canvasContainer hiddenDiv">
                                 <canvas #canvasElement3 [width]="croppedWidth" [height]="croppedHeight"
                                     [style.height.px]="croppedHeight" [style.opacity]="imageOpacityValue"></canvas>
                             </div>
-                        </div>
+                        </div> -->
                         <div #minimapId id='minimapId'
                             [class]="currentZoomVal != 1 || droppedFile ? 'minimapPlotContainer' : 'hiddenDiv minimapPlotContainer'"
                             [style.opacity]="displayPlot ? plotOpacityValue : 0" [style.top.px]="0">

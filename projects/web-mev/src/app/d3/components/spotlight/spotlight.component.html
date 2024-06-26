@@ -73,7 +73,7 @@
             [style.width.px]="currentZoomVal !== 1 ? (plotWidth+legendWidth)*2:(plotWidth+legendWidth)*2 -100">
             <div *ngIf="currentZoomVal !== 1 && currentZoomVal !== 0.5" class="verticalSliderContainer">
                 <mat-slider [min]="minSliderTopValue()" [max]="maxSliderTopValue()" step="10" [(ngModel)]="sliderTop"
-                    (change)="movePlot('left', 'slider', 'plot')" vertical [style.height.px]="plotHeight">
+                    (change)="moveImage('left', 'slider', 'plot')" vertical [style.height.px]="plotHeight">
                 </mat-slider>
             </div>
             <div class="overlayDiv"
@@ -155,7 +155,7 @@
         </span>
         <div *ngIf="currentZoomVal !== 1 && currentZoomVal !== 0.5" class="horizontalSliderContainer">
             <mat-slider [min]="minSliderLeftValue()" [max]="maxSliderLeftValue()" step="10" [(ngModel)]="sliderLeft"
-                (change)="movePlot('left', 'slider', 'plot')" [style.width.px]="plotWidth">
+                (change)="moveImage('left', 'slider', 'plot')" [style.width.px]="plotWidth">
             </mat-slider>
         </div>
     </div>
@@ -165,19 +165,19 @@
         <div *ngIf="displayAlignment">
             <label id="modes-label">Alignment: </label>
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Plot Left"
-                (click)="movePlot('left', 'align', 'plot')">
+                (click)="moveImage('left', 'align', 'plot')">
                 <mat-icon>arrow_back</mat-icon>
             </button>
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Plot Right"
-                (click)="movePlot('right', 'align', 'plot')">
+                (click)="moveImage('right', 'align', 'plot')">
                 <mat-icon>arrow_forward</mat-icon>
             </button>
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Plot Up"
-                (click)="movePlot('up', 'align', 'plot')">
+                (click)="moveImage('up', 'align', 'plot')">
                 <mat-icon>arrow_upward</mat-icon>
             </button>
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Plot Down"
-                (click)="movePlot('down', 'align', 'plot')">
+                (click)="moveImage('down', 'align', 'plot')">
                 <mat-icon>arrow_downward</mat-icon>
             </button>
 
@@ -199,19 +199,19 @@
             </button>
             <br>
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Image Left"
-                (click)="movePlot('left', 'align', 'image')">
+                (click)="moveImage('left', 'align', 'image')">
                 <mat-icon>arrow_back</mat-icon>
             </button>
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Image Right"
-                (click)="movePlot('right', 'align', 'image')">
+                (click)="moveImage('right', 'align', 'image')">
                 <mat-icon>arrow_forward</mat-icon>
             </button>
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Image Up"
-                (click)="movePlot('up', 'align', 'image')">
+                (click)="moveImage('up', 'align', 'image')">
                 <mat-icon>arrow_upward</mat-icon>
             </button>
             <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Image Down"
-                (click)="movePlot('down', 'align', 'image')">
+                (click)="moveImage('down', 'align', 'image')">
                 <mat-icon>arrow_downward</mat-icon>
             </button>
 

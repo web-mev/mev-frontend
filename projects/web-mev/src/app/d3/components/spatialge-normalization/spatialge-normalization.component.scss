@@ -308,15 +308,20 @@ mat-slider {
     margin: 6px 0;
 }
 
-.imageContainer, .imageContainer2{
+.imageContainer,
+.imageContainer2 {
     position: relative;
 }
 
-.closeButtonContainer{
+.closeButtonContainer {
     position: absolute;
     top: 0px;
 }
 
 .imageContainer2:hover .closeButton {
-    opacity: 1; 
+    opacity: 1;
+}
+
+.wait-cursor {
+    cursor: wait;
 }

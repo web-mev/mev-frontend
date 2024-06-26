@@ -278,7 +278,7 @@
         <br>
         <mat-slide-toggle [(ngModel)]="overlayImage" [disabled]="!droppedFile">Overlay Images</mat-slide-toggle>
         <br>
-        <mat-slide-toggle [(ngModel)]="displayAlignment" (change)="setAlignmentMode()" [disabled]="!droppedFile">
+        <mat-slide-toggle [(ngModel)]="displayAlignment" (change)="changeOverlayMode()" [disabled]="!droppedFile">
             Alignment Mode</mat-slide-toggle>
         <br>
         <mat-slide-toggle [(ngModel)]="displayPlot">Display Plot</mat-slide-toggle>

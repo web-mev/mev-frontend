@@ -2,7 +2,7 @@
 <mat-card class="analysis-card">
     <mat-card-header>
         <div mat-card-avatar class="analysis-card__img"></div>
-        <mat-card-title>SpatialGE: {{ outputs?.job_name }}</mat-card-title>
+        <mat-card-title>SpatialGE {{useNormalization ? 'Normalization' : 'Clusters'}}: {{ outputs?.job_name }}</mat-card-title>
         <mev-input-info [outputs]="outputs"></mev-input-info>
     </mat-card-header>
 
@@ -29,9 +29,8 @@
         </mat-expansion-panel-header>
         <p class="instructions_text">
             To plot your spatial data, we depend on the coordinate metadata you provided. Since different technologies
-            can
-            label those files differently, we require you to specify which columns dictate the horiztonal and vertical
-            positions. Please set these using the dropdown menus below:
+            can label those files differently, we require you to specify which columns dictate the horiztonal and
+            vertical positions. Please set these using the dropdown menus below:
         </p>
 
         <mat-form-field appearance="outline">
@@ -52,8 +51,6 @@
             [disabled]="xAxisValue === '' || yAxisValue === '' || geneSearchVal === ''"
             (click)="analysisType === 'normalization' ? getDataNormalization(): getDataClusters() ">Submit</button>
     </mat-expansion-panel>
-
-
 
     <div id="topOfPage"></div>
     <div *ngIf="!displayOverlayContainer || (scatterPlotData.length === 0 && (useNormalization || useCluster))"
@@ -78,7 +75,8 @@
                 [style.width.px]="overlayImage ? (currentZoomVal == 1 ? originalPlotWidth+legendWidth: originalPlotWidth) : !droppedFile ? (currentZoomVal != 1 ? originalPlotWidth+legendWidth : originalPlotWidth * 3 + 150 + legendWidth*3): originalPlotWidth+legendWidth">
 
                 <div #scatter id="scatter" [class]="overlayImage ? 'overlayPlots' : 'displayPlotSideBySide'"
-                    [style.opacity]="displayPlot ? plotOpacityValue : 0" [style.width.px]="originalPlotWidth + legendWidth"
+                    [style.opacity]="displayPlot ? plotOpacityValue : 0"
+                    [style.width.px]="originalPlotWidth + legendWidth"
                     [style]="!displayAlignment ? 'z-index: 2' : 'z-index: 4'" class="plotContainer">
                 </div>
                 <div *ngIf="scatterPlotData.length > 0"
@@ -140,8 +138,6 @@
                     </div>
                 </div>
             </div>
-
-
         </span>
         <div *ngIf="currentZoomVal !== 1 && currentZoomVal !== 0.5" class="horizontalSliderContainer"
             [style.width.px]="plotWidth">
@@ -153,11 +149,9 @@
 
     <div *ngIf="scatterPlotData.length > 0" class="slider"
         [style.top.px]="(plotHeight+heightAdjustment) + geneSearchHeight + 100">
-
-
         <div class="container">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-7">
                     <div *ngIf="displayAlignment">
                         <label id="modes-label">Alignment: </label>
                         <button mat-flat-button color="primary" class="custom-button" matTooltip="Move Image Left"
@@ -192,8 +186,6 @@
                             (click)="stretchPlot('y-axis', '-')">
                             <mat-icon>compress</mat-icon>
                         </button>
-
-
                         <button mat-flat-button color="primary" class="custom-button" matTooltip="Rotate Image Left"
                             (click)="rotateImage('-')">
                             <mat-icon>rotate_left</mat-icon>
@@ -255,10 +247,11 @@
                     </mat-slider>
                     {{100}} %
                     <br>
-                    <mat-slide-toggle [(ngModel)]="overlayImage" [disabled]="!droppedFile">Overlay Images
+                    <mat-slide-toggle [(ngModel)]="overlayImage" [disabled]="!droppedFile"
+                        (change)="changeOverlayMode()">Overlay Images
                     </mat-slide-toggle>
                     <br>
-                    <mat-slide-toggle [(ngModel)]="displayAlignment" (change)="setAlignmentMode()"
+                    <mat-slide-toggle [(ngModel)]="displayAlignment" (change)="changeOverlayMode()"
                         [disabled]="!droppedFile">
                         Alignment Mode</mat-slide-toggle>
                     <br>
@@ -267,7 +260,7 @@
                     <mat-slide-toggle [(ngModel)]="displayImage" [disabled]="!droppedFile">Display Image
                     </mat-slide-toggle>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-5">
                     <label class="scalefactor-group">Scale Factor:</label>
                     <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
                         matTooltip="Scale factor determines how to scale the histopathology image to approximately align with the summary plot. This is typically provided in a JSON-format file by 10X Genomics (Visium). If the value is not known or does not appear to align that well, you can manually adjust."

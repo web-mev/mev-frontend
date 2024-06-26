@@ -56,7 +56,7 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
         this.showMiniMap = true;
         this.isLoading = true;
         this.scrollTo('topOfPage');
-        this.resetVariables();
+        this.resetAllVariables();
         this.resetSpotlightVariables();
 
         console.log("calling get data")
@@ -121,8 +121,8 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
             let selectionRectHeight = (this.plotHeight + this.heightAdjustment) / (4 * this.currentZoomVal);
 
             this.selectionRectStyle = {
-                top: `-${this.currentTop}px`,
-                left: `-${this.currentLeft}px`,
+                top: `-${0}px`,
+                left: `-${0}px`,
                 width: `${selectionRectWidth}px`,
                 height: `${selectionRectHeight}px`,
                 border: '2px solid #1DA1F2',
@@ -205,8 +205,8 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
 
     createScatterplotSpotlight(size: string): void {
         let adjObj = {
-            current_left: this.currentLeft,
-            current_top: this.currentTop,
+            current_left: 0,
+            current_top: 0,
             current_image_left: this.currentImageLeft,
             current_image_top: this.currentImageTop,
             width_adjustment: this.widthAdjustment,

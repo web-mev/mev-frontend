@@ -44,7 +44,14 @@ export class OperationComponent implements OnChanges {
 
   // a master list of the tools which have a custom implementation (not using the default form generator)
   // These are identified by the operation's name
-  customTools = [...this.differentialExpressionTools, 'K-means', 'Likelihood ratio test', 'MAST Single-cell differential expression', 'ComBat-seq',  'SNF (Similarity Network Fusion)'];
+  customTools = [...this.differentialExpressionTools,
+    'K-means', 
+    'Likelihood ratio test', 
+    'MAST Single-cell differential expression', 
+    'ComBat-seq',  
+    'SNF (Similarity Network Fusion)',
+    'spatialGE Spatial Gradient Testing (STgradient)'
+  ];
 
   constructor(
     private apiService: AnalysesService,

@@ -21,6 +21,7 @@ import { LikelihoodRatioTestInputComponent } from './components/likelihood-ratio
 import { SCTKMastInputComponent } from './components/sctk-mast-input/sctk-mast-input.component';
 import { CombatseqInputComponent } from './components/combatseq-input/combatseq-input.component';
 import { SnfInputComponent } from './components/snf-input/snf-input.component';
+import { StgradientInputComponent } from './components/stgradient-input/stgradient-input.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { SnfInputComponent } from './components/snf-input/snf-input.component';
     LikelihoodRatioTestInputComponent,
     SCTKMastInputComponent,
     CombatseqInputComponent,
-    SnfInputComponent
+    SnfInputComponent,
+    StgradientInputComponent
   ],
   exports: [
     OperationComponent,

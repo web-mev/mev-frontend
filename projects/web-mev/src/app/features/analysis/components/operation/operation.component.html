@@ -32,6 +32,11 @@
       <snf-input [operationData]="operationData" [workspaceId]="workspaceId"
         (formValid)="alterFormStatus($event)"></snf-input>
     </div>
+  
+    <div *ngIf="operationData.name === 'spatialGE Spatial Gradient Testing (STgradient)'">
+      <stgradient-input [operationData]="operationData" [workspaceId]="workspaceId"
+        (formValid)="alterFormStatus($event)"></stgradient-input>
+    </div>
 
   </div>
 

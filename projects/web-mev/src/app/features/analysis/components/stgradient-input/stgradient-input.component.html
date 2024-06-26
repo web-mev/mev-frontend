@@ -1,0 +1,171 @@
+<form *ngIf="analysesForm" [formGroup]="analysesForm" (ngSubmit)="onSubmit()">
+
+    <ng-container *ngIf="operationData.mode !== 'client'">
+        <div class="label">
+            Operation name: <span class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="Type operation name" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <input matInput formControlName="job_name" name="job_name">
+        </mat-form-field>
+    </ng-container>
+    <div class="label">
+        {{sampleNameField.name}} <span class="redAsterisk">* </span>
+        <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+            matTooltip="{{sampleNameField.desc}}" aria-label="Info tooltip about the field">info
+        </mat-icon>
+    </div>
+    <mat-form-field class="form-control" color="accent">
+        <input matInput formControlName="job_name" name="job_name">
+    </mat-form-field>
+    <br>
+
+    <div class="label">Cluster source: <span class="redAsterisk">* </span></div>
+    <br>
+    <p>Note that we require a reference cluster from which we will calculate the correlation coefficients.
+        This can come from either a previously-defined observation/sample set or may be directly selected
+        by choosing the results from an STClust operation that was previously executed.
+    </p>
+    <mat-button-toggle-group formControlName="reference_cluster_selection" (change)="clusterOptionChange()">
+        <mat-button-toggle value="obs_set">Observation set</mat-button-toggle>
+        <mat-button-toggle value="stclust">STClust results</mat-button-toggle>
+    </mat-button-toggle-group>
+    <br>
+    <br>
+    <div *ngIf="analysesForm.get('reference_cluster_selection').value === 'obs_set'">
+
+        <div class="label">
+            Reference cluster:
+            <span *ngIf="obsSetField.required" class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="{{ obsSetField.desc}}" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <mat-select [formControlName]="obsSetField.key">
+                <mat-option *ngFor="let set of obsSetField.sets" [value]="set">
+                    {{ set.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <div>
+            <div class="label">
+                {{ rawCountsField.name }} <span class="redAsterisk">* </span>
+                <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                    matTooltip="{{ rawCountsField.desc}}" aria-label="Info tooltip about the field">info
+                </mat-icon>
+            </div>
+            <mat-form-field class="form-control" color="accent">
+                <mat-select [formControlName]="rawCountsField.key">
+                    <mat-option *ngFor="let file of rawCountsField.files" [value]="file.id">
+                        {{ file.name }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="f[rawCountsField.key].errors?.required">
+                    This field is required
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <div class="label">
+                {{ coordMetadataField.name }} <span class="redAsterisk">* </span>
+                <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                    matTooltip="{{ coordMetadataField.desc}}" aria-label="Info tooltip about the field">info
+                </mat-icon>
+            </div>
+            <mat-form-field class="form-control" color="accent">
+                <mat-select [formControlName]="coordMetadataField.key">
+                    <mat-option *ngFor="let file of coordMetadataField.files" [value]="file.id">
+                        {{ file.name }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="f[coordMetadataField.key].errors?.required">
+                    This field is required
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div>
+            <div class="label">
+                {{normalizationMethodField.name}} <span class="redAsterisk">* </span>
+                <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                    matTooltip="{{normalizationMethodField.desc}}" aria-label="Info tooltip about the field">info
+                </mat-icon>
+            </div>
+            <mat-form-field class="form-control" color="accent">
+                <mat-select [formControlName]="normalizationMethodField.key">
+                    <mat-option *ngFor="let option of normalizationMethodField.options" [value]="option">
+                        {{ option }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+    <div *ngIf="analysesForm.get('reference_cluster_selection').value === 'stclust'">
+
+        <div class="label">
+            STClust results:
+            <span *ngIf="stClustResultsField.required" class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="{{ stClustResultsField.desc}}" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <mat-select [formControlName]="stClustResultsField.key" (selectionChange)="onJobSelection()">
+                <mat-option *ngFor="let job of stClustResultsField.jobs" [value]="job">
+                    Job name: {{ job.job_name }} (completed {{job.execution_stop_datetime}})
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <div *ngIf="clustering_job_id.length > 0">
+            <!-- TODO: Show this in a nicer way-->
+            <p>Show clustering using job {{clustering_job_id}}</p>
+            <p>This will implicitly use inputs of {{input_counts_uuid}}</p>
+            <p>Coordinate metadata of {{input_metadata_uuid}}</p>
+            <p> Normalization method of {{normalization_method}}</p>
+
+            <!--TODO: Show plot to select clusters-->
+        </div>
+    </div>
+
+    <br />
+    <div>
+        <div class="label">
+            {{distanceSummaryField.name}} <span class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="{{distanceSummaryField.desc}}" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <mat-select [formControlName]="distanceSummaryField.key">
+                <mat-option *ngFor="let option of distanceSummaryField.options" [value]="option">
+                    {{ option }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <br>
+    <div class="label">
+        {{ numGenesField.name }} <span class="redAsterisk">* </span>
+        <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+            matTooltip="{{ numGenesField.desc}}" aria-label="Info tooltip about the field">info
+        </mat-icon>
+    </div>
+    <mat-form-field class="form-control" color="accent">
+        <input matInput [formControlName]="numGenesField.key" [name]="numGenesField.key">
+        <div *ngIf="f[numGenesField.key].value && f[numGenesField.key].errors">
+            <mat-error *ngIf="f[numGenesField.key].errors.required">
+                This field is required
+            </mat-error>
+            <mat-error *ngIf="f[numGenesField.key].errors.pattern">
+                The value should be an integer.
+            </mat-error>
+            <mat-error *ngIf="f[numGenesField.key].errors.min">
+                The value should be an integer greater than or equal to {{ numGenesField.min }}
+            </mat-error>
+        </div>
+    </mat-form-field>
+</form>

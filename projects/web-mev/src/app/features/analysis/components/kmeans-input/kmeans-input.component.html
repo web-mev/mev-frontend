@@ -1,0 +1,121 @@
+<form *ngIf="analysesForm" [formGroup]="analysesForm" (ngSubmit)="onSubmit()">
+    <ng-container *ngIf="operationData.mode !== 'client'">
+        <div class="label">
+            Operation name: <span class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="Type operation name" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <input matInput formControlName="job_name" name="job_name">
+        </mat-form-field>
+    </ng-container>
+    <div>
+        <div class="label">
+            {{ inputMatrixField.name }} <span class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="{{ inputMatrixField.desc}}" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <mat-select [formControlName]="inputMatrixField.key">
+                <mat-option *ngFor="let file of inputMatrixField.files" [value]="file.id">
+                    {{ file.name }}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="f[inputMatrixField.key].errors?.required">
+                This field is required
+            </mat-error>
+            <mat-error *ngIf="analysesForm.errors?.badSample">
+                The sample/observation groups chosen below do not match your input matrix. The invalid samples were:
+                {{analysesForm.errors?.['badSample']}}
+            </mat-error>
+        </mat-form-field>
+    </div>
+
+    <div class="label">
+        {{ numClustersField.name }} <span class="redAsterisk">* </span>
+        <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+            matTooltip="{{ numClustersField.desc}}" aria-label="Info tooltip about the field">info
+        </mat-icon>
+    </div>
+    <mat-form-field class="form-control" color="accent">
+        <input matInput [formControlName]="numClustersField.key" [name]="numClustersField.key">
+        <div *ngIf="f[numClustersField.key].value && f[numClustersField.key].errors">
+            <mat-error *ngIf="f[numClustersField.key].errors.required">
+                This field is required
+            </mat-error>
+            <mat-error *ngIf="f[numClustersField.key].errors.pattern">
+                The value should be an integer.
+            </mat-error>
+            <mat-error *ngIf="f[numClustersField.key].errors.min">
+                The value should be an integer greater than or equal to {{ numClustersField.min }}
+            </mat-error>
+            <mat-error *ngIf="f[numClustersField.key].errors?.bad_cluster_num">
+                The number of clusters must be less than the number of samples.
+            </mat-error>
+        </div>
+    </mat-form-field>
+    <div class="label">
+        {{ dimensionField.name }} <span class="redAsterisk">* </span>
+        <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+            matTooltip="{{ dimensionField.desc}}" aria-label="Info tooltip about the field">info
+        </mat-icon>
+    </div>
+    <mat-form-field class="form-control" color="accent">
+        <mat-select [formControlName]="dimensionField.key">
+            <mat-option *ngFor="let option of dimensionField.options" [value]="option">
+                {{ option }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <div class="label">
+        {{ obsSetField.name }}
+        <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+            matTooltip="{{ obsSetField.desc}}" aria-label="Info tooltip about the field">info
+        </mat-icon>
+    </div>
+    <mat-form-field class="form-control" color="accent">
+        <mat-select [formControlName]="obsSetField.key">
+            <mat-option *ngFor="let set of obsSetField.sets" [value]="set">
+                {{ set.name }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <div class="label">
+        {{ featureSetField.name }}
+        <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+            matTooltip="{{ featureSetField.desc}}" aria-label="Info tooltip about the field">info
+        </mat-icon>
+    </div>
+    <mat-form-field class="form-control" color="accent">
+        <mat-select [formControlName]="featureSetField.key">
+            <mat-option *ngFor="let set of featureSetField.sets" [value]="set">
+                {{ set.name }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <div class="label">
+        {{ numIterField.name }}
+        <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+            matTooltip="{{ numIterField.desc}}" aria-label="Info tooltip about the field">info
+        </mat-icon>
+    </div>
+    <mat-form-field class="form-control" color="accent">
+        <input matInput [formControlName]="numIterField.key" [name]="numIterField.key">
+        <div *ngIf="f[numIterField.key].value && f[numIterField.key].errors">
+            <mat-error *ngIf="f[numIterField.key].errors.required">
+                This field is required
+            </mat-error>
+            <mat-error *ngIf="f[numIterField.key].errors.pattern">
+                The value should be an integer.
+            </mat-error>
+            <mat-error *ngIf="f[numIterField.key].errors.min">
+                The value should be an integer greater than or equal to {{ numIterField.min }}
+            </mat-error>
+        </div>
+    </mat-form-field>
+</form>

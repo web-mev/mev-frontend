@@ -1,0 +1,76 @@
+<form *ngIf="analysesForm" [formGroup]="analysesForm" (ngSubmit)="onSubmit()">
+    <ng-container *ngIf="operationData.mode !== 'client'">
+        <div class="label">
+            Operation name: <span class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="Type operation name" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <input matInput formControlName="job_name" name="job_name">
+        </mat-form-field>
+    </ng-container>
+    <div *ngFor="let inputField of matrixSamples">
+        <div class="label">
+            {{ inputField.name }} <span class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="{{ inputField.desc}}" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <mat-select [formControlName]="inputField.key"
+                (selectionChange)="inputField.name === 'Annotations:' ? selectionChangeLRT() : null">
+                <mat-option *ngFor="let file of inputField.files" [value]="file.id">
+                    {{ file.name }}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="f[inputField.key].errors?.required">
+                This field is required
+            </mat-error>
+            <mat-error *ngIf="analysesForm.errors?.badSample">
+                The sample/observation groups chosen below do not match your input matrix. The invalid samples were:
+                {{analysesForm.errors?.['badSample']}}
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <ng-container *ngIf="covariateValues.length > 0; else noAnnotationValues">
+        <div class="label">
+            {{covariateDetails['name']}} <span class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                [matTooltip]="covariateDetails['desc']" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <mat-select [formControlName]="covariateDetails['key']">
+                <mat-option *ngFor="let file of covariateValues" [value]="file.name">
+                    {{ file.name }}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="f[covariateDetails['key']].errors?.required">
+                This field is required
+            </mat-error>
+        </mat-form-field>
+
+    </ng-container>
+    <ng-template #noAnnotationValues>
+        <div *ngFor="let textField of textFields">
+            <div *ngIf="textField.required">
+                <div class="label">
+                    {{ textField.name }} <span class="redAsterisk">* </span>
+                    <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                        matTooltip="{{ textField.desc}}" aria-label="Info tooltip about the field">info
+                    </mat-icon>
+                </div>
+                <mat-form-field class="form-control" color="accent">
+                    <input matInput [formControlName]="textField.key" [name]="textField.key">
+                    <div *ngIf="submitted && f[textField.key].errors">
+                        <mat-error *ngIf="f[textField.key].errors.required">
+                            This field is required
+                        </mat-error>
+                    </div>
+                </mat-form-field>
+            </div>
+        </div>
+    </ng-template>
+
+</form>

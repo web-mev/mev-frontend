@@ -14,7 +14,14 @@ import { PlottingMenuComponent } from './components/plotting-menu/plotting-menu.
 import { IGVComponent } from './components/igv/igv.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AddDialog2Component } from './components/igv/add-dialog/add-dialog.component';
-
+import { DefaultOperationComponent } from './components/default-operation-inputs/default-operation-inputs.component';
+import { DifferentialExpressionInputComponent } from './components/differential-expression-input/differential-expression-input.component';
+import { KmeansInputComponent } from './components/kmeans-input/kmeans-input.component';
+import { LikelihoodRatioTestInputComponent } from './components/likelihood-ratio-test-input/likelihood-ratio-test-input.component';
+import { SCTKMastInputComponent } from './components/sctk-mast-input/sctk-mast-input.component';
+import { CombatseqInputComponent } from './components/combatseq-input/combatseq-input.component';
+import { SnfInputComponent } from './components/snf-input/snf-input.component';
+import { StgradientInputComponent } from './components/stgradient-input/stgradient-input.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +34,14 @@ import { AddDialog2Component } from './components/igv/add-dialog/add-dialog.comp
     PlottingMenuComponent,
     IGVComponent,
     AddDialog2Component,
+    DefaultOperationComponent,
+    DifferentialExpressionInputComponent,
+    KmeansInputComponent,
+    LikelihoodRatioTestInputComponent,
+    SCTKMastInputComponent,
+    CombatseqInputComponent,
+    SnfInputComponent,
+    StgradientInputComponent
   ],
   exports: [
     OperationComponent,

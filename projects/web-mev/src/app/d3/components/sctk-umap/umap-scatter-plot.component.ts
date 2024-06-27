@@ -92,7 +92,7 @@ export class UmapScatterPlotComponent implements OnChanges {
   }
 
   getOverlayValues() {
-    let uuid = this.outputs["SctkUmapDimensionReduce.raw_counts"];
+    let uuid = this.outputs["raw_counts"];
     let gene = this.overlayValue;
     this.httpClient.get(
       `${this.API_URL}/resources/${uuid}/contents/?__rowname__=[eq]:${gene}`).pipe(

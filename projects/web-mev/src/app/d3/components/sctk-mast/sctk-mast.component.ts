@@ -166,6 +166,7 @@ export class MastDgeComponent implements OnInit, AfterViewInit {
   }
 
   initializeFeatureResource(): void {
+    this.analysisName = this.outputs.operation.operation_name;
     this.dgeResourceId = this.outputs['SctkMastDge.mast_output'];
     const sorting = {
       sortField: this.defaultSorting.field,

@@ -19,6 +19,9 @@ export class ResultInputInfoComponent implements OnInit {
   workspaceId: string;
   private readonly API_URL = environment.apiUrl;
 
+  // allows us to identify which inputs are files:
+  fileTypes = ['VariableDataResource', 'DataResource']
+
   constructor(
     private httpClient: HttpClient,
     private metadataService: MetadataService,
@@ -47,11 +50,12 @@ export class ResultInputInfoComponent implements OnInit {
           const capturedText = match[1];
           formattedText = capturedText.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
         } else {
-          formattedText = key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+          formattedText = this.outputs.operation.inputs[key]['name']
         }
 
         let value = this.outputs[key]
-        if (value.length === 36) {
+        const inputType = this.outputs.operation.inputs[key]['spec']['attribute_type'];
+        if(this.fileTypes.includes(inputType)){
           let query = `${this.API_URL}/resources/${value}/`
           this.httpClient.get(query).subscribe(res => {
             this.inputList[formattedText] = res['name']
@@ -60,16 +64,14 @@ export class ResultInputInfoComponent implements OnInit {
               console.error(`Error for ${key}: `, error);
               this.inputList[formattedText] = value
             }
-        } else if (value['name']) {
-          let customSetName = value['name']
-          const exists = customSet.some(item => item.name === customSetName);
-          if (exists) {
-            this.inputList[formattedText] = value['name'];
-          } else {
-            let replacementName = value['elements'].length + " Samples";
-            this.inputList[formattedText] = replacementName;
-          }
-        } else {
+        } else if(inputType === 'ObservationSet') {
+          this.inputList[formattedText] = value['name'] + " (" + value['elements'].length + " Samples)"
+        }
+        else if(inputType === 'FeatureSet') {
+          this.inputList[formattedText] = value['name'] + " (" + value['elements'].length + " Features)"
+
+        }  
+        else {
           this.inputList[formattedText] = value
         }
 

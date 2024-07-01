@@ -48,7 +48,7 @@ export class SctkSingleRComponent implements OnInit {
   imageName = 'cluster_distributions';
 
   // Some plot params
-  margin = { top: 50, right: 300, bottom: 50, left: 70 }; // chart margins
+  margin = { top: 50, right: 300, bottom: 125, left: 70 }; // chart margins
   outerHeight = 500;
   fillFraction = 0.9;
   tooltipOffsetX = 10; // to position the tooltip on the right side of the triggering element
@@ -143,7 +143,7 @@ export class SctkSingleRComponent implements OnInit {
                   id: sampleId,
                   attributes: {}
                 }
-                
+
                 customSets[assignedCluster].elements.push(
                   {
                     id: sampleId,
@@ -202,7 +202,7 @@ export class SctkSingleRComponent implements OnInit {
     svg.call(tTip);
 
     let clusterIds = [];
-    for( let obj of this.distData){
+    for (let obj of this.distData) {
       clusterIds.push(obj.clusterId)
     }
     let maxCount = d3.max(this.distData, s => +s['count']);
@@ -225,11 +225,13 @@ export class SctkSingleRComponent implements OnInit {
       .selectAll('text')
       .attr('dx', '-.8em')
       .attr('dy', '.6em')
+      .attr('transform', 'rotate(-45)')
+      .style('text-anchor', 'end');
 
     svg.append('g')
       .attr("transform",
         "translate(" + (width / 2) + " ," +
-        (height + this.margin.top) + ")")
+        (height + this.margin.top + this.margin.bottom - 60) + ")")
       .append('text')
       .style("text-anchor", "middle")
       .style('fill', 'black') // don't know why, but won't appear unless we set fill

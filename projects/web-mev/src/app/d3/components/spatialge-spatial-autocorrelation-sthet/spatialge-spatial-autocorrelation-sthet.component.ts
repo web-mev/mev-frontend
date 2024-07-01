@@ -23,7 +23,7 @@ export class SpatialGESpatialAutocorrelationSthetComponent implements OnInit {
     dataSource: FeaturesDataSource;
     resourceId;
     analysisName = 'SpatialGE Spatial Autocorrelation (STHET)';
-    displayedColumns = ['sample_gene','gene_mean', 'gene_stdevs', 'moran_i', 'geary_c'];
+    displayedColumns = ['sample_gene','gene_mean', 'gene_stdevs', 'moran_i', 'geary_c', 'actions'];
     defaultPageIndex = 0;
     defaultPageSize = 10;
     maxFeatureSetSize = 500;
@@ -100,6 +100,10 @@ export class SpatialGESpatialAutocorrelationSthetComponent implements OnInit {
             this.paginator.pageIndex,
             this.paginator.pageSize
         );
+    }
+
+    selectGene(gene){
+        console.log("gene: ", gene)
     }
 }
 

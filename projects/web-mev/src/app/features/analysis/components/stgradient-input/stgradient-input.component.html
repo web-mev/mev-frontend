@@ -18,7 +18,7 @@
         </mat-icon>
     </div>
     <mat-form-field class="form-control" color="accent">
-        <input matInput formControlName="job_name" name="job_name">
+        <input matInput [formControlName]="sampleNameField.key" [name]="sampleNameField.key" >
     </mat-form-field>
     <br>
 

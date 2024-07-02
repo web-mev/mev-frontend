@@ -7,6 +7,8 @@ import d3Tip from 'd3-tip';
 import { NotificationService } from '@core/core.module';
 import html2canvas from 'html2canvas';
 import { forkJoin } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { AnalysesService } from '@app/features/analysis/services/analysis.service';
 
 interface ScatterDataNormailization {
   xValue: number;
@@ -157,7 +159,10 @@ export class BaseSpatialgeComponent {
   constructor(
     protected httpClient: HttpClient,
     protected readonly notificationService: NotificationService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    public route: ActivatedRoute,
+    public apiService: AnalysesService,
+    public analysesService: AnalysesService,
   ) { }
 
   resetAllVariables() {
@@ -231,7 +236,7 @@ export class BaseSpatialgeComponent {
     }
   }
 
-  resetImageVariables(){
+  resetImageVariables() {
     this.widthAdjustment = 0;
     this.heightAdjustment = 0;
     this.currentImageLeft = 0;
@@ -267,6 +272,8 @@ export class BaseSpatialgeComponent {
     })
   }
 
+  // normalization_uuid = '';
+  // coords_metadata_uuid = '';
   getDataNormalization() {
     this.displayOverlayContainer = true;
     this.showMiniMap = true;

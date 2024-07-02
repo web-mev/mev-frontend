@@ -23,7 +23,7 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
     @Output() formValid: EventEmitter<any> = new EventEmitter<any>();
     private readonly API_URL = environment.apiUrl;
 
-    reference_cluster_selection: string = '';
+    reference_cluster_selection: string = 'obs_set';
     availableObsSets;
     sampleNameField;
     obsSetField;
@@ -33,7 +33,7 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
     normalizationMethodField;
     distanceSummaryField;
     numGenesField;
-    clustering_job_id='';
+    clustering_job_id = '';
 
     stclust_retrieved = false;
     files_retrieved = false;
@@ -65,19 +65,21 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
     }
 
     ngOnChanges(): void {
+        console.log("there was a change: ", this.analysesForm)
         if (this.operationData) {
             this.createForm();
             this.analysesForm.statusChanges.subscribe(() => this.onFormValid());
         }
-        if(this.workspaceId && !this.stclust_retrieved){
+        if (this.workspaceId && !this.stclust_retrieved) {
             this.queryForSTclustResults();
         }
-        if(this.workspaceId && this.operationData && !this.files_retrieved){
+        if (this.workspaceId && this.operationData && !this.files_retrieved) {
             this.getPotentialInputFiles();
         }
     }
 
     public onFormValid() {
+        console.log("onformvalid: ", this.analysesForm)
         this.formValid.emit(this.analysesForm.valid);
     }
 
@@ -88,23 +90,24 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
         const controlsConfig = {};
         controlsConfig['job_name'] = ['', [Validators.required]];
         controlsConfig['reference_cluster_selection'] = [this.reference_cluster_selection, []];
-        
+
         key = 'sample_name'
         input = this.operationData.inputs[key];
+        console.log("op data: ", this.operationData.inputs)
         this.sampleNameField = {
             key: key,
             name: input.name,
             desc: input.description,
-            required: input.required,
+            required: input.required
         };
+
         const configSampleNameField = [
-            undefined,
+            '',
             [...(input.required ? [Validators.required] : [])]
         ];
         controlsConfig[key] = configSampleNameField;
-        
         key = 'barcodes';
-        if(this.reference_cluster_selection === 'obs_set') {
+        if (this.reference_cluster_selection === 'obs_set') {
             input = this.operationData.inputs[key];
             this.obsSetField = {
                 key: key,
@@ -130,7 +133,7 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
                 files: this.raw_count_files,
                 selectedFiles: []
             };
-    
+
             const configRawCountsField = [
                 '',
                 []
@@ -148,7 +151,7 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
                 files: this.ann_files,
                 selectedFiles: []
             };
-    
+
             const configCoordMetaField = [
                 '',
                 []
@@ -182,8 +185,8 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
                 undefined,
                 [...(input.required ? [Validators.required] : [])]
             ];
-            controlsConfig[key] = configSTClustResultsField;  
-        } 
+            controlsConfig[key] = configSTClustResultsField;
+        }
 
         key = 'distance_summary';
         input = this.operationData.inputs[key];
@@ -225,6 +228,8 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
                 asyncValidators: [],
                 updateOn: 'change'
             } as AbstractControlOptions);
+
+        console.log("form: ", this.analysesForm)
     }
 
     getInputData(): any {
@@ -246,7 +251,7 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
      * Triggered when the toggle is chosen to select between using an observation 
      * set and using prior STClust results.
      */
-    clusterOptionChange(){
+    clusterOptionChange() {
         this.reference_cluster_selection = this.analysesForm.value.reference_cluster_selection;
         this.createForm();
     }
@@ -254,7 +259,7 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
     /**
      * Grabs all successful STClust runs in the current workspace
      */
-    queryForSTclustResults(){
+    queryForSTclustResults() {
         this.apiService
             .getExecOperations(
                 this.workspaceId
@@ -263,14 +268,14 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
                 console.log(data);
                 this.stclust_results = data.filter(
                     (exec_op) => (exec_op.operation.operation_name === 'spatialGE clustering')
-                    && (!exec_op.job_failed)
+                        && (!exec_op.job_failed)
                 );
                 this.stclust_retrieved = true;
             });
 
     }
 
-    getPotentialInputFiles(){
+    getPotentialInputFiles() {
         let raw_counts_input = this.operationData.inputs['raw_counts'];
         let coords_metadata_input = this.operationData.inputs['coords_metadata'];
         let all_resource_types = [...raw_counts_input.spec.resource_types, coords_metadata_input.spec.resource_type]
@@ -281,11 +286,11 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
             )
             .subscribe(data => {
                 console.log('all files: ', data)
-                for(let file_data of data){
-                    if(raw_counts_input.spec.resource_types.includes(file_data.resource_type)){
+                for (let file_data of data) {
+                    if (raw_counts_input.spec.resource_types.includes(file_data.resource_type)) {
                         this.raw_count_files.push(file_data);
-                    } 
-                    else if(file_data.resource_type === coords_metadata_input.spec.resource_type){
+                    }
+                    else if (file_data.resource_type === coords_metadata_input.spec.resource_type) {
                         this.ann_files.push(file_data)
                     }
                 }
@@ -293,7 +298,7 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
             });
     }
 
-    onJobSelection(){
+    onJobSelection() {
         let val = this.analysesForm.value.barcodes;
         // TODO: use the UUID here to get the results for plotting.
         this.outputs_file_uuid = val.outputs.clustered_positions;

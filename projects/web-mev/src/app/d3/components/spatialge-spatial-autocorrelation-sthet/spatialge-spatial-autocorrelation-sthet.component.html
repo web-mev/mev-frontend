@@ -1,3 +1,4 @@
+<mev-spinner-overlay *ngIf="isLoading"></mev-spinner-overlay>
 <mat-card class="analysis-card">
     <mat-card-header>
         <div mat-card-avatar class="analysis-card__img"></div>
@@ -5,18 +6,16 @@
         <mev-input-info [outputs]="outputs"></mev-input-info>
     </mat-card-header>
     <mat-card-content class="analysis-card__main">
-        <!-- <p class="instructions_text">STenrich is a spatially informed pathway analysis algorithm for
-            transcriptomics. It identifies enriched
-            pathways that are spatially clustered. Through a permutation process, STenrich identifies whether enriched
-            pathways are closer in coordinate distance than randomly selected background.</p>
-        <p class="instructions_text">
-            You can also define custom sets of genes for exploration with other tools. Custom set size is
-            limited to {{maxFeatureSetSize}} items.
-        </p> -->
         <mat-divider [inset]="true"></mat-divider>
         <div class="analysis-card__content">
             <mev-spinner-overlay *ngIf="dataSource.loading$ | async"></mev-spinner-overlay>
-
+            <mat-form-field appearance="outline">
+                <mat-label>Select ST Normalize File</mat-label>
+                <mat-select [(value)]="selectedStNormalizedFile">
+                    <mat-option [value]="option" *ngFor="let option of stNormalizeFile">{{ option['job_name'] }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
             <div class="mat-elevation-z8">
                 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" class="table">
                     <ng-container matColumnDef="sample_gene">
@@ -35,7 +34,8 @@
 
                     <ng-container matColumnDef="moran_i">
                         <th mat-header-cell *matHeaderCellDef> Moran I </th>
-                        <td mat-cell *matCellDef="let element" class="numericCols"> {{element.values.moran_i ? element.values.moran_i : 'NA'}} </td>
+                        <td mat-cell *matCellDef="let element" class="numericCols"> {{element.values.moran_i ?
+                            element.values.moran_i : 'NA'}} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="geary_c">
@@ -47,8 +47,8 @@
                     <ng-container matColumnDef="actions">
                         <th mat-header-cell *matHeaderCellDef> </th>
                         <td mat-cell *matCellDef="let element; let i=index;" class="numericCols">
-                            <button mat-raised-button color="accent" title="Create feature set"
-                                (click)="selectGene(element.rowname)">
+                            <button mat-raised-button title="Select Gene" [disabled]="isEmpty(selectedStNormalizedFile)"
+                                (click)="selectGene(element.rowname)" [class]="element.rowname === geneSearchVal ? 'selectedButton' : 'notSelectedButton' ">
                                 Select Gene
                             </button>
                         </td>
@@ -64,8 +64,33 @@
             </div>
         </div>
         <br>
-        <button mat-raised-button color="accent" title="button that does nothing">
-            Button to do something later
-        </button>
+        <br>
+        <div *ngIf="geneSelected">
+            <p>
+                Selected Gene: {{geneSearchVal}}
+            </p>
+            <mat-form-field appearance="outline">
+                <mat-label>Select X-Axis Label</mat-label>
+                <mat-select [(value)]="yAxisValue">
+                    <mat-option [value]="option" *ngFor="let option of yAxisValueList">{{ option }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <br>
+            <mat-form-field appearance="outline">
+                <mat-label>Select Y-Axis Label</mat-label>
+                <mat-select [(value)]="xAxisValue">
+                    <mat-option [value]="option" *ngFor="let option of xAxisValueList">{{ option }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <br>
+            <button mat-flat-button color="primary" class="searchButton"
+                [disabled]="xAxisValue === '' || yAxisValue === '' || geneSearchVal === ''"
+                (click)="getDataNormalizationSthet()">Submit</button>
+        </div>
+        <br>
+        <br>
+        <div id="topOfPage"></div>
+        <div #scatter id="scatter" [style.width.px]="originalPlotWidth + legendWidth" class="plotContainer"></div>
+
     </mat-card-content>
 </mat-card>

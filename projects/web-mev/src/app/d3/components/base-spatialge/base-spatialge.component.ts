@@ -398,7 +398,6 @@ export class BaseSpatialgeComponent {
   }
 
   getDataClusters() {
-
     this.showMiniMap = true;
     this.geneSearchHeight = 0;
     this.useCluster = true;

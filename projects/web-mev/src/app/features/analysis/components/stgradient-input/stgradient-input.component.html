@@ -1,3 +1,4 @@
+<mev-spinner-overlay *ngIf="isLoading"></mev-spinner-overlay>
 <form *ngIf="analysesForm" [formGroup]="analysesForm" (ngSubmit)="onSubmit()">
 
     <ng-container *ngIf="operationData.mode !== 'client'">
@@ -18,7 +19,7 @@
         </mat-icon>
     </div>
     <mat-form-field class="form-control" color="accent">
-        <input matInput [formControlName]="sampleNameField.key" [name]="sampleNameField.key" >
+        <input matInput [formControlName]="sampleNameField.key" [name]="sampleNameField.key">
     </mat-form-field>
     <br>
 
@@ -128,7 +129,43 @@
             <p> Normalization method of {{normalization_method}}</p>
 
             <!--TODO: Show plot to select clusters-->
+            <mat-form-field appearance="outline">
+                <mat-label>Select X-Axis Label</mat-label>
+                <mat-select [(value)]="yAxisValue">
+                    <mat-option [value]="option" *ngFor="let option of yAxisValueList">{{ option }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <br>
+            <mat-form-field appearance="outline">
+                <mat-label>Select Y-Axis Label</mat-label>
+                <mat-select [(value)]="xAxisValue">
+                    <mat-option [value]="option" *ngFor="let option of xAxisValueList">{{ option }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <br>
+            <button mat-flat-button color="primary" class="searchButton"
+                [disabled]="xAxisValue === '' || yAxisValue === '' " (click)="getDataClusters()">Submit</button>
+
+            <br>
+            <br>
+            <div id="topOfPage"></div>
+            <div #scatter id="scatter" [style.width.px]="originalPlotWidth + legendWidth" class="plotContainer"></div>
+            <br>
+            <div class="label">
+                Cluster: <span class="redAsterisk">* </span>
+                <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                    matTooltip="Select Cluster" aria-label="Info tooltip about the field">info
+                </mat-icon>
+            </div>
+            <mat-form-field class="form-control" color="accent">
+                <mat-select [(value)]="clusterValue">
+                    <mat-option *ngFor="let option of clusterList" [value]="option">
+                        {{ option }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
         </div>
+
     </div>
 
     <br />

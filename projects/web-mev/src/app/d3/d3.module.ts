@@ -60,6 +60,7 @@ import { SpatialGEClustersComponent } from './components/spatialge-clusters/spat
 import { SpatialGEPathwayEnrichmentComponent } from './components/spatialge-pathway-enrichment/spatialge-pathway-enrichment.component';
 import { SpotlightComponent } from './components/spotlight/spotlight.component';
 import { SpatialGESpatialAutocorrelationSthetComponent } from './components/spatialge-spatial-autocorrelation-sthet/spatialge-spatial-autocorrelation-sthet.component';
+import { SpatialGESpatialGradientComponent } from './components/spatialge-spatial-gradient-testing-stgradient/spatialge-spatial-gradient-testing-stgradient.component'
 
 @NgModule({
   declarations: [
@@ -119,7 +120,8 @@ import { SpatialGESpatialAutocorrelationSthetComponent } from './components/spat
     SpatialGEClustersComponent,
     SpatialGEPathwayEnrichmentComponent,
     SpotlightComponent,
-    SpatialGESpatialAutocorrelationSthetComponent
+    SpatialGESpatialAutocorrelationSthetComponent,
+    SpatialGESpatialGradientComponent,
   ],
   imports: [CommonModule, SharedModule, DragDropModule, MatBadgeModule],
   exports: [
@@ -169,7 +171,8 @@ import { SpatialGESpatialAutocorrelationSthetComponent } from './components/spat
     SpatialGEClustersComponent,
     SpatialGEPathwayEnrichmentComponent,
     SpotlightComponent,
-    SpatialGESpatialAutocorrelationSthetComponent
+    SpatialGESpatialAutocorrelationSthetComponent,
+    SpatialGESpatialGradientComponent
   ]
 })
 export class D3Module { }

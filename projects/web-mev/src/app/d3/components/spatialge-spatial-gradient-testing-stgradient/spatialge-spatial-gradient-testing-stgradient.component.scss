@@ -1,0 +1,38 @@
+.analysis-card__img {
+    background-image: url("~assets/icons/ct-scan.png");
+    background-size: 30px;
+    background-position: top right;
+    background-repeat: no-repeat;
+}
+
+.analysis-card__content {
+    padding-top: 1rem;
+}
+.word-wrap {
+    white-space: normal !important;
+    word-wrap: break-word !important;
+    max-width: 400px;
+}
+
+.table {
+    width: 100%;
+}
+
+.numericCols {
+    min-width: 100px;
+}
+
+.instructions_text {
+    color: rgba(0, 0, 0, 0.8);
+    width: 60vw;
+}
+
+.notSelectedButton{
+    color: #03a9f4;
+    background: white;
+}
+
+.selectedButton{
+    color: white;
+    background: #03a9f4;
+}

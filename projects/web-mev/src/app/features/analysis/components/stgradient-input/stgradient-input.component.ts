@@ -5,7 +5,17 @@ import { BaseOperationInput } from '../base-operation-inputs/base-operation-inpu
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { MetadataService } from '@app/core/metadata/metadata.service';
+import { catchError } from "rxjs/operators";
+import { forkJoin } from 'rxjs';
+import { NotificationService } from '@core/notifications/notification.service';
+import * as d3 from 'd3';
+import d3Tip from 'd3-tip';
 
+interface ScatterDataCluster {
+    xValue: number;
+    yValue: number;
+    clusterid: string
+}
 
 @Component({
     selector: 'stgradient-input',
@@ -50,7 +60,8 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
         private apiService: AnalysesService,
         private formBuilder: FormBuilder,
         private httpClient: HttpClient,
-        private metadataService: MetadataService
+        private metadataService: MetadataService,
+        protected readonly notificationService: NotificationService,
     ) {
         super();
 
@@ -65,7 +76,6 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
     }
 
     ngOnChanges(): void {
-        console.log("there was a change: ", this.analysesForm)
         if (this.operationData) {
             this.createForm();
             this.analysesForm.statusChanges.subscribe(() => this.onFormValid());
@@ -79,9 +89,10 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
     }
 
     public onFormValid() {
-        console.log("onformvalid: ", this.analysesForm)
         this.formValid.emit(this.analysesForm.valid);
     }
+
+
 
     createForm() {
 
@@ -228,8 +239,6 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
                 asyncValidators: [],
                 updateOn: 'change'
             } as AbstractControlOptions);
-
-        console.log("form: ", this.analysesForm)
     }
 
     getInputData(): any {
@@ -265,7 +274,6 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
                 this.workspaceId
             )
             .subscribe(data => {
-                console.log(data);
                 this.stclust_results = data.filter(
                     (exec_op) => (exec_op.operation.operation_name === 'spatialGE clustering')
                         && (!exec_op.job_failed)
@@ -285,7 +293,6 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
                 this.workspaceId
             )
             .subscribe(data => {
-                console.log('all files: ', data)
                 for (let file_data of data) {
                     if (raw_counts_input.spec.resource_types.includes(file_data.resource_type)) {
                         this.raw_count_files.push(file_data);
@@ -307,6 +314,288 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
         this.normalization_method = val.inputs.normalization_method;
         this.clustering_job_id = val.id;
 
+
+        this.getAxisColumnNamesGradient()
     }
 
+    isLoading = false;
+    xAxisValue: string = '';
+    yAxisValue: string = ''
+    xAxisValueList: string[] = [];
+    yAxisValueList: string[] = [];
+
+    clusterList = [];
+    clusterValue = '';
+
+    getAxisColumnNamesGradient() {
+        this.isLoading = true;
+        // let coords_metadata_uuid = this.selectedStNormalizedFile['inputs']["coords_metadata"]
+        this.httpClient.get(`${this.API_URL}/resources/${this.input_metadata_uuid}/contents/?page=1&page_size=1`).pipe(
+            catchError(error => {
+                this.isLoading = false;
+                this.notificationService.error(`Error ${error.status}: Error from coordinates metadata request.`);
+                console.log("some error from coord: ", error)
+                throw error;
+            })
+        ).subscribe(res => {
+            this.isLoading = false;
+            let jsonObj = res['results'][0]['values']
+            const keys = Object.keys(jsonObj);
+            this.xAxisValueList = keys;
+            this.yAxisValueList = keys;
+
+            console.log("dropdown list: ", this.xAxisValueList, this.yAxisValueList)
+        })
+    }
+
+    scatterPlotDataCluster: ScatterDataCluster[] = [];
+
+    dataDict: Record<string, any> = {}
+
+    xMin: number = 100000000
+    xMax: number = 0
+    yMin: number = 100000000
+    yMax: number = 0
+    totalCountsMax: number = 0;
+    totalCountsMin: number = 100000000;
+
+    totalCounts: Record<string, any> = {}
+
+    plotWidth: number = 300;
+    plotHeight: number = 500;
+    originalPlotWidth: number = 0;
+    originalPlotHeight: number = 0;
+    legendWidth: number = 120;
+
+    clusterTypes: Record<string, any> = {};
+    clusterColors: string[] = ["#EBCD00", "#52A52E", "#00979D", "#6578B4", "#80408D", "#C9006B", "#68666F", "#E80538", "#E87D1E"];
+
+    normalizePlotWidth = 300;
+    imageOverlayOffset = 220;
+
+    scrollTo(htmlID) {
+        const element = document.getElementById(htmlID) as HTMLElement;
+        element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+    }
+
+    getDataClusters() {
+        this.isLoading = true;
+        this.scrollTo('topOfPage');
+        // this.resetAllVariables();
+        let clusters_uuid = this.outputs_file_uuid
+        let coords_metadata_uuid = this.input_metadata_uuid
+
+        const clusterRequest = this.httpClient.get(`${this.API_URL}/resources/${clusters_uuid}/contents/`).pipe(
+            catchError(error => {
+                this.isLoading = false;
+                this.notificationService.error(`Error ${error.status}: Error from normalized expression request.`);
+                throw error;
+            })
+        );
+
+        const coordsMetadataRequest = this.httpClient.get(`${this.API_URL}/resources/${coords_metadata_uuid}/contents/`).pipe(
+            catchError(error => {
+                this.isLoading = false;
+                this.notificationService.error(`Error ${error.status}: Error from coordinates metadata request.`);
+                throw error;
+            })
+        );
+
+        forkJoin([clusterRequest, coordsMetadataRequest]).subscribe(([clusterRes, coordsMetadataRes]) => {
+            this.isLoading = false;
+            if (Array.isArray(clusterRes) && clusterRes.length > 0 && clusterRes[0].hasOwnProperty('rowname') && clusterRes[0].hasOwnProperty('values')) {
+                for (let index in clusterRes) {
+                    let key = clusterRes[index]['rowname']
+                    let clusterid = clusterRes[index]['values']['clusterid']
+                    this.dataDict[key] = {
+                        ...this.dataDict[key],
+                        clusterid
+                    };
+                }
+
+                for (let i in coordsMetadataRes) {
+                    let obj = coordsMetadataRes[i];
+                    let key = obj['rowname'];
+                    let xVal = obj['values'][this.xAxisValue]
+                    let yVal = obj['values'][this.yAxisValue]
+                    this.dataDict[key] = {
+                        ...this.dataDict[key],
+                        xVal,
+                        yVal
+                    };
+                }
+
+                let colorLabels = {}
+
+                for (let i in this.dataDict) {
+                    const parsedX = parseInt(this.dataDict[i]['xVal'])
+                    const parsedY = parseInt(this.dataDict[i]['yVal'])
+                    const clusterid = this.dataDict[i]['clusterid']
+
+                    if (!isNaN(parsedX) && !isNaN(parsedY) && clusterid) {
+                        let clusterName = "Cluster " + clusterid
+                        let temp = {
+                            "xValue": parsedX,
+                            "yValue": parsedY,
+                            "clusterid": clusterid
+                        }
+                        //this allows for the colors to be repeated 
+                        let clusterNumber = parseInt(clusterid)
+                        if (!colorLabels[clusterNumber]) {
+                            colorLabels[clusterNumber] = 1;
+                            let remainder = clusterNumber % this.clusterColors.length;
+                            let colorObj = {
+                                "label": clusterName,
+                                "color": remainder === 0 ? this.clusterColors[this.clusterColors.length - 1] : this.clusterColors[remainder - 1]
+                            }
+                            this.clusterTypes[clusterName] = colorObj
+                            this.clusterList.push(clusterName)
+                        }
+
+                        this.scatterPlotDataCluster.push(temp)
+
+                        this.xMin = Math.min(this.xMin, parsedX);
+                        this.xMax = Math.max(this.xMax, parsedX);
+
+                        this.yMin = Math.min(this.yMin, parsedY);
+                        this.yMax = Math.max(this.yMax, parsedY);
+                    }
+                }
+
+                // let normalizePlot = (this.xMax - this.xMin) > (this.yMax - this.yMin) ? (this.xMax - this.xMin) / this.normalizePlotWidth : (this.yMax - this.yMin) / this.normalizePlotWidth
+                let normalizePlot = (this.xMax - this.xMin) / this.normalizePlotWidth // This will set the plot to a width of 300px
+                this.plotWidth = (this.xMax - this.xMin) / normalizePlot;
+                this.plotHeight = (this.yMax - this.yMin) / normalizePlot;
+
+                this.imageOverlayOffset = this.plotWidth - this.legendWidth
+
+                if (this.originalPlotWidth === 0) {
+                    this.originalPlotWidth = this.plotWidth;
+                    this.originalPlotHeight = this.plotHeight;
+                }
+
+                if (this.scatterPlotDataCluster.length > 0) {
+                    // this.displayOverlayContainer = true;
+                    // this.callCreateScatterPlot();
+                    this.createScatterPlot('normal')
+                }
+            } else {
+                // this.displayOverlayContainer = false;
+            }
+
+        });
+    }
+
+    containerId: string = '#scatter';
+    selectedColor: string = 'Green';
+    colors: string[] = ['Red', 'Green'];
+    createScatterPlot(size) {
+        console.log("cluster type: ", this.clusterTypes)
+        var margin = { top: 0, right: 0, bottom: 0, left: this.legendWidth},
+            width = this.plotWidth - margin.left - margin.right + this.legendWidth,
+            height = this.plotHeight - margin.top - margin.bottom;
+
+        let scatterplotContainerId = this.containerId;
+        d3.select(scatterplotContainerId)
+            .selectAll('svg')
+            .remove();
+
+        const pointTip = d3Tip()
+            .attr('class', 'd3-tip')
+            .offset([-10, 0])
+            .html((event: any, d: any) => {
+                let tipBox = `<div><div class="category">Cluster ID:</div> ${d.clusterid}</div>`
+                return tipBox
+            });
+
+        var svg = d3.select(scatterplotContainerId)
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform",
+                "translate(" + margin.left + "," + margin.top + ")");
+
+        svg.call(pointTip);
+
+        const color = d3.scaleLinear<string>()
+            .domain([0, this.totalCountsMax])
+            .range(["rgb(255,255,224)", this.selectedColor]);
+
+        const colorScale = d3.scaleOrdinal<string>()
+            .domain([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20])
+            .range(this.clusterColors);
+
+        var x = d3.scaleLinear()
+            .domain([this.xMin, this.xMax])
+            .range([0, width]);
+
+        var y = d3.scaleLinear()
+            .domain([this.yMin, this.yMax])
+            .range([height, 0]);
+
+        const circles = svg.append('g')
+            .selectAll("dot")
+            .data(this.scatterPlotDataCluster)
+            .enter()
+            .append("circle")
+            .attr("cx", function (d) { return x(d.xValue) })
+            .attr("cy", function (d) { return height - y(d.yValue); })
+            .attr("r", size === 'normal' ? 1.75 : .5)
+            .attr("fill", d => {
+                return colorScale(d.clusterid)
+            })
+
+        circles.on('mouseover', function (mouseEvent: any, d) {
+            d3.select(this).style('cursor', 'pointer');
+            pointTip.show(mouseEvent, d, this);
+            pointTip.style('left', mouseEvent.x + 10 + 'px');
+        })
+            .on('mouseout', function () {
+                d3.select(this).style('cursor', 'default');  // Revert cursor to default on mouseout
+                pointTip.hide();
+            });
+
+
+        // Add Legend
+        if (this.legendWidth !== 0) {
+            // Legend
+            const clusterColors = Object.keys(this.clusterTypes).map(key => ({
+                label: this.clusterTypes[key].label,
+                color: this.clusterTypes[key].color
+            }));
+            clusterColors.sort((a, b) => {
+                const numA = parseInt(a.label.split(' ')[1]);
+                const numB = parseInt(b.label.split(' ')[1]);
+                return numA - numB;
+            });
+            const legendWidth = this.legendWidth;
+
+            const legend = svg
+                .selectAll('.legend')
+                .data(clusterColors)
+                .enter()
+                .append('g')
+                .classed('legend', true)
+                .attr('transform', function (d, i) {
+                    return `translate(-${legendWidth},${i * 15 + 50})`;
+                });
+
+            legend
+                .append('circle')
+                .attr('r', 4)
+                .attr('cx', 10)
+                .attr('fill', d => d.color);
+
+            legend
+                .append('text')
+                .attr('x', 20)
+                .attr('dy', '.35em')
+                .style('fill', '#000')
+                .style('font-size', '8px')
+                .attr('class', 'legend-label')
+                .text(d => d.label);
+        }
+
+    }
 }

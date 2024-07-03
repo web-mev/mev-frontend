@@ -55,7 +55,7 @@ export class MetadataComponent implements OnInit {
 
   // if we have more than this amount of observations, we disable various 
   // options since making a UI that is responsive, etc. is cumbersome
-  maxObservations = 7500;
+  maxObservations = 500;
 
   // a boolean which tracks whether we have exceeded the number of permitted observations.
   // Used to enable/disable certain parts of the UI so it doesn't grind to a halt.

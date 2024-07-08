@@ -13,6 +13,8 @@ import { ActivatedRoute } from '@angular/router';
 import { BaseSpatialgeComponent } from '../base-spatialge/base-spatialge.component';
 import { catchError } from "rxjs/operators";
 import { forkJoin } from 'rxjs';
+import * as d3 from 'd3';
+import d3Tip from 'd3-tip';
 
 @Component({
     selector: 'mev-spatialge-spatial-autocorrelation-sthet',
@@ -58,9 +60,9 @@ export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialge
         this.initializeFeatureResource();
         this.getListNormalizeFiles();
 
-        if(this.outputs['stat_method'] === "Moran's I"){
+        if (this.outputs['stat_method'] === "Moran's I") {
             this.displayedColumns = ['sample_gene', 'gene_mean', 'gene_stdevs', 'moran_i', 'actions'];
-        }else{
+        } else {
             this.displayedColumns = ['sample_gene', 'gene_mean', 'gene_stdevs', 'geary_c', 'actions'];
         }
 
@@ -104,7 +106,13 @@ export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialge
     selectGene(gene) {
         this.geneSearchVal = gene;
         this.geneSelected = true;
-        this.getAxisColumnNamesSthet();
+
+        if (this.xAxisValue !== '' && this.yAxisValue !== '') {
+            this.getDataNormalizationSthet()
+        } else {
+            this.getAxisColumnNamesSthet();
+        }
+
 
     }
 
@@ -214,8 +222,6 @@ export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialge
                         this.totalCountsMin = Math.min(this.totalCountsMin, totalCounts)
                     }
                 }
-                // let normalizePlot = (this.xMax - this.xMin) > (this.yMax - this.yMin) ? (this.xMax - this.xMin) / this.normalizePlotWidth : (this.yMax - this.yMin) / this.normalizePlotWidth
-
                 let normalizePlot = (this.xMax - this.xMin) / this.normalizePlotWidth // This will set the plot to a width of 300px
                 this.plotWidth = (this.xMax - this.xMin) / normalizePlot;
                 this.plotHeight = (this.yMax - this.yMin) / normalizePlot;
@@ -241,7 +247,7 @@ export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialge
 
                 if (this.scatterPlotData.length > 0) {
                     this.displayOverlayContainer = true;
-                    this.callCreateScatterPlot();
+                    this.createScatterPlotSthet();
                 }
 
             }
@@ -251,9 +257,143 @@ export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialge
             }
         });
     }
+
+    createScatterPlotSthet() {
+        this.displayPlot = true;
+        var margin = { top: 0, right: 0, bottom: 0, left: this.legendWidth },
+            width = this.plotWidth - margin.left - margin.right + this.legendWidth,
+            height = this.plotHeight - margin.top - margin.bottom;
+
+        let scatterplotContainerId = this.containerId;
+        d3.select(scatterplotContainerId)
+            .selectAll('svg')
+            .remove();
+
+        const pointTip = d3Tip()
+            .attr('class', 'd3-tip')
+            .offset([-10, 0])
+            .html((event: any, d: any) => {
+                let tipBox = `<div><div class="category">Normalized Count:</div> ${d.totalCounts}</div>`
+                return tipBox
+            });
+
+        var svg = d3.select(scatterplotContainerId)
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform",
+                "translate(" + margin.left + "," + margin.top + ")");
+
+        svg.call(pointTip);
+
+        const color = d3.scaleLinear<string>()
+            .domain([0, this.totalCountsMax / 2, this.totalCountsMax])
+            .range(["#4363d8", "#fffac8", "#e6194B"]);
+
+        var x = d3.scaleLinear()
+            .domain([this.xMin, this.xMax])
+            .range([0, width]);
+
+        var y = d3.scaleLinear()
+            .domain([this.yMin, this.yMax])
+            .range([height, 0]);
+
+        const circles = svg.append('g')
+            .selectAll("dot")
+            .data(this.scatterPlotData)
+            .enter()
+            .append("circle")
+            .attr("cx", function (d) { return x(d.xValue) })
+            .attr("cy", function (d) { return height - y(d.yValue); })
+            .attr("r", 1.75)
+            .attr("fill", d => {
+                return color(d.totalCounts);
+            })
+            .on('mouseover', function (mouseEvent: any, d) {
+                d3.select(this).style('cursor', 'pointer');
+                pointTip.show(mouseEvent, d, this);
+                pointTip.style('left', mouseEvent.x + 10 + 'px');
+                console.log("d: ", d)
+            })
+            .on('mouseout', function () {
+                d3.select(this).style('cursor', 'default');  // Revert cursor to default on mouseout
+                pointTip.hide();
+            });
+
+
+        // Add Legend
+        const gradient = svg.append("defs")
+            .append("linearGradient")
+            .attr("id", "legendGradient")
+            .attr("x1", "0%")
+            .attr("y1", "0%")
+            .attr("x2", "100%")
+            .attr("y2", "0%");
+
+        gradient.append("stop")
+            .attr("offset", "0%")
+            .attr("stop-color", "#4363d8");
+
+        gradient.append("stop")
+            .attr("offset", "50%")
+            .attr("stop-color", "#fffac8");
+
+        gradient.append("stop")
+            .attr("offset", "100%")
+            .attr("stop-color", '#e6194B');
+
+        const legendX = -this.legendWidth + 20;
+        const legendY = 60;
+        const borderWidth = 1;
+        const legendBarWidth = 50;
+        const legendBarHeight = 10;
+
+        svg.append("rect")
+            .attr("x", legendX - borderWidth)
+            .attr("y", legendY - borderWidth)
+            .attr("width", legendBarWidth + 2 * borderWidth)
+            .attr("height", legendBarHeight + 2 * borderWidth)
+            .style("stroke", "rgba(0, 0, 0, 0.3)")
+            .style("fill", "none");
+
+        // Create legend rectangle
+        svg.append("rect")
+            .attr("x", legendX)
+            .attr("y", legendY)
+            .attr("width", legendBarWidth)
+            .attr("height", legendBarHeight)
+            .style("fill", "url(#legendGradient)")
+
+        svg.append("text")
+            .attr("x", legendX)
+            .attr("y", 80)
+            .attr("text-anchor", "start")
+            .attr("font-size", "6px")
+            .text("0");
+
+        const xmaxLabelWidth = this.totalCountsMax.toString().toLocaleString().length * 1;  // Adjust the font size multiplier as needed
+        const adjustedXmaxLabelX = legendX + 60 - xmaxLabelWidth;
+
+        svg.append("text")
+            .attr("x", adjustedXmaxLabelX)
+            .attr("y", 80)
+            .attr("text-anchor", "end")
+            .attr("font-size", "6px")
+            .text(this.totalCountsMax.toLocaleString());
+
+        svg.append("text")
+            .attr("x", legendX)
+            .attr("y", 50)
+            .attr("text-anchor", "start")
+            .attr("font-size", "6px")
+            .attr("font-weight", "bold")
+            .text("Counts");
+    }
+
     isEmpty(obj: any): boolean {
         return obj && Object.keys(obj).length === 0;
-      }
+    }
 }
 
 export interface SPEFeature {
@@ -294,7 +434,7 @@ export class FeaturesDataSource implements DataSource<SPEFeature> {
                 const featuresFormatted = features.results;
                 return this.featuresSubject.next(featuresFormatted);
             });
-            
+
     }
 
     connect(): Observable<SPEFeature[]> {

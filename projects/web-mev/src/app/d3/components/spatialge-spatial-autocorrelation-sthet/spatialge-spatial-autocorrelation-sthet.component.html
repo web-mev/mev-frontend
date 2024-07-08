@@ -32,13 +32,13 @@
                         <td mat-cell *matCellDef="let element" class="numericCols"> {{element.values.gene_stdevs}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="moran_i" >
+                    <ng-container matColumnDef="moran_i">
                         <th mat-header-cell *matHeaderCellDef> Moran I </th>
                         <td mat-cell *matCellDef="let element" class="numericCols"> {{element.values.moran_i ?
                             element.values.moran_i : 'NA'}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="geary_c" >
+                    <ng-container matColumnDef="geary_c">
                         <th mat-header-cell *matHeaderCellDef> Geary C </th>
                         <td mat-cell *matCellDef="let element" class="numericCols"> {{element.values.geary_c ?
                             element.values.geary_c : 'NA'}} </td>
@@ -48,7 +48,8 @@
                         <th mat-header-cell *matHeaderCellDef> </th>
                         <td mat-cell *matCellDef="let element; let i=index;" class="numericCols">
                             <button mat-raised-button title="Select Gene" [disabled]="isEmpty(selectedStNormalizedFile)"
-                                (click)="selectGene(element.rowname)" [class]="element.rowname === geneSearchVal ? 'selectedButton' : 'notSelectedButton' ">
+                                (click)="selectGene(element.rowname)"
+                                [class]="element.rowname === geneSearchVal ? 'selectedButton' : 'notSelectedButton' ">
                                 {{element.rowname === geneSearchVal ? 'Selected Gene' : 'Select Gene'}}
                             </button>
                         </td>
@@ -66,26 +67,31 @@
         <br>
         <br>
         <div *ngIf="geneSelected">
-            <!-- <p>
-                Selected Gene: {{geneSearchVal}}
-            </p> -->
-            <mat-form-field appearance="outline">
-                <mat-label>Select X-Axis Label</mat-label>
-                <mat-select [(value)]="yAxisValue">
-                    <mat-option [value]="option" *ngFor="let option of yAxisValueList">{{ option }}</mat-option>
-                </mat-select>
-            </mat-form-field>
-            <br>
-            <mat-form-field appearance="outline">
-                <mat-label>Select Y-Axis Label</mat-label>
-                <mat-select [(value)]="xAxisValue">
-                    <mat-option [value]="option" *ngFor="let option of xAxisValueList">{{ option }}</mat-option>
-                </mat-select>
-            </mat-form-field>
-            <br>
-            <button mat-flat-button color="primary" class="searchButton"
-                [disabled]="xAxisValue === '' || yAxisValue === '' || geneSearchVal === ''"
-                (click)="getDataNormalizationSthet()">Submit</button>
+            <mat-expansion-panel #accordion [(expanded)]="panelOpenState" class="no-box-shadow">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <span class="plot-options-header">Select X and Y Axis Labels: </span>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Select X-Axis Label</mat-label>
+                    <mat-select [(value)]="yAxisValue">
+                        <mat-option [value]="option" *ngFor="let option of yAxisValueList">{{ option }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <br>
+                <mat-form-field appearance="outline">
+                    <mat-label>Select Y-Axis Label</mat-label>
+                    <mat-select [(value)]="xAxisValue">
+                        <mat-option [value]="option" *ngFor="let option of xAxisValueList">{{ option }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <br>
+                <button mat-flat-button color="primary" class="searchButton"
+                    [disabled]="xAxisValue === '' || yAxisValue === '' || geneSearchVal === ''"
+                    (click)="getDataNormalizationSthet()">Submit</button>
+            </mat-expansion-panel>
         </div>
         <br>
         <br>

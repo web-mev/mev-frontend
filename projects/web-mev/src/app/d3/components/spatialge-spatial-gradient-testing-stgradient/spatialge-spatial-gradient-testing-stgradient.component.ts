@@ -54,7 +54,6 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
     // }
 
     ngOnInit() {
-        console.log("outputs: ", this.outputs)
         // this.dataSource = new FeaturesDataSource(this.analysesService);
         // this.initializeFeatureResource();
         // this.getListNormalizeFiles();
@@ -68,7 +67,7 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
                 throw error;
             })
         ).subscribe(res => {
-           console.log("res: ", res)
+        //    console.log("res: ", res)
         })
 
 
@@ -91,11 +90,9 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
     getListNormalizeFiles() {
         this.workspaceId = this.route.snapshot.paramMap.get('workspaceId');
         this.apiService.getExecOperations(this.workspaceId).subscribe(res => {
-            console.log("res: ", res)
             for (let file of res) {
                 if (file['operation']['operation_name'] === 'spatialGE normalization') {
                     this.stNormalizeFile.push(file)
-                    console.log("found: ", file)
                 }
 
             }

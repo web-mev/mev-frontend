@@ -1149,7 +1149,6 @@ export class BaseSpatialgeComponent {
     } else if (!this.displayAlignment && this.currentZoomVal === 1) {
       this.legendWidth = 120;
     }
-    console.log("change in overlay, ", this.currentImageLeft, this.currentImageTop, this.widthAdjustment, this.heightAdjustment)
     this.callCreateScatterPlot();
   }
 }

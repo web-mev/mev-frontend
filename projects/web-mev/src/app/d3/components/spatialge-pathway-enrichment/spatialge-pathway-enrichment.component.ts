@@ -50,7 +50,6 @@ export class SpatialGEPathwayEnrichmentComponent implements OnInit {
             this.defaultPageIndex,
             this.defaultPageSize
         );
-        console.log("enrich datasource: ", this.dataSource)
     }
 
     onCreateCustomFeatureSet(row) {

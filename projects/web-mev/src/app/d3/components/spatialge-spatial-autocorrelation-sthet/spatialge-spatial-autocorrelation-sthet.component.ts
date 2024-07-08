@@ -54,11 +54,15 @@ export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialge
     // }
 
     ngOnInit() {
-        console.log("outputs: ", this.outputs)
         this.dataSource = new FeaturesDataSource(this.analysesService);
         this.initializeFeatureResource();
         this.getListNormalizeFiles();
 
+        if(this.outputs['stat_method'] === "Moran's I"){
+            this.displayedColumns = ['sample_gene', 'gene_mean', 'gene_stdevs', 'moran_i', 'actions'];
+        }else{
+            this.displayedColumns = ['sample_gene', 'gene_mean', 'gene_stdevs', 'geary_c', 'actions'];
+        }
 
     }
 
@@ -71,8 +75,6 @@ export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialge
             this.defaultPageIndex,
             this.defaultPageSize
         );
-        console.log("datasource2: ", this.dataSource)
-
     }
     selectedStNormalizedFile = {}
 
@@ -82,7 +84,6 @@ export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialge
             for (let file of res) {
                 if (file['operation']['operation_name'] === 'spatialGE normalization') {
                     this.stNormalizeFile.push(file)
-                    console.log("found: ", file)
                 }
             }
         })
@@ -101,11 +102,9 @@ export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialge
     geneSelected = false
 
     selectGene(gene) {
-        console.log("gene: ", gene)
         this.geneSearchVal = gene;
         this.geneSelected = true;
         this.getAxisColumnNamesSthet();
-        console.log("selected job", this.selectedStNormalizedFile)
 
     }
 
@@ -295,6 +294,7 @@ export class FeaturesDataSource implements DataSource<SPEFeature> {
                 const featuresFormatted = features.results;
                 return this.featuresSubject.next(featuresFormatted);
             });
+            
     }
 
     connect(): Observable<SPEFeature[]> {

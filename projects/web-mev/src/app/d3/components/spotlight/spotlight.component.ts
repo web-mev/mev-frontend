@@ -59,7 +59,6 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
         this.resetAllVariables();
         this.resetSpotlightVariables();
 
-        console.log("calling get data")
         // this.currentImageLeft = 182.5
         // this.currentImageTop = 15
         // this.currentLeft = 80 
@@ -219,7 +218,6 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
 
 
         }
-        console.log("adjustment data: ", size, adjObj)
 
         this.displayPlot = true;
         let scatterplotContainerId = size === 'normal' ? this.containerId : this.minimapContainerId;

@@ -104,7 +104,6 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
 
         key = 'sample_name'
         input = this.operationData.inputs[key];
-        console.log("op data: ", this.operationData.inputs)
         this.sampleNameField = {
             key: key,
             name: input.name,
@@ -343,8 +342,6 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
             const keys = Object.keys(jsonObj);
             this.xAxisValueList = keys;
             this.yAxisValueList = keys;
-
-            console.log("dropdown list: ", this.xAxisValueList, this.yAxisValueList)
         })
     }
 
@@ -490,7 +487,6 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
     selectedColor: string = 'Green';
     colors: string[] = ['Red', 'Green'];
     createScatterPlot(size) {
-        console.log("cluster type: ", this.clusterTypes)
         var margin = { top: 0, right: 0, bottom: 0, left: this.legendWidth},
             width = this.plotWidth - margin.left - margin.right + this.legendWidth,
             height = this.plotHeight - margin.top - margin.bottom;

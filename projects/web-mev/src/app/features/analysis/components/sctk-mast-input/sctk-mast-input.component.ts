@@ -222,7 +222,6 @@ export class SCTKMastInputComponent extends BaseOperationInput implements OnInit
 
     analysisTypeChange() {
         this.analysisType = this.analysesForm.value.analysisType
-        console.log("analysesForm: ", this.analysesForm)
 
         this.createForm();
         this.onFormValid();

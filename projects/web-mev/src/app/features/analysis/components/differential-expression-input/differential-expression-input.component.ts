@@ -255,20 +255,13 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
 
         this.analysesForm.get('experimental_condition_samples').valueChanges.subscribe(
             (val) => {
-                // since an obs set has been chosen, remove it from the other
-                let obsSetName = val.name;
-                let obsSetArr = this.handleObsSetSelection(obsSetName)
-                this.ctrlObsSetField.sets = obsSetArr;
-                this.analysesForm.get('experimental_condition_name').setValue(obsSetName);
+                this.analysesForm.get('experimental_condition_name').setValue(val.name);
             }
         );
 
         this.analysesForm.get('base_condition_samples').valueChanges.subscribe(
             (val) => {
-                let obsSetName = val.name;
-                let obsSetArr = this.handleObsSetSelection(obsSetName)
-                this.experimentalObsSetField.sets = obsSetArr;
-                this.analysesForm.get('base_condition_name').setValue(obsSetName);
+                this.analysesForm.get('base_condition_name').setValue(val.name);
             }
         );
     }

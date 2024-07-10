@@ -141,8 +141,8 @@ export class CombatseqInputComponent extends BaseOperationInput implements OnCha
         //input = this.operationData.inputs[key];
         this.otherCovarsChoiceField = {
             key: key,
-            name: 'other covars',
-            desc: 'something',
+            name: 'Other covariates to preserve:',
+            desc: 'Selections here will be modeled so that effects related to covariates of interest are not removed through the normalization process.',
             options: [],
             selectedOptions: []
         };

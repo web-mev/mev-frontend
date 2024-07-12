@@ -4,12 +4,6 @@ import { AnalysesService } from '@app/features/analysis/services/analysis.servic
 import { BehaviorSubject, Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { DataSource } from '@angular/cdk/table';
-import { CustomSetType } from '@app/_models/metadata';
-import { MatDialog } from '@angular/material/dialog';
-import { AddSampleSetComponent } from '../dialogs/add-sample-set/add-sample-set.component';
-import { MetadataService } from '@app/core/metadata/metadata.service';
-import { NotificationService } from '../../../core/core.module';
-import { ActivatedRoute } from '@angular/router';
 import { BaseSpatialgeComponent } from '../base-spatialge/base-spatialge.component';
 import { catchError } from "rxjs/operators";
 import { forkJoin } from 'rxjs';
@@ -41,22 +35,14 @@ export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialge
     xAxisValueList: string[] = [];
     yAxisValueList: string[] = [];
 
-    geneSearch: string = 'ENSMUSG00000025903';
-    geneSearchVal: string = 'ENSMUSG00000025903';
-
-    // constructor(
-    //     private route: ActivatedRoute,
-    //     private apiService: AnalysesService,
-    //     // private metadataService: MetadataService,
-    //     private analysesService: AnalysesService,
-    //     public dialog: MatDialog,
-    //     // private readonly notificationService: NotificationService
-    // ) {
-    //     this.dataSource = new FeaturesDataSource(this.analysesService);
-    // }
+    geneSearch: string = '';
+    geneSelected = false;
+    // displayPlotSTHet = false
+    axisSubmitted = false;
 
     ngOnInit() {
         this.dataSource = new FeaturesDataSource(this.analysesService);
+        this.panelOpenState = true;
         this.initializeFeatureResource();
         this.getListNormalizeFiles();
 
@@ -101,21 +87,6 @@ export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialge
         );
     }
 
-    geneSelected = false
-
-    selectGene(gene) {
-        this.geneSearchVal = gene;
-        this.geneSelected = true;
-
-        if (this.xAxisValue !== '' && this.yAxisValue !== '') {
-            this.getDataNormalizationSthet()
-        } else {
-            this.getAxisColumnNamesSthet();
-        }
-
-
-    }
-
     getAxisColumnNamesSthet() {
         this.isLoading = true;
         let coords_metadata_uuid = this.selectedStNormalizedFile['inputs']["coords_metadata"]
@@ -136,14 +107,14 @@ export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialge
     }
 
     getDataNormalizationSthet() {
-        this.displayOverlayContainer = true;
-        this.showMiniMap = true;
-        this.geneSearch = this.geneSearchVal.split('').map(letter => letter.toUpperCase()).join('');
-        this.geneSearchHeight = 100;
-        this.useNormalization = true;
-        this.useCluster = false;
+        // this.displayOverlayContainer = true;
+        // this.showMiniMap = true;
+        // this.geneSearch = this.geneSearchVal.split('').map(letter => letter.toUpperCase()).join('');
+        // this.geneSearchHeight = 100;
+        // this.useNormalization = true;
+        // this.useCluster = false;
         this.isLoading = true;
-        this.panelOpenState = false;
+        // this.panelOpenState = false;
         this.scrollTo('topOfPage');
         this.resetAllVariables();
 
@@ -233,33 +204,33 @@ export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialge
                     this.originalPlotHeight = this.plotHeight;
                 }
 
-                let selectionRectWidth = this.plotWidth / (4 * this.currentZoomVal);
-                let selectionRectHeight = this.plotHeight / (4 * this.currentZoomVal);
+                // let selectionRectWidth = this.plotWidth / (4 * this.currentZoomVal);
+                // let selectionRectHeight = this.plotHeight / (4 * this.currentZoomVal);
 
-                this.selectionRectStyle = {
-                    top: `-${0}px`,
-                    left: `-${0}px`,
-                    width: `${selectionRectWidth}px`,
-                    height: `${selectionRectHeight}px`,
-                    border: '2px solid #1DA1F2',
-                    position: 'absolute',
-                };
+                // this.selectionRectStyle = {
+                //     top: `-${0}px`,
+                //     left: `-${0}px`,
+                //     width: `${selectionRectWidth}px`,
+                //     height: `${selectionRectHeight}px`,
+                //     border: '2px solid #1DA1F2',
+                //     position: 'absolute',
+                // };
 
                 if (this.scatterPlotData.length > 0) {
-                    this.displayOverlayContainer = true;
+                    // this.displayPlotSTHet = true;
                     this.createScatterPlotSthet();
                 }
 
             }
 
-            else {
-                this.displayOverlayContainer = false;
-            }
+            // else {
+            //     // this.displayPlotSTHet = false;
+            // }
         });
     }
 
     createScatterPlotSthet() {
-        this.displayPlot = true;
+        // this.displayPlotSTHet = true;
         var margin = { top: 0, right: 0, bottom: 0, left: this.legendWidth },
             width = this.plotWidth - margin.left - margin.right + this.legendWidth,
             height = this.plotHeight - margin.top - margin.bottom;
@@ -314,7 +285,6 @@ export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialge
                 d3.select(this).style('cursor', 'pointer');
                 pointTip.show(mouseEvent, d, this);
                 pointTip.style('left', mouseEvent.x + 10 + 'px');
-                console.log("d: ", d)
             })
             .on('mouseout', function () {
                 d3.select(this).style('cursor', 'default');  // Revert cursor to default on mouseout
@@ -393,6 +363,40 @@ export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialge
 
     isEmpty(obj: any): boolean {
         return obj && Object.keys(obj).length === 0;
+    }
+
+    selectGene(gene) {
+        this.geneSearch = gene;
+        this.geneSelected = true;
+        this.scrollTo('topOfPage');
+
+        if (this.xAxisValue !== '' && this.yAxisValue !== '') {
+            this.getDataNormalizationSthet()
+        } else {
+            
+            this.getAxisColumnNamesSthet();
+        }
+    }
+
+    submitAxisValues(){
+        this.panelOpenState = false;
+        this.axisSubmitted = true;
+        this.getDataNormalizationSthet()
+    }
+
+    onSelectSTNormalizeFile() {
+        this.xAxisValue = '';
+        this.yAxisValue = '';
+        this.xAxisValueList = [];
+        this.yAxisValueList = [];
+        this.geneSearch = '';
+        this.geneSelected = false;
+        // this.displayPlotSTHet = false;
+        this.axisSubmitted = false;
+
+        d3.select(this.containerId)
+            .selectAll('svg')
+            .remove();
     }
 }
 

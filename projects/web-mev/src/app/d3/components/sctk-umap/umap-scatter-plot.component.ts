@@ -554,6 +554,7 @@ export class UmapScatterPlotComponent implements OnChanges {
         };
 
         if (this.metadataService.addCustomSet(observationSet)) {
+          console.log("obs set: ", observationSet)
           this.customObservationSets = this.metadataService.getCustomObservationSets();
         }
       }

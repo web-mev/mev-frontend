@@ -561,6 +561,7 @@ export class MetadataComponent implements OnInit {
                 color: customSetData.color,
                 elements: newSet.elements
               };
+              
               this.metadataService.addCustomSet(customSet);
             }
           });

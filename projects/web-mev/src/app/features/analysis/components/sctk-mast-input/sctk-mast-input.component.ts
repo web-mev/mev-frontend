@@ -194,7 +194,6 @@ export class SCTKMastInputComponent extends BaseOperationInput implements OnInit
         if (this.analysisType === 'direct_comparison') {
             controlsConfigDefault[key] = configObsSetsField2;
         }
-        console.log("control: ", controlsConfigDefault)
 
         this.analysesForm = this.formBuilder.group(controlsConfigDefault,
             {

@@ -11,7 +11,7 @@
             <mev-spinner-overlay *ngIf="dataSource.loading$ | async"></mev-spinner-overlay>
             <mat-form-field appearance="outline">
                 <mat-label>Select ST Normalize File</mat-label>
-                <mat-select [(value)]="selectedStNormalizedFile">
+                <mat-select [(value)]="selectedStNormalizedFile" (selectionChange)="onSelectSTNormalizeFile()">
                     <mat-option [value]="option" *ngFor="let option of stNormalizeFile">{{ option['job_name'] }}
                     </mat-option>
                 </mat-select>
@@ -49,8 +49,8 @@
                         <td mat-cell *matCellDef="let element; let i=index;" class="numericCols">
                             <button mat-raised-button title="Select Gene" [disabled]="isEmpty(selectedStNormalizedFile)"
                                 (click)="selectGene(element.rowname)"
-                                [class]="element.rowname === geneSearchVal ? 'selectedButton' : 'notSelectedButton' ">
-                                {{element.rowname === geneSearchVal ? 'Selected Gene' : 'Select Gene'}}
+                                [class]="element.rowname === geneSearch ? 'selectedButton' : 'notSelectedButton' ">
+                                {{element.rowname === geneSearch ? 'Selected Gene' : 'Select Gene'}}
                             </button>
                         </td>
                     </ng-container>
@@ -90,13 +90,14 @@
                 <br>
                 <button mat-flat-button color="primary" class="searchButton"
                     [disabled]="xAxisValue === '' || yAxisValue === '' || geneSearchVal === ''"
-                    (click)="getDataNormalizationSthet()">Submit</button>
+                    (click)="submitAxisValues()">Submit</button>
             </mat-expansion-panel>
         </div>
         <br>
         <br>
         <div id="topOfPage"></div>
         <div #scatter id="scatter" [style.width.px]="originalPlotWidth + legendWidth" class="plotContainer"></div>
+        <p *ngIf="axisSubmitted && scatterPlotData.length === 0 && !isLoading && xAxisValue !== '' && yAxisValue !== '' && geneSearchVal !== ''">No data to display</p>
 
     </mat-card-content>
 </mat-card>

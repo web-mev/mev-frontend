@@ -36,7 +36,6 @@
     <br>
     <br>
     <div *ngIf="analysesForm.get('reference_cluster_selection').value === 'obs_set'">
-
         <div class="label">
             Reference cluster:
             <span *ngIf="obsSetField.required" class="redAsterisk">* </span>
@@ -115,20 +114,20 @@
             </mat-icon>
         </div>
         <mat-form-field class="form-control" color="accent">
-            <mat-select [formControlName]="stClustResultsField.key" (selectionChange)="onJobSelection()">
+            <mat-select [formControlName]="stClustResultsField.key" (selectionChange)="onClusterTypeSelection()">
                 <mat-option *ngFor="let job of stClustResultsField.jobs" [value]="job">
                     Job name: {{ job.job_name }} (completed {{job.execution_stop_datetime}})
                 </mat-option>
             </mat-select>
         </mat-form-field>
         <div *ngIf="clustering_job_id.length > 0">
-            <!-- TODO: Show this in a nicer way-->
+            <!-- TODO: Show this in a nicer way -->
             <p>Show clustering using job {{clustering_job_id}}</p>
             <p>This will implicitly use inputs of {{input_counts_uuid}}</p>
             <p>Coordinate metadata of {{input_metadata_uuid}}</p>
             <p> Normalization method of {{normalization_method}}</p>
 
-            <!--TODO: Show plot to select clusters-->
+            <!-- TODO: Show plot to select clusters -->
             <mat-form-field appearance="outline">
                 <mat-label>Select X-Axis Label</mat-label>
                 <mat-select [(value)]="yAxisValue">
@@ -158,13 +157,43 @@
                 </mat-icon>
             </div>
             <mat-form-field class="form-control" color="accent">
-                <mat-select [(value)]="clusterValue">
+                <mat-select [(value)]="clusterValue" (selectionChange)="saveObsSets(clusterValue)">
                     <mat-option *ngFor="let option of clusterList" [value]="option">
                         {{ option }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
+
+        <div class="label">
+            {{ rawCountsField.name }} <span class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="{{ rawCountsField.desc}}" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <input matInput [formControlName]="rawCountsField.key" [name]="rawCountsField.key" [value]="input_counts_uuid">
+        </mat-form-field>
+
+        <div class="label">
+            {{ coordMetadataField.name }} <span class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="{{ coordMetadataField.desc}}" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <input matInput [formControlName]="coordMetadataField.key" [name]="coordMetadataField.key" [value]="input_metadata_uuid">
+        </mat-form-field>
+
+        <div class="label">
+            {{ normalizationMethodField.name }} <span class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="{{ normalizationMethodField.desc}}" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <input matInput [formControlName]="normalizationMethodField.key" [name]="normalizationMethodField.key" [value]="normalization_method">
+        </mat-form-field>
 
     </div>
 

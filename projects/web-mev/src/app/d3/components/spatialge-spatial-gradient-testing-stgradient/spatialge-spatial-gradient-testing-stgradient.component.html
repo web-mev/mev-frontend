@@ -17,9 +17,9 @@
                 </mat-select>
             </mat-form-field>
             <div class="mat-elevation-z8">
-                <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" class="table">
+                <table *ngIf="outputs.distance_summary === 'Average'" mat-table [dataSource]="dataSource" class="mat-elevation-z8" class="table">
                     <ng-container matColumnDef="sample_gene">
-                        <th mat-header-cell *matHeaderCellDef> Sample Gene </th>
+                        <th mat-header-cell *matHeaderCellDef> Gene </th>
                         <td mat-cell *matCellDef="let element" class="word-wrap"> {{element.rowname}} </td>
                     </ng-container>
                     <ng-container matColumnDef="avg_lm_coef">
@@ -48,6 +48,54 @@
                         <th mat-header-cell *matHeaderCellDef> avg_spearman_r_pval_adj </th>
                         <td mat-cell *matCellDef="let element" class="numericCols">
                             {{element.values.avg_spearman_r_pval_adj}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef> </th>
+                        <td mat-cell *matCellDef="let element; let i=index;" class="numericCols">
+                            <button mat-raised-button title="Select Gene" [disabled]="isEmpty(selectedStNormalizedFile)"
+                                (click)="selectGene(element.rowname)"
+                                [class]="element.rowname === geneSearch ? 'selectedButton' : 'notSelectedButton' ">
+                                {{element.rowname === geneSearch ? 'Selected Gene' : 'Select Gene'}}
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+
+                <table *ngIf="outputs.distance_summary === 'Minimum'" mat-table [dataSource]="dataSource" class="mat-elevation-z8" class="table">
+                    <ng-container matColumnDef="sample_gene">
+                        <th mat-header-cell *matHeaderCellDef> Gene </th>
+                        <td mat-cell *matCellDef="let element" class="word-wrap"> {{element.rowname}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="min_lm_coef">
+                        <th mat-header-cell *matHeaderCellDef> min_lm_coef </th>
+                        <td mat-cell *matCellDef="let element" class="numericCols"> {{element.values.min_lm_coef}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="min_lm_pval">
+                        <th mat-header-cell *matHeaderCellDef> min_lm_pval </th>
+                        <td mat-cell *matCellDef="let element" class="numericCols"> {{element.values.min_lm_pval}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="min_spearman_r">
+                        <th mat-header-cell *matHeaderCellDef> min_spearman_r </th>
+                        <td mat-cell *matCellDef="let element" class="numericCols"> {{element.values.min_spearman_r}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="min_spearman_r_pval">
+                        <th mat-header-cell *matHeaderCellDef> min_spearman_r_pval </th>
+                        <td mat-cell *matCellDef="let element" class="numericCols">
+                            {{element.values.min_spearman_r_pval}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="min_spearman_r_pval_adj">
+                        <th mat-header-cell *matHeaderCellDef> min_spearman_r_pval_adj </th>
+                        <td mat-cell *matCellDef="let element" class="numericCols">
+                            {{element.values.min_spearman_r_pval_adj}} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="actions">

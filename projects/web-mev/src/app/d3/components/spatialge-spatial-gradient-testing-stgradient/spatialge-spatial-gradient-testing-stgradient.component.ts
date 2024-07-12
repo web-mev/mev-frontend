@@ -23,7 +23,9 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
     dataSource: FeaturesDataSource;
     resourceId;
     analysisName = 'SpatialGE Spatial Gradient Testing (STGradient)';
-    displayedColumns = ['sample_gene', 'avg_lm_coef', 'avg_lm_pval', 'avg_spearman_r', 'avg_spearman_r_pval', 'avg_spearman_r_pval_adj', 'actions'];
+    displayedColumns = [];
+    displayedColumnsAvg = ['sample_gene', 'avg_lm_coef', 'avg_lm_pval', 'avg_spearman_r', 'avg_spearman_r_pval', 'avg_spearman_r_pval_adj', 'actions'];
+    displayedColumnsMin = ['sample_gene', 'min_lm_coef', 'min_lm_pval', 'min_spearman_r', 'min_spearman_r_pval', 'min_spearman_r_pval_adj', 'actions'];
     defaultPageIndex = 0;
     defaultPageSize = 10;
     maxFeatureSetSize = 500;
@@ -47,6 +49,8 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
         this.panelOpenState = true;
         this.initializeFeatureResource();
         this.getListNormalizeFiles();
+        console.log("outputs: ", this.outputs)
+        this.displayedColumns = this.outputs.distance_summary === "Minimum" ? this.displayedColumnsMin : this.displayedColumnsAvg;
 
     }
 
@@ -84,7 +88,7 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
         );
     }
 
-    
+
 
     getAxisColumnNamesSthet() {
         this.isLoading = true;
@@ -107,7 +111,7 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
 
     getDataNormalizationSthet() {
         this.isLoading = true;
-        
+
         this.scrollTo('topOfPage');
         this.resetAllVariables();
         // let mouseKidney_genesearch = 'ENSMUSG00000025903'
@@ -369,7 +373,7 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
         this.scrollTo('topOfPage');
 
         if (this.xAxisValue !== '' && this.yAxisValue !== '') {
-            
+
             this.getDataNormalizationSthet()
         } else {
             this.getAxisColumnNamesSthet();
@@ -378,7 +382,7 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
 
     }
 
-    submitAxisValues(){
+    submitAxisValues() {
         this.panelOpenState = false;
         this.axisSubmitted = true;
         this.getDataNormalizationSthet()

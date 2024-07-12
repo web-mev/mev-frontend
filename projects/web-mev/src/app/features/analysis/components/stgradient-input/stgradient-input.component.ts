@@ -122,6 +122,13 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
     }
 
     public onFormValid() {
+        if (this.reference_cluster_selection === 'stclust') {
+            this.analysesForm.value['coords_metadata'] = this.input_metadata_uuid
+            this.analysesForm.value['normalization_method'] = this.normalization_method
+            this.analysesForm.value['raw_counts'] = this.input_counts_uuid
+            this.analysesForm.value['barcodes'] = this.selectedObsClusterField
+        }
+        console.log("onform valid: ", this.analysesForm)
         this.formValid.emit(this.analysesForm.valid);
     }
 

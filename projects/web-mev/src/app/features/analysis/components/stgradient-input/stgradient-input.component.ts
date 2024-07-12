@@ -44,6 +44,7 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
     rawCountsField;
     coordMetadataField;
     normalizationMethodField;
+    normalizationMethodField2;
     distanceSummaryField;
     numGenesField;
     clustering_job_id = '';
@@ -58,6 +59,35 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
     input_counts_uuid = '';
     input_metadata_uuid = '';
     normalization_method = '';
+
+    selectedObsClusterField = {};
+
+    scatterPlotDataCluster: ScatterDataCluster[] = [];
+
+    dataDict: Record<string, any> = {}
+
+    xMin: number = 100000000
+    xMax: number = 0
+    yMin: number = 100000000
+    yMax: number = 0
+    totalCountsMax: number = 0;
+    totalCountsMin: number = 100000000;
+
+    totalCounts: Record<string, any> = {}
+
+    plotWidth: number = 300;
+    plotHeight: number = 500;
+    originalPlotWidth: number = 0;
+    originalPlotHeight: number = 0;
+    legendWidth: number = 120;
+
+    clusterTypes: Record<string, any> = {};
+    clusterColors: string[] = ["#EBCD00", "#52A52E", "#00979D", "#6578B4", "#80408D", "#C9006B", "#68666F", "#E80538", "#E87D1E"];
+
+    normalizePlotWidth = 300;
+    imageOverlayOffset = 220;
+
+    observationSetsClusters = {}
 
     constructor(
         private apiService: AnalysesService,
@@ -80,7 +110,6 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
 
     ngOnChanges(): void {
         if (this.operationData) {
-            console.log("when does this change?? onchange")
             this.createForm();
             this.analysesForm.statusChanges.subscribe(() => this.onFormValid());
         }
@@ -93,13 +122,6 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
     }
 
     public onFormValid() {
-        console.log("form is now valid: ", this.analysesForm)
-        if (this.reference_cluster_selection === 'stclust') {
-            this.analysesForm.value['coords_metadata'] = this.input_metadata_uuid
-            this.analysesForm.value['normalization_method'] = this.normalization_method
-            this.analysesForm.value['raw_counts'] = this.input_counts_uuid
-            this.analysesForm.value['barcodes'] = this.selectedObsClusterField
-        }
         this.formValid.emit(this.analysesForm.valid);
     }
 
@@ -247,27 +269,19 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
 
             key = 'normalization_method';
             input = this.operationData.inputs[key];
-            this.normalizationMethodField = {
+            this.normalizationMethodField2 = {
                 key: key,
                 name: input.name,
                 desc: input.description,
                 options: input.spec.options
             };
-            const configNormalizationMethodChoiceField = [
+            const configNormalizationMethodChoiceField2 = [
                 this.normalization_method,
-                [Validators.required, Validators.minLength(1)]
+                []
             ];
-            controlsConfig[key] = configNormalizationMethodChoiceField;
+            controlsConfig[key] = configNormalizationMethodChoiceField2;
 
             key = 'barcodes';
-            // input = this.operationData.inputs[key];
-            // this.selectedObsClusterField = {
-            //     key: key,
-            //     name: 'barcode_name',
-            //     type: 'Observation set',
-            //     color: 'red',
-            //     elements: []
-            // };
             const configBarcodeField = [
                 this.selectedObsClusterField,
                 []
@@ -338,7 +352,7 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
      */
     clusterOptionChange() {
         this.reference_cluster_selection = this.analysesForm.value.reference_cluster_selection;
-        console.log("this.reference_cluster_selection: ", this.reference_cluster_selection, this.analysesForm)
+        this.analysesForm = null
         this.createForm();
         this.analysesForm.statusChanges.subscribe(() => this.onFormValid());
     }
@@ -397,8 +411,6 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
 
         this.getAxisColumnNamesGradient();
         this.resetAllVariables();
-
-        console.log("oncluster type selection: ", this.analysesForm)
     }
 
     isLoading = false;
@@ -412,7 +424,6 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
 
     getAxisColumnNamesGradient() {
         this.isLoading = true;
-        // let coords_metadata_uuid = this.selectedStNormalizedFile['inputs']["coords_metadata"]
         this.httpClient.get(`${this.API_URL}/resources/${this.input_metadata_uuid}/contents/?page=1&page_size=1`).pipe(
             catchError(error => {
                 this.isLoading = false;
@@ -429,32 +440,7 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
         })
     }
 
-    scatterPlotDataCluster: ScatterDataCluster[] = [];
-
-    dataDict: Record<string, any> = {}
-
-    xMin: number = 100000000
-    xMax: number = 0
-    yMin: number = 100000000
-    yMax: number = 0
-    totalCountsMax: number = 0;
-    totalCountsMin: number = 100000000;
-
-    totalCounts: Record<string, any> = {}
-
-    plotWidth: number = 300;
-    plotHeight: number = 500;
-    originalPlotWidth: number = 0;
-    originalPlotHeight: number = 0;
-    legendWidth: number = 120;
-
-    clusterTypes: Record<string, any> = {};
-    clusterColors: string[] = ["#EBCD00", "#52A52E", "#00979D", "#6578B4", "#80408D", "#C9006B", "#68666F", "#E80538", "#E87D1E"];
-
-    normalizePlotWidth = 300;
-    imageOverlayOffset = 220;
-
-    observationSetsClusters = {}
+    
 
     scrollTo(htmlID) {
         const element = document.getElementById(htmlID) as HTMLElement;
@@ -564,7 +550,6 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
                     }
                 }
 
-                // let normalizePlot = (this.xMax - this.xMin) > (this.yMax - this.yMin) ? (this.xMax - this.xMin) / this.normalizePlotWidth : (this.yMax - this.yMin) / this.normalizePlotWidth
                 let normalizePlot = (this.xMax - this.xMin) / this.normalizePlotWidth // This will set the plot to a width of 300px
                 this.plotWidth = (this.xMax - this.xMin) / normalizePlot;
                 this.plotHeight = (this.yMax - this.yMin) / normalizePlot;
@@ -588,7 +573,6 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
 
                     }
                 }
-                console.log("this.observationSetsClusters: ", this.observationSetsClusters)
 
                 if (this.originalPlotWidth === 0) {
                     this.originalPlotWidth = this.plotWidth;
@@ -712,30 +696,15 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
         }
     }
 
-    selectedObsClusterField = {}
-    // selectedObsClusterField2 = {}
-
     saveObsSets(name) {
         const observationSet: CustomSet = {
             name: `${name}_${this.observationSetsClusters[name].length}_${this.clustering_job_id}`,
             type: CustomSetType.ObservationSet,
-            color: 'red',
+            color: '#A41034',
             elements: this.observationSetsClusters[name]
         };
-        // this.metadataService.addCustomSet(observationSet)
 
-        // this.availableObsSets = this.metadataService.getCustomObservationSets().map(set => {
-        //     const newSet = set.elements.map(elem => {
-        //         const o = { id: elem.id };
-        //         return o;
-        //     });
-        //     return { ...set, elements: newSet };
-        // });
-
-        // this.selectedObsClusterField2 = this.availableObsSets.find(cluster => cluster.name === `${name}_${this.observationSetsClusters[name].length}_${this.clustering_job_id}`);
-        
         this.analysesForm.value['barcodes'] = observationSet
         this.selectedObsClusterField = observationSet
-        console.log("after save obs: ", this.availableObsSets, this.selectedObsClusterField, this.analysesForm)
     }
 }

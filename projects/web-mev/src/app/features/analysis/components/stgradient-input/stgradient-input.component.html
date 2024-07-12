@@ -122,10 +122,10 @@
         </mat-form-field>
         <div *ngIf="clustering_job_id.length > 0">
             <!-- TODO: Show this in a nicer way -->
-            <p>Show clustering using job {{clustering_job_id}}</p>
+            <!-- <p>Show clustering using job {{clustering_job_id}}</p>
             <p>This will implicitly use inputs of {{input_counts_uuid}}</p>
             <p>Coordinate metadata of {{input_metadata_uuid}}</p>
-            <p> Normalization method of {{normalization_method}}</p>
+            <p> Normalization method of {{normalization_method}}</p> -->
 
             <!-- TODO: Show plot to select clusters -->
             <mat-form-field appearance="outline">
@@ -172,7 +172,7 @@
             </mat-icon>
         </div>
         <mat-form-field class="form-control" color="accent">
-            <input matInput [formControlName]="rawCountsField.key" [name]="rawCountsField.key" [value]="input_counts_uuid">
+            <input matInput [formControlName]="rawCountsField.key" [name]="rawCountsField.key" [value]="input_counts_uuid" readonly>
         </mat-form-field>
 
         <div class="label">
@@ -182,17 +182,17 @@
             </mat-icon>
         </div>
         <mat-form-field class="form-control" color="accent">
-            <input matInput [formControlName]="coordMetadataField.key" [name]="coordMetadataField.key" [value]="input_metadata_uuid">
+            <input matInput [formControlName]="coordMetadataField.key" [name]="coordMetadataField.key" [value]="input_metadata_uuid" readonly>
         </mat-form-field>
 
         <div class="label">
-            {{ normalizationMethodField.name }} <span class="redAsterisk">* </span>
+            {{ normalizationMethodField2.name }} <span class="redAsterisk">* </span>
             <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-                matTooltip="{{ normalizationMethodField.desc}}" aria-label="Info tooltip about the field">info
+                matTooltip="{{ normalizationMethodField2.desc}}" aria-label="Info tooltip about the field">info
             </mat-icon>
         </div>
         <mat-form-field class="form-control" color="accent">
-            <input matInput [formControlName]="normalizationMethodField.key" [name]="normalizationMethodField.key" [value]="normalization_method">
+            <input matInput [formControlName]="normalizationMethodField2.key" [name]="normalizationMethodField2.key" [value]="normalization_method" readonly>
         </mat-form-field>
 
     </div>

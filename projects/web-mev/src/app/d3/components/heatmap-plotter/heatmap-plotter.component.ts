@@ -1090,7 +1090,6 @@ export class D3HeatmapPlotComponent implements OnInit {
     if (this.hideOverlay === true) {
       return 0;
     }
-
     this.categoryOptionsArr = [];
     this.categoryOptions = {};
     for (let i = 0; i < this.resourceDataAnnotation.length; i++) {

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PCAComponent } from './components/pca/pca.component';
 import { SharedModule } from '@app/shared/shared.module';
+import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
 import { AddSampleSetComponent } from './components/dialogs/add-sample-set/add-sample-set.component';
 import { ClusterLabelerComponent } from './components/dialogs/cluster-labeler/cluster-labeler.component';
 import { Deseq2Component } from './components/deseq2/deseq2.component';
@@ -123,7 +124,7 @@ import { SpatialGESpatialGradientComponent } from './components/spatialge-spatia
     SpatialGESpatialAutocorrelationSthetComponent,
     SpatialGESpatialGradientComponent,
   ],
-  imports: [CommonModule, SharedModule, DragDropModule, MatBadgeModule],
+  imports: [CommonModule, SharedModule, DragDropModule, MatBadgeModule, AngularMultiSelectModule],
   exports: [
     PCAComponent,
     Deseq2Component,

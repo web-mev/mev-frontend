@@ -7,6 +7,7 @@ import {
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { MetadataService } from '@app/core/metadata/metadata.service';
 import { AnalysesService } from '@app/features/analysis/services/analysis.service';
+import { FileService } from '@file-manager/services/file-manager.service';
 
 @Component({
   selector: 'mev-heatmap',
@@ -28,6 +29,11 @@ export class HeatmapFormComponent implements OnInit {
   showResult = false;
   showLoading = false;
 
+  annFileSelected = false;
+
+  multipleChoiceDropdownSettings = {};
+  covarsChoiceField;
+
   acceptable_resource_types = [
     'MTX',
     'I_MTX',
@@ -42,14 +48,36 @@ export class HeatmapFormComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private metadataService: MetadataService,
-    private apiService: AnalysesService
-  ) { }
+    private apiService: AnalysesService,
+    private fileService: FileService
+  ) { 
+
+    this.multipleChoiceDropdownSettings = {
+      text: '',
+      selectAllText: 'Select All',
+      unSelectAllText: 'Unselect All',
+      classes: 'resource-dropdown',
+      tagToBody: false
+  };
+
+  }
 
   ngOnInit(): void {
+
+    this.covarsChoiceField = {
+      key: 'other_covars',
+      name: 'Covariates to show',
+      desc: 'Selected covariates will be displayed with the aligned heatmap data.',
+      options: [],
+      selectedOptions: []
+    };
+    const configCovarsChoiceField = [null, []];
+
     this.inputForm = this.formBuilder.group({
       'expMtx': ['', Validators.required],
       'featureSet': ['', Validators.required],
       'ann': [''],
+      'other_covars': configCovarsChoiceField
     })
     this.all_featuresets = this.metadataService.getCustomFeatureSets();
     this.apiService
@@ -71,6 +99,28 @@ export class HeatmapFormComponent implements OnInit {
         this.ann_files = data;
         this.isLoaded = true;
       });
+
+
+
+      this.inputForm.get('ann').valueChanges.subscribe(
+        (val) => {
+          this.annFileSelected = true;
+          
+          // if this is not reset, then any prior-selected value can persist.
+          this.inputForm.get('other_covars').setValue('');
+
+          this.fileService.getFilePreview(val).subscribe(
+              (data) => {
+                  const available_columns = Object.keys(data[0].values);
+                  let items = [];
+                  for(let c in available_columns){
+                      items.push({'id': c, 'name': available_columns[c]});
+                  }
+                  this.covarsChoiceField.options = items;
+              }
+          );
+        }
+      );
   }
 
   onSubmit() {
@@ -110,10 +160,15 @@ export class HeatmapFormComponent implements OnInit {
 
     const resourceId_ann = this.inputForm.value['ann'];
     if (this.inputForm.value['ann'] !== "") {
+
+      const cols = this.covarsChoiceField.selectedOptions.map(obj => obj.name);
       this.useAnnotation = true;
       this.apiService
         .getResourceContent(
           resourceId_ann,
+          0, //pageIndex
+          0, //pageSize
+          {'__colname__': '[in]:' + cols.join(',')} // filters
         )
         .subscribe(features => {
           this.PlotDataAnnotation = features;

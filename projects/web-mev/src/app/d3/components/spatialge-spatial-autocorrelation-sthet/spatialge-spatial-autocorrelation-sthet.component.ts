@@ -365,6 +365,14 @@ export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialge
         return obj && Object.keys(obj).length === 0;
     }
 
+    formatNumToSigFig(value: number): string {
+        const significantFigures: number = 5;
+        if (isNaN(value) || isNaN(significantFigures)) {
+            return value.toString();
+        }
+        return value.toPrecision(significantFigures);
+    }
+
     selectGene(gene) {
         this.geneSearch = gene;
         this.geneSelected = true;

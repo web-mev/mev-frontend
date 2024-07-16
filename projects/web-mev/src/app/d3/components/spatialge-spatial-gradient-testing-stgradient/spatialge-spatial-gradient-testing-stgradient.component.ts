@@ -196,7 +196,7 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
                 this.plotWidth = (this.xMax - this.xMin) / normalizePlot;
                 this.plotHeight = (this.yMax - this.yMin) / normalizePlot;
 
-                this.imageOverlayOffset = this.plotWidth - this.legendWidth
+                // this.imageOverlayOffset = this.plotWidth - this.legendWidth
 
                 if (this.originalPlotWidth === 0) {
                     this.originalPlotWidth = this.plotWidth;

@@ -18,7 +18,7 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
     limit = 0.1
 
     plotData = {};
-    plot_width_in_pixels = 300; //sets the width of the plot in pixels
+    plot_width_in_pixels = 400; //sets the width of the plot in pixels
     geneDict: any = {};
 
     pieChartColors: any = {};
@@ -40,8 +40,8 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
             this.createScatterplotSpotlight('minimap')
         })
 
-        this.hideMinimapImage = true; 
-        
+        this.hideMinimapImage = true;
+
         this.getData()
     }
 
@@ -53,107 +53,111 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
     }
 
     getData() {
+        this.displayOverlayContainer = true;
         this.showMiniMap = true;
+        this.geneSearchHeight = -100;
+        this.useCluster = false;
+        this.useNormalization = false;
         this.isLoading = true;
         this.scrollTo('topOfPage');
         this.resetAllVariables();
         this.resetSpotlightVariables();
 
-        // this.currentImageLeft = 182.5
-        // this.currentImageTop = 15
-        // this.currentLeft = 80 
-        // this.currentTop = 180
-        // this.heightAdjustment = -100
-        // this.widthAdjustment = -100
-
-        this.geneSearchHeight = -100;
         let deconvoluted_outputs_uuid = this.outputs["deconvoluted_output"];
         let coords_metadata_uuid = this.outputs["coords_metadata"];
+        let spotlightUrl = `${deconvoluted_outputs_uuid}/contents/`
 
-        const spotlightRequest = this.httpClient.get(`${this.API_URL}/resources/${deconvoluted_outputs_uuid}/contents/`).pipe(
+        const spotlightRequest = this.httpClient.get(`${this.API_URL}/resources/${spotlightUrl}`).pipe(
             catchError(error => {
                 this.isLoading = false;
-                this.notificationService.error(`Error ${error.status}: Error from normalized expression request.`);
-                console.log("some error message from norm: ", error)
+                this.notificationService.error(`Error ${error.status}: Error from spotlight request.`);
                 throw error;
             })
         );
 
-        const coordsMetadataRequest = this.httpClient.get(`${this.API_URL}/resources/${coords_metadata_uuid}/contents/`).pipe(
+
+        let coordMetaUrl = `${this.API_URL}/resources/${coords_metadata_uuid}/contents/`
+        const coordsMetadataRequest = this.httpClient.get(coordMetaUrl).pipe(
             catchError(error => {
                 this.isLoading = false;
                 this.notificationService.error(`Error ${error.status}: Error from coordinates metadata request.`);
-                console.log("some error from coord: ", error)
                 throw error;
             })
         );
 
-
         forkJoin([spotlightRequest, coordsMetadataRequest]).subscribe(([spotlightRes, coordsMetadataRes]) => {
             this.isLoading = false;
+            if (Array.isArray(spotlightRes) && spotlightRes.length > 0 && spotlightRes[0].hasOwnProperty('values')) {
 
-            for (let index in coordsMetadataRes) {
-                let gene = coordsMetadataRes[index]
-                let key = gene.rowname
-                let x = gene.values["pxl_y"]
-                let y = gene.values["pxl_x"]
-                this.xMin = Math.min(this.xMin, x)
-                this.xMax = Math.max(this.xMax, x)
-                this.yMin = Math.min(this.yMin, y)
-                this.yMax = Math.max(this.yMax, y)
+                for (let index in coordsMetadataRes) {
+                    let gene = coordsMetadataRes[index]
+                    let key = gene['rowname']
+                    let x = gene['values']["pxl_y"]
+                    let y = gene['values']["pxl_x"]
+                    this.xMin = Math.min(this.xMin, x)
+                    this.xMax = Math.max(this.xMax, x)
+                    this.yMin = Math.min(this.yMin, y)
+                    this.yMax = Math.max(this.yMax, y)
 
-                this.plotData[key] = {
-                    x,
-                    y
-                }
-
-                let normalizePlot = (this.xMax - this.xMin) / 500 // This will set the plot to a width of 500px
-                this.plotWidth = (this.xMax - this.xMin) / normalizePlot;
-                this.plotHeight = (this.yMax - this.yMin) / normalizePlot;
-            }
-            if (this.originalPlotWidth === 0) {
-                this.originalPlotWidth = this.plotWidth;
-                this.originalPlotHeight = this.plotHeight;
-            }
-
-            let selectionRectWidth = (this.plotWidth + this.widthAdjustment) / (4 * this.currentZoomVal);
-            let selectionRectHeight = (this.plotHeight + this.heightAdjustment) / (4 * this.currentZoomVal);
-
-            this.selectionRectStyle = {
-                top: `-${0}px`,
-                left: `-${0}px`,
-                width: `${selectionRectWidth}px`,
-                height: `${selectionRectHeight}px`,
-                border: '2px solid #1DA1F2',
-                position: 'absolute',
-            };
-
-            this.maxImageContainerWidthSidebySide = this.plotWidth * 2;
-
-            for (let index in spotlightRes) {
-                let gene = spotlightRes[index];
-                let geneName = gene.rowname;
-                for (const key in gene.values) {
-
-                    if (!this.pieChartColors[geneName]) {
-                        this.pieChartColors[geneName] = this.colorsArray[this.colorIndex]
-                        this.colorIndex++;
+                    this.plotData[key] = {
+                        x,
+                        y
                     }
 
-                    if (gene.values[key] > this.limit) {
-                        let temp = {
-                            [geneName]: gene.values[key]
-                        }
-                        let edittedKey = key.replace(".", "-");
-                        if (this.plotData[edittedKey]["pieData"] === undefined) {
-                            this.plotData[edittedKey]["pieData"] = []
-                        }
-                        this.plotData[edittedKey]["pieData"].push(temp)
-                    }
+                    let normalizePlot = (this.xMax - this.xMin) / this.plot_width_in_pixels // This will set the plot to a width of 300px
+                    this.plotWidth = (this.xMax - this.xMin) / normalizePlot;
+                    this.plotHeight = (this.yMax - this.yMin) / normalizePlot;
+                }
+                if (this.originalPlotWidth === 0) {
+                    this.originalPlotWidth = this.plotWidth;
+                    this.originalPlotHeight = this.plotHeight;
                 }
 
+                // let selectionRectWidth = (this.plotWidth + this.widthAdjustment) / (4 * this.currentZoomVal);
+                // let selectionRectHeight = (this.plotHeight + this.heightAdjustment) / (4 * this.currentZoomVal);
+
+                let selectionRectWidth = this.plotWidth / (4 * this.currentZoomVal);
+                let selectionRectHeight = this.plotHeight / (4 * this.currentZoomVal);
+
+                this.selectionRectStyle = {
+                    top: `-${0}px`,
+                    left: `-${0}px`,
+                    width: `${selectionRectWidth}px`,
+                    height: `${selectionRectHeight}px`,
+                    border: '2px solid #1DA1F2',
+                    position: 'absolute',
+                };
+
+                this.maxImageContainerWidthSidebySide = this.plotWidth * 2;
+
+                for (let index in spotlightRes) {
+                    let gene = spotlightRes[index];
+                    let geneName = gene.rowname;
+                    for (const key in gene.values) {
+
+                        if (!this.pieChartColors[geneName]) {
+                            this.pieChartColors[geneName] = this.colorsArray[this.colorIndex]
+                            this.colorIndex++;
+                        }
+
+                        if (gene.values[key] > this.limit) {
+                            let temp = {
+                                [geneName]: gene.values[key]
+                            }
+                            let edittedKey = key.replace(".", "-");
+                            if (this.plotData[edittedKey]["pieData"] === undefined) {
+                                this.plotData[edittedKey]["pieData"] = []
+                            }
+                            this.plotData[edittedKey]["pieData"].push(temp)
+                        }
+                    }
+
+                }
+                this.formatData()
             }
-            this.formatData()
+            else {
+                this.displayOverlayContainer = false;
+            }
         })
     }
 
@@ -198,36 +202,27 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
         for (let geneName in this.plotData) {
             this.scatterPlotData.push(this.plotData[geneName])
         }
-        this.createScatterplotSpotlight('normal')
-        this.createScatterplotSpotlight('minimap')
+        if (this.scatterPlotData.length > 0) {
+            this.displayOverlayContainer = true;
+            this.createScatterplotSpotlight('normal')
+            this.createScatterplotSpotlight('minimap')
+        } else {
+            this.displayOverlayContainer = false;
+        }
     }
 
     createScatterplotSpotlight(size: string): void {
-        let adjObj = {
-            current_left: 0,
-            current_top: 0,
-            current_image_left: this.currentImageLeft,
-            current_image_top: this.currentImageTop,
-            width_adjustment: this.widthAdjustment,
-            height_adjustment: this.heightAdjustment,
-            zoom_scale_factor: this.currentZoomVal,
-            legend_width: this.legendWidth,
-            plot_height: this.plotHeight,
-            plot_width: this.plotWidth,
-            size,
-
-
-        }
-
         this.displayPlot = true;
-        let scatterplotContainerId = size === 'normal' ? this.containerId : this.minimapContainerId;
-        const data = this.scatterPlotData
+        // var margin = { top: 0, right: 0, bottom: 0, left: size === 'normal' ? this.legendWidth : 0 },
+        //     width = size === 'normal' ? this.plotWidth - margin.left - margin.right + this.widthAdjustment + this.legendWidth : (this.plotWidth - margin.left - margin.right + this.widthAdjustment) / 4,
+        //     height = size === 'normal' ? this.plotHeight - margin.top - margin.bottom + this.heightAdjustment : (this.plotHeight - margin.top - margin.bottom + this.heightAdjustment) / 4;
 
         var margin = { top: 0, right: 0, bottom: 0, left: size === 'normal' ? this.legendWidth : 0 },
-            width = size === 'normal' ? this.plotWidth - margin.left - margin.right + this.widthAdjustment + this.legendWidth : (this.plotWidth - margin.left - margin.right + this.widthAdjustment) / 4,
-            height = size === 'normal' ? this.plotHeight - margin.top - margin.bottom + this.heightAdjustment : (this.plotHeight - margin.top - margin.bottom + this.heightAdjustment) / 4;
+            width = size === 'normal' ? this.plotWidth - margin.left - margin.right + this.legendWidth : (this.plotWidth - margin.left - margin.right) / 4,
+            height = size === 'normal' ? this.plotHeight - margin.top - margin.bottom : (this.plotHeight - margin.top - margin.bottom) / 4;
 
-
+        let scatterplotContainerId = size === 'normal' ? this.containerId : this.minimapContainerId;
+        const data = this.scatterPlotData
         d3.select(scatterplotContainerId)
             .selectAll('svg')
             .remove();
@@ -253,12 +248,19 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
 
         svg.call(pointTip);
 
-        const x = d3.scaleLinear()
-            .domain([this.xMin - (this.xMax - this.xMin) * this.scaleFactor, this.xMax + (this.xMax - this.xMin) * this.scaleFactor])
+        // const x = d3.scaleLinear()
+        //     .domain([this.xMin - (this.xMax - this.xMin) * this.scaleFactor, this.xMax + (this.xMax - this.xMin) * this.scaleFactor])
+        //     .range([0, width]);
+
+        // const y = d3.scaleLinear()
+        //     .domain([this.yMin - (this.yMax - this.yMin) * this.scaleFactor, this.yMax + (this.yMax - this.yMin) * this.scaleFactor])
+        //     .range([0, height]);
+        var x = d3.scaleLinear()
+            .domain([this.xMin, this.xMax])
             .range([0, width]);
 
-        const y = d3.scaleLinear()
-            .domain([this.yMin - (this.yMax - this.yMin) * this.scaleFactor, this.yMax + (this.yMax - this.yMin) * this.scaleFactor])
+        var y = d3.scaleLinear()
+            .domain([this.yMin, this.yMax])
             .range([0, height]);
 
         // Add pie charts for each data point

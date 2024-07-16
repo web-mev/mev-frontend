@@ -146,7 +146,7 @@ export class BaseSpatialgeComponent {
   hideMinimapImage = false;
 
   normalizePlotWidth = 400;
-  imageOverlayOffset = 220;
+  // imageOverlayOffset = 220;
 
   aspectRatio = 1;
   reloadImage = false;
@@ -294,7 +294,6 @@ export class BaseSpatialgeComponent {
       catchError(error => {
         this.isLoading = false;
         this.notificationService.error(`Error ${error.status}: Error from normalized expression request.`);
-        console.log("some error message from norm: ", error)
         throw error;
       })
     );
@@ -304,7 +303,6 @@ export class BaseSpatialgeComponent {
       catchError(error => {
         this.isLoading = false;
         this.notificationService.error(`Error ${error.status}: Error from coordinates metadata request.`);
-        console.log("some error from coord: ", error)
         throw error;
       })
     );
@@ -321,11 +319,11 @@ export class BaseSpatialgeComponent {
           };
         }
 
-        for (let i in coordsMetadataRes) {
-          let obj = coordsMetadataRes[i];
-          let key = obj['rowname'];
-          let xVal = obj['values'][this.xAxisValue];
-          let yVal = obj['values'][this.yAxisValue];
+        for (let index in coordsMetadataRes) {
+          let gene = coordsMetadataRes[index];
+          let key = gene['rowname'];
+          let xVal = gene['values'][this.xAxisValue];
+          let yVal = gene['values'][this.yAxisValue];
 
           this.dataDict[key] = {
             ...this.dataDict[key],
@@ -359,13 +357,12 @@ export class BaseSpatialgeComponent {
             this.totalCountsMin = Math.min(this.totalCountsMin, totalCounts)
           }
         }
-        // let normalizePlot = (this.xMax - this.xMin) > (this.yMax - this.yMin) ? (this.xMax - this.xMin) / this.normalizePlotWidth : (this.yMax - this.yMin) / this.normalizePlotWidth
 
         let normalizePlot = (this.xMax - this.xMin) / this.normalizePlotWidth // This will set the plot to a width of 300px
         this.plotWidth = (this.xMax - this.xMin) / normalizePlot;
         this.plotHeight = (this.yMax - this.yMin) / normalizePlot;
 
-        this.imageOverlayOffset = this.plotWidth - this.legendWidth
+        // this.imageOverlayOffset = this.plotWidth - this.legendWidth
 
         if (this.originalPlotWidth === 0) {
           this.originalPlotWidth = this.plotWidth;
@@ -489,7 +486,7 @@ export class BaseSpatialgeComponent {
         this.plotWidth = (this.xMax - this.xMin) / normalizePlot;
         this.plotHeight = (this.yMax - this.yMin) / normalizePlot;
 
-        this.imageOverlayOffset = this.plotWidth - this.legendWidth
+        // this.imageOverlayOffset = this.plotWidth - this.legendWidth
 
         if (this.originalPlotWidth === 0) {
           this.originalPlotWidth = this.plotWidth;
@@ -519,7 +516,7 @@ export class BaseSpatialgeComponent {
     });
   }
 
-  createScatterPlot(size) {
+  createScatterPlot(size: string) {
     this.displayPlot = true;
     var margin = { top: 0, right: 0, bottom: 0, left: size === 'normal' ? this.legendWidth : 0 },
       width = size === 'normal' ? this.plotWidth - margin.left - margin.right + this.legendWidth : (this.plotWidth - margin.left - margin.right) / 4,
@@ -542,7 +539,6 @@ export class BaseSpatialgeComponent {
       .append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
-      // .style("background", "pink")
       .append("g")
       .attr("transform",
         "translate(" + margin.left + "," + margin.top + ")");

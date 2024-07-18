@@ -319,12 +319,12 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
                 .append('g')
                 .classed('legend', true)
                 .attr('transform', function (d, i) {
-                    return `translate(${-(width + 130)}, ${i * 20 + 50})`;
+                    return `translate(${-(width + 130)}, ${i * 15 + 50})`;
                 });
 
             legend
                 .append('circle')
-                .attr('r', 4)
+                .attr('r', 3)
                 .attr('cx', width + 20)
                 .attr('fill', d => d.color);
 
@@ -333,7 +333,7 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
                 .attr('x', width + 30)
                 .attr('dy', '.35em')
                 .style('fill', '#000')
-                .style('font-size', '8px')
+                .style('font-size', '6px')
                 .attr('class', 'legend-label')
                 .text(d => d.label)
                 .call(this.wrap, this.legendWidth - 5);

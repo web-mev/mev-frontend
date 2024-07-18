@@ -289,11 +289,13 @@ export class BaseSpatialgeComponent {
     let normalization_uuid = this.outputs["normalized_expression"];
     let coords_metadata_uuid = this.outputs["coords_metadata"];
     let normUrl = `${this.API_URL}/resources/${normalization_uuid}/contents/?__rowname__=[eq]:${this.geneSearch}`;
+    console.log("outputs: ", this.outputs, normalization_uuid, normUrl)
 
     const normRequest = this.httpClient.get(normUrl).pipe(
       catchError(error => {
         this.isLoading = false;
         this.notificationService.error(`Error ${error.status}: Error from normalized expression request.`);
+        console.log("Error: ", error)
         throw error;
       })
     );
@@ -303,12 +305,14 @@ export class BaseSpatialgeComponent {
       catchError(error => {
         this.isLoading = false;
         this.notificationService.error(`Error ${error.status}: Error from coordinates metadata request.`);
+        console.log("Error: ", error)
         throw error;
       })
     );
 
     forkJoin([normRequest, coordsMetadataRequest]).subscribe(([normRes, coordsMetadataRes]) => {
       this.isLoading = false;
+      console.log("normRes: ", normRes, this.geneSearch)
       if (Array.isArray(normRes) && normRes.length > 0 && normRes[0].hasOwnProperty('values')) {
         for (let i in normRes[0]['values']) {
           let key = i;

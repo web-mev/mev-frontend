@@ -85,7 +85,7 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
     clusterColors: string[] = ["#EBCD00", "#52A52E", "#00979D", "#6578B4", "#80408D", "#C9006B", "#68666F", "#E80538", "#E87D1E"];
 
     normalizePlotWidth = 300;
-    imageOverlayOffset = 220;
+    // imageOverlayOffset = 220;
 
     observationSetsClusters = {}
 
@@ -561,7 +561,7 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
                 this.plotWidth = (this.xMax - this.xMin) / normalizePlot;
                 this.plotHeight = (this.yMax - this.yMin) / normalizePlot;
 
-                this.imageOverlayOffset = this.plotWidth - this.legendWidth
+                // this.imageOverlayOffset = this.plotWidth - this.legendWidth
 
                 for (let geneName in this.dataDict) {
                     const parsedX = parseInt(this.dataDict[geneName]['xVal'])

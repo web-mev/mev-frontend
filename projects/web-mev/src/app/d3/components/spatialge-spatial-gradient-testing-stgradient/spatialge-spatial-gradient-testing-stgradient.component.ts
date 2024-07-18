@@ -114,7 +114,6 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
 
         this.scrollTo('topOfPage');
         this.resetAllVariables();
-        // let mouseKidney_genesearch = 'ENSMUSG00000025903'
 
         let normalization_uuid = this.selectedStNormalizedFile['outputs']["normalized_expression"];
         let coords_metadata_uuid = this.selectedStNormalizedFile['inputs']["coords_metadata"];

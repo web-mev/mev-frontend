@@ -272,12 +272,10 @@ export class BaseSpatialgeComponent {
     })
   }
 
-  // normalization_uuid = '';
-  // coords_metadata_uuid = '';
   getDataNormalization() {
     this.displayOverlayContainer = true;
     this.showMiniMap = true;
-    this.geneSearch = this.geneSearchVal.split('').map(letter => letter.toUpperCase()).join('');
+    this.geneSearch = (this.geneSearchVal.slice(0, 3).toLowerCase() === 'ens') ? this.geneSearchVal.toUpperCase() : this.geneSearchVal;
     this.geneSearchHeight = 100;
     this.useNormalization = true;
     this.useCluster = false;
@@ -289,7 +287,6 @@ export class BaseSpatialgeComponent {
     let normalization_uuid = this.outputs["normalized_expression"];
     let coords_metadata_uuid = this.outputs["coords_metadata"];
     let normUrl = `${this.API_URL}/resources/${normalization_uuid}/contents/?__rowname__=[eq]:${this.geneSearch}`;
-    console.log("outputs: ", this.outputs, normalization_uuid, normUrl)
 
     const normRequest = this.httpClient.get(normUrl).pipe(
       catchError(error => {
@@ -312,7 +309,6 @@ export class BaseSpatialgeComponent {
 
     forkJoin([normRequest, coordsMetadataRequest]).subscribe(([normRes, coordsMetadataRes]) => {
       this.isLoading = false;
-      console.log("normRes: ", normRes, this.geneSearch)
       if (Array.isArray(normRes) && normRes.length > 0 && normRes[0].hasOwnProperty('values')) {
         for (let i in normRes[0]['values']) {
           let key = i;

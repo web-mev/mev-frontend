@@ -40,7 +40,11 @@ export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialge
     // displayPlotSTHet = false
     axisSubmitted = false;
 
+    rawCountsForOutput = ''
+
     ngOnInit() {
+        console.log("outputs: ", this.outputs)
+        this.rawCountsForOutput = this.outputs['raw_counts']
         this.dataSource = new FeaturesDataSource(this.analysesService);
         this.panelOpenState = true;
         this.initializeFeatureResource();
@@ -70,7 +74,9 @@ export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialge
         this.workspaceId = this.route.snapshot.paramMap.get('workspaceId');
         this.apiService.getExecOperations(this.workspaceId).subscribe(res => {
             for (let file of res) {
-                if (file['operation']['operation_name'] === 'spatialGE normalization') {
+                let rawCountsForNormFile = file['inputs']['raw_counts']
+                let jobFailed = file['job_failed']
+                if (file['operation']['operation_name'] === 'spatialGE normalization' && rawCountsForNormFile === this.rawCountsForOutput && !jobFailed) {
                     this.stNormalizeFile.push(file)
                 }
             }
@@ -107,19 +113,10 @@ export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialge
     }
 
     getDataNormalizationSthet() {
-        // this.displayOverlayContainer = true;
-        // this.showMiniMap = true;
-        // this.geneSearch = this.geneSearchVal.split('').map(letter => letter.toUpperCase()).join('');
-        // this.geneSearchHeight = 100;
-        // this.useNormalization = true;
-        // this.useCluster = false;
         this.isLoading = true;
-        // this.panelOpenState = false;
         this.scrollTo('topOfPage');
         this.resetAllVariables();
 
-        // let normalization_uuid = this.outputs["normalized_expression"];
-        // let coords_metadata_uuid = this.outputs["coords_metadata"];
         let normalization_uuid = this.selectedStNormalizedFile['outputs']["normalized_expression"];
         let coords_metadata_uuid = this.selectedStNormalizedFile['inputs']["coords_metadata"];
         let normUrl = `${this.API_URL}/resources/${normalization_uuid}/contents/?__rowname__=[eq]:${this.geneSearch}`;

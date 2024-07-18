@@ -44,14 +44,16 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
     // displayPlotSTGrad = false;
     axisSubmitted = false;
 
+    rawCountsForOutput = ''
+
     ngOnInit() {
+        console.log("outputs: ", this.outputs)
+        this.rawCountsForOutput = this.outputs['raw_counts']
         this.dataSource = new FeaturesDataSource(this.analysesService);
         this.panelOpenState = true;
         this.initializeFeatureResource();
         this.getListNormalizeFiles();
-        console.log("outputs: ", this.outputs)
         this.displayedColumns = this.outputs.distance_summary === "Minimum" ? this.displayedColumnsMin : this.displayedColumnsAvg;
-
     }
 
     initializeFeatureResource(): void {
@@ -63,7 +65,6 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
             this.defaultPageIndex,
             this.defaultPageSize
         );
-        console.log("datasource gradient: ", this.dataSource)
 
     }
 
@@ -71,11 +72,15 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
         this.workspaceId = this.route.snapshot.paramMap.get('workspaceId');
         this.apiService.getExecOperations(this.workspaceId).subscribe(res => {
             for (let file of res) {
-                if (file['operation']['operation_name'] === 'spatialGE normalization') {
+                let rawCountsForNormFile = file['inputs']['raw_counts']
+                let jobFailed = file['job_failed']
+                if (file['operation']['operation_name'] === 'spatialGE normalization' && rawCountsForNormFile === this.rawCountsForOutput && !jobFailed) {
                     this.stNormalizeFile.push(file)
                 }
             }
         })
+
+        console.log("norm files: ", this.stNormalizeFile)
     }
 
     loadFeaturesPage() {
@@ -109,7 +114,7 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
         })
     }
 
-    getDataNormalizationSthet() {
+    getDataNormalizationGradient() {
         this.isLoading = true;
 
         this.scrollTo('topOfPage');
@@ -118,8 +123,6 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
         let normalization_uuid = this.selectedStNormalizedFile['outputs']["normalized_expression"];
         let coords_metadata_uuid = this.selectedStNormalizedFile['inputs']["coords_metadata"];
         let normUrl = `${this.API_URL}/resources/${normalization_uuid}/contents/?__rowname__=[eq]:${this.geneSearch}`;
-
-        console.log("getdatanorm: ", normUrl, this.selectedStNormalizedFile)
 
         const normRequest = this.httpClient.get(normUrl).pipe(
             catchError(error => {
@@ -141,7 +144,6 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
         );
 
         forkJoin([normRequest, coordsMetadataRequest]).subscribe(([normRes, coordsMetadataRes]) => {
-            console.log("norm: ", normRes, coordsMetadataRes)
             this.isLoading = false;
             if (Array.isArray(normRes) && normRes.length > 0 && normRes[0].hasOwnProperty('values')) {
                 for (let i in normRes[0]['values']) {
@@ -195,42 +197,21 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
                 this.plotWidth = (this.xMax - this.xMin) / normalizePlot;
                 this.plotHeight = (this.yMax - this.yMin) / normalizePlot;
 
-                // this.imageOverlayOffset = this.plotWidth - this.legendWidth
-
                 if (this.originalPlotWidth === 0) {
                     this.originalPlotWidth = this.plotWidth;
                     this.originalPlotHeight = this.plotHeight;
                 }
 
-                // let selectionRectWidth = this.plotWidth / (4 * this.currentZoomVal);
-                // let selectionRectHeight = this.plotHeight / (4 * this.currentZoomVal);
-
-                // this.selectionRectStyle = {
-                //     top: `-${0}px`,
-                //     left: `-${0}px`,
-                //     width: `${selectionRectWidth}px`,
-                //     height: `${selectionRectHeight}px`,
-                //     border: '2px solid #1DA1F2',
-                //     position: 'absolute',
-                // };
-
-                console.log("this.scatterplotdata: ", this.scatterPlotData)
 
                 if (this.scatterPlotData.length > 0) {
-                    // this.displayPlotSTGrad = true;
                     this.createScatterPlotSthet();
                 }
 
             }
-
-            // else {
-            //     // this.displayPlotSTGrad = false;
-            // }
         });
     }
 
     createScatterPlotSthet() {
-        // this.displayPlotSTGrad = true;
         var margin = { top: 0, right: 0, bottom: 0, left: this.legendWidth },
             width = this.plotWidth - margin.left - margin.right + this.legendWidth,
             height = this.plotHeight - margin.top - margin.bottom;
@@ -285,7 +266,6 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
                 d3.select(this).style('cursor', 'pointer');
                 pointTip.show(mouseEvent, d, this);
                 pointTip.style('left', mouseEvent.x + 10 + 'px');
-                console.log("d: ", d)
             })
             .on('mouseout', function () {
                 d3.select(this).style('cursor', 'default');  // Revert cursor to default on mouseout
@@ -381,7 +361,7 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
 
         if (this.xAxisValue !== '' && this.yAxisValue !== '') {
 
-            this.getDataNormalizationSthet()
+            this.getDataNormalizationGradient()
         } else {
             this.getAxisColumnNamesSthet();
         }
@@ -390,7 +370,7 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
     submitAxisValues() {
         this.panelOpenState = false;
         this.axisSubmitted = true;
-        this.getDataNormalizationSthet()
+        this.getDataNormalizationGradient()
     }
 
     onSelectSTNormalizeFile() {

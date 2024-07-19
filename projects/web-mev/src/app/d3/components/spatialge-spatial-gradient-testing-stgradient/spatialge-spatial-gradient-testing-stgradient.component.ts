@@ -47,7 +47,6 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
     rawCountsForOutput = ''
 
     ngOnInit() {
-        console.log("outputs: ", this.outputs)
         this.rawCountsForOutput = this.outputs['raw_counts']
         this.dataSource = new FeaturesDataSource(this.analysesService);
         this.panelOpenState = true;
@@ -79,8 +78,6 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
                 }
             }
         })
-
-        console.log("norm files: ", this.stNormalizeFile)
     }
 
     loadFeaturesPage() {

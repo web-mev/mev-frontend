@@ -300,7 +300,7 @@ export class PandaComponent implements AfterViewInit {
     }
 
     addSearchItem(event: MatChipInputEvent): void {
-        const value = (event.value || '').trim().toUpperCase();
+        const value = (event.value || '').trim();
         let index = this.searchTerms.indexOf(value);
         if (index !== -1) {
             this.notificationService.warn(`Error: "${value}" has already been added to the search query.`);

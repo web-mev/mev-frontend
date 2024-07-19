@@ -128,7 +128,6 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
             this.analysesForm.value['raw_counts'] = this.input_counts_uuid
             this.analysesForm.value['barcodes'] = this.selectedObsClusterField
         }
-        console.log("onform valid: ", this.analysesForm)
         this.formValid.emit(this.analysesForm.valid);
     }
 

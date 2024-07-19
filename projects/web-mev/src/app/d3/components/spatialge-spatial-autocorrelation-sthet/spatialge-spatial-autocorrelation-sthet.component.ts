@@ -43,7 +43,6 @@ export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialge
     rawCountsForOutput = ''
 
     ngOnInit() {
-        console.log("outputs: ", this.outputs)
         this.rawCountsForOutput = this.outputs['raw_counts']
         this.dataSource = new FeaturesDataSource(this.analysesService);
         this.panelOpenState = true;

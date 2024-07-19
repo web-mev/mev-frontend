@@ -104,13 +104,11 @@ export class OperationComponent implements OnChanges {
     
     let inputs = this.opInput.getInputData();
     inputs = this.convertToFloatObj(inputs);
-    console.log("inputs startAnalysis: ", inputs, this.operation.id, this.workspaceId)
 
 
     this.apiService
       .executeOperation(this.operation.id, this.workspaceId, inputs)
       .subscribe(data => {
-        console.log("start analysis data: ", data)
         this.executedOperationId.emit(data.executed_operation_id);
       },
         error => {
@@ -119,7 +117,7 @@ export class OperationComponent implements OnChanges {
 
           // This lets us tie the particular error to a "human-readable" input field.
           // Otherwise the error text would be a bit cryptic for the end user.
-          console.log("error2: ", error)
+          console.log("error: ", error)
           let op_inputs = this.operation.inputs;
           let err_obj = error.error;
           let input_errors = err_obj.inputs;

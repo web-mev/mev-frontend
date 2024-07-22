@@ -259,7 +259,7 @@ export class BaseSpatialgeComponent {
     this.httpClient.get(`${this.API_URL}/resources/${coords_metadata_uuid}/contents/?page=1&page_size=1`).pipe(
       catchError(error => {
         this.isLoading = false;
-        this.notificationService.error(`Error ${error.status}: Error from coordinates metadata request.`);
+        this.notificationService.error(`Error ${error.status}: ${error.error.error}`);
         console.log("some error from coord: ", error)
         throw error;
       })
@@ -286,12 +286,12 @@ export class BaseSpatialgeComponent {
 
     let normalization_uuid = this.outputs["normalized_expression"];
     let coords_metadata_uuid = this.outputs["coords_metadata"];
-    let normUrl = `${this.API_URL}/resources/${normalization_uuid}/contents/?__rowname__=[eq]:${this.geneSearch}`;
+    let normUrl = `${this.API_URL}/resources/${normalization_uuid}/contents/?__rowname__=[case-ins-eq]:${this.geneSearch}`;
 
     const normRequest = this.httpClient.get(normUrl).pipe(
       catchError(error => {
         this.isLoading = false;
-        this.notificationService.error(`Error ${error.status}: Error from normalized expression request.`);
+        this.notificationService.error(`Error ${error.status}: ${error.error.error}`);
         console.log("Error: ", error)
         throw error;
       })
@@ -301,7 +301,7 @@ export class BaseSpatialgeComponent {
     const coordsMetadataRequest = this.httpClient.get(coordMetaUrl).pipe(
       catchError(error => {
         this.isLoading = false;
-        this.notificationService.error(`Error ${error.status}: Error from coordinates metadata request.`);
+        this.notificationService.error(`Error ${error.status}: ${error.error.error}`);
         console.log("Error: ", error)
         throw error;
       })
@@ -408,7 +408,7 @@ export class BaseSpatialgeComponent {
     const clusterRequest = this.httpClient.get(`${this.API_URL}/resources/${clusters_uuid}/contents/`).pipe(
       catchError(error => {
         this.isLoading = false;
-        this.notificationService.error(`Error ${error.status}: Error from normalized expression request.`);
+        this.notificationService.error(`Error ${error.status}: ${error.error.error}`);
         throw error;
       })
     );
@@ -416,7 +416,7 @@ export class BaseSpatialgeComponent {
     const coordsMetadataRequest = this.httpClient.get(`${this.API_URL}/resources/${coords_metadata_uuid}/contents/`).pipe(
       catchError(error => {
         this.isLoading = false;
-        this.notificationService.error(`Error ${error.status}: Error from coordinates metadata request.`);
+        this.notificationService.error(`Error ${error.status}: ${error.error.error}`);
         throw error;
       })
     );

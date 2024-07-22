@@ -386,7 +386,7 @@
                     [style.margin-left.px]="overlayImage ? (currentZoomVal === 1 ? -originalPlotWidth : -originalPlotWidth): 20"
                     [style.height.px]="!droppedFile ? originalPlotHeight - 100: originalPlotHeight"
                     [style.width.px]="!overlayImage && !droppedFile ? normalizePlotWidth - 200 : originalPlotWidth"
-                    (click)="fileInput.click()" class="imageContainer" [style.opacity]="imageOpacityValue">
+                    (click)="!droppedFile && currentZoomVal === 1 ? fileInput.click(): '' " class="imageContainer" [style.opacity]="imageOpacityValue">
                     <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;">
                     <div *ngIf="!droppedFile && currentZoomVal == 1" class="drop-message">
                         <p>Drop image file here or click to upload</p>

@@ -19,4 +19,6 @@ export class SpatialGENormalizationComponent extends BaseSpatialgeComponent impl
         this.analysisType = 'normalization'
         this.getAxisColumnNames()
     }
+
+    
 }

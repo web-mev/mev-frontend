@@ -8,18 +8,7 @@
     </mat-card-header>
 
     <div *ngIf="useNormalization" class="searchContainer">
-        <label id="radio-group-axis">Gene Search: </label>
-        <div class="inputContainer">
-            <mat-form-field class="example-form-field" appearance="outline">
-                <mat-label>Gene Search</mat-label>
-                <input matInput type="search" name="search" [(ngModel)]="geneSearchVal" class="smallerInput">
-                <button *ngIf="geneSearchVal" matSuffix mat-icon-button aria-label="Clear" (click)="geneSearchVal = ''">
-                    <mat-icon>close</mat-icon>
-                </button>
-            </mat-form-field>
-            <button *ngIf="!panelOpenState" mat-flat-button color="primary" class="searchButton"
-                [disabled]="geneSearchVal === ''" (click)="getDataNormalization()">Submit</button>
-        </div>
+        <mev-gene-search-input-field (searchSubmit)="onSubmitFromGeneSearch($event)" [initialGeneVal]="geneSearchVal"></mev-gene-search-input-field>
     </div>
 
     <mat-expansion-panel #accordion [(expanded)]="panelOpenState">
@@ -86,7 +75,8 @@
                     [style.margin-left.px]="overlayImage ? (currentZoomVal === 1 ? -originalPlotWidth : -originalPlotWidth): 20"
                     [style.height.px]="!droppedFile ? originalPlotHeight - 100: originalPlotHeight"
                     [style.width.px]="!overlayImage && !droppedFile ? normalizePlotWidth - 200 : originalPlotWidth"
-                    (click)="!droppedFile && currentZoomVal === 1 ? fileInput.click(): '' " class="imageContainer" [style.opacity]="imageOpacityValue">
+                    (click)="!droppedFile && currentZoomVal === 1 ? fileInput.click(): '' " class="imageContainer"
+                    [style.opacity]="imageOpacityValue">
                     <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;">
                     <div *ngIf="!droppedFile && currentZoomVal === 1" class="drop-message">
                         <p>Drop image file here or click to upload</p>
@@ -135,7 +125,8 @@
                             [class]="currentZoomVal != 1 || droppedFile ? 'minimapPlotContainer' : 'hiddenDiv minimapPlotContainer'"
                             [style.opacity]="displayPlot ? plotOpacityValue : 0" [style.top.px]="0">
                         </div>
-                        <div [ngStyle]="selectionRectStyle" [style.opacity]="displayPlot ? 1 : 0" class="miniboxDiv"></div>
+                        <div [ngStyle]="selectionRectStyle" [style.opacity]="displayPlot ? 1 : 0" class="miniboxDiv">
+                        </div>
                     </div>
                 </div>
             </div>

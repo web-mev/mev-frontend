@@ -60,7 +60,8 @@ import { SpatialGEClustersComponent } from './components/spatialge-clusters/spat
 import { SpatialGEPathwayEnrichmentComponent } from './components/spatialge-pathway-enrichment/spatialge-pathway-enrichment.component';
 import { SpotlightComponent } from './components/spotlight/spotlight.component';
 import { SpatialGESpatialAutocorrelationSthetComponent } from './components/spatialge-spatial-autocorrelation-sthet/spatialge-spatial-autocorrelation-sthet.component';
-import { SpatialGESpatialGradientComponent } from './components/spatialge-spatial-gradient-testing-stgradient/spatialge-spatial-gradient-testing-stgradient.component'
+import { SpatialGESpatialGradientComponent } from './components/spatialge-spatial-gradient-testing-stgradient/spatialge-spatial-gradient-testing-stgradient.component';
+import { GeneSearchInputFieldComponent } from './components/gene-search-input-field/gene-search-input-field.component'
 
 @NgModule({
   declarations: [
@@ -122,6 +123,7 @@ import { SpatialGESpatialGradientComponent } from './components/spatialge-spatia
     SpotlightComponent,
     SpatialGESpatialAutocorrelationSthetComponent,
     SpatialGESpatialGradientComponent,
+    GeneSearchInputFieldComponent
   ],
   imports: [CommonModule, SharedModule, DragDropModule, MatBadgeModule],
   exports: [
@@ -172,7 +174,8 @@ import { SpatialGESpatialGradientComponent } from './components/spatialge-spatia
     SpatialGEPathwayEnrichmentComponent,
     SpotlightComponent,
     SpatialGESpatialAutocorrelationSthetComponent,
-    SpatialGESpatialGradientComponent
+    SpatialGESpatialGradientComponent,
+    GeneSearchInputFieldComponent
   ]
 })
 export class D3Module { }

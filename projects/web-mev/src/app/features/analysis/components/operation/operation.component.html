@@ -38,6 +38,11 @@
         (formValid)="alterFormStatus($event)"></stgradient-input>
     </div>
 
+    <div *ngIf="operationData.name === 'spatialGE Spatial Autocorrelation (SThet)'">
+      <stheit-input [operationData]="operationData" [workspaceId]="workspaceId"
+        (formValid)="alterFormStatus($event)"></stheit-input>
+    </div>
+
   </div>
 
   <ng-template #defaultBlock>

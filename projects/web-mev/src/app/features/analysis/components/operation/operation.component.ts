@@ -50,7 +50,8 @@ export class OperationComponent implements OnChanges {
     'MAST Single-cell differential expression', 
     'ComBat-seq',  
     'SNF (Similarity Network Fusion)',
-    'spatialGE Spatial Gradient Testing (STgradient)'
+    'spatialGE Spatial Gradient Testing (STgradient)',
+    'spatialGE Spatial Autocorrelation (SThet)'
   ];
 
   constructor(

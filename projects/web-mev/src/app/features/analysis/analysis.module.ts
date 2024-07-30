@@ -22,6 +22,7 @@ import { SCTKMastInputComponent } from './components/sctk-mast-input/sctk-mast-i
 import { CombatseqInputComponent } from './components/combatseq-input/combatseq-input.component';
 import { SnfInputComponent } from './components/snf-input/snf-input.component';
 import { StgradientInputComponent } from './components/stgradient-input/stgradient-input.component';
+import { StheitInputComponent } from './components/stheit-input/stheit-input.component'
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { StgradientInputComponent } from './components/stgradient-input/stgradie
     SCTKMastInputComponent,
     CombatseqInputComponent,
     SnfInputComponent,
-    StgradientInputComponent
+    StgradientInputComponent,
+    StheitInputComponent,
   ],
   exports: [
     OperationComponent,

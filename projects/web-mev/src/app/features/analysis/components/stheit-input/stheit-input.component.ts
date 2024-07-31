@@ -27,40 +27,25 @@ export class StheitInputComponent extends BaseOperationInput implements OnChange
     @Output() formValid: EventEmitter<any> = new EventEmitter<any>();
     private readonly API_URL = environment.apiUrl;
 
-    availableObsSets;
     availableFeatureSets;
     sampleNameField;
-    obsSetField;
-    stClustResultsField;
     rawCountsField;
     coordMetadataField;
     normalizationMethodField;
-    normalizationMethodField2;
-    distanceSummaryField;
-    numGenesField;
     statMethodField;
     featuresField;
     xPosField;
-    yPosField
-    clustering_job_id = '';
+    yPosField;
 
-    stclust_retrieved = false;
     files_retrieved = false;
-    stclust_results = [];
     raw_count_files = [];
     ann_files = [];
 
-    outputs_file_uuid;
-    input_counts_uuid = '';
-    input_metadata_uuid = '';
-    normalization_method = '';
-
     curr_coords_metadata_uuid = ''
 
-
-    selectedObsClusterField = {};
-
-    observationSetsClusters = {}
+    isLoading = false;
+    xAxisValueList: string[] = [];
+    yAxisValueList: string[] = [];
 
     constructor(
         private apiService: AnalysesService,
@@ -71,15 +56,6 @@ export class StheitInputComponent extends BaseOperationInput implements OnChange
     ) {
         super();
 
-        // get and 'cache' the available observation sets
-        this.availableObsSets = this.metadataService.getCustomObservationSets().map(set => {
-            const newSet = set.elements.map(elem => {
-                const o = { id: elem.id };
-                return o;
-            });
-            return { ...set, elements: newSet };
-        });
-
         this.availableFeatureSets = this.metadataService.getCustomFeatureSets().map(set => {
             const newSet = set.elements.map(elem => {
                 const o = { id: elem.id };
@@ -87,17 +63,12 @@ export class StheitInputComponent extends BaseOperationInput implements OnChange
             });
             return { ...set, elements: newSet };
         });
-        console.log("avail fs: ", this.availableFeatureSets)
     }
 
     ngOnChanges(): void {
         if (this.operationData) {
-            console.log("operation data from stheit:  ", this.operationData)
             this.createForm();
             this.analysesForm.statusChanges.subscribe(() => this.onFormValid());
-        }
-        if (this.workspaceId && !this.stclust_retrieved) {
-            this.queryForSTclustResults();
         }
         if (this.workspaceId && this.operationData && !this.files_retrieved) {
             this.getPotentialInputFiles();
@@ -165,7 +136,6 @@ export class StheitInputComponent extends BaseOperationInput implements OnChange
 
         const configRawCountsField = [
             '',
-            // []
             [...(input.required ? [Validators.required] : [])]
         ];
         controlsConfig[key] = configRawCountsField;
@@ -184,7 +154,6 @@ export class StheitInputComponent extends BaseOperationInput implements OnChange
 
         const configCoordMetaField = [
             '',
-            // []
             [...(input.required ? [Validators.required] : [])]
         ];
         controlsConfig[key] = configCoordMetaField;
@@ -200,7 +169,6 @@ export class StheitInputComponent extends BaseOperationInput implements OnChange
         };
         const configNormalizationMethodChoiceField = [
             '',
-            // [Validators.required, Validators.minLength(1)]
             [...(input.required ? [Validators.required] : [])]
         ];
         controlsConfig[key] = configNormalizationMethodChoiceField;
@@ -211,11 +179,11 @@ export class StheitInputComponent extends BaseOperationInput implements OnChange
             key: key,
             name: input.name,
             desc: input.description,
+            required: input.required,
             options: input.spec.options
         };
         const configStatMethodField = [
             '',
-            // [Validators.required, Validators.minLength(1)]
             [...(input.required ? [Validators.required] : [])]
         ];
         controlsConfig[key] = configStatMethodField;
@@ -234,10 +202,6 @@ export class StheitInputComponent extends BaseOperationInput implements OnChange
             [...(input.required ? [Validators.required] : [])]
         ];
 
-        // const configFeatureSetsField = [
-        //     '',
-        //     []
-        // ];
         controlsConfig[key] = configFeatureSetsField;
 
         key = 'xpos_col';
@@ -247,12 +211,10 @@ export class StheitInputComponent extends BaseOperationInput implements OnChange
             name: input.name,
             desc: input.description,
             required: input.required,
-            options: input.spec.options,
-            files: this.availableFeatureSets
+            // options: input.spec.options
         };
         const configXPosField = [
             '',
-            // [Validators.required, Validators.minLength(1)]
             [...(input.required ? [Validators.required] : [])]
         ];
         controlsConfig[key] = configXPosField;
@@ -262,13 +224,11 @@ export class StheitInputComponent extends BaseOperationInput implements OnChange
         this.yPosField = {
             key: key,
             name: input.name,
-            required: input.required,
             desc: input.description,
-            files: this.availableFeatureSets
+            required: input.required,
         };
         const configYPosField = [
             '',
-            // [Validators.required, Validators.minLength(1)]
             [...(input.required ? [Validators.required] : [])]
         ];
         controlsConfig[key] = configYPosField;
@@ -296,34 +256,6 @@ export class StheitInputComponent extends BaseOperationInput implements OnChange
         this.submitted = true;
     }
 
-    /**
-     * Triggered when the toggle is chosen to select between using an observation 
-     * set and using prior STClust results.
-     */
-    clusterOptionChange() {
-        // this.reference_cluster_selection = this.analysesForm.value.reference_cluster_selection;
-        this.analysesForm = null
-        this.createForm();
-        this.analysesForm.statusChanges.subscribe(() => this.onFormValid());
-    }
-
-    /**
-     * Grabs all successful STClust runs in the current workspace
-     */
-    queryForSTclustResults() {
-        this.apiService
-            .getExecOperations(
-                this.workspaceId
-            )
-            .subscribe(data => {
-                this.stclust_results = data.filter(
-                    (exec_op) => (exec_op.operation.operation_name === 'spatialGE clustering')
-                        && (!exec_op.job_failed)
-                );
-                this.stclust_retrieved = true;
-            });
-    }
-
     getPotentialInputFiles() {
         let raw_counts_input = this.operationData.inputs['raw_counts'];
         let coords_metadata_input = this.operationData.inputs['coords_metadata'];
@@ -343,319 +275,11 @@ export class StheitInputComponent extends BaseOperationInput implements OnChange
                     }
                 }
                 this.files_retrieved = true;
-                console.log("ann files: ", this.ann_files)
             });
     }
-
-    // onClusterTypeSelection() {
-    //     let val = this.analysesForm.value['stclust_results'];
-    //     // TODO: use the UUID here to get the results for plotting.
-    //     this.outputs_file_uuid = val.outputs.clustered_positions;
-    //     this.input_counts_uuid = val.inputs.raw_counts;
-    //     this.input_metadata_uuid = val.inputs.coords_metadata;
-    //     this.normalization_method = val.inputs.normalization_method;
-    //     this.clustering_job_id = val.id;
-
-    //     this.analysesForm.value['coords_metadata'] = this.input_metadata_uuid
-    //     this.analysesForm.value['normalization_method'] = this.normalization_method
-    //     this.analysesForm.value['raw_counts'] = this.input_counts_uuid
-
-    //     this.getAxisColumnNamesGradient();
-    //     // this.resetAllVariables();
-    // }
-
-    isLoading = false;
-    xAxisValue: string = '';
-    yAxisValue: string = ''
-    xAxisValueList: string[] = [];
-    yAxisValueList: string[] = [];
-
-    clusterList = [];
-    clusterValue = '';
-
-    // getAxisColumnNamesGradient() {
-    //     this.isLoading = true;
-    //     this.httpClient.get(`${this.API_URL}/resources/${this.input_metadata_uuid}/contents/?page=1&page_size=1`).pipe(
-    //         catchError(error => {
-    //             this.isLoading = false;
-    //             this.notificationService.error(`Error ${error.status}: Error from coordinates metadata request.`);
-    //             console.log("some error from coord: ", error)
-    //             throw error;
-    //         })
-    //     ).subscribe(res => {
-    //         this.isLoading = false;
-    //         let jsonObj = res['results'][0]['values']
-    //         const keys = Object.keys(jsonObj);
-    //         this.xAxisValueList = keys;
-    //         this.yAxisValueList = keys;
-    //     })
-    // }
-
-
 
     scrollTo(htmlID) {
         const element = document.getElementById(htmlID) as HTMLElement;
         element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
-    }
-
-    // resetAllVariables() {
-    //     this.scatterPlotDataCluster = [];
-    //     this.xMin = 100000000
-    //     this.xMax = 0
-    //     this.yMin = 100000000
-    //     this.yMax = 0
-    //     this.totalCountsMax = 0;
-    //     this.totalCountsMin = 100000000;
-
-    //     this.dataDict = {}
-    //     this.plotWidth = 300;
-    //     this.plotHeight = 500;
-    //     this.originalPlotWidth = 0;
-    //     this.originalPlotHeight = 0;
-
-    //     this.legendWidth = 120;
-
-    // }
-
-    // getDataClusters() {
-    //     this.isLoading = true;
-    //     this.scrollTo('topOfPage');
-    //     let clusters_uuid = this.outputs_file_uuid
-    //     let coords_metadata_uuid = this.input_metadata_uuid
-
-    //     const clusterRequest = this.httpClient.get(`${this.API_URL}/resources/${clusters_uuid}/contents/`).pipe(
-    //         catchError(error => {
-    //             this.isLoading = false;
-    //             this.notificationService.error(`Error ${error.status}: Error from normalized expression request.`);
-    //             throw error;
-    //         })
-    //     );
-
-    //     const coordsMetadataRequest = this.httpClient.get(`${this.API_URL}/resources/${coords_metadata_uuid}/contents/`).pipe(
-    //         catchError(error => {
-    //             this.isLoading = false;
-    //             this.notificationService.error(`Error ${error.status}: Error from coordinates metadata request.`);
-    //             throw error;
-    //         })
-    //     );
-
-    //     forkJoin([clusterRequest, coordsMetadataRequest]).subscribe(([clusterRes, coordsMetadataRes]) => {
-    //         this.isLoading = false;
-    //         if (Array.isArray(clusterRes) && clusterRes.length > 0 && clusterRes[0].hasOwnProperty('rowname') && clusterRes[0].hasOwnProperty('values')) {
-    //             for (let index in clusterRes) {
-    //                 let key = clusterRes[index]['rowname']
-    //                 let clusterid = clusterRes[index]['values']['clusterid']
-    //                 this.dataDict[key] = {
-    //                     ...this.dataDict[key],
-    //                     clusterid
-    //                 };
-    //             }
-
-    //             for (let i in coordsMetadataRes) {
-    //                 let obj = coordsMetadataRes[i];
-    //                 let key = obj['rowname'];
-    //                 let xVal = obj['values'][this.xAxisValue]
-    //                 let yVal = obj['values'][this.yAxisValue]
-    //                 this.dataDict[key] = {
-    //                     ...this.dataDict[key],
-    //                     xVal,
-    //                     yVal
-    //                 };
-
-    //             }
-
-    //             let colorLabels = {};
-
-    //             for (let i in this.dataDict) {
-    //                 const parsedX = parseInt(this.dataDict[i]['xVal'])
-    //                 const parsedY = parseInt(this.dataDict[i]['yVal'])
-    //                 const clusterid = this.dataDict[i]['clusterid']
-
-    //                 if (!isNaN(parsedX) && !isNaN(parsedY) && clusterid) {
-    //                     let clusterName = "Cluster " + clusterid
-    //                     let temp = {
-    //                         "xValue": parsedX,
-    //                         "yValue": parsedY,
-    //                         "clusterid": clusterid
-    //                     }
-    //                     //this allows for the colors to be repeated 
-    //                     let clusterNumber = parseInt(clusterid)
-    //                     if (!colorLabels[clusterNumber]) {
-    //                         colorLabels[clusterNumber] = 1;
-    //                         let remainder = clusterNumber % this.clusterColors.length;
-    //                         let colorObj = {
-    //                             "label": clusterName,
-    //                             "color": remainder === 0 ? this.clusterColors[this.clusterColors.length - 1] : this.clusterColors[remainder - 1]
-    //                         }
-    //                         this.clusterTypes[clusterName] = colorObj
-    //                         this.clusterList.push(clusterName)
-    //                     }
-
-    //                     this.scatterPlotDataCluster.push(temp)
-
-    //                     this.xMin = Math.min(this.xMin, parsedX);
-    //                     this.xMax = Math.max(this.xMax, parsedX);
-
-    //                     this.yMin = Math.min(this.yMin, parsedY);
-    //                     this.yMax = Math.max(this.yMax, parsedY);
-    //                 }
-    //             }
-
-    //             let normalizePlot = (this.xMax - this.xMin) / this.normalizePlotWidth // This will set the plot to a width of 300px
-    //             this.plotWidth = (this.xMax - this.xMin) / normalizePlot;
-    //             this.plotHeight = (this.yMax - this.yMin) / normalizePlot;
-
-    //             // this.imageOverlayOffset = this.plotWidth - this.legendWidth
-
-    //             for (let geneName in this.dataDict) {
-    //                 const parsedX = parseInt(this.dataDict[geneName]['xVal'])
-    //                 const parsedY = parseInt(this.dataDict[geneName]['yVal'])
-    //                 const clusterid = this.dataDict[geneName]['clusterid']
-
-    //                 if (!isNaN(parsedX) && !isNaN(parsedY) && clusterid) {
-    //                     let clusterName = "Cluster " + clusterid
-    //                     if (!this.observationSetsClusters[clusterName]) {
-    //                         this.observationSetsClusters[clusterName] = []
-    //                     }
-    //                     let geneObj = {
-    //                         id: geneName
-    //                     }
-    //                     this.observationSetsClusters[clusterName].push(geneObj)
-
-    //                 }
-    //             }
-
-    //             if (this.originalPlotWidth === 0) {
-    //                 this.originalPlotWidth = this.plotWidth;
-    //                 this.originalPlotHeight = this.plotHeight;
-    //             }
-
-    //             // if (this.scatterPlotDataCluster.length > 0) {
-    //             //     this.createScatterPlot()
-    //             // }
-    //         }
-
-    //     });
-    // }
-
-    // containerId: string = '#scatter';
-    // selectedColor: string = 'Green';
-    // colors: string[] = ['Red', 'Green'];
-    // createScatterPlot() {
-    //     var margin = { top: 0, right: 0, bottom: 0, left: this.legendWidth },
-    //         width = this.plotWidth - margin.left - margin.right + this.legendWidth,
-    //         height = this.plotHeight - margin.top - margin.bottom;
-
-    //     let scatterplotContainerId = this.containerId;
-    //     d3.select(scatterplotContainerId)
-    //         .selectAll('svg')
-    //         .remove();
-
-    //     const pointTip = d3Tip()
-    //         .attr('class', 'd3-tip')
-    //         .offset([-10, 0])
-    //         .html((event: any, d: any) => {
-    //             let tipBox = `<div><div class="category">Cluster ID:</div> ${d.clusterid}</div>`
-    //             return tipBox
-    //         });
-
-    //     var svg = d3.select(scatterplotContainerId)
-    //         .append("svg")
-    //         .attr("width", width + margin.left + margin.right)
-    //         .attr("height", height + margin.top + margin.bottom)
-    //         .append("g")
-    //         .attr("transform",
-    //             "translate(" + margin.left + "," + margin.top + ")");
-
-    //     svg.call(pointTip);
-
-    //     const color = d3.scaleLinear<string>()
-    //         .domain([0, this.totalCountsMax])
-    //         .range(["rgb(255,255,224)", this.selectedColor]);
-
-    //     const colorScale = d3.scaleOrdinal<string>()
-    //         .domain([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20])
-    //         .range(this.clusterColors);
-
-    //     var x = d3.scaleLinear()
-    //         .domain([this.xMin, this.xMax])
-    //         .range([0, width]);
-
-    //     var y = d3.scaleLinear()
-    //         .domain([this.yMin, this.yMax])
-    //         .range([height, 0]);
-
-    //     const circles = svg.append('g')
-    //         .selectAll("dot")
-    //         .data(this.scatterPlotDataCluster)
-    //         .enter()
-    //         .append("circle")
-    //         .attr("cx", function (d) { return x(d.xValue) })
-    //         .attr("cy", function (d) { return height - y(d.yValue); })
-    //         .attr("r", 1.75)
-    //         .attr("fill", d => {
-    //             return colorScale(d.clusterid)
-    //         })
-
-    //     circles.on('mouseover', function (mouseEvent: any, d) {
-    //         d3.select(this).style('cursor', 'pointer');
-    //         pointTip.show(mouseEvent, d, this);
-    //         pointTip.style('left', mouseEvent.x + 10 + 'px');
-    //     })
-    //         .on('mouseout', function () {
-    //             d3.select(this).style('cursor', 'default');  // Revert cursor to default on mouseout
-    //             pointTip.hide();
-    //         });
-
-    //     // Add Legend
-    //     if (this.legendWidth !== 0) {
-    //         const clusterColors = Object.keys(this.clusterTypes).map(key => ({
-    //             label: this.clusterTypes[key].label,
-    //             color: this.clusterTypes[key].color
-    //         }));
-    //         clusterColors.sort((a, b) => {
-    //             const numA = parseInt(a.label.split(' ')[1]);
-    //             const numB = parseInt(b.label.split(' ')[1]);
-    //             return numA - numB;
-    //         });
-    //         const legendWidth = this.legendWidth;
-
-    //         const legend = svg
-    //             .selectAll('.legend')
-    //             .data(clusterColors)
-    //             .enter()
-    //             .append('g')
-    //             .classed('legend', true)
-    //             .attr('transform', function (d, i) {
-    //                 return `translate(-${legendWidth},${i * 15 + 50})`;
-    //             });
-
-    //         legend
-    //             .append('circle')
-    //             .attr('r', 4)
-    //             .attr('cx', 10)
-    //             .attr('fill', d => d.color);
-
-    //         legend
-    //             .append('text')
-    //             .attr('x', 20)
-    //             .attr('dy', '.35em')
-    //             .style('fill', '#000')
-    //             .style('font-size', '8px')
-    //             .attr('class', 'legend-label')
-    //             .text(d => d.label);
-    //     }
-    // }
-
-    saveObsSets(name) {
-        const observationSet: CustomSet = {
-            name: `${name}_${this.observationSetsClusters[name].length}_${this.clustering_job_id}`,
-            type: CustomSetType.ObservationSet,
-            color: '#A41034',
-            elements: this.observationSetsClusters[name]
-        };
-
-        this.analysesForm.value['barcodes'] = observationSet
-        this.selectedObsClusterField = observationSet
     }
 }

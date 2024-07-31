@@ -17,7 +17,7 @@ import { MatSort } from '@angular/material/sort';
     styleUrls: ['./spatialge-spatial-autocorrelation-sthet.component.scss'],
     changeDetection: ChangeDetectionStrategy.Default
 })
-export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialgeComponent implements OnInit{
+export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialgeComponent implements OnInit {
     @Input() outputs;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -42,8 +42,12 @@ export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialge
 
     rawCountsForOutput = '';
 
+    selectedStNormalizedFile = {};
+    moranISort = { field: 'moran_i', direction: 'desc' };
+    gearyCSort = { field: 'geary_c', direction: 'asc' };
+    defaultSorting;
+
     ngOnInit() {
-        console.log("heit outputs: ", this.outputs)
         this.xAxisValue = this.outputs['ypos_col']
         this.yAxisValue = this.outputs['xpos_col']
         this.rawCountsForOutput = this.outputs['raw_counts']
@@ -62,11 +66,6 @@ export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialge
 
     }
 
-    moranISort = { field: 'moran_i', direction: 'desc' }
-    gearyCSort = { field: 'geary_c', direction: 'asc' };
-    defaultSorting;
-    // defaultSorting = this.outputs['stat_method'] === "Moran's I" ? this.moranISort : this.gearyCSort
-
     initializeFeatureResource(): void {
         this.resourceId = this.outputs['SThet_results'];
 
@@ -82,9 +81,22 @@ export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialge
             this.defaultPageIndex,
             this.defaultPageSize
         );
-        console.log("init feat: ", this.dataSource)
     }
-    selectedStNormalizedFile = {}
+
+    sortData(sort: MatSort) {
+        const sorting = {
+            sortField: sort.active,
+            sortDirection: sort.direction
+        };
+
+        this.dataSource.loadFeatures(
+            this.resourceId,
+            {},
+            sorting,
+            this.defaultPageIndex,
+            this.defaultPageSize
+        );
+    }
 
     getListNormalizeFiles() {
         this.workspaceId = this.route.snapshot.paramMap.get('workspaceId');
@@ -214,40 +226,20 @@ export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialge
                 this.plotWidth = (this.xMax - this.xMin) / normalizePlot;
                 this.plotHeight = (this.yMax - this.yMin) / normalizePlot;
 
-                // this.imageOverlayOffset = this.plotWidth - this.legendWidth
-
                 if (this.originalPlotWidth === 0) {
                     this.originalPlotWidth = this.plotWidth;
                     this.originalPlotHeight = this.plotHeight;
                 }
 
-                // let selectionRectWidth = this.plotWidth / (4 * this.currentZoomVal);
-                // let selectionRectHeight = this.plotHeight / (4 * this.currentZoomVal);
-
-                // this.selectionRectStyle = {
-                //     top: `-${0}px`,
-                //     left: `-${0}px`,
-                //     width: `${selectionRectWidth}px`,
-                //     height: `${selectionRectHeight}px`,
-                //     border: '2px solid #1DA1F2',
-                //     position: 'absolute',
-                // };
-
                 if (this.scatterPlotData.length > 0) {
-                    // this.displayPlotSTHet = true;
                     this.createScatterPlotSthet();
                 }
 
             }
-
-            // else {
-            //     // this.displayPlotSTHet = false;
-            // }
         });
     }
 
     createScatterPlotSthet() {
-        // this.displayPlotSTHet = true;
         var margin = { top: 0, right: 0, bottom: 0, left: this.legendWidth },
             width = this.plotWidth - margin.left - margin.right + this.legendWidth,
             height = this.plotHeight - margin.top - margin.bottom;
@@ -396,30 +388,15 @@ export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialge
         this.scrollTo('topOfPage');
 
         if (this.xAxisValue !== '' && this.yAxisValue !== '') {
-            // this.axisSubmitted = true;
-            console.log("x/y: ", this.xAxisValue, this.yAxisValue)
             this.getDataNormalizationSthet()
         } else {
 
             this.getAxisColumnNamesSthet();
         }
     }
-
-    // submitAxisValues(){
-    //     this.panelOpenState = false;
-    //     this.axisSubmitted = true;
-    //     this.getDataNormalizationSthet()
-    // }
-
     onSelectSTNormalizeFile() {
-        // this.xAxisValue = '';
-        // this.yAxisValue = '';
-        // this.xAxisValueList = [];
-        // this.yAxisValueList = [];
         this.geneSearch = '';
         this.geneSelected = false;
-        // this.displayPlotSTHet = false;
-        // this.axisSubmitted = false;
 
         d3.select(this.containerId)
             .selectAll('svg')
@@ -467,7 +444,6 @@ export class FeaturesDataSource implements DataSource<SPEFeature> {
                 const featuresFormatted = features.results;
                 return this.featuresSubject.next(featuresFormatted);
             });
-
     }
 
     connect(): Observable<SPEFeature[]> {

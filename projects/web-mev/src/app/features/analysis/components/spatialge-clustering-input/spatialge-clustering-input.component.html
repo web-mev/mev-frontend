@@ -65,7 +65,6 @@
             </mat-select>
         </mat-form-field>
     </div>
-
     <div *ngIf="curr_coords_metadata_uuid !== '' ">
         <div class="label">
             {{yPosField.name}} <span *ngIf="yPosField.required" class="redAsterisk">* </span>
@@ -103,6 +102,22 @@
         <mat-form-field class="form-control" color="accent">
             <mat-select [formControlName]="normalizationMethodField.key">
                 <mat-option *ngFor="let option of normalizationMethodField.options" [value]="option">
+                    {{ option }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div>
+        <div class="label">
+            {{clusterNumField.name}} <span *ngIf="clusterNumField.required" class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="{{clusterNumField.desc}}" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <mat-select [formControlName]="clusterNumField.key">
+                <mat-option *ngFor="let option of clusterNumField.options" [value]="option">
                     {{ option }}
                 </mat-option>
             </mat-select>

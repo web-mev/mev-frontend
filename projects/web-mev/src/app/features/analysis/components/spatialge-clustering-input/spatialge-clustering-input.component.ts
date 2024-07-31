@@ -8,14 +8,14 @@ import { catchError } from "rxjs/operators";
 import { NotificationService } from '@core/notifications/notification.service';
 
 @Component({
-    selector: 'stnormalization-input',
-    templateUrl: './stnormalization-input.component.html',
-    styleUrls: ['./stnormalization-input.component.scss'],
-    providers: [{ provide: BaseOperationInput, useExisting: StnormalizationInputComponent }],
+    selector: 'spatialge-clustering-input',
+    templateUrl: './spatialge-clustering-input.component.html',
+    styleUrls: ['./spatialge-clustering-input.component.scss'],
+    providers: [{ provide: BaseOperationInput, useExisting: SpatialgeClusteringInputComponent }],
     changeDetection: ChangeDetectionStrategy.Default
 })
 
-export class StnormalizationInputComponent extends BaseOperationInput implements OnChanges {
+export class SpatialgeClusteringInputComponent extends BaseOperationInput implements OnChanges {
     analysesForm: FormGroup;
     submitted = false;
 
@@ -24,17 +24,30 @@ export class StnormalizationInputComponent extends BaseOperationInput implements
     @Output() formValid: EventEmitter<any> = new EventEmitter<any>();
     private readonly API_URL = environment.apiUrl;
 
+    // availableFeatureSets;
     sampleNameField;
+    // stClustResultsField;
     rawCountsField;
     coordMetadataField;
     normalizationMethodField;
     xPosField;
     yPosField;
+
+    clusterNumField;
     outputPrefixField;
 
+    // clustering_job_id = '';
+
+    stclust_retrieved = false;
     files_retrieved = false;
+    stclust_results = [];
     raw_count_files = [];
     ann_files = [];
+
+    // outputs_file_uuid;
+    // input_counts_uuid = '';
+    // input_metadata_uuid = '';
+    // normalization_method = '';
 
     curr_coords_metadata_uuid = '';
 
@@ -55,6 +68,9 @@ export class StnormalizationInputComponent extends BaseOperationInput implements
         if (this.operationData) {
             this.createForm();
             this.analysesForm.statusChanges.subscribe(() => this.onFormValid());
+        }
+        if (this.workspaceId && !this.stclust_retrieved) {
+            this.queryForSTclustResults();
         }
         if (this.workspaceId && this.operationData && !this.files_retrieved) {
             this.getPotentialInputFiles();
@@ -117,7 +133,6 @@ export class StnormalizationInputComponent extends BaseOperationInput implements
             desc: input.description,
             required: input.required,
             files: this.raw_count_files,
-            selectedFiles: []
         };
 
         const configRawCountsField = [
@@ -135,7 +150,6 @@ export class StnormalizationInputComponent extends BaseOperationInput implements
             desc: input.description,
             required: input.required,
             files: this.ann_files,
-            selectedFiles: []
         };
 
         const configCoordMetaField = [
@@ -159,27 +173,14 @@ export class StnormalizationInputComponent extends BaseOperationInput implements
         ];
         controlsConfig[key] = configNormalizationMethodChoiceField;
 
-        key = 'output_prefix';
-        input = this.operationData.inputs[key];
-        this.outputPrefixField = {
-            key: key,
-            name: input.name,
-            desc: input.description,
-            required: input.required
-        };
-        const configOutputPrefixField = [
-            '',
-            [...(input.required ? [Validators.required] : [])]
-        ];
-        controlsConfig[key] = configOutputPrefixField;
-
         key = 'xpos_col';
         input = this.operationData.inputs[key];
         this.xPosField = {
             key: key,
             name: input.name,
             desc: input.description,
-            required: input.required
+            required: input.required,
+            options: input.spec.options,
         };
         const configXPosField = [
             '',
@@ -192,14 +193,44 @@ export class StnormalizationInputComponent extends BaseOperationInput implements
         this.yPosField = {
             key: key,
             name: input.name,
+            required: input.required,
             desc: input.description,
-            required: input.required
         };
         const configYPosField = [
             '',
             [...(input.required ? [Validators.required] : [])]
         ];
         controlsConfig[key] = configYPosField;
+
+        key = 'cluster_num';
+        input = this.operationData.inputs[key];
+        this.clusterNumField = {
+            key: key,
+            name: input.name,
+            desc: input.description,
+            required: input.required,
+            options: input.spec.options
+        };
+        const configClusterNumField = [
+            '',
+            [...(input.required ? [Validators.required] : [])]
+        ];
+        controlsConfig[key] = configClusterNumField;
+
+        key = 'output_prefix';
+        input = this.operationData.inputs[key];
+        this.outputPrefixField = {
+            key: key,
+            name: input.name,
+            desc: input.description,
+            required: input.required,
+            options: input.spec.options
+        };
+        const configOutputPrefixField = [
+            '',
+            [...(input.required ? [Validators.required] : [])]
+        ];
+        controlsConfig[key] = configOutputPrefixField;
 
         this.analysesForm = this.formBuilder.group(controlsConfig,
             {
@@ -224,16 +255,23 @@ export class StnormalizationInputComponent extends BaseOperationInput implements
         this.submitted = true;
     }
 
-    /**
-     * Triggered when the toggle is chosen to select between using an observation 
-     * set and using prior STClust results.
-     */
-    clusterOptionChange() {
-        this.analysesForm = null
-        this.createForm();
-        this.analysesForm.statusChanges.subscribe(() => this.onFormValid());
-    }
 
+    /**
+     * Grabs all successful STClust runs in the current workspace
+     */
+    queryForSTclustResults() {
+        this.apiService
+            .getExecOperations(
+                this.workspaceId
+            )
+            .subscribe(data => {
+                this.stclust_results = data.filter(
+                    (exec_op) => (exec_op.operation.operation_name === 'spatialGE clustering')
+                        && (!exec_op.job_failed)
+                );
+                this.stclust_retrieved = true;
+            });
+    }
 
     getPotentialInputFiles() {
         let raw_counts_input = this.operationData.inputs['raw_counts'];
@@ -261,5 +299,4 @@ export class StnormalizationInputComponent extends BaseOperationInput implements
         const element = document.getElementById(htmlID) as HTMLElement;
         element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
     }
-
 }

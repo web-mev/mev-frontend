@@ -65,7 +65,6 @@
             </mat-select>
         </mat-form-field>
     </div>
-
     <div *ngIf="curr_coords_metadata_uuid !== '' ">
         <div class="label">
             {{yPosField.name}} <span *ngIf="yPosField.required" class="redAsterisk">* </span>
@@ -111,13 +110,49 @@
 
     <div>
         <div class="label">
-            {{outputPrefixField.name}} <span *ngIf="outputPrefixField.required" class="redAsterisk">* </span>
+            {{geneSetDatabaseField.name}} <span *ngIf="geneSetDatabaseField.required" class="redAsterisk">* </span>
             <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-                matTooltip="{{outputPrefixField.desc}}" aria-label="Info tooltip about the field">info
+                matTooltip="{{geneSetDatabaseField.desc}}" aria-label="Info tooltip about the field">info
             </mat-icon>
         </div>
         <mat-form-field class="form-control" color="accent">
-            <input matInput [formControlName]="outputPrefixField.key" [name]="outputPrefixField.key">
+            <mat-select [formControlName]="geneSetDatabaseField.key">
+                <mat-option *ngFor="let option of geneSetDatabaseField.options" [value]="option">
+                    {{ option }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div>
+        <div class="label">
+            {{geneIdChoiceField.name}} <span *ngIf="geneIdChoiceField.required" class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="{{geneIdChoiceField.desc}}" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <mat-select [formControlName]="geneIdChoiceField.key">
+                <mat-option *ngFor="let option of geneIdChoiceField.options" [value]="option">
+                    {{ option }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div>
+        <div class="label">
+            {{organismField.name}} <span *ngIf="organismField.required" class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="{{organismField.desc}}" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <mat-select [formControlName]="organismField.key">
+                <mat-option *ngFor="let option of organismField.options" [value]="option">
+                    {{ option }}
+                </mat-option>
+            </mat-select>
         </mat-form-field>
     </div>
 </form>

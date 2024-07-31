@@ -8,14 +8,14 @@ import { catchError } from "rxjs/operators";
 import { NotificationService } from '@core/notifications/notification.service';
 
 @Component({
-    selector: 'stnormalization-input',
-    templateUrl: './stnormalization-input.component.html',
-    styleUrls: ['./stnormalization-input.component.scss'],
-    providers: [{ provide: BaseOperationInput, useExisting: StnormalizationInputComponent }],
+    selector: 'spatialge-pathway-enrichment-input',
+    templateUrl: './spatialge-pathway-enrichment-input.component.html',
+    styleUrls: ['./spatialge-pathway-enrichment-input.component.scss'],
+    providers: [{ provide: BaseOperationInput, useExisting: SpatialgePathwayEnrichmentInputComponent }],
     changeDetection: ChangeDetectionStrategy.Default
 })
 
-export class StnormalizationInputComponent extends BaseOperationInput implements OnChanges {
+export class SpatialgePathwayEnrichmentInputComponent extends BaseOperationInput implements OnChanges {
     analysesForm: FormGroup;
     submitted = false;
 
@@ -24,17 +24,31 @@ export class StnormalizationInputComponent extends BaseOperationInput implements
     @Output() formValid: EventEmitter<any> = new EventEmitter<any>();
     private readonly API_URL = environment.apiUrl;
 
+    // availableObsSets;
+    // availableFeatureSets;
     sampleNameField;
+    // obsSetField;
+    // stClustResultsField;
     rawCountsField;
     coordMetadataField;
     normalizationMethodField;
     xPosField;
     yPosField;
-    outputPrefixField;
 
+    geneSetDatabaseField;
+    geneIdChoiceField;
+    organismField;
+
+    // stclust_retrieved = false;
     files_retrieved = false;
+    // stclust_results = [];
     raw_count_files = [];
     ann_files = [];
+
+    // outputs_file_uuid;
+    // input_counts_uuid = '';
+    // input_metadata_uuid = '';
+    // normalization_method = '';
 
     curr_coords_metadata_uuid = '';
 
@@ -159,20 +173,6 @@ export class StnormalizationInputComponent extends BaseOperationInput implements
         ];
         controlsConfig[key] = configNormalizationMethodChoiceField;
 
-        key = 'output_prefix';
-        input = this.operationData.inputs[key];
-        this.outputPrefixField = {
-            key: key,
-            name: input.name,
-            desc: input.description,
-            required: input.required
-        };
-        const configOutputPrefixField = [
-            '',
-            [...(input.required ? [Validators.required] : [])]
-        ];
-        controlsConfig[key] = configOutputPrefixField;
-
         key = 'xpos_col';
         input = this.operationData.inputs[key];
         this.xPosField = {
@@ -192,14 +192,59 @@ export class StnormalizationInputComponent extends BaseOperationInput implements
         this.yPosField = {
             key: key,
             name: input.name,
-            desc: input.description,
-            required: input.required
+            required: input.required,
+            desc: input.description
         };
         const configYPosField = [
             '',
             [...(input.required ? [Validators.required] : [])]
         ];
         controlsConfig[key] = configYPosField;
+
+        key = 'gene_set_database';
+        input = this.operationData.inputs[key];
+        this.geneSetDatabaseField = {
+            key: key,
+            name: input.name,
+            desc: input.description,
+            required: input.required,
+            options: input.spec.options
+        };
+        const configGeneSetDatabaseField = [
+            '',
+            [...(input.required ? [Validators.required] : [])]
+        ];
+        controlsConfig[key] = configGeneSetDatabaseField;
+
+        key = 'gene_id_choice';
+        input = this.operationData.inputs[key];
+        this.geneIdChoiceField = {
+            key: key,
+            name: input.name,
+            desc: input.description,
+            required: input.required,
+            options: input.spec.options
+        };
+        const configGeneIdChoiceField = [
+            '',
+            [...(input.required ? [Validators.required] : [])]
+        ];
+        controlsConfig[key] = configGeneIdChoiceField;
+
+        key = 'organism';
+        input = this.operationData.inputs[key];
+        this.organismField = {
+            key: key,
+            name: input.name,
+            desc: input.description,
+            required: input.required,
+            options: input.spec.options
+        };
+        const configOrganismField = [
+            '',
+            [...(input.required ? [Validators.required] : [])]
+        ];
+        controlsConfig[key] = configOrganismField;
 
         this.analysesForm = this.formBuilder.group(controlsConfig,
             {
@@ -229,11 +274,28 @@ export class StnormalizationInputComponent extends BaseOperationInput implements
      * set and using prior STClust results.
      */
     clusterOptionChange() {
+        // this.reference_cluster_selection = this.analysesForm.value.reference_cluster_selection;
         this.analysesForm = null
         this.createForm();
         this.analysesForm.statusChanges.subscribe(() => this.onFormValid());
     }
 
+    /**
+     * Grabs all successful STClust runs in the current workspace
+     */
+    // queryForSTclustResults() {
+    //     this.apiService
+    //         .getExecOperations(
+    //             this.workspaceId
+    //         )
+    //         .subscribe(data => {
+    //             this.stclust_results = data.filter(
+    //                 (exec_op) => (exec_op.operation.operation_name === 'spatialGE clustering')
+    //                     && (!exec_op.job_failed)
+    //             );
+    //             this.stclust_retrieved = true;
+    //         });
+    // }
 
     getPotentialInputFiles() {
         let raw_counts_input = this.operationData.inputs['raw_counts'];

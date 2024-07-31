@@ -53,6 +53,8 @@ export class OperationComponent implements OnChanges {
     'spatialGE Spatial Gradient Testing (STgradient)',
     'spatialGE Spatial Autocorrelation (SThet)',
     'spatialGE normalization',
+    'spatialGE pathway enrichment',
+    'spatialGE clustering',
   ];
 
   constructor(

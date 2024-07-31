@@ -7,7 +7,7 @@
         <mev-input-info [outputs]="outputs"></mev-input-info>
     </mat-card-header>
 
-    <mat-expansion-panel #accordion [(expanded)]="panelOpenState">
+    <!-- <mat-expansion-panel #accordion [(expanded)]="panelOpenState">
         <mat-expansion-panel-header>
             <mat-panel-title>
                 <span class="plot-options-header">Select X and Y Axis Labels: </span>
@@ -36,7 +36,7 @@
         <button mat-flat-button color="primary" class="searchButton"
             [disabled]="xAxisValue === '' || yAxisValue === '' || geneSearchVal === ''"
             (click)="analysisType === 'normalization' ? getDataNormalization(): getDataClusters() ">Submit</button>
-    </mat-expansion-panel>
+    </mat-expansion-panel> -->
 
     <div id="topOfPage"></div>
     <div *ngIf="!displayOverlayContainer || (scatterPlotDataCluster.length === 0 && (useNormalization || useCluster))"

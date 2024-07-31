@@ -24,6 +24,8 @@ import { SnfInputComponent } from './components/snf-input/snf-input.component';
 import { StgradientInputComponent } from './components/stgradient-input/stgradient-input.component';
 import { StheitInputComponent } from './components/stheit-input/stheit-input.component';
 import { StnormalizationInputComponent } from './components/stnormalization-input/stnormalization-input.component';
+import { SpatialgePathwayEnrichmentInputComponent } from './components/spatialge-pathway-enrichment-input/spatialge-pathway-enrichment-input.component'
+import { SpatialgeClusteringInputComponent } from './components/spatialge-clustering-input/spatialge-clustering-input.component'
 
 @NgModule({
   declarations: [
@@ -46,6 +48,8 @@ import { StnormalizationInputComponent } from './components/stnormalization-inpu
     StgradientInputComponent,
     StheitInputComponent,
     StnormalizationInputComponent,
+    SpatialgePathwayEnrichmentInputComponent,
+    SpatialgeClusteringInputComponent
   ],
   exports: [
     OperationComponent,

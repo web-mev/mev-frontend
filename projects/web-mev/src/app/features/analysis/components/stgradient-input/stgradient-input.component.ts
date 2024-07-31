@@ -85,9 +85,21 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
     clusterColors: string[] = ["#EBCD00", "#52A52E", "#00979D", "#6578B4", "#80408D", "#C9006B", "#68666F", "#E80538", "#E87D1E"];
 
     normalizePlotWidth = 300;
-    // imageOverlayOffset = 220;
 
     observationSetsClusters = {}
+
+    isLoading = false;
+    xAxisValue: string = '';
+    yAxisValue: string = ''
+    xAxisValueList: string[] = [];
+    yAxisValueList: string[] = [];
+
+    clusterList = [];
+    clusterValue = '';
+
+    containerId: string = '#scatter';
+    selectedColor: string = 'Green';
+    colors: string[] = ['Red', 'Green'];
 
     constructor(
         private apiService: AnalysesService,
@@ -224,7 +236,6 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
             input = this.operationData.inputs[key];
             this.stClustResultsField = {
                 key: key,
-                // name: input.name,
                 name: 'stclust_results',
                 desc: 'stclust_results',
                 required: true,
@@ -404,7 +415,6 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
 
     onClusterTypeSelection() {
         let val = this.analysesForm.value['stclust_results'];
-        // TODO: use the UUID here to get the results for plotting.
         this.outputs_file_uuid = val.outputs.clustered_positions;
         this.input_counts_uuid = val.inputs.raw_counts;
         this.input_metadata_uuid = val.inputs.coords_metadata;
@@ -418,15 +428,6 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
         this.getAxisColumnNamesGradient();
         this.resetAllVariables();
     }
-
-    isLoading = false;
-    xAxisValue: string = '';
-    yAxisValue: string = ''
-    xAxisValueList: string[] = [];
-    yAxisValueList: string[] = [];
-
-    clusterList = [];
-    clusterValue = '';
 
     getAxisColumnNamesGradient() {
         this.isLoading = true;
@@ -560,8 +561,6 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
                 this.plotWidth = (this.xMax - this.xMin) / normalizePlot;
                 this.plotHeight = (this.yMax - this.yMin) / normalizePlot;
 
-                // this.imageOverlayOffset = this.plotWidth - this.legendWidth
-
                 for (let geneName in this.dataDict) {
                     const parsedX = parseInt(this.dataDict[geneName]['xVal'])
                     const parsedY = parseInt(this.dataDict[geneName]['yVal'])
@@ -593,9 +592,6 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
         });
     }
 
-    containerId: string = '#scatter';
-    selectedColor: string = 'Green';
-    colors: string[] = ['Red', 'Green'];
     createScatterPlot() {
         var margin = { top: 0, right: 0, bottom: 0, left: this.legendWidth },
             width = this.plotWidth - margin.left - margin.right + this.legendWidth,

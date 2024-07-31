@@ -16,8 +16,17 @@ interface ScatterData {
 export class SpatialGEClustersComponent extends BaseSpatialgeComponent implements OnInit {
 
     ngOnInit(): void {
+        // this.analysisType = 'clusters'
+        // this.getAxisColumnNames()
+
+        console.log("clusters outputs: ", this.outputs)
+        this.geneSearch= 'Gnai3';
+        this.geneSearchVal= 'Gnai3';
+        this.xAxisValue = this.outputs['ypos_col']
+        this.yAxisValue = this.outputs['xpos_col']
         this.analysisType = 'clusters'
-        this.getAxisColumnNames()
+        // this.getAxisColumnNames()
+        this.getDataClusters();
     }
 
 }

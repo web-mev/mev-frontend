@@ -48,6 +48,16 @@
         (formValid)="alterFormStatus($event)"></stnormalization-input>
     </div>
 
+    <div *ngIf="operationData.name === 'spatialGE pathway enrichment'">
+      <spatialge-pathway-enrichment-input [operationData]="operationData" [workspaceId]="workspaceId"
+        (formValid)="alterFormStatus($event)"></spatialge-pathway-enrichment-input>
+    </div>
+
+    <div *ngIf="operationData.name === 'spatialGE clustering'">
+      <spatialge-clustering-input [operationData]="operationData" [workspaceId]="workspaceId"
+        (formValid)="alterFormStatus($event)"></spatialge-clustering-input>
+    </div>
+
   </div>
 
   <ng-template #defaultBlock>

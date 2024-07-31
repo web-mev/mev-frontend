@@ -121,13 +121,6 @@
             </mat-select>
         </mat-form-field>
         <div *ngIf="clustering_job_id.length > 0">
-            <!-- TODO: Show this in a nicer way -->
-            <!-- <p>Show clustering using job {{clustering_job_id}}</p>
-            <p>This will implicitly use inputs of {{input_counts_uuid}}</p>
-            <p>Coordinate metadata of {{input_metadata_uuid}}</p>
-            <p> Normalization method of {{normalization_method}}</p> -->
-
-            <!-- TODO: Show plot to select clusters -->
             <mat-form-field appearance="outline">
                 <mat-label>Select X-Axis Label</mat-label>
                 <mat-select [(value)]="yAxisValue">

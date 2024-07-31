@@ -7,11 +7,11 @@
         <mev-input-info [outputs]="outputs"></mev-input-info>
     </mat-card-header>
 
-    <div *ngIf="useNormalization" class="searchContainer">
+    <div class="searchContainer">
         <mev-gene-search-input-field (searchSubmit)="onSubmitFromGeneSearch($event)" [initialGeneVal]="geneSearchVal"></mev-gene-search-input-field>
     </div>
 
-    <mat-expansion-panel #accordion [(expanded)]="panelOpenState">
+    <!-- <mat-expansion-panel #accordion [(expanded)]="panelOpenState">
         <mat-expansion-panel-header>
             <mat-panel-title>
                 <span class="plot-options-header">Select X and Y Axis Labels: </span>
@@ -40,7 +40,7 @@
         <button mat-flat-button color="primary" class="searchButton"
             [disabled]="xAxisValue === '' || yAxisValue === '' || geneSearchVal === ''"
             (click)="analysisType === 'normalization' ? getDataNormalization(): getDataClusters() ">Submit</button>
-    </mat-expansion-panel>
+    </mat-expansion-panel> -->
 
     <div id="topOfPage"></div>
     <div *ngIf="!displayOverlayContainer || (scatterPlotData.length === 0 && (useNormalization || useCluster))"

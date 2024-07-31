@@ -43,6 +43,11 @@
         (formValid)="alterFormStatus($event)"></stheit-input>
     </div>
 
+    <div *ngIf="operationData.name === 'spatialGE normalization'">
+      <stnormalization-input [operationData]="operationData" [workspaceId]="workspaceId"
+        (formValid)="alterFormStatus($event)"></stnormalization-input>
+    </div>
+
   </div>
 
   <ng-template #defaultBlock>

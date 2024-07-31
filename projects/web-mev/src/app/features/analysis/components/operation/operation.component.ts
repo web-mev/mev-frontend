@@ -51,7 +51,8 @@ export class OperationComponent implements OnChanges {
     'ComBat-seq',  
     'SNF (Similarity Network Fusion)',
     'spatialGE Spatial Gradient Testing (STgradient)',
-    'spatialGE Spatial Autocorrelation (SThet)'
+    'spatialGE Spatial Autocorrelation (SThet)',
+    'spatialGE normalization',
   ];
 
   constructor(
@@ -69,6 +70,7 @@ export class OperationComponent implements OnChanges {
   loadData() {
     this.apiService.getOperation(this.operation.id).subscribe(data => {
       this.operationData = data;
+      console.log("operattion data: ", this.operationData)
       if (this.customTools.includes(this.operationData.name)) {
         this.customInput = true;
       } else {

@@ -9,6 +9,7 @@ import { catchError } from "rxjs/operators";
 import { forkJoin } from 'rxjs';
 import * as d3 from 'd3';
 import d3Tip from 'd3-tip';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
     selector: 'mev-spatialge-spatial-autocorrelation-sthet',
@@ -16,9 +17,10 @@ import d3Tip from 'd3-tip';
     styleUrls: ['./spatialge-spatial-autocorrelation-sthet.component.scss'],
     changeDetection: ChangeDetectionStrategy.Default
 })
-export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialgeComponent implements OnInit {
+export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialgeComponent implements OnInit{
     @Input() outputs;
     @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
 
     dataSource: FeaturesDataSource;
     resourceId;
@@ -37,14 +39,17 @@ export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialge
 
     geneSearch: string = '';
     geneSelected = false;
-    // displayPlotSTHet = false
-    axisSubmitted = false;
 
-    rawCountsForOutput = ''
+    rawCountsForOutput = '';
 
     ngOnInit() {
+        console.log("heit outputs: ", this.outputs)
+        this.xAxisValue = this.outputs['ypos_col']
+        this.yAxisValue = this.outputs['xpos_col']
         this.rawCountsForOutput = this.outputs['raw_counts']
+        this.defaultSorting = this.outputs['stat_method'] === "Moran's I" ? this.moranISort : this.gearyCSort
         this.dataSource = new FeaturesDataSource(this.analysesService);
+
         this.panelOpenState = true;
         this.initializeFeatureResource();
         this.getListNormalizeFiles();
@@ -57,15 +62,27 @@ export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialge
 
     }
 
+    moranISort = { field: 'moran_i', direction: 'desc' }
+    gearyCSort = { field: 'geary_c', direction: 'asc' };
+    defaultSorting;
+    // defaultSorting = this.outputs['stat_method'] === "Moran's I" ? this.moranISort : this.gearyCSort
+
     initializeFeatureResource(): void {
         this.resourceId = this.outputs['SThet_results'];
+
+        const sorting = {
+            sortField: this.defaultSorting.field,
+            sortDirection: this.defaultSorting.direction
+        };
+
         this.dataSource.loadFeatures(
             this.resourceId,
             {},
-            {},
+            sorting,
             this.defaultPageIndex,
             this.defaultPageSize
         );
+        console.log("init feat: ", this.dataSource)
     }
     selectedStNormalizedFile = {}
 
@@ -78,6 +95,10 @@ export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialge
                 if (file['operation']['operation_name'] === 'spatialGE normalization' && rawCountsForNormFile === this.rawCountsForOutput && !jobFailed) {
                     this.stNormalizeFile.push(file)
                 }
+            }
+
+            if (this.stNormalizeFile.length === 1) {
+                this.selectedStNormalizedFile = this.stNormalizeFile[0]
             }
         })
     }
@@ -375,28 +396,30 @@ export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialge
         this.scrollTo('topOfPage');
 
         if (this.xAxisValue !== '' && this.yAxisValue !== '') {
+            // this.axisSubmitted = true;
+            console.log("x/y: ", this.xAxisValue, this.yAxisValue)
             this.getDataNormalizationSthet()
         } else {
-            
+
             this.getAxisColumnNamesSthet();
         }
     }
 
-    submitAxisValues(){
-        this.panelOpenState = false;
-        this.axisSubmitted = true;
-        this.getDataNormalizationSthet()
-    }
+    // submitAxisValues(){
+    //     this.panelOpenState = false;
+    //     this.axisSubmitted = true;
+    //     this.getDataNormalizationSthet()
+    // }
 
     onSelectSTNormalizeFile() {
-        this.xAxisValue = '';
-        this.yAxisValue = '';
-        this.xAxisValueList = [];
-        this.yAxisValueList = [];
+        // this.xAxisValue = '';
+        // this.yAxisValue = '';
+        // this.xAxisValueList = [];
+        // this.yAxisValueList = [];
         this.geneSearch = '';
         this.geneSelected = false;
         // this.displayPlotSTHet = false;
-        this.axisSubmitted = false;
+        // this.axisSubmitted = false;
 
         d3.select(this.containerId)
             .selectAll('svg')
@@ -428,6 +451,8 @@ export class FeaturesDataSource implements DataSource<SPEFeature> {
         pageSize: number
     ) {
         this.loadingSubject.next(true);
+
+
         this.analysesService
             .getResourceContent(
                 resourceId,

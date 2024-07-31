@@ -11,14 +11,14 @@ import { NotificationService } from '@core/notifications/notification.service';
 import { CustomSet, CustomSetType } from '@app/_models/metadata';
 
 @Component({
-    selector: 'stheit-input',
-    templateUrl: './stheit-input.component.html',
-    styleUrls: ['./stheit-input.component.scss'],
-    providers: [{ provide: BaseOperationInput, useExisting: StheitInputComponent }],
+    selector: 'stnormalization-input',
+    templateUrl: './stnormalization-input.component.html',
+    styleUrls: ['./stnormalization-input.component.scss'],
+    providers: [{ provide: BaseOperationInput, useExisting: StnormalizationInputComponent }],
     changeDetection: ChangeDetectionStrategy.Default
 })
 
-export class StheitInputComponent extends BaseOperationInput implements OnChanges {
+export class StnormalizationInputComponent extends BaseOperationInput implements OnChanges {
     analysesForm: FormGroup;
     submitted = false;
 
@@ -41,7 +41,8 @@ export class StheitInputComponent extends BaseOperationInput implements OnChange
     statMethodField;
     featuresField;
     xPosField;
-    yPosField
+    yPosField;
+    outputPrefixField;
     clustering_job_id = '';
 
     stclust_retrieved = false;
@@ -92,7 +93,7 @@ export class StheitInputComponent extends BaseOperationInput implements OnChange
 
     ngOnChanges(): void {
         if (this.operationData) {
-            console.log("operation data from stheit:  ", this.operationData)
+            console.log("operation data from stnorm:  ", this.operationData)
             this.createForm();
             this.analysesForm.statusChanges.subscribe(() => this.onFormValid());
         }
@@ -205,40 +206,36 @@ export class StheitInputComponent extends BaseOperationInput implements OnChange
         ];
         controlsConfig[key] = configNormalizationMethodChoiceField;
 
-        key = 'stat_method';
+        key = 'output_prefix';
         input = this.operationData.inputs[key];
-        this.statMethodField = {
-            key: key,
-            name: input.name,
-            desc: input.description,
-            options: input.spec.options
-        };
-        const configStatMethodField = [
-            '',
-            // [Validators.required, Validators.minLength(1)]
-            [...(input.required ? [Validators.required] : [])]
-        ];
-        controlsConfig[key] = configStatMethodField;
-
-        key = 'features'
-        input = this.operationData.inputs[key];
-        this.featuresField = {
+        this.outputPrefixField = {
             key: key,
             name: input.name,
             desc: input.description,
             required: input.required,
-            files: this.availableFeatureSets
+            options: input.spec.options
         };
-        const configFeatureSetsField = [
-            undefined,
+        const configOutputPrefixField = [
+            '',
+            // [Validators.required, Validators.minLength(1)]
             [...(input.required ? [Validators.required] : [])]
         ];
+        controlsConfig[key] = configOutputPrefixField;
 
+        // key = 'features'
+        // input = this.operationData.inputs[key];
+        // this.featuresField = {
+        //     key: key,
+        //     name: input.name,
+        //     desc: input.description,
+        //     required: input.required,
+        //     files: this.availableFeatureSets
+        // };
         // const configFeatureSetsField = [
-        //     '',
-        //     []
+        //     undefined,
+        //     [...(input.required ? [Validators.required] : [])]
         // ];
-        controlsConfig[key] = configFeatureSetsField;
+        // controlsConfig[key] = configFeatureSetsField;
 
         key = 'xpos_col';
         input = this.operationData.inputs[key];
@@ -262,8 +259,8 @@ export class StheitInputComponent extends BaseOperationInput implements OnChange
         this.yPosField = {
             key: key,
             name: input.name,
-            required: input.required,
             desc: input.description,
+            required: input.required,
             files: this.availableFeatureSets
         };
         const configYPosField = [
@@ -343,7 +340,7 @@ export class StheitInputComponent extends BaseOperationInput implements OnChange
                     }
                 }
                 this.files_retrieved = true;
-                console.log("ann files: ", this.ann_files)
+                // console.log("ann files: ", this.ann_files)
             });
     }
 

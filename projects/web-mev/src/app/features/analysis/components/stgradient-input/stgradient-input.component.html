@@ -13,7 +13,7 @@
         </mat-form-field>
     </ng-container>
     <div class="label">
-        {{sampleNameField.name}} <span class="redAsterisk">* </span>
+        {{sampleNameField.name}} <span *ngIf="sampleNameField.required" class="redAsterisk">* </span>
         <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
             matTooltip="{{sampleNameField.desc}}" aria-label="Info tooltip about the field">info
         </mat-icon>
@@ -53,7 +53,7 @@
 
         <div>
             <div class="label">
-                {{ rawCountsField.name }} <span class="redAsterisk">* </span>
+                {{ rawCountsField.name }} <span *ngIf="rawCountsField.required" class="redAsterisk">* </span>
                 <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
                     matTooltip="{{ rawCountsField.desc}}" aria-label="Info tooltip about the field">info
                 </mat-icon>
@@ -72,7 +72,7 @@
 
         <div>
             <div class="label">
-                {{ coordMetadataField.name }} <span class="redAsterisk">* </span>
+                {{ coordMetadataField.name }} <span *ngIf="coordMetadataField.required" class="redAsterisk">* </span>
                 <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
                     matTooltip="{{ coordMetadataField.desc}}" aria-label="Info tooltip about the field">info
                 </mat-icon>
@@ -90,7 +90,7 @@
         </div>
         <div>
             <div class="label">
-                {{normalizationMethodField.name}} <span class="redAsterisk">* </span>
+                {{normalizationMethodField.name}} <span *ngIf="normalizationMethodField.required" class="redAsterisk">* </span>
                 <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
                     matTooltip="{{normalizationMethodField.desc}}" aria-label="Info tooltip about the field">info
                 </mat-icon>
@@ -166,7 +166,7 @@
         </div>
 
         <div class="label">
-            {{ rawCountsField.name }} <span class="redAsterisk">* </span>
+            {{ rawCountsField.name }} <span *ngIf="rawCountsField.required" class="redAsterisk">* </span>
             <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
                 matTooltip="{{ rawCountsField.desc}}" aria-label="Info tooltip about the field">info
             </mat-icon>
@@ -176,7 +176,7 @@
         </mat-form-field>
 
         <div class="label">
-            {{ coordMetadataField.name }} <span class="redAsterisk">* </span>
+            {{ coordMetadataField.name }} <span *ngIf="coordMetadataField.required" class="redAsterisk">* </span>
             <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
                 matTooltip="{{ coordMetadataField.desc}}" aria-label="Info tooltip about the field">info
             </mat-icon>
@@ -186,7 +186,7 @@
         </mat-form-field>
 
         <div class="label">
-            {{ normalizationMethodField2.name }} <span class="redAsterisk">* </span>
+            {{ normalizationMethodField2.name }} <span *ngIf="normalizationMethodField2.required" class="redAsterisk">* </span>
             <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
                 matTooltip="{{ normalizationMethodField2.desc}}" aria-label="Info tooltip about the field">info
             </mat-icon>
@@ -200,7 +200,7 @@
     <br />
     <div>
         <div class="label">
-            {{distanceSummaryField.name}} <span class="redAsterisk">* </span>
+            {{distanceSummaryField.name}} <span *ngIf="distanceSummaryField.required" class="redAsterisk">* </span>
             <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
                 matTooltip="{{distanceSummaryField.desc}}" aria-label="Info tooltip about the field">info
             </mat-icon>
@@ -215,7 +215,7 @@
     </div>
     <br>
     <div class="label">
-        {{ numGenesField.name }} <span class="redAsterisk">* </span>
+        {{ numGenesField.name }} <span *ngIf="numGenesField.required" class="redAsterisk">* </span>
         <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
             matTooltip="{{ numGenesField.desc}}" aria-label="Info tooltip about the field">info
         </mat-icon>

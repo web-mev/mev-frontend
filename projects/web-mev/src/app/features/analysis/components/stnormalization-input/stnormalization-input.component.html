@@ -92,7 +92,7 @@
     </mat-form-field>
     <br>
 
-    <div>
+    <!-- <div>
         <div class="label">
             {{ featuresField.name }} <span *ngIf="featuresField.required" class="redAsterisk">* </span>
             <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
@@ -109,7 +109,7 @@
                 This field is required
             </mat-error>
         </mat-form-field>
-    </div>
+    </div> -->
     <div>
         <div class="label">
             {{normalizationMethodField.name}} <span *ngIf="normalizationMethodField.required" class="redAsterisk">* </span>
@@ -128,18 +128,21 @@
 
     <div>
         <div class="label">
-            {{statMethodField.name}} <span *ngIf="statMethodField.required" class="redAsterisk">* </span>
+            {{outputPrefixField.name}} <span *ngIf="outputPrefixField.required" class="redAsterisk">* </span>
             <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-                matTooltip="{{statMethodField.desc}}" aria-label="Info tooltip about the field">info
+                matTooltip="{{outputPrefixField.desc}}" aria-label="Info tooltip about the field">info
             </mat-icon>
         </div>
         <mat-form-field class="form-control" color="accent">
-            <mat-select [formControlName]="statMethodField.key">
-                <mat-option *ngFor="let option of statMethodField.options" [value]="option">
+            <input matInput [formControlName]="outputPrefixField.key" [name]="outputPrefixField.key">
+        </mat-form-field>
+        <!-- <mat-form-field class="form-control" color="accent">
+            <mat-select [formControlName]="outputPrefixField.key">
+                <mat-option *ngFor="let option of outputPrefixField.options" [value]="option">
                     {{ option }}
                 </mat-option>
             </mat-select>
-        </mat-form-field>
+        </mat-form-field> -->
     </div>
 
     

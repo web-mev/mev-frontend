@@ -1149,14 +1149,9 @@ export class BaseSpatialgeComponent {
   }
 
   onSubmitFromGeneSearch(gene: string) {
-    console.log("from onsubmit in norm: ", gene)
     this.geneSearch = gene
     if (this.outputs["normalized_expression"]) {
       this.getDataNormalization()
     }
-
-
-    console.log("outputs: ", this.outputs)
-
   }
 }

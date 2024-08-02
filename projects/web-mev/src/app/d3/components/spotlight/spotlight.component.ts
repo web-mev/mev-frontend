@@ -32,6 +32,9 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
     low_res_scalefactor = '0.0218635';
 
     ngOnInit(): void {
+        this.yAxisValue = this.outputs['xpos_col'];
+        this.xAxisValue = this.outputs['ypos_col'];
+
         this.scaleFactorVal = this.low_res_scalefactor;
         this.scaleFactor = parseFloat(this.low_res_scalefactor);
         this.operationName = this.outputs.operation.operation_name;
@@ -92,8 +95,8 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
                 for (let index in coordsMetadataRes) {
                     let gene = coordsMetadataRes[index]
                     let key = gene['rowname']
-                    let x = gene['values']["pxl_y"]
-                    let y = gene['values']["pxl_x"]
+                    let x = gene['values'][this.xAxisValue]
+                    let y= gene['values'][this.yAxisValue]
                     this.xMin = Math.min(this.xMin, x)
                     this.xMax = Math.max(this.xMax, x)
                     this.yMin = Math.min(this.yMin, y)

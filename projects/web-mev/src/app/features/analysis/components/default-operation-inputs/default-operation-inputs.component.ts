@@ -377,7 +377,6 @@ export class DefaultOperationComponent extends BaseOperationInput implements OnC
 
     ngOnChanges(): void {
         if(this.operationData){
-            console.log("default op data: ", this.operationData)
             this.createForm();
             this.analysesForm.statusChanges.subscribe(() => this.onFormValid());
         }

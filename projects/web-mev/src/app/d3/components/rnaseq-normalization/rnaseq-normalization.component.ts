@@ -26,7 +26,7 @@ import { NotificationService } from '../../../core/core.module';
   changeDetection: ChangeDetectionStrategy.Default
 
 })
-export class RnaSeqNormalizationComponent implements OnInit, AfterViewInit  {
+export class RnaSeqNormalizationComponent implements AfterViewInit  {
     @Input() outputs;
     dataSource: ExpressionMatrixDataSource; // datasource for MatTable
     resourceId;
@@ -106,10 +106,6 @@ export class RnaSeqNormalizationComponent implements OnInit, AfterViewInit  {
             }
         }
       }
-
-    ngOnInit() {
-        this.initData();
-    }
     
     ngOnChanges(): void {
         this.initData();

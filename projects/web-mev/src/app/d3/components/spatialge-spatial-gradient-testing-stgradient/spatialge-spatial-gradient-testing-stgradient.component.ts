@@ -9,6 +9,7 @@ import { catchError } from "rxjs/operators";
 import { forkJoin } from 'rxjs';
 import * as d3 from 'd3';
 import d3Tip from 'd3-tip';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
     selector: 'mev-spatialge-spatial-gradient-testing-stgradient',
@@ -44,7 +45,9 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
     // displayPlotSTGrad = false;
     axisSubmitted = false;
 
-    rawCountsForOutput = ''
+    rawCountsForOutput = '';
+
+    defaultSorting;
 
     ngOnInit() {
         this.rawCountsForOutput = this.outputs['raw_counts']
@@ -57,14 +60,36 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
 
     initializeFeatureResource(): void {
         this.resourceId = this.outputs['STgradient_results'];
+
+        // const sorting = {
+        //     sortField: this.defaultSorting.field,
+        //     sortDirection: this.defaultSorting.direction
+        // };
+        const sorting = {}
+
         this.dataSource.loadFeatures(
             this.resourceId,
             {},
-            {},
+            sorting,
             this.defaultPageIndex,
             this.defaultPageSize
         );
 
+    }
+
+    sortData(sort: MatSort) {
+        const sorting = {
+            sortField: sort.active,
+            sortDirection: sort.direction
+        };
+
+        this.dataSource.loadFeatures(
+            this.resourceId,
+            {},
+            sorting,
+            this.defaultPageIndex,
+            this.defaultPageSize
+        );
     }
 
     getListNormalizeFiles() {

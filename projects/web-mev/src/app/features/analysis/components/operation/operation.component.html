@@ -58,6 +58,11 @@
         (formValid)="alterFormStatus($event)"></spatialge-clustering-input>
     </div>
 
+    <div *ngIf="operationData.name === 'SPOTlight'">
+      <spotlight-input [operationData]="operationData" [workspaceId]="workspaceId"
+        (formValid)="alterFormStatus($event)"></spotlight-input>
+    </div>
+
   </div>
 
   <ng-template #defaultBlock>

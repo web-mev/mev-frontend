@@ -19,7 +19,7 @@
             <div class="mat-elevation-z8">
                 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" class="table" matSort (matSortChange)="sortData($event)">
                     <ng-container matColumnDef="sample_gene">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Sample Gene </th>
+                        <th mat-header-cell *matHeaderCellDef> Sample Gene </th>
                         <td mat-cell *matCellDef="let element" class="word-wrap"> {{element.rowname}} </td>
                     </ng-container>
                     <ng-container matColumnDef="gene_mean">

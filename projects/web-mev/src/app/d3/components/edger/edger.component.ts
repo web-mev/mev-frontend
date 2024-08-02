@@ -18,12 +18,10 @@ export class EdgerComponent extends DifferentialExpressionComponent {
         'padj'
       ];
 
-    ngOnInit() {
-        super.ngOnInit();
-    }
     ngAfterViewInit() {
         super.ngAfterViewInit();
     }
+    
     ngOnChanges() {
         super.ngOnChanges();
     }

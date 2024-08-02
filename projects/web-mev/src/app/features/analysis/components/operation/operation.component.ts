@@ -55,6 +55,7 @@ export class OperationComponent implements OnChanges {
     'spatialGE normalization',
     'spatialGE pathway enrichment',
     'spatialGE clustering',
+    'SPOTlight',
   ];
 
   constructor(
@@ -72,7 +73,6 @@ export class OperationComponent implements OnChanges {
   loadData() {
     this.apiService.getOperation(this.operation.id).subscribe(data => {
       this.operationData = data;
-      console.log("operattion data: ", this.operationData)
       if (this.customTools.includes(this.operationData.name)) {
         this.customInput = true;
       } else {

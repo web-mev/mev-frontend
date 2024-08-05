@@ -34,7 +34,7 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
     workspaceId = '';
 
     xAxisValue: string = '';
-    yAxisValue: string = ''
+    yAxisValue: string = '';
     xAxisValueList: string[] = [];
     yAxisValueList: string[] = [];
 
@@ -42,14 +42,14 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
 
     geneSearch: string = '';
     geneSelected = false;
-    // displayPlotSTGrad = false;
-    axisSubmitted = false;
 
     rawCountsForOutput = '';
 
     defaultSorting;
 
     ngOnInit() {
+        this.xAxisValue = this.outputs['ypos_col']
+        this.yAxisValue = this.outputs['xpos_col']
         this.rawCountsForOutput = this.outputs['raw_counts']
         this.dataSource = new FeaturesDataSource(this.analysesService);
         this.panelOpenState = true;
@@ -60,12 +60,7 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
 
     initializeFeatureResource(): void {
         this.resourceId = this.outputs['STgradient_results'];
-
-        // const sorting = {
-        //     sortField: this.defaultSorting.field,
-        //     sortDirection: this.defaultSorting.direction
-        // };
-        const sorting = {}
+        const sorting = {};
 
         this.dataSource.loadFeatures(
             this.resourceId,
@@ -74,7 +69,6 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
             this.defaultPageIndex,
             this.defaultPageSize
         );
-
     }
 
     sortData(sort: MatSort) {
@@ -101,6 +95,10 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
                 if (file['operation']['operation_name'] === 'spatialGE normalization' && rawCountsForNormFile === this.rawCountsForOutput && !jobFailed) {
                     this.stNormalizeFile.push(file)
                 }
+
+                if (this.stNormalizeFile.length === 1) {
+                    this.selectedStNormalizedFile = this.stNormalizeFile[0]
+                }
             }
         })
     }
@@ -113,27 +111,6 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
             this.paginator.pageIndex,
             this.paginator.pageSize
         );
-    }
-
-
-
-    getAxisColumnNamesSthet() {
-        this.isLoading = true;
-        let coords_metadata_uuid = this.selectedStNormalizedFile['inputs']["coords_metadata"]
-        this.httpClient.get(`${this.API_URL}/resources/${coords_metadata_uuid}/contents/?page=1&page_size=1`).pipe(
-            catchError(error => {
-                this.isLoading = false;
-                this.notificationService.error(`Error ${error.status}: Error from coordinates metadata request.`);
-                console.log("some error from coord: ", error)
-                throw error;
-            })
-        ).subscribe(res => {
-            this.isLoading = false;
-            let jsonObj = res['results'][0]['values']
-            const keys = Object.keys(jsonObj);
-            this.xAxisValueList = keys;
-            this.yAxisValueList = keys;
-        })
     }
 
     getDataNormalizationGradient() {
@@ -223,8 +200,7 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
                     this.originalPlotWidth = this.plotWidth;
                     this.originalPlotHeight = this.plotHeight;
                 }
-
-
+                
                 if (this.scatterPlotData.length > 0) {
                     this.createScatterPlotSthet();
                 }
@@ -382,28 +358,15 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
         this.scrollTo('topOfPage');
 
         if (this.xAxisValue !== '' && this.yAxisValue !== '') {
-
             this.getDataNormalizationGradient()
-        } else {
-            this.getAxisColumnNamesSthet();
         }
     }
 
-    submitAxisValues() {
-        this.panelOpenState = false;
-        this.axisSubmitted = true;
-        this.getDataNormalizationGradient()
-    }
-
     onSelectSTNormalizeFile() {
-        this.xAxisValue = '';
-        this.yAxisValue = '';
         this.xAxisValueList = [];
         this.yAxisValueList = [];
         this.geneSearch = '';
         this.geneSelected = false;
-        // this.displayPlotSTGrad = false;
-        this.axisSubmitted = false;
 
         d3.select(this.containerId)
             .selectAll('svg')

@@ -1,6 +1,5 @@
 <mev-spinner-overlay *ngIf="isLoading"></mev-spinner-overlay>
 <form *ngIf="analysesForm" [formGroup]="analysesForm" (ngSubmit)="onSubmit()">
-
     <ng-container *ngIf="operationData.mode !== 'client'">
         <div class="label">
             Operation name: <span class="redAsterisk">* </span>
@@ -9,7 +8,7 @@
             </mat-icon>
         </div>
         <mat-form-field class="form-control" color="accent">
-            <input matInput formControlName="job_name" name="job_name">
+            <input matInput formControlName="job_name" name="job_name" [(ngModel)]="jobNameVal">
         </mat-form-field>
     </ng-container>
     <div class="label">
@@ -19,7 +18,8 @@
         </mat-icon>
     </div>
     <mat-form-field class="form-control" color="accent">
-        <input matInput [formControlName]="sampleNameField.key" [name]="sampleNameField.key">
+        <input matInput [formControlName]="sampleNameField.key" [name]="sampleNameField.key"
+            [(ngModel)]="sampleNameVal">
     </mat-form-field>
     <br>
 
@@ -78,7 +78,8 @@
                 </mat-icon>
             </div>
             <mat-form-field class="form-control" color="accent">
-                <mat-select [formControlName]="coordMetadataField.key">
+                <mat-select [formControlName]="coordMetadataField.key"
+                    (selectionChange)="onSelectionChangeCoordMetadata($event)">
                     <mat-option *ngFor="let file of coordMetadataField.files" [value]="file.id">
                         {{ file.name }}
                     </mat-option>
@@ -88,9 +89,42 @@
                 </mat-error>
             </mat-form-field>
         </div>
+
+        <div *ngIf="input_metadata_uuid !== '' ">
+            <div class="label">
+                {{xPosField.name}} <span *ngIf="xPosField.required" class="redAsterisk">* </span>
+                <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                    matTooltip="{{xPosField.desc}}" aria-label="Info tooltip about the field">info
+                </mat-icon>
+            </div>
+            <mat-form-field class="form-control" color="accent">
+                <mat-select [formControlName]="xPosField.key">
+                    <mat-option *ngFor="let option of xAxisValueList" [value]="option">
+                        {{ option }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div *ngIf="input_metadata_uuid !== '' ">
+            <div class="label">
+                {{yPosField.name}} <span *ngIf="yPosField.required" class="redAsterisk">* </span>
+                <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                    matTooltip="{{yPosField.desc}}" aria-label="Info tooltip about the field">info
+                </mat-icon>
+            </div>
+            <mat-form-field class="form-control" color="accent">
+                <mat-select [formControlName]="yPosField.key">
+                    <mat-option *ngFor="let option of yAxisValueList" [value]="option">
+                        {{ option }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
         <div>
             <div class="label">
-                {{normalizationMethodField.name}} <span *ngIf="normalizationMethodField.required" class="redAsterisk">* </span>
+                {{normalizationMethodField.name}} <span *ngIf="normalizationMethodField.required" class="redAsterisk">*
+                </span>
                 <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
                     matTooltip="{{normalizationMethodField.desc}}" aria-label="Info tooltip about the field">info
                 </mat-icon>
@@ -120,8 +154,8 @@
                 </mat-option>
             </mat-select>
         </mat-form-field>
-        <div *ngIf="clustering_job_id.length > 0">
-            <mat-form-field appearance="outline">
+        <div>
+            <!-- <mat-form-field appearance="outline">
                 <mat-label>Select X-Axis Label</mat-label>
                 <mat-select [(value)]="yAxisValue">
                     <mat-option [value]="option" *ngFor="let option of yAxisValueList">{{ option }}</mat-option>
@@ -139,54 +173,70 @@
                 [disabled]="xAxisValue === '' || yAxisValue === '' " (click)="getDataClusters()">Submit</button>
 
             <br>
-            <br>
+            <br> -->
             <div id="topOfPage"></div>
             <div #scatter id="scatter" [style.width.px]="originalPlotWidth + legendWidth" class="plotContainer"></div>
             <br>
+            <div *ngIf="clustering_job_id.length > 0">
+                <div class="label">
+                    Cluster: <span class="redAsterisk">* </span>
+                    <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                        matTooltip="Select Cluster" aria-label="Info tooltip about the field">info
+                    </mat-icon>
+                </div>
+                <mat-form-field class="form-control" color="accent">
+                    <mat-select [(value)]="clusterValue" (selectionChange)="saveObsSets(clusterValue)">
+                        <mat-option *ngFor="let option of clusterList" [value]="option">
+                            {{ option }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+        </div>
+
+        <div>
             <div class="label">
-                Cluster: <span class="redAsterisk">* </span>
+                {{ rawCountsField.name }} <span *ngIf="rawCountsField.required" class="redAsterisk">* </span>
                 <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-                    matTooltip="Select Cluster" aria-label="Info tooltip about the field">info
+                    matTooltip="{{ rawCountsField.desc}}" aria-label="Info tooltip about the field">info
                 </mat-icon>
             </div>
             <mat-form-field class="form-control" color="accent">
-                <mat-select [(value)]="clusterValue" (selectionChange)="saveObsSets(clusterValue)">
-                    <mat-option *ngFor="let option of clusterList" [value]="option">
-                        {{ option }}
-                    </mat-option>
-                </mat-select>
+                <input matInput [formControlName]="rawCountsField.key" [name]="rawCountsField.key"
+                    [value]="input_counts_uuid" readonly>
             </mat-form-field>
         </div>
 
-        <div class="label">
-            {{ rawCountsField.name }} <span *ngIf="rawCountsField.required" class="redAsterisk">* </span>
-            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-                matTooltip="{{ rawCountsField.desc}}" aria-label="Info tooltip about the field">info
-            </mat-icon>
+        <div>
+            <div class="label">
+                {{ coordMetadataField.name }} <span *ngIf="coordMetadataField.required" class="redAsterisk">* </span>
+                <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                    matTooltip="{{ coordMetadataField.desc}}" aria-label="Info tooltip about the field">info
+                </mat-icon>
+            </div>
+            <mat-form-field class="form-control" color="accent">
+                <input matInput [formControlName]="coordMetadataField.key" [name]="coordMetadataField.key"
+                    [value]="input_metadata_uuid" readonly>
+            </mat-form-field>
         </div>
-        <mat-form-field class="form-control" color="accent">
-            <input matInput [formControlName]="rawCountsField.key" [name]="rawCountsField.key" [value]="input_counts_uuid" readonly>
-        </mat-form-field>
 
-        <div class="label">
-            {{ coordMetadataField.name }} <span *ngIf="coordMetadataField.required" class="redAsterisk">* </span>
-            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-                matTooltip="{{ coordMetadataField.desc}}" aria-label="Info tooltip about the field">info
-            </mat-icon>
-        </div>
-        <mat-form-field class="form-control" color="accent">
-            <input matInput [formControlName]="coordMetadataField.key" [name]="coordMetadataField.key" [value]="input_metadata_uuid" readonly>
-        </mat-form-field>
 
-        <div class="label">
-            {{ normalizationMethodField2.name }} <span *ngIf="normalizationMethodField2.required" class="redAsterisk">* </span>
-            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-                matTooltip="{{ normalizationMethodField2.desc}}" aria-label="Info tooltip about the field">info
-            </mat-icon>
+        <div>
+            <div class="label">
+                {{ normalizationMethodField2.name }} <span *ngIf="normalizationMethodField2.required"
+                    class="redAsterisk">*
+                </span>
+                <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                    matTooltip="{{ normalizationMethodField2.desc}}" aria-label="Info tooltip about the field">info
+                </mat-icon>
+            </div>
+            <mat-form-field class="form-control" color="accent">
+                <input matInput [formControlName]="normalizationMethodField2.key" [name]="normalizationMethodField2.key"
+                    [value]="normalization_method" readonly>
+            </mat-form-field>
         </div>
-        <mat-form-field class="form-control" color="accent">
-            <input matInput [formControlName]="normalizationMethodField2.key" [name]="normalizationMethodField2.key" [value]="normalization_method" readonly>
-        </mat-form-field>
+
 
     </div>
 

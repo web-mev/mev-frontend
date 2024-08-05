@@ -118,7 +118,7 @@
                 </mat-paginator>
             </div>
         </div>
-        <br>
+        <!-- <br>
         <br>
         <div *ngIf="geneSelected">
             <mat-expansion-panel #accordion [(expanded)]="panelOpenState" class="no-box-shadow">
@@ -146,12 +146,12 @@
                     [disabled]="xAxisValue === '' || yAxisValue === '' || geneSearchVal === ''"
                     (click)="submitAxisValues()">Submit</button>
             </mat-expansion-panel>
-        </div>
+        </div> -->
         <br>
         <br>
         <div id="topOfPage"></div>
         <div #scatter id="scatter" [style.width.px]="originalPlotWidth + legendWidth" class="plotContainer"></div>
-        <p *ngIf="axisSubmitted && scatterPlotData.length === 0 && !isLoading && xAxisValue !== '' && yAxisValue !== '' && geneSearchVal !== ''">No data to display</p>
+        <p *ngIf="scatterPlotData.length === 0 && !isLoading && xAxisValue !== '' && yAxisValue !== '' && geneSearchVal !== '' && geneSelected">No data to display</p>
 
     </mat-card-content>
 </mat-card>

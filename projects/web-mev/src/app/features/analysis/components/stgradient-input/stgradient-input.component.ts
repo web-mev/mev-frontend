@@ -48,6 +48,11 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
     distanceSummaryField;
     numGenesField;
     clustering_job_id = '';
+    xPosField;
+    yPosField;
+
+    jobNameVal = ''
+    sampleNameVal = ''
 
     stclust_retrieved = false;
     files_retrieved = false;
@@ -135,10 +140,12 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
 
     public onFormValid() {
         if (this.reference_cluster_selection === 'stclust') {
-            this.analysesForm.value['coords_metadata'] = this.input_metadata_uuid
-            this.analysesForm.value['normalization_method'] = this.normalization_method
-            this.analysesForm.value['raw_counts'] = this.input_counts_uuid
-            this.analysesForm.value['barcodes'] = this.selectedObsClusterField
+            this.analysesForm.value['coords_metadata'] = this.input_metadata_uuid;
+            this.analysesForm.value['normalization_method'] = this.normalization_method;
+            this.analysesForm.value['raw_counts'] = this.input_counts_uuid;
+            this.analysesForm.value['barcodes'] = this.selectedObsClusterField;
+            this.analysesForm.value['xpos_col'] = this.xAxisValue;
+            this.analysesForm.value['ypos_col'] = this.yAxisValue;
         }
         this.formValid.emit(this.analysesForm.valid);
     }
@@ -147,7 +154,7 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
         let key;
         let input;
         const controlsConfig = {};
-        controlsConfig['job_name'] = ['', [Validators.required]];
+        controlsConfig['job_name'] = [this.jobNameVal, [Validators.required]];
         controlsConfig['reference_cluster_selection'] = [this.reference_cluster_selection, []];
 
         key = 'sample_name'
@@ -160,7 +167,7 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
         };
 
         const configSampleNameField = [
-            '',
+            this.sampleNameVal,
             [...(input.required ? [Validators.required] : [])]
         ];
         controlsConfig[key] = configSampleNameField;
@@ -223,7 +230,8 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
                 key: key,
                 name: input.name,
                 desc: input.description,
-                options: input.spec.options
+                options: input.spec.options,
+                required: input.required
             };
             const configNormalizationMethodChoiceField = [
                 '',
@@ -290,7 +298,8 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
                 key: key,
                 name: input.name,
                 desc: input.description,
-                options: input.spec.options
+                options: input.spec.options,
+                required: input.required
             };
             const configNormalizationMethodChoiceField2 = [
                 this.normalization_method,
@@ -312,7 +321,8 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
             key: key,
             name: input.name,
             desc: input.description,
-            options: input.spec.options
+            options: input.spec.options,
+            required: input.required
         };
         const configDistanceSummaryChoiceField = [
             '',
@@ -339,6 +349,34 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
             ]
         ];
         controlsConfig[key] = configNumGenesField;
+
+        key = 'xpos_col';
+        input = this.operationData.inputs[key];
+        this.xPosField = {
+            key: key,
+            name: input.name,
+            desc: input.description,
+            required: input.required
+        };
+        const configXPosField = [
+            '',
+            []
+        ];
+        controlsConfig[key] = configXPosField;
+
+        key = 'ypos_col';
+        input = this.operationData.inputs[key];
+        this.yPosField = {
+            key: key,
+            name: input.name,
+            required: input.required,
+            desc: input.description
+        };
+        const configYPosField = [
+            '',
+            []
+        ];
+        controlsConfig[key] = configYPosField;
 
         this.analysesForm = this.formBuilder.group(controlsConfig,
             {
@@ -369,6 +407,10 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
      */
     clusterOptionChange() {
         this.reference_cluster_selection = this.analysesForm.value.reference_cluster_selection;
+
+        this.input_metadata_uuid = '';
+        this.formValid.emit(false); //Valid status doesn't update on the UI immediately so forcing it to up update here.
+
         this.analysesForm = null
         this.createForm();
         this.analysesForm.statusChanges.subscribe(() => this.onFormValid());
@@ -421,25 +463,32 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
         this.normalization_method = val.inputs.normalization_method;
         this.clustering_job_id = val.id;
 
+        this.xAxisValue = val.inputs.xpos_col;
+        this.yAxisValue = val.inputs.ypos_col;
+
         this.analysesForm.value['coords_metadata'] = this.input_metadata_uuid
         this.analysesForm.value['normalization_method'] = this.normalization_method
         this.analysesForm.value['raw_counts'] = this.input_counts_uuid
 
         this.getAxisColumnNamesGradient();
         this.resetAllVariables();
+
+        this.getDataClusters()
+    }
+
+    onSelectionChangeCoordMetadata(file) {
+        this.input_metadata_uuid = file.value
+        this.getAxisColumnNamesGradient()
     }
 
     getAxisColumnNamesGradient() {
-        this.isLoading = true;
         this.httpClient.get(`${this.API_URL}/resources/${this.input_metadata_uuid}/contents/?page=1&page_size=1`).pipe(
             catchError(error => {
-                this.isLoading = false;
                 this.notificationService.error(`Error ${error.status}: Error from coordinates metadata request.`);
                 console.log("some error from coord: ", error)
                 throw error;
             })
         ).subscribe(res => {
-            this.isLoading = false;
             let jsonObj = res['results'][0]['values']
             const keys = Object.keys(jsonObj);
             this.xAxisValueList = keys;
@@ -447,7 +496,7 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
         })
     }
 
-    
+
 
     scrollTo(htmlID) {
         const element = document.getElementById(htmlID) as HTMLElement;
@@ -510,8 +559,8 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
                 for (let i in coordsMetadataRes) {
                     let obj = coordsMetadataRes[i];
                     let key = obj['rowname'];
-                    let xVal = obj['values'][this.xAxisValue]
-                    let yVal = obj['values'][this.yAxisValue]
+                    let xVal = obj['values'][this.yAxisValue]
+                    let yVal = obj['values'][this.xAxisValue]
                     this.dataDict[key] = {
                         ...this.dataDict[key],
                         xVal,

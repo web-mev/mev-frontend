@@ -321,3 +321,13 @@ mat-slider {
 .imageContainer2:hover .closeButton {
     opacity: 1; 
 }
+
+.observationSetContainer{
+    display: flex;
+    flex-direction: row;
+    width: 500px;
+}
+
+.obsFormField{
+    margin: 0 12px;
+}

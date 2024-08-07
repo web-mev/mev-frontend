@@ -324,4 +324,10 @@ export class SpatialgePathwayEnrichmentInputComponent extends BaseOperationInput
         element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
     }
 
+    onSelectionChangeGeneDatabase(event) {
+        if (event.value !== 'MSigDB Hallmark') {
+            this.notificationService.warn(`Note that choice of this pathway enrichment database can lead to long analysis times, sometimes approaching 24 hours.`);
+        }
+    }
+
 }

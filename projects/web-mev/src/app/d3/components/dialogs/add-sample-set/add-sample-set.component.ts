@@ -22,7 +22,7 @@ export class AddSampleSetComponent {
   ngOnInit(): void {
     // if no custom set type is passed, assume Observation set by default
     this.customSetType = this.data?.type || CustomSetType.ObservationSet;
-    const name = this.data?.name || '';
+    const name = this.data?.name || ' ';
     if (this.customSetType === CustomSetType.FeatureSet) {
       this.isObservationSet = false;
     }

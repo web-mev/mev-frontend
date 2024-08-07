@@ -9,6 +9,8 @@ import html2canvas from 'html2canvas';
 import { forkJoin } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { AnalysesService } from '@app/features/analysis/services/analysis.service';
+import { MetadataService } from '@app/core/metadata/metadata.service';
+import { MatDialog } from '@angular/material/dialog';
 
 interface ScatterDataNormailization {
   xValue: number;
@@ -163,6 +165,8 @@ export class BaseSpatialgeComponent {
     public route: ActivatedRoute,
     public apiService: AnalysesService,
     public analysesService: AnalysesService,
+    public dialog: MatDialog,
+    public metadataService: MetadataService,
   ) { }
 
   resetAllVariables() {
@@ -394,6 +398,9 @@ export class BaseSpatialgeComponent {
     });
   }
 
+  clusterData = {};
+  availableClusters = []
+
   getDataClusters() {
     this.showMiniMap = true;
     this.geneSearchHeight = 0;
@@ -478,6 +485,16 @@ export class BaseSpatialgeComponent {
 
             this.yMin = Math.min(this.yMin, parsedY);
             this.yMax = Math.max(this.yMax, parsedY);
+
+            //For creating observation sets in Spatial Clustering
+            if (!this.clusterData[clusterName]) {
+              this.clusterData[clusterName] = [];
+            }
+            this.clusterData[clusterName].push(i);
+
+            if(!this.availableClusters.includes(clusterName)){
+              this.availableClusters.push(clusterName)
+            }
           }
         }
 

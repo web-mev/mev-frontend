@@ -116,7 +116,7 @@
             </mat-icon>
         </div>
         <mat-form-field class="form-control" color="accent">
-            <mat-select [formControlName]="geneSetDatabaseField.key">
+            <mat-select [formControlName]="geneSetDatabaseField.key" (selectionChange)="onSelectionChangeGeneDatabase($event)">
                 <mat-option *ngFor="let option of geneSetDatabaseField.options" [value]="option">
                     {{ option }}
                 </mat-option>

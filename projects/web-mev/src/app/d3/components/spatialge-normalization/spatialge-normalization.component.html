@@ -8,42 +8,12 @@
     </mat-card-header>
 
     <div class="searchContainer">
-        <mev-gene-search-input-field (searchSubmit)="onSubmitFromGeneSearch($event)" [initialGeneVal]="geneSearchVal"></mev-gene-search-input-field>
+        <mev-gene-search-input-field (searchSubmit)="onSubmitFromGeneSearch($event)" [initialGeneVal]="geneSearchVal">
+        </mev-gene-search-input-field>
     </div>
 
-    <!-- <mat-expansion-panel #accordion [(expanded)]="panelOpenState">
-        <mat-expansion-panel-header>
-            <mat-panel-title>
-                <span class="plot-options-header">Select X and Y Axis Labels: </span>
-            </mat-panel-title>
-        </mat-expansion-panel-header>
-        <p class="instructions_text">
-            To plot your spatial data, we depend on the coordinate metadata you provided. Since different technologies
-            can label those files differently, we require you to specify which columns dictate the horiztonal and
-            vertical positions. Please set these using the dropdown menus below:
-        </p>
-
-        <mat-form-field appearance="outline">
-            <mat-label>Select X-Axis Label</mat-label>
-            <mat-select [(value)]="yAxisValue">
-                <mat-option [value]="option" *ngFor="let option of yAxisValueList">{{ option }}</mat-option>
-            </mat-select>
-        </mat-form-field>
-        <br>
-        <mat-form-field appearance="outline">
-            <mat-label>Select Y-Axis Label</mat-label>
-            <mat-select [(value)]="xAxisValue">
-                <mat-option [value]="option" *ngFor="let option of xAxisValueList">{{ option }}</mat-option>
-            </mat-select>
-        </mat-form-field>
-        <br>
-        <button mat-flat-button color="primary" class="searchButton"
-            [disabled]="xAxisValue === '' || yAxisValue === '' || geneSearchVal === ''"
-            (click)="analysisType === 'normalization' ? getDataNormalization(): getDataClusters() ">Submit</button>
-    </mat-expansion-panel> -->
-
     <div id="topOfPage"></div>
-    <div *ngIf="!displayOverlayContainer || (scatterPlotData.length === 0 && (useNormalization || useCluster))"
+    <div *ngIf="!isLoading && (!displayOverlayContainer || (scatterPlotData.length === 0 && (useNormalization || useCluster)))"
         class="noDataDiv">No data found.</div>
     <div *ngIf="displayOverlayContainer" class="overlayContainer"
         [style.width.px]="overlayImage ? maxImageContainerWidthOverylay +100 + legendWidth: maxImageContainerWidthSidebySide + 150">

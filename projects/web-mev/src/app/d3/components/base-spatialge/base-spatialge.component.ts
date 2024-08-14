@@ -122,9 +122,6 @@ export class BaseSpatialgeComponent {
 
   analysisType: string = ''
 
-
-  //separate the alignment variables here
-
   currentDegree: number = 0;
   scaleXCustom: number = 1;
 
@@ -148,7 +145,6 @@ export class BaseSpatialgeComponent {
   hideMinimapImage = false;
 
   normalizePlotWidth = 400;
-  // imageOverlayOffset = 220;
 
   aspectRatio = 1;
   reloadImage = false;
@@ -279,7 +275,6 @@ export class BaseSpatialgeComponent {
   getDataNormalization() {
     this.displayOverlayContainer = true;
     this.showMiniMap = true;
-    // this.geneSearch = (this.geneSearchVal.slice(0, 3).toLowerCase() === 'ens') ? this.geneSearchVal.toUpperCase() : this.geneSearchVal;
     this.geneSearchHeight = 100;
     this.useNormalization = true;
     this.useCluster = false;
@@ -365,8 +360,6 @@ export class BaseSpatialgeComponent {
         let normalizePlot = (this.xMax - this.xMin) / this.normalizePlotWidth // This will set the plot to a width of 300px
         this.plotWidth = (this.xMax - this.xMin) / normalizePlot;
         this.plotHeight = (this.yMax - this.yMin) / normalizePlot;
-
-        // this.imageOverlayOffset = this.plotWidth - this.legendWidth
 
         if (this.originalPlotWidth === 0) {
           this.originalPlotWidth = this.plotWidth;
@@ -498,12 +491,9 @@ export class BaseSpatialgeComponent {
           }
         }
 
-        // let normalizePlot = (this.xMax - this.xMin) > (this.yMax - this.yMin) ? (this.xMax - this.xMin) / this.normalizePlotWidth : (this.yMax - this.yMin) / this.normalizePlotWidth
         let normalizePlot = (this.xMax - this.xMin) / this.normalizePlotWidth // This will set the plot to a width of 300px
         this.plotWidth = (this.xMax - this.xMin) / normalizePlot;
         this.plotHeight = (this.yMax - this.yMin) / normalizePlot;
-
-        // this.imageOverlayOffset = this.plotWidth - this.legendWidth
 
         if (this.originalPlotWidth === 0) {
           this.originalPlotWidth = this.plotWidth;
@@ -879,6 +869,9 @@ export class BaseSpatialgeComponent {
       this.notificationService.success(`Scale Factor updated to ${this.scaleFactor}.`);
       this.reloadImage = false;
       this.displayFile();
+    }else{
+      this.displayFile()
+      console.log("scalefactor: ", this.scaleFactorVal, this.scaleFactor)
     }
 
   }

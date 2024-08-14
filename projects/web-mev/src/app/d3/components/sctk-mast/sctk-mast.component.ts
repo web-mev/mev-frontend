@@ -102,6 +102,8 @@ export class MastDgeComponent implements AfterViewInit {
   yScale;
   customObservationSets: CustomSet[];
 
+  isInitialized = false;
+
   constructor(
     private analysesService: AnalysesService,
     public dialog: MatDialog,
@@ -127,12 +129,6 @@ export class MastDgeComponent implements AfterViewInit {
       }
     }
   }
-
-  isInitialized = false;
-
-  // ngOnInit() {
-  //   this.initializeFeatureResource();
-  // }
 
   ngAfterViewInit() {
     this.sort.sortChange.subscribe(

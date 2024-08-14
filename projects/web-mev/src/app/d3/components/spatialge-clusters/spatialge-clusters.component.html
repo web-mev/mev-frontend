@@ -254,7 +254,7 @@
                         <section class="example-section">
                             <label class="scalefactor-group">Create Observation Set:</label>
                             <br>
-                            <mat-form-field appearance="fill" class="obsFormField">
+                            <mat-form-field appearance="outline" class="obsFormField">
                                 <mat-label>Select Clusters</mat-label>
                                 <mat-select [multiple]="true" [(value)]="selectedClustersList">
                                     <mat-option *ngFor="let cluster of availableClusters" [value]="cluster">

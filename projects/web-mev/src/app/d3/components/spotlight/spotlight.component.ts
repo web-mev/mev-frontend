@@ -251,13 +251,6 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
 
         svg.call(pointTip);
 
-        // const x = d3.scaleLinear()
-        //     .domain([this.xMin - (this.xMax - this.xMin) * this.scaleFactor, this.xMax + (this.xMax - this.xMin) * this.scaleFactor])
-        //     .range([0, width]);
-
-        // const y = d3.scaleLinear()
-        //     .domain([this.yMin - (this.yMax - this.yMin) * this.scaleFactor, this.yMax + (this.yMax - this.yMin) * this.scaleFactor])
-        //     .range([0, height]);
         var x = d3.scaleLinear()
             .domain([this.xMin, this.xMax])
             .range([0, width]);

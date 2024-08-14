@@ -155,25 +155,6 @@
             </mat-select>
         </mat-form-field>
         <div>
-            <!-- <mat-form-field appearance="outline">
-                <mat-label>Select X-Axis Label</mat-label>
-                <mat-select [(value)]="yAxisValue">
-                    <mat-option [value]="option" *ngFor="let option of yAxisValueList">{{ option }}</mat-option>
-                </mat-select>
-            </mat-form-field>
-            <br>
-            <mat-form-field appearance="outline">
-                <mat-label>Select Y-Axis Label</mat-label>
-                <mat-select [(value)]="xAxisValue">
-                    <mat-option [value]="option" *ngFor="let option of xAxisValueList">{{ option }}</mat-option>
-                </mat-select>
-            </mat-form-field>
-            <br>
-            <button mat-flat-button color="primary" class="searchButton"
-                [disabled]="xAxisValue === '' || yAxisValue === '' " (click)="getDataClusters()">Submit</button>
-
-            <br>
-            <br> -->
             <div id="topOfPage"></div>
             <div #scatter id="scatter" [style.width.px]="originalPlotWidth + legendWidth" class="plotContainer"></div>
             <br>

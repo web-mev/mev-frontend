@@ -44,11 +44,6 @@ export class SpatialGEPathwayEnrichmentComponent implements OnInit {
 
     initializeFeatureResource(): void {
         this.resourceId = this.outputs['STEnrich.pathway_results'];
-
-        // const sorting = {
-        //     sortField: this.defaultSorting.field,
-        //     sortDirection: this.defaultSorting.direction
-        // };
         const sorting = {}
 
         this.dataSource.loadFeatures(

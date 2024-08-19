@@ -11,6 +11,8 @@ import { NotificationService } from '@core/notifications/notification.service';
 import * as d3 from 'd3';
 import d3Tip from 'd3-tip';
 
+import { CustomSet, CustomSetType } from '@app/_models/metadata';
+
 interface ScatterDataCluster {
     xValue: number;
     yValue: number;
@@ -24,6 +26,7 @@ interface ScatterDataCluster {
     providers: [{ provide: BaseOperationInput, useExisting: StgradientInputComponent }],
     changeDetection: ChangeDetectionStrategy.Default
 })
+
 export class StgradientInputComponent extends BaseOperationInput implements OnChanges {
     analysesForm: FormGroup;
     submitted = false;
@@ -41,9 +44,15 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
     rawCountsField;
     coordMetadataField;
     normalizationMethodField;
+    normalizationMethodField2;
     distanceSummaryField;
     numGenesField;
     clustering_job_id = '';
+    xPosField;
+    yPosField;
+
+    jobNameVal = ''
+    sampleNameVal = ''
 
     stclust_retrieved = false;
     files_retrieved = false;
@@ -52,9 +61,50 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
     ann_files = [];
 
     outputs_file_uuid;
-    input_counts_uuid;
-    input_metadata_uuid;
-    normalization_method;
+    input_counts_uuid = '';
+    input_metadata_uuid = '';
+    normalization_method = '';
+
+    selectedObsClusterField = {};
+
+    scatterPlotDataCluster: ScatterDataCluster[] = [];
+
+    dataDict: Record<string, any> = {}
+
+    xMin: number = 100000000
+    xMax: number = 0
+    yMin: number = 100000000
+    yMax: number = 0
+    totalCountsMax: number = 0;
+    totalCountsMin: number = 100000000;
+
+    totalCounts: Record<string, any> = {}
+
+    plotWidth: number = 300;
+    plotHeight: number = 500;
+    originalPlotWidth: number = 0;
+    originalPlotHeight: number = 0;
+    legendWidth: number = 120;
+
+    clusterTypes: Record<string, any> = {};
+    clusterColors: string[] = ["#EBCD00", "#52A52E", "#00979D", "#6578B4", "#80408D", "#C9006B", "#68666F", "#E80538", "#E87D1E"];
+
+    normalizePlotWidth = 300;
+
+    observationSetsClusters = {}
+
+    isLoading = false;
+    xAxisValue: string = '';
+    yAxisValue: string = ''
+    xAxisValueList: string[] = [];
+    yAxisValueList: string[] = [];
+
+    clusterList = [];
+    clusterValue = '';
+
+    containerId: string = '#scatter';
+    selectedColor: string = 'Green';
+    colors: string[] = ['Red', 'Green'];
 
     constructor(
         private apiService: AnalysesService,
@@ -89,17 +139,22 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
     }
 
     public onFormValid() {
+        if (this.reference_cluster_selection === 'stclust') {
+            this.analysesForm.value['coords_metadata'] = this.input_metadata_uuid;
+            this.analysesForm.value['normalization_method'] = this.normalization_method;
+            this.analysesForm.value['raw_counts'] = this.input_counts_uuid;
+            this.analysesForm.value['barcodes'] = this.selectedObsClusterField;
+            this.analysesForm.value['xpos_col'] = this.xAxisValue;
+            this.analysesForm.value['ypos_col'] = this.yAxisValue;
+        }
         this.formValid.emit(this.analysesForm.valid);
     }
 
-
-
     createForm() {
-
         let key;
         let input;
         const controlsConfig = {};
-        controlsConfig['job_name'] = ['', [Validators.required]];
+        controlsConfig['job_name'] = [this.jobNameVal, [Validators.required]];
         controlsConfig['reference_cluster_selection'] = [this.reference_cluster_selection, []];
 
         key = 'sample_name'
@@ -112,12 +167,13 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
         };
 
         const configSampleNameField = [
-            '',
+            this.sampleNameVal,
             [...(input.required ? [Validators.required] : [])]
         ];
         controlsConfig[key] = configSampleNameField;
-        key = 'barcodes';
+
         if (this.reference_cluster_selection === 'obs_set') {
+            key = 'barcodes';
             input = this.operationData.inputs[key];
             this.obsSetField = {
                 key: key,
@@ -174,7 +230,8 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
                 key: key,
                 name: input.name,
                 desc: input.description,
-                options: input.spec.options
+                options: input.spec.options,
+                required: input.required
             };
             const configNormalizationMethodChoiceField = [
                 '',
@@ -183,19 +240,79 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
             controlsConfig[key] = configNormalizationMethodChoiceField;
 
         } else { // user has elected to use prior clustering results
+            key = 'stclust_results'
             input = this.operationData.inputs[key];
             this.stClustResultsField = {
                 key: key,
-                name: input.name,
-                desc: input.description,
-                required: input.required,
+                name: 'stclust_results',
+                desc: 'stclust_results',
+                required: true,
                 jobs: this.stclust_results
             };
             const configSTClustResultsField = [
-                undefined,
-                [...(input.required ? [Validators.required] : [])]
+                this.stClustResultsField,
+                [...(this.stClustResultsField.required ? [Validators.required] : [])]
             ];
             controlsConfig[key] = configSTClustResultsField;
+
+            //new stuff just added
+            key = "raw_counts"
+            input = this.operationData.inputs[key];
+            this.rawCountsField = {
+                key: key,
+                name: input.name,
+                resource_types: input.spec.resource_types,
+                desc: input.description,
+                required: input.required,
+                files: this.raw_count_files,
+                selectedFiles: []
+            };
+
+            const configRawCountsField = [
+                this.input_counts_uuid,
+                []
+            ];
+            controlsConfig[key] = configRawCountsField;
+
+            key = "coords_metadata"
+            input = this.operationData.inputs[key];
+            this.coordMetadataField = {
+                key: key,
+                name: input.name,
+                resource_types: input.spec.resource_types,
+                desc: input.description,
+                required: input.required,
+                files: this.ann_files,
+                selectedFiles: []
+            };
+
+            const configCoordMetaField = [
+                this.input_metadata_uuid,
+                []
+            ];
+            controlsConfig[key] = configCoordMetaField;
+
+            key = 'normalization_method';
+            input = this.operationData.inputs[key];
+            this.normalizationMethodField2 = {
+                key: key,
+                name: input.name,
+                desc: input.description,
+                options: input.spec.options,
+                required: input.required
+            };
+            const configNormalizationMethodChoiceField2 = [
+                this.normalization_method,
+                []
+            ];
+            controlsConfig[key] = configNormalizationMethodChoiceField2;
+
+            key = 'barcodes';
+            const configBarcodeField = [
+                this.selectedObsClusterField,
+                []
+            ];
+            controlsConfig[key] = configBarcodeField;
         }
 
         key = 'distance_summary';
@@ -204,7 +321,8 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
             key: key,
             name: input.name,
             desc: input.description,
-            options: input.spec.options
+            options: input.spec.options,
+            required: input.required
         };
         const configDistanceSummaryChoiceField = [
             '',
@@ -231,6 +349,34 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
             ]
         ];
         controlsConfig[key] = configNumGenesField;
+
+        key = 'xpos_col';
+        input = this.operationData.inputs[key];
+        this.xPosField = {
+            key: key,
+            name: input.name,
+            desc: input.description,
+            required: input.required
+        };
+        const configXPosField = [
+            '',
+            []
+        ];
+        controlsConfig[key] = configXPosField;
+
+        key = 'ypos_col';
+        input = this.operationData.inputs[key];
+        this.yPosField = {
+            key: key,
+            name: input.name,
+            required: input.required,
+            desc: input.description
+        };
+        const configYPosField = [
+            '',
+            []
+        ];
+        controlsConfig[key] = configYPosField;
 
         this.analysesForm = this.formBuilder.group(controlsConfig,
             {
@@ -261,7 +407,13 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
      */
     clusterOptionChange() {
         this.reference_cluster_selection = this.analysesForm.value.reference_cluster_selection;
+
+        this.input_metadata_uuid = '';
+        this.formValid.emit(false); //Valid status doesn't update on the UI immediately so forcing it to up update here.
+
+        this.analysesForm = null
         this.createForm();
+        this.analysesForm.statusChanges.subscribe(() => this.onFormValid());
     }
 
     /**
@@ -279,7 +431,6 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
                 );
                 this.stclust_retrieved = true;
             });
-
     }
 
     getPotentialInputFiles() {
@@ -304,40 +455,40 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
             });
     }
 
-    onJobSelection() {
-        let val = this.analysesForm.value.barcodes;
-        // TODO: use the UUID here to get the results for plotting.
+    onClusterTypeSelection() {
+        let val = this.analysesForm.value['stclust_results'];
         this.outputs_file_uuid = val.outputs.clustered_positions;
         this.input_counts_uuid = val.inputs.raw_counts;
         this.input_metadata_uuid = val.inputs.coords_metadata;
         this.normalization_method = val.inputs.normalization_method;
         this.clustering_job_id = val.id;
 
+        this.xAxisValue = val.inputs.xpos_col;
+        this.yAxisValue = val.inputs.ypos_col;
 
+        this.analysesForm.value['coords_metadata'] = this.input_metadata_uuid
+        this.analysesForm.value['normalization_method'] = this.normalization_method
+        this.analysesForm.value['raw_counts'] = this.input_counts_uuid
+
+        this.getAxisColumnNamesGradient();
+        this.resetAllVariables();
+
+        this.getDataClusters()
+    }
+
+    onSelectionChangeCoordMetadata(file) {
+        this.input_metadata_uuid = file.value
         this.getAxisColumnNamesGradient()
     }
 
-    isLoading = false;
-    xAxisValue: string = '';
-    yAxisValue: string = ''
-    xAxisValueList: string[] = [];
-    yAxisValueList: string[] = [];
-
-    clusterList = [];
-    clusterValue = '';
-
     getAxisColumnNamesGradient() {
-        this.isLoading = true;
-        // let coords_metadata_uuid = this.selectedStNormalizedFile['inputs']["coords_metadata"]
         this.httpClient.get(`${this.API_URL}/resources/${this.input_metadata_uuid}/contents/?page=1&page_size=1`).pipe(
             catchError(error => {
-                this.isLoading = false;
                 this.notificationService.error(`Error ${error.status}: Error from coordinates metadata request.`);
                 console.log("some error from coord: ", error)
                 throw error;
             })
         ).subscribe(res => {
-            this.isLoading = false;
             let jsonObj = res['results'][0]['values']
             const keys = Object.keys(jsonObj);
             this.xAxisValueList = keys;
@@ -345,40 +496,35 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
         })
     }
 
-    scatterPlotDataCluster: ScatterDataCluster[] = [];
 
-    dataDict: Record<string, any> = {}
-
-    xMin: number = 100000000
-    xMax: number = 0
-    yMin: number = 100000000
-    yMax: number = 0
-    totalCountsMax: number = 0;
-    totalCountsMin: number = 100000000;
-
-    totalCounts: Record<string, any> = {}
-
-    plotWidth: number = 300;
-    plotHeight: number = 500;
-    originalPlotWidth: number = 0;
-    originalPlotHeight: number = 0;
-    legendWidth: number = 120;
-
-    clusterTypes: Record<string, any> = {};
-    clusterColors: string[] = ["#EBCD00", "#52A52E", "#00979D", "#6578B4", "#80408D", "#C9006B", "#68666F", "#E80538", "#E87D1E"];
-
-    normalizePlotWidth = 300;
-    imageOverlayOffset = 220;
 
     scrollTo(htmlID) {
         const element = document.getElementById(htmlID) as HTMLElement;
         element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
     }
 
+    resetAllVariables() {
+        this.scatterPlotDataCluster = [];
+        this.xMin = 100000000
+        this.xMax = 0
+        this.yMin = 100000000
+        this.yMax = 0
+        this.totalCountsMax = 0;
+        this.totalCountsMin = 100000000;
+
+        this.dataDict = {}
+        this.plotWidth = 300;
+        this.plotHeight = 500;
+        this.originalPlotWidth = 0;
+        this.originalPlotHeight = 0;
+
+        this.legendWidth = 120;
+
+    }
+
     getDataClusters() {
         this.isLoading = true;
         this.scrollTo('topOfPage');
-        // this.resetAllVariables();
         let clusters_uuid = this.outputs_file_uuid
         let coords_metadata_uuid = this.input_metadata_uuid
 
@@ -413,16 +559,17 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
                 for (let i in coordsMetadataRes) {
                     let obj = coordsMetadataRes[i];
                     let key = obj['rowname'];
-                    let xVal = obj['values'][this.xAxisValue]
-                    let yVal = obj['values'][this.yAxisValue]
+                    let xVal = obj['values'][this.yAxisValue]
+                    let yVal = obj['values'][this.xAxisValue]
                     this.dataDict[key] = {
                         ...this.dataDict[key],
                         xVal,
                         yVal
                     };
+
                 }
 
-                let colorLabels = {}
+                let colorLabels = {};
 
                 for (let i in this.dataDict) {
                     const parsedX = parseInt(this.dataDict[i]['xVal'])
@@ -459,12 +606,27 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
                     }
                 }
 
-                // let normalizePlot = (this.xMax - this.xMin) > (this.yMax - this.yMin) ? (this.xMax - this.xMin) / this.normalizePlotWidth : (this.yMax - this.yMin) / this.normalizePlotWidth
                 let normalizePlot = (this.xMax - this.xMin) / this.normalizePlotWidth // This will set the plot to a width of 300px
                 this.plotWidth = (this.xMax - this.xMin) / normalizePlot;
                 this.plotHeight = (this.yMax - this.yMin) / normalizePlot;
 
-                this.imageOverlayOffset = this.plotWidth - this.legendWidth
+                for (let geneName in this.dataDict) {
+                    const parsedX = parseInt(this.dataDict[geneName]['xVal'])
+                    const parsedY = parseInt(this.dataDict[geneName]['yVal'])
+                    const clusterid = this.dataDict[geneName]['clusterid']
+
+                    if (!isNaN(parsedX) && !isNaN(parsedY) && clusterid) {
+                        let clusterName = "Cluster " + clusterid
+                        if (!this.observationSetsClusters[clusterName]) {
+                            this.observationSetsClusters[clusterName] = []
+                        }
+                        let geneObj = {
+                            id: geneName
+                        }
+                        this.observationSetsClusters[clusterName].push(geneObj)
+
+                    }
+                }
 
                 if (this.originalPlotWidth === 0) {
                     this.originalPlotWidth = this.plotWidth;
@@ -472,22 +634,15 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
                 }
 
                 if (this.scatterPlotDataCluster.length > 0) {
-                    // this.displayOverlayContainer = true;
-                    // this.callCreateScatterPlot();
-                    this.createScatterPlot('normal')
+                    this.createScatterPlot()
                 }
-            } else {
-                // this.displayOverlayContainer = false;
             }
 
         });
     }
 
-    containerId: string = '#scatter';
-    selectedColor: string = 'Green';
-    colors: string[] = ['Red', 'Green'];
-    createScatterPlot(size) {
-        var margin = { top: 0, right: 0, bottom: 0, left: this.legendWidth},
+    createScatterPlot() {
+        var margin = { top: 0, right: 0, bottom: 0, left: this.legendWidth },
             width = this.plotWidth - margin.left - margin.right + this.legendWidth,
             height = this.plotHeight - margin.top - margin.bottom;
 
@@ -537,7 +692,7 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
             .append("circle")
             .attr("cx", function (d) { return x(d.xValue) })
             .attr("cy", function (d) { return height - y(d.yValue); })
-            .attr("r", size === 'normal' ? 1.75 : .5)
+            .attr("r", 1.75)
             .attr("fill", d => {
                 return colorScale(d.clusterid)
             })
@@ -552,10 +707,8 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
                 pointTip.hide();
             });
 
-
         // Add Legend
         if (this.legendWidth !== 0) {
-            // Legend
             const clusterColors = Object.keys(this.clusterTypes).map(key => ({
                 label: this.clusterTypes[key].label,
                 color: this.clusterTypes[key].color
@@ -592,6 +745,17 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
                 .attr('class', 'legend-label')
                 .text(d => d.label);
         }
+    }
 
+    saveObsSets(name) {
+        const observationSet: CustomSet = {
+            name: `${name}_${this.observationSetsClusters[name].length}_${this.clustering_job_id}`,
+            type: CustomSetType.ObservationSet,
+            color: '#A41034',
+            elements: this.observationSetsClusters[name]
+        };
+
+        this.analysesForm.value['barcodes'] = observationSet
+        this.selectedObsClusterField = observationSet
     }
 }

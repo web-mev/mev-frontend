@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit} from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { BaseSpatialgeComponent } from '../base-spatialge/base-spatialge.component'
 
 interface ScatterData {
@@ -16,7 +16,13 @@ interface ScatterData {
 export class SpatialGENormalizationComponent extends BaseSpatialgeComponent implements OnInit {
 
     ngOnInit(): void {
-        this.analysisType = 'normalization'
-        this.getAxisColumnNames()
+        this.geneSearch= 'Gnai3';
+        this.geneSearchVal= 'Gnai3';
+        this.xAxisValue = this.outputs['ypos_col'];
+        this.yAxisValue = this.outputs['xpos_col'];
+        this.analysisType = 'normalization';
+        this.getDataNormalization();
     }
+
+
 }

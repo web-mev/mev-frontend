@@ -1,28 +1,23 @@
-<div class="container">
-  <h3 mat-dialog-title>Add a new custom {{ customSetType | lowercase}}</h3>
+<span class="headerSpan">
+  <div class="dialogTitle">Add a new custom {{ customSetType | lowercase}}</div>
+  <button class="closeDialogButton" mat-dialog-close mat-icon-button type="button">
+    <mat-icon>close</mat-icon>
+  </button>
+</span>
+<br>
 
-  <form class="mat-dialog-content" [formGroup]="setForm" (ngSubmit)="submit">
-
-    <div class="form">
-
-      <mat-form-field class="form-control" color="accent">
-        <mat-label>{{ customSetType }} name:</mat-label>
-        <input matInput formControlName=customSetName>
-      </mat-form-field>
-
-      <mat-form-field class="form-control" color="accent">
-        <mat-label>Select a color for your set:</mat-label>
-        <input type="color" class="color-picker-input" matInput formControlName=customSetColor>
-      </mat-form-field>
-
-    </div>
-
-
-    <div mat-dialog-actions>
-      <button mat-button mat-raised-button color="accent" (click)="confirmAdd()" 
-        [type]="submit" [disabled]="!setForm.valid" [mat-dialog-close]="1">Save</button>
-      <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
-    </div>
-    <p></p>
-  </form>
-</div>
+<form class="mat-dialog-content" [formGroup]="setForm" (ngSubmit)="submit">
+  <div class="form">
+    <mat-form-field class="form-control" color="accent">
+      <mat-label>{{ customSetType }} name:</mat-label>
+      <input matInput formControlName=customSetName>
+    </mat-form-field>
+    <br>
+    <mat-form-field class="form-control" color="accent">
+      <mat-label>Select a color for your set:</mat-label>
+      <input type="color" class="color-picker-input" matInput formControlName=customSetColor>
+    </mat-form-field>
+  </div>
+  <button mat-button mat-raised-button color="accent" (click)="confirmAdd()" type="submit" [disabled]="!setForm.valid"
+    mat-dialog-close="true">Save</button>
+</form>

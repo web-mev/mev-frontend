@@ -20,12 +20,10 @@ export class Deseq2Component extends DifferentialExpressionComponent {
         'padj'
       ]
 
-    ngOnInit() {
-        super.ngOnInit();
-    }
     ngAfterViewInit() {
         super.ngAfterViewInit();
     }
+    
     ngOnChanges() {
         super.ngOnChanges();
     }

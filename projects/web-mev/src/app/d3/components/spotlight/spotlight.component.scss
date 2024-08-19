@@ -1,5 +1,5 @@
 .analysis-card__img {
-    background-image: url("~assets/icons/ct-scan.png");
+    background-image: url("~assets/icons/dna.png");
     background-size: 30px;
     background-position: top right;
     background-repeat: no-repeat;
@@ -19,7 +19,6 @@
     position: relative;
     width: fit-content;
     overflow: hidden;
-    margin-right: 10px;
 }
 
 .overlayContainer {
@@ -231,6 +230,8 @@ mat-slider {
 .nonOverlay {
     margin-top: 10px;
     overflow: hidden;
+
+    position: relative;
 }
 
 .hiddenDiv {
@@ -289,11 +290,38 @@ mat-slider {
     margin-bottom: 10px;
 }
 
-.tipHeader{
+.tipHeader {
     font-weight: bold;
 }
 
-.plotContainer{
+.plotContainer {
     margin-left: 0px;
     margin-top: 0px;
+}
+
+.resized-canvas {
+    width: auto; /* Maintain aspect ratio */
+}
+
+.scalefactor-group {
+    font-weight: bold;
+    margin: 6px 0;
+}
+
+.imageContainer,
+.imageContainer2 {
+    position: relative;
+}
+
+.closeButtonContainer {
+    position: absolute;
+    top: 0px;
+}
+
+.imageContainer2:hover .closeButton {
+    opacity: 1;
+}
+
+.wait-cursor {
+    cursor: wait;
 }

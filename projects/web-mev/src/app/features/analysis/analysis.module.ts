@@ -22,6 +22,11 @@ import { SCTKMastInputComponent } from './components/sctk-mast-input/sctk-mast-i
 import { CombatseqInputComponent } from './components/combatseq-input/combatseq-input.component';
 import { SnfInputComponent } from './components/snf-input/snf-input.component';
 import { StgradientInputComponent } from './components/stgradient-input/stgradient-input.component';
+import { StheitInputComponent } from './components/stheit-input/stheit-input.component';
+import { StnormalizationInputComponent } from './components/stnormalization-input/stnormalization-input.component';
+import { SpatialgePathwayEnrichmentInputComponent } from './components/spatialge-pathway-enrichment-input/spatialge-pathway-enrichment-input.component'
+import { SpatialgeClusteringInputComponent } from './components/spatialge-clustering-input/spatialge-clustering-input.component';
+import { SpotlightInputComponent } from './components/spotlight-input/spotlight-input.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +46,12 @@ import { StgradientInputComponent } from './components/stgradient-input/stgradie
     SCTKMastInputComponent,
     CombatseqInputComponent,
     SnfInputComponent,
-    StgradientInputComponent
+    StgradientInputComponent,
+    StheitInputComponent,
+    StnormalizationInputComponent,
+    SpatialgePathwayEnrichmentInputComponent,
+    SpatialgeClusteringInputComponent,
+    SpotlightInputComponent,
   ],
   exports: [
     OperationComponent,

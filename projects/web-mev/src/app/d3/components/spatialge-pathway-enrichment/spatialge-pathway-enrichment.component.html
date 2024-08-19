@@ -18,29 +18,29 @@
             <mev-spinner-overlay *ngIf="dataSource.loading$ | async"></mev-spinner-overlay>
 
             <div class="mat-elevation-z8">
-                <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" class="table">
+                <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" class="table" matSort (matSortChange)="sortData($event)">
                     <ng-container matColumnDef="pathway">
                         <th mat-header-cell *matHeaderCellDef> Pathway </th>
                         <td mat-cell *matCellDef="let element" class="word-wrap"> {{element.pathway}} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="padj">
-                        <th mat-header-cell *matHeaderCellDef> Padj </th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Padj </th>
                         <td mat-cell *matCellDef="let element" class="numericCols"> {{element.padj}} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="pval">
-                        <th mat-header-cell *matHeaderCellDef> PVal </th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> PVal </th>
                         <td mat-cell *matCellDef="let element" class="numericCols"> {{element.pval}} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="size">
-                        <th mat-header-cell *matHeaderCellDef> Size </th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Size </th>
                         <td mat-cell *matCellDef="let element" class="numericCols"> {{element.size}} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="actions">
-                        <th mat-header-cell *matHeaderCellDef> </th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> </th>
                         <td mat-cell *matCellDef="let element; let i=index;" class="numericCols">
                             <button mat-raised-button color="accent" title="Create feature set"
                                 (click)="onCreateCustomFeatureSet(element)">

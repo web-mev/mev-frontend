@@ -1,12 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  ViewChild,
-  AfterViewInit,
-  Input,
-  ElementRef
-} from '@angular/core';
+import { Component, ViewChild, AfterViewInit, Input, ElementRef } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { AnalysesService } from '@app/features/analysis/services/analysis.service';
@@ -28,7 +20,7 @@ import { NotificationService } from '../../../core/core.module';
   templateUrl: './sctk-mast.component.html',
   styleUrls: ['../differential_expression/differential_expression.component.scss']
 })
-export class MastDgeComponent implements OnInit, AfterViewInit {
+export class MastDgeComponent implements AfterViewInit {
   @Input() outputs;
   dataSource: FeaturesDataSource; // datasource for MatTable
   boxPlotData;
@@ -110,6 +102,8 @@ export class MastDgeComponent implements OnInit, AfterViewInit {
   yScale;
   customObservationSets: CustomSet[];
 
+  isInitialized = false;
+
   constructor(
     private analysesService: AnalysesService,
     public dialog: MatDialog,
@@ -134,10 +128,6 @@ export class MastDgeComponent implements OnInit, AfterViewInit {
         }
       }
     }
-  }
-
-  ngOnInit() {
-    this.initializeFeatureResource();
   }
 
   ngAfterViewInit() {
@@ -208,7 +198,7 @@ export class MastDgeComponent implements OnInit, AfterViewInit {
         elem => elem.id
       );
     }
-    
+
     const experSamples = this.outputs['expSamples'].elements.map(
       elem => elem.id
     );

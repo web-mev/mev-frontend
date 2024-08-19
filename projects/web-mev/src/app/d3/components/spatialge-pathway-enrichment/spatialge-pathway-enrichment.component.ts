@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddSampleSetComponent } from '../dialogs/add-sample-set/add-sample-set.component';
 import { MetadataService } from '@app/core/metadata/metadata.service';
 import { NotificationService } from '../../../core/core.module';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
     selector: 'mev-spatialge-pathway-enrichment',
@@ -43,10 +44,27 @@ export class SpatialGEPathwayEnrichmentComponent implements OnInit {
 
     initializeFeatureResource(): void {
         this.resourceId = this.outputs['STEnrich.pathway_results'];
+        const sorting = {}
+
         this.dataSource.loadFeatures(
             this.resourceId,
             {},
+            sorting,
+            this.defaultPageIndex,
+            this.defaultPageSize
+        );
+    }
+
+    sortData(sort: MatSort) {
+        const sorting = {
+            sortField: sort.active,
+            sortDirection: sort.direction
+        };
+
+        this.dataSource.loadFeatures(
+            this.resourceId,
             {},
+            sorting,
             this.defaultPageIndex,
             this.defaultPageSize
         );

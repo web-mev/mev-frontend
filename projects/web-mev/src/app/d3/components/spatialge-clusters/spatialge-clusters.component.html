@@ -2,62 +2,17 @@
 <mat-card class="analysis-card">
     <mat-card-header>
         <div mat-card-avatar class="analysis-card__img"></div>
-        <mat-card-title>SpatialGE {{useNormalization ? 'Normalization' : 'Clusters'}}: {{ outputs?.job_name }}</mat-card-title>
+        <mat-card-title>SpatialGE {{useNormalization ? 'Normalization' : 'Clusters'}}: {{ outputs?.job_name }}
+        </mat-card-title>
         <mev-input-info [outputs]="outputs"></mev-input-info>
     </mat-card-header>
 
-    <div *ngIf="useNormalization" class="searchContainer">
-        <label id="radio-group-axis">Gene Search: </label>
-        <div class="inputContainer">
-            <mat-form-field class="example-form-field" appearance="outline">
-                <mat-label>Gene Search</mat-label>
-                <input matInput type="search" name="search" [(ngModel)]="geneSearchVal" class="smallerInput">
-                <button *ngIf="geneSearchVal" matSuffix mat-icon-button aria-label="Clear" (click)="geneSearchVal = ''">
-                    <mat-icon>close</mat-icon>
-                </button>
-            </mat-form-field>
-            <button *ngIf="!panelOpenState" mat-flat-button color="primary" class="searchButton"
-                [disabled]="geneSearchVal === ''" (click)="getDataNormalization()">Submit</button>
-        </div>
-    </div>
-
-    <mat-expansion-panel #accordion [(expanded)]="panelOpenState">
-        <mat-expansion-panel-header>
-            <mat-panel-title>
-                <span class="plot-options-header">Select X and Y Axis Labels: </span>
-            </mat-panel-title>
-        </mat-expansion-panel-header>
-        <p class="instructions_text">
-            To plot your spatial data, we depend on the coordinate metadata you provided. Since different technologies
-            can label those files differently, we require you to specify which columns dictate the horiztonal and
-            vertical positions. Please set these using the dropdown menus below:
-        </p>
-
-        <mat-form-field appearance="outline">
-            <mat-label>Select X-Axis Label</mat-label>
-            <mat-select [(value)]="yAxisValue">
-                <mat-option [value]="option" *ngFor="let option of yAxisValueList">{{ option }}</mat-option>
-            </mat-select>
-        </mat-form-field>
-        <br>
-        <mat-form-field appearance="outline">
-            <mat-label>Select Y-Axis Label</mat-label>
-            <mat-select [(value)]="xAxisValue">
-                <mat-option [value]="option" *ngFor="let option of xAxisValueList">{{ option }}</mat-option>
-            </mat-select>
-        </mat-form-field>
-        <br>
-        <button mat-flat-button color="primary" class="searchButton"
-            [disabled]="xAxisValue === '' || yAxisValue === '' || geneSearchVal === ''"
-            (click)="analysisType === 'normalization' ? getDataNormalization(): getDataClusters() ">Submit</button>
-    </mat-expansion-panel>
-
     <div id="topOfPage"></div>
-    <div *ngIf="!displayOverlayContainer || (scatterPlotDataCluster.length === 0 && (useNormalization || useCluster))"
+    <div *ngIf="!isLoading && (!displayOverlayContainer || (scatterPlotDataCluster.length === 0 && (useNormalization || useCluster)))"
         class="noDataDiv">No data found.</div>
     <div *ngIf="displayOverlayContainer" class="overlayContainer"
         [style.width.px]="overlayImage ? maxImageContainerWidthOverylay +100 + legendWidth: maxImageContainerWidthSidebySide + 150">
-        <div *ngIf="scatterPlotDataCluster.length > 0" class="downloadButtonContainer"
+        <div *ngIf="scatterPlotDataCluster.length > 0 && (displayPlot || displayImage)" class="downloadButtonContainer"
             [style.width.px]="overlayImage ? maxImageContainerWidthOverylay + 100 + legendWidth: maxImageContainerWidthSidebySide + 200">
             <button mat-button *ngIf="!isLoading" id="downloadButton" (click)="captureAndDownloadImages()"
                 matTooltip="Download Image" title="download something">
@@ -66,7 +21,7 @@
         </div>
 
         <span class="fullOverlayDiv" [style.width.px]="(plotWidth + legendWidth)*2">
-            <div *ngIf="currentZoomVal !== 1 && currentZoomVal !== 0.5" class="verticalSliderContainer">
+            <div *ngIf="currentZoomVal !== 1 && currentZoomVal !== 0.5 && displayPlot" class="verticalSliderContainer">
                 <mat-slider [min]="minSliderTopValue()" [max]="maxSliderTopValue()" step="10" [(ngModel)]="sliderTop"
                     (change)="moveImage('left', 'slider', 'plot')" vertical [style.height.px]="plotHeight">
                 </mat-slider>
@@ -85,7 +40,8 @@
                     [style.margin-left.px]="overlayImage ? (currentZoomVal === 1 ? -originalPlotWidth : -originalPlotWidth): 20"
                     [style.height.px]="!droppedFile ? originalPlotHeight - 100: originalPlotHeight"
                     [style.width.px]="!overlayImage && !droppedFile ? normalizePlotWidth - 200 : originalPlotWidth"
-                    (click)="fileInput.click()" class="imageContainer" [style.opacity]="imageOpacityValue">
+                    (click)="!droppedFile && currentZoomVal === 1 ? fileInput.click(): '' " class="imageContainer"
+                    [style.opacity]="imageOpacityValue">
                     <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;">
                     <div *ngIf="!droppedFile && currentZoomVal == 1" class="drop-message">
                         <p>Drop image file here or click to upload</p>
@@ -95,7 +51,7 @@
                     </div>
                 </div>
 
-                <div *ngIf="scatterPlotDataCluster.length > 0" class="zoomButtonContainer"
+                <div *ngIf="scatterPlotDataCluster.length > 0 && displayPlot" class="zoomButtonContainer"
                     [style.left.px]="currentZoomVal === 1 ? plotWidth + legendWidth - 60 : (overlayImage ? plotWidth - 40: plotWidth - 60)">
                     <button class="zoomButton" matTooltip="Zoom In" (click)="applyZoom('+')"
                         [disabled]="currentZoomVal === zoomMax">
@@ -109,7 +65,8 @@
 
             </div>
             <div class="nonOverlay" [style.opacity]="imageOpacityValue" [style.height.px]="plotHeight"
-                [style.width.px]="droppedFile && displayImage && !overlayImage ? (currentZoomVal === 1 ? plotHeight*aspectRatio : plotWidth) : 0">
+                [style.width.px]="droppedFile && displayImage && !overlayImage ? (currentZoomVal === 1 ? plotHeight*aspectRatio : plotWidth) : 0"
+                [style.left.px]="displayPlot ? 0 : (currentZoomVal == 1 ? -(originalPlotWidth+legendWidth): -originalPlotWidth)">
                 <div class="imageContainer2" [style.height.px]="plotHeight">
                     <canvas #canvasElement2 [width]="croppedWidth" [height]="croppedHeight"></canvas>
                 </div>
@@ -133,13 +90,13 @@
                             [class]="currentZoomVal != 1 || droppedFile ? 'minimapPlotContainer' : 'hiddenDiv minimapPlotContainer'"
                             [style.opacity]="displayPlot ? plotOpacityValue : 0" [style.top.px]="0">
                         </div>
-                        <div *ngIf="droppedFile || !droppedFile" [ngStyle]="selectionRectStyle" class="miniboxDiv">
+                        <div [ngStyle]="selectionRectStyle" [style.opacity]="displayPlot ? 1 : 0" class="miniboxDiv">
                         </div>
                     </div>
                 </div>
             </div>
         </span>
-        <div *ngIf="currentZoomVal !== 1 && currentZoomVal !== 0.5" class="horizontalSliderContainer"
+        <div *ngIf="currentZoomVal !== 1 && currentZoomVal !== 0.5 && displayPlot" class="horizontalSliderContainer"
             [style.width.px]="plotWidth">
             <mat-slider [min]="minSliderLeftValue()" [max]="maxSliderLeftValue()" step="10" [(ngModel)]="sliderLeft"
                 (change)="moveImage('left', 'slider', 'plot')" [style.width.px]="plotWidth">
@@ -292,6 +249,24 @@
                             </div>
                         </mat-radio-group>
                     </div>
+                    <br>
+                    <div class="observationSetContainer">
+                        <section class="example-section">
+                            <label class="scalefactor-group">Create Observation Set:</label>
+                            <br>
+                            <mat-form-field appearance="outline" class="obsFormField">
+                                <mat-label>Select Clusters</mat-label>
+                                <mat-select [multiple]="true" [(value)]="selectedClustersList">
+                                    <mat-option *ngFor="let cluster of availableClusters" [value]="cluster">
+                                        {{ cluster }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <button mat-flat-button color="primary" class="searchButton" (click)="onCreateCustomSampleSet()" [disabled]="selectedClustersList.length === 0"
+                            >Save</button>
+                        </section>
+                    </div>
+
                 </div>
             </div>
         </div>

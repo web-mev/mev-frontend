@@ -19,12 +19,10 @@ export class LimmaComponent extends DifferentialExpressionComponent {
         'padj'
       ];
 
-    ngOnInit() {
-        super.ngOnInit();
-    }
     ngAfterViewInit() {
         super.ngAfterViewInit();
     }
+    
     ngOnChanges() {
         super.ngOnChanges();
     }

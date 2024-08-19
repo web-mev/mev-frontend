@@ -34,7 +34,7 @@ import { NotificationService } from '../../../core/core.module';
   styleUrls: ['./differential_expression.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default
 })
-export class DifferentialExpressionComponent implements OnInit, AfterViewInit {
+export class DifferentialExpressionComponent implements AfterViewInit {
   @Input() outputs;
   dataSource: FeaturesDataSource; // datasource for MatTable
   boxPlotData; // data retrieved from the dgeResourceId resource, pre-processed for D3 box plot visualization
@@ -159,10 +159,6 @@ export class DifferentialExpressionComponent implements OnInit, AfterViewInit {
         }
       }
     }
-  }
-
-  ngOnInit() {
-    this.initializeFeatureResource();
   }
 
   ngAfterViewInit() {

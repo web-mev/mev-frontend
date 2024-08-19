@@ -1,0 +1,12 @@
+<label class="search-label">Gene Search: </label>
+<div class="inputContainer">
+    <mat-form-field class="example-form-field" appearance="outline">
+        <mat-label>Gene Search</mat-label>
+        <input matInput type="search" name="search" [(ngModel)]="geneSearchVal" class="smallerInput">
+        <button *ngIf="geneSearchVal" matSuffix mat-icon-button aria-label="Clear" (click)="geneSearchVal = ''">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-form-field>
+    <button mat-flat-button color="primary" class="searchButton" [disabled]="geneSearchVal === ''"
+        (click)="onSubmit()">Submit</button>
+</div>

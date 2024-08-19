@@ -1,5 +1,5 @@
 .analysis-card__img {
-    background-image: url("~assets/icons/ct-scan.png");
+    background-image: url("~assets/icons/dna.png");
     background-size: 30px;
     background-position: top right;
     background-repeat: no-repeat;
@@ -34,6 +34,7 @@
     font-weight: bold;
     margin: 6px 0;
 }
+
 .labelTitle {
     font-weight: bold;
     margin: 6px 0;
@@ -319,4 +320,14 @@ mat-slider {
 
 .imageContainer2:hover .closeButton {
     opacity: 1; 
+}
+
+.observationSetContainer{
+    display: flex;
+    flex-direction: row;
+    width: 500px;
+}
+
+.obsFormField{
+    margin: 0 12px;
 }

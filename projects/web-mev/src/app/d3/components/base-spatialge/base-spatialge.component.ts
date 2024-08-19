@@ -9,6 +9,8 @@ import html2canvas from 'html2canvas';
 import { forkJoin } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { AnalysesService } from '@app/features/analysis/services/analysis.service';
+import { MetadataService } from '@app/core/metadata/metadata.service';
+import { MatDialog } from '@angular/material/dialog';
 
 interface ScatterDataNormailization {
   xValue: number;
@@ -120,9 +122,6 @@ export class BaseSpatialgeComponent {
 
   analysisType: string = ''
 
-
-  //separate the alignment variables here
-
   currentDegree: number = 0;
   scaleXCustom: number = 1;
 
@@ -146,7 +145,6 @@ export class BaseSpatialgeComponent {
   hideMinimapImage = false;
 
   normalizePlotWidth = 400;
-  imageOverlayOffset = 220;
 
   aspectRatio = 1;
   reloadImage = false;
@@ -156,6 +154,9 @@ export class BaseSpatialgeComponent {
   imageWidth = 0;
   imageHeight = 0;
 
+  clusterData = {};
+  availableClusters = [];
+
   constructor(
     protected httpClient: HttpClient,
     protected readonly notificationService: NotificationService,
@@ -163,6 +164,8 @@ export class BaseSpatialgeComponent {
     public route: ActivatedRoute,
     public apiService: AnalysesService,
     public analysesService: AnalysesService,
+    public dialog: MatDialog,
+    public metadataService: MetadataService,
   ) { }
 
   resetAllVariables() {
@@ -259,7 +262,7 @@ export class BaseSpatialgeComponent {
     this.httpClient.get(`${this.API_URL}/resources/${coords_metadata_uuid}/contents/?page=1&page_size=1`).pipe(
       catchError(error => {
         this.isLoading = false;
-        this.notificationService.error(`Error ${error.status}: Error from coordinates metadata request.`);
+        this.notificationService.error(`Error ${error.status}: ${error.error.error}`);
         console.log("some error from coord: ", error)
         throw error;
       })
@@ -272,12 +275,9 @@ export class BaseSpatialgeComponent {
     })
   }
 
-  // normalization_uuid = '';
-  // coords_metadata_uuid = '';
   getDataNormalization() {
     this.displayOverlayContainer = true;
     this.showMiniMap = true;
-    this.geneSearch = this.geneSearchVal.split('').map(letter => letter.toUpperCase()).join('');
     this.geneSearchHeight = 100;
     this.useNormalization = true;
     this.useCluster = false;
@@ -288,13 +288,13 @@ export class BaseSpatialgeComponent {
 
     let normalization_uuid = this.outputs["normalized_expression"];
     let coords_metadata_uuid = this.outputs["coords_metadata"];
-    let normUrl = `${this.API_URL}/resources/${normalization_uuid}/contents/?__rowname__=[eq]:${this.geneSearch}`;
+    let normUrl = `${this.API_URL}/resources/${normalization_uuid}/contents/?__rowname__=[case-ins-eq]:${this.geneSearch}`;
 
     const normRequest = this.httpClient.get(normUrl).pipe(
       catchError(error => {
         this.isLoading = false;
-        this.notificationService.error(`Error ${error.status}: Error from normalized expression request.`);
-        console.log("some error message from norm: ", error)
+        this.notificationService.error(`Error ${error.status}: ${error.error.error}`);
+        console.log("Error: ", error)
         throw error;
       })
     );
@@ -303,8 +303,8 @@ export class BaseSpatialgeComponent {
     const coordsMetadataRequest = this.httpClient.get(coordMetaUrl).pipe(
       catchError(error => {
         this.isLoading = false;
-        this.notificationService.error(`Error ${error.status}: Error from coordinates metadata request.`);
-        console.log("some error from coord: ", error)
+        this.notificationService.error(`Error ${error.status}: ${error.error.error}`);
+        console.log("Error: ", error)
         throw error;
       })
     );
@@ -321,11 +321,11 @@ export class BaseSpatialgeComponent {
           };
         }
 
-        for (let i in coordsMetadataRes) {
-          let obj = coordsMetadataRes[i];
-          let key = obj['rowname'];
-          let xVal = obj['values'][this.xAxisValue];
-          let yVal = obj['values'][this.yAxisValue];
+        for (let index in coordsMetadataRes) {
+          let gene = coordsMetadataRes[index];
+          let key = gene['rowname'];
+          let xVal = gene['values'][this.xAxisValue];
+          let yVal = gene['values'][this.yAxisValue];
 
           this.dataDict[key] = {
             ...this.dataDict[key],
@@ -359,13 +359,10 @@ export class BaseSpatialgeComponent {
             this.totalCountsMin = Math.min(this.totalCountsMin, totalCounts)
           }
         }
-        // let normalizePlot = (this.xMax - this.xMin) > (this.yMax - this.yMin) ? (this.xMax - this.xMin) / this.normalizePlotWidth : (this.yMax - this.yMin) / this.normalizePlotWidth
 
         let normalizePlot = (this.xMax - this.xMin) / this.normalizePlotWidth // This will set the plot to a width of 300px
         this.plotWidth = (this.xMax - this.xMin) / normalizePlot;
         this.plotHeight = (this.yMax - this.yMin) / normalizePlot;
-
-        this.imageOverlayOffset = this.plotWidth - this.legendWidth
 
         if (this.originalPlotWidth === 0) {
           this.originalPlotWidth = this.plotWidth;
@@ -411,7 +408,7 @@ export class BaseSpatialgeComponent {
     const clusterRequest = this.httpClient.get(`${this.API_URL}/resources/${clusters_uuid}/contents/`).pipe(
       catchError(error => {
         this.isLoading = false;
-        this.notificationService.error(`Error ${error.status}: Error from normalized expression request.`);
+        this.notificationService.error(`Error ${error.status}: ${error.error.error}`);
         throw error;
       })
     );
@@ -419,7 +416,7 @@ export class BaseSpatialgeComponent {
     const coordsMetadataRequest = this.httpClient.get(`${this.API_URL}/resources/${coords_metadata_uuid}/contents/`).pipe(
       catchError(error => {
         this.isLoading = false;
-        this.notificationService.error(`Error ${error.status}: Error from coordinates metadata request.`);
+        this.notificationService.error(`Error ${error.status}: ${error.error.error}`);
         throw error;
       })
     );
@@ -481,15 +478,22 @@ export class BaseSpatialgeComponent {
 
             this.yMin = Math.min(this.yMin, parsedY);
             this.yMax = Math.max(this.yMax, parsedY);
+
+            //For creating observation sets in Spatial Clustering
+            if (!this.clusterData[clusterName]) {
+              this.clusterData[clusterName] = [];
+            }
+            this.clusterData[clusterName].push(i);
+
+            if(!this.availableClusters.includes(clusterName)){
+              this.availableClusters.push(clusterName)
+            }
           }
         }
 
-        // let normalizePlot = (this.xMax - this.xMin) > (this.yMax - this.yMin) ? (this.xMax - this.xMin) / this.normalizePlotWidth : (this.yMax - this.yMin) / this.normalizePlotWidth
         let normalizePlot = (this.xMax - this.xMin) / this.normalizePlotWidth // This will set the plot to a width of 300px
         this.plotWidth = (this.xMax - this.xMin) / normalizePlot;
         this.plotHeight = (this.yMax - this.yMin) / normalizePlot;
-
-        this.imageOverlayOffset = this.plotWidth - this.legendWidth
 
         if (this.originalPlotWidth === 0) {
           this.originalPlotWidth = this.plotWidth;
@@ -519,7 +523,7 @@ export class BaseSpatialgeComponent {
     });
   }
 
-  createScatterPlot(size) {
+  createScatterPlot(size: string) {
     this.displayPlot = true;
     var margin = { top: 0, right: 0, bottom: 0, left: size === 'normal' ? this.legendWidth : 0 },
       width = size === 'normal' ? this.plotWidth - margin.left - margin.right + this.legendWidth : (this.plotWidth - margin.left - margin.right) / 4,
@@ -542,7 +546,6 @@ export class BaseSpatialgeComponent {
       .append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
-      // .style("background", "pink")
       .append("g")
       .attr("transform",
         "translate(" + margin.left + "," + margin.top + ")");
@@ -858,7 +861,6 @@ export class BaseSpatialgeComponent {
 
   setScaleFactor(event: Event) {
     event.preventDefault();
-
     this.resetImageVariables()
 
     if (this.scaleFactorVal !== '') {
@@ -866,8 +868,9 @@ export class BaseSpatialgeComponent {
       this.notificationService.success(`Scale Factor updated to ${this.scaleFactor}.`);
       this.reloadImage = false;
       this.displayFile();
+    }else{
+      this.displayFile();
     }
-
   }
 
   onColorChange() {
@@ -1150,5 +1153,12 @@ export class BaseSpatialgeComponent {
       this.legendWidth = 120;
     }
     this.callCreateScatterPlot();
+  }
+
+  onSubmitFromGeneSearch(gene: string) {
+    this.geneSearch = gene
+    if (this.outputs["normalized_expression"]) {
+      this.getDataNormalization()
+    }
   }
 }

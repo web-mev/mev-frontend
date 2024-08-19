@@ -115,7 +115,7 @@
             </p>
             <mat-form-field class="example-chip-list searchField" appearance="outline">
                 <mat-label>Search Terms</mat-label>
-                <mat-chip-list #chipList aria-label="Fruit selection">
+                <mat-chip-list #chipList aria-label="Gene selection">
                     <mat-chip *ngFor="let gene of searchTerms" (removed)="removeSearchItem(gene)">
                         {{gene}}
                         <button matChipRemove>

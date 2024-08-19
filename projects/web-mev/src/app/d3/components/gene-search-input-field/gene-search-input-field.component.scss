@@ -1,0 +1,21 @@
+.inputContainer {
+    display: flex;
+    flex-direction: row;
+    width: 250px;
+}
+
+.searchButton {
+    margin: 8px;
+    height: 40px;
+    padding: 0px;
+}
+
+.smaller-input {
+    width: 500px;
+}
+
+.search-label {
+    display: block;
+    font-weight: bold;
+    margin: 6px 0;
+}

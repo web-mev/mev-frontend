@@ -1,0 +1,144 @@
+<mev-spinner-overlay *ngIf="isLoading"></mev-spinner-overlay>
+<form *ngIf="analysesForm" [formGroup]="analysesForm" (ngSubmit)="onSubmit()">
+    <ng-container *ngIf="operationData.mode !== 'client'">
+        <div class="label">
+            Operation name: <span class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="Type operation name" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <input matInput formControlName="job_name" name="job_name">
+        </mat-form-field>
+    </ng-container>
+
+    <div>
+        <div class="label">
+            {{ rawCountsField.name }} <span *ngIf="rawCountsField.required" class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="{{ rawCountsField.desc}}" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <mat-select [formControlName]="rawCountsField.key">
+                <mat-option *ngFor="let file of rawCountsField.files" [value]="file.id">
+                    {{ file.name }}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="f[rawCountsField.key].errors?.required">
+                This field is required
+            </mat-error>
+        </mat-form-field>
+    </div>
+
+    <div>
+        <div class="label">
+            {{ coordMetadataField.name }} <span *ngIf="coordMetadataField.required" class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="{{ coordMetadataField.desc}}" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <mat-select [formControlName]="coordMetadataField.key" (selectionChange)="onSelectionChangeCoordMetadata($event)">
+                <mat-option *ngFor="let file of coordMetadataField.files" [value]="file.id">
+                    {{ file.name }}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="f[coordMetadataField.key].errors?.required">
+                This field is required
+            </mat-error>
+        </mat-form-field>
+    </div>
+
+    <div *ngIf="curr_coords_metadata_uuid !== '' ">
+        <div class="label">
+            {{xPosField.name}} <span *ngIf="xPosField.required" class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="{{xPosField.desc}}" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <mat-select [formControlName]="xPosField.key">
+                <mat-option *ngFor="let option of xAxisValueList" [value]="option">
+                    {{ option }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div *ngIf="curr_coords_metadata_uuid !== '' ">
+        <div class="label">
+            {{yPosField.name}} <span *ngIf="yPosField.required" class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="{{yPosField.desc}}" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <mat-select [formControlName]="yPosField.key">
+                <mat-option *ngFor="let option of yAxisValueList" [value]="option">
+                    {{ option }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div class="label">
+        {{sampleNameField.name}} <span *ngIf="sampleNameField.required" class="redAsterisk">* </span>
+        <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+            matTooltip="{{sampleNameField.desc}}" aria-label="Info tooltip about the field">info
+        </mat-icon>
+    </div>
+    <mat-form-field class="form-control" color="accent">
+        <input matInput [formControlName]="sampleNameField.key" [name]="sampleNameField.key">
+    </mat-form-field>
+    <br>
+
+    <div>
+        <div class="label">
+            {{ featuresField.name }} <span *ngIf="featuresField.required" class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="{{ featuresField.desc}}" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <mat-select [formControlName]="featuresField.key">
+                <mat-option *ngFor="let file of featuresField.files" [value]="file">
+                    {{ file.name }}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="f[featuresField.key].errors?.required">
+                This field is required
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div>
+        <div class="label">
+            {{normalizationMethodField.name}} <span *ngIf="normalizationMethodField.required" class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="{{normalizationMethodField.desc}}" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <mat-select [formControlName]="normalizationMethodField.key">
+                <mat-option *ngFor="let option of normalizationMethodField.options" [value]="option">
+                    {{ option }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div>
+        <div class="label">
+            {{statMethodField.name}} <span *ngIf="statMethodField.required" class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="{{statMethodField.desc}}" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <mat-select [formControlName]="statMethodField.key">
+                <mat-option *ngFor="let option of statMethodField.options" [value]="option">
+                    {{ option }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</form>

@@ -116,9 +116,6 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
                     this.originalPlotHeight = this.plotHeight;
                 }
 
-                // let selectionRectWidth = (this.plotWidth + this.widthAdjustment) / (4 * this.currentZoomVal);
-                // let selectionRectHeight = (this.plotHeight + this.heightAdjustment) / (4 * this.currentZoomVal);
-
                 let selectionRectWidth = this.plotWidth / (4 * this.currentZoomVal);
                 let selectionRectHeight = this.plotHeight / (4 * this.currentZoomVal);
 
@@ -216,9 +213,6 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
 
     createScatterplotSpotlight(size: string): void {
         this.displayPlot = true;
-        // var margin = { top: 0, right: 0, bottom: 0, left: size === 'normal' ? this.legendWidth : 0 },
-        //     width = size === 'normal' ? this.plotWidth - margin.left - margin.right + this.widthAdjustment + this.legendWidth : (this.plotWidth - margin.left - margin.right + this.widthAdjustment) / 4,
-        //     height = size === 'normal' ? this.plotHeight - margin.top - margin.bottom + this.heightAdjustment : (this.plotHeight - margin.top - margin.bottom + this.heightAdjustment) / 4;
 
         var margin = { top: 0, right: 0, bottom: 0, left: size === 'normal' ? this.legendWidth : 0 },
             width = size === 'normal' ? this.plotWidth - margin.left - margin.right + this.legendWidth : (this.plotWidth - margin.left - margin.right) / 4,
@@ -344,10 +338,10 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
                 word,
                 line = [],
                 lineNumber = 0,
-                lineHeight = 1.1, // ems
+                lineHeight = 1.1,
                 x = text.attr("x"),
                 y = text.attr("y"),
-                dy = 0, //parseFloat(text.attr("dy")),
+                dy = 0,
                 tspan = text.text(null)
                     .append("tspan")
                     .attr("x", x)

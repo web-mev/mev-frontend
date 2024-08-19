@@ -154,6 +154,9 @@ export class BaseSpatialgeComponent {
   imageWidth = 0;
   imageHeight = 0;
 
+  clusterData = {};
+  availableClusters = [];
+
   constructor(
     protected httpClient: HttpClient,
     protected readonly notificationService: NotificationService,
@@ -390,9 +393,6 @@ export class BaseSpatialgeComponent {
       }
     });
   }
-
-  clusterData = {};
-  availableClusters = []
 
   getDataClusters() {
     this.showMiniMap = true;
@@ -861,7 +861,6 @@ export class BaseSpatialgeComponent {
 
   setScaleFactor(event: Event) {
     event.preventDefault();
-
     this.resetImageVariables()
 
     if (this.scaleFactorVal !== '') {
@@ -870,10 +869,8 @@ export class BaseSpatialgeComponent {
       this.reloadImage = false;
       this.displayFile();
     }else{
-      this.displayFile()
-      console.log("scalefactor: ", this.scaleFactorVal, this.scaleFactor)
+      this.displayFile();
     }
-
   }
 
   onColorChange() {

@@ -108,7 +108,7 @@ export class CombatseqInputComponent extends BaseOperationInput implements OnCha
             files: [],
             selectedFiles: []
         };
-
+        // console.log("combaq: ", input.spec)
         this.apiService
             .getWorkspaceResourcesByParam(
                 [input.spec.resource_type],
@@ -123,6 +123,7 @@ export class CombatseqInputComponent extends BaseOperationInput implements OnCha
             []
         ];
         controlsConfig[key] = configAnnField;
+        console.log("annfield: ", this.annField)
 
         key = 'batch_variable_choice';
         input = this.operationData.inputs[key];

@@ -34,7 +34,59 @@
             </mat-error>
         </mat-form-field>
     </div>
-    <div fxLayout>
+
+    <!-- <div class="label">
+        {{ annField.name }} <span *ngIf="annField.required" class="redAsterisk">* </span>
+        <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+            matTooltip="{{ annField.desc}}" aria-label="Info tooltip about the field">info
+        </mat-icon>
+    </div>
+    <mat-form-field class="form-control" color="accent">
+        <mat-select [formControlName]="annField.key">
+            <mat-option *ngFor="let set of annField.sets" [value]="set">
+                {{ set.name }}
+            </mat-option>
+        </mat-select>
+        <mat-error *ngIf="f[rawCountsField.key].errors?.required">
+            This field is required
+        </mat-error>
+    </mat-form-field> -->
+
+    <div class="label">
+        {{ annField.name }} <span class="redAsterisk">* </span>
+        <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+            matTooltip="{{ annField.desc}}" aria-label="Info tooltip about the field">info
+        </mat-icon>
+    </div>
+    <mat-form-field class="form-control" color="accent">
+        <mat-select [formControlName]="annField.key" (selectionChange)="onSelectionChangeCoordMetadata($event)">
+            <mat-option *ngFor="let file of annField.files" [value]="file.id">
+                {{ file.name }}
+            </mat-option>
+        </mat-select>
+        <mat-error *ngIf="f[annField.key].errors?.required">
+            This field is required
+        </mat-error>
+    </mat-form-field>
+
+    <div *ngIf="annotation_uuid !== '' && columnsReady">
+        <div class="label">
+            Columns <span class="redAsterisk">* </span>
+            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                matTooltip="Select columns name" aria-label="Info tooltip about the field">info
+            </mat-icon>
+        </div>
+        <mat-form-field class="form-control" color="accent">
+            <mat-select [formControlName]="columnsField">
+                <mat-option *ngFor="let option of columnsValueList" [value]="option">
+                    {{ option }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <!-- remove observation sets and replace with annotation file input field instead -->
+    <!-- <div fxLayout>
         <div class="label">
             {{ ctrlObsSetField.name }} <span class="redAsterisk">* </span>
             <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
@@ -84,7 +136,7 @@
                 need a minimum of two samples.
             </mat-error>
         </mat-form-field>
-    </div>
+    </div> -->
     <div>
         <div class="label">
             {{ baseConditionNameField.name }}

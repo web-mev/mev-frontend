@@ -113,18 +113,26 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
     // ctrlObsSetField;
     // experimentalObsSetField;
     annField;
-    baseConditionNameField;
-    experimentalConditionNameField;
+    // baseConditionNameField;
+    // experimentalConditionNameField;
     columnsField;
+    group1Field;
+    group2Field;
     rawCountsSamples = [];
     availableObsSets = [];
 
     files_retrieved = false;
 
+    columnsValueList = [];
+    annotation_uuid = '';
+    columnsReady = false;
+    uniqueCols = []
+    uniqueColsReady = false;
+
     constructor(
         private formBuilder: FormBuilder,
         private apiService: AnalysesService,
-        private metadataService: MetadataService,
+        // private metadataService: MetadataService,
         public dialog: MatDialog,
         // private obsSetService: CompatibleObsSetService,
         private httpClient: HttpClient,
@@ -150,15 +158,11 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
     }
 
     public onFormValid() {
+        console.log("form:  ", this.analysesForm)
         this.formValid.emit(this.analysesForm.valid);
     }
 
-    columnsValueList = [];
-    annotation_uuid = '';
-    columnsReady = false
-
-    onSelectionChangeCoordMetadata(file) {
-        console.log("file: ", file)
+    onSelectionAnnotation(file) {
         this.annotation_uuid = file.value;
         this.getColumnNames()
     }
@@ -174,9 +178,29 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
             let jsonObj = res['results'][0]['values']
             const keys = Object.keys(jsonObj);
             this.columnsValueList = keys;
-            console.log("columns: ", this.columnsValueList, res)
+        })
+    }
 
-            //add columns dropdown
+    onSelectionAnnColumn(file) {
+        console.log("ann col: ", file.value)
+        let selectedColumn = file.value
+        let uniqueColumns = []
+
+        this.httpClient.get(`${this.API_URL}/resources/${this.annotation_uuid}/contents/`).pipe(
+            catchError(error => {
+                this.notificationService.error(`Error ${error.status}: ${error.error.error}`);
+                throw error;
+            })
+        ).subscribe(res => {
+            this.uniqueColsReady = true
+            console.log("columns all: ", res)
+            for (let index in res) {
+                let obj = res[index]['values'][selectedColumn]
+                if (!uniqueColumns.includes(obj)) {
+                    uniqueColumns.push(obj)
+                }
+            }
+            this.uniqueCols = uniqueColumns
         })
     }
 
@@ -215,48 +239,22 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
         ];
         controlsConfig[key] = configResourceField;
 
-        // this.availableObsSets = this.metadataService.getCustomObservationSets().map(set => {
-        //     const newSet = set.elements.map(elem => {
-        //         const o = { id: elem.id };
-        //         return o;
-        //     });
-        //     return { ...set, elements: newSet };
-        // });
-        // key = 'annotations'
-        // input = this.operationData.inputs[key];
-        // this.annField = {
-        //     key: key,
-        //     // name: input.name,
-        //     name: key,
-        //     desc: 'ann descript',
-        //     required: true,
-        //     sets: []
-        // };
-        // const configAnnotationField = [
-        //     '',
-        //     []
-        // ];
-        // controlsConfig[key] = configAnnotationField;
-
         key = "annotations"
-        // input = this.operationData.inputs[key];
+        input = this.operationData.inputs[key];
         this.annField = {
             key: key,
-            name: key,
-            // resource_type: input.spec.resource_type,
-            resource_type: "ANN",
-            desc: 'input.description',
-            required: true,
+            name: input.name,
+            resource_type: input.spec.resource_type,
+            desc: input.description,
+            required: input.required,
             files: [],
-            selectedFiles: []
+            // selectedFiles: []
         };
 
-        let temp_resource_type = "ANN";
 
         this.apiService
             .getWorkspaceResourcesByParam(
-                // [input.spec.resource_type],
-                [temp_resource_type],
+                [input.spec.resource_type],
                 this.workspaceId
             )
             .subscribe(data => {
@@ -268,122 +266,60 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
             []
         ];
         controlsConfig[key] = configAnnField;
-        console.log("ann: ", this.annField)
 
-        key = 'columns';
-        // input = this.operationData.inputs[key];
+        key = 'ann_col';
+        input = this.operationData.inputs[key];
         this.columnsField = {
             key: key,
-            name: key,
-            desc: key,
-            required: true,
+            name: input.name,
+            desc: input.description,
+            required: input.required,
             options: this.columnsValueList,
         };
-        const configXPosField = [
+        const configAnnColField = [
             '',
             []
         ];
-        controlsConfig[key] = configXPosField;
+        controlsConfig[key] = configAnnColField;
 
-        // add the observation sets. Note that the obs sets cannot contain
-        // a non-null intersection.
-
-        // get all the available obs sets
-        // this.availableObsSets = this.metadataService.getCustomObservationSets().map(set => {
-        //     const newSet = set.elements.map(elem => {
-        //         const o = { id: elem.id };
-        //         return o;
-        //     });
-        //     return { ...set, elements: newSet };
-        // });
-        // key = 'base_condition_samples'
-        // input = this.operationData.inputs[key];
-        // this.ctrlObsSetField = {
-        //     key: key,
-        //     name: input.name,
-        //     desc: input.description,
-        //     required: input.required,
-        //     sets: this.availableObsSets
-        // };
-        // const configBaseObservationSetsField = [
-        //     undefined,
-        //     [...(input.required ? [Validators.required] : [])]
-        // ];
-        // controlsConfig[key] = configBaseObservationSetsField;
-
-        // key = 'experimental_condition_samples'
-        // input = this.operationData.inputs[key];
-        // this.experimentalObsSetField = {
-        //     key: key,
-        //     name: input.name,
-        //     desc: input.description,
-        //     required: input.required,
-        //     sets: this.availableObsSets
-        // };
-        // const configExpObservationSetsField = [
-        //     undefined,
-        //     [...(input.required ? [Validators.required] : [])]
-        // ];
-        // controlsConfig[key] = configExpObservationSetsField;
-
-        key = 'base_condition_name'
+        key = 'group1';
         input = this.operationData.inputs[key];
-        this.baseConditionNameField = {
+        this.group1Field = {
             key: key,
             name: input.name,
             desc: input.description,
-            required: input.required
+            required: input.required,
+            options: this.uniqueCols,
         };
-        const configBaseConditionNameField = [
+        const configGroup1Field = [
             '',
-            [...(input.required ? [Validators.required] : [])]
+            []
         ];
-        controlsConfig[key] = configBaseConditionNameField;
+        controlsConfig[key] = configGroup1Field;
 
-        key = 'experimental_condition_name'
+        key = 'group2';
         input = this.operationData.inputs[key];
-        this.experimentalConditionNameField = {
+        this.group2Field = {
             key: key,
             name: input.name,
             desc: input.description,
-            required: input.required
+            required: input.required,
+            options: this.uniqueCols,
         };
-        const configExperimentalConditionNameField = [
+        const configGroup2Field = [
             '',
-            [...(input.required ? [Validators.required] : [])]
+            []
         ];
-        controlsConfig[key] = configExperimentalConditionNameField;
+        controlsConfig[key] = configGroup2Field;
 
         this.analysesForm = this.formBuilder.group(controlsConfig,
             {
                 // validators: [intersectingObservationSetsValidator],
                 validators: [],
-                asyncValidators: [],
+                // asyncValidators: [],
                 updateOn: 'change'
             } as AbstractControlOptions
         );
-
-        // this.analysesForm.get('experimental_condition_samples').valueChanges.subscribe(
-        //     (val) => {
-        //         this.analysesForm.get('experimental_condition_name').setValue(val.name);
-        //     }
-        // );
-
-        // this.analysesForm.get('base_condition_samples').valueChanges.subscribe(
-        //     (val) => {
-        //         this.analysesForm.get('base_condition_name').setValue(val.name);
-        //     }
-        // );
-    }
-
-    handleObsSetSelection(obsSetName) {
-        let obsSetArr = [...this.availableObsSets]; //copy so we don't lose track of the universe of sets
-        let setNames = obsSetArr.map((x) => x.name);
-        let index = setNames.indexOf(obsSetName);
-        if (index > -1) {
-            obsSetArr.splice(index, 1);
-        }
-        return obsSetArr;
     }
 
     /**

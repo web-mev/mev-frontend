@@ -14,7 +14,7 @@
     </ng-container>
     <div>
         <div class="label">
-            {{ rawCountsField.name }} <span class="redAsterisk">* </span>
+            {{ rawCountsField.name }} <span *ngIf="rawCountsField.required" class="redAsterisk">* </span>
             <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
                 matTooltip="{{ rawCountsField.desc}}" aria-label="Info tooltip about the field">info
             </mat-icon>
@@ -35,31 +35,14 @@
         </mat-form-field>
     </div>
 
-    <!-- <div class="label">
+    <div class="label">
         {{ annField.name }} <span *ngIf="annField.required" class="redAsterisk">* </span>
         <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
             matTooltip="{{ annField.desc}}" aria-label="Info tooltip about the field">info
         </mat-icon>
     </div>
     <mat-form-field class="form-control" color="accent">
-        <mat-select [formControlName]="annField.key">
-            <mat-option *ngFor="let set of annField.sets" [value]="set">
-                {{ set.name }}
-            </mat-option>
-        </mat-select>
-        <mat-error *ngIf="f[rawCountsField.key].errors?.required">
-            This field is required
-        </mat-error>
-    </mat-form-field> -->
-
-    <div class="label">
-        {{ annField.name }} <span class="redAsterisk">* </span>
-        <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-            matTooltip="{{ annField.desc}}" aria-label="Info tooltip about the field">info
-        </mat-icon>
-    </div>
-    <mat-form-field class="form-control" color="accent">
-        <mat-select [formControlName]="annField.key" (selectionChange)="onSelectionChangeCoordMetadata($event)">
+        <mat-select [formControlName]="annField.key" (selectionChange)="onSelectionAnnotation($event)">
             <mat-option *ngFor="let file of annField.files" [value]="file.id">
                 {{ file.name }}
             </mat-option>
@@ -71,93 +54,59 @@
 
     <div *ngIf="annotation_uuid !== '' && columnsReady">
         <div class="label">
-            Columns <span class="redAsterisk">* </span>
+            {{ columnsField.name }} <span *ngIf="columnsField.required" class="redAsterisk">* </span>
             <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-                matTooltip="Select columns name" aria-label="Info tooltip about the field">info
+                matTooltip="{{ columnsField.desc}}" aria-label="Info tooltip about the field">info
             </mat-icon>
         </div>
         <mat-form-field class="form-control" color="accent">
-            <mat-select [formControlName]="columnsField">
+            <mat-select [formControlName]="columnsField.key" (selectionChange)="onSelectionAnnColumn($event)">
                 <mat-option *ngFor="let option of columnsValueList" [value]="option">
                     {{ option }}
                 </mat-option>
             </mat-select>
+            <mat-error *ngIf="f[columnsField.key].errors?.required">
+                This field is required
+            </mat-error>
         </mat-form-field>
     </div>
 
-    <!-- remove observation sets and replace with annotation file input field instead -->
-    <!-- <div fxLayout>
+    <div *ngIf="annotation_uuid !== '' && uniqueColsReady">
         <div class="label">
-            {{ ctrlObsSetField.name }} <span class="redAsterisk">* </span>
+            {{ group1Field.name }} <span *ngIf="group1Field.required" class="redAsterisk">* </span>
             <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-                matTooltip="{{ ctrlObsSetField.desc}}" aria-label="Info tooltip about the field">info
+                matTooltip="{{ group1Field.desc}}" aria-label="Info tooltip about the field">info
             </mat-icon>
         </div>
         <mat-form-field class="form-control" color="accent">
-            <mat-select [formControlName]="ctrlObsSetField.key">
-                <mat-option *ngFor="let set of ctrlObsSetField.sets" [value]="set">
-                    {{ set.name }}
+            <mat-select [formControlName]="group1Field.key">
+                <mat-option *ngFor="let option of uniqueCols" [value]="option">
+                    {{ option }}
                 </mat-option>
             </mat-select>
-            <mat-error *ngIf="f[ctrlObsSetField.key].errors?.sameName">
-                You cannot choose the same set for both sets of samples
-            </mat-error>
-            <mat-error *ngIf="f[ctrlObsSetField.key].errors?.intersection">
-                The chosen sets cannot share samples. The following were
-                the same: {{analysesForm.errors?.['intersection']}}
-            </mat-error>
-            <mat-error *ngIf="f[ctrlObsSetField.key].errors?.tooFewSamples">
-                The chosen set has too few samples. To perform differential expression, we
-                need a minimum of two samples.
+            <mat-error *ngIf="f[group1Field.key].errors?.required">
+                This field is required
             </mat-error>
         </mat-form-field>
+    </div>
 
+    <div *ngIf="annotation_uuid !== '' && uniqueColsReady">
         <div class="label">
-            {{ experimentalObsSetField.name }} <span class="redAsterisk">* </span>
+            {{ group2Field.name }} <span *ngIf="group2Field.required" class="redAsterisk">* </span>
             <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-                matTooltip="{{ experimentalObsSetField.desc}}" aria-label="Info tooltip about the field">info
+                matTooltip="{{ group2Field.desc}}" aria-label="Info tooltip about the field">info
             </mat-icon>
         </div>
         <mat-form-field class="form-control" color="accent">
-            <mat-select [formControlName]="experimentalObsSetField.key">
-                <mat-option *ngFor="let set of experimentalObsSetField.sets" [value]="set">
-                    {{ set.name }}
+            <mat-select [formControlName]="group2Field.key">
+                <mat-option *ngFor="let option of uniqueCols" [value]="option">
+                    {{ option }}
                 </mat-option>
             </mat-select>
-            <mat-error *ngIf="f[experimentalObsSetField.key].errors?.sameName">
-                You cannot choose the same set for both sets of samples
+            <mat-error *ngIf="f[group2Field.key].errors?.required">
+                This field is required
             </mat-error>
-            <mat-error *ngIf="f[experimentalObsSetField.key].errors?.intersection">
-                The chosen sets cannot share samples. The following were
-                the same: {{analysesForm.errors?.['intersection']}}
-            </mat-error>
-            <mat-error *ngIf="f[experimentalObsSetField.key].errors?.tooFewSamples">
-                The chosen set has too few samples. To perform differential expression, we
-                need a minimum of two samples.
-            </mat-error>
-        </mat-form-field>
-    </div> -->
-    <div>
-        <div class="label">
-            {{ baseConditionNameField.name }}
-            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-                matTooltip="{{ baseConditionNameField.desc}}" aria-label="Info tooltip about the field">info
-            </mat-icon>
-        </div>
-        <mat-form-field class="form-control" color="accent">
-            <input matInput [formControlName]="baseConditionNameField.key" [name]="baseConditionNameField.key">
         </mat-form-field>
     </div>
-    <div>
-        <div class="label">
-            {{ experimentalConditionNameField.name }}
-            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-                matTooltip="{{ experimentalConditionNameField.desc}}" aria-label="Info tooltip about the field">info
-            </mat-icon>
-        </div>
-        <mat-form-field class="form-control" color="accent">
-            <input matInput [formControlName]="experimentalConditionNameField.key"
-                [name]="experimentalConditionNameField.key">
-        </mat-form-field>
-    </div>
+    
 </form>

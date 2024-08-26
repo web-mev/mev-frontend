@@ -77,17 +77,30 @@ export class DifferentialExpressionComponent implements AfterViewInit {
   maxFeatureSetSize = 500;
 
   /* Table filters */
+  // allowedFilters = {
+  //   /*name: { defaultValue: '', hasOperator: false },*/
+  //   padj: {
+  //     defaultValue: '',
+  //     hasOperator: true,
+  //     operatorDefaultValue: 'lte'
+  //   },
+  //   log2FoldChange: {
+  //     defaultValue: '',
+  //     hasOperator: true,
+  //     operatorDefaultValue: 'lte'
+  //   }
+  // };
   allowedFilters = {
     /*name: { defaultValue: '', hasOperator: false },*/
     padj: {
-      defaultValue: '',
+      defaultValue: '0.05',
       hasOperator: true,
-      operatorDefaultValue: 'lte'
+      operatorDefaultValue: 'lt'
     },
     log2FoldChange: {
-      defaultValue: '',
+      defaultValue: '2',
       hasOperator: true,
-      operatorDefaultValue: 'lte'
+      operatorDefaultValue: 'absgt'
     }
   };
 
@@ -192,9 +205,16 @@ export class DifferentialExpressionComponent implements AfterViewInit {
       sortField: this.defaultSorting.field,
       sortDirection: this.defaultSorting.direction
     };
+    // this.dataSource.loadFeatures(
+    //   this.dgeResourceId,
+    //   {},
+    //   sorting,
+    //   this.defaultPageIndex,
+    //   this.defaultPageSize
+    // );
     this.dataSource.loadFeatures(
       this.dgeResourceId,
-      {},
+      { 'padj': '[lt]:0.05', 'log2FoldChange': '[absgt]:2.0' },
       sorting,
       this.defaultPageIndex,
       this.defaultPageSize
@@ -237,13 +257,13 @@ export class DifferentialExpressionComponent implements AfterViewInit {
         const obsSetSamples = obsSet.elements.map(elem => elem.id);
         if (Utils.stringArraysEquivalent(obsSetSamples, baseSamples)) {
           // matches the baseSamples array
-          if(obsSet.color) {
+          if (obsSet.color) {
             this.boxPlotTypes.Base.color = obsSet.color
           }
         }
         if (Utils.stringArraysEquivalent(obsSetSamples, experSamples)) {
           // matches the experSamples array
-          if(obsSet.color) {
+          if (obsSet.color) {
             this.boxPlotTypes.Experimental.color = obsSet.color
           }
         }
@@ -263,9 +283,9 @@ export class DifferentialExpressionComponent implements AfterViewInit {
       newElem[this.yExperCat] = Utils.getBoxPlotStatistics(experNumbers);
       newElem[this.yBaseCat] = Utils.getBoxPlotStatistics(baseNumbers);
       const experPts = [];
-      experSamples.forEach((k,i) => experPts.push({pt_label: k, value: experNumbers[i]}));
+      experSamples.forEach((k, i) => experPts.push({ pt_label: k, value: experNumbers[i] }));
       const basePts = [];
-      baseSamples.forEach((k,i) => basePts.push({pt_label: k, value: baseNumbers[i]}));
+      baseSamples.forEach((k, i) => basePts.push({ pt_label: k, value: baseNumbers[i] }));
       newElem[this.yExperPoints] = experPts;
       newElem[this.yBasePoints] = basePts;
       return newElem;
@@ -290,7 +310,7 @@ export class DifferentialExpressionComponent implements AfterViewInit {
     // We don't want to create exceptionally large feature sets. Check
     // that they don't exceed some preset size
     const setSize = this.dataSource.featuresCount;
-    if (setSize > this.maxFeatureSetSize){
+    if (setSize > this.maxFeatureSetSize) {
       const errorMessage = `The current size of 
         your set (${setSize}) is larger than the 
         maximum allowable size (${this.maxFeatureSetSize}).
@@ -298,7 +318,7 @@ export class DifferentialExpressionComponent implements AfterViewInit {
       this.notificationService.error(errorMessage);
       return;
     }
-    
+
     const dialogRef = this.dialog.open(AddSampleSetComponent, {
       data: { type: CustomSetType.FeatureSet }
     });
@@ -318,7 +338,7 @@ export class DifferentialExpressionComponent implements AfterViewInit {
           )
           .subscribe(features => {
             const elements = features.map(feature => {
-               return {id: feature.rowname};
+              return { id: feature.rowname };
             });
             const customSet = {
               name: customSetData.name,
@@ -367,7 +387,7 @@ export class DifferentialExpressionComponent implements AfterViewInit {
       .html((event, d) => {
 
         // if the pt_label exists we know we are hovering over an individual point
-        if ('pt_label' in d ){
+        if ('pt_label' in d) {
           return d.pt_label + ': ' + d.value.toFixed(this.precision);
         }
 
@@ -460,8 +480,8 @@ export class DifferentialExpressionComponent implements AfterViewInit {
     // how much space is 'allotted' for each gene/feature
     const xStep = this.xScale.step();
     const numFeatures = data.length;
-    let boxWidth = (this.fillFraction*xStep)/num_categories;
-    if(boxWidth < this.minBoxWidth){
+    let boxWidth = (this.fillFraction * xStep) / num_categories;
+    if (boxWidth < this.minBoxWidth) {
       boxWidth = this.minBoxWidth;
       // this.warnMsgArr.push(`Note that the screen width and number of features
       //   are such that the plot may not render correctly. Either decrease the
@@ -469,8 +489,8 @@ export class DifferentialExpressionComponent implements AfterViewInit {
       //   not already maximized.
       // `)
     }
-    let gap = this.gap*boxWidth;
-    const total_width = num_categories*boxWidth + (num_categories - 1)*gap;
+    let gap = this.gap * boxWidth;
+    const total_width = num_categories * boxWidth + (num_categories - 1) * gap;
     Object.keys(this.boxPlotTypes).forEach((key, i) => {
       const yCatProp = this.boxPlotTypes[key].yCat; //e.g. 'experValues'
       const yPointsProp = this.boxPlotTypes[key].yPoints; //e.g. 'experPoints'
@@ -478,7 +498,7 @@ export class DifferentialExpressionComponent implements AfterViewInit {
 
       // where we "start" the plot relative to the x-position
       // for each plot element (gene)
-      const x0 = 0.5*total_width;
+      const x0 = 0.5 * total_width;
 
       // Main vertical line
       svg
@@ -490,14 +510,14 @@ export class DifferentialExpressionComponent implements AfterViewInit {
           'x1',
           (d: any) =>
             //this.xScale(d[this.xCat]) + (1.2 * i - 0.6) * this.boxWidth
-            this.xScale(d[this.xCat]) - x0 + 0.5*boxWidth + i*(boxWidth + gap)
+            this.xScale(d[this.xCat]) - x0 + 0.5 * boxWidth + i * (boxWidth + gap)
 
         )
         .attr(
           'x2',
           (d: any) =>
             //this.xScale(d[this.xCat]) + (1.2 * i - 0.6) * this.boxWidth
-            this.xScale(d[this.xCat]) - x0 + 0.5*boxWidth + i*(boxWidth + gap)
+            this.xScale(d[this.xCat]) - x0 + 0.5 * boxWidth + i * (boxWidth + gap)
 
         )
         .attr('y1', (d: any) => this.yScale(d[yCatProp].min))
@@ -513,7 +533,7 @@ export class DifferentialExpressionComponent implements AfterViewInit {
         .attr(
           'x',
           //d => this.xScale(d[this.xCat]) + (1.2 * i - 1.1) * this.boxWidth
-          d => this.xScale(d[this.xCat]) - x0 + i*(boxWidth + gap)
+          d => this.xScale(d[this.xCat]) - x0 + i * (boxWidth + gap)
 
         )
         .attr('y', d => this.yScale(d[yCatProp].q3))
@@ -521,11 +541,11 @@ export class DifferentialExpressionComponent implements AfterViewInit {
           'height',
           d => this.yScale(d[yCatProp].q1) - this.yScale(d[yCatProp].q3)
         )
-        .attr('width', d=>boxWidth)
+        .attr('width', d => boxWidth)
         .attr('stroke', 'black')
         .style('fill', color)
         .attr('pointer-events', 'all')
-        .on('mouseover', function(mouseEvent: any, d) {
+        .on('mouseover', function (mouseEvent: any, d) {
           tip.show(mouseEvent, d, this);
           tip.style('left', mouseEvent.x + tooltipOffsetX + 'px');
         })
@@ -539,8 +559,8 @@ export class DifferentialExpressionComponent implements AfterViewInit {
         .append('line')
         .attr(
           'x1', d => {
-            if (d[yCatProp].median !== undefined){
-              return this.xScale(d[this.xCat]) - x0 + i*(boxWidth + gap)
+            if (d[yCatProp].median !== undefined) {
+              return this.xScale(d[this.xCat]) - x0 + i * (boxWidth + gap)
             }
             return 0;
           }
@@ -551,9 +571,9 @@ export class DifferentialExpressionComponent implements AfterViewInit {
         //   d => this.xScale(d[this.xCat]) + (1.2 * i - 0.1) * this.boxWidth
         // )
         .attr('x2', d => {
-          if (d[yCatProp].median !== undefined){
+          if (d[yCatProp].median !== undefined) {
             //return this.xScale(d[this.xCat]) + (1.2 * i - 0.1) * this.boxWidth;
-            return this.xScale(d[this.xCat]) - x0 + i*(boxWidth + gap) + boxWidth;
+            return this.xScale(d[this.xCat]) - x0 + i * (boxWidth + gap) + boxWidth;
           }
           return 0;
         })
@@ -581,17 +601,17 @@ export class DifferentialExpressionComponent implements AfterViewInit {
             //     Math.random() * this.jitterWidth
             // )
             .attr(
-              'cx', d=>
+              'cx', d =>
               this.xScale(data[ix][this.xCat]) -
-                x0 + i*(boxWidth + gap) 
-                + Math.random() * boxWidth
+              x0 + i * (boxWidth + gap)
+              + Math.random() * boxWidth
             )
             .attr('cy', d => this.yScale(d['value']))
             .attr('r', 3)
             .style('fill', color)
             .attr('stroke', '#000000')
             .attr('pointer-events', 'all')
-            .on('mouseover', function(mouseEvent: any, d) {
+            .on('mouseover', function (mouseEvent: any, d) {
               tip.show(mouseEvent, d, this);
               tip.style('left', mouseEvent.x + tooltipOffsetX + 'px');
             })
@@ -609,7 +629,7 @@ export class DifferentialExpressionComponent implements AfterViewInit {
         .enter()
         .append('g')
         .classed('legend', true)
-        .attr('transform', function(d, i) {
+        .attr('transform', function (d, i) {
           return 'translate(0,' + i * 20 + ')';
         });
 
@@ -632,7 +652,7 @@ export class DifferentialExpressionComponent implements AfterViewInit {
   /**
    * Function to construct the parameter filters that are passed to the backend
    */
-  createFilters(){
+  createFilters() {
     const formValues = this.filterForm.value; // i.e. {name: "asdfgh", pvalue: 3, pvalue_operator: "lte", log2FoldChange: 2, log2FoldChange_operator: "lte"}
     const paramFilter = {}; // has values {'log2FoldChange': '[absgt]:2'};
     for (const key in this.allowedFilters) {
@@ -663,12 +683,19 @@ export class DifferentialExpressionComponent implements AfterViewInit {
       sortDirection: this.sort.direction
     };
 
+    // this.dataSource.loadFeatures(
+    //   this.dgeResourceId,
+    //   paramFilter,
+    //   sorting,
+    //   this.paginator.pageIndex,
+    //   this.paginator.pageSize
+    // );
     this.dataSource.loadFeatures(
       this.dgeResourceId,
-      paramFilter,
+      { 'padj': '[lt]:0.05', 'log2FoldChange': '[absgt]:2.0' },
       sorting,
-      this.paginator.pageIndex,
-      this.paginator.pageSize
+      this.defaultPageIndex,
+      this.defaultPageSize
     );
   }
 }
@@ -691,7 +718,7 @@ export class FeaturesDataSource implements DataSource<DGEFeature> {
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public loading$ = this.loadingSubject.asObservable();
 
-  constructor(private analysesService: AnalysesService) {}
+  constructor(private analysesService: AnalysesService) { }
 
   loadFeatures(
     resourceId: string,

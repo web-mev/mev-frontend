@@ -123,6 +123,7 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
     }
 
     ngOnChanges(): void {
+        console.log("ops data: ", this.operationData)
         if (this.operationData) {
             this.createForm();
             this.analysesForm.statusChanges.subscribe(() => this.onFormValid());

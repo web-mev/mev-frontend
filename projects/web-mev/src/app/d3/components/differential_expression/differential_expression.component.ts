@@ -77,19 +77,6 @@ export class DifferentialExpressionComponent implements AfterViewInit {
   maxFeatureSetSize = 500;
 
   /* Table filters */
-  // allowedFilters = {
-  //   /*name: { defaultValue: '', hasOperator: false },*/
-  //   padj: {
-  //     defaultValue: '',
-  //     hasOperator: true,
-  //     operatorDefaultValue: 'lte'
-  //   },
-  //   log2FoldChange: {
-  //     defaultValue: '',
-  //     hasOperator: true,
-  //     operatorDefaultValue: 'lte'
-  //   }
-  // };
   allowedFilters = {
     /*name: { defaultValue: '', hasOperator: false },*/
     padj: {
@@ -205,13 +192,6 @@ export class DifferentialExpressionComponent implements AfterViewInit {
       sortField: this.defaultSorting.field,
       sortDirection: this.defaultSorting.direction
     };
-    // this.dataSource.loadFeatures(
-    //   this.dgeResourceId,
-    //   {},
-    //   sorting,
-    //   this.defaultPageIndex,
-    //   this.defaultPageSize
-    // );
     this.dataSource.loadFeatures(
       this.dgeResourceId,
       { 'padj': '[lt]:0.05', 'log2FoldChange': '[absgt]:2.0' },
@@ -683,13 +663,6 @@ export class DifferentialExpressionComponent implements AfterViewInit {
       sortDirection: this.sort.direction
     };
 
-    // this.dataSource.loadFeatures(
-    //   this.dgeResourceId,
-    //   paramFilter,
-    //   sorting,
-    //   this.paginator.pageIndex,
-    //   this.paginator.pageSize
-    // );
     this.dataSource.loadFeatures(
       this.dgeResourceId,
       { 'padj': '[lt]:0.05', 'log2FoldChange': '[absgt]:2.0' },

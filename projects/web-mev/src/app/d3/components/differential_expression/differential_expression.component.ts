@@ -85,14 +85,14 @@ export class DifferentialExpressionComponent implements AfterViewInit {
   allowedFilters = {
     /*name: { defaultValue: '', hasOperator: false },*/
     padj: {
-      defaultValue: '',
+      defaultValue: '0.05',
       hasOperator: true,
-      operatorDefaultValue: 'lte'
+      operatorDefaultValue: 'lt'
     },
     log2FoldChange: {
-      defaultValue: '',
+      defaultValue: '2',
       hasOperator: true,
-      operatorDefaultValue: 'lte'
+      operatorDefaultValue: 'absgt'
     }
   };
 
@@ -168,6 +168,10 @@ export class DifferentialExpressionComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
+    console.log("outputs: ", this.outputs)
+    this.boxPlotTypes.Base.label = this.outputs.group1;
+    this.boxPlotTypes.Experimental.label = this.outputs.group2;
+
     this.sort.sortChange.subscribe(
       () => (this.paginator.pageIndex = this.defaultPageIndex)
     );
@@ -198,9 +202,16 @@ export class DifferentialExpressionComponent implements AfterViewInit {
       sortField: this.defaultSorting.field,
       sortDirection: this.defaultSorting.direction
     };
+    // this.dataSource.loadFeatures(
+    //   this.dgeResourceId,
+    //   {},
+    //   sorting,
+    //   this.defaultPageIndex,
+    //   this.defaultPageSize
+    // );
     this.dataSource.loadFeatures(
       this.dgeResourceId,
-      {},
+      { 'padj': '[lt]:0.05', 'log2FoldChange': '[absgt]:2.0' },
       sorting,
       this.defaultPageIndex,
       this.defaultPageSize
@@ -222,7 +233,7 @@ export class DifferentialExpressionComponent implements AfterViewInit {
     this.createChart();
   }
 
-  
+
   /**
    * Function to prepape the outputs data for D3 box plot visualization
    */
@@ -254,7 +265,7 @@ export class DifferentialExpressionComponent implements AfterViewInit {
 
   }
 
-  handleResponseBoxPlotData(baseSamples, experSamples){
+  handleResponseBoxPlotData(baseSamples, experSamples) {
     /* The input to the basic dge analysis is two observation sets. To populate that option,
       *  the user would have had to define those. To keep everything consistent, we query
       *  the existing observation sets and compare them to the baseSamples/experSamples. If they
@@ -693,12 +704,19 @@ export class DifferentialExpressionComponent implements AfterViewInit {
       sortDirection: this.sort.direction
     };
 
+    // this.dataSource.loadFeatures(
+    //   this.dgeResourceId,
+    //   paramFilter,
+    //   sorting,
+    //   this.paginator.pageIndex,
+    //   this.paginator.pageSize
+    // );
     this.dataSource.loadFeatures(
       this.dgeResourceId,
-      paramFilter,
+      { 'padj': '[lt]:0.05', 'log2FoldChange': '[absgt]:2.0' },
       sorting,
-      this.paginator.pageIndex,
-      this.paginator.pageSize
+      this.defaultPageIndex,
+      this.defaultPageSize
     );
   }
 }

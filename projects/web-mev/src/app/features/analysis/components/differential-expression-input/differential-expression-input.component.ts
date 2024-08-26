@@ -6,89 +6,42 @@ import {
     EventEmitter,
     Input
 } from '@angular/core';
-import { FormGroup, Validators, FormBuilder, AbstractControl, AbstractControlOptions, ValidationErrors, ValidatorFn, AsyncValidatorFn } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder, AbstractControl, AbstractControlOptions, ValidatorFn } from '@angular/forms';
 import { AnalysesService } from '../../services/analysis.service';
-import { MetadataService } from '@app/core/metadata/metadata.service';
 import { MatDialog } from '@angular/material/dialog';
 import { BaseOperationInput } from '../base-operation-inputs/base-operation-inputs';
-// import { CompatibleObsSetService } from '../../services/compatible_obs_set.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { catchError } from "rxjs/operators";
 import { NotificationService } from '@core/notifications/notification.service';
 
+function differentGroupValidator(group1Key: string, group2Key: string): ValidatorFn {
+    return (formGroup: AbstractControl): { [key: string]: any } | null => {
+        const group1Control = formGroup.get(group1Key);
+        const group2Control = formGroup.get(group2Key);
 
-// checks that the chosen observation sets are 1) not the same, 2) have no intersection, and 3)  have at least two elements
-// const intersectingObservationSetsValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-//     const exp_mtx_ctrl = control.get('raw_counts');
-//     const obs_set_1_ctrl = control.get('base_condition_samples');
-//     const obs_set_2_ctrl = control.get('experimental_condition_samples');
-//     const obs_set_1 = obs_set_1_ctrl.value;
-//     const obs_set_2 = obs_set_2_ctrl.value;
-//     if (obs_set_1 && obs_set_2) {
-//         exp_mtx_ctrl.markAsTouched();
+        if (!group1Control || !group2Control) {
+            return null;
+        }
 
-//         if (obs_set_1.name === obs_set_2.name) {
-//             obs_set_1_ctrl.setErrors({ sameName: true });
-//             obs_set_2_ctrl.setErrors({ sameName: true });
-//             exp_mtx_ctrl.setErrors(null);
-//             obs_set_1_ctrl.markAsTouched();
-//             obs_set_2_ctrl.markAsTouched();
-//             exp_mtx_ctrl.markAsTouched();
-//             return { sameName: true }
-//         }
+        const group1Value = group1Control.value;
+        const group2Value = group2Control.value;
 
-//         const v1 = obs_set_1.elements.map(item => {
-//             return item.id;
-//         });
-//         const v2 = obs_set_2.elements.map(item => {
-//             return item.id;
-//         })
+        if (group1Value && group2Value && group1Value === group2Value) {
+            group1Control.setErrors({ sameGroupError: true });
+            group2Control.setErrors({ sameGroupError: true });
+        } else {
+            if (group1Control.hasError('sameGroupError')) {
+                group1Control.setErrors(null);
+            }
+            if (group2Control.hasError('sameGroupError')) {
+                group2Control.setErrors(null);
+            }
+        }
 
-//         let tooFewSamples = false;
-//         if (v1.length < 2) {
-//             obs_set_1_ctrl.setErrors({ tooFewSamples: true });
-//             tooFewSamples = true;
-//         }
-//         if (v2.length < 2) {
-//             obs_set_2_ctrl.setErrors({ tooFewSamples: true });
-//             tooFewSamples = true;
-//         }
-//         if (tooFewSamples) {
-//             return { tooFewSamples: true }
-//         }
-
-//         const elements_1 = new Set(v1);
-//         const elements_2 = new Set(v2);
-//         let intersection = [];
-//         for (const v of elements_1) {
-//             if (elements_2.has(v)) {
-//                 intersection.push(v)
-//             }
-//         }
-//         if (intersection.length > 0) {
-//             obs_set_1_ctrl.setErrors({ intersection: true });
-//             obs_set_2_ctrl.setErrors({ intersection: true });
-//             obs_set_1_ctrl.markAsTouched();
-//             obs_set_2_ctrl.markAsTouched();
-//             return { intersection: intersection }
-//         } else {
-//             obs_set_1_ctrl.setErrors(null);
-//             obs_set_2_ctrl.setErrors(null);
-//             exp_mtx_ctrl.setErrors(null);
-//             obs_set_1_ctrl.markAsTouched();
-//             obs_set_2_ctrl.markAsTouched();
-//             exp_mtx_ctrl.markAsTouched();
-//             return null;
-//         }
-//     } else {
-//         obs_set_1_ctrl.setErrors(null);
-//         obs_set_2_ctrl.setErrors(null);
-//         obs_set_1_ctrl.markAsTouched();
-//         obs_set_2_ctrl.markAsTouched();
-//         return null;
-//     }
-// };
+        return null;
+    };
+}
 
 /**
  * Used to display interactive inputs for a differential expression 
@@ -110,11 +63,7 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
     private readonly API_URL = environment.apiUrl;
 
     rawCountsField;
-    // ctrlObsSetField;
-    // experimentalObsSetField;
     annField;
-    // baseConditionNameField;
-    // experimentalConditionNameField;
     columnsField;
     group1Field;
     group2Field;
@@ -132,9 +81,7 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
     constructor(
         private formBuilder: FormBuilder,
         private apiService: AnalysesService,
-        // private metadataService: MetadataService,
         public dialog: MatDialog,
-        // private obsSetService: CompatibleObsSetService,
         private httpClient: HttpClient,
         protected readonly notificationService: NotificationService,
     ) {
@@ -142,8 +89,8 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
     }
 
     ngOnChanges(): void {
+        console.log("opdata: ", this.operationData)
         if (this.operationData) {
-            console.log("opdata: ", this.operationData)
             this.createForm();
             this.analysesForm.statusChanges.subscribe(() => this.onFormValid());
         }
@@ -158,7 +105,6 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
     }
 
     public onFormValid() {
-        console.log("form:  ", this.analysesForm)
         this.formValid.emit(this.analysesForm.valid);
     }
 
@@ -182,9 +128,8 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
     }
 
     onSelectionAnnColumn(file) {
-        console.log("ann col: ", file.value)
-        let selectedColumn = file.value
-        let uniqueColumns = []
+        let selectedColumn = file.value;
+        let uniqueColumns = [];
 
         this.httpClient.get(`${this.API_URL}/resources/${this.annotation_uuid}/contents/`).pipe(
             catchError(error => {
@@ -192,8 +137,7 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
                 throw error;
             })
         ).subscribe(res => {
-            this.uniqueColsReady = true
-            console.log("columns all: ", res)
+            this.uniqueColsReady = true;
             for (let index in res) {
                 let obj = res[index]['values'][selectedColumn]
                 if (!uniqueColumns.includes(obj)) {
@@ -247,8 +191,7 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
             resource_type: input.spec.resource_type,
             desc: input.description,
             required: input.required,
-            files: [],
-            // selectedFiles: []
+            files: []
         };
 
 
@@ -293,7 +236,7 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
         };
         const configGroup1Field = [
             '',
-            []
+            ...[Validators.required]
         ];
         controlsConfig[key] = configGroup1Field;
 
@@ -308,15 +251,13 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
         };
         const configGroup2Field = [
             '',
-            []
+            ...[Validators.required]
         ];
         controlsConfig[key] = configGroup2Field;
 
         this.analysesForm = this.formBuilder.group(controlsConfig,
             {
-                // validators: [intersectingObservationSetsValidator],
-                validators: [],
-                // asyncValidators: [],
+                validators: [differentGroupValidator('group1', 'group2')],
                 updateOn: 'change'
             } as AbstractControlOptions
         );

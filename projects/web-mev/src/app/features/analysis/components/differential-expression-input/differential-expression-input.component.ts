@@ -73,6 +73,10 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
     columnsReady = false;
     uniqueCols = []
     uniqueColsReady = false;
+    jobNameVal = '';
+    rawCountsVal = '';
+    reference_samples_selection = 'ann_results';
+    ann_col = '';
 
     isLoading = false;
 
@@ -135,6 +139,16 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
             let jsonObj = res['results'][0]['values']
             const keys = Object.keys(jsonObj);
             this.columnsValueList = keys;
+
+            if (this.columnsValueList.length === 1) {
+                this.analysesForm.get(this.columnsField.key)?.setValue(this.columnsValueList[0]);
+                let temp = {
+                    "value": this.columnsValueList[0]
+                }
+                this.onSelectionAnnColumn(temp)
+            }else{
+                this.columnsValueList.sort()
+            }
         })
     }
 
@@ -158,9 +172,6 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
             this.uniqueCols = uniqueColumns
         })
     }
-
-    jobNameVal = ''
-    rawCountsVal = ''
 
     createForm() {
         const controlsConfig = {};
@@ -270,36 +281,6 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
         ];
         controlsConfig[key] = configGroup2Field;
 
-        // key = 'group1'
-        // input = this.operationData.inputs[key];
-        // this.obsSet1Field = {
-        //     key: key,
-        //     name: input.name,
-        //     desc: input.description,
-        //     required: input.required,
-        //     sets: this.availableObsSets
-        // };
-        // const configObsSets1Field = [
-        //     '',
-        //     ...[Validators.required]
-        // ];
-        // controlsConfig[key] = configObsSets1Field;
-
-        // key = 'group2'
-        // input = this.operationData.inputs[key];
-        // this.obsSet2Field = {
-        //     key: key,
-        //     name: input.name,
-        //     desc: input.description,
-        //     required: input.required,
-        //     sets: this.availableObsSets
-        // };
-        // const configObsSets2Field = [
-        //     '',
-        //     ...[Validators.required]
-        // ];
-        // controlsConfig[key] = configObsSets2Field;
-
         this.analysesForm = this.formBuilder.group(controlsConfig,
             {
                 validators: [differentGroupValidator('group1', 'group2')],
@@ -314,9 +295,6 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
     get f() {
         return this.analysesForm.controls;
     }
-
-    reference_samples_selection = 'ann_results';
-    ann_col = ''
 
     selectSamplesOptionChange() {
         this.reference_samples_selection = this.analysesForm.value.reference_samples_selection;

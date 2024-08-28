@@ -1,11 +1,4 @@
-import {
-    Component,
-    ChangeDetectionStrategy,
-    OnChanges,
-    Output,
-    EventEmitter,
-    Input
-} from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnChanges, Output, EventEmitter, Input } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, AbstractControl, AbstractControlOptions, ValidatorFn } from '@angular/forms';
 import { AnalysesService } from '../../services/analysis.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -14,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { catchError } from "rxjs/operators";
 import { NotificationService } from '@core/notifications/notification.service';
+import { MetadataService } from '@app/core/metadata/metadata.service';
 
 function differentGroupValidator(group1Key: string, group2Key: string): ValidatorFn {
     return (formGroup: AbstractControl): { [key: string]: any } | null => {
@@ -67,6 +61,8 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
     columnsField;
     group1Field;
     group2Field;
+    obsSet1Field;
+    obsSet2Field;
     rawCountsSamples = [];
     availableObsSets = [];
 
@@ -78,18 +74,29 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
     uniqueCols = []
     uniqueColsReady = false;
 
+    isLoading = false;
+
     constructor(
         private formBuilder: FormBuilder,
         private apiService: AnalysesService,
         public dialog: MatDialog,
         private httpClient: HttpClient,
         protected readonly notificationService: NotificationService,
+        private metadataService: MetadataService,
     ) {
         super();
+
+        this.availableObsSets = this.metadataService.getCustomObservationSets().map(set => {
+            const newSet = set.elements.map(elem => {
+                const o = { id: elem.id };
+                return o;
+            });
+            return { ...set, elements: newSet };
+        });
+
     }
 
     ngOnChanges(): void {
-        console.log("opdata: ", this.operationData)
         if (this.operationData) {
             this.createForm();
             this.analysesForm.statusChanges.subscribe(() => this.onFormValid());
@@ -105,6 +112,10 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
     }
 
     public onFormValid() {
+        if (this.analysesForm.valid && this.reference_samples_selection === 'obs_set') {
+            this.analysesForm.value.annotations = this.annotation_uuid
+            this.analysesForm.value.ann_col = this.ann_col;
+        }
         this.formValid.emit(this.analysesForm.valid);
     }
 
@@ -148,12 +159,16 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
         })
     }
 
+    jobNameVal = ''
+    rawCountsVal = ''
+
     createForm() {
         const controlsConfig = {};
         let input;
 
         // the job name field:
-        controlsConfig['job_name'] = ['', [Validators.required]];
+        controlsConfig['job_name'] = [this.jobNameVal, [Validators.required]];
+        controlsConfig['reference_samples_selection'] = [this.reference_samples_selection, []];
 
         // the selection for the raw counts:
         let key = "raw_counts"
@@ -178,7 +193,7 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
             });
 
         const configResourceField = [
-            '',
+            this.rawCountsVal,
             []
         ];
         controlsConfig[key] = configResourceField;
@@ -205,7 +220,7 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
             });
 
         const configAnnField = [
-            '',
+            this.annotation_uuid,
             []
         ];
         controlsConfig[key] = configAnnField;
@@ -220,7 +235,7 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
             options: this.columnsValueList,
         };
         const configAnnColField = [
-            '',
+            this.ann_col,
             []
         ];
         controlsConfig[key] = configAnnColField;
@@ -232,7 +247,7 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
             name: input.name,
             desc: input.description,
             required: input.required,
-            options: this.uniqueCols,
+            options: this.reference_samples_selection === 'obs_set' ? this.availableObsSets : this.uniqueCols,
         };
         const configGroup1Field = [
             '',
@@ -247,13 +262,43 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
             name: input.name,
             desc: input.description,
             required: input.required,
-            options: this.uniqueCols,
+            options: this.reference_samples_selection === 'obs_set' ? this.availableObsSets : this.uniqueCols,
         };
         const configGroup2Field = [
             '',
             ...[Validators.required]
         ];
         controlsConfig[key] = configGroup2Field;
+
+        // key = 'group1'
+        // input = this.operationData.inputs[key];
+        // this.obsSet1Field = {
+        //     key: key,
+        //     name: input.name,
+        //     desc: input.description,
+        //     required: input.required,
+        //     sets: this.availableObsSets
+        // };
+        // const configObsSets1Field = [
+        //     '',
+        //     ...[Validators.required]
+        // ];
+        // controlsConfig[key] = configObsSets1Field;
+
+        // key = 'group2'
+        // input = this.operationData.inputs[key];
+        // this.obsSet2Field = {
+        //     key: key,
+        //     name: input.name,
+        //     desc: input.description,
+        //     required: input.required,
+        //     sets: this.availableObsSets
+        // };
+        // const configObsSets2Field = [
+        //     '',
+        //     ...[Validators.required]
+        // ];
+        // controlsConfig[key] = configObsSets2Field;
 
         this.analysesForm = this.formBuilder.group(controlsConfig,
             {
@@ -268,5 +313,84 @@ export class DifferentialExpressionInputComponent extends BaseOperationInput imp
       */
     get f() {
         return this.analysesForm.controls;
+    }
+
+    reference_samples_selection = 'ann_results';
+    ann_col = ''
+
+    selectSamplesOptionChange() {
+        this.reference_samples_selection = this.analysesForm.value.reference_samples_selection;
+
+        this.formValid.emit(false); //Valid status doesn't update on the UI immediately so forcing it to up update here.
+
+        this.analysesForm = null
+        this.createForm();
+        this.analysesForm.statusChanges.subscribe(() => this.onFormValid());
+    }
+
+
+    onObservationSetSelection() {
+        let combinedObsData = [];
+        this.annotation_uuid = '';
+        if (this.analysesForm.value.group1 !== '' && this.analysesForm.value.group2 !== '' && this.analysesForm.value.group1 !== this.analysesForm.value.group2) {
+            let group1Name = this.analysesForm.value.group1;
+            let group2Name = this.analysesForm.value.group2;
+            let selectedObsSet1 = [];
+            let selectedObsSet2 = [];
+
+            for (let i in this.availableObsSets) {
+                if (this.availableObsSets[i]["name"] === group1Name) {
+                    selectedObsSet1 = this.availableObsSets[i]["elements"];
+                }
+                if (this.availableObsSets[i]["name"] === group2Name) {
+                    selectedObsSet2 = this.availableObsSets[i]["elements"];
+                }
+            }
+
+            for (let i in selectedObsSet1) {
+                let id = selectedObsSet1[i].id
+                let temp = {
+                    "__id__": id,
+                    "condition": group1Name
+                }
+                combinedObsData.push(temp)
+            }
+
+            for (let i in selectedObsSet2) {
+                let id = selectedObsSet2[i].id
+                let temp = {
+                    "__id__": id,
+                    "condition": group2Name
+                }
+                combinedObsData.push(temp)
+            }
+
+            let payload = {
+                "data": combinedObsData,
+                "workspace": this.workspaceId,
+                "resource_type": "ANN"
+            }
+
+            let url = `${this.API_URL}/resources/create/`;
+
+            this.isLoading = true;
+            this.httpClient.post(url, payload).subscribe({
+                next: (response) => {
+                    this.isLoading = false;
+                    this.annotation_uuid = response['pk']
+                    this.analysesForm.value['annotations'] = response['pk'];
+                    this.ann_col = 'condition'
+                    this.analysesForm.value.ann_col = 'condition';
+                },
+                error: (err) => {
+                    this.isLoading = false;
+                    console.error('Error:', err);
+                },
+                complete: () => {
+                    this.isLoading = false;
+                    console.log('Request complete');
+                }
+            });
+        }
     }
 }

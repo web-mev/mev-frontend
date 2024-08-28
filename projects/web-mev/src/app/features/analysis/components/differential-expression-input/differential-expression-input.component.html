@@ -1,5 +1,5 @@
+<mev-spinner-overlay *ngIf="isLoading"></mev-spinner-overlay>
 <form *ngIf="analysesForm" [formGroup]="analysesForm" (ngSubmit)="onSubmit()">
-
     <ng-container *ngIf="operationData.mode !== 'client'">
         <div class="label">
             Operation name: <span class="redAsterisk">* </span>
@@ -8,7 +8,7 @@
             </mat-icon>
         </div>
         <mat-form-field class="form-control" color="accent">
-            <input matInput formControlName="job_name" name="job_name">
+            <input matInput formControlName="job_name" name="job_name" [(ngModel)]="jobNameVal">
         </mat-form-field>
     </ng-container>
 
@@ -19,7 +19,7 @@
         </mat-icon>
     </div>
     <mat-form-field class="form-control" color="accent">
-        <mat-select [formControlName]="rawCountsField.key">
+        <mat-select [formControlName]="rawCountsField.key" [(ngModel)]="rawCountsVal">
             <mat-option *ngFor="let file of rawCountsField.files" [value]="file.id">
                 {{ file.name }}
             </mat-option>
@@ -32,83 +32,130 @@
             {{analysesForm.errors?.['badSample']}}
         </mat-error>
     </mat-form-field>
+    <br>
+    <mat-button-toggle-group formControlName="reference_samples_selection" (change)="selectSamplesOptionChange()">
+        <mat-button-toggle value="obs_set">Observation set</mat-button-toggle>
+        <mat-button-toggle value="ann_results">Annotation results</mat-button-toggle>
+    </mat-button-toggle-group>
+    <br>
+    <br>
 
-    <div class="label">
-        {{ annField.name }} <span *ngIf="annField.required" class="redAsterisk">* </span>
-        <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-            matTooltip="{{ annField.desc}}" aria-label="Info tooltip about the field">info
-        </mat-icon>
-    </div>
-    <mat-form-field class="form-control" color="accent">
-        <mat-select [formControlName]="annField.key" (selectionChange)="onSelectionAnnotation($event)">
-            <mat-option *ngFor="let file of annField.files" [value]="file.id">
-                {{ file.name }}
-            </mat-option>
-        </mat-select>
-        <mat-error *ngIf="f[annField.key].errors?.required">
-            This field is required
-        </mat-error>
-    </mat-form-field>
-
-    <div *ngIf="annotation_uuid !== '' && columnsReady">
+    <div *ngIf="analysesForm.get('reference_samples_selection').value === 'ann_results'">
         <div class="label">
-            {{ columnsField.name }} <span *ngIf="columnsField.required" class="redAsterisk">* </span>
+            {{ annField.name }} <span *ngIf="annField.required" class="redAsterisk">* </span>
             <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-                matTooltip="{{ columnsField.desc}}" aria-label="Info tooltip about the field">info
+                matTooltip="{{ annField.desc}}" aria-label="Info tooltip about the field">info
             </mat-icon>
         </div>
         <mat-form-field class="form-control" color="accent">
-            <mat-select [formControlName]="columnsField.key" (selectionChange)="onSelectionAnnColumn($event)">
-                <mat-option *ngFor="let option of columnsValueList" [value]="option">
-                    {{ option }}
+            <mat-select [formControlName]="annField.key" (selectionChange)="onSelectionAnnotation($event)">
+                <mat-option *ngFor="let file of annField.files" [value]="file.id">
+                    {{ file.name }}
                 </mat-option>
             </mat-select>
-            <mat-error *ngIf="f[columnsField.key].errors?.required">
+            <mat-error *ngIf="f[annField.key].errors?.required">
                 This field is required
             </mat-error>
         </mat-form-field>
+
+        <div *ngIf="annotation_uuid !== '' && columnsReady">
+            <div class="label">
+                {{ columnsField.name }} <span *ngIf="columnsField.required" class="redAsterisk">* </span>
+                <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                    matTooltip="{{ columnsField.desc}}" aria-label="Info tooltip about the field">info
+                </mat-icon>
+            </div>
+            <mat-form-field class="form-control" color="accent">
+                <mat-select [formControlName]="columnsField.key" (selectionChange)="onSelectionAnnColumn($event)">
+                    <mat-option *ngFor="let option of columnsValueList" [value]="option">
+                        {{ option }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="f[columnsField.key].errors?.required">
+                    This field is required
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div *ngIf="annotation_uuid !== '' && uniqueColsReady">
+            <div class="label">
+                {{ group1Field.name }} <span *ngIf="group1Field.required" class="redAsterisk">* </span>
+                <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                    matTooltip="{{ group1Field.desc}}" aria-label="Info tooltip about the field">info
+                </mat-icon>
+            </div>
+            <mat-form-field class="form-control" color="accent">
+                <mat-select [formControlName]="group1Field.key">
+                    <mat-option *ngFor="let option of uniqueCols" [value]="option">
+                        {{ option }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="f[group1Field.key].errors?.required">
+                    This field is required
+                </mat-error>
+                <mat-error *ngIf="f[group1Field.key].errors?.sameGroupError">
+                    <p>Group 1 and Group 2 cannot be the same.</p>
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div *ngIf="annotation_uuid !== '' && uniqueColsReady">
+            <div class="label">
+                {{ group2Field.name }} <span *ngIf="group2Field.required" class="redAsterisk">* </span>
+                <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+                    matTooltip="{{ group2Field.desc}}" aria-label="Info tooltip about the field">info
+                </mat-icon>
+            </div>
+            <mat-form-field class="form-control" color="accent">
+                <mat-select [formControlName]="group2Field.key">
+                    <mat-option *ngFor="let option of uniqueCols" [value]="option">
+                        {{ option }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="f[group2Field.key].errors?.required">
+                    This field is required
+                </mat-error>
+                <mat-error *ngIf="f[group2Field.key].errors?.sameGroupError">
+                    <p>Group 1 and Group 2 cannot be the same.</p>
+                </mat-error>
+            </mat-form-field>
+        </div>
     </div>
 
-    <div *ngIf="annotation_uuid !== '' && uniqueColsReady">
+    <div *ngIf="analysesForm.get('reference_samples_selection').value === 'obs_set'">
         <div class="label">
-            {{ group1Field.name }} <span *ngIf="group1Field.required" class="redAsterisk">* </span>
+            Observation Set 1:
+            <span *ngIf="group1Field.required" class="redAsterisk">* </span>
             <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
                 matTooltip="{{ group1Field.desc}}" aria-label="Info tooltip about the field">info
             </mat-icon>
         </div>
         <mat-form-field class="form-control" color="accent">
-            <mat-select [formControlName]="group1Field.key">
-                <mat-option *ngFor="let option of uniqueCols" [value]="option">
-                    {{ option }}
+            <mat-select [formControlName]="group1Field.key" (selectionChange)="onObservationSetSelection()">
+                <mat-option *ngFor="let set of group1Field.options" [value]="set.name">
+                    {{ set.name }}
                 </mat-option>
             </mat-select>
-            <mat-error *ngIf="f[group1Field.key].errors?.required">
-                This field is required
-            </mat-error>
-            <mat-error *ngIf="f[group1Field.key].errors?.sameGroupError">
-                <p>Group 1 and Group 2 cannot be the same.</p>
+            <mat-error *ngIf="f[group2Field.key].errors?.sameGroupError">
+                <p>Observation Set 1 and Observation Set 2 cannot be the same.</p>
             </mat-error>
         </mat-form-field>
-    </div>
 
-    <div *ngIf="annotation_uuid !== '' && uniqueColsReady">
         <div class="label">
-            {{ group2Field.name }} <span *ngIf="group2Field.required" class="redAsterisk">* </span>
+            Observation Set 2:
+            <span *ngIf="group2Field.required" class="redAsterisk">* </span>
             <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
                 matTooltip="{{ group2Field.desc}}" aria-label="Info tooltip about the field">info
             </mat-icon>
         </div>
         <mat-form-field class="form-control" color="accent">
-            <mat-select [formControlName]="group2Field.key">
-                <mat-option *ngFor="let option of uniqueCols" [value]="option">
-                    {{ option }}
+            <mat-select [formControlName]="group2Field.key" (selectionChange)="onObservationSetSelection()">
+                <mat-option *ngFor="let set of group2Field.options" [value]="set.name">
+                    {{ set.name }}
                 </mat-option>
             </mat-select>
-            <mat-error *ngIf="f[group2Field.key].errors?.required">
-                This field is required
-            </mat-error>
             <mat-error *ngIf="f[group2Field.key].errors?.sameGroupError">
-                <p>Group 1 and Group 2 cannot be the same.</p>
+                <p>Observation Set 1 and Observation Set 2 cannot be the same.</p>
             </mat-error>
         </mat-form-field>
     </div>

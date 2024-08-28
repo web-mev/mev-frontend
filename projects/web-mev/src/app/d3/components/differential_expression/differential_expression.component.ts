@@ -253,9 +253,9 @@ export class DifferentialExpressionComponent implements AfterViewInit {
       for (let i in res) {
         let obj = res[i]
         if (obj['values'][ann_col] === group1Name) {
-          group1Arr.push(obj['rowname'])
+          group1Arr.push(obj['__id__'])
         } else if (obj['values'][ann_col] === group2Name) {
-          group2Arr.push(obj['rowname'])
+          group2Arr.push(obj['__id__'])
         }
       }
 
@@ -359,7 +359,7 @@ export class DifferentialExpressionComponent implements AfterViewInit {
           )
           .subscribe(features => {
             const elements = features.map(feature => {
-              return { id: feature.rowname };
+              return { id: feature.__id__ };
             });
             const customSet = {
               name: customSetData.name,
@@ -762,7 +762,7 @@ export class FeaturesDataSource implements DataSource<DGEFeature> {
       .subscribe(features => {
         this.featuresCount = features.count;
         const featuresFormatted = features.results.map(feature => {
-          const newFeature = { name: feature.rowname, ...feature.values };
+          const newFeature = { name: feature.__id__, ...feature.values };
           return newFeature;
         });
         return this.featuresSubject.next(featuresFormatted);

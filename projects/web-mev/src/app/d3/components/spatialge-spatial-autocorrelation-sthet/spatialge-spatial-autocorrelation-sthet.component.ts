@@ -186,7 +186,7 @@ export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialge
 
                 for (let i in coordsMetadataRes) {
                     let obj = coordsMetadataRes[i];
-                    let key = obj['rowname'];
+                    let key = obj['__id__'];
                     let xVal = obj['values'][this.xAxisValue];
                     let yVal = obj['values'][this.yAxisValue];
 

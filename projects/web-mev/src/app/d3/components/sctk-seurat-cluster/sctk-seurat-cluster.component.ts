@@ -124,7 +124,7 @@ export class SctkSeuratClusterComponent implements OnInit {
 
             // now fill:
             response.forEach(obj => {
-              const sampleId = obj.rowname;
+              const sampleId = obj.__id__;
               const assignedCluster = obj.values['seurat_cluster'];
               customSets[assignedCluster].elements.push(
                 {

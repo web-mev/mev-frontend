@@ -28,7 +28,7 @@ import d3Tip from 'd3-tip';
 export class D3BoxPlotComponent implements OnInit, OnChanges, AfterViewInit {
   /*
   An array of items where each item looks like:
-  { 'rowname': 'A1BG', 'values': {'sA':1, 'sB':2,...}}
+  { '__id__': 'A1BG', 'values': {'sA':1, 'sB':2,...}}
   that is, values is an object where the keys are samples/observations
   and they point at the expression for that sample
   */
@@ -151,7 +151,7 @@ export class D3BoxPlotComponent implements OnInit, OnChanges, AfterViewInit {
       this.resourceData = this.resourceData.slice(0, this.maxFeatureNumber);
 
       const countsFormatted = this.resourceData.map(elem => {
-        const newElem = { key: elem.rowname };
+        const newElem = { key: elem.__id__ };
         Object.keys(this.boxPlotTypes).forEach(key => {
           // track the number of samples in this observation set. This will allow
           // us to inform users if their data source does not have all those samples.

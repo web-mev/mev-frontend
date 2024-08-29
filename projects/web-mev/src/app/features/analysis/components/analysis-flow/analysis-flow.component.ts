@@ -212,11 +212,11 @@ export class AnalysisFlowComponent implements OnInit {
       .getResourcePreview(resourceId)
       .subscribe(data => {
         const previewData = {};
-        if (data?.length && 'rowname' in data[0]) {
+        if (data?.length && '__id__' in data[0]) {
           const minN = Math.min(data.length, 10);
           const slicedData = data.slice(0, minN);
           const columns = Object.keys(slicedData[0].values);
-          const rows = slicedData.map(elem => elem.rowname);
+          const rows = slicedData.map(elem => elem.__id__);
           const values = slicedData.map(elem => {
             const rowValues = [];
             const elemValues = elem.values;

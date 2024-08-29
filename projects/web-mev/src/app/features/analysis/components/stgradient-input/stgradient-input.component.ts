@@ -546,9 +546,9 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
 
         forkJoin([clusterRequest, coordsMetadataRequest]).subscribe(([clusterRes, coordsMetadataRes]) => {
             this.isLoading = false;
-            if (Array.isArray(clusterRes) && clusterRes.length > 0 && clusterRes[0].hasOwnProperty('rowname') && clusterRes[0].hasOwnProperty('values')) {
+            if (Array.isArray(clusterRes) && clusterRes.length > 0 && clusterRes[0].hasOwnProperty('__id__') && clusterRes[0].hasOwnProperty('values')) {
                 for (let index in clusterRes) {
-                    let key = clusterRes[index]['rowname']
+                    let key = clusterRes[index]['__id__']
                     let clusterid = clusterRes[index]['values']['clusterid']
                     this.dataDict[key] = {
                         ...this.dataDict[key],
@@ -558,7 +558,7 @@ export class StgradientInputComponent extends BaseOperationInput implements OnCh
 
                 for (let i in coordsMetadataRes) {
                     let obj = coordsMetadataRes[i];
-                    let key = obj['rowname'];
+                    let key = obj['__id__'];
                     let xVal = obj['values'][this.yAxisValue]
                     let yVal = obj['values'][this.xAxisValue]
                     this.dataDict[key] = {

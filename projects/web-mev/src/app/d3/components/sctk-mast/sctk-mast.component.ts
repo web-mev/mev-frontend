@@ -272,7 +272,7 @@ export class MastDgeComponent implements AfterViewInit {
           )
           .subscribe(features => {
             const elements = features.map(feature => {
-              return { id: feature.rowname };
+              return { id: feature.__id__ };
             });
             const customSet = {
               name: customSetData.name,
@@ -582,7 +582,7 @@ export class FeaturesDataSource implements DataSource<SingleCellDGEFeature> {
       .subscribe(features => {
         this.featuresCount = features.count;
         const featuresFormatted = features.results.map(feature => {
-          const newFeature = { name: feature.rowname, ...feature.values };
+          const newFeature = { name: feature.__id__, ...feature.values };
           return newFeature;
         });
         return this.featuresSubject.next(featuresFormatted);

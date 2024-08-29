@@ -240,7 +240,7 @@ export class RnaSeqNormalizationComponent implements AfterViewInit  {
           )
           .subscribe(features => {
             const elements = features.map(feature => {
-               return {id: feature.rowname};
+               return {id: feature.__id__};
             });
             const customSet = {
               name: customSetData.name,
@@ -305,7 +305,7 @@ export class ExpressionMatrixDataSource implements DataSource<GeneExpression> {
                             truncated_expressions[k] = dataRow.values[k].toFixed(this.precision)
                         );
                         return {
-                            geneName: dataRow.rowname,
+                            geneName: dataRow.__id__,
                             meanExp: dataRow['__rowmean__'],
                             expressions: truncated_expressions
                         };

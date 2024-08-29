@@ -94,7 +94,7 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
 
                 for (let index in coordsMetadataRes) {
                     let gene = coordsMetadataRes[index]
-                    let key = gene['rowname']
+                    let key = gene['__id__']
                     let x = gene['values'][this.xAxisValue]
                     let y= gene['values'][this.yAxisValue]
                     this.xMin = Math.min(this.xMin, x)
@@ -132,7 +132,7 @@ export class SpotlightComponent extends BaseSpatialgeComponent implements OnInit
 
                 for (let index in spotlightRes) {
                     let gene = spotlightRes[index];
-                    let geneName = gene.rowname;
+                    let geneName = gene.__id__;
                     for (const key in gene.values) {
 
                         if (!this.pieChartColors[geneName]) {

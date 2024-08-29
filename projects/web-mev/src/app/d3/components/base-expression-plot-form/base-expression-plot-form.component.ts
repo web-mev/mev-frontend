@@ -72,7 +72,7 @@ export class MevBaseExpressionPlotFormComponent implements OnInit {
     const resourceId = this.inputForm.value['expMtx'];
     const selectedFeatureSet = this.inputForm.value['featureSet'];
     const elements = selectedFeatureSet['elements'].map(obj => obj.id);
-    const filters = { '__rowname__': '[in]:' + elements.join(',') }
+    const filters = { '__id__': '[in]:' + elements.join(',') }
     this.apiService
       .getResourceContent(
         resourceId,

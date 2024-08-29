@@ -140,12 +140,14 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
       )
       .subscribe();
 
+
+
     this.analysesService
       .getResourceContent(this.resourceId, 1, 10 ** 4)
       .subscribe(data => {
         this.donutPlotData = data.results.map(dataRow => {
           return {
-            name: dataRow.rowname,
+            name: dataRow.__id__,
             doublet_class: dataRow.values['doublet_class']
           };
         });
@@ -261,7 +263,7 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
           .getResourceContent(this.resourceId, null, null, filterValues, {})
           .subscribe(features => {
             const elements = features.map(feature => {
-              return { id: feature.rowname };
+              return { id: feature.__id__ };
             });
             const customSet = {
               name: customSetData.name,
@@ -508,7 +510,7 @@ export class SctkDoubletDetectionComponent implements OnInit, AfterViewInit {
           .getResourceContent(this.resourceId, null, null, filterValues, {})
           .subscribe(features => {
             const elements = features.map(feature => {
-              return { id: feature.rowname };
+              return { id: feature.__id__ };
             });
             const observationSet: CustomSet = {
               name: customSetData.name,
@@ -563,7 +565,7 @@ export class ExpressionMatrixDataSource
         this.qcCount = data.count;
         const qcFormatted = data.results.map(dataRow => {
           return {
-            name: dataRow.rowname,
+            name: dataRow.__id__,
             doublet_class: dataRow.values['doublet_class']
           };
         });

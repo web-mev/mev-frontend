@@ -168,7 +168,6 @@ export class DifferentialExpressionComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    console.log("outputs: ", this.outputs)
     this.boxPlotTypes.Base.label = this.outputs.group1;
     this.boxPlotTypes.Experimental.label = this.outputs.group2;
 

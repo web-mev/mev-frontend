@@ -1,123 +1,123 @@
 <form *ngIf="analysesForm" [formGroup]="analysesForm" (ngSubmit)="onSubmit()">
 
-    <!-- OPERATION NAME -->
-    <ng-container *ngIf="operationData.mode !== 'client'">
-        <div class="label">
-            Operation name: <span class="redAsterisk">* </span>
-            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-                matTooltip="Type operation name" aria-label="Info tooltip about the field">info
-            </mat-icon>
-        </div>
-        <mat-form-field class="form-control" color="accent">
-            <input matInput formControlName="job_name" name="job_name">
-        </mat-form-field>
-    </ng-container>
-    <div>
-        <div class="label">
-            {{ primaryMatrixField.name }} <span class="redAsterisk">* </span>
-            <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-                matTooltip="{{ primaryMatrixField.desc}}" aria-label="Info tooltip about the field">info
-            </mat-icon>
-        </div>
-        <mat-form-field class="form-control" color="accent">
-            <mat-select [formControlName]="primaryMatrixField.key">
-                <mat-option *ngFor="let file of primaryMatrixField.files" [value]="file.id">
-                    {{ file.name }}
-                </mat-option>
-            </mat-select>
-            <mat-error *ngIf="f[primaryMatrixField.key].errors?.required">
-                This field is required
-            </mat-error>
-            <mat-error *ngIf="analysesForm.errors?.badSample">
-                The sample/observation groups chosen below do not match your input matrix. The invalid samples were:
-                {{analysesForm.errors?.['badSample']}}
-            </mat-error>
-        </mat-form-field>
+  <!-- OPERATION NAME -->
+  <ng-container *ngIf="operationData.mode !== 'client'">
+    <div class="label">
+      Operation name: <span class="redAsterisk">* </span>
+      <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+        matTooltip="Type operation name" aria-label="Info tooltip about the field">info
+      </mat-icon>
     </div>
+    <mat-form-field class="form-control" color="accent">
+      <input matInput formControlName="job_name" name="job_name">
+    </mat-form-field>
+  </ng-container>
+  <div>
+    <div class="label">
+      {{ primaryMatrixField.name }} <span *ngIf="primaryMatrixField.required" class="redAsterisk">* </span>
+      <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+        matTooltip="{{ primaryMatrixField.desc}}" aria-label="Info tooltip about the field">info
+      </mat-icon>
+    </div>
+    <mat-form-field class="form-control" color="accent">
+      <mat-select [formControlName]="primaryMatrixField.key">
+        <mat-option *ngFor="let file of primaryMatrixField.files" [value]="file.id">
+          {{ file.name }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="f[primaryMatrixField.key].errors?.required">
+        This field is required
+      </mat-error>
+      <mat-error *ngIf="analysesForm.errors?.badSample">
+        The sample/observation groups chosen below do not match your input matrix. The invalid samples were:
+        {{analysesForm.errors?.['badSample']}}
+      </mat-error>
+    </mat-form-field>
+  </div>
 
-    <div class="form-control form-control--multiselect">
-        <div class="label">
-          {{ secondaryMatricesField.name }}
-          <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-            matTooltip="{{ secondaryMatricesField.desc}}" aria-label="Info tooltip about the field">info
-          </mat-icon>
-        </div>
-        <angular2-multiselect [formControlName]="secondaryMatricesField.key" [data]="secondaryMatricesField.files"
-          [(ngModel)]="secondaryMatricesField.selectedFiles" [settings]="multipleResourcesDropdownSettings">
-          <c-item>
-            <ng-template let-item="item">
-              <label>{{ item.name }}</label>
-            </ng-template>
-          </c-item>
-          <c-badge>
-            <ng-template let-item="item">
-              <label>{{ item.name }}</label>
-            </ng-template>
-          </c-badge>
-        </angular2-multiselect>
-      </div>
+  <div class="form-control form-control--multiselect">
+    <div class="label">
+      {{ secondaryMatricesField.name }} <span *ngIf="secondaryMatricesField.required" class="redAsterisk">* </span>
+      <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+        matTooltip="{{ secondaryMatricesField.desc}}" aria-label="Info tooltip about the field">info
+      </mat-icon>
+    </div>
+    <angular2-multiselect [formControlName]="secondaryMatricesField.key" [data]="secondaryMatricesField.files"
+      [(ngModel)]="secondaryMatricesField.selectedFiles" [settings]="multipleResourcesDropdownSettings">
+      <c-item>
+        <ng-template let-item="item">
+          <label>{{ item.name }}</label>
+        </ng-template>
+      </c-item>
+      <c-badge>
+        <ng-template let-item="item">
+          <label>{{ item.name }}</label>
+        </ng-template>
+      </c-badge>
+    </angular2-multiselect>
+  </div>
 
-      <div class="label">
-        {{ numNeighborsField.name }}
-        <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-          matTooltip="{{ numNeighborsField.desc}}" aria-label="Info tooltip about the field">info
-        </mat-icon>
-      </div>
-      <mat-form-field class="form-control" color="accent">
-        <mat-select [formControlName]="numNeighborsField.key">
-          <mat-option *ngFor="let option of numNeighborsField.options" [value]="option">
-            {{ option }}
-          </mat-option>
-        </mat-select>
-        <div *ngIf="submitted && f[numNeighborsField.key].errors">
-          <mat-error *ngIf="f[numNeighborsField.key].errors.required">
-            This field is required
-          </mat-error>
-        </div>
-      </mat-form-field>
+  <div class="label">
+    {{ numNeighborsField.name }} <span *ngIf="numNeighborsField.required" class="redAsterisk">* </span>
+    <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+      matTooltip="{{ numNeighborsField.desc}}" aria-label="Info tooltip about the field">info
+    </mat-icon>
+  </div>
+  <mat-form-field class="form-control" color="accent">
+    <mat-select [formControlName]="numNeighborsField.key">
+      <mat-option *ngFor="let option of numNeighborsField.options" [value]="option">
+        {{ option }}
+      </mat-option>
+    </mat-select>
+    <div *ngIf="submitted && f[numNeighborsField.key].errors">
+      <mat-error *ngIf="f[numNeighborsField.key].errors.required">
+        This field is required
+      </mat-error>
+    </div>
+  </mat-form-field>
 
 
-      <div class="label">
-        {{ alphaField.name }}
-        <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-          matTooltip="{{ alphaField.desc}}" aria-label="Info tooltip about the field">info
-        </mat-icon>
-      </div>
-      <mat-form-field class="form-control" color="accent">
-        <mat-select [formControlName]="alphaField.key">
-          <mat-option *ngFor="let option of alphaField.options" [value]="option">
-            {{ option }}
-          </mat-option>
-        </mat-select>
-        <div *ngIf="submitted && f[alphaField.key].errors">
-          <mat-error *ngIf="f[alphaField.key].errors.required">
-            This field is required
-          </mat-error>
-        </div>
-      </mat-form-field>
+  <div class="label">
+    {{ alphaField.name }} <span *ngIf="alphaField.required" class="redAsterisk">* </span>
+    <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+      matTooltip="{{ alphaField.desc}}" aria-label="Info tooltip about the field">info
+    </mat-icon>
+  </div>
+  <mat-form-field class="form-control" color="accent">
+    <mat-select [formControlName]="alphaField.key">
+      <mat-option *ngFor="let option of alphaField.options" [value]="option">
+        {{ option }}
+      </mat-option>
+    </mat-select>
+    <div *ngIf="submitted && f[alphaField.key].errors">
+      <mat-error *ngIf="f[alphaField.key].errors.required">
+        This field is required
+      </mat-error>
+    </div>
+  </mat-form-field>
 
-      <div class="label">
-        {{ numClustersField.name }} <span class="redAsterisk">* </span>
-        <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
-          matTooltip="{{ numClustersField.desc}}" aria-label="Info tooltip about the field">info
-        </mat-icon>
-      </div>
-      <mat-form-field class="form-control" color="accent">
-        <input matInput [formControlName]="numClustersField.key" [name]="numClustersField.key">
-        <div *ngIf="f[numClustersField.key].value && f[numClustersField.key].errors">
-          <mat-error *ngIf="f[numClustersField.key].errors.required">
-            This field is required
-          </mat-error>
-          <mat-error *ngIf="f[numClustersField.key].errors.pattern">
-            The value should be an integer.
-          </mat-error>
-          <mat-error *ngIf="f[numClustersField.key].errors.min">
-            The value should be an integer greater than or equal to {{ numClustersField.min }}
-          </mat-error>
-          <mat-error *ngIf="f[numClustersField.key].errors.max">
-            The value should be an integer less than or equal to {{ numClustersField.max }}
-          </mat-error>
-        </div>
-      </mat-form-field>
+  <div class="label">
+    {{ numClustersField.name }} <span *ngIf="numClustersField.required" class="redAsterisk">* </span>
+    <mat-icon class="analyses-header__icon" matTooltipClass="tooltip" fontSet="material-icons-outlined"
+      matTooltip="{{ numClustersField.desc}}" aria-label="Info tooltip about the field">info
+    </mat-icon>
+  </div>
+  <mat-form-field class="form-control" color="accent">
+    <input matInput [formControlName]="numClustersField.key" [name]="numClustersField.key">
+    <div *ngIf="f[numClustersField.key].value && f[numClustersField.key].errors">
+      <mat-error *ngIf="f[numClustersField.key].errors.required">
+        This field is required
+      </mat-error>
+      <mat-error *ngIf="f[numClustersField.key].errors.pattern">
+        The value should be an integer.
+      </mat-error>
+      <mat-error *ngIf="f[numClustersField.key].errors.min">
+        The value should be an integer greater than or equal to {{ numClustersField.min }}
+      </mat-error>
+      <mat-error *ngIf="f[numClustersField.key].errors.max">
+        The value should be an integer less than or equal to {{ numClustersField.max }}
+      </mat-error>
+    </div>
+  </mat-form-field>
 
 </form>

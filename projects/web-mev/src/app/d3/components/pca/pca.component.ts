@@ -119,7 +119,7 @@ export class PCAComponent implements OnChanges {
       sampleNames.forEach(sampleName => {
         const newPoint = { sample: sampleName };
         results.forEach(el => {
-          const pc = el.rowname;
+          const pc = el.__id__;
           const val = el.values[sampleName];
           newPoint[pc] = val;
         });

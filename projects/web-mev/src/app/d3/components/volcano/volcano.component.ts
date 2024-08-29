@@ -82,7 +82,7 @@ export class VolcanoComponent implements OnInit {
         this.isLoaded = true;
         for (let index in res) {
           let gene = res[index]
-          let name = gene['rowname'];
+          let name = gene['__id__'];
           let pvalue = gene['values']['pvalue']
           let foldChange = gene['values']['log2FoldChange'];
 
@@ -105,7 +105,7 @@ export class VolcanoComponent implements OnInit {
         }
         for (let index in res) {
           let gene = res[index]
-          let name = gene['rowname'];
+          let name = gene['__id__'];
           let pvalue = gene['values']['pvalue']
           let foldChange = gene['values']['log2FoldChange'];
 

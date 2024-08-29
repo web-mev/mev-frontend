@@ -20,7 +20,7 @@
                 <table *ngIf="outputs.distance_summary === 'Average'" mat-table [dataSource]="dataSource" class="mat-elevation-z8" class="table" matSort (matSortChange)="sortData($event)">
                     <ng-container matColumnDef="sample_gene">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Gene </th>
-                        <td mat-cell *matCellDef="let element" class="word-wrap"> {{element.rowname}} </td>
+                        <td mat-cell *matCellDef="let element" class="word-wrap"> {{element.__id__}} </td>
                     </ng-container>
                     <ng-container matColumnDef="avg_lm_coef">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> avg_lm_coef </th>
@@ -54,9 +54,9 @@
                         <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> </th>
                         <td mat-cell *matCellDef="let element; let i=index;" class="numericCols">
                             <button mat-raised-button title="Select Gene" [disabled]="isEmpty(selectedStNormalizedFile)"
-                                (click)="selectGene(element.rowname)"
-                                [class]="element.rowname === geneSearch ? 'selectedButton' : 'notSelectedButton' ">
-                                {{element.rowname === geneSearch ? 'Selected Gene' : 'Select Gene'}}
+                                (click)="selectGene(element.__id__)"
+                                [class]="element.__id__ === geneSearch ? 'selectedButton' : 'notSelectedButton' ">
+                                {{element.__id__ === geneSearch ? 'Selected Gene' : 'Select Gene'}}
                             </button>
                         </td>
                     </ng-container>
@@ -68,7 +68,7 @@
                 <table *ngIf="outputs.distance_summary === 'Minimum'" mat-table [dataSource]="dataSource" class="mat-elevation-z8" class="table" matSort (matSortChange)="sortData($event)">
                     <ng-container matColumnDef="sample_gene">
                         <th mat-header-cell *matHeaderCellDef> Gene </th>
-                        <td mat-cell *matCellDef="let element" class="word-wrap"> {{element.rowname}} </td>
+                        <td mat-cell *matCellDef="let element" class="word-wrap"> {{element.__id__}} </td>
                     </ng-container>
                     <ng-container matColumnDef="min_lm_coef">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> min_lm_coef </th>
@@ -102,9 +102,9 @@
                         <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> </th>
                         <td mat-cell *matCellDef="let element; let i=index;" class="numericCols">
                             <button mat-raised-button title="Select Gene" [disabled]="isEmpty(selectedStNormalizedFile)"
-                                (click)="selectGene(element.rowname)"
-                                [class]="element.rowname === geneSearch ? 'selectedButton' : 'notSelectedButton' ">
-                                {{element.rowname === geneSearch ? 'Selected Gene' : 'Select Gene'}}
+                                (click)="selectGene(element.__id__)"
+                                [class]="element.__id__ === geneSearch ? 'selectedButton' : 'notSelectedButton' ">
+                                {{element.__id__ === geneSearch ? 'Selected Gene' : 'Select Gene'}}
                             </button>
                         </td>
                     </ng-container>

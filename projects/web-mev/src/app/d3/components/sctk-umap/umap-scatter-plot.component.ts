@@ -95,7 +95,7 @@ export class UmapScatterPlotComponent implements OnChanges {
     let uuid = this.outputs["raw_counts"];
     let gene = this.overlayValue;
     this.httpClient.get(
-      `${this.API_URL}/resources/${uuid}/contents/?__rowname__=[eq]:${gene}`).pipe(
+      `${this.API_URL}/resources/${uuid}/contents/?__id__=[eq]:${gene}`).pipe(
         catchError(error => {
           this.isWait = false;
           this.notificationService.error(`Error: ${error.message}`);
@@ -150,7 +150,7 @@ export class UmapScatterPlotComponent implements OnChanges {
       sampleNames.forEach(sampleName => {
         const newPoint = { sample: sampleName };
         results.forEach(el => {
-          const umapComponent = el.rowname;
+          const umapComponent = el.__id__;
           const val = el.values[sampleName];
           newPoint[umapComponent] = val;
         });
@@ -160,8 +160,8 @@ export class UmapScatterPlotComponent implements OnChanges {
 
     // get the x and y 'names' from the rownames. This way we are 
     // not tied to hardcoded values like "umap1"
-    this.xCat = results[0].rowname;
-    this.yCat = results[1].rowname;
+    this.xCat = results[0].__id__;
+    this.yCat = results[1].__id__;
 
     this.umapDataFormatted = {
       points: newPoints

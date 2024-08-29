@@ -16,7 +16,7 @@ import { NotificationService } from '@core/notifications/notification.service';
 export class D3HeatmapPlotComponent implements OnInit {
   /*
   An array of items where each item looks like:
-  { 'rowname': 'A1BG', 'values': {'sA':1, 'sB':2,...}}
+  { '__id__': 'A1BG', 'values': {'sA':1, 'sB':2,...}}
   that is, values is an object where the keys are samples/observations
   and they point at the expression for that sample
   */
@@ -302,10 +302,10 @@ export class D3HeatmapPlotComponent implements OnInit {
 
     this.heatmapData.forEach(
       (item, idx) => {
-        let rowname = item.rowname;
+        let __id__ = item.__id__;
         let valueMap = item.values;
 
-        allFeatures.push(rowname);
+        allFeatures.push(__id__);
         if (idx == 0) {
           allObservations = Object.keys(valueMap);
 
@@ -349,7 +349,7 @@ export class D3HeatmapPlotComponent implements OnInit {
           if (orderedObservations.includes(obsId)) {
             reformattedData.push(
               {
-                featureId: rowname,
+                featureId: __id__,
                 obsId: obsId,
                 value: val // we want to display the true data on hover. Even if logged, that will only affect the color.
               }
@@ -1093,7 +1093,7 @@ export class D3HeatmapPlotComponent implements OnInit {
     this.categoryOptionsArr = [];
     this.categoryOptions = {};
     for (let i = 0; i < this.resourceDataAnnotation.length; i++) {
-      let rowName = this.resourceDataAnnotation[i].rowname;
+      let __id__ = this.resourceDataAnnotation[i].__id__;
       let values = this.resourceDataAnnotation[i].values;
       let temp = {}
       for (let key in values) {
@@ -1109,7 +1109,7 @@ export class D3HeatmapPlotComponent implements OnInit {
         }
 
       }
-      this.annData[rowName] = temp
+      this.annData[__id__] = temp
     }
 
     //find the number of overlay categories in order to calculate the margin needed for the graph

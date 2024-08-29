@@ -49,7 +49,7 @@ export class DecontxComponent implements OnInit {
                 for (let i = 0; i < res.length; i++) {
                     let currentClass = res[i]['values']['decontx_class'];
                     let currentContaminationNumber = res[i]['values']['decontx_contamination'];
-                    let currentId = res[i]['rowname']
+                    let currentId = res[i]['__id__']
                     let newName = currentClass;
                     if (this.decontxClass[newName] === undefined) {
                         this.decontxClass[newName] = []

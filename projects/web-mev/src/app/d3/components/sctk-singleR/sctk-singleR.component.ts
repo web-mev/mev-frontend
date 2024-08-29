@@ -86,12 +86,12 @@ export class SctkSingleRComponent implements OnInit {
 
     for (let data of this.distData) {
       let cellType = data.values.cell_types
-      let rowname = data.rowname
+      let __id__ = data.__id__
 
       if (!reformattedData[cellType]) {
         reformattedData[cellType] = [];
       }
-      reformattedData[cellType].push(rowname)
+      reformattedData[cellType].push(__id__)
     }
 
     let countData = []
@@ -137,7 +137,7 @@ export class SctkSingleRComponent implements OnInit {
               );
               // now fill:
               response.forEach(obj => {
-                const sampleId = obj.rowname;
+                const sampleId = obj.__id__;
                 const assignedCluster = obj.values['cell_types'];
                 let temp = {
                   id: sampleId,

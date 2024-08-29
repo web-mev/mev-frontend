@@ -288,7 +288,7 @@ export class BaseSpatialgeComponent {
 
     let normalization_uuid = this.outputs["normalized_expression"];
     let coords_metadata_uuid = this.outputs["coords_metadata"];
-    let normUrl = `${this.API_URL}/resources/${normalization_uuid}/contents/?__rowname__=[case-ins-eq]:${this.geneSearch}`;
+    let normUrl = `${this.API_URL}/resources/${normalization_uuid}/contents/?__id__=[case-ins-eq]:${this.geneSearch}`;
 
     const normRequest = this.httpClient.get(normUrl).pipe(
       catchError(error => {
@@ -323,7 +323,7 @@ export class BaseSpatialgeComponent {
 
         for (let index in coordsMetadataRes) {
           let gene = coordsMetadataRes[index];
-          let key = gene['rowname'];
+          let key = gene['__id__'];
           let xVal = gene['values'][this.xAxisValue];
           let yVal = gene['values'][this.yAxisValue];
 

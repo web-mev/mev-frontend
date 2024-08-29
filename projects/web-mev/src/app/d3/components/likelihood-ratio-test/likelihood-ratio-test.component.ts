@@ -63,7 +63,7 @@ export class LikelihoodRatioTestComponent implements OnInit {
                 
                 for (let i in data['results']) {
                     let temp = {
-                        gene: data['results'][i]['rowname'],
+                        gene: data['results'][i]['__id__'],
                         baseMean: data['results'][i]['values']['baseMean'],
                         log2FoldChange: data['results'][i]['values']['log2FoldChange'],
                         statistic: data['results'][i]['values']['statistic'],
@@ -75,10 +75,10 @@ export class LikelihoodRatioTestComponent implements OnInit {
                         if (name !== 'baseMean' && name !== 'log2FoldChange' && name !== 'statistic' && name !== 'pvalue' && name !== 'padj') {
                             let temp = {
                                 name: name,
-                                key: data['results'][i]['rowname'] + "_" + this.sampleIdToGroup[name],
+                                key: data['results'][i]['__id__'] + "_" + this.sampleIdToGroup[name],
                                 value: data['results'][i]['values'][name],
                                 group: this.sampleIdToGroup[name],
-                                gene: data['results'][i]['rowname']
+                                gene: data['results'][i]['__id__']
                             }
                             this.boxplotData.push(temp);
                         }

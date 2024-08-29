@@ -13,7 +13,7 @@
           <th *ngFor="let columnNames of fileType.example[0].values | keyvalue">{{columnNames.key}}</th>
         </tr>
         <tr *ngFor="let row of fileType.example | keyvalue">
-          <td>{{fileType.example[row.key].rowname}}</td>
+          <td>{{fileType.example[row.key].__id__}}</td>
           <td *ngFor="let rowData of fileType.example[row.key].values | keyvalue">{{fileType.example[row.key].values[rowData.key]}}</td>
         </tr>
       </table>

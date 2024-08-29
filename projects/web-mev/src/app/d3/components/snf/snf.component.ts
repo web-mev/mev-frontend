@@ -112,14 +112,14 @@ export class SNFComponent implements OnInit {
 
     formatForCytoscape(similarityData, clusterData) {
         for (let j = 0; j < clusterData.length; j++) {
-            let node = clusterData[j]['rowname'];
+            let node = clusterData[j]['__id__'];
             let value = clusterData[j]['values']['cluster']
             this.clusterNodes[node] = value;
         }
 
         //this loop is to get the top 5% of edgeWeights
         for (let i = 0; i < similarityData.length; i++) {
-            let nodeId = similarityData[i]['rowname'];
+            let nodeId = similarityData[i]['__id__'];
             for (let key in similarityData[i]['values']) {
                 let childId = key;
                 let currEdgeWeight = similarityData[i]['values'][key];
@@ -134,7 +134,7 @@ export class SNFComponent implements OnInit {
         this.edgeWeightFilter = this.edgeWeightArr[filterValue]
 
         for (let i = 0; i < similarityData.length; i++) {
-            let nodeId = similarityData[i]['rowname'];
+            let nodeId = similarityData[i]['__id__'];
 
             for (let key in similarityData[i]['values']) {
                 let childId = key;
@@ -343,7 +343,7 @@ export class SNFComponent implements OnInit {
 
                             // now fill:
                             response.forEach(obj => {
-                                const sampleId = obj.rowname;
+                                const sampleId = obj.__id__;
                                 const assignedCluster = obj.values['cluster'];
                                 customSets[assignedCluster].elements.push(
                                     {

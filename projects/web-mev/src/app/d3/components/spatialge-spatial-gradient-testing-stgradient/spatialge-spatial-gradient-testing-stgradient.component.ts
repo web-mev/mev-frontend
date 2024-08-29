@@ -156,7 +156,7 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
 
                 for (let i in coordsMetadataRes) {
                     let obj = coordsMetadataRes[i];
-                    let key = obj['rowname'];
+                    let key = obj['__id__'];
                     let xVal = obj['values'][this.xAxisValue];
                     let yVal = obj['values'][this.yAxisValue];
 
@@ -200,7 +200,6 @@ export class SpatialGESpatialGradientComponent extends BaseSpatialgeComponent im
                     this.originalPlotWidth = this.plotWidth;
                     this.originalPlotHeight = this.plotHeight;
                 }
-                
                 if (this.scatterPlotData.length > 0) {
                     this.createScatterPlotSthet();
                 }

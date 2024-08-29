@@ -113,7 +113,7 @@ export class AddAnnotationDialogComponent implements OnInit {
         .filter(
           sample => sample.values[this.selectedAttribute] === attrValue.name
         )
-        .map(sample => ({ id: sample.rowname, attributes: sample.values }));
+        .map(sample => ({ id: sample.__id__, attributes: sample.values }));
 
       const customSet = {
         name: attrValue.name,

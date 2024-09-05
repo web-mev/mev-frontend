@@ -177,14 +177,12 @@ export class DifferentialExpressionComponent implements AfterViewInit {
     this.dataSource.connect().subscribe(featureData => {
       this.boxPlotData = featureData;
       this.preprocessBoxPlotData();
-      // this.createChart();
     });
     merge(this.sort.sortChange, this.paginator.page)
       .pipe(
         tap(() => {
           this.loadFeaturesPage();
           this.preprocessBoxPlotData();
-          // this.createChart();
         })
       )
       .subscribe();
@@ -201,13 +199,6 @@ export class DifferentialExpressionComponent implements AfterViewInit {
       sortField: this.defaultSorting.field,
       sortDirection: this.defaultSorting.direction
     };
-    // this.dataSource.loadFeatures(
-    //   this.dgeResourceId,
-    //   {},
-    //   sorting,
-    //   this.defaultPageIndex,
-    //   this.defaultPageSize
-    // );
     this.dataSource.loadFeatures(
       this.dgeResourceId,
       { 'padj': '[lt]:0.05', 'log2FoldChange': '[absgt]:2.0' },
@@ -613,13 +604,6 @@ export class DifferentialExpressionComponent implements AfterViewInit {
             .data(d[yPointsProp])
             .enter()
             .append('circle')
-            // .attr(
-            //   'cx',
-            //   this.xScale(data[ix][this.xCat]) +
-            //     (1.2 * i - 0.6) * this.boxWidth -
-            //     this.jitterWidth / 2 +
-            //     Math.random() * this.jitterWidth
-            // )
             .attr(
               'cx', d =>
               this.xScale(data[ix][this.xCat]) -
@@ -703,13 +687,6 @@ export class DifferentialExpressionComponent implements AfterViewInit {
       sortDirection: this.sort.direction
     };
 
-    // this.dataSource.loadFeatures(
-    //   this.dgeResourceId,
-    //   paramFilter,
-    //   sorting,
-    //   this.paginator.pageIndex,
-    //   this.paginator.pageSize
-    // );
     this.dataSource.loadFeatures(
       this.dgeResourceId,
       { 'padj': '[lt]:0.05', 'log2FoldChange': '[absgt]:2.0' },

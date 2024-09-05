@@ -152,7 +152,7 @@ export class SpatialGESpatialAutocorrelationSthetComponent extends BaseSpatialge
         let normalization_uuid = this.selectedStNormalizedFile['outputs']["normalized_expression"];
         let coords_metadata_uuid = this.selectedStNormalizedFile['inputs']["coords_metadata"];
         let normUrl = `${this.API_URL}/resources/${normalization_uuid}/contents/?__rowname__=[eq]:${this.geneSearch}`;
-
+        console.log("normURL: ", normUrl)
         const normRequest = this.httpClient.get(normUrl).pipe(
             catchError(error => {
                 this.isLoading = false;
